@@ -1,0 +1,338 @@
+]633;E;echo "=== STEP 03: NVRAM WRITE FLOW ANALYSIS ===";f7c3dcda-a7ef-439c-9074-36a937f4d9ed]633;C=== STEP 03: NVRAM WRITE FLOW ANALYSIS ===
+timestamp_utc=2026-04-16T15:18:26Z
+
+=== SEARCH: WRITE TRIGGERS ===
+34:    L_NVRAM_Cmd : BYTE;
+703:L_NVRAM_Cmd := 0;
+708:    L_NVRAM_Cmd := 2;
+713:    L_NVRAM_Cmd := 1;
+720:        L_NVRAM_Cmd := 1;
+725:    VI_Command := L_NVRAM_Cmd,
+738:IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
+
+=== SEARCH: WRITE CONDITIONS ===
+76:    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+77:    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+78:    L_Persist_Buffer_Changed : BOOL;
+79:    L_Last_Persist_Write_MS : UDINT;
+674:L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+676:    L_Persist_Buffer[1] := BYTE#1;
+678:    L_Persist_Buffer[1] := BYTE#0;
+681:    L_Persist_Buffer[2] := BYTE#1;
+683:    L_Persist_Buffer[2] := BYTE#0;
+686:    L_Persist_Buffer[3] := BYTE#1;
+688:    L_Persist_Buffer[3] := BYTE#0;
+691:    L_Persist_Buffer[4] := BYTE#1;
+693:    L_Persist_Buffer[4] := BYTE#0;
+696:L_Persist_Buffer_Changed :=
+697:    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+698:    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+699:    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+700:    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+701:    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+716:ELSIF L_Persist_Buffer_Changed THEN
+718:    IF (L_Last_Persist_Write_MS = 0) OR
+719:       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+727:    VI_DataRef := L_Persist_Buffer[0],
+739:    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+740:    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+741:    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+742:    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
+743:    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
+744:    L_Last_Persist_Write_MS := GVL_STATUS.G_System_Time_MS;
+
+=== SEARCH: BUFFER LOGIC ===
+76:    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+77:    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+78:    L_Persist_Buffer_Changed : BOOL;
+674:L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+676:    L_Persist_Buffer[1] := BYTE#1;
+678:    L_Persist_Buffer[1] := BYTE#0;
+681:    L_Persist_Buffer[2] := BYTE#1;
+683:    L_Persist_Buffer[2] := BYTE#0;
+686:    L_Persist_Buffer[3] := BYTE#1;
+688:    L_Persist_Buffer[3] := BYTE#0;
+691:    L_Persist_Buffer[4] := BYTE#1;
+693:    L_Persist_Buffer[4] := BYTE#0;
+696:L_Persist_Buffer_Changed :=
+697:    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+698:    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+699:    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+700:    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+701:    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+716:ELSIF L_Persist_Buffer_Changed THEN
+727:    VI_DataRef := L_Persist_Buffer[0],
+739:    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+740:    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+741:    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+742:    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
+743:    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
+
+=== SEARCH: WRITE EXECUTION ===
+17:    fbNVRAMManager : FB_NVRAM_Manager;
+724:fbNVRAMManager(
+
+=== CONTEXT AROUND WRITE ===
+
+                fbLogEvent(
+                    VI_Event_Type := 7,
+                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                    VI_Param1 := TO_UDINT(L_Scenario_Source),
+                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_SLEEP)
+                );
+            END_IF;
+        END_IF;
+    END_IF;
+END_IF;
+
+fbScenarioManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Activate_Request := L_Scenario_Intent,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VO_Current_Scenario => GVL_STATUS.G_Current_Scenario
+);
+
+
+
+// 14. Менеджер NVRAM
+// Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+    L_Persist_Buffer[1] := BYTE#1;
+ELSE
+    L_Persist_Buffer[1] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+    L_Persist_Buffer[2] := BYTE#1;
+ELSE
+    L_Persist_Buffer[2] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+    L_Persist_Buffer[3] := BYTE#1;
+ELSE
+    L_Persist_Buffer[3] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+    L_Persist_Buffer[4] := BYTE#1;
+ELSE
+    L_Persist_Buffer[4] := BYTE#0;
+END_IF;
+
+L_Persist_Buffer_Changed :=
+    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+
+L_NVRAM_Cmd := 0;
+L_NVRAM_Offset := 0;
+
+IF NOT L_Config_Loaded THEN
+    // keep one startup READ for future recovery compatibility
+    L_NVRAM_Cmd := 2;
+    L_Config_Loaded := TRUE;
+
+ELSIF GVL_CONFIG.G_HMI_Apply_Settings THEN
+    // explicit config apply may request a controlled write
+    L_NVRAM_Cmd := 1;
+    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
+
+ELSIF L_Persist_Buffer_Changed THEN
+    // controlled write: no more often than once per 60 seconds
+    IF (L_Last_Persist_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+        L_NVRAM_Cmd := 1;
+    END_IF;
+END_IF;
+
+fbNVRAMManager(
+    VI_Command := L_NVRAM_Cmd,
+    VI_Offset := L_NVRAM_Offset,
+    VI_DataRef := L_Persist_Buffer[0],
+    VI_DataSize := 5,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Operator_ID := 'SYSTEM',
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_TwoPersonConfirmation := FALSE,
+    VO_Done => L_NVRAM_Done,
+    VO_Error => L_NVRAM_Err,
+    VO_ErrorID => L_NVRAM_ErrID
+);
+
+IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
+    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
+    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
+    L_Last_Persist_Write_MS := GVL_STATUS.G_System_Time_MS;
+END_IF;
+
+// 15. Черный ящик
+L_BB_Record.Timestamp := GVL_STATUS.G_System_Time_MS;
+L_BB_Record.PLC_Active_ID := GVL_STATUS.G_PLC_ID;
+L_BB_Record.Gas_Methane_LEL := GVL_STATE.G_Methane_Sensors[1];
+L_BB_Record.Gas_CO_PPM := GVL_STATE.G_CO_Sensors[1];
+L_BB_Record.Flood_Active := GVL_ALARM.G_Flood_Alarm_Active;
+L_BB_Record.Fire_Active := GVL_ALARM.G_Fire_Alarm_Active;
+L_BB_Record.Valve_Gas_Status := SEL(GVL_COMMAND.G_Gas_Valve_Close, BYTE#0, BYTE#1);
+L_BB_Record.Valve_Water_Status := SEL((GVL_COMMAND.G_Close_Valve_35 OR GVL_COMMAND.G_Close_Valve_36), BYTE#0, BYTE#1);
+
+L_BB_Record.System_Mode := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+L_BB_Record.First_Fault_Type := TO_BYTE(TO_INT(fbSystemHealth.VO_First_Fault_Type));
+L_BB_Record.First_Fault_Source := TO_BYTE(TO_INT(fbSystemHealth.VO_First_Fault_Source));
+L_BB_Record.First_Fault_Active := fbSystemHealth.VO_First_Fault_Active;
+L_BB_Record.System_Severity := TO_BYTE(TO_INT(fbSystemHealth.VO_System_Severity));
+L_BB_Record.Root_Cause := TO_BYTE(TO_INT(fbSystemHealth.VO_Root_Cause));
+L_BB_Record.Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault;
+
+
+L_BB_Freeze := GVL_ALARM.G_Gas_Alarm_Active OR GVL_ALARM.G_Fire_Alarm_Active OR GVL_ALARM.G_Flood_Alarm_Active OR fbSystemHealth.VO_First_Fault_Active;
+
+fbBlackBox(
+    VI_Current_Data := L_BB_Record,
+    VI_Freeze := L_BB_Freeze
+);
+
+// 15.1. Менеджер истории / diagnostics bridge
+L_History_Write_Event := FALSE;
+L_History_Event.timestamp_ms := GVL_STATUS.G_System_Time_MS;
+L_History_Event.event_code := 0;
+L_History_Event.event_value := 0.0;
+L_History_Event.unit := 0;
+L_History_Event.zone_id := 0;
+L_History_Event.operator_id := 'SYSTEM';
+
+=== CONTEXT SNAPSHOT SECTION ===
+    END_IF;
+    GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action := GVL_STATUS.G_Diagnostics.Operator_Block_Reason;
+END_IF;
+
+// Operator action journal
+IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND NOT L_Last_Operator_Blocked THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+END_IF;
+L_Last_Operator_Blocked := GVL_STATUS.G_Diagnostics.Operator_Action_Blocked;
+IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service <> L_Last_DHW_Heating_In_Service THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+    IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС возвращён из ТО';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС выведен в ТО';
+    END_IF;
+END_IF;
+L_Last_DHW_Heating_In_Service := GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
+IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service <> L_Last_DHW_Circ_In_Service THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+    IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС возвращён из ТО';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС выведен в ТО';
+    END_IF;
+END_IF;
+L_Last_DHW_Circ_In_Service := GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
+IF GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq <> GVL_STATUS.G_Diagnostics.Operator_Journal_Last_Seq THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_3 := GVL_STATUS.G_Diagnostics.Operator_Journal_2;
+    GVL_STATUS.G_Diagnostics.Operator_Journal_2 := GVL_STATUS.G_Diagnostics.Operator_Journal_1;
+    IF GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action <> '' THEN
+        GVL_STATUS.G_Diagnostics.Operator_Journal_1 := GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Journal_1 := GVL_STATUS.G_Diagnostics.Maintenance_Last_Action;
+    END_IF;
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Last_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq;
+END_IF;
+
+// ========================================
+// CoreKernel live observer (diagnostic only)
+// ========================================
+// fbCoreKernelObserver disabled temporarily
+
+
+// === NVRAM SNAPSHOT (NO WRITE YET) ===
+GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+
+GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+
+GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+
+GVL_PERSISTENT.P_Valid := TRUE;
+
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: SCENARIO CHANGE ===
+IF L_Scenario_Changed THEN
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Scenario_Source),
+        VI_Param2 := TO_UDINT(L_Scenario_Intent)
+    );
+END_IF;
+
+// === EVENT LOGGING: FAULTS ===
+
+// IO
+IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+
+=== FB_NVRAM_Manager WRITE CORE ===
+
+    IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+        VO_Error := TRUE;
+        VO_ErrorID := 16#150B;
+        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
+
+    IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
+        IF NOT VI_IsActivePLC THEN
+            VO_Error := TRUE;
+            VO_ErrorID := 16#1509;
+            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+        ELSE
+            // Ограничение частоты записи (не чаще 1 раза в 60 секунд)
+            IF (VI_System_Time_MS - L_Last_Write_Time_MS) < 60000 AND L_Last_Write_Time_MS <> 0 THEN
+                VO_Error := TRUE;
+                VO_ErrorID := 16#150C;
+                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+            ELSE
+                // Проверка на изменение данных перед записью
+                L_Data_Changed := FALSE;
+                IF TRUE THEN
+                    L_Data_Changed := TRUE;
+                END_IF;
+                
+                IF L_Data_Changed THEN
+                    // Безопасное копирование (WRITE)
+                    FOR L_i := 0 TO VI_DataSize - 1 DO
+                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+                    END_FOR;
+                    L_Last_Write_Time_MS := VI_System_Time_MS;
+                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+                ELSE
+                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+                END_IF;
+            END_IF;
+        END_IF;
+        VO_Done := TRUE;
+        
+    ELSIF VI_Command = 2 THEN // ЧТЕНИЕ (READ)
+        // Безопасное копирование (READ)
+        FOR L_i := 0 TO VI_DataSize - 1 DO
+            L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+        END_FOR;
+        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+        VO_Done := TRUE;
+    END_IF;
+END_IF;
+
+IF VI_Command = 0 THEN
+    VO_Done := FALSE;
+END_IF;
+// >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+
+=== END STEP 03 ===
