@@ -1,0 +1,226 @@
+]633;E;echo "=== STEP 37: PRG_SAFETY COMMAND EDGE AUDIT ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 37: PRG_SAFETY COMMAND EDGE AUDIT ===
+timestamp_utc=2026-04-16T18:21:23Z
+
+=== ALL GVL_COMMAND USAGE IN PRG_SAFETY ===
+253:IF GVL_COMMAND.CMD_Water_Selective_Recover THEN
+265:IF GVL_COMMAND.CMD_Gas_Selective_Recover THEN
+274:IF GVL_COMMAND.CMD_Water_Valve_Test_Open THEN
+302:IF GVL_COMMAND.CMD_Water_Valve_Test_Close THEN
+308:IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
+318:IF GVL_COMMAND.CMD_Gas_Valve_Test_Open THEN
+344:IF GVL_COMMAND.CMD_Gas_Valve_Test_Close THEN
+349:IF GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Gas_Test_Active THEN
+
+=== CONTEXT AROUND SAFETY COMMANDS ===
+----- CONTEXT line 253 -----
+                GVL_STATUS.G_Diagnostics.Water_Valve_Exercise_Last_Result := 'Прокрутка завершена, CLOSE_FB не подтверждён';
+            END_IF;
+        END_IF;
+    END_IF;
+END_FOR;
+
+IF GVL_COMMAND.CMD_Water_Selective_Recover THEN
+    IF GVL_STATUS.G_Diagnostics.Water_Recovery_Selective_Allowed AND (GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index >= 1) AND (GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index <= 32) THEN
+        GVL_STATE.G_Water_Zone_Enable[GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index] := TRUE;
+        GVL_STATUS.G_Diagnostics.Water_Recovery_Physical_Active := TRUE;
+        GVL_STATUS.G_Diagnostics.Water_Recovery_Physical_Zone_Name := GVL_STATUS.G_Diagnostics.Active_Leak_Zone_Name;
+        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Context := CONCAT('Селективный тест воды для зоны ', GVL_STATUS.G_Diagnostics.Active_Leak_Zone_Name);
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Селективное восстановление воды недоступно: зона аварии не локализована';
+    END_IF;
+END_IF;
+
+----- CONTEXT line 265 -----
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Селективное восстановление воды недоступно: зона аварии не локализована';
+    END_IF;
+END_IF;
+
+IF GVL_COMMAND.CMD_Gas_Selective_Recover THEN
+    IF GVL_STATUS.G_Diagnostics.Gas_Recovery_Selective_Allowed THEN
+        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Context := CONCAT('Селективный тест газа для зоны ', GVL_STATUS.G_Diagnostics.Active_Gas_Zone_Name);
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Селективное восстановление газа недоступно: зона аварии не локализована';
+    END_IF;
+END_IF;
+
+IF GVL_COMMAND.CMD_Water_Valve_Test_Open THEN
+    L_Water_Test_Active := TRUE;
+
+----- CONTEXT line 274 -----
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Селективное восстановление газа недоступно: зона аварии не локализована';
+    END_IF;
+END_IF;
+
+IF GVL_COMMAND.CMD_Water_Valve_Test_Open THEN
+    L_Water_Test_Active := TRUE;
+    L_Water_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
+    GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := TRUE;
+    GVL_STATUS.G_Diagnostics.Water_Valve_Test_Deadline_MS := L_Water_Test_Deadline;
+END_IF;
+IF L_Water_Test_Active THEN
+    IF GVL_STATUS.G_System_Time_MS < L_Water_Test_Deadline THEN
+        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Remaining_MS := L_Water_Test_Deadline - GVL_STATUS.G_System_Time_MS;
+        IF NOT GVL_STATE.G_Safety_Leak_Alarm THEN
+            GVL_STATUS.G_Diagnostics.Water_Valve_Test_Validation_OK := TRUE;
+
+----- CONTEXT line 302 -----
+        L_Water_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+        GVL_COMMAND.G_Close_Valve_35 := TRUE;
+        GVL_COMMAND.G_Close_Valve_36 := TRUE;
+    END_IF;
+END_IF;
+IF GVL_COMMAND.CMD_Water_Valve_Test_Close THEN
+    L_Water_Test_Active := FALSE;
+    GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+    GVL_COMMAND.G_Close_Valve_35 := TRUE;
+    GVL_COMMAND.G_Close_Valve_36 := TRUE;
+END_IF;
+IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
+    IF GVL_STATUS.G_Diagnostics.Water_Valve_Test_Validation_OK THEN
+        L_Water_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+    ELSE
+
+----- CONTEXT line 308 -----
+IF GVL_COMMAND.CMD_Water_Valve_Test_Close THEN
+    L_Water_Test_Active := FALSE;
+    GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+    GVL_COMMAND.G_Close_Valve_35 := TRUE;
+    GVL_COMMAND.G_Close_Valve_36 := TRUE;
+END_IF;
+IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
+    IF GVL_STATUS.G_Diagnostics.Water_Valve_Test_Validation_OK THEN
+        L_Water_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Подтверждение водяного теста запрещено: причина аварии не устранена';
+    END_IF;
+END_IF;
+
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Open THEN
+
+----- CONTEXT line 318 -----
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Подтверждение водяного теста запрещено: причина аварии не устранена';
+    END_IF;
+END_IF;
+
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Open THEN
+    L_Gas_Test_Active := TRUE;
+    L_Gas_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
+    GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := TRUE;
+    GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Deadline_MS := L_Gas_Test_Deadline;
+END_IF;
+IF L_Gas_Test_Active THEN
+    IF GVL_STATUS.G_System_Time_MS < L_Gas_Test_Deadline THEN
+        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Remaining_MS := L_Gas_Test_Deadline - GVL_STATUS.G_System_Time_MS;
+        IF NOT GVL_STATE.G_Safety_Gas_Alarm THEN
+            GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Validation_OK := TRUE;
+
+----- CONTEXT line 344 -----
+    ELSE
+        L_Gas_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+        GVL_COMMAND.G_Gas_Valve_Close := TRUE;
+    END_IF;
+END_IF;
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Close THEN
+    L_Gas_Test_Active := FALSE;
+    GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+    GVL_COMMAND.G_Gas_Valve_Close := TRUE;
+END_IF;
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Gas_Test_Active THEN
+    IF GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Validation_OK THEN
+        L_Gas_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+
+----- CONTEXT line 349 -----
+END_IF;
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Close THEN
+    L_Gas_Test_Active := FALSE;
+    GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+    GVL_COMMAND.G_Gas_Valve_Close := TRUE;
+END_IF;
+IF GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Gas_Test_Active THEN
+    IF GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Validation_OK THEN
+        L_Gas_Test_Active := FALSE;
+        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Подтверждение газового теста запрещено: причина аварии не устранена';
+    END_IF;
+END_IF;
+
+IF GVL_STATE.G_Safety_Leak_Alarm THEN
+
+
+=== SEARCH FOR _PREV / EDGE / RESET IN PRG_SAFETY ===
+58:    GVL_COMMAND.G_Supply_100_Req := FALSE;
+59:    GVL_COMMAND.G_Supply_80_Req := FALSE;
+60:    GVL_COMMAND.G_Vent_PV3_Boost := FALSE;
+61:    GVL_COMMAND.G_Exhaust_100_Req := FALSE;
+65:    GVL_COMMAND.G_Lock_1_Close := FALSE;
+67:    GVL_COMMAND.G_Lock_2_Close := FALSE;
+95:    GVL_STATE.G_Evac_Hazard_Zone[L_i] := FALSE;
+128:GVL_STATUS.G_Diagnostics.Water_Recovery_Physical_Active := FALSE;
+130:GVL_STATUS.G_Diagnostics.Water_Localization_Failed := FALSE;
+131:GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended := FALSE;
+133:GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active := FALSE;
+136:GVL_STATUS.G_Diagnostics.Valve_Test_Validation_OK := FALSE;
+138:GVL_STATUS.G_Diagnostics.Valve_Test_Forced_Close := FALSE;
+139:GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index := 0;
+140:GVL_STATUS.G_Diagnostics.Gas_Recovery_Target_Zone_Index := 0;
+141:GVL_STATUS.G_Diagnostics.Water_Recovery_Selective_Allowed := FALSE;
+142:GVL_STATUS.G_Diagnostics.Gas_Recovery_Selective_Allowed := FALSE;
+145:GVL_STATUS.G_Diagnostics.Active_Leak_Sensor_Index := 0;
+146:GVL_STATUS.G_Diagnostics.Active_Gas_Sensor_Index := 0;
+185:    GVL_STATE.G_Water_Zone_Enable[L_i] := FALSE;
+186:    GVL_STATUS.G_Diagnostics.Water_Zone_Open_Fault[L_i] := FALSE;
+187:    GVL_STATUS.G_Diagnostics.Water_Zone_Close_Fault[L_i] := FALSE;
+188:    GVL_STATUS.G_Diagnostics.Water_Zone_Critical_Close_Fault[L_i] := FALSE;
+189:    GVL_STATUS.G_Diagnostics.Water_Zone_Close_Retry_Active[L_i] := FALSE;
+212:            GVL_STATUS.G_Diagnostics.Water_Zone_Close_Retry_Count[L_i] := 0;
+241:            L_Water_Valve_Exercise_Until_MS[L_i] := 0;
+242:            GVL_STATE.G_Water_Zone_Enable[L_i] := FALSE;
+243:            GVL_STATE.G_Water_Zone_Exercise_Active[L_i] := FALSE;
+287:            GVL_STATUS.G_Diagnostics.Water_Valve_Test_Validation_OK := FALSE;
+292:            L_Water_Test_Active := FALSE;
+293:            GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+296:        L_Water_Test_Active := FALSE;
+297:        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+303:    L_Water_Test_Active := FALSE;
+304:    GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+310:        L_Water_Test_Active := FALSE;
+311:        GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
+331:            GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Validation_OK := FALSE;
+335:            L_Gas_Test_Active := FALSE;
+336:            GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+339:        L_Gas_Test_Active := FALSE;
+340:        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+345:    L_Gas_Test_Active := FALSE;
+346:    GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+351:        L_Gas_Test_Active := FALSE;
+352:        GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
+
+=== GVL_COMMAND DEFINITIONS (LIVE ONLY) ===
+42:    CMD_Water_Valve_Test_Open : BOOL;
+43:    CMD_Water_Valve_Test_Close : BOOL;
+44:    CMD_Water_Valve_Test_Confirm : BOOL;
+45:    CMD_Gas_Valve_Test_Open : BOOL;
+46:    CMD_Gas_Valve_Test_Close : BOOL;
+47:    CMD_Gas_Valve_Test_Confirm : BOOL;
+48:    CMD_Water_Selective_Recover : BOOL;
+49:    CMD_Gas_Selective_Recover : BOOL;
+
+=== END STEP 37 ===
