@@ -1,0 +1,175 @@
+]633;E;echo "=== STEP 13: PACK NVRAM BUFFER FROM STRUCT ADAPTER ===";61cf2567-4c41-49d3-982a-34b1ba96e126]633;C=== STEP 13: PACK NVRAM BUFFER FROM STRUCT ADAPTER ===
+timestamp_utc=2026-04-16T15:59:08Z
+
+=== BEFORE APPLY ===
+END_IF;
+
+fbScenarioManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Activate_Request := L_Scenario_Intent,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VO_Current_Scenario => GVL_STATUS.G_Current_Scenario
+);
+
+
+
+// 14. Менеджер NVRAM
+// Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+    L_Persist_Buffer[1] := BYTE#1;
+ELSE
+    L_Persist_Buffer[1] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+    L_Persist_Buffer[2] := BYTE#1;
+ELSE
+    L_Persist_Buffer[2] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+    L_Persist_Buffer[3] := BYTE#1;
+ELSE
+    L_Persist_Buffer[3] := BYTE#0;
+END_IF;
+IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+    L_Persist_Buffer[4] := BYTE#1;
+ELSE
+    L_Persist_Buffer[4] := BYTE#0;
+END_IF;
+
+L_Persist_Buffer_Changed :=
+    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+
+L_NVRAM_Cmd := 0;
+L_NVRAM_Offset := 0;
+
+IF GVL_CONFIG.G_HMI_Apply_Settings THEN
+    // explicit config apply may request a controlled write
+    L_NVRAM_Cmd := 1;
+    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
+
+ELSIF L_Persist_Buffer_Changed THEN
+    // controlled write: no more often than once per 60 seconds
+    IF (L_Last_Persist_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+        L_NVRAM_Cmd := 1;
+
+=== APPLY STEP SCRIPT ===
+OK: L_Persist_Buffer now packs from L_Persist_Struct
+
+=== AFTER APPLY ===
+END_IF;
+
+fbScenarioManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Activate_Request := L_Scenario_Intent,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VO_Current_Scenario => GVL_STATUS.G_Current_Scenario
+);
+
+
+
+// 14. Менеджер NVRAM
+// Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+L_Persist_Buffer[0] := TO_BYTE(TO_INT(L_Persist_Struct.System_Mode));
+IF L_Persist_Struct.Safety_Gas_Latched THEN
+    L_Persist_Buffer[1] := BYTE#1;
+ELSE
+    L_Persist_Buffer[1] := BYTE#0;
+END_IF;
+IF L_Persist_Struct.Safety_Smoke_Latched THEN
+    L_Persist_Buffer[2] := BYTE#1;
+ELSE
+    L_Persist_Buffer[2] := BYTE#0;
+END_IF;
+IF L_Persist_Struct.Safety_Leak_Latched THEN
+    L_Persist_Buffer[3] := BYTE#1;
+ELSE
+    L_Persist_Buffer[3] := BYTE#0;
+END_IF;
+IF L_Persist_Struct.DHW_Heating_Pump THEN
+    L_Persist_Buffer[4] := BYTE#1;
+ELSE
+    L_Persist_Buffer[4] := BYTE#0;
+END_IF;
+
+L_Persist_Buffer_Changed :=
+    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+
+L_NVRAM_Cmd := 0;
+L_NVRAM_Offset := 0;
+
+IF GVL_CONFIG.G_HMI_Apply_Settings THEN
+    // explicit config apply may request a controlled write
+    L_NVRAM_Cmd := 1;
+    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
+
+ELSIF L_Persist_Buffer_Changed THEN
+    // controlled write: no more often than once per 60 seconds
+    IF (L_Last_Persist_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+        L_NVRAM_Cmd := 1;
+
+=== VERIFY STRUCT-BASED PACKING ===
+674:L_Persist_Buffer[0] := TO_BYTE(TO_INT(L_Persist_Struct.System_Mode));
+675:IF L_Persist_Struct.Safety_Gas_Latched THEN
+680:IF L_Persist_Struct.Safety_Smoke_Latched THEN
+685:IF L_Persist_Struct.Safety_Leak_Latched THEN
+690:IF L_Persist_Struct.DHW_Heating_Pump THEN
+990:L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+992:L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+993:L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+994:L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+996:L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+1000:GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
+1002:GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
+1003:GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
+1004:GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
+1006:GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
+
+=== GIT DIFF (FOCUSED) ===
+diff --git a/PRG_System.st b/PRG_System.st
+index 2c7200d..b889232 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -671,23 +671,23 @@ fbScenarioManager(
+ 
+ // 14. Менеджер NVRAM
+ // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+-L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+-IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
++L_Persist_Buffer[0] := TO_BYTE(TO_INT(L_Persist_Struct.System_Mode));
++IF L_Persist_Struct.Safety_Gas_Latched THEN
+     L_Persist_Buffer[1] := BYTE#1;
+ ELSE
+     L_Persist_Buffer[1] := BYTE#0;
+ END_IF;
+-IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
++IF L_Persist_Struct.Safety_Smoke_Latched THEN
+     L_Persist_Buffer[2] := BYTE#1;
+ ELSE
+     L_Persist_Buffer[2] := BYTE#0;
+ END_IF;
+-IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
++IF L_Persist_Struct.Safety_Leak_Latched THEN
+     L_Persist_Buffer[3] := BYTE#1;
+ ELSE
+     L_Persist_Buffer[3] := BYTE#0;
+ END_IF;
+-IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
++IF L_Persist_Struct.DHW_Heating_Pump THEN
+     L_Persist_Buffer[4] := BYTE#1;
+ ELSE
+     L_Persist_Buffer[4] := BYTE#0;
+
+=== END STEP 13 ===
