@@ -1,0 +1,194 @@
+from pathlib import Path
+import importlib.util
+import re
+import sys
+
+
+ROOT = Path(".").resolve()
+INPUT_XML = ROOT / "компилятор" / "out" / "RESULT.xml"
+OUTPUT_XML = ROOT / "компилятор" / "out" / "RESULT_methods_clean.xml"
+LOG_PATH = ROOT / "компилятор" / "logs" / "method_overlay_clean_python.log"
+
+
+def log(msg: str) -> None:
+    print(msg)
+    with LOG_PATH.open("a", encoding="utf-8") as f:
+        f.write(msg + "\n")
+
+
+def load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, str(path))
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Cannot load module: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def esc(s: str) -> str:
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def find_pou_block(xml_text: str, pou_name: str):
+    pattern = re.compile(rf'(?s)<pou\b[^>]*name="{re.escape(pou_name)}"[^>]*>.*?</pou>')
+    return pattern.search(xml_text)
+
+
+def extract_pou_parts(pou_xml: str):
+    interface_m = re.search(r'(?s)<interface>(.*?)</interface>', pou_xml)
+    body_m = re.search(r'(?s)<body>\s*<ST>\s*<xhtml xmlns="http://www\.w3\.org/1999/xhtml">(.*?)</xhtml>\s*</ST>\s*</body>', pou_xml)
+    adddata_m = re.search(r'(?s)<addData>(.*?)</addData>', pou_xml)
+    objectid_m = re.search(r'(?s)<data name="http://www\.3s-software\.com/plcopenxml/objectid" handleUnknown="discard">\s*<ObjectId>(.*?)</ObjectId>\s*</data>', pou_xml)
+    type_m = re.search(r'<pou\b[^>]*pouType="([^"]+)"', pou_xml)
+
+    if not interface_m or not body_m or not adddata_m or not objectid_m or not type_m:
+        raise RuntimeError("Failed to extract POU parts")
+
+    return {
+        "interface_inner": interface_m.group(1),
+        "body_xhtml": body_m.group(1),
+        "adddata_inner": adddata_m.group(1),
+        "object_id": objectid_m.group(1).strip(),
+        "pou_type": type_m.group(1).strip(),
+    }
+
+
+def remove_existing_method_data(adddata_inner: str) -> str:
+    pattern = re.compile(
+        r'(?s)\s*<data name="http://www\.3s-software\.com/plcopenxml/method" handleUnknown="implementation">.*?</data>'
+    )
+    return pattern.sub("", adddata_inner)
+
+
+def rebuild_pou(xml_name: str, pou_type: str, interface_inner: str, cleaned_code: str, method_blocks: list[str], object_id: str) -> str:
+    methods_xml = ""
+    if method_blocks:
+        methods_xml = "\n" + "\n".join(method_blocks) + "\n"
+    return (
+        f'      <pou name="{esc(xml_name)}" pouType="{pou_type}">\n'
+        f'        <interface>{interface_inner}</interface>\n'
+        f'        <body>\n'
+        f'          <ST>\n'
+        f'            <xhtml xmlns="http://www.w3.org/1999/xhtml">{cleaned_code}</xhtml>\n'
+        f'          </ST>\n'
+        f'        </body>\n'
+        f'        <addData>{methods_xml}'
+        f'          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">\n'
+        f'            <ObjectId>{object_id}</ObjectId>\n'
+        f'          </data>\n'
+        f'        </addData>\n'
+        f'      </pou>'
+    )
+
+
+def replace_projectstructure_object(xml_text: str, xml_name: str, object_id: str, methods: list[dict]) -> str:
+    folder_re = re.compile(r'(?s)(<Folder Name="POUs">)(.*?)(</Folder>)')
+    fm = folder_re.search(xml_text)
+    if not fm:
+        raise RuntimeError("POUs folder not found")
+
+    body = fm.group(2)
+    obj_pat = re.compile(
+        rf'(?s)\n?\s*<Object Name="{re.escape(xml_name)}" ObjectId="{re.escape(object_id)}"(?:\s*/>|>.*?</Object>)'
+    )
+    om = obj_pat.search(body)
+    if not om:
+        raise RuntimeError(f"POUs object not found for {xml_name}")
+
+    if methods:
+        repl = [f'\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}">']
+        for method in methods:
+            repl.append(f'\n            <Object Name="{esc(method["name"])}" ObjectId="{method["object_id"]}" />')
+        repl.append('\n          </Object>')
+        replacement = "".join(repl)
+    else:
+        replacement = f'\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}" />'
+
+    new_body = body[:om.start()] + replacement + body[om.end():]
+    return xml_text[:fm.start()] + fm.group(1) + new_body + fm.group(3) + xml_text[fm.end():]
+
+
+def main():
+    if LOG_PATH.exists():
+        LOG_PATH.unlink()
+
+    baseline = load_module("baseline_import_codesys_final", ROOT / "компилятор" / "import_codesys_FINAL.py")
+    methods_v2 = load_module("methods_v2_builder", ROOT / "steps" / "MASTER_PIPELINE" / "001_universal_pou_builder_METHODS_V2.py")
+
+    xml_text = INPUT_XML.read_text(encoding="utf-8", errors="ignore")
+
+    st_files = []
+    for pattern in methods_v2.ST_PATTERNS:
+        st_files.extend(sorted(ROOT.glob(pattern)))
+    main_path = ROOT / methods_v2.MAIN_FILE
+    if main_path.exists():
+        st_files.append(main_path)
+
+    target_pous = 0
+    total_methods = 0
+
+    for st_file in st_files:
+        raw_name = st_file.stem
+        xml_name, pou_type, tree_target = methods_v2.detect_pou(raw_name)
+        if tree_target != "pous":
+            continue
+
+        st_text = st_file.read_text(encoding="utf-8", errors="ignore")
+        methods, text_without_methods = methods_v2.extract_methods(st_text)
+        if not methods:
+            continue
+
+        pm = find_pou_block(xml_text, xml_name)
+        if not pm:
+            log(f"SKIP_NO_POU={xml_name}")
+            continue
+
+        old_pou = pm.group(0)
+        parts = extract_pou_parts(old_pou)
+
+        # Clean code using baseline helpers so no VAR sections remain in body.
+        _, code_without_vars = baseline.extract_sections(text_without_methods)
+        cleaned_code = baseline.cleanup_code_text(xml_name, pou_type, code_without_vars)
+
+        method_blocks = []
+        method_infos = []
+        for method in methods:
+            method_blocks.append(methods_v2.build_method_xml(
+                str(method["name"]),
+                str(method["return_type"]),
+                [],  # empty method interface except returnType
+                str(method["code_text"]),
+                str(method["object_id"]),
+            ))
+            method_infos.append({
+                "name": str(method["name"]),
+                "object_id": str(method["object_id"]),
+            })
+
+        new_pou = rebuild_pou(
+            xml_name=xml_name,
+            pou_type=parts["pou_type"],
+            interface_inner=parts["interface_inner"],
+            cleaned_code=cleaned_code,
+            method_blocks=method_blocks,
+            object_id=parts["object_id"],
+        )
+
+        xml_text = xml_text[:pm.start()] + new_pou + xml_text[pm.end():]
+        xml_text = replace_projectstructure_object(xml_text, xml_name, parts["object_id"], method_infos)
+
+        target_pous += 1
+        total_methods += len(method_infos)
+        log(f"OVERLAY_OK={xml_name} METHODS={len(method_infos)}")
+
+    OUTPUT_XML.write_text(xml_text, encoding="utf-8")
+    log(f"TARGET_POUS={target_pous}")
+    log(f"TOTAL_METHODS={total_methods}")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        log(f"ERROR={e}")
+        raise
