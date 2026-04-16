@@ -12,6 +12,7 @@ VAR
     fbRedundancy : FB_Redundancy_Manager;
     fbGateway : FB_Gateway_Interface;
     fbScenarioManager : FB_Scenario_Manager;
+    fbScenarioGuard : FB_Scenario_Transition_Guard;
     fbSimulationManager : FB_Simulation_Manager;
     fbRuleEngine : FB_Rule_Engine;
     fbNVRAMManager : FB_NVRAM_Manager;
@@ -671,6 +672,15 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
             END_IF;
         END_IF;
     END_IF;
+END_IF;
+
+fbScenarioGuard(
+    VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
+    VI_Target_Scenario := L_Scenario_Intent
+);
+
+IF NOT fbScenarioGuard.VO_Transition_Allowed THEN
+    GVL_STATUS.G_Diagnostics.HMI_Last_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
 END_IF;
 
 fbScenarioManager(
