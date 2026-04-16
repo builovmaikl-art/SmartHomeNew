@@ -72,6 +72,7 @@ L_Sensor_Fault_Prev : BOOL;
 L_Subsystem_Fault_Prev : BOOL;
 L_Mode_Prev : E_System_Operating_Mode;
 L_User_Access_Denied_Prev : BOOL;
+L_Dangerous_Action_Request_Prev : BOOL;
 
     L_Persist_Buffer : ARRAY[0..4] OF BYTE;
     L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
@@ -877,7 +878,9 @@ fbHistoryManager(
 L_Maintenance_Apply_Intent := FALSE;
 
 // Dangerous action confirmation flow
-IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+IF GVL_COMMAND.CMD_Dangerous_Action_Request AND
+   NOT L_Dangerous_Action_Request_Prev AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
 
     IF NOT L_Dangerous_Action_Armed THEN
         fbLogEvent(
@@ -956,6 +959,7 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_
 END_IF;
 
 L_User_Access_Denied_Prev := GVL_STATUS.G_Diagnostics.User_Access_Denied;
+L_Dangerous_Action_Request_Prev := GVL_COMMAND.CMD_Dangerous_Action_Request;
 
 // Hard revert for forbidden operator actions
 IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked THEN

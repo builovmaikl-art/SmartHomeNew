@@ -1,0 +1,89 @@
+]633;E;echo "=== STEP 34: FIX DANGEROUS REQUEST EDGE ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 34: FIX DANGEROUS REQUEST EDGE ===
+timestamp_utc=2026-04-16T18:13:53Z
+
+=== BEFORE ===
+880:IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+937:IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
+
+=== APPLY ===
+OK: dangerous action request now edge-triggered
+
+=== AFTER ===
+75:L_Dangerous_Action_Request_Prev : BOOL;
+881:IF GVL_COMMAND.CMD_Dangerous_Action_Request AND
+882:   NOT L_Dangerous_Action_Request_Prev AND
+940:IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
+962:L_Dangerous_Action_Request_Prev := GVL_COMMAND.CMD_Dangerous_Action_Request;
+
+=== CONTEXT ===
+
+fbHistoryManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Write_Event := L_History_Write_Event,
+    VI_Event := L_History_Event
+);
+
+
+L_Maintenance_Apply_Intent := FALSE;
+
+// Dangerous action confirmation flow
+IF GVL_COMMAND.CMD_Dangerous_Action_Request AND
+   NOT L_Dangerous_Action_Request_Prev AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+
+    IF NOT L_Dangerous_Action_Armed THEN
+        fbLogEvent(
+            VI_Event_Type := 8,
+            VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+            VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+            VI_Param2 := 1
+        );
+    END_IF;
+
+    L_Dangerous_Action_Armed := TRUE;
+    L_Dangerous_Action_Deadline_MS := GVL_STATUS.G_System_Time_MS + 15000;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := TRUE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Deadline_MS := L_Dangerous_Action_Deadline_MS;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Подтвердите опасное действие в течение 15 секунд';
+END_IF;
+IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+    L_Dangerous_Action_Armed := FALSE;
+    L_Maintenance_Apply_Intent := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+END_IF;
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index b1c0fb0..a2de6cc 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -72,6 +72,7 @@ L_Sensor_Fault_Prev : BOOL;
+ L_Subsystem_Fault_Prev : BOOL;
+ L_Mode_Prev : E_System_Operating_Mode;
+ L_User_Access_Denied_Prev : BOOL;
++L_Dangerous_Action_Request_Prev : BOOL;
+ 
+     L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+     L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+@@ -877,7 +878,9 @@ fbHistoryManager(
+ L_Maintenance_Apply_Intent := FALSE;
+ 
+ // Dangerous action confirmation flow
+-IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
++IF GVL_COMMAND.CMD_Dangerous_Action_Request AND
++   NOT L_Dangerous_Action_Request_Prev AND
++   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+ 
+     IF NOT L_Dangerous_Action_Armed THEN
+         fbLogEvent(
+@@ -956,6 +959,7 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_
+ END_IF;
+ 
+ L_User_Access_Denied_Prev := GVL_STATUS.G_Diagnostics.User_Access_Denied;
++L_Dangerous_Action_Request_Prev := GVL_COMMAND.CMD_Dangerous_Action_Request;
+ 
+ // Hard revert for forbidden operator actions
+ IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked THEN
+
+=== END STEP 34 ===
