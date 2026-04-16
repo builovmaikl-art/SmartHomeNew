@@ -77,6 +77,7 @@ L_User_Access_Denied_Prev : BOOL;
     L_Persist_Buffer_Changed : BOOL;
     L_Last_Persist_Write_MS : UDINT;
     L_Recovery_Done : BOOL;
+    L_Persist_Struct : ST_Persist;
 END_VAR
 
 // 0. Инициализация RETAIN переменных при первом запуске
@@ -985,16 +986,25 @@ END_IF;
 // fbCoreKernelObserver disabled temporarily
 
 
-// === NVRAM SNAPSHOT (NO WRITE YET) ===
-GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
+L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
 
-GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
-GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
-GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
 
-GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+L_Persist_Struct.Valid := TRUE;
 
-GVL_PERSISTENT.P_Valid := TRUE;
+// mirror to legacy persistent variables
+GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
+
+GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
+GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
+GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
+
+GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
+GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 
 // >>> BULK_SYNC_ANCHOR: PRG_System <<<
 

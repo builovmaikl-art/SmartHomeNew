@@ -1,0 +1,145 @@
+]633;E;echo "=== STEP 12 FIXED: ADD PERSIST STRUCT ADAPTER ===";61cf2567-4c41-49d3-982a-34b1ba96e126]633;C=== STEP 12 FIXED: ADD PERSIST STRUCT ADAPTER ===
+timestamp_utc=2026-04-16T15:57:16Z
+
+=== BEFORE APPLY ===
+988:// === NVRAM SNAPSHOT (NO WRITE YET) ===
+
+=== APPLY STEP SCRIPT ===
+OK: persist struct adapter added to PRG_System.st
+
+=== AFTER APPLY ===
+80:    L_Persist_Struct : ST_Persist;
+990:L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+992:L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+993:L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+994:L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+996:L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+997:L_Persist_Struct.Valid := TRUE;
+1000:GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
+1002:GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
+1003:GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
+1004:GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
+1006:GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
+1007:GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+989:// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
+
+=== CONTEXT AFTER APPLY ===
+    L_Last_First_Fault_Type : INT;
+    L_Last_First_Fault_Source : INT;
+    L_Last_Root_Cause : E_System_Root_Cause;
+    L_History_Event : ST_History_Record;
+    L_History_Write_Event : BOOL;
+    L_Last_Operator_Journal_Seq : UDINT;
+    L_Last_Event_Code : UDINT;
+    L_Last_Event_Value : REAL;
+    L_Last_Event_Time_MS : UDINT;
+    L_Gateway_Writes_Allowed : BOOL;
+
+    L_Scenario_Req_Operator : E_SCENARIO_TYPE;
+    L_Scenario_Req_Gateway  : E_SCENARIO_TYPE;
+    L_Scenario_Req_Rule     : E_SCENARIO_TYPE;
+    L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
+    L_Scenario_Intent       : E_SCENARIO_TYPE;
+L_Scenario_Source       : E_SCENARIO_SOURCE;
+L_Scenario_Changed      : BOOL;
+L_Last_Scenario_Change_Time : UDINT;
+
+L_IO_Fault_Prev : BOOL;
+L_Comm_Fault_Prev : BOOL;
+L_Sensor_Fault_Prev : BOOL;
+L_Subsystem_Fault_Prev : BOOL;
+L_Mode_Prev : E_System_Operating_Mode;
+L_User_Access_Denied_Prev : BOOL;
+
+    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Persist_Buffer_Changed : BOOL;
+    L_Last_Persist_Write_MS : UDINT;
+    L_Recovery_Done : BOOL;
+    L_Persist_Struct : ST_Persist;
+
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Last_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq;
+END_IF;
+
+// ========================================
+// CoreKernel live observer (diagnostic only)
+// ========================================
+// fbCoreKernelObserver disabled temporarily
+
+
+// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
+L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+
+L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+
+L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+L_Persist_Struct.Valid := TRUE;
+
+// mirror to legacy persistent variables
+GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
+
+GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
+GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
+GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
+
+GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
+GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: SCENARIO CHANGE ===
+IF L_Scenario_Changed THEN
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+
+=== GIT DIFF (FOCUSED) ===
+diff --git a/PRG_System.st b/PRG_System.st
+index 5d65e65..2c7200d 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -77,6 +77,7 @@ L_User_Access_Denied_Prev : BOOL;
+     L_Persist_Buffer_Changed : BOOL;
+     L_Last_Persist_Write_MS : UDINT;
+     L_Recovery_Done : BOOL;
++    L_Persist_Struct : ST_Persist;
+ END_VAR
+ 
+ // 0. Инициализация RETAIN переменных при первом запуске
+@@ -985,16 +986,25 @@ END_IF;
+ // fbCoreKernelObserver disabled temporarily
+ 
+ 
+-// === NVRAM SNAPSHOT (NO WRITE YET) ===
+-GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
++// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
++L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+ 
+-GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+-GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+-GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
++L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
++L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
++L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+ 
+-GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
++L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
++L_Persist_Struct.Valid := TRUE;
+ 
+-GVL_PERSISTENT.P_Valid := TRUE;
++// mirror to legacy persistent variables
++GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
++
++GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
++GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
++GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
++
++GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
++GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+ 
+ // >>> BULK_SYNC_ANCHOR: PRG_System <<<
+ 
+
+=== END STEP 12 FIXED ===
