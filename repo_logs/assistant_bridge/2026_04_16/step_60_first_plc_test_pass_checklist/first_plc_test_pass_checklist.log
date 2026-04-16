@@ -1,0 +1,43 @@
+]633;E;echo "=== STEP 60: FIRST PLC TEST PASS CHECKLIST ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 60: FIRST PLC TEST PASS CHECKLIST ===
+timestamp_utc=2026-04-16T19:12:10Z
+
+=== PHASE 1: SAFE OBSERVATION ===
+1. Confirm project compiles and starts
+2. Check GVL_STATE.G_System_Mode / Text / Cause
+3. Check GVL_STATUS.G_Current_Scenario / G_Previous_Scenario
+4. Confirm dry-run helpers are inactive by default
+
+=== PHASE 2: SCENARIO / POLICY ===
+5. Request normal scenario change
+6. Confirm scenario transition event/history entry
+7. Arm security and confirm policy forces AWAY
+8. Attempt forbidden transition AWAY -> PARTY and confirm soft guard hold
+
+=== PHASE 3: DANGEROUS ACTION ===
+9. Trigger dangerous action request
+10. Verify arm state appears once
+11. Verify timeout clears pending action
+12. Verify deny path clears pending action
+13. Verify apply works only in NORMAL/DEGRADED
+
+=== PHASE 4: SAFETY ===
+14. Simulate/check flood response
+15. Simulate/check gas response
+16. Simulate/check fire/smoke response
+17. Verify recover/test confirm blocking under active hazard
+
+=== PHASE 5: EVENTS / HEALTH ===
+18. Verify watchdog event 11/12 path if available
+19. Verify IO fault event 2/3 path if available
+20. Verify mode event 4
+21. Verify policy events 5/6/7 are not flooding
+
+=== PHASE 6: GATEWAY ===
+22. Check one-shot VO_* command behavior
+23. Verify telegram command does not trigger time sync
+24. Verify sync/reset/config commands are separated
+
+=== RESULT ===
+Checklist prepared for first PLC runtime pass in safe order.
+
+=== END STEP 60 ===
