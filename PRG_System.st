@@ -1008,13 +1008,13 @@ GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 
 // >>> BULK_SYNC_ANCHOR: PRG_System <<<
 
-// === EVENT LOGGING: SCENARIO CHANGE ===
-IF L_Scenario_Changed THEN
+// === EVENT LOGGING: SCENARIO CHANGE (DETERMINISTIC) ===
+IF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
     fbLogEvent(
         VI_Event_Type := 1,
         VI_Timestamp := GVL_STATUS.G_System_Time_MS,
         VI_Param1 := TO_UDINT(L_Scenario_Source),
-        VI_Param2 := TO_UDINT(L_Scenario_Intent)
+        VI_Param2 := TO_UDINT(GVL_STATUS.G_Current_Scenario)
     );
 END_IF;
 
