@@ -62,8 +62,6 @@ VAR
     L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
     L_Scenario_Intent       : E_SCENARIO_TYPE;
 L_Scenario_Source       : E_SCENARIO_SOURCE;
-L_Scenario_Changed      : BOOL;
-L_Last_Scenario_Change_Time : UDINT;
 
 L_IO_Fault_Prev : BOOL;
 L_Comm_Fault_Prev : BOOL;

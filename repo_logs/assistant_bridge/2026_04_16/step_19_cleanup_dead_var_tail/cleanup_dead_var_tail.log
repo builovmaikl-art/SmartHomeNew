@@ -1,0 +1,61 @@
+]633;E;echo "=== STEP 19: CLEANUP DEAD VAR TAIL ===";7f899988-c0cf-4f7a-9bc0-74bda7869211]633;C=== STEP 19: CLEANUP DEAD VAR TAIL ===
+timestamp_utc=2026-04-16T17:26:24Z
+
+=== BEFORE ===
+65:L_Scenario_Changed      : BOOL;
+66:L_Last_Scenario_Change_Time : UDINT;
+
+=== APPLY ===
+OK: removed dead scenario VAR tail from PRG_System.st
+
+=== AFTER ===
+
+=== VAR CONTEXT ===
+    L_Last_Event_Value : REAL;
+    L_Last_Event_Time_MS : UDINT;
+    L_Gateway_Writes_Allowed : BOOL;
+
+    L_Scenario_Req_Operator : E_SCENARIO_TYPE;
+    L_Scenario_Req_Gateway  : E_SCENARIO_TYPE;
+    L_Scenario_Req_Rule     : E_SCENARIO_TYPE;
+    L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
+    L_Scenario_Intent       : E_SCENARIO_TYPE;
+L_Scenario_Source       : E_SCENARIO_SOURCE;
+
+L_IO_Fault_Prev : BOOL;
+L_Comm_Fault_Prev : BOOL;
+L_Sensor_Fault_Prev : BOOL;
+L_Subsystem_Fault_Prev : BOOL;
+L_Mode_Prev : E_System_Operating_Mode;
+L_User_Access_Denied_Prev : BOOL;
+
+    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Persist_Buffer_Changed : BOOL;
+    L_Last_Persist_Write_MS : UDINT;
+    L_Recovery_Done : BOOL;
+    L_Persist_Struct : ST_Persist;
+END_VAR
+
+// 0. Инициализация RETAIN переменных при первом запуске
+IF NOT GVL_Retain.G_Initialized THEN
+    FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY - 1 DO
+        GVL_Retain.G_Presence_History[L_i] := 0;
+    END_FOR;
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index d7b409f..a4e924a 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -62,8 +62,6 @@ VAR
+     L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
+     L_Scenario_Intent       : E_SCENARIO_TYPE;
+ L_Scenario_Source       : E_SCENARIO_SOURCE;
+-L_Scenario_Changed      : BOOL;
+-L_Last_Scenario_Change_Time : UDINT;
+ 
+ L_IO_Fault_Prev : BOOL;
+ L_Comm_Fault_Prev : BOOL;
+
+=== END STEP 19 ===
