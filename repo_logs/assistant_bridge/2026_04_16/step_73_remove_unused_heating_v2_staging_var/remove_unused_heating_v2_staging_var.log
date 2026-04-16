@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 73: REMOVE UNUSED HEATING V2 STAGING VAR ===";fd114dcf-b8f0-4fa9-a638-75bd3982af51]633;C=== STEP 73: REMOVE UNUSED HEATING V2 STAGING VAR ===
+timestamp_utc=2026-04-16T20:20:29Z
+
+=== BEFORE ===
+64:    fbHeatingV2Staging : FB_Heating_V2_Staging;
+
+=== APPLY ===
+OK: removed unused fbHeatingV2Staging declaration
+
+=== AFTER ===
+
+=== ROOT REFERENCES AFTER CLEANUP ===
+./FB_Heating_System_Manager.st:699:// Inlined from FB_Heating_V2_Staging
+./FB_Heating_V2_Staging.st:1:FUNCTION_BLOCK FB_Heating_V2_Staging
+
+=== DIFF ===
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index 8d8f6ee..db061e7 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -61,7 +61,6 @@ END_VAR
+ 
+ VAR
+     // Heating V2 staging layer
+-    fbHeatingV2Staging : FB_Heating_V2_Staging;
+     L_Heating_V2_Command_V2 : ST_Heating_Command_V2;
+     L_Heating_V2_State_V2 : ST_Heating_State_V2;
+     L_Heating_V2_Shadow_Diff_Found : BOOL;
+
+=== END STEP 73 ===

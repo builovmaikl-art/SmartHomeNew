@@ -61,7 +61,6 @@ END_VAR
 
 VAR
     // Heating V2 staging layer
-    fbHeatingV2Staging : FB_Heating_V2_Staging;
     L_Heating_V2_Command_V2 : ST_Heating_Command_V2;
     L_Heating_V2_State_V2 : ST_Heating_State_V2;
     L_Heating_V2_Shadow_Diff_Found : BOOL;
