@@ -1,0 +1,10 @@
+MAIN_CALL_MAP
+
+L6: PRG_IO_Read :: // Вызов основных программ
+L7: PRG_System
+L8: PRG_Safety
+L9: PRG_Security
+L10: PRG_Heating
+L11: PRG_Ventilation
+L12: PRG_Lighting
+L13: PRG_IO_Write

@@ -1,0 +1,9 @@
+FB_ASTRO_TIMER_DEEP_DIFF
+ST_SOURCE=FB_Astro_Timer.st
+XML_TARGET=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml
+DIFF_EMPTY=False
+FILES:
+  02_repo_st_source.st
+  03_xml_pou_fragment.xml
+  04_xml_body_extracted.st
+  05_unified_diff.txt

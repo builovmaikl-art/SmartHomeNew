@@ -1,0 +1,12 @@
+REPO_ACCESS_SUMMARY
+tracked_total=3613
+missing=0
+all_tracked_files_readable=yes
+all_tracked_files_writable=yes
+all_tracked_dirs_writable=yes
+temp_create_delete_in_repo=yes
+
+not_readable_count=0
+not_writable_count=0
+dir_not_writable_count=0
+

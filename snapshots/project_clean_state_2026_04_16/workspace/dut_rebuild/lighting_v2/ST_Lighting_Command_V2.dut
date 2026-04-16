@@ -1,0 +1,10 @@
+TYPE ST_Lighting_Command_V2 :
+STRUCT
+    Zone_ID : INT;
+    Enabled : BOOL;
+    Brightness_Setpoint : REAL;
+    Scene_ID : INT;
+    Manual_Override : BOOL;
+    Transition_Time_MS : UDINT;
+END_STRUCT
+END_TYPE

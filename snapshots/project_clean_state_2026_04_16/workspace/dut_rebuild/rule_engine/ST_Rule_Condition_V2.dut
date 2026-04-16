@@ -1,0 +1,12 @@
+TYPE ST_Rule_Condition_V2 :
+STRUCT
+    enabled : BOOL;
+    source : E_Rule_Data_Source_V2;
+    source_id : UINT;
+    comparison : E_Rule_Comparison;
+    value_type : E_Rule_Value_Type_V2;
+    value_real : REAL;
+    value_real_max : REAL;
+    value_bool : BOOL;
+END_STRUCT
+END_TYPE

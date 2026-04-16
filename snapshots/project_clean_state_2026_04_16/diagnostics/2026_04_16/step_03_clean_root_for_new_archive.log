@@ -1,0 +1,13 @@
+== START CLEAN ROOT ==
+-- BEFORE --
+total 12
+drwxrwxrwx+ 3 codespace root 4096 Apr 16 11:37 .
+drwxr-xrwx+ 5 codespace root 4096 Apr 16 11:26 ..
+drwxrwxrwx+ 8 codespace root 4096 Apr 16 11:40 .git
+-- AFTER --
+total 16
+drwxrwxrwx+ 4 codespace root      4096 Apr 16 11:45 .
+drwxr-xrwx+ 5 codespace root      4096 Apr 16 11:26 ..
+drwxrwxrwx+ 8 codespace root      4096 Apr 16 11:40 .git
+drwxrwxrwx+ 3 codespace codespace 4096 Apr 16 11:45 diagnostics
+== END ==

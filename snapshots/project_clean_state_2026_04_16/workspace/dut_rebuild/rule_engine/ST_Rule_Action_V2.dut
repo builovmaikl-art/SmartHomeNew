@@ -1,0 +1,11 @@
+TYPE ST_Rule_Action_V2 :
+STRUCT
+    active : BOOL;
+    triggered : BOOL;
+    target_domain : E_Rule_Target_Domain_V2;
+    action_type : E_Rule_Action_Type;
+    target_id : UINT;
+    value_real : REAL;
+    value_bool : BOOL;
+END_STRUCT
+END_TYPE

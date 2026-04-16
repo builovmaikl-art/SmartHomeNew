@@ -1,0 +1,4 @@
+1. Review workspace index and integration plan
+2. Freeze old/new mapping for Rule Engine
+3. Create compatibility adapter draft in workspace
+4. Only then prepare runtime code migration package

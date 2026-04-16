@@ -1,0 +1,13 @@
+WATCHDOG_HEALTH_SHADOW_MAPPING
+SOURCE=PRG_System
+TARGETS=
+- FB_Watchdog_Shadow_Slice_DRAFT
+- FB_SystemHealth_Shadow_Slice_DRAFT
+
+PRIMARY_REGIONS:
+- fbWatchdog call
+- fbSystemHealth call
+- watchdog -> system health dependency chain
+
+NOTE:
+GVL writes stay outside in this phase.

@@ -1,0 +1,10 @@
+TYPE ST_Lighting_State_V2 :
+STRUCT
+    Zone_ID : INT;
+    Is_Active : BOOL;
+    Brightness_Actual : REAL;
+    Motion_Active : BOOL;
+    Ambient_Lux : REAL;
+    Alarm_Active : BOOL;
+END_STRUCT
+END_TYPE

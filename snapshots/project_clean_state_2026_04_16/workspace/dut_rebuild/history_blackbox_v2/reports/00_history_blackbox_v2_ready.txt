@@ -1,0 +1,3 @@
+HISTORY_BLACKBOX_V2_PACKAGE=READY
+RUNTIME_PATCH=NOT_DONE
+NEXT_STEP=prepare extraction package for History event bridge and BlackBox snapshot bridge

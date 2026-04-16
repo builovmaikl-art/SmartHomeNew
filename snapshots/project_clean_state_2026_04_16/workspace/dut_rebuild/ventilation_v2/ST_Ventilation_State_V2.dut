@@ -1,0 +1,11 @@
+TYPE ST_Ventilation_State_V2 :
+STRUCT
+    Zone_ID : INT;
+    Is_Active : BOOL;
+    Fan_Speed_Actual : REAL;
+    Supply_Temp : REAL;
+    Extract_Temp : REAL;
+    Filter_Dirty : BOOL;
+    Alarm_Active : BOOL;
+END_STRUCT
+END_TYPE

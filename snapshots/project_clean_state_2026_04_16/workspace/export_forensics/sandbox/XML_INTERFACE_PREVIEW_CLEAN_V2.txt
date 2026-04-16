@@ -1,0 +1,2520 @@
+XML_INTERFACE_PREVIEW_CLEAN_V2
+
+=== FB_Analog_Validator.st ===
+<inputVars>
+  <variable name="VI_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Min_Valid">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Max_Valid">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Fallback_Mode">
+    <type><INT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="VI_Default_Value">
+    <type><REAL/></type>
+    <initialValue value="0.0"/>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VO_Error">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Last_Good_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_First_Valid">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+</localVars>
+
+=== FB_BlackBox_Recorder.st ===
+<inputVars>
+  <variable name="VI_Current_Data">
+    <type><derived name="ST_BlackBox_Record"/></type>
+  </variable>
+  <variable name="VI_Freeze">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Frozen">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Records_Count">
+    <type><INT/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Write_Index">
+    <type><INT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="L_Initialized">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+</localVars>
+
+=== FB_HMI_Interface.st ===
+<inputVars>
+  <variable name="VI_Severity">
+    <type><derived name="E_System_Severity"/></type>
+  </variable>
+  <variable name="VI_RootCause">
+    <type><derived name="E_System_Root_Cause"/></type>
+  </variable>
+  <variable name="VI_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_HMI_Status_Text">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_HMI_State_Code">
+    <type><INT/></type>
+  </variable>
+</outputVars>
+
+=== FB_Socket_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_Fire_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Flood_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Security_Armed">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Manual_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Physical_Switches">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Rule_Actions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_IO_Modules_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Socket_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Internal_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="fbSocketV2Staging">
+    <type><derived name="FB_Socket_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_Socket_V2_Command_Shadow">
+    <type><derived name="ST_Socket_Command_V2"/></type>
+  </variable>
+  <variable name="L_Socket_V2_State_Shadow">
+    <type><derived name="ST_Socket_State_V2"/></type>
+  </variable>
+  <variable name="L_Socket_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Socket_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Socket_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Socket_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_j">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Rule_State">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Rule_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Internal_State">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Manual_Trig">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+
+=== FB_Astro_Timer.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Latitude">
+    <type><REAL/></type>
+    <initialValue value="55.75"/>
+  </variable>
+  <variable name="VI_Longitude">
+    <type><REAL/></type>
+    <initialValue value="37.61"/>
+  </variable>
+  <variable name="VI_Timezone">
+    <type><REAL/></type>
+    <initialValue value="3.0"/>
+  </variable>
+  <variable name="VI_Day_Of_Year">
+    <type><UINT/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Sunset_Time">
+    <type><TOD/></type>
+  </variable>
+  <variable name="VO_Sunrise_Time">
+    <type><TOD/></type>
+  </variable>
+  <variable name="VO_Is_Night">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+  <variable name="L_Pi">
+    <type><REAL/></type>
+    <initialValue value="3.14159265359"/>
+  </variable>
+  <variable name="L_Rad">
+    <type><REAL/></type>
+    <initialValue value="3.14159265359 / 180.0"/>
+  </variable>
+  <variable name="L_Deg">
+    <type><REAL/></type>
+    <initialValue value="180.0 / 3.14159265359"/>
+  </variable>
+  <variable name="L_B">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_EoT">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Declination">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Cos_Omega">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Omega">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Sunrise_Local">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Sunset_Local">
+    <type><REAL/></type>
+  </variable>
+</localVars>
+
+=== FB_Rule_Engine.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Security_Armed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Current_Time">
+    <type><TOD/></type>
+  </variable>
+  <variable name="VI_Day_Of_Week">
+    <type><INT/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Rules">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Indoor_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Floor_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Humidities">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_CO2_Levels">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Motion_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Door_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Window_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Water_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Smoke_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Methane_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_CO_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Actions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="fbCompat">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Compat_All_OK">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Compat_First_Warning">
+    <type><string length="255"/></type>
+  </variable>
+  <variable name="L_Compat_First_Warning_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Shadow_V2_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Shadow_V2_Roundtrip_Mismatch">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Shadow_V2_First_Mismatch_Rule">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_V2_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Condition_Met">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Current_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Triggers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Trigger_Count">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Last_Reset_Time">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Elapsed_Time">
+    <type><UDINT/></type>
+  </variable>
+</localVars>
+
+=== FB_Water_Leakage_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Flood_Global_Config"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Close_Valve_35">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Close_Valve_36">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Leak_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Leak_Warning_Level">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Sensor_Timers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Any_Leak">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Any_Warning">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Ventilation_System_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Outdoor_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Current_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Ventilation_Global_Config"/></type>
+  </variable>
+  <variable name="VI_Fire_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gas_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_PV3_Boost_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Supply_100_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Exhaust_100_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Supply_80_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Vent_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_IO_Modules_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Supply_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Room_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Room_Humidities">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Room_CO2">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Wet_Zone_Active">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Rule_Actions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Supply_Fans">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Exhaust_Fans">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Heater_Power">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Policy_Normal">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Safe_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Degraded">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Freeze_Protection">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_j">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Max_CO2">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Max_Hum">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Base_Speed">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Target_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_PID_Heaters">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Wet_Zone_Timers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="fbVentilationV2Staging">
+    <type><derived name="FB_Ventilation_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_Vent_Command_Shadow">
+    <type><derived name="ST_Ventilation_Command_V2"/></type>
+  </variable>
+  <variable name="L_Vent_State_Shadow">
+    <type><derived name="ST_Ventilation_State_V2"/></type>
+  </variable>
+  <variable name="L_Vent_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Vent_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Vent_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Vent_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Fault_Logger.st ===
+<inputVars>
+  <variable name="VI_Severity">
+    <type><derived name="E_System_Severity"/></type>
+  </variable>
+  <variable name="VI_RootCause">
+    <type><derived name="E_System_Root_Cause"/></type>
+  </variable>
+  <variable name="VI_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Last_Event_Text">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Event_Count">
+    <type><UINT/></type>
+  </variable>
+  <variable name="VO_Last_Index">
+    <type><UINT/></type>
+  </variable>
+  <variable name="VO_Event_Time_MS">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Event_Severity">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Event_RootCause">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Event_Text">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Last_Severity">
+    <type><derived name="E_System_Severity"/></type>
+  </variable>
+  <variable name="L_Last_RootCause">
+    <type><derived name="E_System_Root_Cause"/></type>
+  </variable>
+  <variable name="L_Write_Index">
+    <type><UINT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="L_Event_Text">
+    <type><string length="200"/></type>
+  </variable>
+</localVars>
+
+=== FB_History_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Write_Event">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Event">
+    <type><derived name="ST_History_Record"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Total_Events">
+    <type><UDINT/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Prev_Write_Event">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Watchdog.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Timeout_MS">
+    <type><UDINT/></type>
+    <initialValue value="2000"/>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Alive">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Watchdog_Fault">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Cycle_DT_MS">
+    <type><UDINT/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Initialized">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="L_Last_Call_MS">
+    <type><UDINT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="L_DT_MS">
+    <type><UDINT/></type>
+    <initialValue value="0"/>
+  </variable>
+</localVars>
+
+=== FB_IO_Module_Watchdog.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Module_ID">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="VI_Heartbeat_Signal">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Timeout_MS">
+    <type><UDINT/></type>
+    <initialValue value="2000"/>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Module_Online">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Error_Active">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Last_Heartbeat_State">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Last_Heartbeat_Time">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Elapsed_Time">
+    <type><UDINT/></type>
+  </variable>
+</localVars>
+
+=== FB_AccessCode_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Code_To_Check">
+    <type><string length="4"/></type>
+  </variable>
+  <variable name="VI_RFID_To_Check">
+    <type><string length="20"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Access_Codes">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_RFID_Tags">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Code_Valid">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="pCode">
+    <type><derived name="POINTER TO BYTE"/></type>
+  </variable>
+  <variable name="L_CRC_Calc">
+    <type><derived name="FB_CRC32_Calculator"/></type>
+  </variable>
+  <variable name="L_Input_Hash">
+    <type><DWORD/></type>
+  </variable>
+</localVars>
+
+=== FB_PID_Controller.st ===
+<inputVars>
+  <variable name="VI_SetPoint">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_ProcessValue">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Kp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Tn">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Tv">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Y_Min">
+    <type><REAL/></type>
+    <initialValue value="0.0"/>
+  </variable>
+  <variable name="VI_Y_Max">
+    <type><REAL/></type>
+    <initialValue value="100.0"/>
+  </variable>
+  <variable name="VI_Manual_Mode">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Manual_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Deadband">
+    <type><REAL/></type>
+    <initialValue value="0.1"/>
+  </variable>
+  <variable name="VI_Cycle_Time_S">
+    <type><REAL/></type>
+    <initialValue value="0.01"/>
+  </variable>
+  <variable name="VI_Reset">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Output">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VO_Error">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VO_Limiting">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Integral_Sum">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Prev_Error">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Derivative">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Output_Raw">
+    <type><REAL/></type>
+  </variable>
+</localVars>
+
+=== FB_Lighting_Blinds_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Current_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_Away_Level">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="VI_Simulation_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Is_Night">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Manual_Light_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manual_Blinds_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Simulation_Lights">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Physical_Switches">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Motion_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Rule_Actions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_IO_Modules_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Wet_Zone_Map">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Scenario_Configs">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Lighting_Levels">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Blinds_Positions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Wet_Zone_Light_Active">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="fbBlindsV2Staging">
+    <type><derived name="FB_Blinds_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_Blinds_V2_Command_Shadow">
+    <type><derived name="ST_Blinds_Command_V2"/></type>
+  </variable>
+  <variable name="L_Blinds_V2_State_Shadow">
+    <type><derived name="ST_Blinds_State_V2"/></type>
+  </variable>
+  <variable name="L_Blinds_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Blinds_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Blinds_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Blinds_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="fbLightingV2Staging">
+    <type><derived name="FB_Lighting_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_Lighting_V2_Command_Shadow">
+    <type><derived name="ST_Lighting_Command_V2"/></type>
+  </variable>
+  <variable name="L_Lighting_V2_State_Shadow">
+    <type><derived name="ST_Lighting_State_V2"/></type>
+  </variable>
+  <variable name="L_Lighting_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Lighting_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Lighting_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Lighting_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_j">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Base_Light">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Base_Blinds">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Target_Base_Light">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Target_Base_Blinds">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Prev_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="L_Transition_Light">
+    <type><derived name="FB_Scenario_Transition_Controller"/></type>
+  </variable>
+  <variable name="L_Transition_Blinds">
+    <type><derived name="FB_Scenario_Transition_Controller"/></type>
+  </variable>
+  <variable name="L_Light_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Prev_Switches">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Prev_Motion_Q">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Manual_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Motion_Timers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Rule_Light_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Rule_Light_Val">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Rule_Blinds_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Rule_Blinds_Val">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_Wet_Zone_Idx">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Effective_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="L_Effective_Simulation_Active">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_System_Health.st ===
+<inputVars>
+  <variable name="VI_Smoke_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gas_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_CO_Warning_Level">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_CO_Alarm_Level">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Leak_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Sensor_Fault">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="VI_IO_Offline">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="VI_Comm_Fault">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="VI_Watchdog_Fault">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="VI_Subsystem_Fault">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_System_Severity">
+    <type><derived name="E_System_Severity"/></type>
+  </variable>
+  <variable name="VO_Root_Cause">
+    <type><derived name="E_System_Root_Cause"/></type>
+  </variable>
+  <variable name="VO_Sensor_Fault">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_IO_Fault">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Comm_Fault">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Subsystem_Degraded">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_First_Fault_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_First_Fault_Type">
+    <type><INT/></type>
+  </variable>
+  <variable name="VO_First_Fault_Source">
+    <type><INT/></type>
+  </variable>
+</outputVars>
+
+=== FB_System_Timer.st ===
+<inputVars>
+  <variable name="IN">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="PT">
+    <type><TIME/></type>
+  </variable>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="Q">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="ET">
+    <type><TIME/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Start_Time">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Running">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_DHW_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Pressure">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_DHW_Config"/></type>
+  </variable>
+  <variable name="VI_Current_Day_Of_Week">
+    <type><UINT/></type>
+  </variable>
+  <variable name="VI_Reset_Errors">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Emergency_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+  <variable name="VI_IO_Modules_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Status">
+    <type><derived name="ST_DHW_Status"/></type>
+  </variable>
+  <variable name="VO_Heating_Pump">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Circ_Pump">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="fbDHWV2Staging">
+    <type><derived name="FB_DHW_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_DHW_V2_Command_Shadow">
+    <type><derived name="ST_DHW_Command_V2"/></type>
+  </variable>
+  <variable name="L_DHW_V2_State_Shadow">
+    <type><derived name="ST_DHW_State_V2"/></type>
+  </variable>
+  <variable name="L_DHW_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_DHW_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_DHW_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_DHW_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+  <variable name="L_Legionella_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Legionella_Timer">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_Last_Good_Temp">
+    <type><REAL/></type>
+    <initialValue value="55.0"/>
+  </variable>
+  <variable name="L_Legionella_Done_Today">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Last_Legionella_Day">
+    <type><UINT/></type>
+  </variable>
+  <variable name="fbTempValidator">
+    <type><derived name="FB_Analog_Validator"/></type>
+  </variable>
+  <variable name="fbPressValidator">
+    <type><derived name="FB_Analog_Validator"/></type>
+  </variable>
+  <variable name="L_Error_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Error_ID_Latched">
+    <type><DWORD/></type>
+  </variable>
+  <variable name="L_Policy_Degraded">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Freeze_Protection">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Safe_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Target_Temp_Adjusted">
+    <type><REAL/></type>
+  </variable>
+</localVars>
+
+=== FB_Alarm_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gas_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Fire_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Flood_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Security_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_First_Fault_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_First_Fault_Type">
+    <type><INT/></type>
+  </variable>
+  <variable name="VI_First_Fault_Source">
+    <type><INT/></type>
+  </variable>
+  <variable name="VI_Security_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VI_Acknowledge_All">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Mute_Siren">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Boiler_Errors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<localVars>
+  <variable name="VIO_Next_Alarm_ID">
+    <type><UDINT/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Global_Critical">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Global_Warning">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Siren_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Active_Count">
+    <type><INT/></type>
+  </variable>
+  <variable name="VO_Unacked_Count">
+    <type><INT/></type>
+  </variable>
+  <variable name="VO_Event_Pulse">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Event_Code">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VO_Event_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VO_Alarm_List">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="fbCompatAlarm">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Target_Slot">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Min_Pri">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Pending_Alarms">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Pending_Count">
+    <type><INT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="T_Debounce_Gas">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="T_Debounce_Fire">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="T_Debounce_Flood">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="T_Debounce_Security">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="R_Trig_Gas">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Fire">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Flood">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Security">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_First_Fault">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Boiler">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_First_Fault_Source_Text">
+    <type><string length="32"/></type>
+  </variable>
+  <variable name="L_First_Fault_Type_Text">
+    <type><string length="32"/></type>
+  </variable>
+  <variable name="L_Event_Pulse_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_Compat_All_OK">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_First_Warning">
+    <type><string length="255"/></type>
+  </variable>
+  <variable name="L_Alarm_First_Warning_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_Shadow_Mismatch">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_Shadow_First_Mismatch">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="fbAlarmV2Core">
+    <type><derived name="FB_Alarm_V2_Core_DRAFT"/></type>
+  </variable>
+  <variable name="fbHistoryV2Core">
+    <type><derived name="FB_History_V2_Core_DRAFT"/></type>
+  </variable>
+  <variable name="fbBlackBoxV2Core">
+    <type><derived name="FB_BlackBox_V2_Core_DRAFT"/></type>
+  </variable>
+  <variable name="L_BlackBox_V2_Snapshot_Shadow">
+    <type><derived name="ST_BlackBox_Snapshot_V2"/></type>
+  </variable>
+  <variable name="L_History_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_History_V2_Shadow_First_Diff_Slot">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_BlackBox_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_History_V2_Buffer_Shadow">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Shadow_Compare_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Shadow_First_Diff_Slot">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Event_Pulse">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Event_Code">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Event_Value">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Alarm_V2_List_Shadow">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Alarm_V2_Next_ID_Shadow">
+    <type><UDINT/></type>
+  </variable>
+</localVars>
+
+=== FB_Scenario_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Activate_Request">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Current_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Last_Scenario_Time">
+    <type><UDINT/></type>
+  </variable>
+</localVars>
+
+=== FB_State_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Severity">
+    <type><derived name="E_System_Severity"/></type>
+  </variable>
+  <variable name="VI_Root_Cause">
+    <type><derived name="E_System_Root_Cause"/></type>
+  </variable>
+  <variable name="VI_Freeze_Risk">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_System_OK">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_System_Warning">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_System_Critical">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+</outputVars>
+
+=== FB_NVRAM_Manager.st ===
+<inputVars>
+  <variable name="VI_Command">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="VI_Offset">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_DataRef">
+    <type><derived name="REFERENCE TO BYTE"/></type>
+  </variable>
+  <variable name="VI_DataSize">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Operator_ID">
+    <type><string length="10"/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_TwoPersonConfirmation">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Done">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Error">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_ErrorID">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VO_ReadDataRef">
+    <type><derived name="REFERENCE TO BYTE"/></type>
+  </variable>
+  <variable name="VO_HMI_Status_Message">
+    <type><string length="200"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_prev_Command">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="L_cmd_rising">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Last_Write_Time_MS">
+    <type><UDINT/></type>
+    <initialValue value="0"/>
+  </variable>
+  <variable name="L_Data_Changed">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+<localVars>
+  <variable name="C_MAX_NVRAM_SIZE">
+    <type><UDINT/></type>
+    <initialValue value="12800"/>
+  </variable>
+</localVars>
+
+=== FB_Heating_System_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Outdoor_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Heating_Config"/></type>
+  </variable>
+  <variable name="VI_Tariff">
+    <type><derived name="ST_Tariff_Config"/></type>
+  </variable>
+  <variable name="VI_Current_Hour">
+    <type><UINT/></type>
+  </variable>
+  <variable name="VI_Boiler_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_DHW_Heating_Demand">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_DHW_Target_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Current_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_Emergency_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gas_Safety_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Boiler_Error_Status">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Boiler_OT_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Boiler_Modulation">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Floor_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Room_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Pressures">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Currents">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Temps_Supply">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Temps_Return">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Boiler_Flame_Status">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Zone_Configs">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Rule_Actions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_IO_Modules_Online">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Scenario_Configs">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_End_Switches">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Valve_Test_Config">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Manifold_Valves">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Manifold_Pumps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Zone_Valves">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Boiler_OT_Enable">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Boiler_OT_Setpoint">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Backup_Circulation_Pump">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Electric_Heater_Enable">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Freeze_Risk_Status">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Boiler_Status">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="fbHeatingV2Staging">
+    <type><derived name="FB_Heating_V2_Staging_DRAFT"/></type>
+  </variable>
+  <variable name="L_Heating_V2_Command_Shadow">
+    <type><derived name="ST_Heating_Command_V2"/></type>
+  </variable>
+  <variable name="L_Heating_V2_State_Shadow">
+    <type><derived name="ST_Heating_State_V2"/></type>
+  </variable>
+  <variable name="L_Heating_V2_Shadow_Diff_Found">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Heating_V2_Switch_Enabled">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Heating_V2_Path_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Heating_Using_Legacy_Fallback">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_PID_Valves">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_PID_Timer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Floor_Controllers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Last_Boiler_Rotation">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Lead_Boiler">
+    <type><BYTE/></type>
+    <initialValue value="1"/>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Zone_Config">
+    <type><derived name="ST_FloorHeating_Circuit_Config"/></type>
+  </variable>
+  <variable name="L_j">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Target_Supply_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Demand_Power">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Any_Zone_Active">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Current_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Sensor_Error">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Prev_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="L_Scenario_Adjust">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Target_Scenario_Adjust">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Transition_Temp">
+    <type><derived name="FB_Scenario_Transition_Controller"/></type>
+  </variable>
+  <variable name="L_Overheat_Timer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Pump_Run_Timer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Pump_Pause_Timer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Pump_In_Pause">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Last_Scan_Time">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Scan_Time_Init">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+  <variable name="L_Lifespan_S">
+    <type><REAL/></type>
+    <initialValue value="50000.0 * 3600.0"/>
+  </variable>
+  <variable name="L_Delta_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Pump_Diag">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Boiler_Life">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="fbFloorTempValidator">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="fbRoomTempValidator">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="fbValveTestManager">
+    <type><derived name="FB_Valve_Test_Manager"/></type>
+  </variable>
+  <variable name="fbBoilerCascade">
+    <type><derived name="FB_Boiler_Cascade_Manager"/></type>
+  </variable>
+  <variable name="fbBoilerOpenTherm">
+    <type><derived name="FB_Boiler_OpenTherm_Interface"/></type>
+  </variable>
+  <variable name="L_IO_Failsafe_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Freeze_Mode_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Freeze_Target_Supply">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Delta_T">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Min_Supply_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Boiler_OT_Command_Valid">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Boiler_Request_Enable">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Boiler_Request_Setpoint">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Policy_Normal">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Safe_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Degraded">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Policy_Freeze_Protection">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Any_Sensor_Error">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Any_Subsystem_Degraded">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Gateway_Interface.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Local_PLC_Role">
+    <type><derived name="E_PLC_ROLE"/></type>
+  </variable>
+  <variable name="VI_Incoming_Command">
+    <type><derived name="ST_Gateway_Command"/></type>
+  </variable>
+  <variable name="VI_Command_Received">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Outdoor_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Security_Armed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Flood_Alarm_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gas_Alarm_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Fire_Alarm_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Methane_Concentration">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VI_Active_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_Send_2FA_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_2FA_Code">
+    <type><string length="6"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_FloorHeating_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Room_Temps">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Zone_Valve_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Pressures">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Manifold_Pump_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Lighting_Base_Levels">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Socket_States">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Blinds_Positions">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Allowed_IPs">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Modbus_Registers">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Lighting_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Blinds_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Socket_Override">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Arm_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Disarm_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_PIN_Code">
+    <type><string length="4"/></type>
+  </variable>
+  <variable name="VO_RFID_Tag">
+    <type><string length="20"/></type>
+  </variable>
+  <variable name="VO_2FA_Code_In">
+    <type><string length="6"/></type>
+  </variable>
+  <variable name="VO_Data_Ready">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_HMI_Status_Message">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Telegram_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Send_Telegram">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Set_Scenario_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Target_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VO_Set_Temp_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Target_Zone">
+    <type><INT/></type>
+  </variable>
+  <variable name="VO_Target_Temp">
+    <type><REAL/></type>
+  </variable>
+  <variable name="VO_Set_Vent_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Target_Vent_Speed">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="VO_Reset_Errors_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Set_Config_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Sync_Time_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_New_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_last_update_time">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_j">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_idx">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_tmp_word">
+    <type><WORD/></type>
+  </variable>
+  <variable name="L_Code_UDINT">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Prev_Fire">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Prev_Gas">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Prev_Flood">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Prev_Security">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Deduplicator">
+    <type><derived name="FB_Command_Deduplication"/></type>
+  </variable>
+  <variable name="L_CRC_Calc">
+    <type><derived name="FB_CRC32_Calculator"/></type>
+  </variable>
+  <variable name="L_Calculated_CRC">
+    <type><DWORD/></type>
+  </variable>
+  <variable name="L_Command_Size">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_IP_Allowed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Process_Command">
+    <type><derived name="ST_Gateway_Command"/></type>
+  </variable>
+  <variable name="L_Has_Command_To_Process">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+<localVars>
+  <variable name="L_Command_Buffer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="L_Buffer_Head">
+    <type><INT/></type>
+    <initialValue value="1"/>
+  </variable>
+  <variable name="L_Buffer_Tail">
+    <type><INT/></type>
+    <initialValue value="1"/>
+  </variable>
+  <variable name="L_Buffer_Count">
+    <type><INT/></type>
+    <initialValue value="0"/>
+  </variable>
+</localVars>
+
+=== FB_Access_Control.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Armed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_System_Mode">
+    <type><derived name="E_System_Operating_Mode"/></type>
+  </variable>
+  <variable name="VI_Gate_Open_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Wicket_Open_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Lock_1_Open_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Lock_1_Close_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Lock_2_Open_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Lock_2_Close_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_PIN_Code">
+    <type><string length="4"/></type>
+  </variable>
+  <variable name="VI_RFID_Tag">
+    <type><string length="20"/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Security_Global_Config"/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Access_Codes">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_RFID_Tags">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Gate_Open">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Wicket_Open">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Lock_1_Open">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Lock_1_Close">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Lock_2_Open">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Lock_2_Close">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Gate_Timer">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Wicket_Timer">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Lock_1_Open_T">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Lock_1_Close_T">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Lock_2_Open_T">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Lock_2_Close_T">
+    <type><derived name="TP"/></type>
+  </variable>
+  <variable name="L_Prev_Armed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Auto_Lock_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="R_Trig_Gate">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Wicket">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Lock_1_O">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Lock_1_C">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Lock_2_O">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="R_Trig_Lock_2_C">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+  <variable name="fbAccessCode">
+    <type><derived name="FB_AccessCode_Manager"/></type>
+  </variable>
+  <variable name="L_Valid_PIN">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Security_System_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Arm_Request">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Disarm_Request">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_PIN_Code">
+    <type><string length="4"/></type>
+  </variable>
+  <variable name="VI_RFID_Tag">
+    <type><string length="20"/></type>
+  </variable>
+  <variable name="VI_2FA_Code">
+    <type><string length="6"/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Security_Global_Config"/></type>
+  </variable>
+  <variable name="VI_Current_TOD">
+    <type><TOD/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Motion_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Door_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Window_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Bypass_Motion">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Bypass_Doors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Bypass_Windows">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Armed">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Alarm_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Siren_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Send_Code_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Code_To_Send">
+    <type><string length="6"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Any_Sensor_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Arm_Delay_Timer">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_Alarm_Delay_Timer">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_Arming_In_Progress">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Valid_PIN">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="fbAccessCode">
+    <type><derived name="FB_AccessCode_Manager"/></type>
+  </variable>
+  <variable name="fbTwoFactor">
+    <type><derived name="FB_TwoFactor_Auth"/></type>
+  </variable>
+  <variable name="L_2FA_Required">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Disarm_Pending">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Reset_2FA">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Auto_Arm_Trigger">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="R_Trig_Auto_Arm">
+    <type><derived name="R_TRIG"/></type>
+  </variable>
+</localVars>
+
+=== FB_Gas_Smoke_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Mute_Request">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<localVars>
+  <variable name="VI_Methane_LEL">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_CO_PPM">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VI_Smoke_Sensors">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+<outputVars>
+  <variable name="VO_Smoke_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Gas_Detected">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_CO_Warning_Level">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_CO_Alarm_Level">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Siren_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Gas_Valve_Close">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Boiler_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Vent_PV3_Boost">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Supply_100_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Exhaust_100_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Supply_80_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Vent_Stop">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Methane_Max">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_CO_Max">
+    <type><REAL/></type>
+  </variable>
+  <variable name="L_Smoke_Count">
+    <type><UINT/></type>
+  </variable>
+  <variable name="L_Smoke_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_CO_Timer_30ppm">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_CO_Timer_70ppm">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_CO_Timer_400ppm">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_CO_Level_30">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_CO_Level_70">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_CO_Level_400">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Smoke_Timer">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</localVars>
+
+=== FB_Safety_Manager.st ===
+<inputVars>
+  <variable name="VI_Gas_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Leak_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Smoke_Alarm">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Reset">
+    <type><BOOL/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Gas_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Leak_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Smoke_Latched">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Emergency_Stop">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Any_Active">
+    <type><BOOL/></type>
+  </variable>
+</localVars>
+
+=== FB_Simulation_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_IsActivePLC">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Scenario">
+    <type><derived name="E_SCENARIO_TYPE"/></type>
+  </variable>
+  <variable name="VI_Config">
+    <type><derived name="ST_Scenario_Config"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Sim_Lights">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Sim_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Sim_Water_Leak">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+  <variable name="VO_Sim_Gas_Leak">
+    <type><derived name="ARRAY"/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Random">
+    <type><derived name="FB_Random_Generator"/></type>
+  </variable>
+  <variable name="L_Last_Toggle">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_i">
+    <type><INT/></type>
+  </variable>
+  <variable name="L_Rand_Val">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="L_Test_Mode">
+    <type><BOOL/></type>
+    <initialValue value="FALSE"/>
+  </variable>
+</localVars>
+
+=== FB_Redundancy_Manager.st ===
+<inputVars>
+  <variable name="VI_System_Time_MS">
+    <type><UDINT/></type>
+  </variable>
+  <variable name="VI_Local_PLC_ID">
+    <type><BYTE/></type>
+  </variable>
+  <variable name="VI_Remote_Pulse">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Remote_Is_Active">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Gateway_Ping_OK">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VI_Remote_State">
+    <type><derived name="ST_System_State_Snapshot"/></type>
+  </variable>
+  <variable name="VI_Local_State">
+    <type><derived name="ST_System_State_Snapshot"/></type>
+  </variable>
+</inputVars>
+<outputVars>
+  <variable name="VO_Local_Role">
+    <type><derived name="E_PLC_ROLE"/></type>
+  </variable>
+  <variable name="VO_Local_Pulse">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Sync_Data_Req">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="VO_Status_Msg">
+    <type><string length="200"/></type>
+  </variable>
+  <variable name="VO_Synced_State">
+    <type><derived name="ST_System_State_Snapshot"/></type>
+  </variable>
+  <variable name="VO_State_Updated">
+    <type><BOOL/></type>
+  </variable>
+</outputVars>
+<localVars>
+  <variable name="L_Heartbeat">
+    <type><derived name="FB_PLC_Heartbeat"/></type>
+  </variable>
+  <variable name="L_Pulse_Timer">
+    <type><derived name="FB_System_Timer"/></type>
+  </variable>
+  <variable name="L_Pulse_State">
+    <type><BOOL/></type>
+  </variable>
+  <variable name="L_Prev_Role">
+    <type><derived name="E_PLC_ROLE"/></type>
+  </variable>
+  <variable name="L_State_Replicator">
+    <type><derived name="FB_State_Replication"/></type>
+  </variable>
+</localVars>

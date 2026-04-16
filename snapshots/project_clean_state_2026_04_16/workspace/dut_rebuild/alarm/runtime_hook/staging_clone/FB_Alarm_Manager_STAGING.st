@@ -1,0 +1,6 @@
+FUNCTION_BLOCK FB_Alarm_Manager_STAGING
+VAR_INPUT
+END_VAR
+VAR
+    // placeholder
+END_VAR

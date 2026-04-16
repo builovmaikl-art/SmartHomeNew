@@ -1,0 +1,7 @@
+COMPARISON_FLAGS_MAPPING
+LEGACY_SIGNAL=VO_Path_Ready
+SHADOW_SIGNAL=VO_Shadow_Path_Ready
+FIRST_DIFF=VO_Diff_Found
+
+NEXT_STEP:
+Integrate comparison flags into CoreKernel comparison chain.

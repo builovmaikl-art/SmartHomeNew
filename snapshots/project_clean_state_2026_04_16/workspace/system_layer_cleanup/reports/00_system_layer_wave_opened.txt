@@ -1,0 +1,3 @@
+SYSTEM_LAYER_WAVE=OPENED
+DOMAIN_LAYER_CLOSED_COUNT=7
+NEXT_STEP=discover and inventory real system-layer entrypoints

@@ -1,0 +1,952 @@
+INTERFACE_PREVIEW
+
+=== FB_Analog_Validator.st ===
+[inputVars]
+VI_Value : REAL
+VI_Min_Valid : REAL
+VI_Max_Valid : REAL
+VI_Fallback_Mode : INT
+0 : derived(Hold)
+1 : derived(Default)
+VI_Default_Value : REAL
+[outputVars]
+VO_Value : REAL
+VO_Error : BOOL
+[localVars]
+L_Last_Good_Value : REAL
+L_First_Valid : BOOL
+
+=== FB_BlackBox_Recorder.st ===
+[inputVars]
+VI_Current_Data : derived(ST_BlackBox_Record)
+VI_Freeze : BOOL
+[outputVars]
+VO_Frozen : BOOL
+VO_Records_Count : INT
+[localVars]
+L_Write_Index : INT
+L_Initialized : BOOL
+
+=== FB_HMI_Interface.st ===
+[inputVars]
+VI_Severity : derived(E_System_Severity)
+VI_RootCause : derived(E_System_Root_Cause)
+VI_Status_Msg : derived(STRING)
+[outputVars]
+VO_HMI_Status_Text : derived(STRING)
+VO_HMI_State_Code : INT
+
+=== FB_Socket_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+VI_Scenario : derived(E_SCENARIO_TYPE)
+VI_Fire_Alarm : BOOL
+VI_Flood_Alarm : BOOL
+VI_Security_Armed : BOOL
+[localVars]
+VI_Manual_Override : derived(ARRAY)
+VI_Physical_Switches : derived(ARRAY)
+вход : derived(не)
+VI_Rule_Actions : derived(ARRAY)
+VI_IO_Modules_Online : derived(ARRAY)
+[outputVars]
+VO_Socket_States : derived(ARRAY)
+VO_Internal_States : derived(ARRAY)
+[localVars]
+fbSocketV2Staging : derived(FB_Socket_V2_Staging_DRAFT)
+L_Socket_V2_Command_Shadow : derived(ST_Socket_Command_V2)
+L_Socket_V2_State_Shadow : derived(ST_Socket_State_V2)
+L_Socket_V2_Shadow_Diff_Found : BOOL
+L_Socket_V2_Switch_Enabled : BOOL
+L_Socket_V2_Path_Ready : BOOL
+L_Socket_Using_Legacy_Fallback : BOOL
+L_i : INT
+L_j : INT
+L_Rule_State : BOOL
+L_Rule_Active : BOOL
+L_Internal_State : derived(ARRAY)
+L_Manual_Trig : derived(ARRAY)
+
+=== FB_Astro_Timer.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Latitude : REAL
+VI_Longitude : REAL
+VI_Timezone : REAL
+VI_Day_Of_Year : UINT
+[outputVars]
+VO_Sunset_Time : TOD
+VO_Sunrise_Time : TOD
+VO_Is_Night : BOOL
+VO_Current_TOD : TOD
+[localVars]
+L_Current_TOD : TOD
+L_Pi : REAL
+L_Rad : REAL
+L_Deg : REAL
+L_B : REAL
+L_EoT : REAL
+L_Declination : REAL
+L_Cos_Omega : REAL
+L_Omega : REAL
+L_Sunrise_Local : REAL
+L_Sunset_Local : REAL
+
+=== FB_Rule_Engine.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Security_Armed : BOOL
+Статус : derived(Система)
+VI_Current_Time : TOD
+VI_Day_Of_Week : INT
+[localVars]
+VI_Rules : derived(ARRAY)
+VI_Indoor_Temps : derived(ARRAY)
+VI_Floor_Temps : derived(ARRAY)
+VI_Humidities : derived(ARRAY)
+VI_CO2_Levels : derived(ARRAY)
+VI_Motion_Sensors : derived(ARRAY)
+VI_Door_Sensors : derived(ARRAY)
+VI_Window_Sensors : derived(ARRAY)
+VI_Water_Sensors : derived(ARRAY)
+VI_Smoke_Sensors : derived(ARRAY)
+VI_Methane_Sensors : derived(ARRAY)
+VI_CO_Sensors : derived(ARRAY)
+[outputVars]
+VO_Actions : derived(ARRAY)
+[localVars]
+L_i : INT
+fbCompat : derived(ARRAY)
+L_Compat_All_OK : BOOL
+L_Compat_First_Warning : derived(STRING)
+L_Compat_First_Warning_Latched : BOOL
+L_Shadow_V2_Enabled : BOOL
+L_Shadow_V2_Roundtrip_Mismatch : BOOL
+L_Shadow_V2_First_Mismatch_Rule : INT
+L_V2_Switch_Enabled : BOOL
+L_V2_Path_Ready : BOOL
+L_V2_Using_Legacy_Fallback : BOOL
+L_Condition_Met : BOOL
+L_Current_Value : REAL
+L_Triggers : derived(ARRAY)
+L_Trigger_Count : derived(ARRAY)
+L_Last_Reset_Time : UDINT
+L_Elapsed_Time : UDINT
+
+=== FB_Water_Leakage_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+VI_Config : derived(ST_Flood_Global_Config)
+[localVars]
+VI_Sensors : derived(ARRAY)
+[outputVars]
+VO_Close_Valve_35 : BOOL
+VO_Close_Valve_36 : BOOL
+VO_Status_Msg : derived(STRING)
+VO_Leak_Detected : BOOL
+VO_Leak_Warning_Level : BOOL
+[localVars]
+L_i : INT
+L_Sensor_Timers : derived(ARRAY)
+L_Any_Leak : BOOL
+L_Any_Warning : BOOL
+
+=== FB_Ventilation_System_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Outdoor_Temp : REAL
+VI_Current_Scenario : derived(E_SCENARIO_TYPE)
+VI_System_Mode : derived(E_System_Operating_Mode)
+VI_Config : derived(ST_Ventilation_Global_Config)
+VI_Fire_Alarm : BOOL
+VI_Gas_Alarm : BOOL
+VI_PV3_Boost_Req : BOOL
+VI_Supply_100_Req : BOOL
+VI_Exhaust_100_Req : BOOL
+VI_Supply_80_Req : BOOL
+VI_Vent_Stop : BOOL
+VI_IO_Modules_Online : derived(ARRAY)
+[localVars]
+VI_Supply_Temps : derived(ARRAY)
+VI_Room_Temps : derived(ARRAY)
+VI_Room_Humidities : derived(ARRAY)
+VI_Room_CO2 : derived(ARRAY)
+VI_Wet_Zone_Active : derived(ARRAY)
+VI_Rule_Actions : derived(ARRAY)
+[outputVars]
+VO_Supply_Fans : derived(ARRAY)
+Выход : derived(Управление)
+VO_Exhaust_Fans : derived(ARRAY)
+Выход : derived(Управление)
+VO_Heater_Power : derived(ARRAY)
+Выход : derived(Мощность)
+VO_Status_Msg : derived(STRING)
+[localVars]
+L_Policy_Normal : BOOL
+L_Policy_Safe_Stop : BOOL
+L_Policy_Degraded : BOOL
+L_Policy_Freeze_Protection : BOOL
+L_i : INT
+L_j : INT
+L_Max_CO2 : REAL
+L_Max_Hum : REAL
+L_Base_Speed : derived(BYTE)
+L_Target_Temp : REAL
+L_PID_Heaters : derived(ARRAY)
+L_Wet_Zone_Timers : derived(ARRAY)
+fbVentilationV2Staging : derived(FB_Ventilation_V2_Staging_DRAFT)
+L_Vent_Command_Shadow : derived(ST_Ventilation_Command_V2)
+L_Vent_State_Shadow : derived(ST_Ventilation_State_V2)
+L_Vent_V2_Shadow_Diff_Found : BOOL
+L_Vent_V2_Switch_Enabled : BOOL
+L_Vent_V2_Path_Ready : BOOL
+L_Vent_Using_Legacy_Fallback : BOOL
+
+=== FB_Fault_Logger.st ===
+[inputVars]
+VI_Severity : derived(E_System_Severity)
+VI_RootCause : derived(E_System_Root_Cause)
+VI_Time_MS : UDINT
+[outputVars]
+VO_Last_Event_Text : derived(STRING)
+VO_Event_Count : UINT
+VO_Last_Index : UINT
+VO_Event_Time_MS : derived(ARRAY)
+VO_Event_Severity : derived(ARRAY)
+VO_Event_RootCause : derived(ARRAY)
+VO_Event_Text : derived(ARRAY)
+[localVars]
+L_Last_Severity : derived(E_System_Severity)
+L_Last_RootCause : derived(E_System_Root_Cause)
+L_Write_Index : UINT
+L_Event_Text : derived(STRING)
+
+=== FB_History_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Write_Event : BOOL
+VI_Event : derived(ST_History_Record)
+[outputVars]
+VO_Total_Events : UDINT
+[localVars]
+L_Prev_Write_Event : BOOL
+
+=== FB_Watchdog.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Timeout_MS : UDINT
+[outputVars]
+VO_Alive : BOOL
+VO_Watchdog_Fault : BOOL
+VO_Cycle_DT_MS : UDINT
+[localVars]
+L_Initialized : BOOL
+L_Last_Call_MS : UDINT
+L_DT_MS : UDINT
+
+=== FB_IO_Module_Watchdog.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Module_ID : derived(BYTE)
+VI_Heartbeat_Signal : BOOL
+VI_Timeout_MS : UDINT
+[outputVars]
+VO_Module_Online : BOOL
+VO_Error_Active : BOOL
+[localVars]
+L_Last_Heartbeat_State : BOOL
+L_Last_Heartbeat_Time : UDINT
+L_Elapsed_Time : UDINT
+
+=== FB_AccessCode_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+VI_Code_To_Check : derived(STRING)
+VI_RFID_To_Check : derived(STRING)
+[localVars]
+VI_Access_Codes : derived(ARRAY)
+VI_RFID_Tags : derived(ARRAY)
+[outputVars]
+VO_Code_Valid : BOOL
+[localVars]
+L_i : INT
+pCode : derived(POINTER)
+L_CRC_Calc : derived(FB_CRC32_Calculator)
+L_Input_Hash : derived(DWORD)
+
+=== FB_PID_Controller.st ===
+[inputVars]
+VI_SetPoint : REAL
+VI_ProcessValue : REAL
+VI_Kp : REAL
+VI_Tn : REAL
+VI_Tv : REAL
+VI_Y_Min : REAL
+VI_Y_Max : REAL
+VI_Manual_Mode : BOOL
+VI_Manual_Value : REAL
+VI_Deadband : REAL
+VI_Cycle_Time_S : REAL
+VI_Reset : BOOL
+[outputVars]
+VO_Output : REAL
+VO_Error : REAL
+VO_Limiting : BOOL
+[localVars]
+L_Integral_Sum : REAL
+L_Prev_Error : REAL
+L_Derivative : REAL
+L_Output_Raw : REAL
+
+=== FB_Lighting_Blinds_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+VI_Current_Scenario : derived(E_SCENARIO_TYPE)
+VI_Away_Level : derived(BYTE)
+VI_Simulation_Active : BOOL
+VI_Is_Night : BOOL
+VI_System_Mode : derived(E_System_Operating_Mode)
+[localVars]
+VI_Manual_Light_Override : derived(ARRAY)
+VI_Manual_Blinds_Override : derived(ARRAY)
+VI_Simulation_Lights : derived(ARRAY)
+VI_Physical_Switches : derived(ARRAY)
+VI_Motion_Sensors : derived(ARRAY)
+VI_Rule_Actions : derived(ARRAY)
+VI_IO_Modules_Online : derived(ARRAY)
+VI_Wet_Zone_Map : derived(ARRAY)
+VI_Scenario_Configs : derived(ARRAY)
+[outputVars]
+VO_Lighting_Levels : derived(ARRAY)
+VO_Blinds_Positions : derived(ARRAY)
+VO_Wet_Zone_Light_Active : derived(ARRAY)
+[localVars]
+fbBlindsV2Staging : derived(FB_Blinds_V2_Staging_DRAFT)
+L_Blinds_V2_Command_Shadow : derived(ST_Blinds_Command_V2)
+L_Blinds_V2_State_Shadow : derived(ST_Blinds_State_V2)
+L_Blinds_V2_Shadow_Diff_Found : BOOL
+L_Blinds_V2_Switch_Enabled : BOOL
+L_Blinds_V2_Path_Ready : BOOL
+L_Blinds_Using_Legacy_Fallback : BOOL
+fbLightingV2Staging : derived(FB_Lighting_V2_Staging_DRAFT)
+L_Lighting_V2_Command_Shadow : derived(ST_Lighting_Command_V2)
+L_Lighting_V2_State_Shadow : derived(ST_Lighting_State_V2)
+L_Lighting_V2_Shadow_Diff_Found : BOOL
+L_Lighting_V2_Switch_Enabled : BOOL
+L_Lighting_V2_Path_Ready : BOOL
+L_Lighting_Using_Legacy_Fallback : BOOL
+L_i : INT
+L_j : INT
+L_Base_Light : derived(BYTE)
+L_Base_Blinds : derived(BYTE)
+L_Target_Base_Light : derived(BYTE)
+L_Target_Base_Blinds : derived(BYTE)
+L_Prev_Scenario : derived(E_SCENARIO_TYPE)
+L_Transition_Light : derived(FB_Scenario_Transition_Controller)
+L_Transition_Blinds : derived(FB_Scenario_Transition_Controller)
+L_Light_States : derived(ARRAY)
+L_Prev_Switches : derived(ARRAY)
+L_Prev_Motion_Q : derived(ARRAY)
+L_Manual_Override : derived(ARRAY)
+L_Motion_Timers : derived(ARRAY)
+L_Rule_Light_Active : BOOL
+L_Rule_Light_Val : derived(BYTE)
+L_Rule_Blinds_Active : BOOL
+L_Rule_Blinds_Val : derived(BYTE)
+L_Wet_Zone_Idx : INT
+L_Effective_Scenario : derived(E_SCENARIO_TYPE)
+L_Effective_Simulation_Active : BOOL
+
+=== FB_System_Health.st ===
+[inputVars]
+VI_Smoke_Detected : BOOL
+VI_Gas_Detected : BOOL
+VI_CO_Warning_Level : BOOL
+VI_CO_Alarm_Level : BOOL
+VI_Leak_Detected : BOOL
+VI_Sensor_Fault : BOOL
+VI_IO_Offline : BOOL
+VI_Comm_Fault : BOOL
+VI_Watchdog_Fault : BOOL
+VI_Subsystem_Fault : BOOL
+[outputVars]
+VO_System_Severity : derived(E_System_Severity)
+VO_Root_Cause : derived(E_System_Root_Cause)
+VO_Sensor_Fault : BOOL
+VO_IO_Fault : BOOL
+VO_Comm_Fault : BOOL
+VO_Subsystem_Degraded : BOOL
+VO_First_Fault_Active : BOOL
+VO_First_Fault_Type : INT
+VO_First_Fault_Source : INT
+
+=== FB_System_Timer.st ===
+[inputVars]
+IN : BOOL
+PT : TIME
+VI_System_Time_MS : UDINT
+[outputVars]
+Q : BOOL
+Выход : derived(таймер)
+ET : TIME
+[localVars]
+L_Start_Time : UDINT
+L_Running : BOOL
+
+=== FB_DHW_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Current_TOD : TOD
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Temp : REAL
+VI_Pressure : REAL
+VI_Config : derived(ST_DHW_Config)
+VI_Current_Day_Of_Week : UINT
+VI_Reset_Errors : BOOL
+VI_Emergency_Stop : BOOL
+VI_System_Mode : derived(E_System_Operating_Mode)
+VI_IO_Modules_Online : derived(ARRAY)
+[outputVars]
+VO_Status : derived(ST_DHW_Status)
+VO_Heating_Pump : BOOL
+Выход : derived(Управление)
+VO_Circ_Pump : BOOL
+Выход : derived(Управление)
+[localVars]
+fbDHWV2Staging : derived(FB_DHW_V2_Staging_DRAFT)
+L_DHW_V2_Command_Shadow : derived(ST_DHW_Command_V2)
+L_DHW_V2_State_Shadow : derived(ST_DHW_State_V2)
+L_DHW_V2_Shadow_Diff_Found : BOOL
+L_DHW_V2_Switch_Enabled : BOOL
+L_DHW_V2_Path_Ready : BOOL
+L_DHW_Using_Legacy_Fallback : BOOL
+L_i : INT
+L_Current_TOD : TOD
+L_Legionella_Active : BOOL
+L_Legionella_Timer : derived(FB_System_Timer)
+L_Last_Good_Temp : REAL
+L_Legionella_Done_Today : BOOL
+L_Last_Legionella_Day : UINT
+fbTempValidator : derived(FB_Analog_Validator)
+fbPressValidator : derived(FB_Analog_Validator)
+L_Error_Latched : BOOL
+L_Error_ID_Latched : derived(DWORD)
+L_Policy_Degraded : BOOL
+L_Policy_Freeze_Protection : BOOL
+L_Policy_Safe_Stop : BOOL
+L_Target_Temp_Adjusted : REAL
+
+=== FB_Alarm_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Gas_Alarm : BOOL
+тревоги : derived(Утечка)
+VI_Fire_Alarm : BOOL
+тревоги : derived(Пожар)
+VI_Flood_Alarm : BOOL
+тревоги : derived(Протечка)
+VI_Security_Alarm : BOOL
+тревоги : derived(Охранная)
+VI_First_Fault_Active : BOOL
+VI_First_Fault_Type : INT
+VI_First_Fault_Source : INT
+VI_Security_Msg : derived(STRING)
+VI_Acknowledge_All : BOOL
+Команда : derived(Квитировать)
+VI_Mute_Siren : BOOL
+Команда : derived(Временное)
+[localVars]
+VI_Boiler_Errors : derived(ARRAY)
+[localVars]
+VIO_Next_Alarm_ID : UDINT
+[outputVars]
+VO_Global_Critical : BOOL
+VO_Global_Warning : BOOL
+VO_Siren_Active : BOOL
+VO_Active_Count : INT
+VO_Unacked_Count : INT
+VO_Event_Pulse : BOOL
+VO_Event_Code : UDINT
+VO_Event_Value : REAL
+VO_Alarm_List : derived(ARRAY)
+[localVars]
+fbCompatAlarm : derived(ARRAY)
+L_k : INT
+L_Target_Slot : INT
+L_Min_Pri : INT
+L_Pending_Alarms : derived(ARRAY)
+L_Pending_Count : INT
+T_Debounce_Gas : derived(FB_System_Timer)
+T_Debounce_Fire : derived(FB_System_Timer)
+T_Debounce_Flood : derived(FB_System_Timer)
+T_Debounce_Security : derived(FB_System_Timer)
+R_Trig_Gas : derived(R_TRIG)
+R_Trig_Fire : derived(R_TRIG)
+R_Trig_Flood : derived(R_TRIG)
+R_Trig_Security : derived(R_TRIG)
+R_Trig_First_Fault : derived(R_TRIG)
+R_Trig_Boiler : derived(ARRAY)
+L_First_Fault_Source_Text : derived(STRING)
+L_First_Fault_Type_Text : derived(STRING)
+L_Event_Pulse_Latched : BOOL
+L_Alarm_Compat_All_OK : BOOL
+L_Alarm_First_Warning : derived(STRING)
+L_Alarm_First_Warning_Latched : BOOL
+L_Alarm_Shadow_Mismatch : BOOL
+L_Alarm_Shadow_First_Mismatch : INT
+L_Alarm_V2_Switch_Enabled : BOOL
+L_Alarm_V2_Path_Ready : BOOL
+L_Alarm_Using_Legacy_Fallback : BOOL
+fbAlarmV2Core : derived(FB_Alarm_V2_Core_DRAFT)
+fbHistoryV2Core : derived(FB_History_V2_Core_DRAFT)
+fbBlackBoxV2Core : derived(FB_BlackBox_V2_Core_DRAFT)
+L_BlackBox_V2_Snapshot_Shadow : derived(ST_BlackBox_Snapshot_V2)
+L_History_V2_Shadow_Diff_Found : BOOL
+L_History_V2_Shadow_First_Diff_Slot : INT
+L_BlackBox_V2_Shadow_Diff_Found : BOOL
+L_History_V2_Buffer_Shadow : derived(ARRAY)
+L_Alarm_V2_Shadow_Compare_Enabled : BOOL
+L_Alarm_V2_Shadow_Diff_Found : BOOL
+L_Alarm_V2_Shadow_First_Diff_Slot : INT
+L_Alarm_V2_Event_Pulse : BOOL
+L_Alarm_V2_Event_Code : UDINT
+L_Alarm_V2_Event_Value : REAL
+L_Alarm_V2_List_Shadow : derived(ARRAY)
+L_Alarm_V2_Next_ID_Shadow : UDINT
+
+=== FB_Scenario_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Activate_Request : derived(E_SCENARIO_TYPE)
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_System_Mode : derived(E_System_Operating_Mode)
+[outputVars]
+VO_Current_Scenario : derived(E_SCENARIO_TYPE)
+VO_Status_Msg : derived(STRING)
+[localVars]
+L_Last_Scenario_Time : UDINT
+
+=== FB_State_Manager.st ===
+[inputVars]
+VI_System_Severity : derived(E_System_Severity)
+VI_Root_Cause : derived(E_System_Root_Cause)
+VI_Freeze_Risk : BOOL
+[outputVars]
+VO_System_OK : BOOL
+VO_System_Warning : BOOL
+VO_System_Critical : BOOL
+VO_Status_Msg : derived(STRING)
+VO_System_Mode : derived(E_System_Operating_Mode)
+
+=== FB_NVRAM_Manager.st ===
+[inputVars]
+VI_Command : derived(BYTE)
+VI_Offset : UDINT
+VI_DataRef : derived(REFERENCE)
+VI_DataSize : UDINT
+КРИТИЧНО : derived(используем)
+VI_System_Time_MS : UDINT
+VI_Operator_ID : derived(STRING)
+VI_IsActivePLC : BOOL
+VI_TwoPersonConfirmation : BOOL
+[outputVars]
+VO_Done : BOOL
+VO_Error : BOOL
+VO_ErrorID : UDINT
+VO_ReadDataRef : derived(REFERENCE)
+VO_HMI_Status_Message : derived(STRING)
+[localVars]
+L_prev_Command : derived(BYTE)
+L_cmd_rising : BOOL
+L_i : UDINT
+L_Last_Write_Time_MS : UDINT
+L_Data_Changed : BOOL
+[localVars]
+C_MAX_NVRAM_SIZE : UDINT
+
+=== FB_Heating_System_Manager.st ===
+[inputVars]
+VI_System_Mode : derived(E_System_Operating_Mode)
+VI_System_Time_MS : UDINT
+VI_Current_TOD : TOD
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Outdoor_Temp : REAL
+VI_Config : derived(ST_Heating_Config)
+VI_Tariff : derived(ST_Tariff_Config)
+VI_Current_Hour : UINT
+VI_Boiler_Stop : BOOL
+VI_DHW_Heating_Demand : BOOL
+VI_DHW_Target_Temp : REAL
+VI_Current_Scenario : derived(E_SCENARIO_TYPE)
+VI_Emergency_Stop : BOOL
+VI_Gas_Safety_Stop : BOOL
+VI_Boiler_Error_Status : derived(ARRAY)
+VI_Boiler_OT_Online : derived(ARRAY)
+VI_Boiler_Modulation : derived(ARRAY)
+[localVars]
+VI_Floor_Temps : derived(ARRAY)
+VI_Room_Temps : derived(ARRAY)
+VI_Manifold_Pressures : derived(ARRAY)
+VI_Manifold_Currents : derived(ARRAY)
+VI_Manifold_Temps_Supply : derived(ARRAY)
+VI_Manifold_Temps_Return : derived(ARRAY)
+VI_Boiler_Flame_Status : derived(ARRAY)
+VI_Zone_Configs : derived(ARRAY)
+VI_Rule_Actions : derived(ARRAY)
+VI_IO_Modules_Online : derived(ARRAY)
+VI_Scenario_Configs : derived(ARRAY)
+VI_Manifold_End_Switches : derived(ARRAY)
+VI_Valve_Test_Config : derived(ARRAY)
+[outputVars]
+VO_Manifold_Valves : derived(ARRAY)
+Выход : derived(Положение)
+VO_Manifold_Pumps : derived(ARRAY)
+Выход : derived(Управление)
+VO_Zone_Valves : derived(ARRAY)
+Выход : derived(Управление)
+VO_Boiler_OT_Enable : derived(ARRAY)
+VO_Boiler_OT_Setpoint : derived(ARRAY)
+VO_Backup_Circulation_Pump : BOOL
+VO_Electric_Heater_Enable : BOOL
+VO_Freeze_Risk_Status : BOOL
+VO_Status : derived(ARRAY)
+VO_Boiler_Status : derived(ARRAY)
+[localVars]
+fbHeatingV2Staging : derived(FB_Heating_V2_Staging_DRAFT)
+L_Heating_V2_Command_Shadow : derived(ST_Heating_Command_V2)
+L_Heating_V2_State_Shadow : derived(ST_Heating_State_V2)
+L_Heating_V2_Shadow_Diff_Found : BOOL
+L_Heating_V2_Switch_Enabled : BOOL
+L_Heating_V2_Path_Ready : BOOL
+L_Heating_Using_Legacy_Fallback : BOOL
+L_PID_Valves : derived(ARRAY)
+L_PID_Timer : derived(ARRAY)
+L_Floor_Controllers : derived(ARRAY)
+L_Last_Boiler_Rotation : UDINT
+L_Lead_Boiler : derived(BYTE)
+L_i : INT
+L_Zone_Config : derived(ST_FloorHeating_Circuit_Config)
+L_j : INT
+L_Target_Supply_Temp : REAL
+L_Demand_Power : REAL
+L_Any_Zone_Active : derived(ARRAY)
+L_Current_Temp : REAL
+L_Sensor_Error : BOOL
+L_Prev_Scenario : derived(E_SCENARIO_TYPE)
+L_Scenario_Adjust : REAL
+L_Target_Scenario_Adjust : REAL
+L_Transition_Temp : derived(FB_Scenario_Transition_Controller)
+5 : derived(Защита)
+L_Overheat_Timer : derived(ARRAY)
+6 : derived(Сервисная)
+L_Pump_Run_Timer : derived(ARRAY)
+L_Pump_Pause_Timer : derived(ARRAY)
+L_Pump_In_Pause : derived(ARRAY)
+Флаг : derived(Насос)
+8 : derived(Учет)
+L_Last_Scan_Time : UDINT
+L_Scan_Time_Init : BOOL
+L_Lifespan_S : REAL
+L_Delta_MS : UDINT
+L_Pump_Diag : derived(ARRAY)
+L_Boiler_Life : derived(ARRAY)
+fbFloorTempValidator : derived(ARRAY)
+fbRoomTempValidator : derived(ARRAY)
+fbValveTestManager : derived(FB_Valve_Test_Manager)
+fbBoilerCascade : derived(FB_Boiler_Cascade_Manager)
+fbBoilerOpenTherm : derived(FB_Boiler_OpenTherm_Interface)
+L_IO_Failsafe_Active : BOOL
+L_Freeze_Mode_Active : BOOL
+L_Freeze_Target_Supply : REAL
+L_Delta_T : REAL
+L_Min_Supply_Temp : REAL
+L_Boiler_OT_Command_Valid : derived(ARRAY)
+L_Boiler_Request_Enable : derived(ARRAY)
+L_Boiler_Request_Setpoint : derived(ARRAY)
+L_Policy_Normal : BOOL
+Policy : derived(normal)
+L_Policy_Safe_Stop : BOOL
+Policy : derived(hard)
+L_Policy_Degraded : BOOL
+Policy : derived(limited)
+L_Policy_Freeze_Protection : BOOL
+Policy : derived(freeze)
+L_Any_Sensor_Error : BOOL
+L_Any_Subsystem_Degraded : BOOL
+
+=== FB_Gateway_Interface.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Local_PLC_Role : derived(E_PLC_ROLE)
+VI_Incoming_Command : derived(ST_Gateway_Command)
+VI_Command_Received : BOOL
+VI_Outdoor_Temp : REAL
+VI_Security_Armed : BOOL
+VI_Flood_Alarm_Active : BOOL
+VI_Gas_Alarm_Active : BOOL
+VI_Fire_Alarm_Active : BOOL
+VI_Methane_Concentration : REAL
+VI_Active_Scenario : derived(E_SCENARIO_TYPE)
+VI_Send_2FA_Req : BOOL
+VI_2FA_Code : derived(STRING)
+[localVars]
+VI_FloorHeating_Temps : derived(ARRAY)
+VI_Room_Temps : derived(ARRAY)
+VI_Zone_Valve_States : derived(ARRAY)
+VI_Manifold_Pressures : derived(ARRAY)
+VI_Manifold_Pump_States : derived(ARRAY)
+VI_Lighting_Base_Levels : derived(ARRAY)
+VI_Socket_States : derived(ARRAY)
+VI_Blinds_Positions : derived(ARRAY)
+VI_Allowed_IPs : derived(ARRAY)
+[outputVars]
+VO_Modbus_Registers : derived(ARRAY)
+VO_Lighting_Override : derived(ARRAY)
+VO_Blinds_Override : derived(ARRAY)
+VO_Socket_Override : derived(ARRAY)
+VO_Arm_Req : BOOL
+VO_Disarm_Req : BOOL
+VO_PIN_Code : derived(STRING)
+VO_RFID_Tag : derived(STRING)
+VO_2FA_Code_In : derived(STRING)
+VO_Data_Ready : BOOL
+VO_HMI_Status_Message : derived(STRING)
+VO_Telegram_Msg : derived(STRING)
+VO_Send_Telegram : BOOL
+VO_Set_Scenario_Req : BOOL
+VO_Target_Scenario : derived(E_SCENARIO_TYPE)
+VO_Set_Temp_Req : BOOL
+VO_Target_Zone : INT
+VO_Target_Temp : REAL
+VO_Set_Vent_Req : BOOL
+VO_Target_Vent_Speed : derived(BYTE)
+VO_Reset_Errors_Req : BOOL
+VO_Set_Config_Req : BOOL
+VO_Sync_Time_Req : BOOL
+VO_New_Time_MS : UDINT
+[localVars]
+L_last_update_time : UDINT
+L_i : INT
+L_j : INT
+L_idx : INT
+L_tmp_word : derived(WORD)
+L_Code_UDINT : UDINT
+L_Prev_Fire : BOOL
+L_Prev_Gas : BOOL
+L_Prev_Flood : BOOL
+L_Prev_Security : BOOL
+L_Deduplicator : derived(FB_Command_Deduplication)
+L_CRC_Calc : derived(FB_CRC32_Calculator)
+L_Calculated_CRC : derived(DWORD)
+L_Command_Size : UDINT
+L_IP_Allowed : BOOL
+L_Process_Command : derived(ST_Gateway_Command)
+L_Has_Command_To_Process : BOOL
+[localVars]
+L_Command_Buffer : derived(ARRAY)
+L_Buffer_Head : INT
+L_Buffer_Tail : INT
+L_Buffer_Count : INT
+
+=== FB_Access_Control.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Armed : BOOL
+Статус : derived(Система)
+VI_System_Mode : derived(E_System_Operating_Mode)
+VI_Gate_Open_Req : BOOL
+VI_Wicket_Open_Req : BOOL
+VI_Lock_1_Open_Req : BOOL
+VI_Lock_1_Close_Req : BOOL
+VI_Lock_2_Open_Req : BOOL
+VI_Lock_2_Close_Req : BOOL
+VI_PIN_Code : derived(STRING)
+VI_RFID_Tag : derived(STRING)
+VI_Config : derived(ST_Security_Global_Config)
+[localVars]
+VI_Access_Codes : derived(ARRAY)
+VI_RFID_Tags : derived(ARRAY)
+[outputVars]
+VO_Gate_Open : BOOL
+Выход : derived(Импульс)
+VO_Wicket_Open : BOOL
+Выход : derived(Импульс)
+VO_Lock_1_Open : BOOL
+Выход : derived(Импульс)
+VO_Lock_1_Close : BOOL
+Выход : derived(Импульс)
+VO_Lock_2_Open : BOOL
+Выход : derived(Импульс)
+VO_Lock_2_Close : BOOL
+Выход : derived(Импульс)
+[localVars]
+L_Gate_Timer : derived(TP)
+L_Wicket_Timer : derived(TP)
+L_Lock_1_Open_T : derived(TP)
+L_Lock_1_Close_T : derived(TP)
+L_Lock_2_Open_T : derived(TP)
+L_Lock_2_Close_T : derived(TP)
+L_Prev_Armed : BOOL
+L_Auto_Lock_Req : BOOL
+R_Trig_Gate : derived(R_TRIG)
+R_Trig_Wicket : derived(R_TRIG)
+R_Trig_Lock_1_O : derived(R_TRIG)
+R_Trig_Lock_1_C : derived(R_TRIG)
+R_Trig_Lock_2_O : derived(R_TRIG)
+R_Trig_Lock_2_C : derived(R_TRIG)
+fbAccessCode : derived(FB_AccessCode_Manager)
+L_Valid_PIN : BOOL
+
+=== FB_Security_System_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Arm_Request : BOOL
+VI_Disarm_Request : BOOL
+VI_PIN_Code : derived(STRING)
+VI_RFID_Tag : derived(STRING)
+VI_2FA_Code : derived(STRING)
+VI_Config : derived(ST_Security_Global_Config)
+VI_Current_TOD : TOD
+[localVars]
+VI_Motion_Sensors : derived(ARRAY)
+VI_Door_Sensors : derived(ARRAY)
+VI_Window_Sensors : derived(ARRAY)
+VI_Bypass_Motion : derived(ARRAY)
+VI_Bypass_Doors : derived(ARRAY)
+VI_Bypass_Windows : derived(ARRAY)
+[outputVars]
+VO_Armed : BOOL
+Статус : derived(Система)
+VO_Alarm_Active : BOOL
+Статус : derived(Тревога)
+VO_Siren_Active : BOOL
+Команда : derived(Включить)
+VO_Status_Msg : derived(STRING)
+VO_Send_Code_Req : BOOL
+VO_Code_To_Send : derived(STRING)
+[localVars]
+L_i : INT
+L_Any_Sensor_Active : BOOL
+L_Arm_Delay_Timer : derived(FB_System_Timer)
+L_Alarm_Delay_Timer : derived(FB_System_Timer)
+L_Arming_In_Progress : BOOL
+L_Valid_PIN : BOOL
+fbAccessCode : derived(FB_AccessCode_Manager)
+fbTwoFactor : derived(FB_TwoFactor_Auth)
+L_2FA_Required : BOOL
+L_Disarm_Pending : BOOL
+L_Reset_2FA : BOOL
+L_Auto_Arm_Trigger : BOOL
+R_Trig_Auto_Arm : derived(R_TRIG)
+
+=== FB_Gas_Smoke_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+VI_Mute_Request : BOOL
+[localVars]
+VI_Methane_LEL : derived(ARRAY)
+VI_CO_PPM : derived(ARRAY)
+VI_Smoke_Sensors : derived(ARRAY)
+[outputVars]
+VO_Smoke_Detected : BOOL
+VO_Gas_Detected : BOOL
+VO_CO_Warning_Level : BOOL
+VO_CO_Alarm_Level : BOOL
+VO_Siren_Active : BOOL
+VO_Gas_Valve_Close : BOOL
+VO_Boiler_Stop : BOOL
+VO_Vent_PV3_Boost : BOOL
+VO_Supply_100_Req : BOOL
+VO_Exhaust_100_Req : BOOL
+VO_Supply_80_Req : BOOL
+VO_Vent_Stop : BOOL
+VO_Status_Msg : derived(STRING)
+[localVars]
+L_Methane_Max : REAL
+L_CO_Max : REAL
+L_Smoke_Count : UINT
+L_Smoke_Active : BOOL
+L_i : INT
+L_CO_Timer_30ppm : derived(FB_System_Timer)
+L_CO_Timer_70ppm : derived(FB_System_Timer)
+L_CO_Timer_400ppm : derived(FB_System_Timer)
+L_CO_Level_30 : BOOL
+L_CO_Level_70 : BOOL
+L_CO_Level_400 : BOOL
+L_Smoke_Timer : derived(ARRAY)
+
+=== FB_Safety_Manager.st ===
+[inputVars]
+VI_Gas_Alarm : BOOL
+VI_Leak_Alarm : BOOL
+VI_Smoke_Alarm : BOOL
+VI_Reset : BOOL
+[outputVars]
+VO_Gas_Latched : BOOL
+VO_Leak_Latched : BOOL
+VO_Smoke_Latched : BOOL
+VO_Emergency_Stop : BOOL
+[localVars]
+L_Any_Active : BOOL
+
+=== FB_Simulation_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_IsActivePLC : BOOL
+Флаг : derived(Данный)
+VI_Scenario : derived(E_SCENARIO_TYPE)
+VI_Config : derived(ST_Scenario_Config)
+[outputVars]
+VO_Sim_Lights : derived(ARRAY)
+VO_Sim_Active : BOOL
+Флаг : derived(Симуляция)
+VO_Sim_Water_Leak : derived(ARRAY)
+VO_Sim_Gas_Leak : derived(ARRAY)
+[localVars]
+L_Random : derived(FB_Random_Generator)
+L_Last_Toggle : UDINT
+L_i : INT
+L_Rand_Val : UDINT
+L_Test_Mode : BOOL
+
+=== FB_Redundancy_Manager.st ===
+[inputVars]
+VI_System_Time_MS : UDINT
+VI_Local_PLC_ID : derived(BYTE)
+VI_Remote_Pulse : BOOL
+VI_Remote_Is_Active : BOOL
+VI_Gateway_Ping_OK : BOOL
+VI_Remote_State : derived(ST_System_State_Snapshot)
+VI_Local_State : derived(ST_System_State_Snapshot)
+[outputVars]
+VO_Local_Role : derived(E_PLC_ROLE)
+VO_Local_Pulse : BOOL
+VO_Sync_Data_Req : BOOL
+VO_Status_Msg : derived(STRING)
+VO_Synced_State : derived(ST_System_State_Snapshot)
+VO_State_Updated : BOOL
+Флаг : derived(Состояние)
+[localVars]
+L_Heartbeat : derived(FB_PLC_Heartbeat)
+L_Pulse_Timer : derived(FB_System_Timer)
+L_Pulse_State : BOOL
+L_Prev_Role : derived(E_PLC_ROLE)
+L_State_Replicator : derived(FB_State_Replication)

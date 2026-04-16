@@ -1,0 +1,55 @@
+XML_BULK_SYNC_REPORT
+XML=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml
+APPLY=True
+CHANGED=True
+TOTAL_ST=43
+PATCHED=20
+ALREADY_SYNCED=0
+MISSING_IN_XML=23
+MISSING_BODY=0
+SKIPPED_INVALID=0
+
+DETAILS:
+FB_AccessCode_Manager	PATCHED	FB_AccessCode_Manager.st
+FB_Access_Control	PATCHED	FB_Access_Control.st
+FB_Alarm_Manager	MISSING_IN_XML	FB_Alarm_Manager.st
+FB_Analog_Validator	MISSING_IN_XML	FB_Analog_Validator.st
+FB_Astro_Timer	PATCHED	FB_Astro_Timer.st
+FB_BlackBox_Recorder	PATCHED	FB_BlackBox_Recorder.st
+FB_DHW_Manager	PATCHED	FB_DHW_Manager.st
+FB_Fault_Logger	MISSING_IN_XML	FB_Fault_Logger.st
+FB_Gas_Smoke_Manager	PATCHED	FB_Gas_Smoke_Manager.st
+FB_Gateway_Interface	PATCHED	FB_Gateway_Interface.st
+FB_HMI_Interface	MISSING_IN_XML	FB_HMI_Interface.st
+FB_Heating_System_Manager	PATCHED	FB_Heating_System_Manager.st
+FB_History_Manager	PATCHED	FB_History_Manager.st
+FB_IO_Module_Watchdog	MISSING_IN_XML	FB_IO_Module_Watchdog.st
+FB_Lighting_Blinds_Manager	PATCHED	FB_Lighting_Blinds_Manager.st
+FB_NVRAM_Manager	PATCHED	FB_NVRAM_Manager.st
+FB_PID_Controller	PATCHED	FB_PID_Controller.st
+FB_Redundancy_Manager	MISSING_IN_XML	FB_Redundancy_Manager.st
+FB_Rule_Engine	MISSING_IN_XML	FB_Rule_Engine.st
+FB_Safety_Manager	MISSING_IN_XML	FB_Safety_Manager.st
+FB_Scenario_Manager	PATCHED	FB_Scenario_Manager.st
+FB_Security_System_Manager	PATCHED	FB_Security_System_Manager.st
+FB_Simulation_Manager	PATCHED	FB_Simulation_Manager.st
+FB_Socket_Manager	MISSING_IN_XML	FB_Socket_Manager.st
+FB_State_Manager	PATCHED	FB_State_Manager.st
+FB_System_Health	MISSING_IN_XML	FB_System_Health.st
+FB_System_Timer	MISSING_IN_XML	FB_System_Timer.st
+FB_Ventilation_System_Manager	PATCHED	FB_Ventilation_System_Manager.st
+FB_Watchdog	MISSING_IN_XML	FB_Watchdog.st
+FB_Water_Leakage_Manager	PATCHED	FB_Water_Leakage_Manager.st
+F_TimeDiff	MISSING_IN_XML	F_TimeDiff.st
+MAIN	MISSING_IN_XML	MAIN.st
+PRG_Heating	MISSING_IN_XML	PRG_Heating.st
+PRG_IO_Read	MISSING_IN_XML	PRG_IO_Read.st
+PRG_IO_Write	MISSING_IN_XML	PRG_IO_Write.st
+PRG_Lighting	MISSING_IN_XML	PRG_Lighting.st
+PRG_PLC_A	PATCHED	PRG_PLC_A.st
+PRG_PLC_B	PATCHED	PRG_PLC_B.st
+PRG_Safety	MISSING_IN_XML	PRG_Safety.st
+PRG_Security	MISSING_IN_XML	PRG_Security.st
+PRG_System	MISSING_IN_XML	PRG_System.st
+PRG_Test	MISSING_IN_XML	PRG_Test.st
+PRG_Ventilation	MISSING_IN_XML	PRG_Ventilation.st

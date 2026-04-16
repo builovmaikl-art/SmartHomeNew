@@ -1,0 +1,37 @@
+]633;E;echo "===== CURRENT BRANCH =====";e775d918-891c-48df-a093-fb6809d689d8]633;C===== CURRENT BRANCH =====
+main
+
+===== STATUS =====
+?? диагностика/publish_probe.log
+
+===== BRANCH -VV =====
+  dut_step c55f1bf run build_project_new test
+* main     8bedbf0 [origin/main] diag: branch and push target probe
+
+===== REMOTE =====
+origin	https://github.com/builovmaikl-art/SmartHomeNew (fetch)
+origin	https://github.com/builovmaikl-art/SmartHomeNew (push)
+
+===== LOCAL HEAD =====
+8bedbf00877036c0be73ea629b4656575a64fe35
+
+===== ORIGIN/MAIN =====
+8bedbf00877036c0be73ea629b4656575a64fe35
+
+===== LAST 15 COMMITS =====
+8bedbf0 (HEAD -> main, origin/main, origin/HEAD) diag: branch and push target probe
+ad05382 diag: remove all gitignore and force add diagnostics
+6da5f4e diag: audit file read/write access across repo
+858b2b4 diag: confirm repo rights and origin url
+96e1a29 diag: check repo access via git (fetch/push/status)
+244e4fc diag: publish nvram real audit to assistant bridge
+f75fad8 diag: mirror nvram real log to repo_logs
+3822de6 diag: refresh nvram_REAL_latest log
+152e9ed Merge pull request #15 from builovmaikl-art/builovmaikl-art-patch-1
+6826312 Delete .gitignore
+fa1c6e1 diag: refresh nvram_REAL_latest log
+5d4ad8a diag: refresh nvram_REAL_latest log
+d883f67 diag: update nvram REAL audit
+e3d45be diag: refresh nvram_REAL_latest log
+587a0d3 diag: refresh nvram_REAL_latest log
+

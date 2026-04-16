@@ -1,0 +1,5 @@
+TYPE ST_Blinds_State_V2 :
+STRUCT
+    Position_Actual : BYTE;
+END_STRUCT
+END_TYPE

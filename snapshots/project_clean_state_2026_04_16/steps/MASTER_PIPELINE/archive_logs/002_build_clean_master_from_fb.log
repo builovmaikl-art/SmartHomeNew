@@ -1,0 +1,49 @@
+=== STEP 002 START ===
+SCRIPT_DIR=/workspaces/SmartHomeNew/steps/MASTER_PIPELINE
+INPUT_XML=/workspaces/SmartHomeNew/steps/MASTER_PIPELINE/001_BASE.xml
+INPUT_EXISTS=True
+OUTPUT_XML=/workspaces/SmartHomeNew/steps/MASTER_PIPELINE/002_RESULT.xml
+OUTPUT_PARENT_EXISTS=True
+ROOT_DIR=/workspaces/SmartHomeNew
+INPUT_SIZE=168945
+ANCHOR_FOUND_IN_INPUT=True
+ST_FILES_FOUND=30
+FB=FB_AccessCode_Manager VARS=11 OK
+FB=FB_Access_Control VARS=37 OK
+FB=FB_Alarm_Manager VARS=66 OK
+FB=FB_Analog_Validator VARS=9 OK
+FB=FB_Astro_Timer VARS=20 OK
+FB=FB_BlackBox_Recorder VARS=6 OK
+FB=FB_DHW_Manager VARS=36 OK
+FB=FB_Fault_Logger VARS=14 OK
+FB=FB_Gas_Smoke_Manager VARS=31 OK
+FB=FB_Gateway_Interface VARS=67 WARN=VAR: unparsed lines=1
+FB=FB_HMI_Interface VARS=5 OK
+FB=FB_Heating_System_Manager VARS=93 OK
+FB=FB_History_Manager VARS=5 OK
+FB=FB_IO_Module_Watchdog VARS=9 OK
+FB=FB_Lighting_Blinds_Manager VARS=54 OK
+FB=FB_NVRAM_Manager VARS=19 WARN=VAR: unparsed lines=1
+FB=FB_PID_Controller VARS=19 OK
+FB=FB_Redundancy_Manager VARS=18 OK
+FB=FB_Rule_Engine VARS=35 OK
+FB=FB_Safety_Manager VARS=9 OK
+FB=FB_Scenario_Manager VARS=7 OK
+FB=FB_Security_System_Manager VARS=34 OK
+FB=FB_Simulation_Manager VARS=13 OK
+FB=FB_Socket_Manager VARS=25 OK
+FB=FB_State_Manager VARS=8 OK
+FB=FB_System_Health VARS=19 OK
+FB=FB_System_Timer VARS=7 OK
+FB=FB_Ventilation_System_Manager VARS=43 OK
+FB=FB_Watchdog VARS=8 OK
+FB=FB_Water_Leakage_Manager VARS=13 OK
+FB_INSERTED=30
+TOTAL_VARS_PARSED=740
+FB_WITH_WARNINGS=2
+OUTPUT_EXISTS=True
+OUTPUT_SIZE=393401
+ANCHOR_LEFT_IN_OUTPUT=False
+FB_POU_COUNT_IN_OUTPUT=0
+FB_OBJECT_COUNT_IN_PROJECTSTRUCTURE=0
+=== STEP 002 DONE ===

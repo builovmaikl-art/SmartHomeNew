@@ -1,0 +1,18 @@
+]633;E;echo "== START PYTHON UNZIP DEBUG ==";3e0b601e-7d23-45e6-9ec3-9f4f984d5987]633;C== START PYTHON UNZIP DEBUG ==
+-- ROOT FILES --
+./.git
+./diagnostics
+
+-- ZIP/LIKE FILES --
+
+-- PYTHON VERSION --
+Python 3.12.1
+
+-- RUN --
+zip candidates: []
+ERROR: No .zip files found in repo root
+
+-- ROOT AFTER --
+./.git
+./diagnostics
+== END ==

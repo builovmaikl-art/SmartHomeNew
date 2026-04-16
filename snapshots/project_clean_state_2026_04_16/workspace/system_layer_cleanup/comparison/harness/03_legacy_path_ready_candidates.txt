@@ -1,0 +1,45 @@
+LEGACY_PATH_READY_SOURCE_CANDIDATES
+
+L113: [G_Is_Active_PLC] GVL_STATUS.G_Is_Active_PLC := (fbRedundancy.VO_Local_Role = E_PLC_ROLE.ROLE_ACTIVE);
+L115: [G_Is_Active_PLC] GVL_IO.DO_Active_Status := GVL_STATUS.G_Is_Active_PLC;
+L174: [VO_Status_Msg]     VI_Status_Msg := fbStateManager.VO_Status_Msg
+L184: [G_System_Mode] GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
+L208: [G_System_Mode] GVL_STATE.G_System_Mode := fbStateManager.VO_System_Mode;
+L210: [G_System_Mode] CASE GVL_STATE.G_System_Mode OF
+L212: [G_System_Mode]         GVL_STATE.G_System_Mode_Text := 'SAFE_STOP';
+L215: [G_System_Mode]         GVL_STATE.G_System_Mode_Text := 'FREEZE_PROTECTION';
+L218: [G_System_Mode]         GVL_STATE.G_System_Mode_Text := 'DEGRADED';
+L221: [G_System_Mode]         GVL_STATE.G_System_Mode_Text := 'NORMAL';
+L226: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Пожар/дым';
+L228: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Утечка газа';
+L230: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Критический CO';
+L232: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Повышенный CO';
+L234: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Протечка воды';
+L236: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Ошибка watchdog';
+L238: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Недоступен модуль IO';
+L240: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Ошибка связи';
+L242: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Ошибка датчика';
+L244: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Ошибка подсистемы';
+L246: [G_System_Mode]         GVL_STATUS.G_System_Mode_Cause := 'Аварийные режимы отсутствуют';
+L250: [G_System_Mode] GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
+L286: [G_System_Mode] IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP AND GVL_STATE.G_Safety_Smoke_Latched THEN
+L305: [G_Is_Active_PLC]     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+L306: [G_System_Mode]     VI_System_Mode := GVL_STATE.G_System_Mode,
+L321: [G_Is_Active_PLC]     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC AND (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL),
+L331: [G_Is_Active_PLC]     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+L359: [G_Is_Active_PLC]     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+L398: [G_Is_Active_PLC]     VI_Local_PLC_Role := SEL(GVL_STATUS.G_Is_Active_PLC, E_PLC_ROLE.ROLE_STANDBY, E_PLC_ROLE.ROLE_ACTIVE),
+L423: [Ready]     VO_Data_Ready => GVL_GATEWAY.G_Gateway_Data_Ready,
+L438: [G_System_Mode]    ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
+L439: [G_System_Mode]     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
+L445: [G_System_Mode]    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+L451: [G_System_Mode]    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+L457: [G_System_Mode]    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+L463: [G_System_Mode]    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+L468: [G_System_Mode] IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
+L508: [G_Is_Active_PLC]     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+L525: [G_System_Mode] L_BB_Record.System_Mode := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+L545: [G_System_Mode] IF GVL_STATE.G_System_Mode <> L_Last_System_Mode THEN
+L548: [G_System_Mode]     L_History_Event.event_value := TO_REAL(TO_INT(GVL_STATE.G_System_Mode));
+L551: [G_System_Mode]     IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
+L556: [G_System_Mode]     L_Last_System_Mode := GVL_STATE.G_System_Mode;

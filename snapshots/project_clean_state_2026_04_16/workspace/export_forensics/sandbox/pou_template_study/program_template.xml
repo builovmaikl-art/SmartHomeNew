@@ -1,0 +1,27 @@
+<pou name="PRG_PLC_A" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="L_PLC_ID">
+              <type>
+                <BYTE />
+              </type>
+              <initialValue>
+                <simpleValue value="1" />
+              </initialValue>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">// Вызов основной программы
+PRG_System();
+// &gt;&gt;&gt; BULK_SYNC_ANCHOR: PRG_PLC_A &lt;&lt;&lt;
+</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>13f32e36-d6f4-4cc2-a983-f0b3b470eea9</ObjectId>
+          </data>
+        </addData>
+      </pou>

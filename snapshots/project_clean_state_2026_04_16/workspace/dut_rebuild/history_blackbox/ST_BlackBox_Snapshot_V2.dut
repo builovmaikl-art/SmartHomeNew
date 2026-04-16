@@ -1,0 +1,14 @@
+TYPE ST_BlackBox_Snapshot_V2 :
+STRUCT
+    timestamp_ms : UDINT;
+    system_mode : BYTE;
+    severity : BYTE;
+    root_cause : BYTE;
+    first_fault_type : BYTE;
+    first_fault_source : BYTE;
+    watchdog_fault : BOOL;
+    gas_alarm : BOOL;
+    fire_alarm : BOOL;
+    flood_alarm : BOOL;
+END_STRUCT
+END_TYPE

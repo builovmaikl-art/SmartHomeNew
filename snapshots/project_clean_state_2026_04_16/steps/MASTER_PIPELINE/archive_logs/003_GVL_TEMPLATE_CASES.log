@@ -1,0 +1,1180 @@
+=== GVL TEMPLATE CASES ===
+TOTAL_GLOBALVARS_BLOCKS=7
+
+===== BLOCK 1 =====
+NAME=GVL_BlackBox
+CLASS=QUALIFIED_ONLY
+HEADER=<globalVars name="GVL_BlackBox">
+OBJECT_ID=576a3cd2-531b-462f-a7f4-87e96f876363
+VARIABLE_COUNT=3
+DOCUMENTATION_COUNT=1
+INITIAL_VALUE_COUNT=0
+ARRAY_COUNT=1
+DERIVED_COUNT=1
+STRING_COUNT=0
+ATTRIBUTES:
+  - qualified_only = 
+--- BLOCK START ---
+<globalVars name="GVL_BlackBox">
+        <variable name="G_BlackBox_Buffer">
+          <type>
+            <array>
+              <dimension lower="0" upper="99" />
+              <baseType>
+                <derived name="ST_BlackBox_Record" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Буфер на 100 записей (при опросе 100мс это 10 секунд истории)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_BlackBox_Frozen">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_BlackBox_LastIndex">
+          <type>
+            <INT />
+          </type>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+            <Attributes>
+              <Attribute Name="qualified_only" Value="" />
+            </Attributes>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>576a3cd2-531b-462f-a7f4-87e96f876363</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---
+
+===== BLOCK 2 =====
+NAME=GVL_Constants
+CLASS=CONSTANT+QUALIFIED_ONLY
+HEADER=<globalVars name="GVL_Constants" constant="true">
+OBJECT_ID=0f61acce-932b-48fb-ae67-674c363f5710
+VARIABLE_COUNT=6
+DOCUMENTATION_COUNT=0
+INITIAL_VALUE_COUNT=6
+ARRAY_COUNT=0
+DERIVED_COUNT=0
+STRING_COUNT=0
+ATTRIBUTES:
+  - qualified_only = 
+--- BLOCK START ---
+<globalVars name="GVL_Constants" constant="true">
+        <variable name="C_MS_PER_SEC">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="1000" />
+          </initialValue>
+        </variable>
+        <variable name="C_SEC_PER_MIN">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="60" />
+          </initialValue>
+        </variable>
+        <variable name="C_MIN_PER_HOUR">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="60" />
+          </initialValue>
+        </variable>
+        <variable name="C_MS_PER_MIN">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="60000" />
+          </initialValue>
+        </variable>
+        <variable name="C_MAX_RULES">
+          <type>
+            <INT />
+          </type>
+          <initialValue>
+            <simpleValue value="20" />
+          </initialValue>
+        </variable>
+        <variable name="C_ZONE_COUNT">
+          <type>
+            <BYTE />
+          </type>
+          <initialValue>
+            <simpleValue value="18" />
+          </initialValue>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+            <Attributes>
+              <Attribute Name="qualified_only" Value="" />
+            </Attributes>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>0f61acce-932b-48fb-ae67-674c363f5710</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---
+
+===== BLOCK 3 =====
+NAME=GVL_Diagnostics
+CLASS=QUALIFIED_ONLY
+HEADER=<globalVars name="GVL_Diagnostics">
+OBJECT_ID=6ac29d52-1f0d-4068-aac3-934d1b6eb056
+VARIABLE_COUNT=3
+DOCUMENTATION_COUNT=1
+INITIAL_VALUE_COUNT=1
+ARRAY_COUNT=1
+DERIVED_COUNT=2
+STRING_COUNT=0
+ATTRIBUTES:
+  - qualified_only = 
+--- BLOCK START ---
+<globalVars name="GVL_Diagnostics">
+        <variable name="G_Pump_Health">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <derived name="ST_Device_Health" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Для 5 коллекторных насосов</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_Gas_Valve_Health">
+          <type>
+            <derived name="ST_Device_Health" />
+          </type>
+        </variable>
+        <variable name="G_System_Health_Summary">
+          <type>
+            <BYTE />
+          </type>
+          <initialValue>
+            <simpleValue value="100" />
+          </initialValue>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+            <Attributes>
+              <Attribute Name="qualified_only" Value="" />
+            </Attributes>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>6ac29d52-1f0d-4068-aac3-934d1b6eb056</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---
+
+===== BLOCK 4 =====
+NAME=GVL_Global_Variables
+CLASS=QUALIFIED_ONLY
+HEADER=<globalVars name="GVL_Global_Variables">
+OBJECT_ID=845a2243-b948-47e1-8c64-3164112118a4
+VARIABLE_COUNT=5
+DOCUMENTATION_COUNT=1
+INITIAL_VALUE_COUNT=2
+ARRAY_COUNT=2
+DERIVED_COUNT=1
+STRING_COUNT=0
+ATTRIBUTES:
+  - qualified_only = 
+--- BLOCK START ---
+<globalVars name="GVL_Global_Variables">
+        <variable name="GVL_System_Time_MS">
+          <type>
+            <UDINT />
+          </type>
+        </variable>
+        <variable name="GVL_IsActivePLC">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="TRUE" />
+          </initialValue>
+        </variable>
+        <variable name="GVL_Local_PLC_Role">
+          <type>
+            <derived name="E_PLC_ROLE" />
+          </type>
+          <initialValue>
+            <simpleValue value="E_PLC_ROLE.ROLE_ACTIVE" />
+          </initialValue>
+        </variable>
+        <variable name="GVL_Floor_Temps">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <REAL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Данные датчиков</xhtml>
+          </documentation>
+        </variable>
+        <variable name="GVL_Valve_States">
+          <type>
+            <array>
+              <dimension lower="1" upper="3" />
+              <baseType>
+                <BYTE />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+            <Attributes>
+              <Attribute Name="qualified_only" Value="" />
+            </Attributes>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>845a2243-b948-47e1-8c64-3164112118a4</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---
+
+===== BLOCK 5 =====
+NAME=GVL_HMI_Config
+CLASS=PLAIN
+HEADER=<globalVars name="GVL_HMI_Config">
+OBJECT_ID=666b119e-853a-4d32-9d3a-5e95b0587feb
+VARIABLE_COUNT=24
+DOCUMENTATION_COUNT=15
+INITIAL_VALUE_COUNT=2
+ARRAY_COUNT=7
+DERIVED_COUNT=9
+STRING_COUNT=1
+ATTRIBUTES:
+  - NONE
+--- BLOCK START ---
+<globalVars name="GVL_HMI_Config">
+        <variable name="G_HMI_FloorHeating_Configs">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <derived name="ST_FloorHeating_Circuit_Config" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Настройки отопления (16 контуров)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Tariff_Settings">
+          <type>
+            <derived name="ST_Tariff_Config" />
+          </type>
+        </variable>
+        <variable name="G_HMI_Vent_Global_Config">
+          <type>
+            <derived name="ST_Ventilation_Global_Config" />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Настройки вентиляции (8 установок)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Vent_Unit_Configs">
+          <type>
+            <array>
+              <dimension lower="1" upper="8" />
+              <baseType>
+                <derived name="ST_Ventilation_Unit_Config" />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="G_HMI_Scenario_Configs">
+          <type>
+            <array>
+              <dimension lower="1" upper="6" />
+              <baseType>
+                <derived name="ST_Scenario_Config" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Для каждого типа сценария</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Outdoor_Configs">
+          <type>
+            <array>
+              <dimension lower="1" upper="4" />
+              <baseType>
+                <derived name="ST_Outdoor_Zone_Config" />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="G_HMI_Flood_Config">
+          <type>
+            <derived name="ST_Flood_Global_Config" />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Настройки безопасности</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Cleaning_Mode_Active">
+          <type>
+            <array>
+              <dimension lower="1" upper="3" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Режим уборки для 3-х зон протечки</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Cleaning_Mode_TimeLeft">
+          <type>
+            <array>
+              <dimension lower="1" upper="3" />
+              <baseType>
+                <UINT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Оставшееся время (мин)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Gas_Config">
+          <type>
+            <derived name="ST_Gas_Valve_Configuration" />
+          </type>
+        </variable>
+        <variable name="G_HMI_Admin_2FA_Enabled">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="FALSE" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Настройка: 1 или 2 фактора для ADMIN</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Current_Operator_Factor2_Done">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Флаг прохождения 2-го фактора</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Sensor_Calibrations">
+          <type>
+            <array>
+              <dimension lower="1" upper="20" />
+              <baseType>
+                <derived name="ST_Sensor_Calibration_Record" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Калибровка датчиков (например, для 20 датчиков)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Current_Operator_ID">
+          <type>
+            <string length="10" />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> ID текущего авторизованного пользователя</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_Open">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Запрос на открытие</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_Time">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="5" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Время в минутах</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_TimeLeft">
+          <type>
+            <UDINT />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Оставшееся время (для вывода на HMI)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Apply_Settings">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команда на сохранение настроек в NVRAM</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Gate_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Управление доступом (HMI)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Wicket_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_1_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_1_Close_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_2_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_2_Close_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>666b119e-853a-4d32-9d3a-5e95b0587feb</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---
+
+===== BLOCK 6 =====
+NAME=GVL_IO
+CLASS=PLAIN
+HEADER=<globalVars name="GVL_IO">
+OBJECT_ID=ebf2e03c-1213-4bc5-aa31-b0ba19d04314
+VARIABLE_COUNT=45
+DOCUMENTATION_COUNT=20
+INITIAL_VALUE_COUNT=0
+ARRAY_COUNT=24
+DERIVED_COUNT=3
+STRING_COUNT=0
+ATTRIBUTES:
+  - NONE
+--- BLOCK START ---
+<globalVars name="GVL_IO">
+        <variable name="DI_Security_Open">
+          <type>
+            <array>
+              <dimension lower="1" upper="15" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Датчики открытия (15 физических каналов по ТЗ 3.1)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DI_Security_Glass">
+          <type>
+            <array>
+              <dimension lower="1" upper="15" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Датчики разбития (15 физических каналов по ТЗ 3.2)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DI_Security_2F_Group">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Групповой канал 2-го этажа</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DI_Flood_Sensors">
+          <type>
+            <array>
+              <dimension lower="1" upper="12" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Датчики протечки (12 штук по ТЗ 4.1)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AO_Manifold_Valves">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <UINT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-1000 (Modbus)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DO_Manifold_Pumps">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Manifold_Currents">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <INT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 4-20mA -&gt; 400-2000</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_Manifold_Pressures">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <INT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-10V -&gt; 0-1000</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_Manifold_Temps_Supply">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <derived name="ST_Owen_Analog_Value" />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Manifold_Temps_Return">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <INT />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AO_Supply_Fans">
+          <type>
+            <array>
+              <dimension lower="1" upper="3" />
+              <baseType>
+                <UINT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-1000</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AO_Exhaust_Fans">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <UINT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-1000</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DO_Boiler_Enable">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Котлы (BAXI Luna Platinum+ через OpenTherm)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AO_Boiler_Setpoint">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <UINT />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-1000 (0-100.0 C)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_Boiler_Modulation">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <INT />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Boiler_Flame_Status">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="DI_Boiler_Error">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Methane_LEL">
+          <type>
+            <array>
+              <dimension lower="1" upper="2" />
+              <baseType>
+                <derived name="ST_Owen_Analog_Value" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-100% LEL</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_CO_PPM">
+          <type>
+            <array>
+              <dimension lower="1" upper="8" />
+              <baseType>
+                <REAL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 0-1000 PPM</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DI_Smoke_Sensors">
+          <type>
+            <array>
+              <dimension lower="1" upper="6" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Temp_Outdoor">
+          <type>
+            <derived name="ST_Owen_Analog_Value" />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Аналоговые входы (AI)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_Floor_Temps">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <REAL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="AI_Room_Temps">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <REAL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Датчики температуры помещения (ТЗ 1.1)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DO_Zone_Valves">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Клапаны контуров ТП</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_DHW_Temp">
+          <type>
+            <REAL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> ГВС (ТЗ 5.0)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="AI_DHW_Pressure">
+          <type>
+            <REAL />
+          </type>
+        </variable>
+        <variable name="DO_DHW_Heating_Pump">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_DHW_Circ_Pump">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DI_Lighting_Switches">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Освещение и Движение (ТЗ 1.0, 2.0)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DI_Motion_Sensors">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <BOOL />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="DO_Gas_Valve_Close">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Безопасность и Аварии</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DO_Water_Valve_35_Close">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Water_Valve_36_Close">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="AI_Water_Valve_35_Current">
+          <type>
+            <REAL />
+          </type>
+        </variable>
+        <variable name="AI_Water_Valve_36_Current">
+          <type>
+            <REAL />
+          </type>
+        </variable>
+        <variable name="DI_Power_OK">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Gas_Siren">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Fire_Siren">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Pump_Main_Enable">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Gate_Open">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Управление доступом (Сухие контакты)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="DO_Wicket_Open">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Lock_1_Open">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Lock_1_Close">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Lock_2_Open">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="DO_Lock_2_Close">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>ebf2e03c-1213-4bc5-aa
+... [TRUNCATED] ...
+--- BLOCK END ---
+
+===== BLOCK 7 =====
+NAME=GVL_Vars
+CLASS=PLAIN
+HEADER=<globalVars name="GVL_Vars">
+OBJECT_ID=0c1bcc0a-e1fd-451c-bd14-c80f3daf5b1d
+VARIABLE_COUNT=33
+DOCUMENTATION_COUNT=10
+INITIAL_VALUE_COUNT=9
+ARRAY_COUNT=5
+DERIVED_COUNT=11
+STRING_COUNT=1
+ATTRIBUTES:
+  - NONE
+--- BLOCK START ---
+<globalVars name="GVL_Vars">
+        <variable name="G_System_Time_MS">
+          <type>
+            <UDINT />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Системное время (мс)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_Current_Scenario">
+          <type>
+            <derived name="E_SCENARIO_TYPE" />
+          </type>
+          <initialValue>
+            <simpleValue value="E_SCENARIO_TYPE.SCENARIO_NONE" />
+          </initialValue>
+        </variable>
+        <variable name="G_Security_Armed">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="FALSE" />
+          </initialValue>
+        </variable>
+        <variable name="G_Gas_Alarm_Active">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="FALSE" />
+          </initialValue>
+        </variable>
+        <variable name="G_Fire_Alarm_Active">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="FALSE" />
+          </initialValue>
+        </variable>
+        <variable name="G_Flood_Alarm_Active">
+          <type>
+            <BOOL />
+          </type>
+          <initialValue>
+            <simpleValue value="FALSE" />
+          </initialValue>
+        </variable>
+        <variable name="G_Local_PLC_ID">
+          <type>
+            <BYTE />
+          </type>
+          <initialValue>
+            <simpleValue value="1" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> ID текущего ПЛК (1 для A, 2 для B)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_Active_PLC_ID">
+          <type>
+            <BYTE />
+          </type>
+          <initialValue>
+            <simpleValue value="1" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> ID активного ПЛК в данный момент</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_Remote_PLC_Pulse">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Импульс от партнера</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Current_Operator_ID">
+          <type>
+            <string length="10" />
+          </type>
+          <initialValue>
+            <simpleValue value="'ADMIN'" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> HMI и Конфигурация</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Gas_Config">
+          <type>
+            <derived name="ST_Gas_Valve_Configuration" />
+          </type>
+        </variable>
+        <variable name="G_Heating_Config">
+          <type>
+            <derived name="ST_Heating_Config" />
+          </type>
+        </variable>
+        <variable name="G_Ventilation_Config">
+          <type>
+            <derived name="ST_Ventilation_Config" />
+          </type>
+        </variable>
+        <variable name="G_DHW_Config">
+          <type>
+            <derived name="ST_DHW_Config" />
+          </type>
+        </variable>
+        <variable name="G_Security_Config">
+          <type>
+            <derived name="ST_Security_Config" />
+          </type>
+        </variable>
+        <variable name="G_Flood_Config">
+          <type>
+            <derived name="ST_Flood_Config" />
+          </type>
+        </variable>
+        <variable name="G_HMI_Mute_Alarm">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_Open">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_Time">
+          <type>
+            <UDINT />
+          </type>
+          <initialValue>
+            <simpleValue value="300000" />
+          </initialValue>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> 5 минут по умолчанию</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Manual_Gas_Valve_TimeLeft">
+          <type>
+            <UDINT />
+          </type>
+        </variable>
+        <variable name="G_Floor_Temps">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <REAL />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Состояние датчиков</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_BlackBox_Buffer">
+          <type>
+            <array>
+              <dimension lower="0" upper="99" />
+              <baseType>
+                <derived name="ST_BlackBox_Record" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Черный ящик</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_BlackBox_LastIndex">
+          <type>
+            <INT />
+          </type>
+        </variable>
+        <variable name="G_BlackBox_Frozen">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_Maintenance_Zones">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <derived name="ST_Component_Maintenance" />
+              </baseType>
+            </array>
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> ТЗ 6.0: Обслуживание и ремонт</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_Maintenance_Manifolds">
+          <type>
+            <array>
+              <dimension lower="1" upper="5" />
+              <baseType>
+                <derived name="ST_Component_Maintenance" />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="G_Maintenance_Lighting">
+          <type>
+            <array>
+              <dimension lower="1" upper="16" />
+              <baseType>
+                <derived name="ST_Component_Maintenance" />
+              </baseType>
+            </array>
+          </type>
+        </variable>
+        <variable name="G_HMI_Gate_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+          <documentation>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Управление доступом (HMI)</xhtml>
+          </documentation>
+        </variable>
+        <variable name="G_HMI_Wicket_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_1_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_1_Close_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_2_Open_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <variable name="G_HMI_Lock_2_Close_Req">
+          <type>
+            <BOOL />
+          </type>
+        </variable>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>0c1bcc0a-e1fd-451c-bd14-c80f3daf5b1d</ObjectId>
+          </data>
+        </addData>
+      </globalVars>
+--- BLOCK END ---

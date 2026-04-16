@@ -1,0 +1,3 @@
+ALARM_V2_CORE_SKELETON=READY
+RUNTIME_SWITCH=NOT_ENABLED
+NEXT_STEP=prepare extraction package for pending-alarm queue

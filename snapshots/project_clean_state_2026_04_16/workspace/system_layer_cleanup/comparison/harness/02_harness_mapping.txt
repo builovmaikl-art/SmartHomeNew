@@ -1,0 +1,11 @@
+COREKERNEL_COMPARISON_HARNESS_MAPPING
+SOURCE=PRG_System + FB_CoreKernel_DRAFT
+TARGET=FB_CoreKernel_Comparison_Harness_DRAFT
+
+EXPECTED_CONNECTIONS:
+- legacy path ready -> VI_Legacy_Path_Ready
+- core shadow path ready -> VO_Shadow_Path_Ready
+- comparison diff -> VO_Diff_Found
+
+NEXT_STEP:
+Choose a first safe legacy signal source for path-ready comparison.

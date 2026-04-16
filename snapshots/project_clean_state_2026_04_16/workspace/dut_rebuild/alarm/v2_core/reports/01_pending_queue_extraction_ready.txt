@@ -1,0 +1,3 @@
+ALARM_PENDING_QUEUE_EXTRACTION=READY
+RUNTIME_SWITCH=DISABLED
+NEXT_STEP=prepare staging call package from Alarm Manager to Alarm V2 Core

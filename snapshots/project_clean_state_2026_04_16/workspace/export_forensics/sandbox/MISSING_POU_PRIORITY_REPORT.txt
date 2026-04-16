@@ -1,0 +1,39 @@
+MISSING_POU_PRIORITY_REPORT
+TOTAL_MISSING=23
+
+MUST_HAVE_FOR_BUILD
+COUNT=16
+FB_Alarm_Manager	FB_Alarm_Manager.st
+FB_IO_Module_Watchdog	FB_IO_Module_Watchdog.st
+FB_Redundancy_Manager	FB_Redundancy_Manager.st
+FB_Safety_Manager	FB_Safety_Manager.st
+FB_System_Health	FB_System_Health.st
+FB_System_Timer	FB_System_Timer.st
+FB_Watchdog	FB_Watchdog.st
+MAIN	MAIN.st
+PRG_Heating	PRG_Heating.st
+PRG_IO_Read	PRG_IO_Read.st
+PRG_IO_Write	PRG_IO_Write.st
+PRG_Lighting	PRG_Lighting.st
+PRG_Safety	PRG_Safety.st
+PRG_Security	PRG_Security.st
+PRG_System	PRG_System.st
+PRG_Ventilation	PRG_Ventilation.st
+
+SECONDARY_FB_AND_PRG
+COUNT=6
+FB_Analog_Validator	FB_Analog_Validator.st
+FB_Fault_Logger	FB_Fault_Logger.st
+FB_HMI_Interface	FB_HMI_Interface.st
+FB_Rule_Engine	FB_Rule_Engine.st
+FB_Socket_Manager	FB_Socket_Manager.st
+PRG_Test	PRG_Test.st
+
+OPTIONAL_MISC
+COUNT=1
+F_TimeDiff	F_TimeDiff.st
+
+NEXT_ACTION:
+1. Add MUST_HAVE blocks to XML container first.
+2. Re-run implementation sync.
+3. Re-test compile errors.

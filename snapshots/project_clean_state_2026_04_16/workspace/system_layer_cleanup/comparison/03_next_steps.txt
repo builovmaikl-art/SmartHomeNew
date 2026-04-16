@@ -1,0 +1,6 @@
+NEXT_STEPS
+
+1. Introduce shadow outputs (internal only)
+2. Mirror System_Mode without publishing
+3. Add debug comparison flags
+4. Prepare switch gate (future)

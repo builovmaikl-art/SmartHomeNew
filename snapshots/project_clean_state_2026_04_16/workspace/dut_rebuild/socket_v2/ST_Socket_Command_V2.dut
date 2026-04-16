@@ -1,0 +1,10 @@
+TYPE ST_Socket_Command_V2 :
+STRUCT
+    Socket_ID : INT;
+    Enabled : BOOL;
+    Target_State : BOOL;
+    Manual_Override : BOOL;
+    Safety_Lock : BOOL;
+    Scenario_ID : INT;
+END_STRUCT
+END_TYPE

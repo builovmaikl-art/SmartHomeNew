@@ -1,0 +1,13 @@
+== START CLEAN + UNZIP ==
+-- BEFORE --
+./.git
+./SmartHomeNew-main
+./SmartHomeNew-main.zip
+./diagnostics
+zip candidates: ['SmartHomeNew-main.zip']
+entries: 1022
+OK: SmartHomeNew-main.zip extracted and removed
+-- AFTER --
+./.git
+./SmartHomeNew-main
+./diagnostics

@@ -1,0 +1,24 @@
+CORE_KERNEL_BOUNDARIES
+
+PRIMARY_FB_CALLS:
+- fbRedundancy :: around L104-L128
+- fbSafety :: around L131-L141
+- fbWatchdog :: around L147-L160
+- fbSystemHealth :: around L151-L179
+- fbStateManager :: around L165-L184
+
+MODE_AND_STATUS_APPLY:
+- System mode publish :: around L184-L208
+- System mode text/cause :: around L210-L246
+
+RELATED_DEPENDENCIES_OUTSIDE_KERNEL:
+- Evacuation activation :: around L252-L286
+- Scenario manager feed with System_Mode :: around L301-L321
+- Gateway command gating by System_Mode :: around L438-L468
+- Persistence / history reads from System_Mode and SystemHealth :: around L525-L574
+
+EXTRACTION_GUIDANCE:
+1. Extract call sequence first, not side effects
+2. Keep GVL writes outside kernel in first shadow iteration
+3. Treat mode text/cause as projection layer, not kernel core
+4. First shadow target = redundancy + safety + watchdog + system health + state manager outputs

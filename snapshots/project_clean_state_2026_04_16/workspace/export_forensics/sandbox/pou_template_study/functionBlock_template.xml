@@ -1,0 +1,213 @@
+<pou name="FB_Access_Control" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="VI_System_Time_MS">
+              <type>
+                <UDINT />
+              </type>
+            </variable>
+            <variable name="VI_IsActivePLC">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Armed">
+              <type>
+                <BOOL />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Состояние охраны</xhtml>
+              </documentation>
+            </variable>
+            <variable name="VI_Gate_Open_Req">
+              <type>
+                <BOOL />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команды HMI</xhtml>
+              </documentation>
+            </variable>
+            <variable name="VI_Wicket_Open_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Lock_1_Open_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Lock_1_Close_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Lock_2_Open_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Lock_2_Close_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VI_Config">
+              <type>
+                <derived name="ST_Security_Config" />
+              </type>
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml"> Настройки</xhtml>
+              </documentation>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="VO_Gate_Open">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VO_Wicket_Open">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VO_Lock_1_Open">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VO_Lock_1_Close">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VO_Lock_2_Open">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="VO_Lock_2_Close">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="L_Gate_Timer">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Wicket_Timer">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Lock_1_Open_T">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Lock_1_Close_T">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Lock_2_Open_T">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Lock_2_Close_T">
+              <type>
+                <derived name="TON" />
+              </type>
+            </variable>
+            <variable name="L_Prev_Armed">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="L_Auto_Lock_Req">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">// Если ПЛК находится в режиме Standby (резерв), он не должен управлять выходами
+IF NOT VI_IsActivePLC THEN
+    RETURN;
+END_IF;
+
+IF VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
+    VO_Gate_Open := FALSE;
+    VO_Wicket_Open := FALSE;
+    VO_Lock_1_Open := FALSE;
+    VO_Lock_2_Open := FALSE;
+    RETURN;
+END_IF;
+
+// 1. Логика автоматического закрытия замков при постановке на охрану (ТЗ 3.0)
+// При переходе системы в режим &quot;Охрана&quot; принудительно блокируем все замки
+IF VI_Armed AND NOT L_Prev_Armed THEN
+    L_Auto_Lock_Req := TRUE;
+END_IF;
+L_Prev_Armed := VI_Armed;
+
+// Детекторы фронта для команд
+R_Trig_Gate(CLK := VI_Gate_Open_Req);
+R_Trig_Wicket(CLK := VI_Wicket_Open_Req);
+R_Trig_Lock_1_O(CLK := VI_Lock_1_Open_Req);
+R_Trig_Lock_1_C(CLK := VI_Lock_1_Close_Req OR L_Auto_Lock_Req);
+R_Trig_Lock_2_O(CLK := VI_Lock_2_Open_Req);
+R_Trig_Lock_2_C(CLK := VI_Lock_2_Close_Req OR L_Auto_Lock_Req);
+
+// Проверка PIN-кода или RFID-метки через менеджер кодов
+fbAccessCode(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_Code_To_Check := VI_PIN_Code,
+    VI_RFID_To_Check := VI_RFID_Tag,
+    VI_Access_Codes := VI_Access_Codes,
+    VI_RFID_Tags := VI_RFID_Tags,
+    VO_Code_Valid =&gt; L_Valid_PIN
+);
+
+// 2. Формирование импульсов управления исполнительными механизмами (Pulse Control)
+// Открытие ворот и калитки требует валидного ПИН-кода или RFID-метки, если система под охраной
+L_Gate_Timer(IN := R_Trig_Gate.Q AND (NOT VI_Armed OR L_Valid_PIN), PT := TO_TIME(VI_Config.gate_open_pulse_ms));
+VO_Gate_Open := L_Gate_Timer.Q;
+
+L_Wicket_Timer(IN := R_Trig_Wicket.Q AND (NOT VI_Armed OR L_Valid_PIN), PT := TO_TIME(VI_Config.wicket_open_pulse_ms));
+VO_Wicket_Open := L_Wicket_Timer.Q;
+
+L_Lock_1_Open_T(IN := R_Trig_Lock_1_O.Q AND (NOT VI_Armed OR L_Valid_PIN), PT := TO_TIME(VI_Config.lock_open_pulse_ms));
+VO_Lock_1_Open := L_Lock_1_Open_T.Q;
+
+L_Lock_1_Close_T(IN := R_Trig_Lock_1_C.Q, PT := TO_TIME(VI_Config.lock_close_pulse_ms));
+VO_Lock_1_Close := L_Lock_1_Close_T.Q;
+
+L_Lock_2_Open_T(IN := R_Trig_Lock_2_O.Q AND (NOT VI_Armed OR L_Valid_PIN), PT := TO_TIME(VI_Config.lock_open_pulse_ms));
+VO_Lock_2_Open := L_Lock_2_Open_T.Q;
+
+L_Lock_2_Close_T(IN := R_Trig_Lock_2_C.Q, PT := TO_TIME(VI_Config.lock_close_pulse_ms));
+VO_Lock_2_Close := L_Lock_2_Close_T.Q;
+
+// Сброс флага автоматического закрытия
+IF L_Auto_Lock_Req THEN
+    L_Auto_Lock_Req := FALSE;
+END_IF;
+// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_Access_Control &lt;&lt;&lt;
+</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>9d1c7387-3ea5-428b-aa65-87dff46e5c25</ObjectId>
+          </data>
+        </addData>
+      </pou>

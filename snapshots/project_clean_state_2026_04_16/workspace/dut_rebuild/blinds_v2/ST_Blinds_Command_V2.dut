@@ -1,0 +1,10 @@
+TYPE ST_Blinds_Command_V2 :
+STRUCT
+    Blind_ID : INT;
+    Enabled : BOOL;
+    Position_Setpoint : BYTE;
+    Manual_Override : BOOL;
+    Scenario_ID : INT;
+    Safety_Mode : BOOL;
+END_STRUCT
+END_TYPE

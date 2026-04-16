@@ -1,0 +1,2 @@
+NEXT_STEP=prepare minimal safe patch script for FB_Rule_Engine
+READY_FOR_PATCH=YES

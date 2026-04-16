@@ -1,0 +1,10 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Device_Health_Zones : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF ST_Device_Health;
+    G_Device_Health_Manifolds : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+    G_Device_Health_Boilers : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Device_Health;
+    G_Device_Health_Vents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+    G_System_Health_Summary : BYTE := 100;
+    G_Pump_Health : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health; // Для 5 коллекторных насосов
+    G_Gas_Valve_Health : ST_Device_Health;
+END_VAR
