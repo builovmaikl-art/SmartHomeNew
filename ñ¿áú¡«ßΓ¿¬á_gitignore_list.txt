@@ -1,3 +1,0 @@
-./snapshots/clean_build_20260414_0820/.gitignore
-./snapshots/clean_build_2026_04_15/.gitignore
-./snapshots/clean_build_2026_04_14/.gitignore
