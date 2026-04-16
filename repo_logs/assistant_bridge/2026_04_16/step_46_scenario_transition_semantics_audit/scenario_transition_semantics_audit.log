@@ -1,0 +1,114 @@
+]633;E;echo "=== STEP 46: SCENARIO TRANSITION SEMANTICS AUDIT ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 46: SCENARIO TRANSITION SEMANTICS AUDIT ===
+timestamp_utc=2026-04-16T18:44:18Z
+
+=== FB_SCENARIO_MANAGER FULL ===
+FUNCTION_BLOCK FB_Scenario_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+    VI_Activate_Request : E_SCENARIO_TYPE; // Запрос на активацию сценария
+    VI_IsActivePLC : BOOL; // Флаг: Данный ПЛК является ведущим
+    VI_System_Mode : E_System_Operating_Mode; // Агрегированный режим работы системы
+END_VAR
+VAR_OUTPUT
+    VO_Current_Scenario : E_SCENARIO_TYPE; // Текущий активный сценарий
+    VO_Status_Msg : STRING(200); // Строковое сообщение о статусе
+END_VAR
+
+VAR
+    L_Last_Scenario_Time : UDINT;
+END_VAR
+
+IF NOT VI_IsActivePLC THEN
+    RETURN;
+END_IF;
+
+CASE VI_System_Mode OF
+    E_System_Operating_Mode.MODE_SAFE_STOP,
+    E_System_Operating_Mode.MODE_FREEZE_PROTECTION:
+        IF VO_Current_Scenario <> E_SCENARIO_TYPE.SCENARIO_NONE THEN
+            VO_Current_Scenario := E_SCENARIO_TYPE.SCENARIO_NONE;
+            VO_Status_Msg := 'Сценарии принудительно отключены режимом безопасности';
+        END_IF;
+        RETURN;
+
+    E_System_Operating_Mode.MODE_DEGRADED:
+        VO_Status_Msg := 'Смена сценариев заблокирована: деградированный режим';
+        RETURN;
+END_CASE;
+
+IF VI_Activate_Request <> VO_Current_Scenario THEN
+    // Проверка минимального времени работы сценария
+    IF (VI_System_Time_MS - L_Last_Scenario_Time) >= 60000 OR VO_Current_Scenario = E_SCENARIO_TYPE.SCENARIO_NONE THEN
+        // Логика переключения сценариев
+        VO_Current_Scenario := VI_Activate_Request;
+        L_Last_Scenario_Time := VI_System_Time_MS;
+        
+        CASE VO_Current_Scenario OF
+        E_SCENARIO_TYPE.SCENARIO_NONE:
+            VO_Status_Msg := 'Сценарии отключены';
+        E_SCENARIO_TYPE.SCENARIO_AWAY:
+            VO_Status_Msg := 'Активирован сценарий: Вне дома (Охрана + Энергосбережение)';
+        E_SCENARIO_TYPE.SCENARIO_SLEEP:
+            VO_Status_Msg := 'Активирован сценарий: Сон (Ночное освещение + Климат)';
+        E_SCENARIO_TYPE.SCENARIO_PRESENCE:
+            VO_Status_Msg := 'Активирован сценарий: Имитация присутствия';
+        END_CASE;
+    END_IF;
+END_IF;
+// >>> BULK_SYNC_ANCHOR: FB_Scenario_Manager <<<
+
+=== FB_SCENARIO_TRANSITION_CONTROLLER FULL ===
+FUNCTION_BLOCK FB_Scenario_Transition_Controller
+VAR_INPUT
+    VI_System_Time : UDINT;
+    VI_Start_Time  : UDINT;
+    VI_Duration    : UDINT; // Длительность перехода (мс)
+    VI_Start_Value : REAL;  // Начальное значение
+    VI_End_Value   : REAL;  // Конечное значение
+END_VAR
+VAR_OUTPUT
+    VO_Current_Value : REAL; // Текущее интерполированное значение
+    VO_Transition_Done : BOOL; // Флаг завершения перехода
+END_VAR
+VAR
+    L_Elapsed : UDINT;
+    L_Progress : REAL;
+END_VAR
+
+L_Elapsed := (SEL(VI_System_Time >= VI_Start_Time, VI_System_Time - VI_Start_Time, (4294967295 - VI_Start_Time) + VI_System_Time + 1));
+
+IF L_Elapsed >= VI_Duration OR VI_Duration = 0 THEN
+    VO_Current_Value := VI_End_Value;
+    VO_Transition_Done := TRUE;
+ELSE
+    L_Progress := UDINT_TO_REAL(L_Elapsed) / UDINT_TO_REAL(VI_Duration);
+    VO_Current_Value := VI_Start_Value + (VI_End_Value - VI_Start_Value) * L_Progress;
+    VO_Transition_Done := FALSE;
+END_IF;
+=== ST_SCENARIO_TRANSITION_CONFIG ===
+{attribute 'pack_mode' := '1'}
+TYPE ST_Scenario_Transition_Config :
+STRUCT
+    current_scenario : E_SCENARIO_TYPE;
+    target_scenario : E_SCENARIO_TYPE;
+    min_duration_minutes : UDINT := 5;
+    transition_allowed : BOOL := FALSE;
+END_STRUCT
+END_TYPE
+=== SCENARIO MANAGER USAGE ===
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:14:    fbScenarioManager : FB_Scenario_Manager;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:662:fbScenarioManager(
+./PRG_System.st:14:    fbScenarioManager : FB_Scenario_Manager;
+./PRG_System.st:676:fbScenarioManager(
+
+=== SCENARIO TRANSITION CONTROLLER USAGE ===
+./FB_Lighting_Blinds_Manager.st:53:    L_Transition_Light : FB_Scenario_Transition_Controller;
+./FB_Lighting_Blinds_Manager.st:54:    L_Transition_Blinds : FB_Scenario_Transition_Controller;
+./FB_Heating_System_Manager.st:90:    L_Transition_Temp : FB_Scenario_Transition_Controller;
+./snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st:53:    L_Transition_Light : FB_Scenario_Transition_Controller;
+./snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st:54:    L_Transition_Blinds : FB_Scenario_Transition_Controller;
+./snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st:90:    L_Transition_Temp : FB_Scenario_Transition_Controller;
+./snapshots/project_clean_state_2026_04_16/FB_Scenario_Transition_Controller.st:1:FUNCTION_BLOCK FB_Scenario_Transition_Controller
+./FB_Scenario_Transition_Controller.st:1:FUNCTION_BLOCK FB_Scenario_Transition_Controller
+
+=== END STEP 46 ===
