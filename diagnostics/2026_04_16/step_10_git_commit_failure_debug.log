@@ -251,3 +251,25 @@ builov.maikl@gmail.com
 ./компилятор
 
 -- TRY GIT ADD -A --
+git add exit=0
+
+-- STATUS AFTER ADD --
+AM diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
+
+-- TRY COMMIT --
+[main 6d54780] fix: normalize russian filenames and directories after encoding issue
+ 1 file changed, 253 insertions(+)
+ create mode 100644 diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
+git commit exit=0
+
+-- TRY PUSH --
+To https://github.com/builovmaikl-art/SmartHomeNew
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/builovmaikl-art/SmartHomeNew'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+git push exit=1
+
+== END ==
