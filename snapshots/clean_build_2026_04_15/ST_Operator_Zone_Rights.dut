@@ -1,9 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Operator_Zone_Rights :
-STRUCT
-    operator_id : STRING(10);
-    global_access_level : BYTE := 0;
-    zone_masks : DWORD; // Битовая маска доступа к зонам (до 32 зон)
-    last_modified : UDINT;
-END_STRUCT
-END_TYPE

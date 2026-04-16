@@ -1,4 +1,0 @@
-TYPE ST_Heating_Command_V2 : STRUCT
-    Valve_Position_Setpoint : REAL;
-END_STRUCT
-END_TYPE

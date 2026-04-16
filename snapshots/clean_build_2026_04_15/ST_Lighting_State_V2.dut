@@ -1,5 +1,0 @@
-TYPE ST_Lighting_State_V2 : STRUCT
-    Brightness_Actual : REAL;
-    Motion_Active : BOOL;
-END_STRUCT
-END_TYPE

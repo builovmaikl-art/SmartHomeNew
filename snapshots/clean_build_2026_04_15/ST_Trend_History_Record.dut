@@ -1,7 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Trend_History_Record :
-STRUCT
-    timestamp_ms : UDINT := 0;
-    value : REAL := 0.0;
-END_STRUCT
-END_TYPE

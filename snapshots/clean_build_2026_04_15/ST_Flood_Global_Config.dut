@@ -1,9 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Flood_Global_Config :
-STRUCT
-    valve_types : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_VALVES] OF E_VALVE_TYPE := [GVL_CONSTANTS.C_MAX_FLOOD_VALVES(E_VALVE_TYPE.VALVE_NC)];
-    sensor_to_valve_map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BYTE := [1, 1, 1, 2, 2, 2, 2, 0, 0, 0]; // 1 -> Valve 35, 2 -> Valve 36
-    min_duration_ms : UDINT := 5000; // Защита от брызг (5 сек)
-    warning_duration_ms : UDINT := 30000; // Время предупреждения до перекрытия (30 сек)
-END_STRUCT
-END_TYPE

@@ -1,9 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Component_Maintenance :
-STRUCT
-    Is_Faulty : BOOL;
-    Is_In_Maintenance : BOOL;
-    Fallback_Value : REAL;
-    Use_Last_Good_Value : BOOL;
-END_STRUCT
-END_TYPE

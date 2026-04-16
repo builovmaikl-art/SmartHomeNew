@@ -1,8 +1,0 @@
-TYPE E_System_Operating_Mode :
-(
-    MODE_NORMAL := 0,
-    MODE_DEGRADED := 1,
-    MODE_SAFE_STOP := 2,
-    MODE_FREEZE_PROTECTION := 3
-);
-END_TYPE

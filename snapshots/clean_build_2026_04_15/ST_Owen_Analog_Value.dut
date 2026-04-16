@@ -1,8 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Owen_Analog_Value :
-STRUCT
-    rValue : REAL;
-    uiCycleTime : UINT;
-    wStatus : WORD;
-END_STRUCT
-END_TYPE

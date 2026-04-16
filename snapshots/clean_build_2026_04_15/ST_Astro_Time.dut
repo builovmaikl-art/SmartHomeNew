@@ -1,8 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Astro_Time :
-STRUCT
-    sunrise_ms : UDINT := 0;
-    sunset_ms : UDINT := 0;
-    is_daylight : BOOL := FALSE;
-END_STRUCT
-END_TYPE
