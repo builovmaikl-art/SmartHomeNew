@@ -1,0 +1,26 @@
+]633;E;echo "=== STEP 38: EDGE INJECTION POINTS ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 38: EDGE INJECTION POINTS ===
+timestamp_utc=2026-04-16T18:23:40Z
+
+=== LIST OF COMMAND USAGE WITH LINE NUMBERS ===
+253:IF GVL_COMMAND.CMD_Water_Selective_Recover THEN
+265:IF GVL_COMMAND.CMD_Gas_Selective_Recover THEN
+274:IF GVL_COMMAND.CMD_Water_Valve_Test_Open THEN
+302:IF GVL_COMMAND.CMD_Water_Valve_Test_Close THEN
+308:IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
+318:IF GVL_COMMAND.CMD_Gas_Valve_Test_Open THEN
+344:IF GVL_COMMAND.CMD_Gas_Valve_Test_Close THEN
+349:IF GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Gas_Test_Active THEN
+
+=== UNIQUE COMMANDS IN PRG_SAFETY ===
+GVL_COMMAND.CMD_Gas_Selective_Recover
+GVL_COMMAND.CMD_Gas_Valve_Test_Close
+GVL_COMMAND.CMD_Gas_Valve_Test_Confirm
+GVL_COMMAND.CMD_Gas_Valve_Test_Open
+GVL_COMMAND.CMD_Water_Selective_Recover
+GVL_COMMAND.CMD_Water_Valve_Test_Close
+GVL_COMMAND.CMD_Water_Valve_Test_Confirm
+GVL_COMMAND.CMD_Water_Valve_Test_Open
+
+=== CHECK EXISTING _PREV VARIABLES ===
+
+=== END STEP 38 ===
