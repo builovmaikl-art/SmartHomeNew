@@ -51,6 +51,7 @@ VAR
     L_History_Event : ST_History_Record;
     L_History_Write_Event : BOOL;
     L_Last_Operator_Journal_Seq : UDINT;
+    L_Last_Maintenance_Action_Code : UDINT;
     L_Last_Event_Code : UDINT;
     L_Last_Event_Value : REAL;
     L_Last_Event_Time_MS : UDINT;
@@ -975,20 +976,34 @@ IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND NOT L_Last_Operator_Bloc
 END_IF;
 L_Last_Operator_Blocked := GVL_STATUS.G_Diagnostics.Operator_Action_Blocked;
 IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service <> L_Last_DHW_Heating_In_Service THEN
-    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
     IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
         GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС возвращён из ТО';
+        IF L_Last_Maintenance_Action_Code <> 1101 THEN
+            GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+            L_Last_Maintenance_Action_Code := 1101;
+        END_IF;
     ELSE
         GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС выведен в ТО';
+        IF L_Last_Maintenance_Action_Code <> 1102 THEN
+            GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+            L_Last_Maintenance_Action_Code := 1102;
+        END_IF;
     END_IF;
 END_IF;
 L_Last_DHW_Heating_In_Service := GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
 IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service <> L_Last_DHW_Circ_In_Service THEN
-    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
     IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
         GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС возвращён из ТО';
+        IF L_Last_Maintenance_Action_Code <> 1201 THEN
+            GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+            L_Last_Maintenance_Action_Code := 1201;
+        END_IF;
     ELSE
         GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС выведен в ТО';
+        IF L_Last_Maintenance_Action_Code <> 1202 THEN
+            GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+            L_Last_Maintenance_Action_Code := 1202;
+        END_IF;
     END_IF;
 END_IF;
 L_Last_DHW_Circ_In_Service := GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
