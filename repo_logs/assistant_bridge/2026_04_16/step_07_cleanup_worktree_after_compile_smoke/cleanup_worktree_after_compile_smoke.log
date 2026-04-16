@@ -1,0 +1,23 @@
+]633;E;echo "=== STEP 07: CLEANUP WORKTREE AFTER COMPILE SMOKE ===";f7c3dcda-a7ef-439c-9074-36a937f4d9ed]633;C=== STEP 07: CLEANUP WORKTREE AFTER COMPILE SMOKE ===
+timestamp_utc=2026-04-16T15:30:21Z
+
+=== CURRENT BRANCH ===
+main
+
+=== HEAD COMMIT BEFORE CLEANUP ===
+1b32cd60be25827c42439be9319f9f0da2376e5c
+
+=== GIT STATUS BEFORE ===
+?? repo_logs/assistant_bridge/2026_04_16/step_07_cleanup_worktree_after_compile_smoke/
+
+=== GIT STATUS -SB BEFORE ===
+## main...origin/main
+?? repo_logs/assistant_bridge/2026_04_16/step_07_cleanup_worktree_after_compile_smoke/
+
+=== GIT DIFF --STAT BEFORE ===
+
+=== GIT DIFF NAME-ONLY BEFORE ===
+
+=== GIT DIFF CACHED --STAT BEFORE ===
+
+=== ADD ALL REMAINING CHANGES ===
