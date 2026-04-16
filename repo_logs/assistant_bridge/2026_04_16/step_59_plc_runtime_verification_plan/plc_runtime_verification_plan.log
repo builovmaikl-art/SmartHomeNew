@@ -1,0 +1,52 @@
+]633;E;echo "=== STEP 59: PLC RUNTIME VERIFICATION PLAN ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 59: PLC RUNTIME VERIFICATION PLAN ===
+timestamp_utc=2026-04-16T19:10:51Z
+
+=== TARGET 1: SYSTEM MODE ===
+Observe:
+- GVL_STATE.G_System_Mode
+- GVL_STATE.G_System_Mode_Text
+- GVL_STATUS.G_System_Mode_Cause
+
+=== TARGET 2: SCENARIO LAYER ===
+Observe:
+- GVL_STATUS.G_Current_Scenario
+- GVL_STATUS.G_Previous_Scenario
+- scenario guard deny message in HMI diagnostics
+- policy AWAY/SLEEP behavior
+
+=== TARGET 3: DANGEROUS ACTION FLOW ===
+Observe:
+- arming
+- timeout
+- deny
+- apply only in NORMAL/DEGRADED
+
+=== TARGET 4: EVENT / HISTORY ===
+Observe:
+- scenario transition event
+- watchdog event 11/12
+- IO fault event 2/3
+- mode event 4
+- policy events 5/6/7
+
+=== TARGET 5: SAFETY ===
+Observe:
+- flood/gas/fire alarms
+- valve close behavior
+- selective recover/test confirm blocks
+
+=== TARGET 6: GATEWAY ===
+Observe:
+- one-shot VO_* requests
+- telegram/sync/reset/config command separation
+- no duplicated command effects
+
+=== TARGET 7: NON-INTERFERENCE ===
+Observe:
+- dry-run helpers are present but inactive
+- no production path depends on dry-run rig
+
+=== RESULT ===
+Plan prepared for first real PLC/runtime verification pass.
+
+=== END STEP 59 ===
