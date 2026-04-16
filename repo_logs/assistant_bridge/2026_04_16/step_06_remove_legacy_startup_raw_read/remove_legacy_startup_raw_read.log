@@ -92,3 +92,16 @@ index b28b4c3..5d65e65 100644
      GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
 
 === COMPILE SMOKE ===
+[main a220f7e] test: compile smoke after migration
+ 5 files changed, 551 insertions(+), 446 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_16/step_06_remove_legacy_startup_raw_read/remove_legacy_startup_raw_read.log
+ create mode 100644 steps/2026-04-16_remove_legacy_startup_raw_read/01_remove_legacy_startup_raw_read.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   cf50112..a220f7e  main -> main
+
+=== END STEP 06 ===
