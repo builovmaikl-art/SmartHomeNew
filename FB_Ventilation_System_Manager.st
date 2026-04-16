@@ -42,7 +42,6 @@ VAR
     L_Target_Temp : REAL;
     L_PID_Heaters : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_PID_Controller;
     L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
-    fbVentilationV2Staging : FB_Ventilation_V2_Staging;
     L_Vent_Command_Shadow : ST_Ventilation_Command_V2;
     L_Vent_State_Shadow : ST_Ventilation_State_V2;
     L_Vent_V2_Shadow_Diff_Found : BOOL;
