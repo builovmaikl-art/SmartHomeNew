@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 68: REMOVE UNUSED LIGHTING V2 STAGING VAR ===";fd114dcf-b8f0-4fa9-a638-75bd3982af51]633;C=== STEP 68: REMOVE UNUSED LIGHTING V2 STAGING VAR ===
+timestamp_utc=2026-04-16T20:03:11Z
+
+=== BEFORE ===
+39:    fbLightingV2Staging : FB_Lighting_V2_Staging;
+
+=== APPLY ===
+OK: removed unused fbLightingV2Staging declaration
+
+=== AFTER ===
+
+=== ROOT REFERENCES AFTER CLEANUP ===
+./FB_Lighting_Blinds_Manager.st:274:// Inlined from FB_Lighting_V2_Staging
+./FB_Lighting_V2_Staging.st:1:FUNCTION_BLOCK FB_Lighting_V2_Staging
+
+=== DIFF ===
+diff --git a/FB_Lighting_Blinds_Manager.st b/FB_Lighting_Blinds_Manager.st
+index 55016a9..700d9a6 100644
+--- a/FB_Lighting_Blinds_Manager.st
++++ b/FB_Lighting_Blinds_Manager.st
+@@ -36,7 +36,6 @@ VAR
+     L_Blinds_V2_Path_Ready : BOOL;
+     L_Blinds_Using_Legacy_Fallback : BOOL;
+     // Lighting V2 shadow (phase2)
+-    fbLightingV2Staging : FB_Lighting_V2_Staging;
+     L_Lighting_V2_Command_Shadow : ST_Lighting_Command_V2;
+     L_Lighting_V2_State_Shadow : ST_Lighting_State_V2;
+     L_Lighting_V2_Shadow_Diff_Found : BOOL;
+
+=== END STEP 68 ===

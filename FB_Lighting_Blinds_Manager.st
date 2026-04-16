@@ -36,7 +36,6 @@ VAR
     L_Blinds_V2_Path_Ready : BOOL;
     L_Blinds_Using_Legacy_Fallback : BOOL;
     // Lighting V2 shadow (phase2)
-    fbLightingV2Staging : FB_Lighting_V2_Staging;
     L_Lighting_V2_Command_Shadow : ST_Lighting_Command_V2;
     L_Lighting_V2_State_Shadow : ST_Lighting_State_V2;
     L_Lighting_V2_Shadow_Diff_Found : BOOL;
