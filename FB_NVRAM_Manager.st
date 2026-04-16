@@ -80,9 +80,12 @@ IF L_cmd_rising THEN
             ELSE
                 // Проверка на изменение данных перед записью
                 L_Data_Changed := FALSE;
-                IF TRUE THEN
-                    L_Data_Changed := TRUE;
-                END_IF;
+                FOR L_i := 0 TO VI_DataSize - 1 DO
+                    IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+                        L_Data_Changed := TRUE;
+                        EXIT;
+                    END_IF;
+                END_FOR;
                 
                 IF L_Data_Changed THEN
                     // Безопасное копирование (WRITE)
