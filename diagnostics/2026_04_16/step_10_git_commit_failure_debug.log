@@ -1,22 +1,23 @@
-]633;E;echo "== START GIT COMMIT FAILURE DEBUG ==";6da197fb-c579-4883-85ed-f6f81ab499a1]633;C== START GIT COMMIT FAILURE DEBUG ==
+]633;E;echo "== START GIT COMMIT FAILURE DEBUG ==";28074703-056c-4271-af14-973763a44ba6]633;C== START GIT COMMIT FAILURE DEBUG ==
 
 -- PWD --
 /workspaces/SmartHomeNew
 
 -- GIT STATUS SHORT --
-?? diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
+ M diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
 
 -- GIT STATUS --
 On branch main
 Your branch and 'origin/main' have diverged,
-and have 2 and 2 different commits each, respectively.
+and have 4 and 2 different commits each, respectively.
   (use "git pull" if you want to integrate the remote branch with yours)
 
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
 
-nothing added to commit but untracked files present (use "git add" to track)
+no changes added to commit (use "git add" and/or "git commit -a")
 
 -- GIT CONFIG USER --
 builovmaikl-art
@@ -251,25 +252,3 @@ builov.maikl@gmail.com
 ./компилятор
 
 -- TRY GIT ADD -A --
-git add exit=0
-
--- STATUS AFTER ADD --
-AM diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
-
--- TRY COMMIT --
-[main 6d54780] fix: normalize russian filenames and directories after encoding issue
- 1 file changed, 253 insertions(+)
- create mode 100644 diagnostics/2026_04_16/step_10_git_commit_failure_debug.log
-git commit exit=0
-
--- TRY PUSH --
-To https://github.com/builovmaikl-art/SmartHomeNew
- ! [rejected]        main -> main (non-fast-forward)
-error: failed to push some refs to 'https://github.com/builovmaikl-art/SmartHomeNew'
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. If you want to integrate the remote changes,
-hint: use 'git pull' before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-git push exit=1
-
-== END ==
