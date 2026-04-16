@@ -1,0 +1,49 @@
+]633;E;echo "=== STEP 10: DEFINE PERSIST STRUCT CONTRACT ===";f7c3dcda-a7ef-439c-9074-36a937f4d9ed]633;C=== STEP 10: DEFINE PERSIST STRUCT CONTRACT ===
+timestamp_utc=2026-04-16T15:38:17Z
+
+=== CREATED FILE ===
+-rw-rw-rw- 1 codespace codespace 340 Apr 16 15:38 DUT/ST_Persist.dut
+
+=== FILE CONTENT ===
+TYPE ST_Persist :
+STRUCT
+    // --- Core system ---
+    System_Mode : INT;
+
+    // --- Safety latches ---
+    Safety_Gas_Latched : BOOL;
+    Safety_Smoke_Latched : BOOL;
+    Safety_Leak_Latched : BOOL;
+
+    // --- DHW ---
+    DHW_Heating_Active : BOOL;
+
+    // --- Versioning (future-proof) ---
+    Version : UINT := 1;
+END_STRUCT
+END_TYPE
+
+=== SEARCH FOR CURRENT PERSIST FIELDS ===
+GVL_PERSISTENT.gvl:4:    P_System_Mode : E_System_Operating_Mode;
+GVL_PERSISTENT.gvl:7:    P_Safety_Gas_Latched : BOOL;
+GVL_PERSISTENT.gvl:8:    P_Safety_Smoke_Latched : BOOL;
+GVL_PERSISTENT.gvl:9:    P_Safety_Leak_Latched : BOOL;
+GVL_PERSISTENT.gvl:12:    P_DHW_Heating_Active : BOOL;
+PRG_System.st:112:        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+PRG_System.st:113:        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+PRG_System.st:114:        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+PRG_System.st:115:        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+PRG_System.st:674:IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+PRG_System.st:679:IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+PRG_System.st:684:IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+PRG_System.st:689:IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+PRG_System.st:989:GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+PRG_System.st:991:GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+PRG_System.st:992:GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+PRG_System.st:993:GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+PRG_System.st:995:GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+
+=== NOTE ===
+Structure created. No runtime logic changed yet.
+
+=== END STEP 10 ===

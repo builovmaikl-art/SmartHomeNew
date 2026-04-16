@@ -1,0 +1,17 @@
+TYPE ST_Persist :
+STRUCT
+    // --- Core system ---
+    System_Mode : INT;
+
+    // --- Safety latches ---
+    Safety_Gas_Latched : BOOL;
+    Safety_Smoke_Latched : BOOL;
+    Safety_Leak_Latched : BOOL;
+
+    // --- DHW ---
+    DHW_Heating_Active : BOOL;
+
+    // --- Versioning (future-proof) ---
+    Version : UINT := 1;
+END_STRUCT
+END_TYPE
