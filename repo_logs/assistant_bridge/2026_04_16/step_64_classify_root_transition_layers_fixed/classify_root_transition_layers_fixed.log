@@ -1,0 +1,110 @@
+]633;E;echo "=== STEP 64 FIXED: CLASSIFY ROOT TRANSITION LAYERS ===";fd114dcf-b8f0-4fa9-a638-75bd3982af51]633;C=== STEP 64 FIXED: CLASSIFY ROOT TRANSITION LAYERS ===
+timestamp_utc=2026-04-16T19:47:08Z
+
+=== GROUP 1: RUNTIME BRIDGE ===
+FB_DHW_V2_Staging.st
+FB_Heating_V2_Staging.st
+FB_Ventilation_V2_Staging.st
+FB_Lighting_V2_Staging.st
+FB_Blinds_V2_Staging.st
+FB_Socket_V2_Staging.st
+ST_DHW_Command_V2.dut
+ST_DHW_State_V2.dut
+ST_Heating_Command_V2.dut
+ST_Heating_State_V2.dut
+ST_Ventilation_Command_V2.dut
+ST_Ventilation_State_V2.dut
+ST_Lighting_Command_V2.dut
+ST_Lighting_State_V2.dut
+ST_Blinds_Command_V2.dut
+ST_Blinds_State_V2.dut
+ST_Socket_Command_V2.dut
+ST_Socket_State_V2.dut
+
+=== GROUP 2: COMPATIBILITY LAYER ===
+FB_Alarm_Compatibility_Package.st
+FB_Rule_Compatibility_Package.st
+FB_Alarm_V2_Core.st
+FB_History_V2_Core.st
+FB_BlackBox_V2_Core.st
+ST_History_Event_V2.dut
+ST_BlackBox_Snapshot_V2.dut
+
+=== GROUP 3: ISOLATED TEST LAYER ===
+FB_DryRun_Simulation_Harness.st
+FB_DryRun_Assertion_Map.st
+PRG_DryRun_TestRig.st
+
+=== GROUP 4: EMBEDDED TRANSITION CONTROL (NOT JUNK) ===
+FB_Scenario_Transition_Guard.st
+
+=== REFERENCE CHECKS ===
+--- FB_DHW_V2_Staging.st ---
+./FB_DHW_Manager.st:23:    fbDHWV2Staging : FB_DHW_V2_Staging;
+./FB_DHW_V2_Staging.st:1:FUNCTION_BLOCK FB_DHW_V2_Staging
+
+--- FB_Heating_V2_Staging.st ---
+./FB_Heating_System_Manager.st:64:    fbHeatingV2Staging : FB_Heating_V2_Staging;
+./FB_Heating_V2_Staging.st:1:FUNCTION_BLOCK FB_Heating_V2_Staging
+
+--- FB_Ventilation_V2_Staging.st ---
+./FB_Ventilation_System_Manager.st:45:    fbVentilationV2Staging : FB_Ventilation_V2_Staging;
+./FB_Ventilation_V2_Staging.st:1:FUNCTION_BLOCK FB_Ventilation_V2_Staging
+
+--- FB_Lighting_V2_Staging.st ---
+./FB_Lighting_Blinds_Manager.st:39:    fbLightingV2Staging : FB_Lighting_V2_Staging;
+./FB_Lighting_V2_Staging.st:1:FUNCTION_BLOCK FB_Lighting_V2_Staging
+
+--- FB_Blinds_V2_Staging.st ---
+./FB_Blinds_V2_Staging.st:1:FUNCTION_BLOCK FB_Blinds_V2_Staging
+./FB_Lighting_Blinds_Manager.st:31:    fbBlindsV2Staging : FB_Blinds_V2_Staging;
+
+--- FB_Socket_V2_Staging.st ---
+./FB_Socket_Manager.st:24:    fbSocketV2Staging : FB_Socket_V2_Staging;
+./FB_Socket_V2_Staging.st:1:FUNCTION_BLOCK FB_Socket_V2_Staging
+
+--- FB_Alarm_Compatibility_Package.st ---
+./FB_Alarm_Compatibility_Package.st:1:FUNCTION_BLOCK FB_Alarm_Compatibility_Package
+./FB_Alarm_Manager.st:41:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package;
+
+--- FB_Rule_Compatibility_Package.st ---
+./FB_Rule_Compatibility_Package.st:1:FUNCTION_BLOCK FB_Rule_Compatibility_Package
+./FB_Rule_Engine.st:28:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package;
+
+--- FB_Alarm_V2_Core.st ---
+./FB_Alarm_Manager.st:70:    fbAlarmV2Core : FB_Alarm_V2_Core;
+./FB_Alarm_V2_Core.st:1:FUNCTION_BLOCK FB_Alarm_V2_Core
+
+--- FB_History_V2_Core.st ---
+./FB_Alarm_Manager.st:71:    fbHistoryV2Core : FB_History_V2_Core;
+./FB_History_V2_Core.st:1:FUNCTION_BLOCK FB_History_V2_Core
+
+--- FB_BlackBox_V2_Core.st ---
+./FB_Alarm_Manager.st:72:    fbBlackBoxV2Core : FB_BlackBox_V2_Core;
+./FB_BlackBox_V2_Core.st:1:FUNCTION_BLOCK FB_BlackBox_V2_Core
+
+--- FB_DryRun_Simulation_Harness.st ---
+./FB_DryRun_Simulation_Harness.st:1:FUNCTION_BLOCK FB_DryRun_Simulation_Harness
+./FB_DryRun_Simulation_Harness.st:79:// >>> BULK_SYNC_ANCHOR: FB_DryRun_Simulation_Harness <<<
+./PRG_DryRun_TestRig.st:3:    fbDryRunHarness : FB_DryRun_Simulation_Harness;
+
+--- FB_DryRun_Assertion_Map.st ---
+./FB_DryRun_Assertion_Map.st:1:FUNCTION_BLOCK FB_DryRun_Assertion_Map
+./FB_DryRun_Assertion_Map.st:29:// >>> BULK_SYNC_ANCHOR: FB_DryRun_Assertion_Map <<<
+./PRG_DryRun_TestRig.st:4:    fbDryRunAssert  : FB_DryRun_Assertion_Map;
+
+--- PRG_DryRun_TestRig.st ---
+./PRG_DryRun_TestRig.st:1:PROGRAM PRG_DryRun_TestRig
+./PRG_DryRun_TestRig.st:27:// >>> BULK_SYNC_ANCHOR: PRG_DryRun_TestRig <<<
+
+--- FB_Scenario_Transition_Guard.st ---
+./FB_Scenario_Transition_Guard.st:1:FUNCTION_BLOCK FB_Scenario_Transition_Guard
+./FB_Scenario_Transition_Guard.st:62:// >>> BULK_SYNC_ANCHOR: FB_Scenario_Transition_Guard <<<
+./PRG_System.st:15:    fbScenarioGuard : FB_Scenario_Transition_Guard;
+
+
+=== CONCLUSION ===
+No root transition-like file is currently unreferenced junk.
+Next architectural question: which runtime_bridge files should remain explicit, and which should later be collapsed into managers.
+
+=== END STEP 64 FIXED ===
