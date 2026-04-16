@@ -83,3 +83,16 @@ index 4ea70bf..d8e1102 100644
                      // Безопасное копирование (WRITE)
 
 === COMPILE SMOKE ===
+[main 373abf5] test: compile smoke after migration
+ 5 files changed, 558 insertions(+), 435 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_16/step_04_fix_nvram_real_dirty_detection/fix_nvram_real_dirty_detection.log
+ create mode 100644 steps/2026-04-16_nvram_real_dirty_detection/01_fix_nvram_real_dirty_detection.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   d2691e3..373abf5  main -> main
+
+=== END STEP 04 ===
