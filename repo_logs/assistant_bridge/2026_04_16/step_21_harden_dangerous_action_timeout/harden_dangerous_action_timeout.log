@@ -1,0 +1,52 @@
+]633;E;echo "=== STEP 21: HARDEN DANGEROUS ACTION TIMEOUT ===";7f899988-c0cf-4f7a-9bc0-74bda7869211]633;C=== STEP 21: HARDEN DANGEROUS ACTION TIMEOUT ===
+timestamp_utc=2026-04-16T17:28:36Z
+
+=== BEFORE ===
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Подтвердите опасное действие в течение 15 секунд';
+END_IF;
+IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+    L_Dangerous_Action_Armed := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+END_IF;
+IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+   L_Dangerous_Action_Armed AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+    L_Maintenance_Apply_Intent := TRUE;
+
+    fbLogEvent(
+
+=== APPLY ===
+OK: dangerous action timeout path hardened
+
+=== AFTER ===
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Подтвердите опасное действие в течение 15 секунд';
+END_IF;
+IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+    L_Dangerous_Action_Armed := FALSE;
+    L_Maintenance_Apply_Intent := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+END_IF;
+IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+   L_Dangerous_Action_Armed AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+    L_Maintenance_Apply_Intent := TRUE;
+
+    fbLogEvent(
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index 8eabfb8..2901cc3 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -881,6 +881,7 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Lev
+ END_IF;
+ IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+     L_Dangerous_Action_Armed := FALSE;
++    L_Maintenance_Apply_Intent := FALSE;
+     GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+     GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+ END_IF;
+
+=== END STEP 21 ===

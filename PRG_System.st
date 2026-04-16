@@ -881,6 +881,7 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Lev
 END_IF;
 IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
     L_Dangerous_Action_Armed := FALSE;
+    L_Maintenance_Apply_Intent := FALSE;
     GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
     GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
 END_IF;
