@@ -1,0 +1,1669 @@
+]633;E;echo "== CONSTANTS.DUT USAGE AUDIT ==";ca6985ef-f3ea-4b59-b672-9b8910c7b940]633;C== CONSTANTS.DUT USAGE AUDIT ==
+
+-- FILE EXISTS --
+-rw-rw-rw- 1 codespace codespace 226 Apr 16 12:33 CONSTANTS.dut
+
+-- DIRECT FILE NAME SEARCH --
+./AGENTS.md
+./CONSTANTS.dut
+./E_ALERT_PRIORITY.dut
+./E_Debug_Log_Level.dut
+./E_Gateway_Command_Type.dut
+./E_Lifetime_Device_Type.dut
+./E_Outdoor_Mode.dut
+./E_PLC_ROLE.dut
+./E_Rule_Action_Type.dut
+./E_Rule_Comparison.dut
+./E_Rule_Condition_Type.dut
+./E_SCENARIO_SOURCE.dut
+./E_SCENARIO_TYPE.dut
+./E_SENSOR_TYPE.dut
+./E_System_Operating_Mode.dut
+./E_System_Root_Cause.dut
+./E_System_Severity.dut
+./E_Trend_Parameter_Type.dut
+./E_TwoFactor_Method.dut
+./E_VALVE_TYPE.dut
+./E_VENTILATION_LOCATION.dut
+./E_VENTILATION_UNIT_TYPE.dut
+./E_Valve_Test_Result.dut
+./E_WEATHER_COMPENSATION_METHOD.dut
+./E_Zone_Access_Level.dut
+./FB_AccessCode_Manager.st
+./FB_Access_Control.st
+./FB_Alarm_Compatibility_Package.st
+./FB_Alarm_Manager.st
+./FB_Alarm_V2_Core.st
+./FB_Analog_Validator.st
+./FB_Astro_Timer.st
+./FB_BlackBox_Recorder.st
+./FB_BlackBox_V2_Core.st
+./FB_Blinds_V2_Staging.st
+./FB_Boiler_Cascade_Manager.st
+./FB_Boiler_OpenTherm_Interface.st
+./FB_CO_Detector.st
+./FB_CRC32_Calculator.st
+./FB_Calibration_Manager.st
+./FB_Command_Deduplication.st
+./FB_CoreKernel_Live_Observer.st
+./FB_DHW_Manager.st
+./FB_DHW_V2_Staging.st
+./FB_Debug_Logger.st
+./FB_Device_Predictive_Diag.st
+./FB_Emergency_Valve_Open.st
+./FB_Exhaust_Ventilation_Controller.st
+./FB_Fault_Logger.st
+./FB_FloorHeating_Controller.st
+./FB_FloorHeating_Freeze_Protection.st
+./FB_FloorHeating_Overheat_Protection.st
+./FB_Gas_Methane_Detector.st
+./FB_Gas_Smoke_Manager.st
+./FB_Gas_Valve_Controller.st
+./FB_Gateway_Interface.st
+./FB_HMAC_SHA1.st
+./FB_HMI_Interface.st
+./FB_Heating_System_Manager.st
+./FB_Heating_V2_Staging.st
+./FB_History_Manager.st
+./FB_History_V2_Core.st
+./FB_IO_Module_Watchdog.st
+./FB_Lifetime_Predictor.st
+./FB_Lighting_Blinds_Manager.st
+./FB_Lighting_V2_Staging.st
+./FB_LogEvent.st
+./FB_Maintenance_Access.st
+./FB_Manifold_Pump_Controller.st
+./FB_Manual_Valve_Control.st
+./FB_NVRAM_Manager.st
+./FB_Outdoor_Lighting_Controller.st
+./FB_PID_Controller.st
+./FB_PLC_Heartbeat.st
+./FB_Pre_Departure_Heating.st
+./FB_Presence_Playback.st
+./FB_Presence_Simulator.st
+./FB_Random_Generator.st
+./FB_Redundancy_Manager.st
+./FB_Rule_Compatibility_Package.st
+./FB_Rule_Engine.st
+./FB_SHA1.st
+./FB_Safety_Manager.st
+./FB_Scenario_Manager.st
+./FB_Scenario_Transition_Controller.st
+./FB_Security_Alarm.st
+./FB_Security_System_Manager.st
+./FB_Sensor_Analog_Processing.st
+./FB_Sensor_Calibration.st
+./FB_Sensor_Calibration_Processor.st
+./FB_Sensor_Distribution.st
+./FB_Simulation_Manager.st
+./FB_Smoke_Detector.st
+./FB_Socket_Manager.st
+./FB_Socket_V2_Staging.st
+./FB_State_Manager.st
+./FB_State_Manager_MVP.st
+./FB_State_Replication.st
+./FB_State_Snapshot_Manager.st
+./FB_State_Snapshot_NVRAM.st
+./FB_Supply_Ventilation_Controller.st
+./FB_System_Health.st
+./FB_System_Timer.st
+./FB_System_Timer_TOF.st
+./FB_Trend_Analyzer.st
+./FB_Trend_Logger.st
+./FB_TwoFactor_Auth.st
+./FB_Valve_Test.st
+./FB_Valve_Test_Manager.st
+./FB_Ventilation_System_Manager.st
+./FB_Ventilation_V2_Staging.st
+./FB_Watchdog.st
+./FB_Water_Leakage_Manager.st
+./FB_Water_Valve_Controller.st
+./FB_Zone_Access_Manager.st
+./GVL_ALARM.gvl
+./GVL_BlackBox.gvl
+./GVL_COMMAND.gvl
+./GVL_CONFIG.gvl
+./GVL_CONSTANTS.gvl
+./GVL_DEBUG.gvl
+./GVL_EVENT.gvl
+./GVL_GATEWAY.gvl
+./GVL_HEALTH_BRIDGE.gvl
+./GVL_IO.gvl
+./GVL_MODBUS.gvl
+./GVL_PERSISTENT.gvl
+./GVL_Retain.gvl
+./GVL_STATE.gvl
+./GVL_STATUS.gvl
+./GVL_TIME.gvl
+./IValveController.st
+./MAIN.st
+./PRG_Heating.st
+./PRG_IO_Read.st
+./PRG_IO_Write.st
+./PRG_Lighting.st
+./PRG_PLC_A.st
+./PRG_PLC_B.st
+./PRG_Safety.st
+./PRG_Security.st
+./PRG_System.st
+./PRG_Test.st
+./PRG_Ventilation.st
+./ST_Alarm_Record.dut
+./ST_Astro_Time.dut
+./ST_BlackBox_Record.dut
+./ST_BlackBox_Snapshot_V2.dut
+./ST_Blinds_Command_V2.dut
+./ST_Blinds_State_V2.dut
+./ST_Boiler_Status.dut
+./ST_Component_Maintenance.dut
+./ST_DHW_Command_V2.dut
+./ST_DHW_Config.dut
+./ST_DHW_State_V2.dut
+./ST_DHW_Status.dut
+./ST_Debug_Log_Record.dut
+./ST_Debug_Logger_Config.dut
+./ST_Device_Health.dut
+./ST_EVENT.dut
+./ST_Flood_Config.dut
+./ST_Flood_Global_Config.dut
+./ST_FloorHeating_Circuit_Config.dut
+./ST_FloorHeating_Global_Config.dut
+./ST_FloorHeating_Manifold_Config.dut
+./ST_Gas_Valve_Configuration.dut
+./ST_Gateway_Command.dut
+./ST_Heating_Command_V2.dut
+./ST_Heating_Config.dut
+./ST_Heating_State_V2.dut
+./ST_History_Event_V2.dut
+./ST_History_Record.dut
+./ST_Lifetime_Status.dut
+./ST_Lighting_Command_V2.dut
+./ST_Lighting_State_V2.dut
+./ST_Maintenance_Access_Config.dut
+./ST_Manifold_Status.dut
+./ST_Operator_Zone_Rights.dut
+./ST_Outdoor_Zone_Config.dut
+./ST_Owen_Analog_Value.dut
+./ST_Rule.dut
+./ST_Rule_Action.dut
+./ST_Scenario_Config.dut
+./ST_Scenario_Transition_Config.dut
+./ST_Security_Global_Config.dut
+./ST_Security_Zone_State.dut
+./ST_Sensor_Calibration_Record.dut
+./ST_Socket_Command_V2.dut
+./ST_Socket_State_V2.dut
+./ST_State_Snapshot.dut
+./ST_System_Diagnostics.dut
+./ST_System_State_Snapshot.dut
+./ST_System_State_Summary.dut
+./ST_Tariff_Config.dut
+./ST_Trend_Config.dut
+./ST_Trend_Data.dut
+./ST_Trend_Header.dut
+./ST_Trend_History_Record.dut
+./ST_TwoFactor_Auth_State.dut
+./ST_TwoFactor_Data.dut
+./ST_User_Rule.dut
+./ST_Valve_Test_Config.dut
+./ST_Ventilation_Command_V2.dut
+./ST_Ventilation_Config.dut
+./ST_Ventilation_Global_Config.dut
+./ST_Ventilation_Scenario_Mode.dut
+./ST_Ventilation_State_V2.dut
+./ST_Ventilation_Unit.dut
+./ST_Ventilation_Unit_Config.dut
+./ST_Zone_Sensors.dut
+./docs/ARCHITECTURE_NOTES.md
+./docs/CHANGELOG_WORK.md
+./docs/DEVELOPMENT_WORKFLOW.md
+./docs/DEVELOPMENT_WORKFLOW_V2.md
+./docs/EQUIPMENT_DECISIONS.md
+./docs/EXECUTION_CONVENTIONS.md
+./docs/EXECUTION_CONVENTIONS_2026-04-05.md
+./docs/FB_INVENTORY_AUDIT.md
+./docs/FB_INVENTORY_AUDIT_BATCH_02.md
+./docs/FB_INVENTORY_AUDIT_BATCH_03.md
+./docs/FB_INVENTORY_AUDIT_BATCH_04.md
+./docs/IMPORT_PIPELINE_RULES.md
+./docs/IO_MAPPING_CONCEPT.md
+./docs/MASTER_GUIDE.md
+./docs/POLICY_LAYER.md
+./docs/PROJECT_ROADMAP.md
+./docs/PROJECT_STATUS_2026-04-05.md
+./docs/PROJECT_STATUS_2026-04-06_FULL.md
+./docs/RECOVERY_STRATEGY.md
+./docs/REFACTOR_PLAN_ARCH_ALIGNMENT.md
+./docs/REPOSITORY_WRITE_RULES.md
+./docs/START_NEW_CHAT_TEMPLATE.md
+./docs/SYSTEM_PRIORITIES.md
+./docs/TEST_COMMIT_PIPELINE.md
+./docs/WORKFLOW.md
+./docs/WORK_NOTES.md
+./docs/architecture/deferred_tasks.md
+./docs/architecture/system_overview.md
+./docs/systems/README.md
+./docs/systems/access.md
+./docs/systems/dhw.md
+./docs/systems/heating.md
+./docs/systems/lighting.md
+./docs/systems/ventilation.md
+./docs/tech_debt/PRG_System_todo.md
+./steps/MASTER_PIPELINE/archive_legacy_004/004_struct_initializer_analysis.md
+./steps/MASTER_PIPELINE/archive_legacy_004/004_struct_initializer_strategy.md
+./workspace/WORKFLOW_GITHUB_CODESYS.md
+./workspace/compile_green_cleanup_inventory_2026-04-12.md
+./workspace/draft_v2_inventory_2026-04-12.md
+./workspace/dut_rebuild/INDEX.md
+./workspace/dut_rebuild/README.md
+./workspace/dut_rebuild/alarm/01_alarm_rebuild_plan.md
+./workspace/dut_rebuild/alarm/FB_Alarm_Compatibility_Package_DRAFT.st
+./workspace/dut_rebuild/alarm/FB_Alarm_Legacy_To_V2_Adapter_DRAFT.st
+./workspace/dut_rebuild/alarm/FB_Alarm_V2_To_Legacy_Adapter_DRAFT.st
+./workspace/dut_rebuild/alarm/ST_Alarm_Core_Record_V2.dut
+./workspace/dut_rebuild/alarm/ST_Alarm_Event_V2.dut
+./workspace/dut_rebuild/alarm/ST_Alarm_V2.dut
+./workspace/dut_rebuild/alarm/ST_Alarm_View_Record_V2.dut
+./workspace/dut_rebuild/alarm/integration/adapter_notes.md
+./workspace/dut_rebuild/alarm/runtime_hook/active_migration/plan.md
+./workspace/dut_rebuild/alarm/runtime_hook/staging_clone/FB_Alarm_Manager_STAGING.st
+./workspace/dut_rebuild/alarm/v2_core/01_alarm_v2_core_plan.md
+./workspace/dut_rebuild/alarm/v2_core/02_alarm_v2_migration_targets.md
+./workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st
+./workspace/dut_rebuild/alarm/v2_core/README.md
+./workspace/dut_rebuild/alarm/v2_core/extraction/01_pending_queue_extraction_plan.md
+./workspace/dut_rebuild/alarm/v2_core/extraction/02_pending_queue_old_to_new_map.md
+./workspace/dut_rebuild/alarm/v2_core/extraction/03_next_runtime_step.md
+./workspace/dut_rebuild/blinds_v2/README.md
+./workspace/dut_rebuild/blinds_v2/ST_Blinds_Command_V2.dut
+./workspace/dut_rebuild/blinds_v2/ST_Blinds_State_V2.dut
+./workspace/dut_rebuild/blinds_v2/compatibility/01_blinds_compatibility_plan.md
+./workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/blinds_v2/extraction/01_blinds_extraction_plan.md
+./workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_Command_Extractor_DRAFT.st
+./workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_State_Extractor_DRAFT.st
+./workspace/dut_rebuild/blinds_v2/staging/01_blinds_staging_plan.md
+./workspace/dut_rebuild/blinds_v2/staging/FB_Blinds_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/blinds_v2/v2_core/01_blinds_v2_core_plan.md
+./workspace/dut_rebuild/blinds_v2/v2_core/FB_Blinds_V2_Core_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/README.md
+./workspace/dut_rebuild/dhw_v2/ST_DHW_Command_V2.dut
+./workspace/dut_rebuild/dhw_v2/ST_DHW_State_V2.dut
+./workspace/dut_rebuild/dhw_v2/compatibility/01_dhw_compatibility_plan.md
+./workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/extraction/01_dhw_extraction_plan.md
+./workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_Command_Extractor_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_State_Extractor_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/staging/01_dhw_staging_plan.md
+./workspace/dut_rebuild/dhw_v2/staging/FB_DHW_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/dhw_v2/v2_core/01_dhw_v2_core_plan.md
+./workspace/dut_rebuild/dhw_v2/v2_core/FB_DHW_V2_Core_DRAFT.st
+./workspace/dut_rebuild/heating_v2/README.md
+./workspace/dut_rebuild/heating_v2/ST_Heating_Command_V2.dut
+./workspace/dut_rebuild/heating_v2/ST_Heating_State_V2.dut
+./workspace/dut_rebuild/heating_v2/compatibility/01_heating_compatibility_plan.md
+./workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/heating_v2/extraction/01_heating_extraction_plan.md
+./workspace/dut_rebuild/heating_v2/extraction/02_legacy_to_v2_map.md
+./workspace/dut_rebuild/heating_v2/staging/01_heating_staging_plan.md
+./workspace/dut_rebuild/heating_v2/staging/FB_Heating_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/heating_v2/v2_core/01_heating_v2_core_plan.md
+./workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_Command_Path_DRAFT.st
+./workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_State_Path_DRAFT.st
+./workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_V2_Core_DRAFT.st
+./workspace/dut_rebuild/history_blackbox/01_history_blackbox_rebuild_plan.md
+./workspace/dut_rebuild/history_blackbox/ST_BlackBox_Snapshot_V2.dut
+./workspace/dut_rebuild/history_blackbox/ST_History_Event_V2.dut
+./workspace/dut_rebuild/history_blackbox_v2/README.md
+./workspace/dut_rebuild/history_blackbox_v2/ST_BlackBox_Snapshot_V2.dut
+./workspace/dut_rebuild/history_blackbox_v2/ST_History_Event_V2.dut
+./workspace/dut_rebuild/history_blackbox_v2/compatibility/01_history_blackbox_compatibility_plan.md
+./workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_BlackBox_Legacy_To_V2_Adapter_DRAFT.st
+./workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+./workspace/dut_rebuild/history_blackbox_v2/v2_core/01_history_blackbox_v2_core_plan.md
+./workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_BlackBox_V2_Core_DRAFT.st
+./workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_History_V2_Core_DRAFT.st
+./workspace/dut_rebuild/integration/01_rule_engine_integration_plan.md
+./workspace/dut_rebuild/integration/02_rule_engine_old_to_new_field_map.md
+./workspace/dut_rebuild/integration/03_rule_engine_open_questions.md
+./workspace/dut_rebuild/integration/04_rule_engine_adapter_draft.md
+./workspace/dut_rebuild/integration/05_rule_engine_condition_translation.md
+./workspace/dut_rebuild/integration/06_rule_engine_action_translation.md
+./workspace/dut_rebuild/integration/07_rule_engine_adapter_open_mismatches.md
+./workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+./workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+./workspace/dut_rebuild/integration/runtime_hook/01_runtime_hook_strategy.md
+./workspace/dut_rebuild/integration/runtime_hook/02_runtime_hook_package_layout.md
+./workspace/dut_rebuild/integration/runtime_hook/03_migration_checklist.md
+./workspace/dut_rebuild/integration/runtime_hook/04_test_checklist.md
+./workspace/dut_rebuild/integration/runtime_hook/FB_Rule_Compatibility_Package_DRAFT.st
+./workspace/dut_rebuild/integration/runtime_hook/README.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/01_insertion_point.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/02_patch_strategy.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/03_patch_diff_draft.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/04_validation_checklist.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/05_rollback_plan.md
+./workspace/dut_rebuild/integration/runtime_hook/active_migration/README.md
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/01_staging_clone_strategy.md
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/02_staging_clone_review_points.md
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/03_next_runtime_migration_package.md
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/README.md
+./workspace/dut_rebuild/lighting_v2/README.md
+./workspace/dut_rebuild/lighting_v2/ST_Lighting_Command_V2.dut
+./workspace/dut_rebuild/lighting_v2/ST_Lighting_State_V2.dut
+./workspace/dut_rebuild/lighting_v2/compatibility/01_lighting_compatibility_plan.md
+./workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/lighting_v2/extraction/01_lighting_extraction_plan.md
+./workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_Command_Extractor_DRAFT.st
+./workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_State_Extractor_DRAFT.st
+./workspace/dut_rebuild/lighting_v2/staging/01_lighting_staging_plan.md
+./workspace/dut_rebuild/lighting_v2/staging/FB_Lighting_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/lighting_v2/v2_core/01_lighting_v2_core_plan.md
+./workspace/dut_rebuild/lighting_v2/v2_core/FB_Lighting_V2_Core_DRAFT.st
+./workspace/dut_rebuild/reports/00_rebuild_first_scope.md
+./workspace/dut_rebuild/reports/01_old_to_new_mapping.md
+./workspace/dut_rebuild/reports/03_workspace_review.md
+./workspace/dut_rebuild/rule_engine/01_rule_engine_rebuild_plan.md
+./workspace/dut_rebuild/rule_engine/E_Rule_Data_Source_V2.dut
+./workspace/dut_rebuild/rule_engine/E_Rule_Target_Domain_V2.dut
+./workspace/dut_rebuild/rule_engine/E_Rule_Value_Type_V2.dut
+./workspace/dut_rebuild/rule_engine/ST_Rule_Action_V2.dut
+./workspace/dut_rebuild/rule_engine/ST_Rule_Condition_V2.dut
+./workspace/dut_rebuild/rule_engine/ST_User_Rule_V2.dut
+./workspace/dut_rebuild/socket_v2/README.md
+./workspace/dut_rebuild/socket_v2/ST_Socket_Command_V2.dut
+./workspace/dut_rebuild/socket_v2/ST_Socket_State_V2.dut
+./workspace/dut_rebuild/socket_v2/compatibility/01_socket_compatibility_plan.md
+./workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/socket_v2/extraction/01_socket_extraction_plan.md
+./workspace/dut_rebuild/socket_v2/extraction/FB_Socket_Command_Extractor_DRAFT.st
+./workspace/dut_rebuild/socket_v2/extraction/FB_Socket_State_Extractor_DRAFT.st
+./workspace/dut_rebuild/socket_v2/staging/01_socket_staging_plan.md
+./workspace/dut_rebuild/socket_v2/staging/FB_Socket_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/socket_v2/v2_core/01_socket_v2_core_plan.md
+./workspace/dut_rebuild/socket_v2/v2_core/FB_Socket_V2_Core_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/README.md
+./workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut
+./workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut
+./workspace/dut_rebuild/ventilation_v2/compatibility/01_ventilation_compatibility_plan.md
+./workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/extraction/01_ventilation_extraction_plan.md
+./workspace/dut_rebuild/ventilation_v2/extraction/02_legacy_to_v2_map.md
+./workspace/dut_rebuild/ventilation_v2/staging/01_ventilation_staging_plan.md
+./workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/v2_core/01_ventilation_v2_core_plan.md
+./workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st
+./workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st
+./workspace/export_forensics/EXPORT_PRELIMINARY_ANALYSIS.md
+./workspace/export_forensics/EXPORT_STRUCTURE_NOTES.md
+./workspace/export_forensics/README.md
+./workspace/export_forensics/XML_EXPORT_STRUCTURE_FINDINGS_2026-04-06.md
+./workspace/export_forensics/sandbox/FB_IMPORT_STATUS_CONFIRMED.md
+./workspace/export_forensics/sandbox/fb_astro_timer_diff/02_repo_st_source.st
+./workspace/export_forensics/sandbox/fb_astro_timer_diff/04_xml_body_extracted.st
+./workspace/gvl_constants_inventory_2026-04-12.md
+./workspace/system_layer_cleanup/README.md
+./workspace/system_layer_cleanup/comparison/01_comparison_plan.md
+./workspace/system_layer_cleanup/comparison/flags/01_comparison_flags_scope.md
+./workspace/system_layer_cleanup/comparison/flags/FB_CoreKernel_Comparison_Flags_DRAFT.st
+./workspace/system_layer_cleanup/comparison/harness/01_comparison_harness_scope.md
+./workspace/system_layer_cleanup/comparison/harness/05_first_live_binding_plan.md
+./workspace/system_layer_cleanup/comparison/harness/FB_CoreKernel_Comparison_Harness_DRAFT.st
+./workspace/system_layer_cleanup/comparison/harness/FB_CoreKernel_First_Live_Binding_DRAFT.st
+./workspace/system_layer_cleanup/comparison/live_observer/01_live_observer_scope.md
+./workspace/system_layer_cleanup/comparison/live_observer/FB_CoreKernel_Live_Observer_DRAFT.st
+./workspace/system_layer_cleanup/comparison/shadow_outputs/01_shadow_outputs_scope.md
+./workspace/system_layer_cleanup/comparison/shadow_outputs/FB_CoreKernel_Shadow_Outputs_DRAFT.st
+./workspace/system_layer_cleanup/plans/01_system_layer_cleanup_plan.md
+./workspace/system_layer_cleanup/split_scaffold/README.md
+./workspace/system_layer_cleanup/split_scaffold/alarm_layer/FB_AlarmLayer_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/03_core_kernel_shadow_plan.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/04_core_kernel_shadow_execution_notes.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/FB_CoreKernel_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/FB_CoreKernel_Shadow_Exec_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/FB_CoreKernel_Shadow_Stub_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/01_redundancy_shadow_scope.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/FB_Redundancy_Shadow_Slice_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/01_safety_shadow_scope.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/FB_Safety_Shadow_Slice_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/state_manager_slice/01_state_manager_scope.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/state_manager_slice/FB_StateManager_Shadow_Slice_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/01_watchdog_health_scope.md
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_SystemHealth_Shadow_Slice_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_Watchdog_Shadow_Slice_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/external_interface/FB_ExternalInterface_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/persistence/FB_PersistenceLayer_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/scenario_layer/FB_ScenarioLayer_DRAFT.st
+./workspace/system_layer_cleanup/split_scaffold/time_context/FB_TimeContext_DRAFT.st
+./компилятор/запуск_сборки.md
+
+-- TEXT SEARCH: CONSTANTS / CONSTANTS.dut --
+./FB_FloorHeating_Freeze_Protection.st:7:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./FB_FloorHeating_Freeze_Protection.st:20:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./GVL_STATUS.gvl:22:    G_Manifold_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Manifold_Status;
+./GVL_STATUS.gvl:23:    G_Boiler_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Boiler_Status;
+./GVL_STATUS.gvl:24:    G_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./ST_Ventilation_Global_Config.dut:9:    Scenario_Modes : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Ventilation_Scenario_Mode;
+./ST_Ventilation_Global_Config.dut:10:    wet_zone_to_exhaust_map : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF INT := [2, 3, 4, 5]; // Привязка мокрых зон к вытяжным вентиляторам
+./FB_Trend_Logger.st:21:   ((SEL(VI_System_Time_MS >= L_Last_Log_Time, VI_System_Time_MS - L_Last_Log_Time, (4294967295 - L_Last_Log_Time) + VI_System_Time_MS + 1)) >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
+./ST_State_Snapshot.dut:7:    lighting_levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHTING_ZONES] OF BYTE;
+./ST_State_Snapshot.dut:8:    floor_heating_setpoints : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./PRG_Safety.st:98:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./PRG_Safety.st:106:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./PRG_Safety.st:114:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./PRG_Safety.st:150:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./PRG_Safety.st:162:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./FB_Manual_Valve_Control.st:26:    L_elapsed := (SEL(VI_System_Time >= L_Start_Time, VI_System_Time - L_Start_Time, (4294967295 - L_Start_Time) + VI_System_Time + 1)) / GVL_CONSTANTS.C_MS_IN_MINUTE;
+./FB_Lighting_Blinds_Manager.st:15:    VI_Manual_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE; // Ручное переопределение позиции штор (0-100%)
+./FB_Lighting_Blinds_Manager.st:19:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./FB_Lighting_Blinds_Manager.st:20:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./FB_Lighting_Blinds_Manager.st:22:    VI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+./FB_Lighting_Blinds_Manager.st:26:    VO_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE; // Выходные позиции штор (0-100%)
+./FB_Lighting_Blinds_Manager.st:27:    VO_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL; // Флаги включенного света в мокрых зонах (для вентиляции)
+./FB_Lighting_Blinds_Manager.st:91:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./FB_Lighting_Blinds_Manager.st:94:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./FB_Lighting_Blinds_Manager.st:108:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./FB_Lighting_Blinds_Manager.st:113:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./FB_Lighting_Blinds_Manager.st:121:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./FB_Lighting_Blinds_Manager.st:129:IF L_Effective_Scenario >= 1 AND L_Effective_Scenario <= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./FB_Lighting_Blinds_Manager.st:185:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Lighting_Blinds_Manager.st:240:    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx <= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+./FB_Lighting_Blinds_Manager.st:247:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./FB_Lighting_Blinds_Manager.st:252:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Heating_System_Manager.st:29:    VI_Boiler_Error_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов / ошибка адаптера
+./FB_Heating_System_Manager.st:30:    VI_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Признак доступности OpenTherm-канала
+./FB_Heating_System_Manager.st:31:    VI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Текущая модуляция котлов (%)
+./FB_Heating_System_Manager.st:36:    VI_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Давление в коллекторах (бар)
+./FB_Heating_System_Manager.st:37:    VI_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Ток насосов коллекторов (мА)
+./FB_Heating_System_Manager.st:38:    VI_Manifold_Temps_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Температура подачи на коллекторах
+./FB_Heating_System_Manager.st:39:    VI_Manifold_Temps_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Температура обратки на коллекторах
+./FB_Heating_System_Manager.st:40:    VI_Boiler_Flame_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Статус наличия пламени в котлах
+./FB_Heating_System_Manager.st:42:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./FB_Heating_System_Manager.st:43:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./FB_Heating_System_Manager.st:44:    VI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+./FB_Heating_System_Manager.st:45:    VI_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Концевики клапанов
+./FB_Heating_System_Manager.st:46:    VI_Valve_Test_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config; // Конфигурация тестирования клапанов
+./FB_Heating_System_Manager.st:50:    VO_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Выход: Положение клапанов смесителей (0-100%)
+./FB_Heating_System_Manager.st:51:    VO_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Выход: Управление насосами коллекторов
+./FB_Heating_System_Manager.st:53:    VO_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Физические команды в OpenTherm
+./FB_Heating_System_Manager.st:54:    VO_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Физические уставки в OpenTherm
+./FB_Heating_System_Manager.st:58:    VO_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Manifold_Status; // Сводный статус коллекторных узлов для HMI
+./FB_Heating_System_Manager.st:59:    VO_Boiler_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Boiler_Status; // Сводный статус котлов для HMI
+./FB_Heating_System_Manager.st:72:    L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
+./FB_Heating_System_Manager.st:73:    L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
+./FB_Heating_System_Manager.st:82:    L_Any_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Флаги наличия запроса тепла по коллекторам
+./FB_Heating_System_Manager.st:96:    L_Pump_Run_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер непрерывной работы насоса (до 72ч)
+./FB_Heating_System_Manager.st:97:    L_Pump_Pause_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер обязательной паузы насоса (1ч)
+./FB_Heating_System_Manager.st:98:    L_Pump_In_Pause : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Флаг: Насос находится в режиме сервисной паузы
+./FB_Heating_System_Manager.st:105:    L_Pump_Diag : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Device_Predictive_Diag; // Диагностика насосов
+./FB_Heating_System_Manager.st:106:    L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor; // Предиктор ресурса котлов
+./FB_Heating_System_Manager.st:118:    L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Команда ушла через OT
+./FB_Heating_System_Manager.st:119:    L_Boiler_Request_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Внутренний request на котлы от логики каскада
+./FB_Heating_System_Manager.st:120:    L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Внутренняя request-уставка котлов
+./FB_Heating_System_Manager.st:164:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:171:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:176:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:187:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:210:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:214:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:219:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:231:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./FB_Heating_System_Manager.st:245:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:258:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:270:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:301:IF VI_Current_Scenario >= 1 AND VI_Current_Scenario <= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./FB_Heating_System_Manager.st:330:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:346:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:416:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Heating_System_Manager.st:428:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:432:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Heating_System_Manager.st:435:        IF L_j >= 1 AND L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./FB_Heating_System_Manager.st:442:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:556:    IF L_i >= 1 AND L_i <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./FB_Heating_System_Manager.st:568:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Heating_System_Manager.st:586:    VI_Enable := VI_IsActivePLC AND ((L_Demand_Power > GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR L_Freeze_Mode_Active),
+./FB_Heating_System_Manager.st:607:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:628:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:668:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Heating_System_Manager.st:673:        IF GVL_Retain.G_Boiler_Accumulated_MS[L_i] >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./FB_Water_Leakage_Manager.st:9:    VI_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+./FB_Water_Leakage_Manager.st:24:    L_Sensor_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
+./FB_Water_Leakage_Manager.st:34:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./FB_Simulation_Manager.st:12:    VO_Sim_Water_Leak : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Симулированные сигналы протечки
+./FB_Simulation_Manager.st:13:    VO_Sim_Gas_Leak   : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Симулированные уровни газа
+./FB_Simulation_Manager.st:27:    IF (VI_System_Time_MS - L_Last_Toggle) >= (GVL_CONSTANTS.C_MS_IN_MINUTE * 30) THEN
+./FB_Simulation_Manager.st:54:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO VO_Sim_Water_Leak[L_i] := FALSE; END_FOR;
+./FB_Simulation_Manager.st:55:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO VO_Sim_Gas_Leak[L_i] := 0.0; END_FOR;
+./FB_Boiler_OpenTherm_Interface.st:3:    VI_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_OpenTherm_Interface.st:4:    VI_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./FB_Boiler_OpenTherm_Interface.st:6:    VI_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_OpenTherm_Interface.st:7:    VI_OT_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_OpenTherm_Interface.st:11:    VO_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_OpenTherm_Interface.st:12:    VO_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./FB_Boiler_OpenTherm_Interface.st:13:    VO_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_OpenTherm_Interface.st:20:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./ST_Security_Global_Config.dut:5:    Phones : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_PHONES] OF STRING(15);
+./ST_Security_Global_Config.dut:14:    gate_open_pulse_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+./ST_Security_Global_Config.dut:15:    wicket_open_pulse_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+./ST_Security_Global_Config.dut:16:    lock_open_pulse_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+./ST_Security_Global_Config.dut:17:    lock_close_pulse_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+./ST_Security_Global_Config.dut:21:    bypass_doors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+./GVL_ALARM.gvl:10:    G_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./GVL_STATE.gvl:4:    G_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+./GVL_STATE.gvl:5:    G_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+./GVL_STATE.gvl:6:    G_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+./GVL_STATE.gvl:8:    G_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+./GVL_STATE.gvl:9:    G_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+./GVL_STATE.gvl:10:    G_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+./GVL_STATE.gvl:11:    G_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL;
+./GVL_STATE.gvl:12:    G_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
+./GVL_STATE.gvl:13:    G_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
+./GVL_STATE.gvl:14:    G_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./GVL_STATE.gvl:15:    G_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./GVL_STATE.gvl:16:    G_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./GVL_STATE.gvl:17:    G_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./GVL_STATE.gvl:18:    G_Boiler_Flame : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./GVL_STATE.gvl:19:    G_Boiler_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./GVL_STATE.gvl:20:    G_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Статус доступности OpenTherm-канала котла от реального OT-адаптера/драйвера
+./GVL_STATE.gvl:21:    G_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Команды разрешения через OpenTherm
+./GVL_STATE.gvl:22:    G_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Уставки через OpenTherm
+./GVL_STATE.gvl:24:    G_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-поле: локальные выключатели розеток не используются
+./GVL_STATE.gvl:26:    G_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF REAL; // Температура приточного воздуха после калорифера
+./GVL_STATE.gvl:30:    G_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./GVL_STATE.gvl:31:    G_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // 0.0 - 1.0
+./GVL_STATE.gvl:32:    G_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Концевики клапанов
+./GVL_STATE.gvl:33:    G_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF REAL; // 0.0 - 1.0
+./GVL_STATE.gvl:34:    G_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF REAL; // 0.0 - 1.0
+./GVL_STATE.gvl:35:    G_Vent_Heater_Power : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./GVL_STATE.gvl:37:    G_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./GVL_STATE.gvl:38:    G_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./GVL_STATE.gvl:69:    G_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action;
+./FB_Alarm_V2_Core.st:7:    VIO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./FB_Debug_Logger.st:8:    VI_Floor_Temps      : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./FB_Debug_Logger.st:9:    VI_Pump_Currents    : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./FB_Debug_Logger.st:12:    VO_Buffer           : ARRAY[1..GVL_CONSTANTS.C_MAX_DEBUG_LOGS] OF ST_Debug_Log_Record;
+./FB_Debug_Logger.st:19:    L_last_temps        : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./FB_Debug_Logger.st:20:    L_last_temp_time    : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UDINT;
+./FB_Debug_Logger.st:32:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Debug_Logger.st:50:            IF VO_Write_Idx = GVL_CONSTANTS.C_MAX_DEBUG_LOGS THEN
+./FB_Debug_Logger.st:53:            VO_Write_Idx := (VO_Write_Idx MOD GVL_CONSTANTS.C_MAX_DEBUG_LOGS) + 1;
+./FB_Debug_Logger.st:69:        IF VO_Write_Idx = GVL_CONSTANTS.C_MAX_DEBUG_LOGS THEN
+./FB_Debug_Logger.st:72:        VO_Write_Idx := (VO_Write_Idx MOD GVL_CONSTANTS.C_MAX_DEBUG_LOGS) + 1;
+./FB_FloorHeating_Overheat_Protection.st:6:    VI_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./FB_FloorHeating_Overheat_Protection.st:10:    VO_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+./FB_FloorHeating_Overheat_Protection.st:17:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./FB_Security_System_Manager.st:15:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей (герконы)
+./FB_Security_System_Manager.st:18:    VI_Bypass_Doors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Байпас дверей
+./FB_Security_System_Manager.st:70:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./FB_Security_System_Manager.st:71:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./FB_Security_System_Manager.st:136:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./FB_Security_System_Manager.st:137:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./FB_Security_System_Manager.st:138:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./ST_System_State_Snapshot.dut:10:    Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./ST_System_State_Snapshot.dut:12:    Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./ST_System_State_Snapshot.dut:13:    Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./FB_Rule_Engine.st:10:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+./FB_Rule_Engine.st:16:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей
+./FB_Rule_Engine.st:18:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Датчики протечки воды
+./FB_Rule_Engine.st:19:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Датчики дыма
+./FB_Rule_Engine.st:20:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Датчики метана
+./FB_Rule_Engine.st:21:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
+./FB_Rule_Engine.st:24:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+./FB_Rule_Engine.st:28:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package;
+./FB_Rule_Engine.st:40:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+./FB_Rule_Engine.st:41:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+./FB_Rule_Engine.st:61:IF L_Elapsed_Time >= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+./FB_Rule_Engine.st:63:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Rule_Engine.st:68:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Rule_Engine.st:122:                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+./FB_Rule_Engine.st:127:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./FB_Rule_Engine.st:128:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./FB_Rule_Engine.st:129:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./FB_Rule_Engine.st:130:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./FB_Rule_Engine.st:131:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./FB_Rule_Engine.st:136:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./ST_FloorHeating_Manifold_Config.dut:8:    circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_CIRCUITS_PER_MANIFOLD] OF ST_FloorHeating_Circuit_Config;
+./FB_Gas_Smoke_Manager.st:9:    VI_Methane_LEL    : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
+./FB_Gas_Smoke_Manager.st:10:    VI_CO_PPM         : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
+./FB_Gas_Smoke_Manager.st:11:    VI_Smoke_Sensors  : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL;
+./FB_Gas_Smoke_Manager.st:49:    L_Smoke_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF FB_System_Timer;
+./FB_Gas_Smoke_Manager.st:72:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./FB_Gas_Smoke_Manager.st:91:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+./FB_Gas_Smoke_Manager.st:119:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./PRG_IO_Write.st:14:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./PRG_IO_Write.st:21:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./PRG_IO_Write.st:24:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./PRG_IO_Write.st:43:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./FB_Gateway_Interface.st:27:    VI_Manifold_Pressures       : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./FB_Gateway_Interface.st:28:    VI_Manifold_Pump_States     : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./FB_Gateway_Interface.st:30:    VI_Socket_States            : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./FB_Gateway_Interface.st:31:    VI_Blinds_Positions         : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./FB_Gateway_Interface.st:32:    VI_Allowed_IPs              : ARRAY[1..GVL_CONSTANTS.C_MAX_ALLOWED_IPS] OF STRING(15);
+./FB_Gateway_Interface.st:36:    VO_Modbus_Registers         : ARRAY[0..GVL_CONSTANTS.C_MAX_MODBUS_REGISTERS-1] OF WORD; // Расширенный диапазон
+./FB_Gateway_Interface.st:38:    VO_Blinds_Override          : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./FB_Gateway_Interface.st:39:    VO_Socket_Override          : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./FB_Gateway_Interface.st:87:    L_Command_Buffer            : ARRAY[1..GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS] OF ST_Gateway_Command;
+./FB_Gateway_Interface.st:121:IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./FB_Gateway_Interface.st:153:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_Gateway_Interface.st:163:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./FB_Gateway_Interface.st:168:    FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
+./FB_Gateway_Interface.st:172:            IF L_idx <= GVL_CONSTANTS.C_MAX_SOCKETS THEN
+./FB_Gateway_Interface.st:214:        IF L_Buffer_Count < GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN
+./FB_Gateway_Interface.st:217:            IF L_Buffer_Head > GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Head := 1; END_IF;
+./FB_Gateway_Interface.st:227:    IF L_Buffer_Tail > GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Tail := 1; END_IF;
+./FB_Gateway_Interface.st:239:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALLOWED_IPS DO
+./FB_Gateway_Interface.st:277:            IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+./FB_Gateway_Interface.st:282:            IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+./FB_Valve_Test_Manager.st:7:    VI_Valve_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+./FB_Valve_Test_Manager.st:8:    VI_Valve_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./FB_Valve_Test_Manager.st:9:    VI_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config;
+./FB_Valve_Test_Manager.st:14:    VO_Valve_Cmd : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./FB_Valve_Test_Manager.st:15:    VO_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // TRUE = OK
+./FB_Valve_Test_Manager.st:22:    L_Last_Test_Time : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UDINT;
+./FB_Valve_Test_Manager.st:36:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./FB_History_V2_Core.st:9:    VIO_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./GVL_GATEWAY.gvl:12:    G_Gateway_Modbus_Registers : ARRAY[0..GVL_CONSTANTS.C_MAX_MODBUS_REGISTERS-1] OF WORD;
+./ST_System_State_Summary.dut:5:    Indoor_Temp : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+./ST_System_State_Summary.dut:6:    Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./ST_System_State_Summary.dut:7:    Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_HUMIDITY_SENSORS] OF REAL;
+./ST_System_State_Summary.dut:8:    CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_CO2_SENSORS] OF REAL;
+./FB_AccessCode_Manager.st:9:    VI_Access_Codes   : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF DWORD;
+./FB_AccessCode_Manager.st:10:    VI_RFID_Tags      : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20);
+./FB_AccessCode_Manager.st:28:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./FB_AccessCode_Manager.st:38:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./ST_Flood_Config.dut:7:    sensor_to_valve_map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF INT := [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3]; // 1: ХВС, 2: ГВС, 3: Оба
+./FB_Presence_Playback.st:17:L_Current_Slot := (VI_Time_Index / (GVL_CONSTANTS.C_MS_IN_MINUTE * 10)) MOD TO_UDINT(GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY); // Слот каждые 10 минут
+./FB_Pre_Departure_Heating.st:7:    VI_Selected       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+./FB_Pre_Departure_Heating.st:11:    VO_Setpoints      : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./FB_Pre_Departure_Heating.st:21:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./диагностика/file_access_audit.log:41:CONSTANTS.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:159:GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:608:save_2026-04-07/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:652:snapshots/clean_build_20260414_0820/CONSTANTS.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:768:snapshots/clean_build_20260414_0820/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1035:snapshots/clean_build_20260414_0820/save_2026-04-07/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1532:snapshots/clean_build_2026_04_14/CONSTANTS.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1648:snapshots/clean_build_2026_04_14/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1916:snapshots/clean_build_2026_04_14/save_2026-04-07/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2396:snapshots/clean_build_2026_04_15/CONSTANTS.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2512:snapshots/clean_build_2026_04_15/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2782:snapshots/clean_build_2026_04_15/save_2026-04-07/GVL_CONSTANTS.gvl	file	yes	yes	yes	0o666
+./FB_Alarm_Manager.st:23:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./FB_Alarm_Manager.st:38:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./FB_Alarm_Manager.st:41:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package;
+./FB_Alarm_Manager.st:58:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./FB_Alarm_Manager.st:77:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./FB_Alarm_Manager.st:84:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./FB_Alarm_Manager.st:122:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Alarm_Manager.st:203:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Alarm_Manager.st:275:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:285:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:296:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:323:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:337:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:345:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) >= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) <= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./FB_Alarm_Manager.st:354:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:369:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:379:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./FB_Alarm_Manager.st:458:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./docs/assistant_bridge/nvram_REAL_latest.log:148:    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+./docs/assistant_bridge/nvram_REAL_latest.log:151:    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
+./docs/assistant_bridge/nvram_REAL_latest.log:154:    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+./docs/assistant_bridge/nvram_REAL_latest.log:159:    G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+./docs/assistant_bridge/nvram_REAL_latest.log:160:    G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+./docs/assistant_bridge/nvram_REAL_latest.log:163:    G_Valve_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./docs/assistant_bridge/nvram_REAL_latest.log:167:    G_Access_Codes : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF DWORD := [16#9BE3E0A3, 16#4A89A12D, 16#F4DBDF21, 16#90F59C65, 16#0972D346, 0, 0, 0, 0, 0];
+./docs/assistant_bridge/nvram_REAL_latest.log:170:    G_RFID_Tags : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20) := ['A1B2C3D4', 'E5F67890', '', '', '', '', '', '', '', ''];
+./FB_BlackBox_Recorder.st:17:    IF L_Write_Index < 0 OR L_Write_Index >= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./FB_BlackBox_Recorder.st:35:    IF L_Write_Index >= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./FB_BlackBox_Recorder.st:40:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./FB_TwoFactor_Auth.st:75:    IF L_Elapsed_Time < (GVL_CONSTANTS.C_MS_IN_MINUTE * 5) THEN
+./FB_TwoFactor_Auth.st:76:        VO_State.Time_Left_S := TO_UINT(((GVL_CONSTANTS.C_MS_IN_MINUTE * 5) - L_Elapsed_Time) / 1000);
+./FB_TwoFactor_Auth.st:133:    IF L_Elapsed_Time > (GVL_CONSTANTS.C_MS_IN_MINUTE * 5) THEN
+./FB_TwoFactor_Auth.st:139:    IF (SEL(VI_System_Time_MS >= L_Lockout_Start_Time, VI_System_Time_MS - L_Lockout_Start_Time, (4294967295 - L_Lockout_Start_Time) + VI_System_Time_MS + 1)) >= (GVL_CONSTANTS.C_MS_IN_MINUTE * 5) THEN
+./ST_Debug_Logger_Config.dut:5:    sampling_period_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+./FB_History_Manager.st:18:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./FB_Maintenance_Access.st:22:    L_elapsed := (SEL(VI_System_Time >= L_Start_Time, VI_System_Time - L_Start_Time, (4294967295 - L_Start_Time) + VI_System_Time + 1)) / GVL_CONSTANTS.C_MS_IN_MINUTE;
+./GVL_IO.gvl:3:    DI_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL; // Дискретные входы: Герконы (нормально-замкнутые контакты, TRUE = Открыто)
+./GVL_IO.gvl:4:    DI_Security_Glass : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL; // Дискретные входы: Датчики разбития стекла (активный уровень - TRUE)
+./GVL_IO.gvl:6:    DI_Flood_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Дискретные входы: Датчики протечки воды (активный уровень - TRUE)
+./GVL_IO.gvl:7:    DI_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Дискретные входы: Концевые выключатели клапанов коллекторов
+./GVL_IO.gvl:8:    AO_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UINT; // Аналоговые выходы: Приводы клапанов (0-10В, 0-1000 ед. для Modbus)
+./GVL_IO.gvl:9:    DO_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Дискретные выходы: Циркуляционные насосы коллекторных узлов (220В)
+./GVL_IO.gvl:10:    AI_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Обратная связь по току потребления насосов (диагностика)
+./GVL_IO.gvl:11:    AI_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Давление теплоносителя в коллекторах (0-10 бар)
+./GVL_IO.gvl:12:    AI_Manifold_Temps_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Owen_Analog_Value; // Аналоговые входы: Температура подачи (структура со статусом)
+./GVL_IO.gvl:13:    AI_Manifold_Temps_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Температура обратной линии (в 10-х долях градуса)
+./GVL_IO.gvl:14:    AO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF UINT; // Аналоговые выходы: Скорость приточных вентиляторов (0-10В)
+./GVL_IO.gvl:15:    AO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF UINT; // Аналоговые выходы: Скорость вытяжных вентиляторов (0-10В)
+./GVL_IO.gvl:16:    AO_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UINT; // Аналоговые выходы: диммирование освещения (0-1000 -> 0..100%)
+./GVL_IO.gvl:17:    AO_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF UINT; // Аналоговые выходы: позиционирование штор/жалюзи (0-1000 -> 0..100%)
+./GVL_IO.gvl:18:    AI_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Owen_Analog_Value; // Аналоговые входы: Температура приточного воздуха после калорифера
+./GVL_IO.gvl:19:    AI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF INT; // Аналоговые входы: Текущий уровень модуляции мощности котла (%)
+./GVL_IO.gvl:20:    AI_Boiler_Flame_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Дискретные входы: Датчик ионизации (подтверждение наличия пламени)
+./GVL_IO.gvl:21:    DI_Boiler_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Дискретные входы: Сигнал общей ошибки/аварии котла
+./GVL_IO.gvl:22:    AI_Methane_LEL : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF ST_Owen_Analog_Value; // Аналоговые входы: Уровень метана CH4 (0-100% LEL)
+./GVL_IO.gvl:23:    AI_CO_PPM : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Аналоговые входы: Уровень угарного газа CO (PPM)
+./GVL_IO.gvl:24:    DI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Дискретные входы: Оптические датчики дыма (пожарный шлейф)
+./GVL_IO.gvl:26:    AI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL; // Аналоговые входы: Температура стяжки пола по зонам (датчики в гильзах)
+./GVL_IO.gvl:27:    AI_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL; // Аналоговые входы: Температура воздуха в помещениях (настенные датчики)
+./GVL_IO.gvl:28:    AI_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL; // Аналоговые входы: Влажность воздуха в помещениях (%)
+./GVL_IO.gvl:29:    AI_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL; // Аналоговые входы: Уровень CO2 в помещениях (ppm)
+./GVL_IO.gvl:30:    DO_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL; // Дискретные выходы: Термоэлектрические приводы контуров (220В)
+./GVL_IO.gvl:37:    DI_Lighting_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL; // Дискретные входы: Физические кнопки/выключатели (импульсные)
+./GVL_IO.gvl:38:    DI_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: локальные выключатели розеток отключены концептуально
+./GVL_IO.gvl:39:    DI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL; // Дискретные входы: Датчики присутствия (PIR-сенсоры)
+./GVL_IO.gvl:40:    DO_Sockets : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Дискретные выходы: Управление розетками (реле)
+./FB_Access_Control.st:24:    VI_Access_Codes     : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF DWORD;
+./FB_Access_Control.st:25:    VI_RFID_Tags        : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20);
+./FB_Socket_Manager.st:13:    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+./FB_Socket_Manager.st:14:    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+./FB_Socket_Manager.st:15:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./FB_Socket_Manager.st:16:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./FB_Socket_Manager.st:19:    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+./FB_Socket_Manager.st:20:    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+./FB_Socket_Manager.st:35:    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./FB_Socket_Manager.st:36:    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+./FB_Socket_Manager.st:47:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./FB_Socket_Manager.st:50:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./FB_Socket_Manager.st:57:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./FB_Socket_Manager.st:69:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Sensor_Analog_Processing.st:9:    VI_Filter_Time_MS : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND; // Filtering time
+./FB_Sensor_Analog_Processing.st:38:        IF VI_Raw_Value < GVL_CONSTANTS.C_ANALOG_3_6MA_RAW THEN // < 3.6mA (Open circuit)
+./FB_Sensor_Analog_Processing.st:41:        ELSIF VI_Raw_Value > GVL_CONSTANTS.C_ANALOG_21MA_RAW THEN // > 21mA (Short circuit)
+./FB_Sensor_Analog_Processing.st:46:            L_Scaled := VI_Min_Scale + (TO_REAL(VI_Raw_Value - GVL_CONSTANTS.C_ANALOG_4MA_RAW) / TO_REAL(GVL_CONSTANTS.C_ANALOG_RAW_MAX - GVL_CONSTANTS.C_ANALOG_4MA_RAW)) * (VI_Max_Scale - VI_Min_Scale);
+./FB_Sensor_Analog_Processing.st:50:        IF VI_Raw_Value > GVL_CONSTANTS.C_ANALOG_10V_MAX_RAW THEN // Out of range
+./FB_Sensor_Analog_Processing.st:54:            L_Scaled := VI_Min_Scale + (TO_REAL(VI_Raw_Value) / TO_REAL(GVL_CONSTANTS.C_ANALOG_RAW_MAX)) * (VI_Max_Scale - VI_Min_Scale);
+./GVL_Retain.gvl:9:    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+./GVL_Retain.gvl:12:    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
+./GVL_Retain.gvl:15:    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+./GVL_Retain.gvl:20:    G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+./GVL_Retain.gvl:21:    G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+./GVL_Retain.gvl:24:    G_Valve_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./GVL_Retain.gvl:28:    G_Access_Codes : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF DWORD := [16#9BE3E0A3, 16#4A89A12D, 16#F4DBDF21, 16#90F59C65, 16#0972D346, 0, 0, 0, 0, 0];
+./GVL_Retain.gvl:31:    G_RFID_Tags : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20) := ['A1B2C3D4', 'E5F67890', '', '', '', '', '', '', '', ''];
+./FB_Trend_Analyzer.st:6:    VI_Data       : ARRAY[1..GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS] OF REAL;
+./FB_Trend_Analyzer.st:20:IF VI_Count > 0 AND VI_Count <= GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6106:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6121:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6124:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6141:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6160:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6167:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6205:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6286:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6358:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6368:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6379:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6406:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6420:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6428:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) &gt;= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) &lt;= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6437:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6452:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6462:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6541:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6913:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6914:    VI_Indoor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Температуры в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6915:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Температуры пола
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6916:    VI_Humidities : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Влажность в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6917:    VI_CO2_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Уровни CO2
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6918:    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики движения
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6919:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6920:    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики открытия окон
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6921:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Датчики протечки воды
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6922:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Датчики дыма
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6923:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Датчики метана
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6924:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6927:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6931:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6943:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6944:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6964:IF L_Elapsed_Time &gt;= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6966:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:6971:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7019:                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7020:                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7021:                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7022:                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7023:                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7025:                    IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7027:                    ELSIF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7030:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7031:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7032:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7033:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7034:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7039:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7171:    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7172:    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7173:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7174:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7177:    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7178:    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7193:    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7194:    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7205:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7208:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7215:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V7.xml:7227:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:10946:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:10961:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:10964:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:10981:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11000:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11007:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11045:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11126:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11198:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11208:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11219:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11246:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11260:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11268:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) &gt;= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) &lt;= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11277:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11292:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11302:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:11381:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12059:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12060:    VI_Indoor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Температуры в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12061:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Температуры пола
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12062:    VI_Humidities : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Влажность в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12063:    VI_CO2_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Уровни CO2
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12064:    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики движения
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12065:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12066:    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики открытия окон
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12067:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Датчики протечки воды
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12068:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Датчики дыма
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12069:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Датчики метана
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12070:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12073:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12077:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12089:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12090:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12110:IF L_Elapsed_Time &gt;= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12112:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12117:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12165:                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12166:                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12167:                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12168:                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12169:                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12171:                    IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12173:                    ELSIF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12176:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12177:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12178:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12179:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12180:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12185:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12419:    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12420:    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12421:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12422:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12425:    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12426:    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12441:    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12442:    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12453:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12456:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12463:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V6.xml:12475:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:3364:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:3374:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:3556:    IF L_Write_Index &lt; 0 OR L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:3574:    IF L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:3579:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:4419:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5272:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5291:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5319:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5741:IF F_TimeDiff(VI_System_Time_MS, L_last_update_time) &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5754:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5759:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5765:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5773:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5778:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5783:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5788:    FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5792:            IF L_idx &lt;= GVL_CONSTANTS.C_MAX_SOCKETS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5834:        IF L_Buffer_Count &lt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5837:            IF L_Buffer_Head &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Head := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5847:    IF L_Buffer_Tail &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Tail := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5859:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALLOWED_IPS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5892:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5897:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5902:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:5916:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6300:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6307:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6312:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6323:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6346:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6350:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6355:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6367:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6381:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6394:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6406:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6437:IF VI_Current_Scenario &gt;= 1 AND VI_Current_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6466:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6482:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6491:    IF L_Climate_Zone_ID &gt;= 1 AND L_Climate_Zone_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6552:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6564:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6568:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6571:        IF L_j &gt;= 1 AND L_j &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6578:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6692:    IF L_i &gt;= 1 AND L_i &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6704:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6722:    VI_Enable := VI_IsActivePLC AND ((L_Demand_Power &gt; GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR L_Freeze_Mode_Active),
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6743:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6764:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6804:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6809:        IF GVL_Retain.G_Boiler_Accumulated_MS[L_i] &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:6945:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7236:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7239:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7242:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7256:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7261:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7266:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7269:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7277:IF L_Effective_Scenario &gt;= 1 AND L_Effective_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7328:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7333:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7388:    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx &lt;= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7395:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:7400:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9552:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9553:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9618:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9619:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9620:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9842:    IF F_TimeDiff(VI_System_Time_MS, L_Last_Toggle) &gt;= (GVL_CONSTANTS.C_MS_IN_MINUTE * 30) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9845:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9852:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO VO_Sim_Lights[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9869:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO VO_Sim_Water_Leak[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:9870:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO VO_Sim_Gas_Leak[L_i] := 0.0; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11126:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11128:        IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11132:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11140:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11144:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11147:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11150:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11163:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11166:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11169:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11177:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11180:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11188:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11191:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11194:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11217:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11219:    IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11233:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11248:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11252:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11281:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:11512:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12318:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12333:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12336:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12353:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12372:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12379:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12419:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12500:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12572:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12582:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12593:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12620:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12634:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12642:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) >= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) <= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12651:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12666:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12676:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:12755:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13245:    VI_Current_Hour := TO_UINT(GVL_STATUS.G_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13314:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13345:    fbDebounce_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13346:    fbDebounce_Motion : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13347:    fbDebounce_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13348:    fbDebounce_Security_Glass : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13349:    fbDebounce_Flood : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13350:    fbDebounce_Smoke : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF FB_System_Timer;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13384:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO GVL_STATE.G_Manifold_Pumps[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13388:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13396:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13402:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SECURITY_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13408:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13409:    IF GVL_CONFIG.G_Door_Map[L_i] > 0 AND GVL_CONFIG.G_Door_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13414:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13416:        IF GVL_CONFIG.G_Window_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13418:        ELSIF GVL_CONFIG.G_Window_Map[L_i] <= (GVL_CONSTANTS.C_MAX_SECURITY_SENSORS * 2) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13419:            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[GVL_CONFIG.G_Window_Map[L_i] - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS].Q;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13425:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13430:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13439:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13445:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13449:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13450:    IF GVL_CONFIG.G_FloorTemp_Map[L_i] > 0 AND GVL_CONFIG.G_FloorTemp_Map[L_i] <= GVL_CONSTANTS.C_MAX_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13453:    IF GVL_CONFIG.G_RoomTemp_Map[L_i] > 0 AND GVL_CONFIG.G_RoomTemp_Map[L_i] <= GVL_CONSTANTS.C_MAX_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13458:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13468:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13482:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13521:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13528:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13531:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13547:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13550:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13664:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13789:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13797:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13805:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13841:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:13853:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14207:    FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY - 1 DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14214:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14219:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14503:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14626:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14777:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml:14820:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3127:    Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3128:    Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3129:    Lighting_States : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHTING_ZONES] OF BYTE;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3130:    Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3131:    Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3478:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3488:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3667:    IF L_Write_Index &lt; 0 OR L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3685:    IF L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:3690:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:4529:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5381:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5400:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5428:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5849:IF F_TimeDiff(VI_System_Time_MS, L_last_update_time) &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5862:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5867:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5873:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5881:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5886:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5891:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5896:    FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5900:            IF L_idx &lt;= GVL_CONSTANTS.C_MAX_SOCKETS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5942:        IF L_Buffer_Count &lt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5945:            IF L_Buffer_Head &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Head := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5955:    IF L_Buffer_Tail &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Tail := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:5967:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALLOWED_IPS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6000:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6005:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6010:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6024:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6407:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6414:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6419:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6430:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6453:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6457:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6462:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6474:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6488:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6501:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6513:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6544:IF VI_Current_Scenario &gt;= 1 AND VI_Current_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6573:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6589:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6598:    IF L_Climate_Zone_ID &gt;= 1 AND L_Climate_Zone_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6659:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6671:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6675:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6678:        IF L_j &gt;= 1 AND L_j &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6685:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6799:    IF L_i &gt;= 1 AND L_i &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6811:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6829:    VI_Enable := VI_IsActivePLC AND ((L_Demand_Power &gt; GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR L_Freeze_Mode_Active),
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6850:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6871:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6911:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:6916:        IF GVL_Retain.G_Boiler_Accumulated_MS[L_i] &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7051:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7341:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7344:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7347:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7361:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7366:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7371:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7374:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7382:IF L_Effective_Scenario &gt;= 1 AND L_Effective_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7433:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7438:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7493:    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx &lt;= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7500:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:7505:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9653:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9654:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9719:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9720:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9721:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9942:    IF F_TimeDiff(VI_System_Time_MS, L_Last_Toggle) &gt;= (GVL_CONSTANTS.C_MS_IN_MINUTE * 30) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9945:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9952:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO VO_Sim_Lights[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9969:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO VO_Sim_Water_Leak[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:9970:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO VO_Sim_Gas_Leak[L_i] := 0.0; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11224:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11226:        IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11230:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11238:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11242:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11245:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11248:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11261:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11264:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11267:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11275:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11278:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11286:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11289:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11292:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11315:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11317:    IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11331:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11346:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11350:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11379:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml:11609:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:3364:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:3374:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:3556:    IF L_Write_Index &lt; 0 OR L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:3574:    IF L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:3579:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:4419:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5272:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5291:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5319:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5741:IF F_TimeDiff(VI_System_Time_MS, L_last_update_time) &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5754:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5759:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5765:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5773:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5778:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5783:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5788:    FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5792:            IF L_idx &lt;= GVL_CONSTANTS.C_MAX_SOCKETS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5834:        IF L_Buffer_Count &lt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5837:            IF L_Buffer_Head &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Head := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5847:    IF L_Buffer_Tail &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Tail := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5859:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALLOWED_IPS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5892:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5897:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5902:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:5916:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6300:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6307:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6312:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6323:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6346:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6350:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6355:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6367:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6381:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6394:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6406:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6437:IF VI_Current_Scenario &gt;= 1 AND VI_Current_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6466:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6482:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6491:    IF L_Climate_Zone_ID &gt;= 1 AND L_Climate_Zone_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6552:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6564:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6568:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6571:        IF L_j &gt;= 1 AND L_j &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6578:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6692:    IF L_i &gt;= 1 AND L_i &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6704:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6722:    VI_Enable := VI_IsActivePLC AND ((L_Demand_Power &gt; GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR L_Freeze_Mode_Active),
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6743:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6764:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6804:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6809:        IF GVL_Retain.G_Boiler_Accumulated_MS[L_i] &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:6945:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7236:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7239:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7242:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7256:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7261:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7266:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7269:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7277:IF L_Effective_Scenario &gt;= 1 AND L_Effective_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7328:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7333:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7388:    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx &lt;= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7395:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:7400:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9552:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9553:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9618:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9619:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9620:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9842:    IF F_TimeDiff(VI_System_Time_MS, L_Last_Toggle) &gt;= (GVL_CONSTANTS.C_MS_IN_MINUTE * 30) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9845:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9852:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO VO_Sim_Lights[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9869:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO VO_Sim_Water_Leak[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:9870:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO VO_Sim_Gas_Leak[L_i] := 0.0; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11126:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11128:        IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11132:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11140:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11144:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11147:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11150:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11163:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11166:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11169:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11177:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11180:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11188:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11191:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11194:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11217:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11219:    IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11233:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11248:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11252:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11281:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V4.xml:11512:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:3364:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:3374:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:3556:    IF L_Write_Index &lt; 0 OR L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:3574:    IF L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:3579:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:4419:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5272:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5291:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5319:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5741:IF F_TimeDiff(VI_System_Time_MS, L_last_update_time) &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5754:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5759:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5765:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5773:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5778:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5783:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5788:    FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5792:            IF L_idx &lt;= GVL_CONSTANTS.C_MAX_SOCKETS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5834:        IF L_Buffer_Count &lt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5837:            IF L_Buffer_Head &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Head := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5847:    IF L_Buffer_Tail &gt; GVL_CONSTANTS.C_MAX_GATEWAY_COMMANDS THEN L_Buffer_Tail := 1; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5859:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALLOWED_IPS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5892:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5897:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5902:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:5916:            IF (L_Process_Command.target_zone &gt;= 1) AND (L_Process_Command.target_zone &lt;= GVL_CONSTANTS.C_MAX_LIGHTING_ZONES) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6300:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6307:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6312:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6323:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6346:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6350:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6355:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6367:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6381:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6394:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6406:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6437:IF VI_Current_Scenario &gt;= 1 AND VI_Current_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6466:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6482:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6491:    IF L_Climate_Zone_ID &gt;= 1 AND L_Climate_Zone_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6552:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6564:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6568:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6571:        IF L_j &gt;= 1 AND L_j &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6578:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6692:    IF L_i &gt;= 1 AND L_i &lt;= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6704:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6722:    VI_Enable := VI_IsActivePLC AND ((L_Demand_Power &gt; GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR L_Freeze_Mode_Active),
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6743:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6764:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6804:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6809:        IF GVL_Retain.G_Boiler_Accumulated_MS[L_i] &gt;= GVL_CONSTANTS.C_MS_IN_SECOND THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:6945:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7236:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7239:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7242:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7256:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7261:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7266:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7269:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7277:IF L_Effective_Scenario &gt;= 1 AND L_Effective_Scenario &lt;= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7328:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7333:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7388:    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx &lt;= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7395:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:7400:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9552:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9553:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9618:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9619:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9620:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9842:    IF F_TimeDiff(VI_System_Time_MS, L_Last_Toggle) &gt;= (GVL_CONSTANTS.C_MS_IN_MINUTE * 30) THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9845:        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9852:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHTING_ZONES DO VO_Sim_Lights[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9869:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO VO_Sim_Water_Leak[L_i] := FALSE; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:9870:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO VO_Sim_Gas_Leak[L_i] := 0.0; END_FOR;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11126:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11128:        IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11132:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11140:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11144:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11147:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11150:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11163:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11166:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11169:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11177:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11180:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11188:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11191:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11194:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11217:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11219:    IF L_i &lt;= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11233:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11248:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11252:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11281:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:11512:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12370:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12385:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12388:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12405:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12424:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12431:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12469:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12550:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12622:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12632:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12643:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12670:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12684:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12692:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) &gt;= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) &lt;= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12701:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12716:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12726:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:12805:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13483:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13484:    VI_Indoor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Температуры в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13485:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Температуры пола
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13486:    VI_Humidities : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Влажность в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13487:    VI_CO2_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Уровни CO2
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13488:    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики движения
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13489:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13490:    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики открытия окон
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13491:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Датчики протечки воды
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13492:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Датчики дыма
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13493:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Датчики метана
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13494:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13497:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13501:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13513:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13514:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13534:IF L_Elapsed_Time &gt;= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13536:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13541:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13589:                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13590:                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13591:                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13592:                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13593:                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13595:                    IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13597:                    ELSIF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13600:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13601:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13602:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13603:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13604:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13609:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13843:    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13844:    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13845:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13846:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13849:    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13850:    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13865:    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13866:    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13877:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13880:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13887:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V8.xml:13899:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:4943:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:4953:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ACCESS_CODES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:4995:    IF L_Write_Index &lt; 0 OR L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:5013:    IF L_Write_Index &gt;= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:5018:VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:5272:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V9.xml:5681:    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11237:    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11238:    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11239:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11240:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11243:    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11244:    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11259:    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11260:    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11271:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11274:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11281:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11293:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11461:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11462:    VI_Indoor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Температуры в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11463:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Температуры пола
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11464:    VI_Humidities : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Влажность в помещениях
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11465:    VI_CO2_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL; // Уровни CO2
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11466:    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики движения
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11467:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11468:    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL; // Датчики открытия окон
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11469:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Датчики протечки воды
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11470:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL; // Датчики дыма
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11471:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL; // Датчики метана
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11472:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11475:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11479:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11491:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11492:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11512:IF L_Elapsed_Time &gt;= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11514:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11519:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11567:                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11568:                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11569:                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11570:                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11571:                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11573:                    IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11575:                    ELSIF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CLIMATE_ZONES THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11578:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11579:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11580:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11581:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID &lt;= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11582:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:11587:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12250:    VI_Boiler_Errors : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Ошибки котлов
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12265:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12268:    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package_DRAFT;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12285:    R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12304:    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12311:    L_Alarm_V2_List_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12349:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12430:FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12502:    FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12512:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12523:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12550:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12564:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12572:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) &gt;= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) &lt;= GVL_CONSTANTS.C_MAX_BOILERS THEN
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12581:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12596:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12606:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V5.xml:12685:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/compile_green_cleanup_inventory_2026-04-12.md:30:- CONSTANTS.dut
+./workspace/index/root_repo_index.log:55:-rw-rw-rw-   1 codespace root          6628 Apr  6 04:14 GVL_CONSTANTS.gvl
+./workspace/index/root_repo_index.log:156:./GVL_CONSTANTS.gvl
+./workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_History_V2_Core_DRAFT.st:9:    VIO_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;
+./workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_History_V2_Core_DRAFT.st:16:    FOR L_i := GVL_CONSTANTS.C_MAX_HISTORY_RECORDS TO 2 BY -1 DO
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:10:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:11:    VI_Indoor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:12:    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:13:    VI_Humidities : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:14:    VI_CO2_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:15:    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:16:    VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:17:    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF BOOL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:18:    VI_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:19:    VI_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:20:    VI_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:21:    VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:24:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:30:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package_DRAFT;
+./workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st:43:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st:7:    VIO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+./workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st:31:        FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st:41:            FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st:52:            FOR L_k := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+./workspace/gvl_constants_inventory_2026-04-12.md:1:# Инвентарь проблемных мест по GVL_CONSTANTS / границам массивов
+./workspace/gvl_constants_inventory_2026-04-12.md:5:Цель: адресно заменить использование `GVL_CONSTANTS.C_MAX_*` в границах массивов на compile-time константы из `CONSTANTS.dut`.
+./workspace/gvl_constants_inventory_2026-04-12.md:38:   - `GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS` -> `C_MAX_HEATING_CIRCUITS`
+./workspace/gvl_constants_inventory_2026-04-12.md:39:   - `GVL_CONSTANTS.C_MAX_LIGHTING_ZONES` -> `C_MAX_LIGHTING_ZONES`
+./workspace/gvl_constants_inventory_2026-04-12.md:40:   - `GVL_CONSTANTS.C_MAX_CLIMATE_ZONES` -> `C_MAX_CLIMATE_ZONES`
+./workspace/gvl_constants_inventory_2026-04-12.md:44:- не трогать runtime-сравнения и обычный код, где `GVL_CONSTANTS.C_MAX_*` используется не как граница массива;
+./PRG_Heating.st:7:    L_Boiler_Modulation_REAL : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./PRG_Heating.st:13:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./PRG_Heating.st:44:    VI_Current_Hour := TO_UINT(GVL_STATUS.G_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
+./PRG_Heating.st:114:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./GVL_COMMAND.gvl:31:    G_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+./GVL_COMMAND.gvl:32:    G_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+./GVL_COMMAND.gvl:33:    CMD_Set_Manifold_Pump_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./FB_State_Snapshot_Manager.st:12:    L_Snapshot_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot;
+./FB_State_Snapshot_Manager.st:21:    L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
+./FB_Ventilation_System_Manager.st:16:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода (только чтение)
+./FB_Ventilation_System_Manager.st:19:    VI_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF REAL; // Температура приточного воздуха после калорифера
+./FB_Ventilation_System_Manager.st:23:    VI_Wet_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL; // Сигналы включения света в санузлах (ТЗ 4.0)
+./FB_Ventilation_System_Manager.st:24:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+./FB_Ventilation_System_Manager.st:27:    VO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE; // Выход: Управление приточными вентиляторами (0-100%)
+./FB_Ventilation_System_Manager.st:28:    VO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE; // Выход: Управление вытяжными вентиляторами (0-100%)
+./FB_Ventilation_System_Manager.st:29:    VO_Heater_Power : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Выход: Мощность калориферов (0-100%)
+./FB_Ventilation_System_Manager.st:43:    L_PID_Heaters : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_PID_Controller;
+./FB_Ventilation_System_Manager.st:44:    L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
+./FB_Ventilation_System_Manager.st:69:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:71:        IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./FB_Ventilation_System_Manager.st:75:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_Ventilation_System_Manager.st:83:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./FB_Ventilation_System_Manager.st:87:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:90:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_Ventilation_System_Manager.st:93:        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Ventilation_System_Manager.st:106:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:109:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_Ventilation_System_Manager.st:112:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Ventilation_System_Manager.st:120:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:123:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Ventilation_System_Manager.st:131:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:134:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_Ventilation_System_Manager.st:137:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Ventilation_System_Manager.st:160:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./FB_Ventilation_System_Manager.st:162:    IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+./FB_Ventilation_System_Manager.st:176:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./FB_Ventilation_System_Manager.st:191:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_Ventilation_System_Manager.st:195:    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./FB_Ventilation_System_Manager.st:224:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./PRG_IO_Read.st:8:    fbDebounce_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF FB_System_Timer;
+./PRG_IO_Read.st:9:    fbDebounce_Security_Glass : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF FB_System_Timer;
+./PRG_IO_Read.st:10:    fbDebounce_Flood : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
+./PRG_IO_Read.st:11:    fbDebounce_Smoke : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF FB_System_Timer;
+./PRG_IO_Read.st:43:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO GVL_STATE.G_Manifold_Pumps[L_i] := FALSE; END_FOR;
+./PRG_IO_Read.st:55:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+./PRG_IO_Read.st:61:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SECURITY_SENSORS DO
+./PRG_IO_Read.st:67:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+./PRG_IO_Read.st:68:    IF GVL_CONFIG.G_Door_Map[L_i] > 0 AND GVL_CONFIG.G_Door_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+./PRG_IO_Read.st:75:        IF GVL_CONFIG.G_Window_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+./PRG_IO_Read.st:77:        ELSIF GVL_CONFIG.G_Window_Map[L_i] <= (GVL_CONSTANTS.C_MAX_SECURITY_SENSORS * 2) THEN
+./PRG_IO_Read.st:78:            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[GVL_CONFIG.G_Window_Map[L_i] - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS].Q;
+./PRG_IO_Read.st:84:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+./PRG_IO_Read.st:89:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+./PRG_IO_Read.st:98:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
+./PRG_IO_Read.st:117:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./PRG_IO_Read.st:127:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+./PRG_IO_Read.st:141:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./ST_Flood_Global_Config.dut:4:    valve_types : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_VALVES] OF E_VALVE_TYPE := [GVL_CONSTANTS.C_MAX_FLOOD_VALVES(E_VALVE_TYPE.VALVE_NC)];
+./ST_Flood_Global_Config.dut:5:    sensor_to_valve_map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BYTE := [1, 1, 1, 2, 2, 2, 2, 0, 0, 0]; // 1 -> Valve 35, 2 -> Valve 36
+./GVL_DEBUG.gvl:3:    G_Device_Health_Zones : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF ST_Device_Health;
+./GVL_DEBUG.gvl:4:    G_Device_Health_Manifolds : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+./GVL_DEBUG.gvl:5:    G_Device_Health_Boilers : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Device_Health;
+./GVL_DEBUG.gvl:6:    G_Device_Health_Vents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+./GVL_DEBUG.gvl:8:    G_Pump_Health : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health; // Для 5 коллекторных насосов
+./FB_Command_Deduplication.st:13:    L_Processed_History : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT; // Ring buffer of last processed IDs
+./FB_Command_Deduplication.st:14:    L_Processed_Times   : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT; // Timestamps for processed IDs
+./FB_Command_Deduplication.st:22:FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1 DO
+./FB_Command_Deduplication.st:41:    IF L_History_Index > GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1 THEN
+./PRG_Ventilation.st:5:    L_Supply_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE;
+./PRG_Ventilation.st:6:    L_Exhaust_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE;
+./PRG_Ventilation.st:7:    L_Wet_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
+./PRG_Ventilation.st:16:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+./PRG_Ventilation.st:92:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+./PRG_Ventilation.st:95:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+./FB_DHW_Manager.st:13:    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода (только чтение)
+./FB_DHW_Manager.st:117:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+./ST_Ventilation_Scenario_Mode.dut:9:  Exhaust_Modes : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE;
+./ST_Ventilation_Scenario_Mode.dut:10:  Supply_Modes : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE;
+./ST_System_Diagnostics.dut:18:    Manifold_Pump_Exercise_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UDINT;
+./ST_System_Diagnostics.dut:31:    Manifold_Pump_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+./FB_Boiler_Cascade_Manager.st:13:    VI_Boiler_Flame_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_Cascade_Manager.st:14:    VI_Boiler_Error_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_Cascade_Manager.st:15:    VI_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_Cascade_Manager.st:16:    VI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./FB_Boiler_Cascade_Manager.st:20:    VO_Boiler_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+./FB_Boiler_Cascade_Manager.st:21:    VO_Boiler_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+./FB_Boiler_Cascade_Manager.st:38:    L_Flame_Miss_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF TON;
+./FB_Boiler_Cascade_Manager.st:42:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./FB_Boiler_Cascade_Manager.st:61:    IF GVL_CONSTANTS.C_MAX_BOILERS > 1 THEN
+./FB_Boiler_Cascade_Manager.st:74:    (GVL_CONSTANTS.C_MAX_BOILERS > 1) AND
+./FB_Boiler_Cascade_Manager.st:92:        (GVL_CONSTANTS.C_MAX_BOILERS > 1) AND
+./FB_Boiler_Cascade_Manager.st:116:        (GVL_CONSTANTS.C_MAX_BOILERS > 1) AND
+./PRG_System.st:85:    FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY - 1 DO
+./PRG_System.st:92:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+./PRG_System.st:97:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./PRG_System.st:406:FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+./PRG_System.st:905:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./PRG_System.st:940:    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+./GVL_CONFIG.gvl:15:    G_HMI_Vent_Unit_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_VENT_UNITS] OF ST_Ventilation_Unit_Config; // Конфигурации отдельных вентустановок
+./GVL_CONFIG.gvl:16:    G_HMI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+./GVL_CONFIG.gvl:17:    G_HMI_Outdoor_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF ST_Outdoor_Zone_Config; // Конфигурации зон уличного освещения
+./GVL_CONFIG.gvl:20:    G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record; // Данные калибровки датчиков
+./GVL_CONFIG.gvl:21:    G_HMI_User_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Пользовательские правила (Rule Engine)
+./GVL_CONFIG.gvl:24:    G_Valve_Test_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config;
+./GVL_CONFIG.gvl:27:    G_HMI_Cleaning_Mode_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF BOOL; // Режим уборки активен
+./GVL_CONFIG.gvl:28:    G_HMI_Cleaning_Mode_TimeLeft : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF UINT; // Оставшееся время режима уборки
+./GVL_CONFIG.gvl:53:    G_Allowed_IPs : ARRAY[1..GVL_CONSTANTS.C_MAX_ALLOWED_IPS] OF STRING(15) := ['192.168.1.100','192.168.1.101','127.0.0.1','','']; // Разрешенные IP-адреса для шлюза
+./GVL_CONFIG.gvl:62:    G_Manifold_Pump_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL := [TRUE, TRUE, TRUE, TRUE, TRUE];
+./GVL_CONFIG.gvl:75:    G_Door_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8];
+./GVL_CONFIG.gvl:81:    G_Evac_Smoke_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF INT; // Привязка дымовых датчиков к зонам эвакуации
+./GVL_CONFIG.gvl:82:    G_Evac_Leak_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF INT; // Привязка датчиков протечки к зонам эвакуации
+./GVL_CONFIG.gvl:83:    G_Evac_Gas_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF INT; // Привязка газовых датчиков к зонам эвакуации
+./GVL_CONFIG.gvl:89:    C_MS_PER_SEC    : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND; // Миллисекунд в секунде
+./GVL_CONFIG.gvl:92:    C_MS_PER_MIN    : UDINT := GVL_CONSTANTS.C_MS_IN_MINUTE; // Миллисекунд в минуте
+
+-- DUT HEADER --
+TYPE
+    C_MAX_HEATING_CIRCUITS : INT := 8;
+    C_MAX_LIGHTING_ZONES : INT := 32;
+    C_MAX_CLIMATE_ZONES : INT := 16;
+    C_MAX_VENT_UNITS : INT := 8;
+    C_MAX_DHW_UNITS : INT := 4;
+    C_MAX_IO_MODULES : INT := 16;
+END_TYPE
+== END ==
