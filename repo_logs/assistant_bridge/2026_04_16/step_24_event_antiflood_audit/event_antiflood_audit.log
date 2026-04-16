@@ -1,0 +1,507 @@
+]633;E;echo "=== STEP 24: EVENT ANTIFLOOD AUDIT ===";efb6d0e6-aaa4-469c-84e4-0cc7d1f7ffb4]633;C=== STEP 24: EVENT ANTIFLOOD AUDIT ===
+timestamp_utc=2026-04-16T17:36:54Z
+
+=== ALL fbLogEvent CALLS ===
+613:            fbLogEvent(
+636:                fbLogEvent(
+649:                fbLogEvent(
+815:    fbLogEvent(
+868:        fbLogEvent(
+893:    fbLogEvent(
+923:            fbLogEvent(
+1025:    fbLogEvent(
+1034:    fbLogEvent(
+1046:    fbLogEvent(
+
+=== EVENT TYPE MAP ===
+614:                VI_Event_Type := 5,
+637:                    VI_Event_Type := 6,
+650:                    VI_Event_Type := 7,
+816:        VI_Event_Type := 1,
+869:            VI_Event_Type := 8,
+894:        VI_Event_Type := 9,
+924:                VI_Event_Type := 10,
+1026:        VI_Event_Type := 2,
+1035:        VI_Event_Type := 3,
+1047:        VI_Event_Type := 4,
+
+=== TIME / DEDUP SIGNALS ===
+44:    L_Dangerous_Action_Armed : BOOL;
+45:    L_Dangerous_Action_Deadline_MS : UDINT;
+54:    L_Last_Event_Code : UDINT;
+55:    L_Last_Event_Value : REAL;
+56:    L_Last_Event_Time_MS : UDINT;
+66:L_IO_Fault_Prev : BOOL;
+67:L_Comm_Fault_Prev : BOOL;
+68:L_Sensor_Fault_Prev : BOOL;
+69:L_Subsystem_Fault_Prev : BOOL;
+70:L_Mode_Prev : E_System_Operating_Mode;
+71:L_User_Access_Denied_Prev : BOOL;
+447:    NOT GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm AND
+807:ELSIF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
+822:    GVL_STATUS.G_Previous_Scenario := GVL_STATUS.G_Current_Scenario;
+844:    IF (L_History_Event.event_code = L_Last_Event_Code)
+845:       AND (ABS(L_History_Event.event_value - L_Last_Event_Value) < 0.001)
+846:       AND (GVL_STATUS.G_System_Time_MS - L_Last_Event_Time_MS < 5000) THEN
+849:        L_Last_Event_Code := L_History_Event.event_code;
+850:        L_Last_Event_Value := L_History_Event.event_value;
+851:        L_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+865:IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+867:    IF NOT L_Dangerous_Action_Armed THEN
+876:    L_Dangerous_Action_Armed := TRUE;
+877:    L_Dangerous_Action_Deadline_MS := GVL_STATUS.G_System_Time_MS + 15000;
+878:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := TRUE;
+879:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Deadline_MS := L_Dangerous_Action_Deadline_MS;
+880:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Подтвердите опасное действие в течение 15 секунд';
+882:IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+883:    L_Dangerous_Action_Armed := FALSE;
+885:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+886:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+888:IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+889:   L_Dangerous_Action_Armed AND
+900:    L_Dangerous_Action_Armed := FALSE;
+901:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+902:    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Опасное действие подтверждено оператором';
+920:IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
+922:        IF NOT L_User_Access_Denied_Prev THEN
+935:        L_Dangerous_Action_Armed := FALSE;
+936:        GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+937:        GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Доступ запрещён: требуется уровень ENGINEER';
+941:L_User_Access_Denied_Prev := GVL_STATUS.G_Diagnostics.User_Access_Denied;
+1024:IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+1033:IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+1042:L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+1045:IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
+1049:        VI_Param1 := TO_UDINT(L_Mode_Prev),
+1054:L_Mode_Prev := GVL_STATE.G_System_Mode;
+
+=== CONTEXT AROUND EACH fbLogEvent ===
+----- CONTEXT line 613 -----
+       (L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
+
+        IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
+            L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
+            L_Scenario_Source := SRC_POLICY;
+
+            fbLogEvent(
+                VI_Event_Type := 5,
+                VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                VI_Param1 := TO_UDINT(L_Scenario_Source),
+                VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
+            );
+        END_IF;
+    END_IF;
+END_IF;
+
+----- CONTEXT line 636 -----
+
+        IF GVL_ALARM.G_Security_Armed THEN
+            IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
+                L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
+                L_Scenario_Source := SRC_POLICY;
+
+                fbLogEvent(
+                    VI_Event_Type := 6,
+                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                    VI_Param1 := TO_UDINT(L_Scenario_Source),
+                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
+                );
+            END_IF;
+
+        ELSIF L_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_PRESENCE THEN
+
+----- CONTEXT line 649 -----
+
+        ELSIF L_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_PRESENCE THEN
+            IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_SLEEP THEN
+                L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_SLEEP;
+                L_Scenario_Source := SRC_POLICY;
+
+                fbLogEvent(
+                    VI_Event_Type := 7,
+                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                    VI_Param1 := TO_UDINT(L_Scenario_Source),
+                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_SLEEP)
+                );
+            END_IF;
+        END_IF;
+    END_IF;
+
+----- CONTEXT line 815 -----
+    L_History_Event.event_code := 1001; // Scenario transition
+    L_History_Event.event_value := TO_REAL(GVL_STATUS.G_Current_Scenario);
+    L_History_Event.unit := 4; // scenario domain
+    L_History_Event.zone_id := 0;
+    L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Scenario_Source),
+        VI_Param2 := TO_UDINT(GVL_STATUS.G_Current_Scenario)
+    );
+
+    GVL_STATUS.G_Previous_Scenario := GVL_STATUS.G_Current_Scenario;
+
+
+----- CONTEXT line 868 -----
+L_Maintenance_Apply_Intent := FALSE;
+
+// Dangerous action confirmation flow
+IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+
+    IF NOT L_Dangerous_Action_Armed THEN
+        fbLogEvent(
+            VI_Event_Type := 8,
+            VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+            VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+            VI_Param2 := 1
+        );
+    END_IF;
+
+    L_Dangerous_Action_Armed := TRUE;
+
+----- CONTEXT line 893 -----
+END_IF;
+IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+   L_Dangerous_Action_Armed AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+    L_Maintenance_Apply_Intent := TRUE;
+
+    fbLogEvent(
+        VI_Event_Type := 9,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+        VI_Param2 := 1
+    );
+
+    L_Dangerous_Action_Armed := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+
+----- CONTEXT line 923 -----
+GVL_STATUS.G_Diagnostics.User_Access_Deny_Reason := '';
+GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := FALSE;
+GVL_STATUS.G_Diagnostics.Operator_Block_Reason := '';
+IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
+    IF GVL_COMMAND.CMD_User_Access_Level < 2 THEN
+        IF NOT L_User_Access_Denied_Prev THEN
+            fbLogEvent(
+                VI_Event_Type := 10,
+                VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+                VI_Param2 := 2
+            );
+        END_IF;
+
+        GVL_STATUS.G_Diagnostics.User_Access_Denied := TRUE;
+
+----- CONTEXT line 1025 -----
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: FAULTS ===
+
+// IO
+IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 2,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+
+----- CONTEXT line 1034 -----
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 3,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+
+----- CONTEXT line 1046 -----
+END_IF;
+
+L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+
+// === EVENT LOGGING: MODE CHANGE ===
+IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 4,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Mode_Prev),
+        VI_Param2 := TO_UDINT(GVL_STATE.G_System_Mode)
+    );
+END_IF;
+
+L_Mode_Prev := GVL_STATE.G_System_Mode;
+
+
+=== EVENT AREA ===
+    L_History_Event.event_code := 1103; // First fault source changed
+    L_History_Event.event_value := TO_REAL(fbSystemHealth.VO_First_Fault_Source);
+    L_History_Event.unit := 3; // root cause source domain
+    L_History_Event.zone_id := TO_BYTE(fbSystemHealth.VO_First_Fault_Source);
+    L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+    L_Last_First_Fault_Source := fbSystemHealth.VO_First_Fault_Source;
+
+ELSIF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
+    L_History_Write_Event := TRUE;
+    L_History_Event.event_code := 1001; // Scenario transition
+    L_History_Event.event_value := TO_REAL(GVL_STATUS.G_Current_Scenario);
+    L_History_Event.unit := 4; // scenario domain
+    L_History_Event.zone_id := 0;
+    L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Scenario_Source),
+        VI_Param2 := TO_UDINT(GVL_STATUS.G_Current_Scenario)
+    );
+
+    GVL_STATUS.G_Previous_Scenario := GVL_STATUS.G_Current_Scenario;
+
+ELSIF GVL_STATUS.G_Diagnostics.Alarm_Event_Pulse THEN
+    L_History_Write_Event := TRUE;
+    L_History_Event.event_code := TO_WORD(GVL_STATUS.G_Diagnostics.Alarm_Event_Code);
+    L_History_Event.event_value := GVL_STATUS.G_Diagnostics.Alarm_Event_Value;
+    L_History_Event.unit := 10; // alarm lifecycle domain
+    L_History_Event.zone_id := 0;
+    L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+
+ELSIF GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq <> L_Last_Operator_Journal_Seq THEN
+    L_History_Write_Event := TRUE;
+    L_History_Event.event_code := 1301; // Operator journal event
+    L_History_Event.event_value := TO_REAL(GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq);
+    L_History_Event.unit := 20; // operator journal domain
+    L_History_Event.zone_id := 0;
+    L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+    L_Last_Operator_Journal_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq;
+END_IF;
+
+// --- History anti-flood / dedup ---
+IF L_History_Write_Event THEN
+    IF (L_History_Event.event_code = L_Last_Event_Code)
+       AND (ABS(L_History_Event.event_value - L_Last_Event_Value) < 0.001)
+       AND (GVL_STATUS.G_System_Time_MS - L_Last_Event_Time_MS < 5000) THEN
+        L_History_Write_Event := FALSE;
+    ELSE
+        L_Last_Event_Code := L_History_Event.event_code;
+        L_Last_Event_Value := L_History_Event.event_value;
+        L_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+    END_IF;
+END_IF;
+
+fbHistoryManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Write_Event := L_History_Write_Event,
+    VI_Event := L_History_Event
+);
+
+
+L_Maintenance_Apply_Intent := FALSE;
+
+// Dangerous action confirmation flow
+IF GVL_COMMAND.CMD_Dangerous_Action_Request AND (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+
+    IF NOT L_Dangerous_Action_Armed THEN
+        fbLogEvent(
+            VI_Event_Type := 8,
+            VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+            VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+            VI_Param2 := 1
+        );
+    END_IF;
+
+    L_Dangerous_Action_Armed := TRUE;
+    L_Dangerous_Action_Deadline_MS := GVL_STATUS.G_System_Time_MS + 15000;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := TRUE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Deadline_MS := L_Dangerous_Action_Deadline_MS;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Подтвердите опасное действие в течение 15 секунд';
+END_IF;
+IF L_Dangerous_Action_Armed AND (GVL_STATUS.G_System_Time_MS > L_Dangerous_Action_Deadline_MS) THEN
+    L_Dangerous_Action_Armed := FALSE;
+    L_Maintenance_Apply_Intent := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Окно подтверждения истекло';
+END_IF;
+IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+   L_Dangerous_Action_Armed AND
+   (GVL_COMMAND.CMD_User_Access_Level >= 2) THEN
+    L_Maintenance_Apply_Intent := TRUE;
+
+    fbLogEvent(
+        VI_Event_Type := 9,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+        VI_Param2 := 1
+    );
+
+    L_Dangerous_Action_Armed := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+    GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Опасное действие подтверждено оператором';
+END_IF;
+
+// HMI maintenance mode control (confirmation-aware)
+IF L_Maintenance_Apply_Intent THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := GVL_COMMAND.CMD_Set_Manifold_Pump_In_Service[L_i];
+    END_FOR;
+    GVL_CONFIG.G_DHW_Heating_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Heating_Pump_In_Service;
+    GVL_CONFIG.G_DHW_Circ_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Circ_Pump_In_Service;
+END_IF;
+
+// Access level enforcement for dangerous actions
+GVL_STATUS.G_Diagnostics.User_Access_Level_Active := GVL_COMMAND.CMD_User_Access_Level;
+GVL_STATUS.G_Diagnostics.User_Access_Denied := FALSE;
+GVL_STATUS.G_Diagnostics.User_Access_Deny_Reason := '';
+GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := FALSE;
+GVL_STATUS.G_Diagnostics.Operator_Block_Reason := '';
+IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
+    IF GVL_COMMAND.CMD_User_Access_Level < 2 THEN
+        IF NOT L_User_Access_Denied_Prev THEN
+            fbLogEvent(
+                VI_Event_Type := 10,
+                VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                VI_Param1 := TO_UDINT(GVL_COMMAND.CMD_User_Access_Level),
+                VI_Param2 := 2
+            );
+        END_IF;
+
+        GVL_STATUS.G_Diagnostics.User_Access_Denied := TRUE;
+        GVL_STATUS.G_Diagnostics.User_Access_Deny_Reason := 'Недостаточный уровень доступа для опасного действия';
+        GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
+        GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Требуется уровень ENGINEER для опасного действия';
+        L_Dangerous_Action_Armed := FALSE;
+        GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
+        GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Доступ запрещён: требуется уровень ENGINEER';
+    END_IF;
+END_IF;
+
+L_User_Access_Denied_Prev := GVL_STATUS.G_Diagnostics.User_Access_Denied;
+
+// Hard revert for forbidden operator actions
+IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
+            GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := TRUE;
+        END_IF;
+    END_FOR;
+    IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+        GVL_CONFIG.G_DHW_Heating_Pump_In_Service := TRUE;
+    END_IF;
+    IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+        GVL_CONFIG.G_DHW_Circ_Pump_In_Service := TRUE;
+    END_IF;
+    GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action := GVL_STATUS.G_Diagnostics.Operator_Block_Reason;
+END_IF;
+
+// Operator action journal
+IF GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND NOT L_Last_Operator_Blocked THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+END_IF;
+L_Last_Operator_Blocked := GVL_STATUS.G_Diagnostics.Operator_Action_Blocked;
+IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service <> L_Last_DHW_Heating_In_Service THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+    IF GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС возвращён из ТО';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос загрузки ГВС выведен в ТО';
+    END_IF;
+END_IF;
+L_Last_DHW_Heating_In_Service := GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
+IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service <> L_Last_DHW_Circ_In_Service THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq + 1;
+    IF GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС возвращён из ТО';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Maintenance_Last_Action := 'Насос рециркуляции ГВС выведен в ТО';
+    END_IF;
+END_IF;
+L_Last_DHW_Circ_In_Service := GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
+IF GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq <> GVL_STATUS.G_Diagnostics.Operator_Journal_Last_Seq THEN
+    GVL_STATUS.G_Diagnostics.Operator_Journal_3 := GVL_STATUS.G_Diagnostics.Operator_Journal_2;
+    GVL_STATUS.G_Diagnostics.Operator_Journal_2 := GVL_STATUS.G_Diagnostics.Operator_Journal_1;
+    IF GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action <> '' THEN
+        GVL_STATUS.G_Diagnostics.Operator_Journal_1 := GVL_STATUS.G_Diagnostics.Operator_Last_Forbidden_Action;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Operator_Journal_1 := GVL_STATUS.G_Diagnostics.Maintenance_Last_Action;
+    END_IF;
+    GVL_STATUS.G_Diagnostics.Operator_Journal_Last_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq;
+END_IF;
+
+// ========================================
+// CoreKernel live observer (diagnostic only)
+// ========================================
+// fbCoreKernelObserver disabled temporarily
+
+
+// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
+L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+
+L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+
+L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+L_Persist_Struct.Valid := TRUE;
+
+// mirror to legacy persistent variables
+GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
+
+GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
+GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
+GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
+
+GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
+GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: FAULTS ===
+
+// IO
+IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 2,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 3,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+
+// === EVENT LOGGING: MODE CHANGE ===
+IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 4,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Mode_Prev),
+        VI_Param2 := TO_UDINT(GVL_STATE.G_System_Mode)
+    );
+END_IF;
+
+L_Mode_Prev := GVL_STATE.G_System_Mode;
+
+=== END STEP 24 ===
