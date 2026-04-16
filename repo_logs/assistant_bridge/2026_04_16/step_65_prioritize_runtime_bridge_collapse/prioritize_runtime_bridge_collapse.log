@@ -1,0 +1,45 @@
+]633;E;echo "=== STEP 65: PRIORITIZE RUNTIME BRIDGE COLLAPSE ===";fd114dcf-b8f0-4fa9-a638-75bd3982af51]633;C=== STEP 65: PRIORITIZE RUNTIME BRIDGE COLLAPSE ===
+timestamp_utc=2026-04-16T19:51:19Z
+
+=== GROUP A: KEEP_FOR_NOW ===
+FB_DHW_V2_Staging.st | keep_for_now | isolated domain bridge, lower cross-coupling
+FB_Socket_V2_Staging.st | keep_for_now | isolated command/state shadow, limited blast radius
+FB_Blinds_V2_Staging.st | keep_for_now | paired with lighting manager, but not first collapse target alone
+ST_DHW_Command_V2.dut | keep_for_now | used by active bridge
+ST_DHW_State_V2.dut | keep_for_now | used by active bridge
+ST_Socket_Command_V2.dut | keep_for_now | used by active bridge
+ST_Socket_State_V2.dut | keep_for_now | used by active bridge
+ST_Blinds_Command_V2.dut | keep_for_now | used by active bridge
+ST_Blinds_State_V2.dut | keep_for_now | used by active bridge
+
+=== GROUP B: COLLAPSE_FIRST ===
+FB_Lighting_V2_Staging.st | collapse_first | sits inside FB_Lighting_Blinds_Manager, easiest visible manager-level consolidation
+FB_Heating_V2_Staging.st | collapse_first | single strong owner manager, high value, moderate scope
+FB_Ventilation_V2_Staging.st | collapse_first | single strong owner manager, high architectural payoff
+ST_Lighting_Command_V2.dut | collapse_first | directly tied to lighting staging bridge
+ST_Lighting_State_V2.dut | collapse_first | directly tied to lighting staging bridge
+ST_Heating_Command_V2.dut | collapse_first | directly tied to heating staging bridge
+ST_Heating_State_V2.dut | collapse_first | directly tied to heating staging bridge
+ST_Ventilation_Command_V2.dut | collapse_first | directly tied to ventilation staging bridge
+ST_Ventilation_State_V2.dut | collapse_first | directly tied to ventilation staging bridge
+
+=== GROUP C: COLLAPSE_LATER ===
+FB_DHW_V2_Staging.st | collapse_later_candidate | keep first, revisit after heating/ventilation pattern stabilizes
+FB_Socket_V2_Staging.st | collapse_later_candidate | low urgency
+FB_Blinds_V2_Staging.st | collapse_later_candidate | likely collapse together with lighting final pass
+
+=== ORDER RECOMMENDATION ===
+1. FB_Lighting_V2_Staging.st
+2. FB_Heating_V2_Staging.st
+3. FB_Ventilation_V2_Staging.st
+4. FB_Blinds_V2_Staging.st (with lighting follow-up)
+5. FB_DHW_V2_Staging.st
+6. FB_Socket_V2_Staging.st
+
+=== COLLAPSE RULE ===
+Do not delete a bridge before:
+- command/state shadow fields are absorbed into owner manager
+- no external root references remain
+- behavior is preserved in first PLC pass or dry-run verification
+
+=== END STEP 65 ===
