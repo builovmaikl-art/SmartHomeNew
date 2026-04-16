@@ -932,6 +932,7 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_
         GVL_STATUS.G_Diagnostics.User_Access_Deny_Reason := 'Недостаточный уровень доступа для опасного действия';
         GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := TRUE;
         GVL_STATUS.G_Diagnostics.Operator_Block_Reason := 'Требуется уровень ENGINEER для опасного действия';
+        L_Dangerous_Action_Armed := FALSE;
         GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm := FALSE;
         GVL_STATUS.G_Diagnostics.Dangerous_Action_Confirm_Text := 'Доступ запрещён: требуется уровень ENGINEER';
     END_IF;
