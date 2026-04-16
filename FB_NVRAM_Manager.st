@@ -100,14 +100,6 @@ IF L_cmd_rising THEN
             END_IF;
         END_IF;
         VO_Done := TRUE;
-        
-    ELSIF VI_Command = 2 THEN // ЧТЕНИЕ (READ)
-        // Безопасное копирование (READ)
-        FOR L_i := 0 TO VI_DataSize - 1 DO
-            L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
-        END_FOR;
-        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
-        VO_Done := TRUE;
     END_IF;
 END_IF;
 
