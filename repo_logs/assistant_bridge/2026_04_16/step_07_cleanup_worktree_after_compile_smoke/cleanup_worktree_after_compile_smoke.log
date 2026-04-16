@@ -21,3 +21,20 @@ main
 === GIT DIFF CACHED --STAT BEFORE ===
 
 === ADD ALL REMAINING CHANGES ===
+
+=== GIT STATUS AFTER ADD ===
+AM repo_logs/assistant_bridge/2026_04_16/step_07_cleanup_worktree_after_compile_smoke/cleanup_worktree_after_compile_smoke.log
+
+=== COMMIT CLEANUP SNAPSHOT ===
+[main 6b25caa] chore: clean worktree after compile smoke
+ 1 file changed, 23 insertions(+)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_16/step_07_cleanup_worktree_after_compile_smoke/cleanup_worktree_after_compile_smoke.log
+
+=== HEAD COMMIT AFTER CLEANUP COMMIT ===
+6b25caa755e275216afcd40a7c19df0cca4e970b
+6b25caa chore: clean worktree after compile smoke
+1b32cd6 fix: remove legacy startup raw nvram read
+a220f7e test: compile smoke after migration
+cf50112 diag: reconcile persistent recovery and raw nvram read paths
+9b2a1e0 fix: implement real dirty detection in nvram manager
+
