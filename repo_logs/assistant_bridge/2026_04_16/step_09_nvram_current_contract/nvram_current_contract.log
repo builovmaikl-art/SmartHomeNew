@@ -1,0 +1,228 @@
+]633;E;echo "=== STEP 09: NVRAM CURRENT CONTRACT ===";f7c3dcda-a7ef-439c-9074-36a937f4d9ed]633;C=== STEP 09: NVRAM CURRENT CONTRACT ===
+timestamp_utc=2026-04-16T15:33:39Z
+
+=== LIVE FILES ONLY ===
+[OK] PRG_System.st
+[OK] FB_NVRAM_Manager.st
+[OK] GVL_PERSISTENT.gvl
+[OK] GVL_Retain.gvl
+
+=== RECOVERY CONTRACT ===
+PRG_System.st:79:    L_Recovery_Done : BOOL;
+PRG_System.st:110:IF NOT L_Recovery_Done THEN
+PRG_System.st:111:    IF GVL_PERSISTENT.P_Valid THEN
+PRG_System.st:112:        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+PRG_System.st:113:        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+PRG_System.st:114:        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+PRG_System.st:115:        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+PRG_System.st:118:    L_Recovery_Done := TRUE;
+PRG_System.st:674:IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+PRG_System.st:679:IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+PRG_System.st:684:IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+PRG_System.st:689:IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+PRG_System.st:989:GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+PRG_System.st:991:GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+PRG_System.st:992:GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+PRG_System.st:993:GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+PRG_System.st:995:GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+PRG_System.st:997:GVL_PERSISTENT.P_Valid := TRUE;
+GVL_PERSISTENT.gvl:4:    P_System_Mode : E_System_Operating_Mode;
+GVL_PERSISTENT.gvl:7:    P_Safety_Gas_Latched : BOOL;
+GVL_PERSISTENT.gvl:8:    P_Safety_Smoke_Latched : BOOL;
+GVL_PERSISTENT.gvl:9:    P_Safety_Leak_Latched : BOOL;
+GVL_PERSISTENT.gvl:12:    P_DHW_Heating_Active : BOOL;
+GVL_PERSISTENT.gvl:15:    P_Valid : BOOL;
+
+=== WRITE CONTRACT ===
+PRG_System.st:75:    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+PRG_System.st:76:    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+PRG_System.st:77:    L_Persist_Buffer_Changed : BOOL;
+PRG_System.st:78:    L_Last_Persist_Write_MS : UDINT;
+PRG_System.st:515:    GVL_CONFIG.G_HMI_Apply_Settings := TRUE;
+PRG_System.st:673:L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+PRG_System.st:675:    L_Persist_Buffer[1] := BYTE#1;
+PRG_System.st:677:    L_Persist_Buffer[1] := BYTE#0;
+PRG_System.st:680:    L_Persist_Buffer[2] := BYTE#1;
+PRG_System.st:682:    L_Persist_Buffer[2] := BYTE#0;
+PRG_System.st:685:    L_Persist_Buffer[3] := BYTE#1;
+PRG_System.st:687:    L_Persist_Buffer[3] := BYTE#0;
+PRG_System.st:690:    L_Persist_Buffer[4] := BYTE#1;
+PRG_System.st:692:    L_Persist_Buffer[4] := BYTE#0;
+PRG_System.st:695:L_Persist_Buffer_Changed :=
+PRG_System.st:696:    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+PRG_System.st:697:    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+PRG_System.st:698:    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+PRG_System.st:699:    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+PRG_System.st:700:    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+PRG_System.st:705:IF GVL_CONFIG.G_HMI_Apply_Settings THEN
+PRG_System.st:707:    L_NVRAM_Cmd := 1;
+PRG_System.st:708:    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
+PRG_System.st:710:ELSIF L_Persist_Buffer_Changed THEN
+PRG_System.st:712:    IF (L_Last_Persist_Write_MS = 0) OR
+PRG_System.st:713:       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+PRG_System.st:714:        L_NVRAM_Cmd := 1;
+PRG_System.st:721:    VI_DataRef := L_Persist_Buffer[0],
+PRG_System.st:733:    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+PRG_System.st:734:    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+PRG_System.st:735:    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+PRG_System.st:736:    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
+PRG_System.st:737:    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
+PRG_System.st:738:    L_Last_Persist_Write_MS := GVL_STATUS.G_System_Time_MS;
+FB_NVRAM_Manager.st:76:            IF (VI_System_Time_MS - L_Last_Write_Time_MS) < 60000 AND L_Last_Write_Time_MS <> 0 THEN
+
+=== RAW RETAIN USAGE ===
+FB_NVRAM_Manager.st:4:    VI_Offset                   : UDINT; // Смещение в байтах
+FB_NVRAM_Manager.st:5:    VI_DataRef                  : REFERENCE TO BYTE;
+FB_NVRAM_Manager.st:6:    VI_DataSize                 : UDINT; // КРИТИЧНО: используем этот размер вместо SIZEOF
+FB_NVRAM_Manager.st:24:    L_Data_Changed              : BOOL; // Флаг изменения данных
+FB_NVRAM_Manager.st:42:    IF VI_Offset >= C_MAX_NVRAM_SIZE THEN
+FB_NVRAM_Manager.st:51:    IF NOT __ISVALIDREF(VI_DataRef) THEN
+FB_NVRAM_Manager.st:59:    L_pData := ADR(VI_DataRef);
+FB_NVRAM_Manager.st:61:    IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+FB_NVRAM_Manager.st:82:                L_Data_Changed := FALSE;
+FB_NVRAM_Manager.st:83:                FOR L_i := 0 TO VI_DataSize - 1 DO
+FB_NVRAM_Manager.st:84:                    IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+FB_NVRAM_Manager.st:85:                        L_Data_Changed := TRUE;
+FB_NVRAM_Manager.st:90:                IF L_Data_Changed THEN
+FB_NVRAM_Manager.st:92:                    FOR L_i := 0 TO VI_DataSize - 1 DO
+FB_NVRAM_Manager.st:93:                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+GVL_Retain.gvl:6:    G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+PRG_System.st:720:    VI_Offset := L_NVRAM_Offset,
+PRG_System.st:721:    VI_DataRef := L_Persist_Buffer[0],
+PRG_System.st:722:    VI_DataSize := 5,
+
+=== PRG_SYSTEM RECOVERY BLOCK ===
+
+// === NVRAM RECOVERY (ONCE AFTER BOOT) ===
+IF NOT L_Recovery_Done THEN
+    IF GVL_PERSISTENT.P_Valid THEN
+        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+    END_IF;
+
+    L_Recovery_Done := TRUE;
+END_IF;
+
+// NVRAM CONTROLLED WRITE ENABLED (step 8B)
+
+// 1. Обновление системного времени
+
+=== PRG_SYSTEM WRITE BLOCK ===
+    L_Persist_Buffer[4] := BYTE#1;
+ELSE
+    L_Persist_Buffer[4] := BYTE#0;
+END_IF;
+
+L_Persist_Buffer_Changed :=
+    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+
+L_NVRAM_Cmd := 0;
+L_NVRAM_Offset := 0;
+
+IF GVL_CONFIG.G_HMI_Apply_Settings THEN
+    // explicit config apply may request a controlled write
+    L_NVRAM_Cmd := 1;
+    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
+
+ELSIF L_Persist_Buffer_Changed THEN
+    // controlled write: no more often than once per 60 seconds
+    IF (L_Last_Persist_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+        L_NVRAM_Cmd := 1;
+    END_IF;
+END_IF;
+
+fbNVRAMManager(
+    VI_Command := L_NVRAM_Cmd,
+    VI_Offset := L_NVRAM_Offset,
+    VI_DataRef := L_Persist_Buffer[0],
+    VI_DataSize := 5,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Operator_ID := 'SYSTEM',
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_TwoPersonConfirmation := FALSE,
+    VO_Done => L_NVRAM_Done,
+    VO_Error => L_NVRAM_Err,
+    VO_ErrorID => L_NVRAM_ErrID
+);
+
+IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
+    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+
+=== PRG_SYSTEM SNAPSHOT TO PERSISTENT ===
+GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+
+GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+
+GVL_PERSISTENT.P_Valid := TRUE;
+
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: SCENARIO CHANGE ===
+IF L_Scenario_Changed THEN
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Scenario_Source),
+
+=== FB_NVRAM_MANAGER CORE ===
+
+    IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+        VO_Error := TRUE;
+        VO_ErrorID := 16#150B;
+        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
+
+    IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
+        IF NOT VI_IsActivePLC THEN
+            VO_Error := TRUE;
+            VO_ErrorID := 16#1509;
+            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+        ELSE
+            // Ограничение частоты записи (не чаще 1 раза в 60 секунд)
+            IF (VI_System_Time_MS - L_Last_Write_Time_MS) < 60000 AND L_Last_Write_Time_MS <> 0 THEN
+                VO_Error := TRUE;
+                VO_ErrorID := 16#150C;
+                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+            ELSE
+                // Проверка на изменение данных перед записью
+                L_Data_Changed := FALSE;
+                FOR L_i := 0 TO VI_DataSize - 1 DO
+                    IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+                        L_Data_Changed := TRUE;
+                        EXIT;
+                    END_IF;
+                END_FOR;
+                
+                IF L_Data_Changed THEN
+                    // Безопасное копирование (WRITE)
+                    FOR L_i := 0 TO VI_DataSize - 1 DO
+                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+                    END_FOR;
+                    L_Last_Write_Time_MS := VI_System_Time_MS;
+                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+                ELSE
+                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+                END_IF;
+            END_IF;
+        END_IF;
+        VO_Done := TRUE;
+    END_IF;
+END_IF;
+
+IF VI_Command = 0 THEN
+    VO_Done := FALSE;
+END_IF;
+
+=== END STEP 09 ===
