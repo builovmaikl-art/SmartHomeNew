@@ -66,6 +66,7 @@ VAR
 L_Scenario_Source       : E_SCENARIO_SOURCE;
 
 L_IO_Fault_Prev : BOOL;
+L_Watchdog_Fault_Prev : BOOL;
 L_Comm_Fault_Prev : BOOL;
 L_Sensor_Fault_Prev : BOOL;
 L_Subsystem_Fault_Prev : BOOL;
@@ -1049,6 +1050,27 @@ GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 // >>> BULK_SYNC_ANCHOR: PRG_System <<<
 
 // === EVENT LOGGING: FAULTS ===
+
+// WATCHDOG
+IF fbWatchdog.VO_Watchdog_Fault AND NOT L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 11,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbWatchdog.VO_Watchdog_Fault AND L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 12,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_Watchdog_Fault_Prev := fbWatchdog.VO_Watchdog_Fault;
 
 // IO
 IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN

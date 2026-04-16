@@ -1,0 +1,129 @@
+]633;E;echo "=== STEP 32 FIXED: ADD WATCHDOG EVENT ===";f1165683-fe3b-4368-874e-5c1706c7b9d6]633;C=== STEP 32 FIXED: ADD WATCHDOG EVENT ===
+timestamp_utc=2026-04-16T18:11:08Z
+
+=== BEFORE ===
+208:    VI_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault,
+770:L_BB_Record.Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault;
+
+=== APPLY ===
+OK: watchdog event logging added to PRG_System.st
+
+=== AFTER ===
+69:L_Watchdog_Fault_Prev : BOOL;
+209:    VI_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault,
+771:L_BB_Record.Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault;
+1055:IF fbWatchdog.VO_Watchdog_Fault AND NOT L_Watchdog_Fault_Prev THEN
+1057:        VI_Event_Type := 11,
+1064:IF NOT fbWatchdog.VO_Watchdog_Fault AND L_Watchdog_Fault_Prev THEN
+1066:        VI_Event_Type := 12,
+1073:L_Watchdog_Fault_Prev := fbWatchdog.VO_Watchdog_Fault;
+
+=== CONTEXT VAR ===
+
+    L_Scenario_Req_Operator : E_SCENARIO_TYPE;
+    L_Scenario_Req_Gateway  : E_SCENARIO_TYPE;
+    L_Scenario_Req_Rule     : E_SCENARIO_TYPE;
+    L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
+    L_Scenario_Intent       : E_SCENARIO_TYPE;
+L_Scenario_Source       : E_SCENARIO_SOURCE;
+
+L_IO_Fault_Prev : BOOL;
+L_Watchdog_Fault_Prev : BOOL;
+L_Comm_Fault_Prev : BOOL;
+L_Sensor_Fault_Prev : BOOL;
+L_Subsystem_Fault_Prev : BOOL;
+L_Mode_Prev : E_System_Operating_Mode;
+L_User_Access_Denied_Prev : BOOL;
+
+
+=== CONTEXT EVENT AREA ===
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: FAULTS ===
+
+// WATCHDOG
+IF fbWatchdog.VO_Watchdog_Fault AND NOT L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 11,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbWatchdog.VO_Watchdog_Fault AND L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 12,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_Watchdog_Fault_Prev := fbWatchdog.VO_Watchdog_Fault;
+
+// IO
+IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 2,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 3,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index 7e0e5f8..b1c0fb0 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -66,6 +66,7 @@ VAR
+ L_Scenario_Source       : E_SCENARIO_SOURCE;
+ 
+ L_IO_Fault_Prev : BOOL;
++L_Watchdog_Fault_Prev : BOOL;
+ L_Comm_Fault_Prev : BOOL;
+ L_Sensor_Fault_Prev : BOOL;
+ L_Subsystem_Fault_Prev : BOOL;
+@@ -1050,6 +1051,27 @@ GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+ 
+ // === EVENT LOGGING: FAULTS ===
+ 
++// WATCHDOG
++IF fbWatchdog.VO_Watchdog_Fault AND NOT L_Watchdog_Fault_Prev THEN
++    fbLogEvent(
++        VI_Event_Type := 11,
++        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
++        VI_Param1 := 1,
++        VI_Param2 := 1
++    );
++END_IF;
++
++IF NOT fbWatchdog.VO_Watchdog_Fault AND L_Watchdog_Fault_Prev THEN
++    fbLogEvent(
++        VI_Event_Type := 12,
++        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
++        VI_Param1 := 1,
++        VI_Param2 := 0
++    );
++END_IF;
++
++L_Watchdog_Fault_Prev := fbWatchdog.VO_Watchdog_Fault;
++
+ // IO
+ IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+     fbLogEvent(
+
+=== END STEP 32 FIXED ===
