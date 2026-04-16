@@ -1,0 +1,692 @@
+]633;E;echo "== NVRAM AUDIT START ==";07ffcac9-d730-4fdc-a13b-ef9d475321f6]633;C== NVRAM AUDIT START ==
+
+-- FILE PRESENCE --
+-rw-rw-rw- 1 codespace codespace 4505 Apr 16 12:33 FB_NVRAM_Manager.st
+-rw-rw-rw- 1 codespace codespace 2316 Apr 16 12:33 FB_State_Snapshot_NVRAM.st
+-rw-rw-rw- 1 codespace codespace  346 Apr 16 12:33 GVL_PERSISTENT.gvl
+-rw-rw-rw- 1 codespace codespace 1908 Apr 16 12:33 GVL_Retain.gvl
+-rw-rw-rw- 1 codespace codespace  447 Apr 16 12:33 ST_State_Snapshot.dut
+-rw-rw-rw- 1 codespace codespace  747 Apr 16 12:33 ST_System_State_Snapshot.dut
+
+-- FB_NVRAM_Manager.st --
+FUNCTION_BLOCK FB_NVRAM_Manager
+VAR_INPUT
+    VI_Command                  : BYTE; // 1=WRITE, 2=READ
+    VI_Offset                   : UDINT; // Смещение в байтах
+    VI_DataRef                  : REFERENCE TO BYTE;
+    VI_DataSize                 : UDINT; // КРИТИЧНО: используем этот размер вместо SIZEOF
+    VI_System_Time_MS           : UDINT;
+    VI_Operator_ID              : STRING(10);
+    VI_IsActivePLC              : BOOL;
+    VI_TwoPersonConfirmation    : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Done                     : BOOL;
+    VO_Error                    : BOOL;
+    VO_ErrorID                  : UDINT;
+    // VO_ReadDataRef removed (REFERENCE TO not allowed in output)
+    VO_HMI_Status_Message       : STRING(200);
+END_VAR
+VAR
+    L_prev_Command              : BYTE;
+    L_cmd_rising                : BOOL;
+    L_i                         : UDINT;
+    L_Last_Write_Time_MS        : UDINT := 0; // Время последней записи
+    L_Data_Changed              : BOOL; // Флаг изменения данных
+    L_pData                      : POINTER TO BYTE;
+END_VAR
+VAR CONSTANT
+    C_MAX_NVRAM_SIZE            : UDINT := 12800;
+END_VAR
+
+// Детекция фронта команды
+L_cmd_rising := (VI_Command <> 0) AND (L_prev_Command = 0);
+L_prev_Command := VI_Command;
+
+IF L_cmd_rising THEN
+    VO_Done := FALSE;
+    VO_Error := FALSE;
+    VO_ErrorID := 0;
+    VO_HMI_Status_Message := '';
+    
+    // Валидация смещения
+    IF VI_Offset >= C_MAX_NVRAM_SIZE THEN
+        VO_Error := TRUE;
+        VO_ErrorID := 16#1501;
+        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
+
+    // Валидация указателя
+    IF NOT __ISVALIDREF(VI_DataRef) THEN
+        VO_Error := TRUE;
+        VO_ErrorID := 16#150A;
+        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
+
+    L_pData := ADR(VI_DataRef);
+
+    IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+        VO_Error := TRUE;
+        VO_ErrorID := 16#150B;
+        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
+
+    IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
+        IF NOT VI_IsActivePLC THEN
+            VO_Error := TRUE;
+            VO_ErrorID := 16#1509;
+            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+        ELSE
+            // Ограничение частоты записи (не чаще 1 раза в 60 секунд)
+            IF (VI_System_Time_MS - L_Last_Write_Time_MS) < 60000 AND L_Last_Write_Time_MS <> 0 THEN
+                VO_Error := TRUE;
+                VO_ErrorID := 16#150C;
+                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+            ELSE
+                // Проверка на изменение данных перед записью
+                L_Data_Changed := FALSE;
+                IF TRUE THEN
+                    L_Data_Changed := TRUE;
+                END_IF;
+                
+                IF L_Data_Changed THEN
+                    // Безопасное копирование (WRITE)
+                    FOR L_i := 0 TO VI_DataSize - 1 DO
+                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+                    END_FOR;
+                    L_Last_Write_Time_MS := VI_System_Time_MS;
+                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+                ELSE
+                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+                END_IF;
+            END_IF;
+        END_IF;
+        VO_Done := TRUE;
+        
+    ELSIF VI_Command = 2 THEN // ЧТЕНИЕ (READ)
+        // Безопасное копирование (READ)
+        FOR L_i := 0 TO VI_DataSize - 1 DO
+            L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+        END_FOR;
+        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+        VO_Done := TRUE;
+    END_IF;
+END_IF;
+
+IF VI_Command = 0 THEN
+    VO_Done := FALSE;
+END_IF;
+// >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+
+-- FB_State_Snapshot_NVRAM.st --
+FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Save_Req       : BOOL;
+    VI_Snapshot       : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Saved          : BOOL;
+    VO_Error          : BOOL;
+END_VAR
+VAR
+    L_FileName        : STRING := '/home/root/snapshot.bin';
+    L_State           : INT := 0;
+    
+    // Асинхронные блоки из библиотеки CAA_File
+    fbFileOpen        : FILE.Open;
+    fbFileWrite       : FILE.Write;
+    fbFileClose       : FILE.Close;
+    L_FileHandle      : FILE.HANDLE;
+END_VAR
+
+CASE L_State OF
+    0: // Ожидание
+        VO_Saved := FALSE;
+        VO_Error := FALSE;
+        IF VI_Save_Req THEN
+            L_State := 10;
+            fbFileOpen(xExecute := FALSE);
+            fbFileWrite(xExecute := FALSE);
+            fbFileClose(xExecute := FALSE);
+        END_IF;
+        
+    10: // Открытие файла
+        fbFileOpen(
+            xExecute := TRUE,
+            sFileName := L_FileName,
+            eFileMode := FILE.MODE.MWRITE
+        );
+        IF fbFileOpen.xDone THEN
+            L_FileHandle := fbFileOpen.hFile;
+            fbFileOpen(xExecute := FALSE);
+            L_State := 20;
+        ELSIF fbFileOpen.xError THEN
+            VO_Error := TRUE;
+            L_State := 0;
+        END_IF;
+        
+    20: // Запись
+        fbFileWrite(
+            xExecute := TRUE,
+            hFile := L_FileHandle,
+            pBuffer := ADR(VI_Snapshot),
+            szSize := SIZEOF(VI_Snapshot)
+        );
+        IF fbFileWrite.xDone THEN
+            fbFileWrite(xExecute := FALSE);
+            L_State := 30;
+        ELSIF fbFileWrite.xError THEN
+            VO_Error := TRUE;
+            L_State := 30; // Все равно закрываем файл
+        END_IF;
+        
+    30: // Закрытие
+        fbFileClose(
+            xExecute := TRUE,
+            hFile := L_FileHandle
+        );
+        IF fbFileClose.xDone THEN
+            fbFileClose(xExecute := FALSE);
+            IF NOT VO_Error THEN
+                VO_Saved := TRUE;
+            END_IF;
+            L_State := 0;
+        ELSIF fbFileClose.xError THEN
+            VO_Error := TRUE;
+            L_State := 0;
+        END_IF;
+END_CASE;
+-- GVL_PERSISTENT.gvl --
+VAR_GLOBAL PERSISTENT RETAIN
+
+    // === SYSTEM ===
+    P_System_Mode : E_System_Operating_Mode;
+
+    // === SAFETY LATCHES ===
+    P_Safety_Gas_Latched : BOOL;
+    P_Safety_Smoke_Latched : BOOL;
+    P_Safety_Leak_Latched : BOOL;
+
+    // === HEATING / DHW ===
+    P_DHW_Heating_Active : BOOL;
+
+    // === CONTROL ===
+    P_Valid : BOOL;
+
+END_VAR
+
+-- GVL_Retain.gvl --
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Initialized : BOOL := FALSE; // Флаг инициализации retain-переменных
+    
+    // Энергонезависимая память (NVRAM) для хранения настроек и логов
+    G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+    
+    // Буфер черного ящика (100 записей)
+    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+    G_BlackBox_LastIndex : INT;
+    G_BlackBox_Frozen : BOOL;
+    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
+    
+    // История событий
+    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+    G_History_Write_Idx : INT := 1;
+    G_History_Total_Events : UDINT;
+    
+    // Статистика котлов
+    G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    
+    // Результаты тестирования клапанов
+    G_Valve_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    
+    // ПИН-коды доступа (храним хэши CRC32 для безопасности)
+    // 16#9BE3E0A3 - это CRC32 от строки '1234'
+    G_Access_Codes : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF DWORD := [16#9BE3E0A3, 16#4A89A12D, 16#F4DBDF21, 16#90F59C65, 16#0972D346, 0, 0, 0, 0, 0];
+    
+    // Зарегистрированные RFID/NFC метки (строковое представление UID)
+    G_RFID_Tags : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20) := ['A1B2C3D4', 'E5F67890', '', '', '', '', '', '', '', ''];
+END_VAR
+-- ST_State_Snapshot.dut --
+{attribute 'pack_mode' := '1'}
+TYPE ST_State_Snapshot :
+STRUCT
+    timestamp_ms : UDINT := 0;
+    operator_id : STRING(10) := '';
+    scenario_id : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    lighting_levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHTING_ZONES] OF BYTE;
+    floor_heating_setpoints : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    alarm_active : BOOL := FALSE;
+    crc32 : DWORD := 0;
+END_STRUCT
+END_TYPE
+-- ST_System_State_Snapshot.dut --
+{attribute 'pack_mode' := '1'}
+TYPE ST_System_State_Snapshot :
+STRUCT
+    System_Time_MS : UDINT;
+    Current_Scenario : E_SCENARIO_TYPE;
+    Security_Armed : BOOL;
+    Active_Alarms : INT;
+    // Критические состояния для синхронизации
+    Zone_Valves : ARRAY[1..8] OF BOOL;
+    Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Lighting_States : ARRAY[1..32] OF BYTE;
+    Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+    Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    Gas_Valve_Closed : BOOL;
+    Water_Valves_Closed : BOOL;
+    Version : UDINT; // Версия состояния для разрешения конфликтов
+END_STRUCT
+END_TYPE
+-- GREP NVRAM / PERSIST / RETAIN / SNAPSHOT --
+./_ refresh method interface check_ __ true:169:                  Copy to log file (unconditionally overwrite).
+./_ refresh method interface check_ __ true:224:                --save-marks
+./FB_NVRAM_Manager.st:1:FUNCTION_BLOCK FB_NVRAM_Manager
+./FB_NVRAM_Manager.st:28:    C_MAX_NVRAM_SIZE            : UDINT := 12800;
+./FB_NVRAM_Manager.st:42:    IF VI_Offset >= C_MAX_NVRAM_SIZE THEN
+./FB_NVRAM_Manager.st:45:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./FB_NVRAM_Manager.st:54:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./FB_NVRAM_Manager.st:61:    IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+./FB_NVRAM_Manager.st:64:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./FB_NVRAM_Manager.st:73:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./FB_NVRAM_Manager.st:79:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./FB_NVRAM_Manager.st:90:                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./FB_NVRAM_Manager.st:93:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./FB_NVRAM_Manager.st:95:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./FB_NVRAM_Manager.st:104:            L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+./FB_NVRAM_Manager.st:106:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./FB_NVRAM_Manager.st:114:// >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+./steps/MASTER_PIPELINE/005_RESULT.xml:6390:<pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/005_RESULT.xml:6489:      <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/005_RESULT.xml:6509:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/005_RESULT.xml:6512:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6521:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6526:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/005_RESULT.xml:6529:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6538:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6544:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6548:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/005_RESULT.xml:6554:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/005_RESULT.xml:6556:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6558:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6566:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/005_RESULT.xml:6568:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/005_RESULT.xml:6576:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/005_RESULT.xml:9221:            <variable name="fbNVRAM">
+./steps/MASTER_PIPELINE/005_RESULT.xml:9223:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/005_RESULT.xml:9381:    fbNVRAM(VI_Command := 2, VI_RecordIndex := 1, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/005_RESULT.xml:9386:    fbNVRAM(VI_Command := 1, VI_RecordIndex := L_Backup_Day, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/005_RESULT.xml:10052:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/005_RESULT.xml:10742:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10744:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/005_RESULT.xml:10826:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10832:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10838:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10844:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10850:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/005_RESULT.xml:10985:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/005_RESULT.xml:11420:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/005_RESULT.xml:11422:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/005_RESULT.xml:11423:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/005_RESULT.xml:11426:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/005_RESULT.xml:11427:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/005_RESULT.xml:11430:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/005_RESULT.xml:11434:fbNVRAMManager(
+./steps/MASTER_PIPELINE/005_RESULT.xml:11435:    VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/005_RESULT.xml:11436:    VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/005_RESULT.xml:11443:    VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/005_RESULT.xml:11444:    VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/005_RESULT.xml:11445:    VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/005_RESULT.xml:12158:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_CONSTANTS" constant="true"><variable name="C_MAX_ZONES"><type><INT /></type><initialValue><simpleValue value="16" /></initialValue><documentation>Максимальное количество зон (комнат)</documentation></variable><variable name="C_MAX_SOCKETS"><type><INT /></type><initialValue><simpleValue value="36" /></initialValue><documentation>Максимальное количество управляемых розеток</documentation></variable><variable name="C_MAX_BLINDS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество штор/жалюзи</documentation></variable><variable name="C_MAX_ALARMS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество активных тревог</documentation></variable><variable name="C_MAX_RULES"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество правил (движок правил)</documentation></variable><variable name="C_MAX_MANIFOLDS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество коллекторов</documentation></variable><variable name="C_MAX_BOILERS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество котлов</documentation></variable><variable name="C_MAX_SUPPLY_FANS"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество приточных вентиляторов</documentation></variable><variable name="C_MAX_EXHAUST_FANS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество вытяжных вентиляторов</documentation></variable><variable name="C_MAX_SECURITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="15" /></initialValue><documentation>Максимальное количество датчиков безопасности (герконы, стекло)</documentation></variable><variable name="C_MAX_FLOOD_SENSORS"><type><INT /></type><initialValue><simpleValue value="12" /></initialValue><documentation>Максимальное количество датчиков протечки</documentation></variable><variable name="C_MAX_DOOR_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков дверей</documentation></variable><variable name="C_MAX_CO_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO</documentation></variable><variable name="C_MAX_METHANE_SENSORS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков метана</documentation></variable><variable name="C_MAX_VENT_UNITS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество вентустановок</documentation></variable><variable name="C_MAX_SUPPLY_TEMPS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков температуры притока</documentation></variable><variable name="C_MAX_SMOKE_SENSORS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество датчиков дыма</documentation></variable><variable name="C_MAX_SCENARIOS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество сценариев</documentation></variable><variable name="C_MAX_OUTDOOR_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество зон уличного освещения</documentation></variable><variable name="C_MAX_ACCESS_CODES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество кодов доступа</documentation></variable><variable name="C_MAX_WET_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество &quot;мокрых&quot; зон (санузлы)</documentation></variable><variable name="C_MAX_CALIBRATIONS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество калибровок датчиков</documentation></variable><variable name="C_MAX_MODULES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество модулей ввода-вывода</documentation></variable><variable name="C_MAX_CLEANING_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов уборки</documentation></variable><variable name="C_MAX_ALLOWED_IPS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество разрешенных IP-адресов</documentation></variable><variable name="C_MAX_VENT_SUPPLY_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов притока вентиляции</documentation></variable><variable name="C_MAX_SECURITY_PHONES"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество телефонов для оповещения</documentation></variable><variable name="C_MAX_FLOOD_VALVES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество кранов защиты от протечек</documentation></variable><variable name="C_MAX_HUMIDITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков влажности</documentation></variable><variable name="C_MAX_CO2_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO2</documentation></variable><variable name="C_MAX_CIRCUITS_PER_MANIFOLD"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество контуров на коллектор</documentation></variable><variable name="C_MAX_TREND_DATA_POINTS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество точек данных для трендов</documentation></variable><variable name="C_MAX_HISTORY_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей в истории</documentation></variable><variable name="C_MAX_DEBUG_LOGS"><type><INT /></type><initialValue><simpleValue value="1000" /></initialValue><documentation>Максимальное количество записей в логе отладки</documentation></variable><variable name="C_MAX_GATEWAY_COMMANDS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество команд в буфере шлюза</documentation></variable><variable name="C_MAX_STATE_SNAPSHOTS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество снимков состояния</documentation></variable><variable name="C_MAX_BLACKBOX_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей черного ящика</documentation></variable><variable name="C_MAX_PRESENCE_HISTORY"><type><INT /></type><initialValue><simpleValue value="1008" /></initialValue><documentation>Максимальное количество записей истории присутствия</documentation></variable><variable name="C_MAX_MODBUS_REGISTERS"><type><INT /></type><initialValue><simpleValue value="201" /></initialValue><documentation>Максимальное количество регистров Modbus</documentation></variable><variable name="C_MAX_DEDUPLICATION_HISTORY"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей истории дедупликации</documentation></variable><variable name="C_MAX_NVRAM_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей NVRAM</documentation></variable><variable name="C_MAX_NVRAM_DATA"><type><INT /></type><initialValue><simpleValue value="128" /></initialValue><documentation>Максимальный размер данных NVRAM</documentation></variable><variable name="C_ANALOG_RAW_MAX"><type><WORD /></type><initialValue><simpleValue value="27648" /></initialValue><documentation>Максимальное значение АЦП (100%)</documentation></variable><variable name="C_ANALOG_4MA_RAW"><type><WORD /></type><initialValue><simpleValue value="5529" /></initialValue><documentation>Значение АЦП для 4mA (20% от 27648)</documentation></variable><variable name="C_ANALOG_3_6MA_RAW"><type><WORD /></type><initialValue><simpleValue value="4976" /></initialValue><documentation>Порог обрыва NAMUR NE43 (&lt; 3.6mA)</documentation></variable><variable name="C_ANALOG_21MA_RAW"><type><WORD /></type><initialValue><simpleValue value="29030" /></initialValue><documentation>Порог КЗ NAMUR NE43 (&gt; 21mA)</documentation></variable><variable name="C_ANALOG_10V_MAX_RAW"><type><WORD /></type><initialValue><simpleValue value="30000" /></initialValue><documentation>Порог выхода за пределы 0-10V</documentation></variable><variable name="C_MS_IN_SECOND"><type><UDINT /></type><initialValue><simpleValue value="1000" /></initialValue></variable><variable name="C_MS_IN_MINUTE"><type><UDINT /></type><initialValue><simpleValue value="60000" /></initialValue></variable><variable name="C_MS_IN_HOUR"><type><UDINT /></type><initialValue><simpleValue value="3600000" /></initialValue></variable><variable name="C_MS_IN_DAY"><type><UDINT /></type><initialValue><simpleValue value="86400000" /></initialValue></variable><variable name="C_BOILER_CASCADE_MIN_DEMAND"><type><REAL /></type><initialValue><simpleValue value="25.0" /></initialValue><documentation>Минимальный запрос для включения ведущего котла (5% от одного коллектора)</documentation></variable><variable name="C_BOILER_CASCADE_HIGH_DEMAND"><type><REAL /></type><initialValue><simpleValue value="250.0" /></initialValue><documentation>Высокий запрос для включения второго котла (50% от общей мощности)</documentation></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>455afb83-cec7-4517-8bf9-1147ed04844f</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/005_RESULT.xml:12396:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_Retain" retain="true"><variable name="G_Initialized"><type><BOOL /></type><initialValue><simpleValue value="FALSE" /></initialValue><documentation>Флаг инициализации retain-переменных</documentation></variable><variable name="G_NVRAM_Data"><type>
+./steps/MASTER_PIPELINE/005_RESULT.xml:12792:          <Object Name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/001_universal_pou_builder.log:20:POU=FB_NVRAM_Manager XML_NAME=FB_NVRAM_Manager TYPE=functionBlock TREE=pous VARS=19 OBJECT_ID=23cf198a-2584-4a60-929f-fcdb43d4f42c WARN=VAR: unparsed lines=1
+./steps/MASTER_PIPELINE/001_universal_pou_builder.log:49:OLD_POU_WINDOW_NAMES=PRG_PLC_A|PRG_PLC_B|FB_Access_Control|FB_AccessCode_Manager|FB_Astro_Timer|FB_BlackBox_Recorder|FB_Boiler_Cascade_Controller|FB_Boiler_Cascade_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_CRC32_Calculator|FB_Debug_Logger|FB_Device_Predictive_Diag|FB_DHW_Manager|FB_Emergency_Valve_Open|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_FloorHeating_Controller|FB_FloorHeating_Freeze_Protection|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Gas_Valve_Controller|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Lifetime_Predictor|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Manifold_Pump_Controller|FB_Manual_Valve_Control|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_PID_Controller|FB_PLC_Heartbeat|FB_Pre_Departure_Heating|FB_Presence_Playback|FB_Presence_Simulator|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_TwoFactor_Auth|FB_User_Rule_Engine|FB_Valve_Test|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Water_Valve_Controller|FB_Zone_Access_Manager|PRG_Main
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V2.py:20:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V2.py:512:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/001_universal_pou_builder.py:20:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder.py:512:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/005_import_prg_v2.py:127:        LOG.write_text('NO_PRG_FILES_FOUND\n', encoding='utf-8')
+./steps/MASTER_PIPELINE/005_import_prg_v2.py:162:    OUT.write_text(xml, encoding='utf-8')
+./steps/MASTER_PIPELINE/005_import_prg_v2.py:163:    LOG.write_text(
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V1.py:19:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V1.py:477:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/005_import_prg.py:71:OUT.write_text(xml, encoding="utf-8")
+./steps/MASTER_PIPELINE/005_import_prg.py:72:LOG.write_text("\n".join(log), encoding="utf-8")
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:2434:            <variable name="write_index">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4045:            <variable name="L_write_idx">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4073:        L_buffer[L_write_idx].timestamp_ms := VI_System_Time_MS;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4074:        L_buffer[L_write_idx].level := E_Debug_Log_Level.LOG_LEVEL_VERBOSE;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4075:        L_buffer[L_write_idx].source_id := TO_BYTE(L_i);
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4076:        L_buffer[L_write_idx].value_real := VI_Floor_Temps[L_i];
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4077:        L_buffer[L_write_idx].text := 'Floor Temp Update';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4079:        L_write_idx := (L_write_idx MOD 1000) + 1;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4084:        L_buffer[L_write_idx].timestamp_ms := VI_System_Time_MS;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4085:        L_buffer[L_write_idx].level := E_Debug_Log_Level.LOG_LEVEL_MINIMAL;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4086:        L_buffer[L_write_idx].event_code := TO_WORD(VI_Error_Code);
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4087:        L_buffer[L_write_idx].text := 'System Error Detected';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:4088:        L_write_idx := (L_write_idx MOD 1000) + 1;
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6617:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6826:            <variable name="C_NVRAM_BASE_ADDR">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6894:                VO_HMI_Status_Message := 'NVRAM: Неверный индекс записи';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6902:                VO_HMI_Status_Message := 'NVRAM: Нулевой указатель данных';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6910:                    VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:6914:                    VO_HMI_Status_Message := 'NVRAM: Размер данных больше 128 байт';
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:8989:      <pou name="FB_State_Snapshot_NVRAM" pouType="functionBlock">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:9103:                // Копируем всю структуру байт за байтом в буфер NVRAM
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:10493:            <variable name="fbNVRAM">
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:10495:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:10653:    fbNVRAM(VI_Command := 2, VI_RecordIndex := 1, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:10658:    fbNVRAM(VI_Command := 1, VI_RecordIndex := L_Backup_Day, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:11244:            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команда на сохранение настроек в NVRAM</xhtml>
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:12140:          <Object Name="FB_NVRAM_Manager" ObjectId="9a413e00-9ce7-419d-abee-feaaff393b77" />
+./steps/MASTER_PIPELINE/æ¿ßΓÑ¼á π¼¡«ú« ñ«¼á.xml:12176:          <Object Name="FB_State_Snapshot_NVRAM" ObjectId="36cf1c27-7dee-4e37-9b07-6d9021ecfee0" />
+./steps/MASTER_PIPELINE/999_archive_flatten_copy.py.txt:43:    REPORT.write_text('\n'.join(report) + '\n', encoding='utf-8')
+./steps/MASTER_PIPELINE/001_universal_pou_builder_LEGACY_BACKUP.py:19:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder_LEGACY_BACKUP.py:323:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/001_universal_v2.log:50:POU=FB_NVRAM_Manager XML_NAME=FB_NVRAM_Manager TYPE=functionBlock TREE=pous VARS=19 OBJECT_ID=a4118b1b-6dd0-4930-9255-569a04d20ca2 WARN=VAR: unparsed lines=1
+./steps/MASTER_PIPELINE/001_universal_v2.log:79:POU=FB_State_Snapshot_NVRAM XML_NAME=FB_State_Snapshot_NVRAM TYPE=functionBlock TREE=pous VARS=11 OBJECT_ID=936f3c79-0d76-4c01-873c-c7b27d21c084 OK
+./steps/MASTER_PIPELINE/001_universal_v2.log:108:OLD_POU_WINDOW_NAMES=PRG_PLC_A|PRG_PLC_B|FB_Access_Control|FB_AccessCode_Manager|FB_Astro_Timer|FB_BlackBox_Recorder|FB_Boiler_Cascade_Controller|FB_Boiler_Cascade_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_CRC32_Calculator|FB_Debug_Logger|FB_Device_Predictive_Diag|FB_DHW_Manager|FB_Emergency_Valve_Open|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_FloorHeating_Controller|FB_FloorHeating_Freeze_Protection|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Gas_Valve_Controller|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Lifetime_Predictor|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Manifold_Pump_Controller|FB_Manual_Valve_Control|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_PID_Controller|FB_PLC_Heartbeat|FB_Pre_Departure_Heating|FB_Presence_Playback|FB_Presence_Simulator|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_TwoFactor_Auth|FB_User_Rule_Engine|FB_Valve_Test|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Water_Valve_Controller|FB_Zone_Access_Manager|PRG_Main
+./steps/MASTER_PIPELINE/001_universal_v2.log:109:OLD_POUS_TREE_NAMES=FB_Lifetime_Predictor|FB_Gas_Valve_Controller|FB_TwoFactor_Auth|FB_Manual_Valve_Control|FB_Boiler_Cascade_Manager|FB_CRC32_Calculator|FB_Emergency_Valve_Open|FB_AccessCode_Manager|FB_Manifold_Pump_Controller|FB_Debug_Logger|FB_Astro_Timer|FB_BlackBox_Recorder|FB_PLC_Heartbeat|FB_User_Rule_Engine|FB_Water_Valve_Controller|FB_FloorHeating_Freeze_Protection|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Device_Predictive_Diag|FB_PID_Controller|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_Pre_Departure_Heating|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_Valve_Test|FB_Zone_Access_Manager|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Boiler_Cascade_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_FloorHeating_Controller|FB_DHW_Manager|FB_Presence_Playback|FB_Presence_Simulator|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_Access_Control
+./steps/MASTER_PIPELINE/004_import_dut.py:413:        LOG.write_text('NO_DUT_FILES_FOUND\n', encoding='utf-8')
+./steps/MASTER_PIPELINE/004_import_dut.py:477:    OUT.write_text(xml, encoding='utf-8')
+./steps/MASTER_PIPELINE/004_import_dut.py:498:    LOG.write_text('\n'.join(summary), encoding='utf-8')
+./steps/MASTER_PIPELINE/004_RESULT.xml:6084:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/004_RESULT.xml:6183:            <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/004_RESULT.xml:6203:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/004_RESULT.xml:6206:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6215:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6220:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/004_RESULT.xml:6223:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6232:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6238:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6242:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/004_RESULT.xml:6248:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/004_RESULT.xml:6250:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6252:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6260:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/004_RESULT.xml:6262:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/004_RESULT.xml:6270:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/004_RESULT.xml:9485:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/004_RESULT.xml:9536:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9538:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/004_RESULT.xml:9606:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9611:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9616:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9621:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9626:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/004_RESULT.xml:9740:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/004_RESULT.xml:10175:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/004_RESULT.xml:10177:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/004_RESULT.xml:10178:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/004_RESULT.xml:10181:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/004_RESULT.xml:10182:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/004_RESULT.xml:10185:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/004_RESULT.xml:10189:fbNVRAMManager(
+./steps/MASTER_PIPELINE/004_RESULT.xml:10190:    VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/004_RESULT.xml:10191:    VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/004_RESULT.xml:10198:    VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/004_RESULT.xml:10199:    VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/004_RESULT.xml:10200:    VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/004_RESULT.xml:11418:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_CONSTANTS" constant="true"><variable name="C_MAX_ZONES"><type><INT /></type><initialValue><simpleValue value="16" /></initialValue><documentation>Максимальное количество зон (комнат)</documentation></variable><variable name="C_MAX_SOCKETS"><type><INT /></type><initialValue><simpleValue value="36" /></initialValue><documentation>Максимальное количество управляемых розеток</documentation></variable><variable name="C_MAX_BLINDS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество штор/жалюзи</documentation></variable><variable name="C_MAX_ALARMS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество активных тревог</documentation></variable><variable name="C_MAX_RULES"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество правил (движок правил)</documentation></variable><variable name="C_MAX_MANIFOLDS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество коллекторов</documentation></variable><variable name="C_MAX_BOILERS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество котлов</documentation></variable><variable name="C_MAX_SUPPLY_FANS"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество приточных вентиляторов</documentation></variable><variable name="C_MAX_EXHAUST_FANS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество вытяжных вентиляторов</documentation></variable><variable name="C_MAX_SECURITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="15" /></initialValue><documentation>Максимальное количество датчиков безопасности (герконы, стекло)</documentation></variable><variable name="C_MAX_FLOOD_SENSORS"><type><INT /></type><initialValue><simpleValue value="12" /></initialValue><documentation>Максимальное количество датчиков протечки</documentation></variable><variable name="C_MAX_DOOR_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков дверей</documentation></variable><variable name="C_MAX_CO_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO</documentation></variable><variable name="C_MAX_METHANE_SENSORS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков метана</documentation></variable><variable name="C_MAX_VENT_UNITS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество вентустановок</documentation></variable><variable name="C_MAX_SUPPLY_TEMPS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков температуры притока</documentation></variable><variable name="C_MAX_SMOKE_SENSORS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество датчиков дыма</documentation></variable><variable name="C_MAX_SCENARIOS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество сценариев</documentation></variable><variable name="C_MAX_OUTDOOR_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество зон уличного освещения</documentation></variable><variable name="C_MAX_ACCESS_CODES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество кодов доступа</documentation></variable><variable name="C_MAX_WET_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество &quot;мокрых&quot; зон (санузлы)</documentation></variable><variable name="C_MAX_CALIBRATIONS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество калибровок датчиков</documentation></variable><variable name="C_MAX_MODULES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество модулей ввода-вывода</documentation></variable><variable name="C_MAX_CLEANING_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов уборки</documentation></variable><variable name="C_MAX_ALLOWED_IPS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество разрешенных IP-адресов</documentation></variable><variable name="C_MAX_VENT_SUPPLY_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов притока вентиляции</documentation></variable><variable name="C_MAX_SECURITY_PHONES"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество телефонов для оповещения</documentation></variable><variable name="C_MAX_FLOOD_VALVES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество кранов защиты от протечек</documentation></variable><variable name="C_MAX_HUMIDITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков влажности</documentation></variable><variable name="C_MAX_CO2_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO2</documentation></variable><variable name="C_MAX_CIRCUITS_PER_MANIFOLD"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество контуров на коллектор</documentation></variable><variable name="C_MAX_TREND_DATA_POINTS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество точек данных для трендов</documentation></variable><variable name="C_MAX_HISTORY_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей в истории</documentation></variable><variable name="C_MAX_DEBUG_LOGS"><type><INT /></type><initialValue><simpleValue value="1000" /></initialValue><documentation>Максимальное количество записей в логе отладки</documentation></variable><variable name="C_MAX_GATEWAY_COMMANDS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество команд в буфере шлюза</documentation></variable><variable name="C_MAX_STATE_SNAPSHOTS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество снимков состояния</documentation></variable><variable name="C_MAX_BLACKBOX_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей черного ящика</documentation></variable><variable name="C_MAX_PRESENCE_HISTORY"><type><INT /></type><initialValue><simpleValue value="1008" /></initialValue><documentation>Максимальное количество записей истории присутствия</documentation></variable><variable name="C_MAX_MODBUS_REGISTERS"><type><INT /></type><initialValue><simpleValue value="201" /></initialValue><documentation>Максимальное количество регистров Modbus</documentation></variable><variable name="C_MAX_DEDUPLICATION_HISTORY"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей истории дедупликации</documentation></variable><variable name="C_MAX_NVRAM_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей NVRAM</documentation></variable><variable name="C_MAX_NVRAM_DATA"><type><INT /></type><initialValue><simpleValue value="128" /></initialValue><documentation>Максимальный размер данных NVRAM</documentation></variable><variable name="C_ANALOG_RAW_MAX"><type><WORD /></type><initialValue><simpleValue value="27648" /></initialValue><documentation>Максимальное значение АЦП (100%)</documentation></variable><variable name="C_ANALOG_4MA_RAW"><type><WORD /></type><initialValue><simpleValue value="5529" /></initialValue><documentation>Значение АЦП для 4mA (20% от 27648)</documentation></variable><variable name="C_ANALOG_3_6MA_RAW"><type><WORD /></type><initialValue><simpleValue value="4976" /></initialValue><documentation>Порог обрыва NAMUR NE43 (&lt; 3.6mA)</documentation></variable><variable name="C_ANALOG_21MA_RAW"><type><WORD /></type><initialValue><simpleValue value="29030" /></initialValue><documentation>Порог КЗ NAMUR NE43 (&gt; 21mA)</documentation></variable><variable name="C_ANALOG_10V_MAX_RAW"><type><WORD /></type><initialValue><simpleValue value="30000" /></initialValue><documentation>Порог выхода за пределы 0-10V</documentation></variable><variable name="C_MS_IN_SECOND"><type><UDINT /></type><initialValue><simpleValue value="1000" /></initialValue></variable><variable name="C_MS_IN_MINUTE"><type><UDINT /></type><initialValue><simpleValue value="60000" /></initialValue></variable><variable name="C_MS_IN_HOUR"><type><UDINT /></type><initialValue><simpleValue value="3600000" /></initialValue></variable><variable name="C_MS_IN_DAY"><type><UDINT /></type><initialValue><simpleValue value="86400000" /></initialValue></variable><variable name="C_BOILER_CASCADE_MIN_DEMAND"><type><REAL /></type><initialValue><simpleValue value="25.0" /></initialValue><documentation>Минимальный запрос для включения ведущего котла (5% от одного коллектора)</documentation></variable><variable name="C_BOILER_CASCADE_HIGH_DEMAND"><type><REAL /></type><initialValue><simpleValue value="250.0" /></initialValue><documentation>Высокий запрос для включения второго котла (50% от общей мощности)</documentation></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>116492fa-8e09-46cb-a821-91f864938c87</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/004_RESULT.xml:11419:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_Retain" retain="true"><variable name="G_Initialized"><type><BOOL /></type><initialValue><simpleValue value="FALSE" /></initialValue><documentation>Флаг инициализации retain-переменных</documentation></variable><variable name="G_NVRAM_Data"><type><array><dimension lower="0" upper="12799" /><baseType><BYTE /></baseType></array></type><documentation>100 * 128 = 12800 байт</documentation></variable><variable name="G_BlackBox_Buffer"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1" /><baseType><derived name="ST_BlackBox_Record" /></baseType></array></type></variable><variable name="G_BlackBox_LastIndex"><type><INT /></type></variable><variable name="G_BlackBox_Frozen"><type><BOOL /></type></variable><variable name="G_Presence_History"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1" /><baseType><WORD /></baseType></array></type><documentation>168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)</documentation></variable><variable name="G_History_Buffer"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_HISTORY_RECORDS" /><baseType><derived name="ST_History_Record" /></baseType></array></type></variable><variable name="G_History_Write_Idx"><type><INT /></type><initialValue><simpleValue value="1" /></initialValue></variable><variable name="G_History_Total_Events"><type><UDINT /></type></variable><variable name="G_Boiler_Accumulated_MS"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Boiler_Work_Seconds"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Valve_Test_Results"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_MANIFOLDS" /><baseType><BOOL /></baseType></array></type></variable><variable name="G_Access_Codes"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><DWORD /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="16#9BE3E0A3" /></value><value><simpleValue value="16#4A89A12D" /></value><value><simpleValue value="16#F4DBDF21" /></value><value><simpleValue value="16#90F59C65" /></value><value><simpleValue value="16#0972D346" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value></arrayValue></initialValue></variable><variable name="G_RFID_Tags"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><string length="20" /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="'A1B2C3D4'" /></value><value><simpleValue value="'E5F67890'" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value></arrayValue></initialValue></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>2d432858-d023-4f3b-a3c0-558b2b972142</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/004_RESULT.xml:11505:          <Object Name="FB_NVRAM_Manager" ObjectId="6da67ad1-41a4-40cc-b6a5-fac0c89e2c91" />
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:2434:            <variable name="write_index">
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7767:<pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7866:      <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7886:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7889:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7898:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7903:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7906:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7915:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7921:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7925:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7931:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7933:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7935:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7943:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7945:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:7953:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:10598:            <variable name="fbNVRAM">
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:10600:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:10758:    fbNVRAM(VI_Command := 2, VI_RecordIndex := 1, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:10763:    fbNVRAM(VI_Command := 1, VI_RecordIndex := L_Backup_Day, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:11349:            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команда на сохранение настроек в NVRAM</xhtml>
+./steps/MASTER_PIPELINE/003_GVL_BASELINE_INPUT.xml:12223:          <Object Name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6084:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6183:            <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6203:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6206:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6215:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6220:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6223:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6232:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6238:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6242:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6248:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6250:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6252:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6260:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6262:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:6270:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9485:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9536:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9538:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9606:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9611:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9616:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9621:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9626:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:9740:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10175:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10177:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10178:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10181:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10182:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10185:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10189:fbNVRAMManager(
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10190:    VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10191:    VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10198:    VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10199:    VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:10200:    VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:11418:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_CONSTANTS" constant="true"><variable name="C_MAX_ZONES"><type><INT /></type><initialValue><simpleValue value="16" /></initialValue><documentation>Максимальное количество зон (комнат)</documentation></variable><variable name="C_MAX_SOCKETS"><type><INT /></type><initialValue><simpleValue value="36" /></initialValue><documentation>Максимальное количество управляемых розеток</documentation></variable><variable name="C_MAX_BLINDS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество штор/жалюзи</documentation></variable><variable name="C_MAX_ALARMS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество активных тревог</documentation></variable><variable name="C_MAX_RULES"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество правил (движок правил)</documentation></variable><variable name="C_MAX_MANIFOLDS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество коллекторов</documentation></variable><variable name="C_MAX_BOILERS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество котлов</documentation></variable><variable name="C_MAX_SUPPLY_FANS"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество приточных вентиляторов</documentation></variable><variable name="C_MAX_EXHAUST_FANS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество вытяжных вентиляторов</documentation></variable><variable name="C_MAX_SECURITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="15" /></initialValue><documentation>Максимальное количество датчиков безопасности (герконы, стекло)</documentation></variable><variable name="C_MAX_FLOOD_SENSORS"><type><INT /></type><initialValue><simpleValue value="12" /></initialValue><documentation>Максимальное количество датчиков протечки</documentation></variable><variable name="C_MAX_DOOR_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков дверей</documentation></variable><variable name="C_MAX_CO_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO</documentation></variable><variable name="C_MAX_METHANE_SENSORS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков метана</documentation></variable><variable name="C_MAX_VENT_UNITS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество вентустановок</documentation></variable><variable name="C_MAX_SUPPLY_TEMPS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков температуры притока</documentation></variable><variable name="C_MAX_SMOKE_SENSORS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество датчиков дыма</documentation></variable><variable name="C_MAX_SCENARIOS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество сценариев</documentation></variable><variable name="C_MAX_OUTDOOR_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество зон уличного освещения</documentation></variable><variable name="C_MAX_ACCESS_CODES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество кодов доступа</documentation></variable><variable name="C_MAX_WET_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество &quot;мокрых&quot; зон (санузлы)</documentation></variable><variable name="C_MAX_CALIBRATIONS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество калибровок датчиков</documentation></variable><variable name="C_MAX_MODULES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество модулей ввода-вывода</documentation></variable><variable name="C_MAX_CLEANING_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов уборки</documentation></variable><variable name="C_MAX_ALLOWED_IPS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество разрешенных IP-адресов</documentation></variable><variable name="C_MAX_VENT_SUPPLY_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов притока вентиляции</documentation></variable><variable name="C_MAX_SECURITY_PHONES"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество телефонов для оповещения</documentation></variable><variable name="C_MAX_FLOOD_VALVES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество кранов защиты от протечек</documentation></variable><variable name="C_MAX_HUMIDITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков влажности</documentation></variable><variable name="C_MAX_CO2_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO2</documentation></variable><variable name="C_MAX_CIRCUITS_PER_MANIFOLD"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество контуров на коллектор</documentation></variable><variable name="C_MAX_TREND_DATA_POINTS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество точек данных для трендов</documentation></variable><variable name="C_MAX_HISTORY_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей в истории</documentation></variable><variable name="C_MAX_DEBUG_LOGS"><type><INT /></type><initialValue><simpleValue value="1000" /></initialValue><documentation>Максимальное количество записей в логе отладки</documentation></variable><variable name="C_MAX_GATEWAY_COMMANDS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество команд в буфере шлюза</documentation></variable><variable name="C_MAX_STATE_SNAPSHOTS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество снимков состояния</documentation></variable><variable name="C_MAX_BLACKBOX_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей черного ящика</documentation></variable><variable name="C_MAX_PRESENCE_HISTORY"><type><INT /></type><initialValue><simpleValue value="1008" /></initialValue><documentation>Максимальное количество записей истории присутствия</documentation></variable><variable name="C_MAX_MODBUS_REGISTERS"><type><INT /></type><initialValue><simpleValue value="201" /></initialValue><documentation>Максимальное количество регистров Modbus</documentation></variable><variable name="C_MAX_DEDUPLICATION_HISTORY"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей истории дедупликации</documentation></variable><variable name="C_MAX_NVRAM_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей NVRAM</documentation></variable><variable name="C_MAX_NVRAM_DATA"><type><INT /></type><initialValue><simpleValue value="128" /></initialValue><documentation>Максимальный размер данных NVRAM</documentation></variable><variable name="C_ANALOG_RAW_MAX"><type><WORD /></type><initialValue><simpleValue value="27648" /></initialValue><documentation>Максимальное значение АЦП (100%)</documentation></variable><variable name="C_ANALOG_4MA_RAW"><type><WORD /></type><initialValue><simpleValue value="5529" /></initialValue><documentation>Значение АЦП для 4mA (20% от 27648)</documentation></variable><variable name="C_ANALOG_3_6MA_RAW"><type><WORD /></type><initialValue><simpleValue value="4976" /></initialValue><documentation>Порог обрыва NAMUR NE43 (&lt; 3.6mA)</documentation></variable><variable name="C_ANALOG_21MA_RAW"><type><WORD /></type><initialValue><simpleValue value="29030" /></initialValue><documentation>Порог КЗ NAMUR NE43 (&gt; 21mA)</documentation></variable><variable name="C_ANALOG_10V_MAX_RAW"><type><WORD /></type><initialValue><simpleValue value="30000" /></initialValue><documentation>Порог выхода за пределы 0-10V</documentation></variable><variable name="C_MS_IN_SECOND"><type><UDINT /></type><initialValue><simpleValue value="1000" /></initialValue></variable><variable name="C_MS_IN_MINUTE"><type><UDINT /></type><initialValue><simpleValue value="60000" /></initialValue></variable><variable name="C_MS_IN_HOUR"><type><UDINT /></type><initialValue><simpleValue value="3600000" /></initialValue></variable><variable name="C_MS_IN_DAY"><type><UDINT /></type><initialValue><simpleValue value="86400000" /></initialValue></variable><variable name="C_BOILER_CASCADE_MIN_DEMAND"><type><REAL /></type><initialValue><simpleValue value="25.0" /></initialValue><documentation>Минимальный запрос для включения ведущего котла (5% от одного коллектора)</documentation></variable><variable name="C_BOILER_CASCADE_HIGH_DEMAND"><type><REAL /></type><initialValue><simpleValue value="250.0" /></initialValue><documentation>Высокий запрос для включения второго котла (50% от общей мощности)</documentation></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>17ac7129-8311-4b8c-9215-c7ff7c46d236</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:11419:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_Retain" retain="true"><variable name="G_Initialized"><type><BOOL /></type><initialValue><simpleValue value="FALSE" /></initialValue><documentation>Флаг инициализации retain-переменных</documentation></variable><variable name="G_NVRAM_Data"><type><array><dimension lower="0" upper="12799" /><baseType><BYTE /></baseType></array></type><documentation>100 * 128 = 12800 байт</documentation></variable><variable name="G_BlackBox_Buffer"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1" /><baseType><derived name="ST_BlackBox_Record" /></baseType></array></type></variable><variable name="G_BlackBox_LastIndex"><type><INT /></type></variable><variable name="G_BlackBox_Frozen"><type><BOOL /></type></variable><variable name="G_Presence_History"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1" /><baseType><WORD /></baseType></array></type><documentation>168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)</documentation></variable><variable name="G_History_Buffer"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_HISTORY_RECORDS" /><baseType><derived name="ST_History_Record" /></baseType></array></type></variable><variable name="G_History_Write_Idx"><type><INT /></type><initialValue><simpleValue value="1" /></initialValue></variable><variable name="G_History_Total_Events"><type><UDINT /></type></variable><variable name="G_Boiler_Accumulated_MS"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Boiler_Work_Seconds"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Valve_Test_Results"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_MANIFOLDS" /><baseType><BOOL /></baseType></array></type></variable><variable name="G_Access_Codes"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><DWORD /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="16#9BE3E0A3" /></value><value><simpleValue value="16#4A89A12D" /></value><value><simpleValue value="16#F4DBDF21" /></value><value><simpleValue value="16#90F59C65" /></value><value><simpleValue value="16#0972D346" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value></arrayValue></initialValue></variable><variable name="G_RFID_Tags"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><string length="20" /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="'A1B2C3D4'" /></value><value><simpleValue value="'E5F67890'" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value></arrayValue></initialValue></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>b670acf3-f78a-4636-bb38-98c7ce1c7f5e</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/out/004_RESULT.xml:11505:          <Object Name="FB_NVRAM_Manager" ObjectId="98b13f27-87ec-424d-ae3d-aa8c82b49f13" />
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:2434:            <variable name="write_index">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7461:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7560:            <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7580:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7583:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7592:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7597:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7600:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7609:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7615:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7619:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7625:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7627:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7629:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7637:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7639:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:7647:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10862:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10913:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10915:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10983:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10988:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10993:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:10998:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11003:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11117:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11552:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11554:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11555:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11558:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11559:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11562:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11566:fbNVRAMManager(
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11567:    VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11568:    VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11575:    VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11576:    VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:11577:    VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:12795:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_CONSTANTS" constant="true"><variable name="C_MAX_ZONES"><type><INT /></type><initialValue><simpleValue value="16" /></initialValue><documentation>Максимальное количество зон (комнат)</documentation></variable><variable name="C_MAX_SOCKETS"><type><INT /></type><initialValue><simpleValue value="36" /></initialValue><documentation>Максимальное количество управляемых розеток</documentation></variable><variable name="C_MAX_BLINDS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество штор/жалюзи</documentation></variable><variable name="C_MAX_ALARMS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество активных тревог</documentation></variable><variable name="C_MAX_RULES"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество правил (движок правил)</documentation></variable><variable name="C_MAX_MANIFOLDS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество коллекторов</documentation></variable><variable name="C_MAX_BOILERS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество котлов</documentation></variable><variable name="C_MAX_SUPPLY_FANS"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество приточных вентиляторов</documentation></variable><variable name="C_MAX_EXHAUST_FANS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество вытяжных вентиляторов</documentation></variable><variable name="C_MAX_SECURITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="15" /></initialValue><documentation>Максимальное количество датчиков безопасности (герконы, стекло)</documentation></variable><variable name="C_MAX_FLOOD_SENSORS"><type><INT /></type><initialValue><simpleValue value="12" /></initialValue><documentation>Максимальное количество датчиков протечки</documentation></variable><variable name="C_MAX_DOOR_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков дверей</documentation></variable><variable name="C_MAX_CO_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO</documentation></variable><variable name="C_MAX_METHANE_SENSORS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков метана</documentation></variable><variable name="C_MAX_VENT_UNITS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество вентустановок</documentation></variable><variable name="C_MAX_SUPPLY_TEMPS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков температуры притока</documentation></variable><variable name="C_MAX_SMOKE_SENSORS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество датчиков дыма</documentation></variable><variable name="C_MAX_SCENARIOS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество сценариев</documentation></variable><variable name="C_MAX_OUTDOOR_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество зон уличного освещения</documentation></variable><variable name="C_MAX_ACCESS_CODES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество кодов доступа</documentation></variable><variable name="C_MAX_WET_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество &quot;мокрых&quot; зон (санузлы)</documentation></variable><variable name="C_MAX_CALIBRATIONS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество калибровок датчиков</documentation></variable><variable name="C_MAX_MODULES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество модулей ввода-вывода</documentation></variable><variable name="C_MAX_CLEANING_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов уборки</documentation></variable><variable name="C_MAX_ALLOWED_IPS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество разрешенных IP-адресов</documentation></variable><variable name="C_MAX_VENT_SUPPLY_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов притока вентиляции</documentation></variable><variable name="C_MAX_SECURITY_PHONES"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество телефонов для оповещения</documentation></variable><variable name="C_MAX_FLOOD_VALVES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество кранов защиты от протечек</documentation></variable><variable name="C_MAX_HUMIDITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков влажности</documentation></variable><variable name="C_MAX_CO2_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO2</documentation></variable><variable name="C_MAX_CIRCUITS_PER_MANIFOLD"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество контуров на коллектор</documentation></variable><variable name="C_MAX_TREND_DATA_POINTS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество точек данных для трендов</documentation></variable><variable name="C_MAX_HISTORY_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей в истории</documentation></variable><variable name="C_MAX_DEBUG_LOGS"><type><INT /></type><initialValue><simpleValue value="1000" /></initialValue><documentation>Максимальное количество записей в логе отладки</documentation></variable><variable name="C_MAX_GATEWAY_COMMANDS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество команд в буфере шлюза</documentation></variable><variable name="C_MAX_STATE_SNAPSHOTS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество снимков состояния</documentation></variable><variable name="C_MAX_BLACKBOX_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей черного ящика</documentation></variable><variable name="C_MAX_PRESENCE_HISTORY"><type><INT /></type><initialValue><simpleValue value="1008" /></initialValue><documentation>Максимальное количество записей истории присутствия</documentation></variable><variable name="C_MAX_MODBUS_REGISTERS"><type><INT /></type><initialValue><simpleValue value="201" /></initialValue><documentation>Максимальное количество регистров Modbus</documentation></variable><variable name="C_MAX_DEDUPLICATION_HISTORY"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей истории дедупликации</documentation></variable><variable name="C_MAX_NVRAM_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей NVRAM</documentation></variable><variable name="C_MAX_NVRAM_DATA"><type><INT /></type><initialValue><simpleValue value="128" /></initialValue><documentation>Максимальный размер данных NVRAM</documentation></variable><variable name="C_ANALOG_RAW_MAX"><type><WORD /></type><initialValue><simpleValue value="27648" /></initialValue><documentation>Максимальное значение АЦП (100%)</documentation></variable><variable name="C_ANALOG_4MA_RAW"><type><WORD /></type><initialValue><simpleValue value="5529" /></initialValue><documentation>Значение АЦП для 4mA (20% от 27648)</documentation></variable><variable name="C_ANALOG_3_6MA_RAW"><type><WORD /></type><initialValue><simpleValue value="4976" /></initialValue><documentation>Порог обрыва NAMUR NE43 (&lt; 3.6mA)</documentation></variable><variable name="C_ANALOG_21MA_RAW"><type><WORD /></type><initialValue><simpleValue value="29030" /></initialValue><documentation>Порог КЗ NAMUR NE43 (&gt; 21mA)</documentation></variable><variable name="C_ANALOG_10V_MAX_RAW"><type><WORD /></type><initialValue><simpleValue value="30000" /></initialValue><documentation>Порог выхода за пределы 0-10V</documentation></variable><variable name="C_MS_IN_SECOND"><type><UDINT /></type><initialValue><simpleValue value="1000" /></initialValue></variable><variable name="C_MS_IN_MINUTE"><type><UDINT /></type><initialValue><simpleValue value="60000" /></initialValue></variable><variable name="C_MS_IN_HOUR"><type><UDINT /></type><initialValue><simpleValue value="3600000" /></initialValue></variable><variable name="C_MS_IN_DAY"><type><UDINT /></type><initialValue><simpleValue value="86400000" /></initialValue></variable><variable name="C_BOILER_CASCADE_MIN_DEMAND"><type><REAL /></type><initialValue><simpleValue value="25.0" /></initialValue><documentation>Минимальный запрос для включения ведущего котла (5% от одного коллектора)</documentation></variable><variable name="C_BOILER_CASCADE_HIGH_DEMAND"><type><REAL /></type><initialValue><simpleValue value="250.0" /></initialValue><documentation>Высокий запрос для включения второго котла (50% от общей мощности)</documentation></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>373bf09a-0b87-447c-a943-767060e96424</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:12796:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_Retain" retain="true"><variable name="G_Initialized"><type><BOOL /></type><initialValue><simpleValue value="FALSE" /></initialValue><documentation>Флаг инициализации retain-переменных</documentation></variable><variable name="G_NVRAM_Data"><type><array><dimension lower="0" upper="12799" /><baseType><BYTE /></baseType></array></type><documentation>100 * 128 = 12800 байт</documentation></variable><variable name="G_BlackBox_Buffer"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1" /><baseType><derived name="ST_BlackBox_Record" /></baseType></array></type></variable><variable name="G_BlackBox_LastIndex"><type><INT /></type></variable><variable name="G_BlackBox_Frozen"><type><BOOL /></type></variable><variable name="G_Presence_History"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1" /><baseType><WORD /></baseType></array></type><documentation>168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)</documentation></variable><variable name="G_History_Buffer"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_HISTORY_RECORDS" /><baseType><derived name="ST_History_Record" /></baseType></array></type></variable><variable name="G_History_Write_Idx"><type><INT /></type><initialValue><simpleValue value="1" /></initialValue></variable><variable name="G_History_Total_Events"><type><UDINT /></type></variable><variable name="G_Boiler_Accumulated_MS"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Boiler_Work_Seconds"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Valve_Test_Results"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_MANIFOLDS" /><baseType><BOOL /></baseType></array></type></variable><variable name="G_Access_Codes"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><DWORD /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="16#9BE3E0A3" /></value><value><simpleValue value="16#4A89A12D" /></value><value><simpleValue value="16#F4DBDF21" /></value><value><simpleValue value="16#90F59C65" /></value><value><simpleValue value="16#0972D346" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value></arrayValue></initialValue></variable><variable name="G_RFID_Tags"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><string length="20" /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="'A1B2C3D4'" /></value><value><simpleValue value="'E5F67890'" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value></arrayValue></initialValue></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>adc7e7ac-dc00-47a5-a6bc-ef1819e19fe2</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/out/003_RESULT.xml:12918:          <Object Name="FB_NVRAM_Manager" ObjectId="692b1e43-ab9b-4602-9c19-6753031a71d6" />
+./steps/MASTER_PIPELINE/002_BASE.xml:2434:            <variable name="write_index">
+./steps/MASTER_PIPELINE/002_BASE.xml:10148:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/002_BASE.xml:10247:            <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/002_BASE.xml:10267:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/002_BASE.xml:10270:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/002_BASE.xml:10279:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/002_BASE.xml:10286:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/002_BASE.xml:10289:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/002_BASE.xml:10298:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/002_BASE.xml:10304:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/002_BASE.xml:10315:                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./steps/MASTER_PIPELINE/002_BASE.xml:10318:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/002_BASE.xml:10320:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/002_BASE.xml:10329:            L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+./steps/MASTER_PIPELINE/002_BASE.xml:10331:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/002_BASE.xml:10339:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/002_BASE.xml:12232:    VI_Access_Codes := GVL_RETAIN.G_Access_Codes,
+./steps/MASTER_PIPELINE/002_BASE.xml:12233:    VI_RFID_Tags := GVL_RETAIN.G_RFID_Tags,
+./steps/MASTER_PIPELINE/002_BASE.xml:13606:                <derived name="ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot" />
+./steps/MASTER_PIPELINE/002_BASE.xml:13623:    L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
+./steps/MASTER_PIPELINE/002_BASE.xml:13636:      <pou name="FB_State_Snapshot_NVRAM" pouType="functionBlock">
+./steps/MASTER_PIPELINE/002_BASE.xml:14334:    VO_Data.write_index := (VO_Data.record_count MOD 100) + 1;
+./steps/MASTER_PIPELINE/002_BASE.xml:14335:    VO_Data.values[VO_Data.write_index] := VI_Current_Value;
+./steps/MASTER_PIPELINE/002_BASE.xml:14336:    VO_Data.timestamps[VO_Data.write_index] := VI_System_Time_MS;
+./steps/MASTER_PIPELINE/002_BASE.xml:16208:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/002_BASE.xml:16958:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/002_BASE.xml:16960:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/002_BASE.xml:17028:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/002_BASE.xml:17033:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/002_BASE.xml:17038:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/002_BASE.xml:17043:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/002_BASE.xml:17048:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/002_BASE.xml:17152:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/002_BASE.xml:17587:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/002_BASE.xml:17589:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/002_BASE.xml:17590:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/002_BASE.xml:17593:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/002_BASE.xml:17594:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/002_BASE.xml:17597:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/002_BASE.xml:17600:// fbNVRAMManager(
+./steps/MASTER_PIPELINE/002_BASE.xml:17601://     VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/002_BASE.xml:17602://     VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/002_BASE.xml:17607://     VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/002_BASE.xml:17608://     VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/002_BASE.xml:17609://     VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/002_BASE.xml:18440:            <xhtml xmlns="http://www.w3.org/1999/xhtml"> Команда на сохранение настроек в NVRAM</xhtml>
+./steps/MASTER_PIPELINE/002_BASE.xml:19343:          <Object Name="FB_NVRAM_Manager" ObjectId="a4118b1b-6dd0-4930-9255-569a04d20ca2" />
+./steps/MASTER_PIPELINE/002_BASE.xml:19372:          <Object Name="FB_State_Snapshot_NVRAM" ObjectId="936f3c79-0d76-4c01-873c-c7b27d21c084" />
+./steps/MASTER_PIPELINE/build_project.py:47:def log_write(path: Path, lines):
+./steps/MASTER_PIPELINE/build_project.py:48:    path.write_text("\n".join(lines) + "\n", encoding='utf-8')
+./steps/MASTER_PIPELINE/build_project.py:306:            elif 'RETAIN' in up:
+./steps/MASTER_PIPELINE/build_project.py:436:    out_xml.write_text(xml, encoding='utf-8')
+./steps/MASTER_PIPELINE/build_project.py:444:    log_write(log_file, logs)
+./steps/MASTER_PIPELINE/build_project.py:806:    out_xml.write_text(xml, encoding='utf-8')
+./steps/MASTER_PIPELINE/build_project.py:826:    log_write(log_file, summary)
+./steps/MASTER_PIPELINE/001_universal_pou_gvl_builder.py:20:        f.write(s + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_gvl_builder.py:287:            elif 'RETAIN' in up:
+./steps/MASTER_PIPELINE/001_universal_pou_gvl_builder.py:438:    OUTPUT_XML.write_text(xml, encoding='utf-8')
+./steps/MASTER_PIPELINE/001_universal_methods_v1.log:50:POU=FB_NVRAM_Manager XML_NAME=FB_NVRAM_Manager TYPE=functionBlock TREE=pous VARS=19 METHODS=0 OBJECT_ID=9644fc16-1320-4172-9f01-69b4627cb924 OK
+./steps/MASTER_PIPELINE/001_universal_methods_v1.log:79:POU=FB_State_Snapshot_NVRAM XML_NAME=FB_State_Snapshot_NVRAM TYPE=functionBlock TREE=pous VARS=11 METHODS=0 OBJECT_ID=159c5b09-94c5-45d8-b5e1-c45ab89d3c65 OK
+./steps/MASTER_PIPELINE/001_universal_methods_v1.log:108:OLD_POU_WINDOW_NAMES=PRG_PLC_A|PRG_PLC_B|FB_Access_Control|FB_AccessCode_Manager|FB_Astro_Timer|FB_BlackBox_Recorder|FB_Boiler_Cascade_Controller|FB_Boiler_Cascade_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_CRC32_Calculator|FB_Debug_Logger|FB_Device_Predictive_Diag|FB_DHW_Manager|FB_Emergency_Valve_Open|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_FloorHeating_Controller|FB_FloorHeating_Freeze_Protection|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Gas_Valve_Controller|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Lifetime_Predictor|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Manifold_Pump_Controller|FB_Manual_Valve_Control|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_PID_Controller|FB_PLC_Heartbeat|FB_Pre_Departure_Heating|FB_Presence_Playback|FB_Presence_Simulator|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_TwoFactor_Auth|FB_User_Rule_Engine|FB_Valve_Test|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Water_Valve_Controller|FB_Zone_Access_Manager|PRG_Main
+./steps/MASTER_PIPELINE/001_universal_methods_v1.log:109:OLD_POUS_TREE_NAMES=FB_Lifetime_Predictor|FB_Gas_Valve_Controller|FB_TwoFactor_Auth|FB_Manual_Valve_Control|FB_Boiler_Cascade_Manager|FB_CRC32_Calculator|FB_Emergency_Valve_Open|FB_AccessCode_Manager|FB_Manifold_Pump_Controller|FB_Debug_Logger|FB_Astro_Timer|FB_BlackBox_Recorder|FB_PLC_Heartbeat|FB_User_Rule_Engine|FB_Water_Valve_Controller|FB_FloorHeating_Freeze_Protection|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Device_Predictive_Diag|FB_PID_Controller|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_Pre_Departure_Heating|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_Valve_Test|FB_Zone_Access_Manager|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Boiler_Cascade_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_FloorHeating_Controller|FB_DHW_Manager|FB_Presence_Playback|FB_Presence_Simulator|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_Access_Control
+./steps/MASTER_PIPELINE/003_RESULT.xml:2434:            <variable name="write_index">
+./steps/MASTER_PIPELINE/003_RESULT.xml:7461:      <pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/003_RESULT.xml:7560:            <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/003_RESULT.xml:7580:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/003_RESULT.xml:7583:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7592:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7597:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/003_RESULT.xml:7600:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7609:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7615:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7619:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/003_RESULT.xml:7625:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/003_RESULT.xml:7627:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7629:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7637:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/003_RESULT.xml:7639:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/003_RESULT.xml:7647:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/003_RESULT.xml:10862:// Selective zonal water recovery outputs
+./steps/MASTER_PIPELINE/003_RESULT.xml:10913:            <variable name="fbNVRAMManager">
+./steps/MASTER_PIPELINE/003_RESULT.xml:10915:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/003_RESULT.xml:10983:            <variable name="L_NVRAM_Cmd">
+./steps/MASTER_PIPELINE/003_RESULT.xml:10988:            <variable name="L_NVRAM_Offset">
+./steps/MASTER_PIPELINE/003_RESULT.xml:10993:            <variable name="L_NVRAM_Done">
+./steps/MASTER_PIPELINE/003_RESULT.xml:10998:            <variable name="L_NVRAM_Err">
+./steps/MASTER_PIPELINE/003_RESULT.xml:11003:            <variable name="L_NVRAM_ErrID">
+./steps/MASTER_PIPELINE/003_RESULT.xml:11117:            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 0. Инициализация RETAIN переменных при первом запуске
+./steps/MASTER_PIPELINE/003_RESULT.xml:11552:// 14. Менеджер NVRAM
+./steps/MASTER_PIPELINE/003_RESULT.xml:11554:    L_NVRAM_Cmd := 2; // READ
+./steps/MASTER_PIPELINE/003_RESULT.xml:11555:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/003_RESULT.xml:11558:    L_NVRAM_Cmd := 1; // WRITE
+./steps/MASTER_PIPELINE/003_RESULT.xml:11559:    L_NVRAM_Offset := 0;
+./steps/MASTER_PIPELINE/003_RESULT.xml:11562:    L_NVRAM_Cmd := 0;
+./steps/MASTER_PIPELINE/003_RESULT.xml:11566:fbNVRAMManager(
+./steps/MASTER_PIPELINE/003_RESULT.xml:11567:    VI_Command := L_NVRAM_Cmd,
+./steps/MASTER_PIPELINE/003_RESULT.xml:11568:    VI_Offset := L_NVRAM_Offset,
+./steps/MASTER_PIPELINE/003_RESULT.xml:11575:    VO_Done =&gt; L_NVRAM_Done,
+./steps/MASTER_PIPELINE/003_RESULT.xml:11576:    VO_Error =&gt; L_NVRAM_Err,
+./steps/MASTER_PIPELINE/003_RESULT.xml:11577:    VO_ErrorID =&gt; L_NVRAM_ErrID
+./steps/MASTER_PIPELINE/003_RESULT.xml:12795:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_CONSTANTS" constant="true"><variable name="C_MAX_ZONES"><type><INT /></type><initialValue><simpleValue value="16" /></initialValue><documentation>Максимальное количество зон (комнат)</documentation></variable><variable name="C_MAX_SOCKETS"><type><INT /></type><initialValue><simpleValue value="36" /></initialValue><documentation>Максимальное количество управляемых розеток</documentation></variable><variable name="C_MAX_BLINDS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество штор/жалюзи</documentation></variable><variable name="C_MAX_ALARMS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество активных тревог</documentation></variable><variable name="C_MAX_RULES"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество правил (движок правил)</documentation></variable><variable name="C_MAX_MANIFOLDS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество коллекторов</documentation></variable><variable name="C_MAX_BOILERS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество котлов</documentation></variable><variable name="C_MAX_SUPPLY_FANS"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество приточных вентиляторов</documentation></variable><variable name="C_MAX_EXHAUST_FANS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество вытяжных вентиляторов</documentation></variable><variable name="C_MAX_SECURITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="15" /></initialValue><documentation>Максимальное количество датчиков безопасности (герконы, стекло)</documentation></variable><variable name="C_MAX_FLOOD_SENSORS"><type><INT /></type><initialValue><simpleValue value="12" /></initialValue><documentation>Максимальное количество датчиков протечки</documentation></variable><variable name="C_MAX_DOOR_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков дверей</documentation></variable><variable name="C_MAX_CO_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO</documentation></variable><variable name="C_MAX_METHANE_SENSORS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков метана</documentation></variable><variable name="C_MAX_VENT_UNITS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество вентустановок</documentation></variable><variable name="C_MAX_SUPPLY_TEMPS"><type><INT /></type><initialValue><simpleValue value="2" /></initialValue><documentation>Максимальное количество датчиков температуры притока</documentation></variable><variable name="C_MAX_SMOKE_SENSORS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество датчиков дыма</documentation></variable><variable name="C_MAX_SCENARIOS"><type><INT /></type><initialValue><simpleValue value="6" /></initialValue><documentation>Максимальное количество сценариев</documentation></variable><variable name="C_MAX_OUTDOOR_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество зон уличного освещения</documentation></variable><variable name="C_MAX_ACCESS_CODES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество кодов доступа</documentation></variable><variable name="C_MAX_WET_ZONES"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество &quot;мокрых&quot; зон (санузлы)</documentation></variable><variable name="C_MAX_CALIBRATIONS"><type><INT /></type><initialValue><simpleValue value="20" /></initialValue><documentation>Максимальное количество калибровок датчиков</documentation></variable><variable name="C_MAX_MODULES"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество модулей ввода-вывода</documentation></variable><variable name="C_MAX_CLEANING_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов уборки</documentation></variable><variable name="C_MAX_ALLOWED_IPS"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество разрешенных IP-адресов</documentation></variable><variable name="C_MAX_VENT_SUPPLY_MODES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество режимов притока вентиляции</documentation></variable><variable name="C_MAX_SECURITY_PHONES"><type><INT /></type><initialValue><simpleValue value="5" /></initialValue><documentation>Максимальное количество телефонов для оповещения</documentation></variable><variable name="C_MAX_FLOOD_VALVES"><type><INT /></type><initialValue><simpleValue value="3" /></initialValue><documentation>Максимальное количество кранов защиты от протечек</documentation></variable><variable name="C_MAX_HUMIDITY_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков влажности</documentation></variable><variable name="C_MAX_CO2_SENSORS"><type><INT /></type><initialValue><simpleValue value="8" /></initialValue><documentation>Максимальное количество датчиков CO2</documentation></variable><variable name="C_MAX_CIRCUITS_PER_MANIFOLD"><type><INT /></type><initialValue><simpleValue value="4" /></initialValue><documentation>Максимальное количество контуров на коллектор</documentation></variable><variable name="C_MAX_TREND_DATA_POINTS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество точек данных для трендов</documentation></variable><variable name="C_MAX_HISTORY_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей в истории</documentation></variable><variable name="C_MAX_DEBUG_LOGS"><type><INT /></type><initialValue><simpleValue value="1000" /></initialValue><documentation>Максимальное количество записей в логе отладки</documentation></variable><variable name="C_MAX_GATEWAY_COMMANDS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество команд в буфере шлюза</documentation></variable><variable name="C_MAX_STATE_SNAPSHOTS"><type><INT /></type><initialValue><simpleValue value="10" /></initialValue><documentation>Максимальное количество снимков состояния</documentation></variable><variable name="C_MAX_BLACKBOX_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей черного ящика</documentation></variable><variable name="C_MAX_PRESENCE_HISTORY"><type><INT /></type><initialValue><simpleValue value="1008" /></initialValue><documentation>Максимальное количество записей истории присутствия</documentation></variable><variable name="C_MAX_MODBUS_REGISTERS"><type><INT /></type><initialValue><simpleValue value="201" /></initialValue><documentation>Максимальное количество регистров Modbus</documentation></variable><variable name="C_MAX_DEDUPLICATION_HISTORY"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей истории дедупликации</documentation></variable><variable name="C_MAX_NVRAM_RECORDS"><type><INT /></type><initialValue><simpleValue value="100" /></initialValue><documentation>Максимальное количество записей NVRAM</documentation></variable><variable name="C_MAX_NVRAM_DATA"><type><INT /></type><initialValue><simpleValue value="128" /></initialValue><documentation>Максимальный размер данных NVRAM</documentation></variable><variable name="C_ANALOG_RAW_MAX"><type><WORD /></type><initialValue><simpleValue value="27648" /></initialValue><documentation>Максимальное значение АЦП (100%)</documentation></variable><variable name="C_ANALOG_4MA_RAW"><type><WORD /></type><initialValue><simpleValue value="5529" /></initialValue><documentation>Значение АЦП для 4mA (20% от 27648)</documentation></variable><variable name="C_ANALOG_3_6MA_RAW"><type><WORD /></type><initialValue><simpleValue value="4976" /></initialValue><documentation>Порог обрыва NAMUR NE43 (&lt; 3.6mA)</documentation></variable><variable name="C_ANALOG_21MA_RAW"><type><WORD /></type><initialValue><simpleValue value="29030" /></initialValue><documentation>Порог КЗ NAMUR NE43 (&gt; 21mA)</documentation></variable><variable name="C_ANALOG_10V_MAX_RAW"><type><WORD /></type><initialValue><simpleValue value="30000" /></initialValue><documentation>Порог выхода за пределы 0-10V</documentation></variable><variable name="C_MS_IN_SECOND"><type><UDINT /></type><initialValue><simpleValue value="1000" /></initialValue></variable><variable name="C_MS_IN_MINUTE"><type><UDINT /></type><initialValue><simpleValue value="60000" /></initialValue></variable><variable name="C_MS_IN_HOUR"><type><UDINT /></type><initialValue><simpleValue value="3600000" /></initialValue></variable><variable name="C_MS_IN_DAY"><type><UDINT /></type><initialValue><simpleValue value="86400000" /></initialValue></variable><variable name="C_BOILER_CASCADE_MIN_DEMAND"><type><REAL /></type><initialValue><simpleValue value="25.0" /></initialValue><documentation>Минимальный запрос для включения ведущего котла (5% от одного коллектора)</documentation></variable><variable name="C_BOILER_CASCADE_HIGH_DEMAND"><type><REAL /></type><initialValue><simpleValue value="250.0" /></initialValue><documentation>Высокий запрос для включения второго котла (50% от общей мощности)</documentation></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>116492fa-8e09-46cb-a821-91f864938c87</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/003_RESULT.xml:12796:<data name="http://www.3s-software.com/plcopenxml/globalvars" handleUnknown="implementation"><globalVars name="GVL_Retain" retain="true"><variable name="G_Initialized"><type><BOOL /></type><initialValue><simpleValue value="FALSE" /></initialValue><documentation>Флаг инициализации retain-переменных</documentation></variable><variable name="G_NVRAM_Data"><type><array><dimension lower="0" upper="12799" /><baseType><BYTE /></baseType></array></type><documentation>100 * 128 = 12800 байт</documentation></variable><variable name="G_BlackBox_Buffer"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1" /><baseType><derived name="ST_BlackBox_Record" /></baseType></array></type></variable><variable name="G_BlackBox_LastIndex"><type><INT /></type></variable><variable name="G_BlackBox_Frozen"><type><BOOL /></type></variable><variable name="G_Presence_History"><type><array><dimension lower="0" upper="GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1" /><baseType><WORD /></baseType></array></type><documentation>168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)</documentation></variable><variable name="G_History_Buffer"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_HISTORY_RECORDS" /><baseType><derived name="ST_History_Record" /></baseType></array></type></variable><variable name="G_History_Write_Idx"><type><INT /></type><initialValue><simpleValue value="1" /></initialValue></variable><variable name="G_History_Total_Events"><type><UDINT /></type></variable><variable name="G_Boiler_Accumulated_MS"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Boiler_Work_Seconds"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_BOILERS" /><baseType><UDINT /></baseType></array></type></variable><variable name="G_Valve_Test_Results"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_MANIFOLDS" /><baseType><BOOL /></baseType></array></type></variable><variable name="G_Access_Codes"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><DWORD /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="16#9BE3E0A3" /></value><value><simpleValue value="16#4A89A12D" /></value><value><simpleValue value="16#F4DBDF21" /></value><value><simpleValue value="16#90F59C65" /></value><value><simpleValue value="16#0972D346" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value><value><simpleValue value="0" /></value></arrayValue></initialValue></variable><variable name="G_RFID_Tags"><type><array><dimension lower="1" upper="GVL_CONSTANTS.C_MAX_ACCESS_CODES" /><baseType><string length="20" /></baseType></array></type><initialValue><arrayValue><value><simpleValue value="'A1B2C3D4'" /></value><value><simpleValue value="'E5F67890'" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value><value><simpleValue value="''" /></value></arrayValue></initialValue></variable><addData><data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation"><Attributes><Attribute Name="qualified_only" Value="" /></Attributes></data><data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard"><ObjectId>2d432858-d023-4f3b-a3c0-558b2b972142</ObjectId></data></addData></globalVars></data>
+./steps/MASTER_PIPELINE/003_RESULT.xml:12918:          <Object Name="FB_NVRAM_Manager" ObjectId="6da67ad1-41a4-40cc-b6a5-fac0c89e2c91" />
+./steps/MASTER_PIPELINE/001_universal_pou_builder.py.before_methods_v2:19:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder.py.before_methods_v2:323:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/001_universal.log:20:POU=FB_NVRAM_Manager XML_NAME=FB_NVRAM_Manager TYPE=functionBlock TREE=pous VARS=19 OBJECT_ID=23cf198a-2584-4a60-929f-fcdb43d4f42c WARN=VAR: unparsed lines=1
+./steps/MASTER_PIPELINE/001_universal.log:49:OLD_POU_WINDOW_NAMES=PRG_PLC_A|PRG_PLC_B|FB_Access_Control|FB_AccessCode_Manager|FB_Astro_Timer|FB_BlackBox_Recorder|FB_Boiler_Cascade_Controller|FB_Boiler_Cascade_Manager|FB_Calibration_Manager|FB_CO_Detector|FB_CRC32_Calculator|FB_Debug_Logger|FB_Device_Predictive_Diag|FB_DHW_Manager|FB_Emergency_Valve_Open|FB_Exhaust_Ventilation_Controller|FB_Flood_Detector|FB_FloorHeating_Controller|FB_FloorHeating_Freeze_Protection|FB_FloorHeating_Overheat_Protection|FB_Gas_Methane_Detector|FB_Gas_Smoke_Manager|FB_Gas_Valve_Controller|FB_Gateway_Interface|FB_Heating_System_Manager|FB_History_Manager|FB_Lifetime_Predictor|FB_Lighting_Blinds_Manager|FB_Maintenance_Access|FB_Manifold_Mixing_Valve_Controller|FB_Manifold_Pump_Controller|FB_Manual_Valve_Control|FB_NVRAM_Manager|FB_Outdoor_Lighting_Controller|FB_PID_Controller|FB_PLC_Heartbeat|FB_Pre_Departure_Heating|FB_Presence_Playback|FB_Presence_Simulator|FB_Random_Generator|FB_Scenario_Manager|FB_Scenario_Transition_Controller|FB_Security_Alarm|FB_Security_System|FB_Security_System_Manager|FB_Sensor_Calibration_Processor|FB_Sensor_Distribution|FB_Simulation_Manager|FB_Smoke_Detector|FB_SMS_Notification|FB_State_Manager|FB_State_Snapshot_Manager|FB_State_Snapshot_NVRAM|FB_Supply_Ventilation_Controller|FB_Trend_Analyzer|FB_TwoFactor_Auth|FB_User_Rule_Engine|FB_Valve_Test|FB_Ventilation_System_Manager|FB_Water_Leakage_Manager|FB_Water_Valve_Controller|FB_Zone_Access_Manager|PRG_Main
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V1.py.before_methods_v2:19:        f.write(msg + '\n')
+./steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V1.py.before_methods_v2:477:    OUTPUT_XML.write_text(xml_text, encoding='utf-8')
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:724:    fbNVRAM(VI_Command := 1, VI_RecordIndex := L_Backup_Day, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:761:    fbNVRAM(VI_Command := 1, VI_RecordIndex := L_Backup_Day, VI_DataPtr := ADR(GVL_Vars.G_HMI_Gas_Config), VI_DataSize := SIZEOF(GVL_Vars.G_HMI_Gas_Config));
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3618:<pou name="FB_NVRAM_Manager" pouType="functionBlock">
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3717:      <variable name="C_MAX_NVRAM_SIZE">
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3737:    IF VI_Offset &gt;= C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3740:        VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3749:        VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3754:    IF (VI_Offset + VI_DataSize) &gt; C_MAX_NVRAM_SIZE THEN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3757:        VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3766:            VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3772:                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3776:                IF MEMCMP(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize) &lt;&gt; 0 THEN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3782:                    MEMCPY(ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), ADR(VI_DataRef), VI_DataSize);
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3784:                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3786:                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3794:        MEMCPY(ADR(VI_DataRef), ADR(GVL_Retain.G_NVRAM_Data[VI_Offset]), VI_DataSize);
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3796:        VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:3804:// &gt;&gt;&gt; BULK_SYNC_ANCHOR: FB_NVRAM_Manager &lt;&lt;&lt;</xhtml>
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:4998:            <variable name="fbNVRAM">
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_XML_TEMPLATE_ANALYSIS.log:5000:                <derived name="FB_NVRAM_Manager" />
+./steps/MASTER_PIPELINE/archive_logs/002_build_clean_master_from_fb.log:26:FB=FB_NVRAM_Manager VARS=19 WARN=VAR: unparsed lines=1
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:24:0018: VAR_GLOBAL RETAIN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:226:0039: C_MAX_STATE_SNAPSHOTS  : INT := 10; // Максимальное количество снимков состояния
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:231:0044: C_MAX_NVRAM_RECORDS    : INT := 100; // Максимальное количество записей NVRAM
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:232:0045: C_MAX_NVRAM_DATA       : INT := 128; // Максимальный размер данных NVRAM
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:356:0002: VAR_GLOBAL RETAIN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:358:0005: // Энергонезависимая память (NVRAM) для хранения настроек и логов
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:359:0006: G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:668:100; // Максимальное количество записей NVRAM -> 1
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:677:128; // Максимальный размер данных NVRAM -> 1
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_RAW_SYNTAX.log:893:GVL_Retain.gvl:5 -> // Энергонезависимая память (NVRAM) для хранения настроек и логов
+./steps/MASTER_PIPELINE/archive_logs/002_insert_fb_from_st_and_refresh_projectstructure.log:26:FB=FB_NVRAM_Manager VARS=19 WARN=VAR: unparsed lines=1
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_STRUCTURE_ANALYSIS.log:28:VAR_GLOBAL RETAIN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_STRUCTURE_ANALYSIS.log:218:VAR_GLOBAL RETAIN
+./steps/MASTER_PIPELINE/archive_logs/003_GVL_STRUCTURE_ANALYSIS.log:221:    // Энергонезависимая память (NVRAM) для хранения настроек и логов
+
+== NVRAM AUDIT END ==
