@@ -914,6 +914,8 @@ END_IF;
 GVL_STATUS.G_Diagnostics.User_Access_Level_Active := GVL_COMMAND.CMD_User_Access_Level;
 GVL_STATUS.G_Diagnostics.User_Access_Denied := FALSE;
 GVL_STATUS.G_Diagnostics.User_Access_Deny_Reason := '';
+GVL_STATUS.G_Diagnostics.Operator_Action_Blocked := FALSE;
+GVL_STATUS.G_Diagnostics.Operator_Block_Reason := '';
 IF GVL_COMMAND.CMD_Dangerous_Action_Request OR GVL_COMMAND.CMD_Dangerous_Action_Confirm THEN
     IF GVL_COMMAND.CMD_User_Access_Level < 2 THEN
         IF NOT L_User_Access_Denied_Prev THEN
