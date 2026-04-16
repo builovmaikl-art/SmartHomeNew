@@ -1,0 +1,272 @@
+]633;E;echo "== PERSIST WRITE PRECHECK ==";f7c3dcda-a7ef-439c-9074-36a937f4d9ed]633;C== PERSIST WRITE PRECHECK ==
+
+-- PRG_System header window --
+PROGRAM PRG_System
+VAR
+    L_i : INT;
+    L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    // --- ADAPTER LAYER ---
+    L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
+    L_Lighting_32   : ARRAY[1..32] OF BYTE;
+    L_Lighting_Bool_32 : ARRAY[1..32] OF BOOL;
+    L_FloorTemps_8  : ARRAY[1..8] OF REAL;
+    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;
+    fbSystemHealth : FB_System_Health;
+    fbRedundancy : FB_Redundancy_Manager;
+    fbGateway : FB_Gateway_Interface;
+    fbScenarioManager : FB_Scenario_Manager;
+    fbSimulationManager : FB_Simulation_Manager;
+    fbRuleEngine : FB_Rule_Engine;
+    fbNVRAMManager : FB_NVRAM_Manager;
+
+    fbBlackBox : FB_BlackBox_Recorder;
+    fbAstroTimer : FB_Astro_Timer;
+    fbAlarmManager : FB_Alarm_Manager;
+    fbHistoryManager : FB_History_Manager;
+    fbSafety : FB_Safety_Manager;
+    fbStateManager : FB_State_Manager;
+    fbWatchdog : FB_Watchdog;
+    fbHMIInterface : FB_HMI_Interface;
+    fbFaultLogger : FB_Fault_Logger;
+    fbLogEvent : FB_LogEvent;
+    
+    L_Time_Diff : UDINT;
+    L_Local_State : ST_System_State_Snapshot;
+    L_Remote_State : ST_System_State_Snapshot;
+    L_Config_Loaded : BOOL;
+    L_NVRAM_Cmd : BYTE;
+    L_NVRAM_Offset : UDINT;
+    L_NVRAM_Done : BOOL;
+    L_NVRAM_Err : BOOL;
+    L_NVRAM_ErrID : UDINT;
+    L_BB_Record : ST_BlackBox_Record;
+    L_BB_Freeze : BOOL;
+    L_Scenario_Idx : INT;
+        L_Last_Operator_Blocked : BOOL;
+    L_Last_DHW_Heating_In_Service : BOOL;
+    L_Last_DHW_Circ_In_Service : BOOL;
+    L_Dangerous_Action_Armed : BOOL;
+    L_Dangerous_Action_Deadline_MS : UDINT;
+    L_Maintenance_Apply_Intent : BOOL;
+    L_Last_System_Mode : E_System_Operating_Mode;
+    L_Last_First_Fault_Type : INT;
+    L_Last_First_Fault_Source : INT;
+    L_Last_Root_Cause : E_System_Root_Cause;
+    L_History_Event : ST_History_Record;
+    L_History_Write_Event : BOOL;
+    L_Last_Operator_Journal_Seq : UDINT;
+    L_Last_Event_Code : UDINT;
+    L_Last_Event_Value : REAL;
+    L_Last_Event_Time_MS : UDINT;
+    L_Gateway_Writes_Allowed : BOOL;
+
+    L_Scenario_Req_Operator : E_SCENARIO_TYPE;
+    L_Scenario_Req_Gateway  : E_SCENARIO_TYPE;
+    L_Scenario_Req_Rule     : E_SCENARIO_TYPE;
+    L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
+    L_Scenario_Intent       : E_SCENARIO_TYPE;
+L_Scenario_Source       : E_SCENARIO_SOURCE;
+L_Scenario_Changed      : BOOL;
+L_Last_Scenario_Change_Time : UDINT;
+
+L_IO_Fault_Prev : BOOL;
+L_Comm_Fault_Prev : BOOL;
+L_Sensor_Fault_Prev : BOOL;
+L_Subsystem_Fault_Prev : BOOL;
+L_Mode_Prev : E_System_Operating_Mode;
+L_User_Access_Denied_Prev : BOOL;
+
+    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+    L_Persist_Buffer_Changed : BOOL;
+    L_Last_Persist_Write_MS : UDINT;
+    L_Recovery_Done : BOOL;
+END_VAR
+
+// 0. Инициализация RETAIN переменных при первом запуске
+IF NOT GVL_Retain.G_Initialized THEN
+    FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY - 1 DO
+        GVL_Retain.G_Presence_History[L_i] := 0;
+    END_FOR;
+    
+    GVL_Retain.G_History_Write_Idx := 1;
+    GVL_Retain.G_History_Total_Events := 0;
+    
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+        GVL_Retain.G_Boiler_Accumulated_MS[L_i] := 0;
+        GVL_Retain.G_Boiler_Work_Seconds[L_i] := 0;
+    END_FOR;
+    
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_Retain.G_Valve_Test_Results[L_i] := FALSE;
+    END_FOR;
+    
+    L_Local_State.Version := 0;
+    L_Remote_State.Version := 0;
+    
+    GVL_Retain.G_Initialized := TRUE;
+
+
+
+END_IF;
+
+// === NVRAM RECOVERY (ONCE AFTER BOOT) ===
+IF NOT L_Recovery_Done THEN
+    IF GVL_PERSISTENT.P_Valid THEN
+        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+    END_IF;
+
+    L_Recovery_Done := TRUE;
+END_IF;
+
+// NVRAM CONTROLLED WRITE ENABLED (step 8B)
+
+// 1. Обновление системного времени
+GVL_STATUS.G_System_Time_MS := TIME_TO_UDINT(TIME());
+L_Time_Diff := (SEL(GVL_STATUS.G_System_Time_MS >= GVL_STATUS.G_Last_System_Time_MS, GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Last_System_Time_MS, (4294967295 - GVL_STATUS.G_Last_System_Time_MS) + GVL_STATUS.G_System_Time_MS + 1));
+GVL_STATUS.G_Time_Of_Day_MS := (GVL_STATUS.G_Time_Of_Day_MS + L_Time_Diff) MOD 86400000;
+
+IF GVL_STATUS.G_Time_Of_Day_MS < L_Time_Diff THEN
+    GVL_STATUS.G_Current_Day := (GVL_STATUS.G_Current_Day MOD 7) + 1;
+    GVL_STATUS.G_Day_Of_Year := (GVL_STATUS.G_Day_Of_Year MOD 365) + 1;
+END_IF;
+
+GVL_STATUS.G_Last_System_Time_MS := GVL_STATUS.G_System_Time_MS;
+GVL_STATUS.G_Current_TOD := UDINT_TO_TOD(GVL_STATUS.G_Time_Of_Day_MS);
+
+// Формирование локального состояния для репликации
+L_Local_State.System_Time_MS := GVL_STATUS.G_System_Time_MS;
+L_Local_State.Current_Scenario := GVL_STATUS.G_Current_Scenario;
+L_Local_State.Security_Armed := GVL_ALARM.G_Security_Armed;
+L_Local_State.Active_Alarms := GVL_ALARM.G_Active_Alarm_Count;
+L_Local_State.Zone_Valves := GVL_STATE.G_Zone_Valves;
+L_Local_State.Manifold_Pumps := GVL_STATE.G_Manifold_Pumps;
+L_Local_State.Lighting_States := GVL_STATE.G_Lighting_Levels;
+L_Local_State.Blinds_Positions := GVL_STATE.G_Blinds_Positions;
+L_Local_State.Socket_States := GVL_STATE.G_Socket_States;
+L_Local_State.Gas_Valve_Closed := GVL_COMMAND.G_Gas_Valve_Close;
+L_Local_State.Water_Valves_Closed := GVL_COMMAND.G_Close_Valve_36;
+L_Local_State.Version := L_Local_State.Version + 1;
+
+// 2. Определение роли ПЛК (Active/Standby)
+fbRedundancy(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Local_PLC_ID := GVL_STATUS.G_PLC_ID,
+    VI_Remote_Pulse := GVL_IO.DI_Partner_Pulse,
+    VI_Remote_Is_Active := GVL_IO.DI_Partner_Active,
+    VI_Gateway_Ping_OK := GVL_GATEWAY.G_Gateway_Ping_OK,
+    VI_Local_State := L_Local_State,
+    VI_Remote_State := L_Remote_State
+);
+GVL_STATUS.G_Is_Active_PLC := (fbRedundancy.VO_Local_Role = E_PLC_ROLE.ROLE_ACTIVE);
+GVL_IO.DO_Heartbeat_Pulse := fbRedundancy.VO_Local_Pulse;
+GVL_IO.DO_Active_Status := GVL_STATUS.G_Is_Active_PLC;
+
+// 3. Синхронизация состояния (применение полученного состояния)
+IF fbRedundancy.VO_State_Updated THEN
+    GVL_STATUS.G_Current_Scenario := fbRedundancy.VO_Synced_State.Current_Scenario;
+    GVL_ALARM.G_Security_Armed := fbRedundancy.VO_Synced_State.Security_Armed;
+    GVL_STATE.G_Zone_Valves := fbRedundancy.VO_Synced_State.Zone_Valves;
+    GVL_STATE.G_Manifold_Pumps := fbRedundancy.VO_Synced_State.Manifold_Pumps;
+    GVL_STATE.G_Lighting_Levels := fbRedundancy.VO_Synced_State.Lighting_States;
+    GVL_STATE.G_Blinds_Positions := fbRedundancy.VO_Synced_State.Blinds_Positions;
+    GVL_STATE.G_Socket_States := fbRedundancy.VO_Synced_State.Socket_States;
+    GVL_COMMAND.G_Gas_Valve_Close := fbRedundancy.VO_Synced_State.Gas_Valve_Closed;
+    GVL_COMMAND.G_Close_Valve_36 := fbRedundancy.VO_Synced_State.Water_Valves_Closed;
+    L_Local_State.Version := fbRedundancy.VO_Synced_State.Version;
+END_IF;
+
+fbSafety(
+    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
+
+-- SEARCH marker and related vars in PRG_System --
+76:    L_Persist_Buffer : ARRAY[0..4] OF BYTE;
+77:    L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
+78:    L_Persist_Buffer_Changed : BOOL;
+79:    L_Last_Persist_Write_MS : UDINT;
+80:    L_Recovery_Done : BOOL;
+111:IF NOT L_Recovery_Done THEN
+119:    L_Recovery_Done := TRUE;
+122:// NVRAM CONTROLLED WRITE ENABLED (step 8B)
+674:L_Persist_Buffer[0] := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+676:    L_Persist_Buffer[1] := BYTE#1;
+678:    L_Persist_Buffer[1] := BYTE#0;
+681:    L_Persist_Buffer[2] := BYTE#1;
+683:    L_Persist_Buffer[2] := BYTE#0;
+686:    L_Persist_Buffer[3] := BYTE#1;
+688:    L_Persist_Buffer[3] := BYTE#0;
+691:    L_Persist_Buffer[4] := BYTE#1;
+693:    L_Persist_Buffer[4] := BYTE#0;
+696:L_Persist_Buffer_Changed :=
+697:    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
+698:    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
+699:    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
+700:    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
+701:    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
+716:ELSIF L_Persist_Buffer_Changed THEN
+718:    IF (L_Last_Persist_Write_MS = 0) OR
+719:       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
+727:    VI_DataRef := L_Persist_Buffer[0],
+739:    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
+740:    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
+741:    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
+742:    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
+743:    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
+744:    L_Last_Persist_Write_MS := GVL_STATUS.G_System_Time_MS;
+
+-- GVL_PERSISTENT full --
+VAR_GLOBAL PERSISTENT RETAIN
+
+    // === SYSTEM ===
+    P_System_Mode : E_System_Operating_Mode;
+
+    // === SAFETY LATCHES ===
+    P_Safety_Gas_Latched : BOOL;
+    P_Safety_Smoke_Latched : BOOL;
+    P_Safety_Leak_Latched : BOOL;
+
+    // === HEATING / DHW ===
+    P_DHW_Heating_Active : BOOL;
+
+    // === CONTROL ===
+    P_Valid : BOOL;
+
+END_VAR
+
+-- SEARCH all writes to GVL_PERSISTENT --
+./диагностика/file_access_audit.log:166:GVL_PERSISTENT.gvl	file	yes	yes	yes	0o666
+./docs/assistant_bridge/nvram_REAL_latest.log:180:112:    IF GVL_PERSISTENT.P_Valid THEN
+./docs/assistant_bridge/nvram_REAL_latest.log:181:113:        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:182:114:        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:183:115:        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:184:116:        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+./docs/assistant_bridge/nvram_REAL_latest.log:188:675:IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+./docs/assistant_bridge/nvram_REAL_latest.log:189:680:IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+./docs/assistant_bridge/nvram_REAL_latest.log:190:685:IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+./docs/assistant_bridge/nvram_REAL_latest.log:191:690:IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+./docs/assistant_bridge/nvram_REAL_latest.log:205:995:GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+./docs/assistant_bridge/nvram_REAL_latest.log:206:997:GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:207:998:GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:208:999:GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+./docs/assistant_bridge/nvram_REAL_latest.log:209:1001:GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+./docs/assistant_bridge/nvram_REAL_latest.log:210:1003:GVL_PERSISTENT.P_Valid := TRUE;
+./PRG_System.st:112:    IF GVL_PERSISTENT.P_Valid THEN
+./PRG_System.st:113:        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+./PRG_System.st:114:        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+./PRG_System.st:115:        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+./PRG_System.st:116:        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+./PRG_System.st:675:IF GVL_PERSISTENT.P_Safety_Gas_Latched THEN
+./PRG_System.st:680:IF GVL_PERSISTENT.P_Safety_Smoke_Latched THEN
+./PRG_System.st:685:IF GVL_PERSISTENT.P_Safety_Leak_Latched THEN
+./PRG_System.st:690:IF GVL_PERSISTENT.P_DHW_Heating_Active THEN
+./PRG_System.st:995:GVL_PERSISTENT.P_System_Mode := GVL_STATE.G_System_Mode;
+./PRG_System.st:997:GVL_PERSISTENT.P_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+./PRG_System.st:998:GVL_PERSISTENT.P_Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+./PRG_System.st:999:GVL_PERSISTENT.P_Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+./PRG_System.st:1001:GVL_PERSISTENT.P_DHW_Heating_Active := GVL_STATE.G_DHW_Heating_Pump;
+./PRG_System.st:1003:GVL_PERSISTENT.P_Valid := TRUE;
+
+== END ==
