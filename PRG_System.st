@@ -813,6 +813,14 @@ ELSIF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
     L_History_Event.unit := 4; // scenario domain
     L_History_Event.zone_id := 0;
     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+
+    fbLogEvent(
+        VI_Event_Type := 1,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := TO_UDINT(L_Scenario_Source),
+        VI_Param2 := TO_UDINT(GVL_STATUS.G_Current_Scenario)
+    );
+
     GVL_STATUS.G_Previous_Scenario := GVL_STATUS.G_Current_Scenario;
 
 ELSIF GVL_STATUS.G_Diagnostics.Alarm_Event_Pulse THEN
@@ -1007,16 +1015,6 @@ GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
 GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 
 // >>> BULK_SYNC_ANCHOR: PRG_System <<<
-
-// === EVENT LOGGING: SCENARIO CHANGE (DETERMINISTIC) ===
-IF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
-    fbLogEvent(
-        VI_Event_Type := 1,
-        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-        VI_Param1 := TO_UDINT(L_Scenario_Source),
-        VI_Param2 := TO_UDINT(GVL_STATUS.G_Current_Scenario)
-    );
-END_IF;
 
 // === EVENT LOGGING: FAULTS ===
 
