@@ -1,0 +1,57 @@
+]633;E;echo "== REMOVE CONSTANTS.DUT + COMPILE CHECK ==";ca6985ef-f3ea-4b59-b672-9b8910c7b940]633;C== REMOVE CONSTANTS.DUT + COMPILE CHECK ==
+
+-- REMOVE FILE --
+removed CONSTANTS.dut
+
+-- VERIFY REMOVE --
+ls: cannot access 'CONSTANTS.dut': No such file or directory
+file not found (ok)
+
+-- RUN COMPILE --
+OVERLAY_OK=FB_CRC32_Calculator METHODS=1
+OVERLAY_OK=FB_Gas_Valve_Controller METHODS=3
+OVERLAY_OK=FB_Random_Generator METHODS=2
+OVERLAY_OK=FB_Water_Valve_Controller METHODS=3
+TARGET_POUS=4
+TOTAL_METHODS=9
+COMPILER_DIR=/workspaces/SmartHomeNew/компилятор
+PROJECT_ROOT=/workspaces/SmartHomeNew
+BASE_XML=/workspaces/SmartHomeNew/компилятор/Система умного дома.xml
+OUT_003=/workspaces/SmartHomeNew/компилятор/out/003_RESULT.xml
+OUT_004=/workspaces/SmartHomeNew/компилятор/out/004_RESULT.xml
+OUT_RESULT=/workspaces/SmartHomeNew/компилятор/out/RESULT.xml
+LOG_001=/workspaces/SmartHomeNew/компилятор/logs/001_universal_pou_gvl.log
+LOG_004=/workspaces/SmartHomeNew/компилятор/logs/004_import_dut_v11.log
+STEP_001_OK
+STEP_004_OK
+FINAL_RESULT_OK=/workspaces/SmartHomeNew/компилятор/out/RESULT.xml
+BUILD_OK
+RUN METHOD OVERLAY...
+METHOD OVERLAY DONE
+CLEANED: /workspaces/SmartHomeNew/компилятор/out/003_RESULT.xml
+CLEANED: /workspaces/SmartHomeNew/компилятор/out/004_RESULT.xml
+CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
+]633;E;echo;ca6985ef-f3ea-4b59-b672-9b8910c7b940]633;C
+-- RESULT CHECK --
+компилятор
+компилятор/import_codesys_FINAL.py.bak
+компилятор/Система умного дома.xml
+компилятор/logs
+компилятор/logs/004_import_dut_v11.log
+компилятор/logs/method_overlay_clean_python.log
+компилятор/logs/001_universal_pou_gvl.log
+компилятор/method_overlay_clean.py
+компилятор/import_codesys_FINAL_METHODS_V3.py
+компилятор/run_compile_smoke.sh
+компилятор/__pycache__
+компилятор/__pycache__/import_codesys_FINAL.cpython-312.pyc
+компилятор/import_codesys_FINAL.py
+компилятор/out
+компилятор/out/RESULT_methods_clean.xml
+компилятор/out/.gitkeep
+компилятор/запуск_сборки.md
+компилятор/import_codesys_FINAL_METHODS_V2.py
+компилятор/method_overlay_clean.py.bak
+компилятор/запуск_сборки.sh
+
+== END ==
