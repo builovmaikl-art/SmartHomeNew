@@ -1,4 +1,4 @@
-]633;E;echo "== START COMPILE SMOKE ==";aead165b-2723-41a0-9368-252251fb72b7]633;C== START COMPILE SMOKE ==
+== START COMPILE SMOKE ==
 -- ROOT --
 /workspaces/SmartHomeNew
 
@@ -6,9 +6,10 @@
 Python 3.12.1
 
 -- COMPILER DIR --
-total 552
-drwxrwxrwx+  4 codespace codespace   4096 Apr 16 14:06 .
+total 560
+drwxrwxrwx+  5 codespace codespace   4096 Apr 16 14:14 .
 drwxrwxrwx+ 10 codespace root       16384 Apr 16 14:00 ..
+drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 __pycache__
 -rw-rw-rw-   1 codespace codespace  34293 Apr 16 14:00 import_codesys_FINAL.py
 -rw-rw-rw-   1 codespace codespace  33804 Apr 16 14:00 import_codesys_FINAL.py.bak
 -rw-rw-rw-   1 codespace codespace   3227 Apr 16 14:00 import_codesys_FINAL_METHODS_V2.py
@@ -16,7 +17,8 @@ drwxrwxrwx+ 10 codespace root       16384 Apr 16 14:00 ..
 drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 logs
 -rw-rw-rw-   1 codespace codespace   7227 Apr 16 14:00 method_overlay_clean.py
 -rw-rw-rw-   1 codespace codespace   7163 Apr 16 14:00 method_overlay_clean.py.bak
-drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:00 out
+drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 out
+-rwxrwxrwx   1 codespace codespace    822 Apr 16 14:14 run_compile_smoke.sh
 -rw-rw-rw-   1 codespace codespace 428970 Apr 16 14:00 Система умного дома.xml
 -rw-rw-rw-   1 codespace codespace    456 Apr 16 14:00 запуск_сборки.md
 -rw-rw-rw-   1 codespace codespace    177 Apr 16 14:00 запуск_сборки.sh
@@ -45,7 +47,7 @@ METHOD OVERLAY DONE
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/003_RESULT.xml
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/004_RESULT.xml
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
-]633;E;echo;aead165b-2723-41a0-9368-252251fb72b7]633;C
+
 -- OUTPUT CHECK --
 компилятор
 компилятор/__pycache__
@@ -63,6 +65,7 @@ CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
 компилятор/out
 компилятор/out/.gitkeep
 компилятор/out/RESULT_methods_clean.xml
+компилятор/run_compile_smoke.sh
 компилятор/Система умного дома.xml
 компилятор/запуск_сборки.md
 компилятор/запуск_сборки.sh
