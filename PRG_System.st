@@ -30,7 +30,6 @@ VAR
     L_Time_Diff : UDINT;
     L_Local_State : ST_System_State_Snapshot;
     L_Remote_State : ST_System_State_Snapshot;
-    L_Config_Loaded : BOOL;
     L_NVRAM_Cmd : BYTE;
     L_NVRAM_Offset : UDINT;
     L_NVRAM_Done : BOOL;
@@ -703,12 +702,7 @@ L_Persist_Buffer_Changed :=
 L_NVRAM_Cmd := 0;
 L_NVRAM_Offset := 0;
 
-IF NOT L_Config_Loaded THEN
-    // keep one startup READ for future recovery compatibility
-    L_NVRAM_Cmd := 2;
-    L_Config_Loaded := TRUE;
-
-ELSIF GVL_CONFIG.G_HMI_Apply_Settings THEN
+IF GVL_CONFIG.G_HMI_Apply_Settings THEN
     // explicit config apply may request a controlled write
     L_NVRAM_Cmd := 1;
     GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
