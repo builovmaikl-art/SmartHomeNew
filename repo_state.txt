@@ -1,0 +1,17 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	repo_state.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+5489c82 Add files via upload
+27f785d Initial commit
+.:
+README.md
+SmartHome-main.zip
+repo_state.txt
