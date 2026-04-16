@@ -55,6 +55,7 @@ VAR
     L_Last_Event_Value : REAL;
     L_Last_Event_Time_MS : UDINT;
     L_Gateway_Writes_Allowed : BOOL;
+    L_Last_Policy_Event_Time_MS : UDINT;
 
     L_Scenario_Req_Operator : E_SCENARIO_TYPE;
     L_Scenario_Req_Gateway  : E_SCENARIO_TYPE;
@@ -610,12 +611,16 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
             L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
             L_Scenario_Source := SRC_POLICY;
 
-            fbLogEvent(
-                VI_Event_Type := 5,
-                VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                VI_Param1 := TO_UDINT(L_Scenario_Source),
-                VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
-            );
+            IF (L_Last_Policy_Event_Time_MS = 0) OR
+               ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
+                fbLogEvent(
+                    VI_Event_Type := 5,
+                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                    VI_Param1 := TO_UDINT(L_Scenario_Source),
+                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
+                );
+                L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+            END_IF;
         END_IF;
     END_IF;
 END_IF;
@@ -633,12 +638,16 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
                 L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
                 L_Scenario_Source := SRC_POLICY;
 
-                fbLogEvent(
-                    VI_Event_Type := 6,
-                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                    VI_Param1 := TO_UDINT(L_Scenario_Source),
-                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
-                );
+                IF (L_Last_Policy_Event_Time_MS = 0) OR
+                   ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
+                    fbLogEvent(
+                        VI_Event_Type := 6,
+                        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                        VI_Param1 := TO_UDINT(L_Scenario_Source),
+                        VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
+                    );
+                    L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+                END_IF;
             END_IF;
 
         ELSIF L_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_PRESENCE THEN
@@ -646,12 +655,16 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
                 L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_SLEEP;
                 L_Scenario_Source := SRC_POLICY;
 
-                fbLogEvent(
-                    VI_Event_Type := 7,
-                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                    VI_Param1 := TO_UDINT(L_Scenario_Source),
-                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_SLEEP)
-                );
+                IF (L_Last_Policy_Event_Time_MS = 0) OR
+                   ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
+                    fbLogEvent(
+                        VI_Event_Type := 7,
+                        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+                        VI_Param1 := TO_UDINT(L_Scenario_Source),
+                        VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_SLEEP)
+                    );
+                    L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+                END_IF;
             END_IF;
         END_IF;
     END_IF;
