@@ -1,0 +1,56 @@
+]633;E;echo "=== STEP 30: GATE MAINTENANCE APPLY BY MODE ===";efb6d0e6-aaa4-469c-84e4-0cc7d1f7ffb4]633;C=== STEP 30: GATE MAINTENANCE APPLY BY MODE ===
+timestamp_utc=2026-04-16T18:06:50Z
+
+=== BEFORE ===
+
+// HMI maintenance mode control (confirmation-aware)
+IF L_Maintenance_Apply_Intent THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := GVL_COMMAND.CMD_Set_Manifold_Pump_In_Service[L_i];
+    END_FOR;
+    GVL_CONFIG.G_DHW_Heating_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Heating_Pump_In_Service;
+    GVL_CONFIG.G_DHW_Circ_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Circ_Pump_In_Service;
+END_IF;
+
+// Access level enforcement for dangerous actions
+GVL_STATUS.G_Diagnostics.User_Access_Level_Active := GVL_COMMAND.CMD_User_Access_Level;
+GVL_STATUS.G_Diagnostics.User_Access_Denied := FALSE;
+
+=== APPLY ===
+OK: maintenance apply now gated by system mode
+
+=== AFTER ===
+
+// HMI maintenance mode control (confirmation-aware)
+IF L_Maintenance_Apply_Intent AND
+   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
+    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := GVL_COMMAND.CMD_Set_Manifold_Pump_In_Service[L_i];
+    END_FOR;
+    GVL_CONFIG.G_DHW_Heating_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Heating_Pump_In_Service;
+    GVL_CONFIG.G_DHW_Circ_Pump_In_Service := GVL_COMMAND.CMD_Set_DHW_Circ_Pump_In_Service;
+END_IF;
+
+// Access level enforcement for dangerous actions
+GVL_STATUS.G_Diagnostics.User_Access_Level_Active := GVL_COMMAND.CMD_User_Access_Level;
+GVL_STATUS.G_Diagnostics.User_Access_Denied := FALSE;
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index fa0be84..7e0e5f8 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -917,7 +917,9 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
+ END_IF;
+ 
+ // HMI maintenance mode control (confirmation-aware)
+-IF L_Maintenance_Apply_Intent THEN
++IF L_Maintenance_Apply_Intent AND
++   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
++    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
+     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+         GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := GVL_COMMAND.CMD_Set_Manifold_Pump_In_Service[L_i];
+     END_FOR;
+
+=== END STEP 30 ===

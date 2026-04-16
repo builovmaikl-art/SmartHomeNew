@@ -917,7 +917,9 @@ IF GVL_COMMAND.CMD_Dangerous_Action_Confirm AND
 END_IF;
 
 // HMI maintenance mode control (confirmation-aware)
-IF L_Maintenance_Apply_Intent THEN
+IF L_Maintenance_Apply_Intent AND
+   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
+    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] := GVL_COMMAND.CMD_Set_Manifold_Pump_In_Service[L_i];
     END_FOR;
