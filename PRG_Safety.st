@@ -1,5 +1,21 @@
 PROGRAM PRG_Safety
 VAR
+    L_CMD_Water_Selective_Recover_Prev : BOOL;
+    L_CMD_Water_Selective_Recover_Edge : BOOL;
+    L_CMD_Gas_Selective_Recover_Prev : BOOL;
+    L_CMD_Gas_Selective_Recover_Edge : BOOL;
+    L_CMD_Water_Valve_Test_Open_Prev : BOOL;
+    L_CMD_Water_Valve_Test_Open_Edge : BOOL;
+    L_CMD_Water_Valve_Test_Close_Prev : BOOL;
+    L_CMD_Water_Valve_Test_Close_Edge : BOOL;
+    L_CMD_Water_Valve_Test_Confirm_Prev : BOOL;
+    L_CMD_Water_Valve_Test_Confirm_Edge : BOOL;
+    L_CMD_Gas_Valve_Test_Open_Prev : BOOL;
+    L_CMD_Gas_Valve_Test_Open_Edge : BOOL;
+    L_CMD_Gas_Valve_Test_Close_Prev : BOOL;
+    L_CMD_Gas_Valve_Test_Close_Edge : BOOL;
+    L_CMD_Gas_Valve_Test_Confirm_Prev : BOOL;
+    L_CMD_Gas_Valve_Test_Confirm_Edge : BOOL;
     fbWaterLeakageManager : FB_Water_Leakage_Manager;
     fbGasSmokeManager : FB_Gas_Smoke_Manager;
     L_i : INT;
@@ -11,6 +27,25 @@ VAR
     L_Water_Valve_Exercise_Until_MS : ARRAY[1..32] OF UDINT;
     L_Water_Zone_Close_Last_Retry_MS : ARRAY[1..32] OF UDINT;
 END_VAR
+
+// === COMMAND EDGE PROCESSING ===
+L_CMD_Water_Selective_Recover_Edge := GVL_COMMAND.CMD_Water_Selective_Recover AND NOT L_CMD_Water_Selective_Recover_Prev;
+L_CMD_Gas_Selective_Recover_Edge := GVL_COMMAND.CMD_Gas_Selective_Recover AND NOT L_CMD_Gas_Selective_Recover_Prev;
+L_CMD_Water_Valve_Test_Open_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Open AND NOT L_CMD_Water_Valve_Test_Open_Prev;
+L_CMD_Water_Valve_Test_Close_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Close AND NOT L_CMD_Water_Valve_Test_Close_Prev;
+L_CMD_Water_Valve_Test_Confirm_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND NOT L_CMD_Water_Valve_Test_Confirm_Prev;
+L_CMD_Gas_Valve_Test_Open_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Open AND NOT L_CMD_Gas_Valve_Test_Open_Prev;
+L_CMD_Gas_Valve_Test_Close_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Close AND NOT L_CMD_Gas_Valve_Test_Close_Prev;
+L_CMD_Gas_Valve_Test_Confirm_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND NOT L_CMD_Gas_Valve_Test_Confirm_Prev;
+
+L_CMD_Water_Selective_Recover_Prev := GVL_COMMAND.CMD_Water_Selective_Recover;
+L_CMD_Gas_Selective_Recover_Prev := GVL_COMMAND.CMD_Gas_Selective_Recover;
+L_CMD_Water_Valve_Test_Open_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Open;
+L_CMD_Water_Valve_Test_Close_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Close;
+L_CMD_Water_Valve_Test_Confirm_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Confirm;
+L_CMD_Gas_Valve_Test_Open_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Open;
+L_CMD_Gas_Valve_Test_Close_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Close;
+L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm;
 
 // 7.5 Система защиты от протечек
 fbWaterLeakageManager(
@@ -250,7 +285,7 @@ FOR L_i := 1 TO 32 DO
     END_IF;
 END_FOR;
 
-IF GVL_COMMAND.CMD_Water_Selective_Recover THEN
+IF L_CMD_Water_Selective_Recover_Edge THEN
     IF GVL_STATUS.G_Diagnostics.Water_Recovery_Selective_Allowed AND (GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index >= 1) AND (GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index <= 32) THEN
         GVL_STATE.G_Water_Zone_Enable[GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index] := TRUE;
         GVL_STATUS.G_Diagnostics.Water_Recovery_Physical_Active := TRUE;
@@ -262,7 +297,7 @@ IF GVL_COMMAND.CMD_Water_Selective_Recover THEN
     END_IF;
 END_IF;
 
-IF GVL_COMMAND.CMD_Gas_Selective_Recover THEN
+IF L_CMD_Gas_Selective_Recover_Edge THEN
     IF GVL_STATUS.G_Diagnostics.Gas_Recovery_Selective_Allowed THEN
         GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Context := CONCAT('Селективный тест газа для зоны ', GVL_STATUS.G_Diagnostics.Active_Gas_Zone_Name);
     ELSE
@@ -271,7 +306,7 @@ IF GVL_COMMAND.CMD_Gas_Selective_Recover THEN
     END_IF;
 END_IF;
 
-IF GVL_COMMAND.CMD_Water_Valve_Test_Open THEN
+IF L_CMD_Water_Valve_Test_Open_Edge THEN
     L_Water_Test_Active := TRUE;
     L_Water_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
     GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := TRUE;
@@ -299,13 +334,13 @@ IF L_Water_Test_Active THEN
         GVL_COMMAND.G_Close_Valve_36 := TRUE;
     END_IF;
 END_IF;
-IF GVL_COMMAND.CMD_Water_Valve_Test_Close THEN
+IF L_CMD_Water_Valve_Test_Close_Edge THEN
     L_Water_Test_Active := FALSE;
     GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
     GVL_COMMAND.G_Close_Valve_35 := TRUE;
     GVL_COMMAND.G_Close_Valve_36 := TRUE;
 END_IF;
-IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
+IF L_CMD_Water_Valve_Test_Confirm_Edge AND L_Water_Test_Active THEN
     IF GVL_STATUS.G_Diagnostics.Water_Valve_Test_Validation_OK THEN
         L_Water_Test_Active := FALSE;
         GVL_STATUS.G_Diagnostics.Water_Valve_Test_Mode_Active := FALSE;
@@ -315,7 +350,7 @@ IF GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Water_Test_Active THEN
     END_IF;
 END_IF;
 
-IF GVL_COMMAND.CMD_Gas_Valve_Test_Open THEN
+IF L_CMD_Gas_Valve_Test_Open_Edge THEN
     L_Gas_Test_Active := TRUE;
     L_Gas_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
     GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := TRUE;
@@ -341,12 +376,12 @@ IF L_Gas_Test_Active THEN
         GVL_COMMAND.G_Gas_Valve_Close := TRUE;
     END_IF;
 END_IF;
-IF GVL_COMMAND.CMD_Gas_Valve_Test_Close THEN
+IF L_CMD_Gas_Valve_Test_Close_Edge THEN
     L_Gas_Test_Active := FALSE;
     GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
     GVL_COMMAND.G_Gas_Valve_Close := TRUE;
 END_IF;
-IF GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Gas_Test_Active THEN
+IF L_CMD_Gas_Valve_Test_Confirm_Edge AND L_Gas_Test_Active THEN
     IF GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Validation_OK THEN
         L_Gas_Test_Active := FALSE;
         GVL_STATUS.G_Diagnostics.Gas_Valve_Test_Mode_Active := FALSE;
