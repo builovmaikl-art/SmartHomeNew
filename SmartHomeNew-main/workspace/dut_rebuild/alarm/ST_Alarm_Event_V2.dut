@@ -1,0 +1,7 @@
+TYPE ST_Alarm_Event_V2 :
+STRUCT
+    event_code : UDINT;
+    alarm_id : UDINT;
+    severity : E_ALERT_PRIORITY;
+END_STRUCT
+END_TYPE

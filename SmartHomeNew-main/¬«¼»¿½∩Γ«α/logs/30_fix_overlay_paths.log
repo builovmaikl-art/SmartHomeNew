@@ -1,0 +1,37 @@
+
+===== FIX overlay input/output paths =====
+Tue Apr 14 21:24:03 UTC 2026
+
+===== DIFF =====
+diff --git a/компилятор/method_overlay_clean.py b/компилятор/method_overlay_clean.py
+index 9cf8898..79a719c 100644
+--- a/компилятор/method_overlay_clean.py
++++ b/компилятор/method_overlay_clean.py
+@@ -5,7 +5,8 @@ import sys
+ 
+ 
+ ROOT = Path(".").resolve()
+-RESULT_XML = ROOT / "компилятор" / "out" / "RESULT_methods_clean.xml"
++INPUT_XML = ROOT / "компилятор" / "out" / "RESULT.xml"
++OUTPUT_XML = ROOT / "компилятор" / "out" / "RESULT_methods_clean.xml"
+ LOG_PATH = ROOT / "компилятор" / "logs" / "method_overlay_clean_python.log"
+ 
+ 
+@@ -114,7 +115,7 @@ def main():
+     baseline = load_module("baseline_import_codesys_final", ROOT / "компилятор" / "import_codesys_FINAL.py")
+     methods_v2 = load_module("methods_v2_builder", ROOT / "steps" / "MASTER_PIPELINE" / "001_universal_pou_builder_METHODS_V2.py")
+ 
+-    xml_text = RESULT_XML.read_text(encoding="utf-8", errors="ignore")
++    xml_text = INPUT_XML.read_text(encoding="utf-8", errors="ignore")
+ 
+     st_files = []
+     for pattern in methods_v2.ST_PATTERNS:
+@@ -180,7 +181,7 @@ def main():
+         total_methods += len(method_infos)
+         log(f"OVERLAY_OK={xml_name} METHODS={len(method_infos)}")
+ 
+-    RESULT_XML.write_text(xml_text, encoding="utf-8")
++    OUTPUT_XML.write_text(xml_text, encoding="utf-8")
+     log(f"TARGET_POUS={target_pous}")
+     log(f"TOTAL_METHODS={total_methods}")
+ 

@@ -1,0 +1,60 @@
+DUT_FILES=28
+REMOVED_OLD_DUT_DATATYPES=66
+ENUM_INSERTED=9
+STRUCT_INSERTED=19
+STRUCT_FIELDS_TOTAL=172
+STRUCT_FIELDS_WITH_INITIALIZER=76
+INITIALIZERS_INSERTED=76
+ARRAY_INITIALIZERS_INSERTED=3
+UNSUPPORTED_INITIALIZERS=0
+XML_INITIALVALUE_TAGS=261
+XML_ARRAYVALUE_TAGS=17
+
+E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
+E_Gateway_Command_Type.dut: ENUM E_Gateway_Command_Type values=9
+E_PLC_ROLE.dut: ENUM E_PLC_ROLE values=4
+E_Rule_Action_Type.dut: ENUM E_Rule_Action_Type values=10
+E_Rule_Comparison.dut: ENUM E_Rule_Comparison values=9
+E_Rule_Condition_Type.dut: ENUM E_Rule_Condition_Type values=13
+E_SCENARIO_TYPE.dut: ENUM E_SCENARIO_TYPE values=8
+E_System_Operating_Mode.dut: ENUM E_System_Operating_Mode values=4
+E_TwoFactor_Method.dut: ENUM E_TwoFactor_Method values=4
+ST_Alarm_Record.dut: STRUCT ST_Alarm_Record fields=8
+ST_BlackBox_Record.dut: STRUCT ST_BlackBox_Record fields=15
+ST_Boiler_Status.dut: STRUCT ST_Boiler_Status fields=11
+ST_DHW_Config.dut: STRUCT ST_DHW_Config fields=9
+ST_DHW_Status.dut: STRUCT ST_DHW_Status fields=7
+ST_Flood_Global_Config.dut: STRUCT ST_Flood_Global_Config fields=4
+ST_FloorHeating_Circuit_Config.dut: STRUCT ST_FloorHeating_Circuit_Config fields=11
+ST_Gateway_Command.dut: STRUCT ST_Gateway_Command fields=14
+ST_Heating_Config.dut: STRUCT ST_Heating_Config fields=8
+ST_History_Record.dut: STRUCT ST_History_Record fields=7
+ST_Manifold_Status.dut: STRUCT ST_Manifold_Status fields=9
+ST_Rule_Action.dut: STRUCT ST_Rule_Action fields=5
+ST_Scenario_Config.dut: STRUCT ST_Scenario_Config fields=8
+ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=17
+ST_System_State_Snapshot.dut: STRUCT ST_System_State_Snapshot fields=12
+ST_Tariff_Config.dut: STRUCT ST_Tariff_Config fields=4
+ST_User_Rule.dut: STRUCT ST_User_Rule fields=10
+ST_Valve_Test_Config.dut: STRUCT ST_Valve_Test_Config fields=5
+ST_Ventilation_Global_Config.dut: STRUCT ST_Ventilation_Global_Config fields=8
+
+STRUCT ST_Alarm_Record: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
+STRUCT ST_BlackBox_Record: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Boiler_Status: total=11 with_initializer=1 without_initializer=10 array_initializer=0 unsupported_initializer=0
+STRUCT ST_DHW_Config: total=9 with_initializer=9 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_DHW_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Flood_Global_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=2 unsupported_initializer=0
+STRUCT ST_FloorHeating_Circuit_Config: total=11 with_initializer=11 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Gateway_Command: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Heating_Config: total=8 with_initializer=8 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_History_Record: total=7 with_initializer=7 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Manifold_Status: total=9 with_initializer=0 without_initializer=9 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Rule_Action: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Scenario_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Security_Global_Config: total=17 with_initializer=13 without_initializer=4 array_initializer=0 unsupported_initializer=0
+STRUCT ST_System_State_Snapshot: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Tariff_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_User_Rule: total=10 with_initializer=0 without_initializer=10 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Valve_Test_Config: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Ventilation_Global_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=1 unsupported_initializer=0

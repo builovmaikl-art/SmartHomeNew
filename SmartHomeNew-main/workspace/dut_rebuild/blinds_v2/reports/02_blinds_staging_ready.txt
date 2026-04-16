@@ -1,0 +1,3 @@
+BLINDS_STAGING_PACKAGE=READY
+RUNTIME_PATCH=NOT_DONE
+NEXT_STEP=discover Lighting blinds runtime and integrate shadow

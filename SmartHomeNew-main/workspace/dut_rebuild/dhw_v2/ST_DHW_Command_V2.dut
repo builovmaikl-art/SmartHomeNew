@@ -1,0 +1,10 @@
+TYPE ST_DHW_Command_V2 :
+STRUCT
+    Tank_ID : INT;
+    Enabled : BOOL;
+    Target_Temp : REAL;
+    Pump_Enable : BOOL;
+    Heating_Priority : BOOL;
+    Source_Mode : BYTE;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,9 @@
+FUNCTION_BLOCK FB_ScenarioLayer_DRAFT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+
+// Scenario + Simulation + Rules
+
+END_FUNCTION_BLOCK

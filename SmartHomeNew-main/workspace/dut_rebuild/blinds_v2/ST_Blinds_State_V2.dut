@@ -1,0 +1,9 @@
+TYPE ST_Blinds_State_V2 :
+STRUCT
+    Blind_ID : INT;
+    Position_Actual : BYTE;
+    Manual_Override_Active : BOOL;
+    Is_Moving : BOOL;
+    Alarm_Active : BOOL;
+END_STRUCT
+END_TYPE

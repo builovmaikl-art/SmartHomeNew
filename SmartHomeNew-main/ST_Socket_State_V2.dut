@@ -1,0 +1,5 @@
+TYPE ST_Socket_State_V2 : STRUCT
+    Is_On : BOOL;
+    Safety_Blocked : BOOL;
+END_STRUCT
+END_TYPE

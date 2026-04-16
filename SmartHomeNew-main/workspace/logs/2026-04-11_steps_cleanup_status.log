@@ -1,0 +1,8 @@
+ M "\320\272\320\276\320\274\320\277\320\270\320\273\321\217\321\202\320\276\321\200/logs/build_run_stdout.log"
+?? steps/MASTER_PIPELINE/build_project_cli.py
+?? steps/MASTER_PIPELINE/build_project_v2.py
+?? steps/MASTER_PIPELINE/logs/
+?? steps/MASTER_PIPELINE/out/
+?? "steps/MASTER_PIPELINE/\320\241\320\270\321\201\321\202\320\265\320\274\320\260 \321\203\320\274\320\275\320\276\320\263\320\276 \320\264\320\276\320\274\320\260.xml"
+?? workspace/logs/2026-04-11_steps_cleanup_run.log
+?? workspace/logs/2026-04-11_steps_cleanup_status.log

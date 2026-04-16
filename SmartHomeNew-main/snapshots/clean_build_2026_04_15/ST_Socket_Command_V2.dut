@@ -1,0 +1,4 @@
+TYPE ST_Socket_Command_V2 : STRUCT
+    Target_State : BOOL;
+END_STRUCT
+END_TYPE

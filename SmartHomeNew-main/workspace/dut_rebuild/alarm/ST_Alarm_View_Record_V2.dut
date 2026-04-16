@@ -1,0 +1,7 @@
+TYPE ST_Alarm_View_Record_V2 :
+STRUCT
+    core : ST_Alarm_Core_Record_V2;
+    source_text : STRING(32);
+    message_text : STRING(200);
+END_STRUCT
+END_TYPE

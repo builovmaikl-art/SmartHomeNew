@@ -1,0 +1,13 @@
+XML_DUT_SYNC_REPORT
+XML=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml
+MISSING_FOUND=4
+INSERTED=4
+SKIPPED=0
+CHANGED=True
+NOTE=Inserted dataTypes contain placeholder ObjectId values and require validation in CODESYS
+
+DETAILS:
+E_Gateway_Command_Type	INSERTED	E_Gateway_Command_Type.dut
+E_System_Operating_Mode	INSERTED	E_System_Operating_Mode.dut
+ST_Alarm_Record	INSERTED	ST_Alarm_Record.dut
+ST_System_State_Snapshot	INSERTED	ST_System_State_Snapshot.dut

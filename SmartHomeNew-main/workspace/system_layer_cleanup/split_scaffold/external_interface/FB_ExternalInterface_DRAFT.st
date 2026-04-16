@@ -1,0 +1,9 @@
+FUNCTION_BLOCK FB_ExternalInterface_DRAFT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+
+// Gateway + arbitration
+
+END_FUNCTION_BLOCK

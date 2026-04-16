@@ -1,0 +1,8 @@
+TYPE ST_BlackBox_Snapshot_V2 : STRUCT
+    Gas_Alarm : BOOL;
+    Fire_Alarm : BOOL;
+    Flood_Alarm : BOOL;
+    First_Fault_Type : BYTE;
+    First_Fault_Source : BYTE;
+END_STRUCT
+END_TYPE

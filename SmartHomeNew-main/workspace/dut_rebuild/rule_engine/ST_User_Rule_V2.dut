@@ -1,0 +1,8 @@
+TYPE ST_User_Rule_V2 :
+STRUCT
+    enabled : BOOL;
+    name : STRING(64);
+    condition : ST_Rule_Condition_V2;
+    action : ST_Rule_Action_V2;
+END_STRUCT
+END_TYPE

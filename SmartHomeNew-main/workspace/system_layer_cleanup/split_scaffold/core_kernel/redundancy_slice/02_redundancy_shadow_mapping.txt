@@ -1,0 +1,11 @@
+REDUNDANCY_SHADOW_MAPPING
+SOURCE=PRG_System
+TARGET=FB_Redundancy_Shadow_Slice_DRAFT
+
+PRIMARY_REGIONS:
+- fbRedundancy call
+- local role publish
+- synced state apply structure
+
+NOTE:
+GVL writes stay outside in this phase.

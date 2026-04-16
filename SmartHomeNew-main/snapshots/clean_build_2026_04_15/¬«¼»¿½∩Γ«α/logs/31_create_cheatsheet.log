@@ -1,0 +1,11 @@
+
+===== CREATE BUILD CHEATSHEET =====
+Tue Apr 14 21:28:29 UTC 2026
+
+===== FILE CONTENT =====
+#!/bin/bash
+
+python3 компилятор/import_codesys_FINAL.py > компилятор/logs/final_test.log 2>&1
+git add -A
+git commit -m "test: run full chain build"
+git push

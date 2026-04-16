@@ -1,0 +1,36 @@
+
+===== PATCH import_codesys_FINAL.py (add overlay call) =====
+Tue Apr 14 21:15:45 UTC 2026
+
+===== BACKUP =====
+
+===== APPLY PATCH =====
+
+===== DIFF =====
+diff --git a/компилятор/import_codesys_FINAL.py b/компилятор/import_codesys_FINAL.py
+index 81b0342..01a4b8d 100644
+--- a/компилятор/import_codesys_FINAL.py
++++ b/компилятор/import_codesys_FINAL.py
+@@ -721,6 +721,22 @@ def main():
+     print('BUILD_OK')
+ 
+ 
++
++    # --- AUTO METHOD OVERLAY ---
++    try:
++        import subprocess
++        from pathlib import Path as _Path
++
++        overlay_script = _Path(__file__).parent / "method_overlay_clean.py"
++        if overlay_script.exists():
++            print("RUN METHOD OVERLAY...")
++            rc = subprocess.call(["python3", str(overlay_script)])
++            if rc != 0:
++                raise RuntimeError("method_overlay_clean.py failed")
++            print("METHOD OVERLAY DONE")
++    except Exception as e:
++        print(f"OVERLAY_ERROR: {e}")
++
+ if __name__ == '__main__':
+     try:
+         main()

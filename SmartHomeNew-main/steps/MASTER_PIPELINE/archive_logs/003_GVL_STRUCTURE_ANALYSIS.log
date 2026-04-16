@@ -1,0 +1,295 @@
+=== STEP 003 GVL STRUCTURE ANALYSIS ===
+GVL_FILES_FOUND=12
+
+FILE=GVL_ALARM.gvl
+SIZE=1147
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Security_Armed : BOOL := FALSE; // Флаг: Система безопасности активирована
+    G_Security_Siren : BOOL := FALSE;
+    G_Global_Siren : BOOL := FALSE; // Глобальный флаг сирены от Alarm Manager
+    G_Global_Critical : BOOL := FALSE;
+    G_Global_Warning : BOOL := FALSE;
+    G_Active_Alarm_Count : INT := 0;
+    G_Unacked_Alarm_Count : INT := 0;
+    G_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+    G_Gas_Alarm_Active : BOOL := FALSE; // Флаг: Обнаружена критическая концентрация газа
+    G_Gas_Fire_Siren : BOOL := FALSE;
+    G_Fire_Alarm_Active : BOOL := FALSE; // Флаг: Сработали пожарные датчики
+    G_Flood_Alarm_Active : BOOL := FALSE; // Флаг: Обнаружена протечка воды
+    G_Security_Alarm : BOOL := FALSE; // Флаг: Тревога системы безопасности
+END_VAR
+
+VAR_GLOBAL RETAIN
+    G_Next_Alarm_ID : UDINT := 1; // Глобальный счетчик ID тревог
+END_VAR
+--- HEAD END ---
+
+FILE=GVL_BlackBox.gvl
+SIZE=63
+HAS_VAR_GLOBAL=False
+HAS_END_VAR=False
+ATTR_COUNT=0
+PRAGMA_COUNT=0
+--- HEAD START ---
+// Переменные перенесены в GVL_Retain.gvl
+--- HEAD END ---
+
+FILE=GVL_COMMAND.gvl
+SIZE=2375
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Gas_Valve_Close : BOOL := FALSE; // Команда: Закрыть газовый клапан
+    G_Boiler_Stop : BOOL := FALSE; // Команда: Остановка котлов
+    G_Supply_100_Req : BOOL := FALSE; // Команда: Приток 100%
+    G_Supply_80_Req : BOOL := FALSE; // Команда: Приток 80%
+    G_Vent_PV3_Boost : BOOL := FALSE; // Команда: Форсированный режим ПВ-3
+    G_Exhaust_100_Req : BOOL := FALSE; // Команда: Вытяжка 100%
+    G_Vent_Stop : BOOL := FALSE; // Команда: Остановка вентиляции
+    G_Close_Valve_35 : BOOL := FALSE; // Команда: Закрыть вводной кран 1
+    G_Close_Valve_36 : BOOL := FALSE; // Команда: Закрыть вводной кран 2
+    G_Gate_Open : BOOL;
+    G_Wicket_Open : BOOL;
+    G_Lock_1_Open : BOOL;
+    G_Lock_1_Close : BOOL;
+    G_Lock_2_Open : BOOL;
+    G_Lock_2_Close : BOOL;
+    G_Reset_Errors : BOOL := FALSE; // Команда: Сброс ошибок
+    G_Scenario_Request : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE; // Запрос на активацию сценария
+    
+--- HEAD END ---
+
+FILE=GVL_CONFIG.gvl
+SIZE=8556
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Subsystem Configurations
+    G_Heating_Config : ST_Heating_Config; // Настройки системы отопления
+    G_Ventilation_Config : ST_Ventilation_Config; // Настройки системы вентиляции
+    G_DHW_Config : ST_DHW_Config; // Настройки горячего водоснабжения
+    G_Security_Config : ST_Security_Global_Config; // Настройки системы безопасности
+    G_Flood_Config : ST_Flood_Config; // Настройки системы защиты от протечек
+    
+    // HMI Configurations
+    G_HMI_FloorHeating_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config; // Конфигурации контуров теплого пола
+    G_Wet_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHTING_ZONES] OF BOOL; // Карта мокрых зон (TRUE = мокрая зона)
+    G_HMI_Tariff_Settings : ST_Tariff_Config; // Настройки тарифов
+    G_HMI_Vent_Global_Config : ST_Ventilation_Global_Config; // Глобальные настройки вентиляции
+    G_HMI_Vent_Unit_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_VENT_UNITS] OF ST_Ventilation_Unit_Config; // Конфигурации отдельных вентустановок
+    G_HMI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+    G_HMI_Outdoor_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF ST_Outdoor_Zone_Config; // Конфигурации зон уличного освещения
+    G_HMI_Flood_Config : ST_Flood_Global_Config; // Глобальные настройки защиты от протечек
+    G_HMI_Gas_Config : ST_Gas_Valve_Configuration; // Конфигурация системы газового контроля
+    G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record; // Данные калибровки датчиков
+--- HEAD END ---
+
+FILE=GVL_CONSTANTS.gvl
+SIZE=6628
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+    // Размеры массивов (конфигурация системы)
+    C_MAX_ZONES            : INT := 16; // Максимальное количество зон (комнат)
+    C_MAX_SOCKETS          : INT := 36; // Максимальное количество управляемых розеток
+    C_MAX_BLINDS           : INT := 20; // Максимальное количество штор/жалюзи
+    C_MAX_ALARMS           : INT := 20; // Максимальное количество активных тревог
+    C_MAX_RULES            : INT := 20; // Максимальное количество правил (движок правил)
+    C_MAX_MANIFOLDS        : INT := 5;  // Максимальное количество коллекторов
+    C_MAX_BOILERS          : INT := 2;  // Максимальное количество котлов
+    C_MAX_SUPPLY_FANS      : INT := 3;  // Максимальное количество приточных вентиляторов
+    C_MAX_EXHAUST_FANS     : INT := 5;  // Максимальное количество вытяжных вентиляторов
+    C_MAX_SECURITY_SENSORS : INT := 15; // Максимальное количество датчиков безопасности (герконы, стекло)
+    C_MAX_FLOOD_SENSORS    : INT := 12; // Максимальное количество датчиков протечки
+    C_MAX_DOOR_SENSORS     : INT := 8;  // Максимальное количество датчиков дверей
+    C_MAX_CO_SENSORS       : INT := 8;  // Максимальное количество датчиков CO
+    C_MAX_METHANE_SENSORS  : INT := 2;  // Максимальное количество датчиков метана
+    C_MAX_VENT_UNITS       : INT := 8;  // Максимальное количество вентустановок
+    C_MAX_SUPPLY_TEMPS     : INT := 2;  // Максимальное количество датчиков температуры притока
+    C_MAX_SMOKE_SENSORS    : INT := 6;  // Максимальное количество датчиков дыма
+--- HEAD END ---
+
+FILE=GVL_DEBUG.gvl
+SIZE=639
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Device_Health_Zones : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF ST_Device_Health;
+    G_Device_Health_Manifolds : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+    G_Device_Health_Boilers : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Device_Health;
+    G_Device_Health_Vents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health;
+    G_System_Health_Summary : BYTE := 100;
+    G_Pump_Health : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Device_Health; // Для 5 коллекторных насосов
+    G_Gas_Valve_Health : ST_Device_Health;
+END_VAR
+--- HEAD END ---
+
+FILE=GVL_GATEWAY.gvl
+SIZE=489
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Gateway_Command : ST_Gateway_Command;
+    G_Gateway_Command_Received : BOOL;
+    G_Gateway_Send_2FA : BOOL;
+    G_Gateway_2FA_Code : STRING(6);
+    G_Gateway_Telegram_Msg : STRING(200);
+    G_Gateway_Send_Telegram : BOOL;
+    G_Gateway_HMI_Status_Message : STRING(200);
+    G_Gateway_Ping_OK : BOOL;
+    G_Gateway_Data_Ready : BOOL;
+    G_Gateway_Modbus_Registers : ARRAY[0..GVL_CONSTANTS.C_MAX_MODBUS_REGISTERS-1] OF WORD;
+END_VAR
+--- HEAD END ---
+
+FILE=GVL_IO.gvl
+SIZE=10859
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    DI_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL; // Дискретные входы: Герконы (нормально-замкнутые контакты, TRUE = Открыто)
+    DI_Security_Glass : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL; // Дискретные входы: Датчики разбития стекла (активный уровень - TRUE)
+    DI_Security_2F_Group : BOOL; // Дискретный вход: Групповой шлейф безопасности 2-го этажа (общий сигнал)
+    DI_Flood_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL; // Дискретные входы: Датчики протечки воды (активный уровень - TRUE)
+    DI_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Дискретные входы: Концевые выключатели клапанов коллекторов
+    AO_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UINT; // Аналоговые выходы: Приводы клапанов (0-10В, 0-1000 ед. для Modbus)
+    DO_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Дискретные выходы: Циркуляционные насосы коллекторных узлов (220В)
+    AI_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Обратная связь по току потребления насосов (диагностика)
+    AI_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Давление теплоносителя в коллекторах (0-10 бар)
+    AI_Manifold_Temps_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Owen_Analog_Value; // Аналоговые входы: Температура подачи (структура со статусом)
+    AI_Manifold_Temps_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT; // Аналоговые входы: Температура обратной линии (в 10-х долях градуса)
+    AO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF UINT; // Аналоговые выходы: Скорость приточных вентиляторов (0-10В)
+    AO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF UINT; // Аналоговые выходы: Скорость вытяжных вентиляторов (0-10В)
+    AO_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UINT; // Аналоговые выходы: диммирование освещения (0-1000 -> 0..100%)
+    AO_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF UINT; // Аналоговые выходы: позиционирование штор/жалюзи (0-1000 -> 0..100%)
+    AI_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Owen_Analog_Value; // Аналоговые входы: Температура приточного воздуха после калорифера
+    AI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF INT; // Аналоговые входы: Текущий уровень модуляции мощности котла (%)
+    AI_Boiler_Flame_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Дискретные входы: Датчик ионизации (подтверждение наличия пламени)
+--- HEAD END ---
+
+FILE=GVL_MODBUS.gvl
+SIZE=0
+HAS_VAR_GLOBAL=False
+HAS_END_VAR=False
+ATTR_COUNT=0
+PRAGMA_COUNT=0
+--- HEAD START ---
+
+--- HEAD END ---
+
+FILE=GVL_Retain.gvl
+SIZE=1908
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Initialized : BOOL := FALSE; // Флаг инициализации retain-переменных
+    
+    // Энергонезависимая память (NVRAM) для хранения настроек и логов
+    G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+    
+    // Буфер черного ящика (100 записей)
+    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+    G_BlackBox_LastIndex : INT;
+    G_BlackBox_Frozen : BOOL;
+    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
+    
+    // История событий
+    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+    G_History_Write_Idx : INT := 1;
+    G_History_Total_Events : UDINT;
+    
+    // Статистика котлов
+    G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+--- HEAD END ---
+
+FILE=GVL_STATE.gvl
+SIZE=5852
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL; // Массив текущих температур поверхности пола
+    G_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    G_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL;
+    G_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
+    G_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
+    G_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Boiler_Flame : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Статус доступности OpenTherm-канала котла от реального OT-адаптера/драйвера
+--- HEAD END ---
+
+FILE=GVL_STATUS.gvl
+SIZE=2463
+HAS_VAR_GLOBAL=True
+HAS_END_VAR=True
+ATTR_COUNT=1
+PRAGMA_COUNT=1
+--- HEAD START ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_System_Time_MS : UDINT; // Системное время в миллисекундах
+    G_Last_System_Time_MS : UDINT := 0; // Предыдущее системное время (для детекции переполнения)
+    G_Time_Of_Day_MS : UDINT := 0; // Время от начала суток в мс (0-86399999)
+    G_Current_Day : UINT := 1; // Текущий день недели (1-7)
+    G_Day_Of_Year : UINT := 1; // Текущий день года (1-365)
+    G_Current_TOD : TOD; // Текущее время суток
+    G_Current_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE; // Текущий активный сценарий
+    G_Previous_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE; // Предыдущий сценарий
+    G_Is_Night : BOOL; // Флаг ночного времени
+    G_PLC_ID : BYTE := 1; // 1 = PLC_A, 2 = PLC_B
+    G_Is_Active_PLC : BOOL;
+    G_Local_PLC_ID : BYTE := 1; // Идентификатор данного ПЛК в паре
+    G_Active_PLC_ID : BYTE := 1; // Идентификатор ведущего ПЛК
+    G_Remote_PLC_Pulse : BOOL; // Сигнал "жизни" от второго ПЛК
+    G_Security_Status_Msg : STRING(200);
+    G_Gas_Status_Msg : STRING(200);
+    G_Flood_Status_Msg : STRING(200);
+    G_Vent_Status_Msg : STRING(200);
+--- HEAD END ---

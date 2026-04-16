@@ -1,0 +1,9 @@
+{attribute 'strict'}
+TYPE E_Debug_Log_Level :
+(
+    LOG_LEVEL_MINIMAL := 0,
+    LOG_LEVEL_NORMAL := 1,
+    LOG_LEVEL_VERBOSE := 2,
+    LOG_LEVEL_DEBUG := 3
+) USINT;
+END_TYPE

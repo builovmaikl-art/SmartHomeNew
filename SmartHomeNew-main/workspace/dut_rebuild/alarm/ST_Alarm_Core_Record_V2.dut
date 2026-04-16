@@ -1,0 +1,12 @@
+TYPE ST_Alarm_Core_Record_V2 :
+STRUCT
+    id : UDINT;
+    timestamp_ms : UDINT;
+    source_code : UINT;
+    source_instance : UINT;
+    severity : E_ALERT_PRIORITY;
+    is_active : BOOL;
+    is_acknowledged : BOOL;
+    cause_code : UINT;
+END_STRUCT
+END_TYPE

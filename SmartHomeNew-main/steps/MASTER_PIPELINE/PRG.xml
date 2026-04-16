@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP17 Patch 3" creationDateTime="2026-04-09T21:59:56.2194606" />
+  <contentHeader name="Без имени23.project" modificationDateTime="2026-04-09T20:22:19.2274177">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous>
+      <pou name="PLC_PRG" pouType="program">
+        <interface>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+              <Attributes>
+                <Attribute Name="object_name" Value="PLC_PRG" />
+              </Attributes>
+            </data>
+          </addData>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">// Вызов основных программ
+PRG_IO_Read();
+PRG_System();
+PRG_Safety();
+PRG_Security();
+PRG_Heating();
+PRG_Ventilation();
+PRG_Lighting();
+PRG_IO_Write();
+
+// PRG_Test(); // Раскомментировать для запуска модульных тестов</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>6d3b6d8e-390f-49c1-b056-368b3a000b36</ObjectId>
+          </data>
+        </addData>
+      </pou>
+      <pou name="PRG_Heating" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="fbHeatingManager">
+              <type>
+                <derived name="FB_Heating_System_Manager" />
+              </type>
+            </variable>
+            <variable name="fbDHWManager">
+              <type>
+                <derived name="FB_DHW_Manager" />
+              </type>
+            </variable>
+            <variable name="L_i">
+              <type>
+                <INT />
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml">// 9. Управление климатом (Отопление)
+fbHeatingManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Current_TOD := GVL_STATUS.G_Current_TOD,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
+    VI_Floor_Temps := GVL_STATE.G_Floor_Temps,
+    VI_Room_Temps := GVL_STATE.G_Room_Temps,
+    VI_Config := GVL_CONFIG.G_Heating_Config,
+    VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
+    VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
+    VI_Current_Hour := TO_UINT(GVL_STATUS.G_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
+    VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
+    VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
+    VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
+    VI_Manifold_Temps_Return := GVL_STATE.G_Manifold_T_Return,
+    VI_Boiler_Flame_Status := GVL_STATE.G_Boiler_Flame,
+    VI_Boiler_Error_Status := GVL_STATE.G_Boiler_Error,
+    VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
+    VI_Boiler_Modulation := GVL_IO.AI_Boiler_Modulation,
+    VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
+    VI_Boiler_Stop := GVL_COMMAND.G_Boiler_Stop,
+    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+    VI_DHW_Heating_Demand := fbDHWManager.VO_Heating_Pump,
+    VI_DHW_Target_Temp := GVL_CONFIG.G_DHW_Config.Target_Temp,
+    VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
+    VI_Gas_Safety_Stop := GVL_STATE.G_Safety_Gas_Latched,
+    VI_Scenario_Configs := GVL_CONFIG.G_HMI_Scenario_Configs,
+    VI_Manifold_End_Switches := GVL_STATE.G_Manifold_End_Switches,
+    VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
+    VO_Manifold_Valves =&gt; GVL_STATE.G_Manifold_Valves,
+    VO_Manifold_Pumps =&gt; GVL_STATE.G_Manifold_Pumps,
+    VO_Zone_Valves =&gt; GVL_STATE.G_Zone_Valves,
+    VO_Boiler_OT_Enable =&gt; GVL_STATE.G_Boiler_OT_Enable,
+    VO_Boiler_OT_Setpoint =&gt; GVL_STATE.G_Boiler_OT_Setpoint,
+    VO_Backup_Circulation_Pump =&gt; GVL_STATE.G_Backup_Circulation_Pump,
+    VO_Electric_Heater_Enable =&gt; GVL_STATE.G_Electric_Heater_Enable,
+    VO_Freeze_Risk_Status =&gt; GVL_STATE.G_Safety_Freeze_Risk,
+    VO_Status =&gt; GVL_STATUS.G_Manifold_Status,
+    VO_Boiler_Status =&gt; GVL_STATUS.G_Boiler_Status
+);
+
+// 12. Управление ГВС
+fbDHWManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Current_TOD := GVL_STATUS.G_Current_TOD,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_Temp := GVL_STATE.G_DHW_Temp,
+    VI_Pressure := GVL_STATE.G_DHW_Pressure,
+    VI_Config := GVL_CONFIG.G_DHW_Config,
+    VI_Current_Day_Of_Week := GVL_STATUS.G_Current_Day,
+    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+    VI_Reset_Errors := GVL_COMMAND.G_Reset_Errors,
+    VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
+    VO_Heating_Pump =&gt; GVL_STATE.G_DHW_Heating_Pump,
+    VO_Circ_Pump =&gt; GVL_STATE.G_DHW_Circ_Pump,
+    VO_Status =&gt; GVL_STATUS.G_DHW_Status
+);
+
+// Integrated freeze-hardware diagnostics and maintenance gating
+GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
+GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
+IF NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service THEN
+    GVL_STATE.G_Backup_Circulation_Pump := FALSE;
+END_IF;
+IF NOT GVL_CONFIG.G_Electric_Heater_In_Service THEN
+    GVL_STATE.G_Electric_Heater_Enable := FALSE;
+END_IF;
+
+GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+
+IF GVL_STATE.G_Freeze_Hardware_Failed THEN
+    GVL_STATE.G_Backup_Circulation_Pump := FALSE;
+    GVL_STATE.G_Electric_Heater_Enable := FALSE;
+    GVL_STATE.G_Safety_Freeze_Risk := TRUE;
+END_IF;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
+    IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+    END_IF;
+END_FOR;
+GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
+IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Heating_Pump := FALSE;
+END_IF;
+GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
+IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Circ_Pump := FALSE;
+END_IF;
+// &gt;&gt;&gt; BULK_SYNC_ANCHOR: PRG_Heating &lt;&lt;&lt;</xhtml>
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>781b41a7-2ec0-4a34-8282-207201a52109</ObjectId>
+          </data>
+        </addData>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="PLC_PRG" ObjectId="6d3b6d8e-390f-49c1-b056-368b3a000b36" />
+        <Object Name="PRG_Heating" ObjectId="781b41a7-2ec0-4a34-8282-207201a52109" />
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>

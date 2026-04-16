@@ -1,0 +1,8 @@
+TYPE E_Rule_Value_Type_V2 : (
+    RULE_VALUE_NONE := 0,
+    RULE_VALUE_BOOL := 1,
+    RULE_VALUE_REAL := 2,
+    RULE_VALUE_TIME_MINUTES := 3,
+    RULE_VALUE_ENUM := 4
+);
+END_TYPE

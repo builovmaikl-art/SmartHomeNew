@@ -1,0 +1,20 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Security_Armed : BOOL := FALSE; // Флаг: Система безопасности активирована
+    G_Security_Siren : BOOL := FALSE;
+    G_Global_Siren : BOOL := FALSE; // Глобальный флаг сирены от Alarm Manager
+    G_Global_Critical : BOOL := FALSE;
+    G_Global_Warning : BOOL := FALSE;
+    G_Active_Alarm_Count : INT := 0;
+    G_Unacked_Alarm_Count : INT := 0;
+    G_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record;
+    G_Gas_Alarm_Active : BOOL := FALSE; // Флаг: Обнаружена критическая концентрация газа
+    G_Gas_Fire_Siren : BOOL := FALSE;
+    G_Fire_Alarm_Active : BOOL := FALSE; // Флаг: Сработали пожарные датчики
+    G_Flood_Alarm_Active : BOOL := FALSE; // Флаг: Обнаружена протечка воды
+    G_Security_Alarm : BOOL := FALSE; // Флаг: Тревога системы безопасности
+END_VAR
+
+VAR_GLOBAL RETAIN
+    G_Next_Alarm_ID : UDINT := 1; // Глобальный счетчик ID тревог
+END_VAR

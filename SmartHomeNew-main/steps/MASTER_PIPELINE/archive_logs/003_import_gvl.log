@@ -1,0 +1,10 @@
+GVL_ALARM.gvl->GVL_ALARM modes=plain,retain
+GVL_COMMAND.gvl->GVL_COMMAND modes=plain
+GVL_CONFIG.gvl->GVL_CONFIG modes=plain,constant
+GVL_CONSTANTS.gvl->GVL_CONSTANTS modes=constant
+GVL_DEBUG.gvl->GVL_DEBUG modes=plain
+GVL_GATEWAY.gvl->GVL_GATEWAY modes=plain
+GVL_IO.gvl->GVL_IO modes=plain
+GVL_Retain.gvl->GVL_Retain modes=retain
+GVL_STATE.gvl->GVL_STATE modes=plain
+GVL_STATUS.gvl->GVL_STATUS modes=plain

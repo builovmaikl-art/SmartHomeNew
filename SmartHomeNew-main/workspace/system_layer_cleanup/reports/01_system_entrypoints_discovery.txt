@@ -1,0 +1,20 @@
+SYSTEM_ENTRYPOINT_DISCOVERY
+
+PRG_System.st :: score=8
+PRG_IO_Read.st :: score=7
+PRG_IO_Write.st :: score=7
+MAIN.st :: score=6
+PRG_Heating.st :: score=6
+PRG_Lighting.st :: score=6
+PRG_Safety.st :: score=5
+PRG_Ventilation.st :: score=5
+FB_Gateway_Interface.st :: score=4
+FB_Simulation_Manager.st :: score=4
+PRG_PLC_A.st :: score=4
+PRG_PLC_B.st :: score=4
+PRG_Security.st :: score=4
+PRG_Test.st :: score=4
+FB_IO_Module_Watchdog.st :: score=3
+FB_Scenario_Manager.st :: score=3
+archive/parked_fb/unclear/FB_Maintenance_Access.st :: score=3
+archive/parked_fb/unclear/FB_Scenario_Transition_Controller.st :: score=3

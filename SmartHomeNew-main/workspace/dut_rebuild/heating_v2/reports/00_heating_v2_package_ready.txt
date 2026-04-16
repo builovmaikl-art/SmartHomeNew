@@ -1,0 +1,3 @@
+HEATING_V2_PACKAGE=READY
+RUNTIME_PATCH=NOT_DONE
+NEXT_STEP=prepare Heating extraction package for command/state path

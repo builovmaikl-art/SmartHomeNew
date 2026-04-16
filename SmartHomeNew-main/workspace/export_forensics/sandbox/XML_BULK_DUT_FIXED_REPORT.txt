@@ -1,0 +1,5 @@
+ADDED=4
+ST_System_State_Snapshot
+ST_Alarm_Record
+E_Gateway_Command_Type
+E_System_Operating_Mode

@@ -1,0 +1,19 @@
+SELECTED_LEGACY_PATH_READY_SOURCE
+
+FIRST_SAFE_SOURCE:
+- GVL_STATUS.G_Is_Active_PLC
+
+RATIONALE:
+- Current CoreKernel shadow slices only propagate VI_IsActivePLC/VI_Enable semantics.
+- System_Mode-aware readiness is not modeled yet inside the shadow chain.
+- Comparing against a mode-gated legacy signal now would create expected but noisy false diffs.
+- First comparison should validate wiring and chain consistency before semantic expansion.
+
+DEFERRED_UPGRADE_SOURCE:
+- GVL_STATUS.G_Is_Active_PLC AND (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL)
+
+UPGRADE_CONDITION:
+- After StateManager shadow begins emitting explicit System_Mode shadow output.
+
+NEXT_STEP:
+- Prepare a harness binding note that feeds VI_Legacy_Path_Ready from GVL_STATUS.G_Is_Active_PLC in the first validation iteration.

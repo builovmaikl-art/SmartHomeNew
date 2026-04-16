@@ -1,0 +1,44 @@
+FB_ASTRO_TIMER_DIAGNOSTIC_REPORT
+ST_SOURCE=FB_Astro_Timer.st
+XML_TARGET=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml
+ST_SHA256=fccdacf0b0750d9b6a2d352584ad2d998753e6c8741302ce17da5f28cc3641ad
+XML_SHA256=ffadb9e520481ad6e18641b310393419bcbcc06bf926228bdac7a40b93ea189f
+EXACT_MATCH=False
+ST_LENGTH=2248
+XML_LENGTH=441
+
+ST_HEAD:
+FUNCTION_BLOCK FB_Astro_Timer
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Latitude : REAL := 55.75; // Москва (по умолчанию)
+    VI_Longitude : REAL := 37.61;
+    VI_Timezone : REAL := 3.0; // UTC+3
+    VI_Day_Of_Year : UINT; // День года (1-365)
+END_VAR
+VAR_OUTPUT
+    VO_Sunset_Time : TOD;
+    VO_Sunrise_Time : TOD;
+    VO_Is_Night : BOOL;
+    VO_Current_TOD : TOD; // Текущее время суток
+END_VAR
+VAR
+    L_Current_TOD : TOD;
+    L_Pi : REAL := 3.14159265359;
+    L_Rad : REAL := 3.14159265359 / 180.0;
+    L_Deg : REAL := 180.0 / 3.14159265359;
+    L_B : REAL;
+    L_EoT : REAL;
+    L_Declina
+
+XML_HEAD:
+// Упрощенная логика астро-таймера (ТЗ 15.2)
+// В реальном проекте используется библиотека SysTimeRtc или расчет по формулам
+L_Current_TOD := UDINT_TO_TOD(VI_System_Time_MS MOD 86400000);
+
+// Примерные значения для средней полосы
+VO_Sunrise_Time := TOD#06:00;
+VO_Sunset_Time := TOD#18:00;
+
+// ТЗ 15.2: Закат + 30 мин / Рассвет - 30 мин
+VO_Is_Night := (L_Current_TOD > (VO_Sunset_Time + T#30m)) OR (L_Current_TOD < (VO_Sunrise_Time - T#30m));
