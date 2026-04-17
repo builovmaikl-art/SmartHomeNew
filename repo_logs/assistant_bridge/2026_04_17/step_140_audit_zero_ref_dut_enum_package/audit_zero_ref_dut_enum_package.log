@@ -1,0 +1,410 @@
+]633;E;echo "=== RUN STEP 140 ===";c91143c6-a704-4775-b84b-ecf25abd49a0]633;C=== RUN STEP 140 ===
+=== STEP 140: AUDIT ZERO-REF DUT/ENUM PACKAGE ===
+
+--- E_Lifetime_Device_Type.dut ---
+line_count=7
+is_enum=False is_struct=False
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'strict'}
+TYPE E_Lifetime_Device_Type :
+(
+    LIFETIME_DEVICE_PUMP := 1,
+    LIFETIME_DEVICE_FAN  := 2
+) USINT;
+END_TYPE
+decision=HOLD
+
+--- E_Outdoor_Mode.dut ---
+line_count=10
+is_enum=False is_struct=False
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'strict'}
+TYPE E_Outdoor_Mode :
+(
+    OUTDOOR_MODE_AUTO := 0,
+    OUTDOOR_MODE_PARTY := 1,
+    OUTDOOR_MODE_SECURITY := 2,
+    OUTDOOR_MODE_ECONOMY := 3,
+    OUTDOOR_MODE_MANUAL := 4
+) USINT;
+END_TYPE
+decision=HOLD
+
+--- E_Valve_Test_Result.dut ---
+line_count=12
+is_enum=False is_struct=False
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'strict'}
+TYPE E_Valve_Test_Result :
+(
+    TEST_RESULT_NONE := 0,
+    TEST_RESULT_PASSED := 1,
+    TEST_RESULT_CURRENT_DEVIATION := 2,
+    TEST_RESULT_TIME_DEVIATION := 3,
+    TEST_RESULT_STALL := 4,
+    TEST_RESULT_LIMIT_SWITCH_FAIL := 5,
+    TEST_RESULT_ABORTED := 6
+) USINT;
+END_TYPE
+decision=HOLD
+
+--- E_WEATHER_COMPENSATION_METHOD.dut ---
+line_count=7
+is_enum=False is_struct=False
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'strict'}
+TYPE E_WEATHER_COMPENSATION_METHOD :
+(
+  WEATHER_COMP_NONE := 0,
+  WEATHER_COMP_OUTDOOR_RESET := 1
+) USINT;
+END_TYPE
+decision=HOLD
+
+--- ST_Astro_Time.dut ---
+line_count=8
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Astro_Time :
+STRUCT
+    sunrise_ms : UDINT := 0;
+    sunset_ms : UDINT := 0;
+    is_daylight : BOOL := FALSE;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Debug_Log_Record.dut ---
+line_count=13
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Debug_Log_Record :
+STRUCT
+    timestamp_ms : UDINT;
+    level : BYTE; // E_Debug_Log_Level
+    source_id : BYTE;
+    event_code : WORD;
+    value_int : UDINT;
+    value_real : REAL;
+    text : STRING(80);
+    crc32 : DWORD;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Debug_Logger_Config.dut ---
+line_count=7
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Debug_Logger_Config :
+STRUCT
+    enabled : BOOL;
+    sampling_period_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_FloorHeating_Global_Config.dut ---
+line_count=10
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_FloorHeating_Global_Config :
+STRUCT
+    enable_floor_heating : BOOL := TRUE;
+    anti_freeze_temp : REAL := 7.0;
+    overheat_temp : REAL := 45.0;
+    weather_compensation_enabled : BOOL := TRUE;
+    total_circuits : BYTE := 16;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_FloorHeating_Manifold_Config.dut ---
+line_count=10
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_FloorHeating_Manifold_Config :
+STRUCT
+    manifold_id : BYTE;
+    location : STRING(30);
+    nominal_flow : REAL;
+    enable_pump : BOOL;
+    circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_CIRCUITS_PER_MANIFOLD] OF ST_FloorHeating_Circuit_Config;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Lifetime_Status.dut ---
+line_count=12
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Lifetime_Status :
+STRUCT
+    device_id : BYTE;
+    runtime_hours : UDINT;
+    start_count : UDINT;
+    remaining_hours : UDINT;
+    remaining_percent : BYTE;
+    maintenance_required : BOOL;
+    last_calc_timestamp : UDINT;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Maintenance_Access_Config.dut ---
+line_count=9
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Maintenance_Access_Config :
+STRUCT
+    maintenance_enabled : BOOL := FALSE;
+    max_duration_minutes : UDINT := 60;
+    requires_two_person : BOOL := TRUE;
+    access_level_required : BYTE := 2;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Rule.dut ---
+line_count=13
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+TYPE ST_Rule :
+STRUCT
+    Action_Type : INT;
+    Action_Target_ID : INT;
+    Action_Value : REAL;
+
+    Condition_Type : INT;
+    Condition_Target_ID : INT;
+    Condition_Op : INT;
+    Condition_Value : REAL;
+    Condition_Value_Max : REAL;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Scenario_Transition_Config.dut ---
+line_count=9
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Scenario_Transition_Config :
+STRUCT
+    current_scenario : E_SCENARIO_TYPE;
+    target_scenario : E_SCENARIO_TYPE;
+    min_duration_minutes : UDINT := 5;
+    transition_allowed : BOOL := FALSE;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Security_Zone_State.dut ---
+line_count=10
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Security_Zone_State :
+STRUCT
+    Armed : BOOL;
+    Alarm : BOOL;
+    Bypassed : BOOL;
+    Last_Trigger_Time : DT;
+    Trigger_Count : UINT;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_System_State_Summary.dut ---
+line_count=15
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_System_State_Summary :
+STRUCT
+    Outdoor_Temp : REAL;
+    Indoor_Temp : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+    Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_HUMIDITY_SENSORS] OF REAL;
+    CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_CO2_SENSORS] OF REAL;
+    Gas_Alarm : BOOL;
+    Flood_Alarm : BOOL;
+    Fire_Alarm : BOOL;
+    Security_Alarm : BOOL;
+    Security_Armed : BOOL;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Trend_Header.dut ---
+line_count=11
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_Header :
+STRUCT
+    parameter_type : BYTE; // E_Trend_Parameter_Type
+    zone_id : BYTE := 0;
+    records_count : UDINT := 0;
+    average_value : REAL := 0.0;
+    min_value : REAL := 0.0;
+    max_value : REAL := 0.0;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Trend_History_Record.dut ---
+line_count=7
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_History_Record :
+STRUCT
+    timestamp_ms : UDINT := 0;
+    value : REAL := 0.0;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_TwoFactor_Data.dut ---
+line_count=10
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_TwoFactor_Data :
+STRUCT
+    operator_id : STRING(10);
+    AuthMethod : BYTE; // E_TwoFactor_Method
+    rfid_tag : STRING(20);
+    totp_secret : STRING(32);
+    last_modified : UDINT;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Ventilation_Unit.dut ---
+line_count=10
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Ventilation_Unit :
+STRUCT
+    Enabled : BOOL;
+    Speed_Percent : REAL;
+    Filter_Dirty : BOOL;
+    Error : BOOL;
+    Mode : BYTE;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+--- ST_Zone_Sensors.dut ---
+line_count=11
+is_enum=False is_struct=True
+nested_types=True
+config_like=False diag_like=False
+is_empty=False
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Zone_Sensors :
+STRUCT
+    Temp_Room : REAL;
+    Temp_Floor : REAL;
+    Motion_Active : BOOL;
+    Switch_Physical : BOOL;
+    Light_State : BOOL;
+    Maintenance : ST_Component_Maintenance;
+END_STRUCT
+END_TYPE
+decision=HOLD
+
+=== SAFE / LIKELY SAFE ===
+NONE
+
+=== HOLD ===
+E_Lifetime_Device_Type.dut
+E_Outdoor_Mode.dut
+E_Valve_Test_Result.dut
+E_WEATHER_COMPENSATION_METHOD.dut
+ST_Astro_Time.dut
+ST_Debug_Log_Record.dut
+ST_Debug_Logger_Config.dut
+ST_FloorHeating_Global_Config.dut
+ST_FloorHeating_Manifold_Config.dut
+ST_Lifetime_Status.dut
+ST_Maintenance_Access_Config.dut
+ST_Rule.dut
+ST_Scenario_Transition_Config.dut
+ST_Security_Zone_State.dut
+ST_System_State_Summary.dut
+ST_Trend_Header.dut
+ST_Trend_History_Record.dut
+ST_TwoFactor_Data.dut
+ST_Ventilation_Unit.dut
+ST_Zone_Sensors.dut
+
+=== END STEP 140 ===
