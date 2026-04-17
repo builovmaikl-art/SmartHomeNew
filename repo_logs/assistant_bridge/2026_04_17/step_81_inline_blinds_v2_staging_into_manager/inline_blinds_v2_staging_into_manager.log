@@ -1,0 +1,52 @@
+]633;E;echo "=== STEP 81: INLINE BLINDS V2 STAGING INTO MANAGER ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 81: INLINE BLINDS V2 STAGING INTO MANAGER ===
+timestamp_utc=2026-04-17T05:24:50Z
+
+=== BEFORE ===
+31:    fbBlindsV2Staging : FB_Blinds_V2_Staging;
+312:fbBlindsV2Staging(
+
+=== APPLY ===
+OK: inlined blinds V2 staging logic into FB_Lighting_Blinds_Manager.st
+
+=== AFTER ===
+31:    fbBlindsV2Staging : FB_Blinds_V2_Staging;
+
+=== ROOT REFERENCES ===
+./FB_Blinds_V2_Staging.st:1:FUNCTION_BLOCK FB_Blinds_V2_Staging
+./FB_Lighting_Blinds_Manager.st:31:    fbBlindsV2Staging : FB_Blinds_V2_Staging;
+./FB_Lighting_Blinds_Manager.st:311:// Inlined from FB_Blinds_V2_Staging
+
+=== DIFF ===
+diff --git a/FB_Lighting_Blinds_Manager.st b/FB_Lighting_Blinds_Manager.st
+index 700d9a6..315c75d 100644
+--- a/FB_Lighting_Blinds_Manager.st
++++ b/FB_Lighting_Blinds_Manager.st
+@@ -308,23 +308,10 @@ END_IF;
+ 
+ // ========================================
+ // Blinds V2 shadow execution (phase2)
++// Inlined from FB_Blinds_V2_Staging
+ // ========================================
+-fbBlindsV2Staging(
+-    VI_Blind_ID := 1,
+-    VI_Enable := TRUE,
+-    VI_Position_Setpoint := VO_Blinds_Positions[1],
+-    VI_Manual_Override := (VI_Manual_Blinds_Override[1] > 0),
+-    VI_Scenario_ID := TO_INT(L_Effective_Scenario),
+-    VI_Safety_Mode := FALSE,
+-
+-    VI_Position_Actual := VO_Blinds_Positions[1],
+-    VI_Manual_Override_Active := (VI_Manual_Blinds_Override[1] > 0),
+-    VI_Is_Moving := FALSE,
+-    VI_Alarm_Active := GVL_STATE.G_Lighting_IO_Fault,
+-
+-    VO_Command_Shadow => L_Blinds_V2_Command_Shadow,
+-    VO_State_Shadow => L_Blinds_V2_State_Shadow
+-);
++L_Blinds_V2_Command_Shadow.Position_Setpoint := VO_Blinds_Positions[1];
++L_Blinds_V2_State_Shadow.Position_Actual := VO_Blinds_Positions[1];
+ 
+ // Blinds validation
+ IF VO_Blinds_Positions[1] <> L_Blinds_V2_Command_Shadow.Position_Setpoint THEN
+
+=== END STEP 81 ===
