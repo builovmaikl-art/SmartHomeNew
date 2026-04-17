@@ -1,0 +1,344 @@
+]633;E;echo "=== RUN STEP 160 ===";ca8db5b3-d207-410d-aafc-c4fe34a00cc8]633;C=== RUN STEP 160 ===
+=== STEP 160: STABILIZATION AUDIT TREND INTEGRATION ===
+
+--- FILE: PRG_System.st ---
+exists=True
+line_count=1184
+trend_symbol_counts:
+  L_Trend_Logger=3
+  L_Trend_Adapter=2
+  L_Trend_Data=11
+  L_Trend_Avg=3
+  L_Trend_Min=2
+  L_Trend_Max=2
+  L_Trend_Up=2
+  L_Trend_Down=2
+  L_Trend_Write=4
+  L_Trend_Write_Prev=3
+  FB_Trend_Logger=1
+  FB_Trend_Analyzer=1
+  FB_Trend_Adapter=1
+  ST_Trend_Data=1
+  ST_Trend_Config=0
+  E_Trend_Parameter_Type=0
+
+trend_lines:
+4:     // === TREND WRITE CONTROL ===
+5:     L_Trend_Write : BOOL;
+6:     L_Trend_Write_Prev : BOOL;
+8:     // === TREND → HISTORY BRIDGE ===
+9:     L_Trend_Event : ST_History_Record;
+11:     // === TREND SYSTEM (MVP) ===
+12:     L_Trend_Logger : FB_Trend_Logger;
+13:     L_Trend_Analyzer : FB_Trend_Analyzer;
+14:     L_Trend_Data : ST_Trend_Data;
+15:     L_Trend_Adapter : FB_Trend_Adapter;
+16:     L_Trend_Avg : REAL;
+17:     L_Trend_Min : REAL;
+18:     L_Trend_Max : REAL;
+19:     L_Trend_Up : BOOL;
+20:     L_Trend_Down : BOOL;
+1084: // === TREND EXECUTION (SAFE MVP) ===
+1085: L_Trend_Data.config.param_type := 1;
+1086: L_Trend_Data.config.zone_id := 0;
+1087: L_Trend_Data.config.enabled := TRUE;
+1088: L_Trend_Data.config.deviation_threshold_percent := 1.0;
+1089: L_Trend_Data.config.history_days := 1;
+1091: L_Trend_Logger(
+1093:     VI_Config := L_Trend_Data.config,
+1097: L_Trend_Data := L_Trend_Logger.VO_Data;
+1099: // === TREND ANALYSIS VIA ADAPTER ===
+1100: L_Trend_Adapter(
+1101:     VI_Data := L_Trend_Data,
+1102:     VO_Average => L_Trend_Avg,
+1103:     VO_Min => L_Trend_Min,
+1104:     VO_Max => L_Trend_Max,
+1105:     VO_Trend_Up => L_Trend_Up,
+1106:     VO_Trend_Down => L_Trend_Down
+1110: // === TREND → HISTORY WRITE (EDGE, SAFE MVP) ===
+1111: L_Trend_Write := (L_Trend_Data.record_count > 0);
+1113: IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
+1114:     L_Trend_Event.event_code := 1001;
+1115:     IF L_Trend_Data.record_count > 0 THEN
+1116:         L_Trend_Event.event_value := L_Trend_Avg;
+1118:         L_Trend_Event.event_value := 0.0;
+1120:     L_Trend_Event.zone_id := 0;
+1121:     L_Trend_Event.operator_id := '';
+1123:     L_History_Event := L_Trend_Event;
+1126: L_Trend_Write_Prev := L_Trend_Write;
+
+history_bridge_lines:
+70:     L_History_Event : ST_History_Record;
+71:     L_History_Write_Event : BOOL;
+812: L_History_Write_Event := FALSE;
+813: L_History_Event.timestamp_ms := GVL_STATUS.G_System_Time_MS;
+814: L_History_Event.event_code := 0;
+815: L_History_Event.event_value := 0.0;
+816: L_History_Event.unit := 0;
+817: L_History_Event.zone_id := 0;
+818: L_History_Event.operator_id := 'SYSTEM';
+819: L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+822:     L_History_Write_Event := TRUE;
+823:     L_History_Event.event_code := 1101; // System mode transition
+824:     L_History_Event.event_value := TO_REAL(TO_INT(GVL_STATE.G_System_Mode));
+825:     L_History_Event.unit := 1; // system mode domain
+826:     L_History_Event.zone_id := 0;
+828:         L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+830:         L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+835:     L_History_Write_Event := TRUE;
+836:     L_History_Event.event_code := 1102; // Root cause changed
+837:     L_History_Event.event_value := TO_REAL(TO_INT(fbSystemHealth.VO_Root_Cause));
+838:     L_History_Event.unit := 2; // root cause enum domain
+839:     L_History_Event.zone_id := TO_BYTE(fbSystemHealth.VO_First_Fault_Source);
+840:     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+844:     L_History_Write_Event := TRUE;
+845:     L_History_Event.event_code := 1103; // First fault source changed
+846:     L_History_Event.event_value := TO_REAL(fbSystemHealth.VO_First_Fault_Source);
+847:     L_History_Event.unit := 3; // root cause source domain
+848:     L_History_Event.zone_id := TO_BYTE(fbSystemHealth.VO_First_Fault_Source);
+849:     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+853:     L_History_Write_Event := TRUE;
+854:     L_History_Event.event_code := 1001; // Scenario transition
+855:     L_History_Event.event_value := TO_REAL(GVL_STATUS.G_Current_Scenario);
+856:     L_History_Event.unit := 4; // scenario domain
+857:     L_History_Event.zone_id := 0;
+858:     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+870:     L_History_Write_Event := TRUE;
+871:     L_History_Event.event_code := TO_WORD(GVL_STATUS.G_Diagnostics.Alarm_Event_Code);
+872:     L_History_Event.event_value := GVL_STATUS.G_Diagnostics.Alarm_Event_Value;
+873:     L_History_Event.unit := 10; // alarm lifecycle domain
+874:     L_History_Event.zone_id := 0;
+875:     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+878:     L_History_Write_Event := TRUE;
+879:     L_History_Event.event_code := 1301; // Operator journal event
+880:     L_History_Event.event_value := TO_REAL(GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq);
+881:     L_History_Event.unit := 20; // operator journal domain
+882:     L_History_Event.zone_id := 0;
+883:     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
+888: IF L_History_Write_Event THEN
+889:     IF (L_History_Event.event_code = L_Last_Event_Code)
+890:        AND (ABS(L_History_Event.event_value - L_Last_Event_Value) < 0.001)
+892:         L_History_Write_Event := FALSE;
+894:         L_Last_Event_Code := L_History_Event.event_code;
+895:         L_Last_Event_Value := L_History_Event.event_value;
+902:     VI_Write_Event := L_History_Write_Event,
+903:     VI_Event := L_History_Event
+1122:     L_History_Write_Event := TRUE;
+1123:     L_History_Event := L_Trend_Event;
+
+--- FILE: FB_Trend_Logger.st ---
+exists=True
+line_count=33
+preview:
+FUNCTION_BLOCK FB_Trend_Logger
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Config : ST_Trend_Config;
+    VI_Current_Value : REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Data : ST_Trend_Data;
+END_VAR
+VAR
+    L_Last_Log_Time : UDINT;
+    L_Last_Value : REAL;
+    L_Deviation : REAL;
+END_VAR
+
+IF NOT VI_Config.enabled THEN RETURN; END_IF;
+
+// Логирование по изменению (Deadband) или по времени (раз в час)
+L_Deviation := ABS(VI_Current_Value - L_Last_Value);
+IF (L_Deviation >= (L_Last_Value * VI_Config.deviation_threshold_percent / 100.0)) OR 
+   ((SEL(VI_System_Time_MS >= L_Last_Log_Time, VI_System_Time_MS - L_Last_Log_Time, (4294967295 - L_Last_Log_Time) + VI_System_Time_MS + 1)) >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
+    
+    // Запись в массив
+    VO_Data.write_index := (VO_Data.record_count MOD 100) + 1;
+    VO_Data.values[VO_Data.write_index] := VI_Current_Value;
+    VO_Data.timestamps[VO_Data.write_index] := VI_System_Time_MS;
+
+    VO_Data.record_count := VO_Data.record_count + 1;
+    VO_Data.sum_values := VO_Data.sum_values + VI_Current_Value;
+    
+    L_Last_Value := VI_Current_Value;
+    L_Last_Log_Time := VI_System_Time_MS;
+END_IF;
+
+--- FILE: FB_Trend_Analyzer.st ---
+exists=True
+line_count=37
+preview:
+FUNCTION_BLOCK FB_Trend_Analyzer
+VAR_INPUT
+    VI_Count      : INT;
+END_VAR
+VAR_IN_OUT
+    VI_Data       : ARRAY[1..GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Average    : REAL;
+    VO_Max        : REAL;
+    VO_Min        : REAL;
+    VO_Trend_Up   : BOOL;
+    VO_Trend_Down : BOOL;
+END_VAR
+VAR
+    L_i   : INT;
+    L_Sum : REAL;
+END_VAR
+
+IF VI_Count > 0 AND VI_Count <= GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS THEN
+    VO_Max := VI_Data[1];
+    VO_Min := VI_Data[1];
+    L_Sum := 0.0;
+    
+    FOR L_i := 1 TO VI_Count DO
+        IF VI_Data[L_i] > VO_Max THEN VO_Max := VI_Data[L_i]; END_IF;
+        IF VI_Data[L_i] < VO_Min THEN VO_Min := VI_Data[L_i]; END_IF;
+        L_Sum := L_Sum + VI_Data[L_i];
+    END_FOR;
+    
+    VO_Average := L_Sum / INT_TO_REAL(VI_Count);
+    
+    IF VI_Count >= 2 THEN
+        VO_Trend_Up := (VI_Data[VI_Count] > VI_Data[1]);
+        VO_Trend_Down := (VI_Data[VI_Count] < VI_Data[1]);
+    END_IF;
+END_IF;
+
+--- FILE: FB_Trend_Adapter.st ---
+exists=True
+line_count=49
+preview:
+FUNCTION_BLOCK FB_Trend_Adapter
+VAR_INPUT
+    VI_Data : ST_Trend_Data;
+END_VAR
+
+VAR_OUTPUT
+    VO_Average : REAL;
+    VO_Min : REAL;
+    VO_Max : REAL;
+    VO_Trend_Up : BOOL;
+    VO_Trend_Down : BOOL;
+END_VAR
+
+VAR
+    fbAnalyzer : FB_Trend_Analyzer;
+    L_Data_Copy : ARRAY[1..GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS] OF REAL;
+    L_Count : INT;
+    L_i : INT;
+END_VAR
+
+// Normalize count to analyzer bounds
+L_Count := UDINT_TO_INT(VI_Data.record_count);
+IF L_Count < 0 THEN
+    L_Count := 0;
+END_IF;
+IF L_Count > GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS THEN
+    L_Count := GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS;
+END_IF;
+
+// Copy source values into analyzer-compatible buffer
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS DO
+    L_Data_Copy[L_i] := 0.0;
+END_FOR;
+
+IF L_Count > 0 THEN
+    FOR L_i := 1 TO L_Count DO
+        L_Data_Copy[L_i] := VI_Data.values[L_i];
+    END_FOR;
+END_IF;
+
+...
+
+--- FILE: ST_Trend_Config.dut ---
+exists=True
+line_count=10
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_Config :
+STRUCT
+    param_type : BYTE; // E_Trend_Parameter_Type
+    zone_id : BYTE;
+    enabled : BOOL;
+    deviation_threshold_percent : REAL := 10.0;
+    history_days : UDINT := 7;
+END_STRUCT
+END_TYPE
+
+--- FILE: ST_Trend_Data.dut ---
+exists=True
+line_count=12
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_Data :
+STRUCT
+    config : ST_Trend_Config;
+    record_count : UDINT;
+    write_index : UDINT;
+    sum_values : REAL;
+    values : ARRAY[1..100] OF REAL;
+    timestamps : ARRAY[1..100] OF UDINT;
+    crc32 : DWORD;
+END_STRUCT
+END_TYPE
+
+--- FILE: ST_Trend_Header.dut ---
+exists=True
+line_count=11
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_Header :
+STRUCT
+    parameter_type : BYTE; // E_Trend_Parameter_Type
+    zone_id : BYTE := 0;
+    records_count : UDINT := 0;
+    average_value : REAL := 0.0;
+    min_value : REAL := 0.0;
+    max_value : REAL := 0.0;
+END_STRUCT
+END_TYPE
+
+--- FILE: ST_Trend_History_Record.dut ---
+exists=True
+line_count=7
+preview:
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_History_Record :
+STRUCT
+    timestamp_ms : UDINT := 0;
+    value : REAL := 0.0;
+END_STRUCT
+END_TYPE
+
+--- FILE: E_Trend_Parameter_Type.dut ---
+exists=True
+line_count=12
+preview:
+{attribute 'strict'}
+TYPE E_Trend_Parameter_Type :
+(
+    TREND_PARAM_NONE := 0,
+    TREND_PARAM_TEMP_AIR := 1,
+    TREND_PARAM_TEMP_FLOOR := 2,
+    TREND_PARAM_PRESSURE := 3,
+    TREND_PARAM_PUMP_CURRENT := 4,
+    TREND_PARAM_GAS_METHANE := 5,
+    TREND_PARAM_GAS_CO := 6
+) USINT;
+END_TYPE
+
+=== SIMPLE FINDINGS ===
+has_trend_logger_instance=True
+has_trend_adapter_instance=True
+has_direct_trend_analyzer_call=False
+has_adapter_call=True
+has_trend_history_bridge=True
+has_duplicate_avg_decl=False
+has_duplicate_min_decl=False
+has_duplicate_max_decl=False
+has_duplicate_up_decl=False
+has_duplicate_down_decl=False
+
+=== END STEP 160 ===
