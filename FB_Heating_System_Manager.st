@@ -61,12 +61,6 @@ END_VAR
 
 VAR
     // Heating V2 staging layer
-    L_Heating_V2_Command_V2 : ST_Heating_Command_V2;
-    L_Heating_V2_State_V2 : ST_Heating_State_V2;
-    L_Heating_V2_Shadow_Diff_Found : BOOL;
-    L_Heating_V2_Switch_Enabled : BOOL;
-    L_Heating_V2_Path_Ready : BOOL;
-    L_Heating_Using_Legacy_Fallback : BOOL;
 
     L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
     L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
@@ -148,10 +142,6 @@ GVL_STATE.G_Heating_Sensor_Fault := FALSE;
 GVL_STATE.G_Heating_Subsystem_Degraded := FALSE;
 L_Any_Sensor_Error := FALSE;
 L_Any_Subsystem_Degraded := FALSE;
-L_Heating_V2_Shadow_Diff_Found := FALSE;
-L_Heating_V2_Switch_Enabled := TRUE;
-L_Heating_V2_Path_Ready := FALSE;
-L_Heating_Using_Legacy_Fallback := TRUE;
 
 // 0. Аварийный стоп от подсистемы безопасности
 VO_Backup_Circulation_Pump := FALSE;
@@ -693,40 +683,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     VO_Boiler_Status[L_i].Running := VI_Boiler_Flame_Status[L_i];
 END_FOR;
 GVL_STATE.G_Heating_Subsystem_Degraded := L_Any_Subsystem_Degraded;
-
-// ========================================
-// Heating V2 shadow execution (phase2)
-// Inlined from FB_Heating_V2_Staging
-// ========================================
-L_Heating_V2_Command_V2.Valve_Position_Setpoint := VO_Manifold_Valves[1];
-L_Heating_V2_State_V2.Room_Temp := VI_Room_Temps[1];
-L_Heating_V2_State_V2.Supply_Temp := VI_Manifold_Temps_Supply[1];
-
-// Heating V2 staging validation
-IF ABS(VO_Manifold_Valves[1] - L_Heating_V2_Command_V2.Valve_Position_Setpoint) > 0.1 THEN
-    L_Heating_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(VI_Room_Temps[1] - L_Heating_V2_State_V2.Room_Temp) > 0.1 THEN
-    L_Heating_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(VI_Manifold_Temps_Supply[1] - L_Heating_V2_State_V2.Supply_Temp) > 0.1 THEN
-    L_Heating_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-// Guarded Heating V2 enable
-IF L_Heating_V2_Switch_Enabled THEN
-    IF NOT L_Heating_V2_Shadow_Diff_Found THEN
-        L_Heating_V2_Path_Ready := TRUE;
-        L_Heating_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_Heating_V2_Path_Ready := FALSE;
-        L_Heating_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_Heating_V2_Path_Ready := FALSE;
-    L_Heating_Using_Legacy_Fallback := TRUE;
-END_IF;
-
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_System_Manager <<<
