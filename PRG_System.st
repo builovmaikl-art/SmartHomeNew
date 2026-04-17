@@ -680,7 +680,7 @@ fbScenarioGuard(
 );
 
 IF NOT fbScenarioGuard.VO_Transition_Allowed THEN
-    GVL_STATUS.G_Diagnostics.HMI_Last_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
+    GVL_GATEWAY.G_Gateway_HMI_Status_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
     L_Scenario_Intent := GVL_STATUS.G_Current_Scenario;
 END_IF;
 
