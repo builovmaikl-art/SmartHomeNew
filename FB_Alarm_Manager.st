@@ -210,29 +210,18 @@ FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     END_IF;
 END_FOR;
 
-// Shadow comparison: execute Alarm V2 core on a separate shadow list.
-// Legacy path remains authoritative; this is diagnostics only.
+// Shadow comparison: Alarm V2 core is currently a no-op.
+// Inlined from FB_Alarm_V2_Core
 IF L_Alarm_V2_Shadow_Compare_Enabled THEN
-    fbAlarmV2Core(
-        VI_System_Time_MS := VI_System_Time_MS,
-        VI_Pending_Alarms := L_Pending_Alarms,
-        VIO_Alarm_List := L_Alarm_V2_List_Shadow,
-        VIO_Next_Alarm_ID := L_Alarm_V2_Next_ID_Shadow,
-        VO_Event_Pulse => L_Alarm_V2_Event_Pulse,
-        VO_Event_Code => L_Alarm_V2_Event_Code,
-        VO_Event_Value => L_Alarm_V2_Event_Value
-    );
+    L_Alarm_V2_Event_Pulse := FALSE;
+    L_Alarm_V2_Event_Code := 0;
+    L_Alarm_V2_Event_Value := 0.0;
 END_IF;
 
-// Staging integration: Alarm V2 core is called behind the phase-4 switch scaffold.
-// Current state: switch remains disabled, so legacy path stays authoritative.
+// Staging integration: Alarm V2 core is currently a no-op.
+// Inlined from FB_Alarm_V2_Core
 IF L_Alarm_V2_Switch_Enabled AND L_Alarm_V2_Path_Ready THEN
-    fbAlarmV2Core(
-        VI_System_Time_MS := VI_System_Time_MS,
-        VI_Pending_Alarms := L_Pending_Alarms,
-        VIO_Alarm_List := VO_Alarm_List,
-        VIO_Next_Alarm_ID := VIO_Next_Alarm_ID
-    );
+    // No runtime mutation in current V2 core.
 END_IF;
 
 // Обработка очереди новых тревог с учетом приоритетов
