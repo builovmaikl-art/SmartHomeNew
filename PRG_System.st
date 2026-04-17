@@ -1,6 +1,10 @@
 PROGRAM PRG_System
 VAR
 
+    // === TREND WRITE CONTROL ===
+    L_Trend_Write : BOOL;
+    L_Trend_Write_Prev : BOOL;
+
     // === TREND → HISTORY BRIDGE ===
     L_Trend_Event : ST_History_Record;
     L_Trend_Write : BOOL;
