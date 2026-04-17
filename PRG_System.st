@@ -1080,58 +1080,33 @@ GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
 GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 
 
-// === TREND EXECUTION (MVP) ===
+// === TREND EXECUTION (SAFE MVP) ===
+L_Trend_Data.config.param_type := 1;
+L_Trend_Data.config.zone_id := 0;
+L_Trend_Data.config.enabled := TRUE;
+L_Trend_Data.config.deviation_threshold_percent := 1.0;
+L_Trend_Data.config.history_days := 1;
+
 L_Trend_Logger(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Config := (
-        param_type := 1,
-        zone_id := 0,
-        enabled := TRUE,
-        deviation_threshold_percent := 1.0,
-        history_days := 1
-    ),
+    VI_Config := L_Trend_Data.config,
     VI_Current_Value := GVL_STATE.G_Outdoor_Temp
 );
 
 L_Trend_Data := L_Trend_Logger.VO_Data;
 
-L_Trend_Analyzer(
-    VI_Count := INT(L_Trend_Data.record_count),
-    VI_Data := L_Trend_Data.values,
-    VO_Average => L_Trend_Average,
-    VO_Max => L_Trend_Max,
-    VO_Min => L_Trend_Min,
-    VO_Trend_Up => L_Trend_Up,
-    VO_Trend_Down => L_Trend_Down
-);
-
-// === TREND → HISTORY WRITE (EDGE, EXTENDED METRICS) ===
+// === TREND → HISTORY WRITE (EDGE, SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
 
 IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
     L_Trend_Event.event_code := 1001;
-    L_Trend_Event.event_value := L_Trend_Average;
+    IF L_Trend_Data.record_count > 0 THEN
+        L_Trend_Event.event_value := L_Trend_Data.sum_values / UDINT_TO_REAL(L_Trend_Data.record_count);
+    ELSE
+        L_Trend_Event.event_value := 0.0;
+    END_IF;
     L_Trend_Event.zone_id := 0;
     L_Trend_Event.operator_id := '';
-
-    IF L_Trend_Min < L_Trend_Average THEN
-        L_Trend_Event.event_code := 1002;
-        L_Trend_Event.event_value := L_Trend_Min;
-    END_IF;
-
-    IF L_Trend_Max > L_Trend_Average THEN
-        L_Trend_Event.event_code := 1003;
-        L_Trend_Event.event_value := L_Trend_Max;
-    END_IF;
-
-    IF L_Trend_Up THEN
-        L_Trend_Event.event_code := 1004;
-        L_Trend_Event.event_value := 1.0;
-    ELSIF L_Trend_Down THEN
-        L_Trend_Event.event_code := 1005;
-        L_Trend_Event.event_value := -1.0;
-    END_IF;
-
     L_History_Write_Event := TRUE;
     L_History_Event := L_Trend_Event;
 END_IF;
