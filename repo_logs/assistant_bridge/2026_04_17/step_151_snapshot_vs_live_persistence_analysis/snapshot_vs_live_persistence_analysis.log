@@ -1,0 +1,353 @@
+]633;E;echo "=== RUN STEP 151 ===";1082d7f0-2e56-44f1-a435-9222cac375b7]633;C=== RUN STEP 151 ===
+=== STEP 151: SNAPSHOT VS LIVE PERSISTENCE ANALYSIS ===
+
+--- FB_State_Snapshot_Manager.st ---
+token_count=13
+
+--- FB_State_Snapshot_NVRAM.st ---
+token_count=34
+
+--- ST_State_Snapshot.dut ---
+token_count=13
+
+--- FB_History_Manager.st ---
+token_count=15
+
+--- FB_BlackBox_Recorder.st ---
+token_count=15
+
+--- FB_NVRAM_Manager.st ---
+token_count=37
+
+--- FB_Redundancy_Manager.st ---
+token_count=36
+
+--- FB_State_Replication.st ---
+token_count=22
+
+--- ST_History_Record.dut ---
+token_count=10
+
+--- ST_System_State_Snapshot.dut ---
+token_count=18
+
+--- GVL_Retain.gvl ---
+token_count=33
+
+=== OVERLAP TOKENS ===
+8
+['ELSIF', 'E_SCENARIO_TYPE', 'GVL_CONSTANTS', 'SIZEOF', 'VI_System_Time_MS', 'VO_Error', 'operator_id', 'timestamp_ms']
+
+=== SNAPSHOT-ONLY TOKENS ===
+47
+['CAA_File', 'C_MAX_HEATING_CIRCUITS', 'C_MAX_LIGHTING_ZONES', 'C_MAX_STATE_SNAPSHOTS', 'Close', 'FB_State_Snapshot_Manager', 'FB_State_Snapshot_NVRAM', 'FILE', 'HANDLE', 'L_FileHandle', 'L_FileName', 'L_Snapshot_Buffer', 'L_State', 'L_Write_Idx', 'MODE', 'MWRITE', 'Open', 'SCENARIO_NONE', 'ST_State_Snapshot', 'VI_Current_State', 'VI_Event_Code', 'VI_Save_Req', 'VI_Snapshot', 'VI_Trigger_Event', 'VO_Saved', 'VO_Snapshot_Saved', 'Write', 'alarm_active', 'crc32', 'eFileMode', 'fbFileClose', 'fbFileOpen', 'fbFileWrite', 'floor_heating_setpoints', 'hFile', 'home', 'lighting_levels', 'pBuffer', 'root', 'sFileName', 'scenario_id', 'snapshot', 'szSize', 'trigger_event_code', 'xDone', 'xError', 'xExecute']
+
+=== LIVE-ONLY TOKENS ===
+137
+['A1B2C3D4', 'ACTIVE', 'ALERT_PRIORITY_NONE', 'Active', 'Active_Alarms', 'BULK_SYNC_ANCHOR', 'Blinds_Positions', 'CONSTANT', 'CRC32', 'C_MAX_ACCESS_CODES', 'C_MAX_BLACKBOX_RECORDS', 'C_MAX_BLINDS', 'C_MAX_BOILERS', 'C_MAX_HISTORY_RECORDS', 'C_MAX_MANIFOLDS', 'C_MAX_NVRAM_SIZE', 'C_MAX_PRESENCE_HISTORY', 'C_MAX_SOCKETS', 'Current_Scenario', 'E5F67890', 'EXIT', 'E_ALERT_PRIORITY', 'E_PLC_ROLE', 'F4DBDF21', 'FB_BlackBox_Recorder', 'FB_History_Manager', 'FB_NVRAM_Manager', 'FB_PLC_Heartbeat', 'FB_Redundancy_Manager', 'FB_State_Replication', 'FB_System_Timer', 'GVL_Retain', 'G_Access_Codes', 'G_BlackBox_Buffer', 'G_BlackBox_Frozen', 'G_BlackBox_LastIndex', 'G_Boiler_Accumulated_MS', 'G_Boiler_Work_Seconds', 'G_History_Buffer', 'G_History_Total_Events', 'G_History_Write_Idx', 'G_Initialized', 'G_NVRAM_Data', 'G_Presence_History', 'G_RFID_Tags', 'G_Valve_Test_Results', 'Gas_Valve_Closed', 'Heartbeat', 'L_Data_Changed', 'L_Elapsed_Time', 'L_Heartbeat', 'L_Initialized', 'L_Last_Sync_Time', 'L_Last_Write_Time_MS', 'L_Periodic_Sync_Req', 'L_Prev_Role', 'L_Prev_Write_Event', 'L_Pulse_State', 'L_Pulse_Timer', 'L_State_Replicator', 'L_Sync_In_Progress', 'L_Write_Index', 'L_cmd_rising', 'L_pData', 'L_prev_Command', 'Lighting_States', 'Logic', 'Manifold_Pumps', 'NVRAM', 'POINTER', 'READ', 'REFERENCE', 'RETAIN', 'RFID', 'ROLE_ACTIVE', 'ROLE_STANDBY', 'Replication', 'STANDBY', 'ST_BlackBox_Record', 'ST_History_Record', 'ST_System_State_Snapshot', 'Security_Armed', 'Socket_States', 'Standby', 'State', 'System_Time_MS', 'VAR_GLOBAL', 'VI_Command', 'VI_Current_Data', 'VI_DataRef', 'VI_DataSize', 'VI_Event', 'VI_Freeze', 'VI_Gateway_Ping_OK', 'VI_IsActivePLC', 'VI_Local_ID', 'VI_Local_PLC_ID', 'VI_Local_Role', 'VI_Local_State', 'VI_Offset', 'VI_Operator_ID', 'VI_Remote_Is_Active', 'VI_Remote_Pulse', 'VI_Remote_State', 'VI_Sync_Req', 'VI_System_Time', 'VI_TwoPersonConfirmation', 'VI_Write_Event', 'VO_Done', 'VO_ErrorID', 'VO_Frozen', 'VO_HMI_Status_Message', 'VO_Is_Active', 'VO_Local_Pulse', 'VO_Local_Role', 'VO_ReadDataRef', 'VO_Records_Count', 'VO_State_Updated', 'VO_Status_Msg', 'VO_Sync_Data_Req']
+
+=== SNAPSHOT GAP SIGNALS ===
+CAA_File
+C_MAX_LIGHTING_ZONES
+C_MAX_STATE_SNAPSHOTS
+FB_State_Snapshot_Manager
+FB_State_Snapshot_NVRAM
+FILE
+L_FileHandle
+L_FileName
+L_Snapshot_Buffer
+L_Write_Idx
+ST_State_Snapshot
+VI_Event_Code
+VI_Snapshot
+VI_Trigger_Event
+VO_Saved
+VO_Snapshot_Saved
+crc32
+eFileMode
+fbFileClose
+fbFileOpen
+fbFileWrite
+floor_heating_setpoints
+hFile
+lighting_levels
+sFileName
+scenario_id
+snapshot
+trigger_event_code
+
+=== LIVE COVERAGE SIGNALS ===
+VI_System_Time_MS
+timestamp_ms
+
+=== FILE PREVIEWS ===
+--- FB_State_Snapshot_Manager.st ---
+FUNCTION_BLOCK FB_State_Snapshot_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Trigger_Event  : BOOL; // Сигнал на создание снимка
+    VI_Event_Code     : WORD;
+    VI_Current_State  : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Snapshot_Saved : BOOL;
+END_VAR
+VAR
+    L_Snapshot_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot;
+    L_Write_Idx       : INT := 1;
+END_VAR
+
+IF VI_Trigger_Event THEN
+    L_Snapshot_Buffer[L_Write_Idx] := VI_Current_State;
+    L_Snapshot_Buffer[L_Write_Idx].timestamp_ms := VI_System_Time_MS;
+    L_Snapshot_Buffer[L_Write_Idx].trigger_event_code := VI_Event_Code;
+    
+    L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
+    VO_Snapshot_Saved := TRUE;
+ELSE
+    VO_Snapshot_Saved := FALSE;
+END_IF;
+
+--- FB_State_Snapshot_NVRAM.st ---
+FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Save_Req       : BOOL;
+    VI_Snapshot       : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Saved          : BOOL;
+    VO_Error          : BOOL;
+END_VAR
+VAR
+    L_FileName        : STRING := '/home/root/snapshot.bin';
+    L_State           : INT := 0;
+    
+    // Асинхронные блоки из библиотеки CAA_File
+    fbFileOpen        : FILE.Open;
+    fbFileWrite       : FILE.Write;
+    fbFileClose       : FILE.Close;
+    L_FileHandle      : FILE.HANDLE;
+END_VAR
+
+CASE L_State OF
+    0: // Ожидание
+        VO_Saved := FALSE;
+        VO_Error := FALSE;
+...
+
+--- ST_State_Snapshot.dut ---
+{attribute 'pack_mode' := '1'}
+TYPE ST_State_Snapshot :
+STRUCT
+    timestamp_ms : UDINT := 0;
+    operator_id : STRING(10) := '';
+    scenario_id : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    lighting_levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHTING_ZONES] OF BYTE;
+    floor_heating_setpoints : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    alarm_active : BOOL := FALSE;
+    crc32 : DWORD := 0;
+END_STRUCT
+END_TYPE
+
+--- FB_History_Manager.st ---
+FUNCTION_BLOCK FB_History_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Write_Event    : BOOL;
+    VI_Event          : ST_History_Record;
+END_VAR
+VAR_OUTPUT
+    VO_Total_Events   : UDINT;
+END_VAR
+VAR
+    L_Prev_Write_Event : BOOL;
+END_VAR
+
+IF VI_Write_Event AND NOT L_Prev_Write_Event THEN
+    GVL_Retain.G_History_Buffer[GVL_Retain.G_History_Write_Idx] := VI_Event;
+    GVL_Retain.G_History_Buffer[GVL_Retain.G_History_Write_Idx].timestamp_ms := VI_System_Time_MS;
+    
+    GVL_Retain.G_History_Write_Idx := (GVL_Retain.G_History_Write_Idx MOD GVL_CONSTANTS.C_MAX_HISTORY_RECORDS) + 1;
+    GVL_Retain.G_History_Total_Events := GVL_Retain.G_History_Total_Events + 1;
+END_IF;
+L_Prev_Write_Event := VI_Write_Event;
+
+VO_Total_Events := GVL_Retain.G_History_Total_Events;
+// >>> BULK_SYNC_ANCHOR: FB_History_Manager <<<
+
+--- FB_BlackBox_Recorder.st ---
+FUNCTION_BLOCK FB_BlackBox_Recorder
+VAR_INPUT
+    VI_Current_Data : ST_BlackBox_Record;
+    VI_Freeze       : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Frozen       : BOOL;
+    VO_Records_Count: INT;
+END_VAR
+VAR
+    L_Write_Index   : INT := 0;
+    L_Initialized   : BOOL := FALSE;
+END_VAR
+
+IF NOT L_Initialized THEN
+    L_Write_Index := GVL_Retain.G_BlackBox_LastIndex;
+    IF L_Write_Index < 0 OR L_Write_Index >= GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS THEN
+        L_Write_Index := 0;
+        GVL_Retain.G_BlackBox_LastIndex := 0;
+    END_IF;
+    L_Initialized := TRUE;
+END_IF;
+
+IF VI_Freeze THEN
+    GVL_Retain.G_BlackBox_Frozen := TRUE;
+...
+
+--- FB_NVRAM_Manager.st ---
+FUNCTION_BLOCK FB_NVRAM_Manager
+VAR_INPUT
+    VI_Command                  : BYTE; // 1=WRITE, 2=READ
+    VI_Offset                   : UDINT; // Смещение в байтах
+    VI_DataRef                  : REFERENCE TO BYTE;
+    VI_DataSize                 : UDINT; // КРИТИЧНО: используем этот размер вместо SIZEOF
+    VI_System_Time_MS           : UDINT;
+    VI_Operator_ID              : STRING(10);
+    VI_IsActivePLC              : BOOL;
+    VI_TwoPersonConfirmation    : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Done                     : BOOL;
+    VO_Error                    : BOOL;
+    VO_ErrorID                  : UDINT;
+    // VO_ReadDataRef removed (REFERENCE TO not allowed in output)
+    VO_HMI_Status_Message       : STRING(200);
+END_VAR
+VAR
+    L_prev_Command              : BYTE;
+    L_cmd_rising                : BOOL;
+    L_i                         : UDINT;
+    L_Last_Write_Time_MS        : UDINT := 0; // Время последней записи
+    L_Data_Changed              : BOOL; // Флаг изменения данных
+    L_pData                      : POINTER TO BYTE;
+...
+
+--- FB_Redundancy_Manager.st ---
+FUNCTION_BLOCK FB_Redundancy_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+    VI_Local_PLC_ID : BYTE; // 1 = ПЛК А, 2 = ПЛК B
+    VI_Remote_Pulse : BOOL; // Сигнал от партнера
+    VI_Remote_Is_Active : BOOL; // Статус партнера
+    VI_Gateway_Ping_OK : BOOL; // Пинг до шлюза
+    VI_Remote_State : ST_System_State_Snapshot; // Состояние партнера
+    VI_Local_State : ST_System_State_Snapshot; // Локальное состояние
+END_VAR
+VAR_OUTPUT
+    VO_Local_Role : E_PLC_ROLE; // Локальная роль ПЛК (Active/Standby)
+    VO_Local_Pulse : BOOL; // Локальный сигнал пульса для партнера
+    VO_Sync_Data_Req : BOOL; // Запрос на синхронизацию данных
+    VO_Status_Msg : STRING(200); // Строковое сообщение о статусе
+    VO_Synced_State : ST_System_State_Snapshot; // Синхронизированное состояние
+    VO_State_Updated : BOOL; // Флаг: Состояние было обновлено
+END_VAR
+VAR
+    L_Heartbeat : FB_PLC_Heartbeat;
+    L_Pulse_Timer : FB_System_Timer;
+    L_Pulse_State : BOOL;
+    L_Prev_Role : E_PLC_ROLE;
+    L_State_Replicator : FB_State_Replication;
+END_VAR
+...
+
+--- FB_State_Replication.st ---
+FUNCTION_BLOCK FB_State_Replication
+VAR_INPUT
+    VI_Local_Role : E_PLC_ROLE; // Локальная роль ПЛК (Active/Standby)
+    VI_Sync_Req : BOOL; // Запрос на принудительную синхронизацию
+    VI_Local_State : ST_System_State_Snapshot; // Локальное состояние системы
+    VI_Remote_State : ST_System_State_Snapshot; // Состояние системы партнера
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+END_VAR
+VAR_OUTPUT
+    VO_State_Updated : BOOL; // Флаг: Состояние было обновлено
+    VO_Synced_State : ST_System_State_Snapshot; // Синхронизированное состояние
+END_VAR
+VAR
+    L_Sync_In_Progress : BOOL;
+    L_Last_Sync_Time : UDINT;
+    L_Periodic_Sync_Req : BOOL;
+    L_Elapsed_Time : UDINT;
+END_VAR
+
+// Периодическая синхронизация (каждые 5 секунд)
+L_Elapsed_Time := (SEL(VI_System_Time_MS >= L_Last_Sync_Time, VI_System_Time_MS - L_Last_Sync_Time, (4294967295 - L_Last_Sync_Time) + VI_System_Time_MS + 1));
+
+IF L_Elapsed_Time > 5000 THEN
+    L_Periodic_Sync_Req := TRUE;
+    L_Last_Sync_Time := VI_System_Time_MS;
+...
+
+--- ST_History_Record.dut ---
+{attribute 'pack_mode' := '1'}
+TYPE ST_History_Record :
+STRUCT
+    timestamp_ms : UDINT := 0;
+    event_code : WORD := 0;
+    event_value : REAL := 0.0;
+    unit : BYTE := 0;
+    zone_id : BYTE := 0;
+    operator_id : STRING(10) := '';
+    priority : E_ALERT_PRIORITY := E_ALERT_PRIORITY.ALERT_PRIORITY_NONE;
+END_STRUCT
+END_TYPE
+
+--- ST_System_State_Snapshot.dut ---
+{attribute 'pack_mode' := '1'}
+TYPE ST_System_State_Snapshot :
+STRUCT
+    System_Time_MS : UDINT;
+    Current_Scenario : E_SCENARIO_TYPE;
+    Security_Armed : BOOL;
+    Active_Alarms : INT;
+    // Критические состояния для синхронизации
+    Zone_Valves : ARRAY[1..8] OF BOOL;
+    Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Lighting_States : ARRAY[1..32] OF BYTE;
+    Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+    Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    Gas_Valve_Closed : BOOL;
+    Water_Valves_Closed : BOOL;
+    Version : UDINT; // Версия состояния для разрешения конфликтов
+END_STRUCT
+END_TYPE
+
+--- GVL_Retain.gvl ---
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Initialized : BOOL := FALSE; // Флаг инициализации retain-переменных
+    
+    // Энергонезависимая память (NVRAM) для хранения настроек и логов
+    G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+    
+    // Буфер черного ящика (100 записей)
+    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+    G_BlackBox_LastIndex : INT;
+    G_BlackBox_Frozen : BOOL;
+    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
+    
+    // История событий
+    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+    G_History_Write_Idx : INT := 1;
+    G_History_Total_Events : UDINT;
+    
+    // Статистика котлов
+    G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    
+    // Результаты тестирования клапанов
+    G_Valve_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    
+...
+
+=== END STEP 151 ===
