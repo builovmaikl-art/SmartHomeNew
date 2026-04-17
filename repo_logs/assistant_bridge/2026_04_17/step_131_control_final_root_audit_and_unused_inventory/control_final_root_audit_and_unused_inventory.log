@@ -1,0 +1,1498 @@
+]633;E;echo "=== RUN STEP 131 ===";c91143c6-a704-4775-b84b-ecf25abd49a0]633;C=== RUN STEP 131 ===
+=== STEP 131: CONTROL FINAL ROOT AUDIT AND UNUSED INVENTORY ===
+
+=== SECTION A: CLEANUP WAVE CONTROL CHECK ===
+-- owner files --
+FB_Alarm_Manager.st
+FB_Rule_Engine.st
+FB_Socket_Manager.st
+FB_DHW_Manager.st
+FB_Ventilation_System_Manager.st
+FB_Lighting_Blinds_Manager.st
+FB_Heating_System_Manager.st
+
+-- internal scaffold residuals in owner files --
+NONE
+
+-- stale cleanup comments in owner files --
+NONE
+
+-- references to removed cleanup symbols --
+FB_Lighting_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_V2_Staging.st
+FB_Heating_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_V2_Staging.st
+FB_Ventilation_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_V2_Staging.st
+FB_Blinds_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_Blinds_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+FB_DHW_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_V2_Staging.st
+FB_Socket_V2_Staging: 2
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_V2_Staging.st
+FB_Alarm_Compatibility_Package: 2
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Compatibility_Package.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+FB_History_V2_Core: 2
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_History_V2_Core.st
+FB_BlackBox_V2_Core: 2
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_BlackBox_V2_Core.st
+FB_Alarm_V2_Core: 2
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_V2_Core.st
+FB_Rule_Compatibility_Package: 2
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Compatibility_Package.st
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+
+=== SECTION B: ROOT INVENTORY OF POSSIBLY UNUSED FILES ===
+-- root files considered --
+E_ALERT_PRIORITY.dut
+E_Debug_Log_Level.dut
+E_Gateway_Command_Type.dut
+E_Lifetime_Device_Type.dut
+E_Outdoor_Mode.dut
+E_PLC_ROLE.dut
+E_Rule_Action_Type.dut
+E_Rule_Comparison.dut
+E_Rule_Condition_Type.dut
+E_SCENARIO_SOURCE.dut
+E_SCENARIO_TYPE.dut
+E_SENSOR_TYPE.dut
+E_System_Operating_Mode.dut
+E_System_Root_Cause.dut
+E_System_Severity.dut
+E_Trend_Parameter_Type.dut
+E_TwoFactor_Method.dut
+E_VALVE_TYPE.dut
+E_VENTILATION_LOCATION.dut
+E_VENTILATION_UNIT_TYPE.dut
+E_Valve_Test_Result.dut
+E_WEATHER_COMPENSATION_METHOD.dut
+E_Zone_Access_Level.dut
+FB_AccessCode_Manager.st
+FB_Access_Control.st
+FB_Alarm_Manager.st
+FB_Analog_Validator.st
+FB_Astro_Timer.st
+FB_BlackBox_Recorder.st
+FB_Boiler_Cascade_Manager.st
+FB_Boiler_OpenTherm_Interface.st
+FB_CO_Detector.st
+FB_CRC32_Calculator.st
+FB_Calibration_Manager.st
+FB_Command_Deduplication.st
+FB_CoreKernel_Live_Observer.st
+FB_DHW_Manager.st
+FB_Debug_Logger.st
+FB_Device_Predictive_Diag.st
+FB_DryRun_Assertion_Map.st
+FB_DryRun_Simulation_Harness.st
+FB_Emergency_Valve_Open.st
+FB_Exhaust_Ventilation_Controller.st
+FB_Fault_Logger.st
+FB_FloorHeating_Controller.st
+FB_FloorHeating_Freeze_Protection.st
+FB_FloorHeating_Overheat_Protection.st
+FB_Gas_Methane_Detector.st
+FB_Gas_Smoke_Manager.st
+FB_Gas_Valve_Controller.st
+FB_Gateway_Interface.st
+FB_HMAC_SHA1.st
+FB_HMI_Interface.st
+FB_Heating_System_Manager.st
+FB_History_Manager.st
+FB_IO_Module_Watchdog.st
+FB_Lifetime_Predictor.st
+FB_Lighting_Blinds_Manager.st
+FB_LogEvent.st
+FB_Maintenance_Access.st
+FB_Manifold_Pump_Controller.st
+FB_Manual_Valve_Control.st
+FB_NVRAM_Manager.st
+FB_Outdoor_Lighting_Controller.st
+FB_PID_Controller.st
+FB_PLC_Heartbeat.st
+FB_Pre_Departure_Heating.st
+FB_Presence_Playback.st
+FB_Presence_Simulator.st
+FB_Random_Generator.st
+FB_Redundancy_Manager.st
+FB_Rule_Engine.st
+FB_SHA1.st
+FB_Safety_Manager.st
+FB_Scenario_Manager.st
+FB_Scenario_Transition_Controller.st
+FB_Scenario_Transition_Guard.st
+FB_Security_Alarm.st
+FB_Security_System_Manager.st
+FB_Sensor_Analog_Processing.st
+FB_Sensor_Calibration.st
+FB_Sensor_Calibration_Processor.st
+FB_Sensor_Distribution.st
+FB_Simulation_Manager.st
+FB_Smoke_Detector.st
+FB_Socket_Manager.st
+FB_State_Manager.st
+FB_State_Manager_MVP.st
+FB_State_Replication.st
+FB_State_Snapshot_Manager.st
+FB_State_Snapshot_NVRAM.st
+FB_Supply_Ventilation_Controller.st
+FB_System_Health.st
+FB_System_Timer.st
+FB_System_Timer_TOF.st
+FB_Trend_Analyzer.st
+FB_Trend_Logger.st
+FB_TwoFactor_Auth.st
+FB_Valve_Test.st
+FB_Valve_Test_Manager.st
+FB_Ventilation_System_Manager.st
+FB_Watchdog.st
+FB_Water_Leakage_Manager.st
+FB_Water_Valve_Controller.st
+FB_Zone_Access_Manager.st
+GVL_ALARM.gvl
+GVL_BlackBox.gvl
+GVL_COMMAND.gvl
+GVL_CONFIG.gvl
+GVL_CONSTANTS.gvl
+GVL_DEBUG.gvl
+GVL_EVENT.gvl
+GVL_GATEWAY.gvl
+GVL_HEALTH_BRIDGE.gvl
+GVL_IO.gvl
+GVL_MODBUS.gvl
+GVL_PERSISTENT.gvl
+GVL_Retain.gvl
+GVL_STATE.gvl
+GVL_STATUS.gvl
+GVL_TIME.gvl
+IValveController.st
+MAIN.st
+PRG_DryRun_TestRig.st
+PRG_Heating.st
+PRG_IO_Read.st
+PRG_IO_Write.st
+PRG_Lighting.st
+PRG_PLC_A.st
+PRG_PLC_B.st
+PRG_Safety.st
+PRG_Security.st
+PRG_System.st
+PRG_Test.st
+PRG_Ventilation.st
+ST_Alarm_Record.dut
+ST_Astro_Time.dut
+ST_BlackBox_Record.dut
+ST_BlackBox_Snapshot_V2.dut
+ST_Blinds_Command_V2.dut
+ST_Blinds_State_V2.dut
+ST_Boiler_Status.dut
+ST_Component_Maintenance.dut
+ST_DHW_Command_V2.dut
+ST_DHW_Config.dut
+ST_DHW_State_V2.dut
+ST_DHW_Status.dut
+ST_Debug_Log_Record.dut
+ST_Debug_Logger_Config.dut
+ST_Device_Health.dut
+ST_EVENT.dut
+ST_Flood_Config.dut
+ST_Flood_Global_Config.dut
+ST_FloorHeating_Circuit_Config.dut
+ST_FloorHeating_Global_Config.dut
+ST_FloorHeating_Manifold_Config.dut
+ST_Gas_Valve_Configuration.dut
+ST_Gateway_Command.dut
+ST_Heating_Command_V2.dut
+ST_Heating_Config.dut
+ST_Heating_State_V2.dut
+ST_History_Event_V2.dut
+ST_History_Record.dut
+ST_Lifetime_Status.dut
+ST_Lighting_Command_V2.dut
+ST_Lighting_State_V2.dut
+ST_Maintenance_Access_Config.dut
+ST_Manifold_Status.dut
+ST_Operator_Zone_Rights.dut
+ST_Outdoor_Zone_Config.dut
+ST_Owen_Analog_Value.dut
+ST_Rule.dut
+ST_Rule_Action.dut
+ST_Scenario_Config.dut
+ST_Scenario_Transition_Config.dut
+ST_Security_Global_Config.dut
+ST_Security_Zone_State.dut
+ST_Sensor_Calibration_Record.dut
+ST_Socket_Command_V2.dut
+ST_Socket_State_V2.dut
+ST_State_Snapshot.dut
+ST_System_Diagnostics.dut
+ST_System_State_Snapshot.dut
+ST_System_State_Summary.dut
+ST_Tariff_Config.dut
+ST_Trend_Config.dut
+ST_Trend_Data.dut
+ST_Trend_Header.dut
+ST_Trend_History_Record.dut
+ST_TwoFactor_Auth_State.dut
+ST_TwoFactor_Data.dut
+ST_User_Rule.dut
+ST_Valve_Test_Config.dut
+ST_Ventilation_Command_V2.dut
+ST_Ventilation_Config.dut
+ST_Ventilation_Global_Config.dut
+ST_Ventilation_Scenario_Mode.dut
+ST_Ventilation_State_V2.dut
+ST_Ventilation_Unit.dut
+ST_Ventilation_Unit_Config.dut
+ST_Zone_Sensors.dut
+
+-- per-file symbol reference inventory (excluding self-file) --
+E_ALERT_PRIORITY.dut | type=.dut | symbol=E_ALERT_PRIORITY | external_refs=19
+  FB_Alarm_Manager.st
+  PRG_System.st
+  ST_Alarm_Record.dut
+  ST_History_Record.dut
+  snapshots/project_clean_state_2026_04_16/E_ALERT_PRIORITY.dut
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/ST_Alarm_Record.dut
+  snapshots/project_clean_state_2026_04_16/ST_History_Record.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/alarm/ST_Alarm_Core_Record_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/alarm/ST_Alarm_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox/ST_History_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/ST_History_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/alarm/ST_Alarm_Core_Record_V2.dut
+  workspace/dut_rebuild/alarm/ST_Alarm_Event_V2.dut
+  workspace/dut_rebuild/history_blackbox/ST_History_Event_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/ST_History_Event_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+E_Debug_Log_Level.dut | type=.dut | symbol=E_Debug_Log_Level | external_refs=5
+  FB_Debug_Logger.st
+  ST_Debug_Log_Record.dut
+  snapshots/project_clean_state_2026_04_16/E_Debug_Log_Level.dut
+  snapshots/project_clean_state_2026_04_16/FB_Debug_Logger.st
+  snapshots/project_clean_state_2026_04_16/ST_Debug_Log_Record.dut
+E_Gateway_Command_Type.dut | type=.dut | symbol=E_Gateway_Command_Type | external_refs=7
+  FB_Command_Deduplication.st
+  FB_Gateway_Interface.st
+  ST_Gateway_Command.dut
+  snapshots/project_clean_state_2026_04_16/E_Gateway_Command_Type.dut
+  snapshots/project_clean_state_2026_04_16/FB_Command_Deduplication.st
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/ST_Gateway_Command.dut
+E_Lifetime_Device_Type.dut | type=.dut | symbol=E_Lifetime_Device_Type | external_refs=1
+  snapshots/project_clean_state_2026_04_16/E_Lifetime_Device_Type.dut
+E_Outdoor_Mode.dut | type=.dut | symbol=E_Outdoor_Mode | external_refs=1
+  snapshots/project_clean_state_2026_04_16/E_Outdoor_Mode.dut
+E_PLC_ROLE.dut | type=.dut | symbol=E_PLC_ROLE | external_refs=9
+  FB_Gateway_Interface.st
+  FB_Redundancy_Manager.st
+  FB_State_Replication.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/E_PLC_ROLE.dut
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Replication.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+E_Rule_Action_Type.dut | type=.dut | symbol=E_Rule_Action_Type | external_refs=21
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Socket_Manager.st
+  FB_Ventilation_System_Manager.st
+  PRG_System.st
+  ST_Rule_Action.dut
+  ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/E_Rule_Action_Type.dut
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/ST_Rule_Action.dut
+  snapshots/project_clean_state_2026_04_16/ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/rule_engine/ST_Rule_Action_V2.dut
+  workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+  ... +1 more
+E_Rule_Comparison.dut | type=.dut | symbol=E_Rule_Comparison | external_refs=7
+  FB_Rule_Engine.st
+  ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/E_Rule_Comparison.dut
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+  snapshots/project_clean_state_2026_04_16/ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/rule_engine/ST_Rule_Condition_V2.dut
+  workspace/dut_rebuild/rule_engine/ST_Rule_Condition_V2.dut
+E_Rule_Condition_Type.dut | type=.dut | symbol=E_Rule_Condition_Type | external_refs=9
+  FB_Rule_Engine.st
+  ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/E_Rule_Condition_Type.dut
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+  snapshots/project_clean_state_2026_04_16/ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+  workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+E_SCENARIO_SOURCE.dut | type=.dut | symbol=E_SCENARIO_SOURCE | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/E_SCENARIO_SOURCE.dut
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+E_SCENARIO_TYPE.dut | type=.dut | symbol=E_SCENARIO_TYPE | external_refs=32
+  FB_Gateway_Interface.st
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Scenario_Manager.st
+  FB_Scenario_Transition_Guard.st
+  FB_Simulation_Manager.st
+  FB_Socket_Manager.st
+  FB_Ventilation_System_Manager.st
+  GVL_COMMAND.gvl
+  GVL_STATUS.gvl
+  PRG_System.st
+  ST_Gateway_Command.dut
+  ST_Scenario_Config.dut
+  ST_Scenario_Transition_Config.dut
+  ST_State_Snapshot.dut
+  ST_System_State_Snapshot.dut
+  snapshots/project_clean_state_2026_04_16/E_SCENARIO_TYPE.dut
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  ... +12 more
+E_SENSOR_TYPE.dut | type=.dut | symbol=E_SENSOR_TYPE | external_refs=3
+  ST_Sensor_Calibration_Record.dut
+  snapshots/project_clean_state_2026_04_16/E_SENSOR_TYPE.dut
+  snapshots/project_clean_state_2026_04_16/ST_Sensor_Calibration_Record.dut
+E_System_Operating_Mode.dut | type=.dut | symbol=E_System_Operating_Mode | external_refs=30
+  DUT/ST_Persist.dut
+  FB_Access_Control.st
+  FB_DHW_Manager.st
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Scenario_Manager.st
+  FB_State_Manager.st
+  FB_Ventilation_System_Manager.st
+  GVL_PERSISTENT.gvl
+  GVL_STATE.gvl
+  PRG_Heating.st
+  PRG_Safety.st
+  PRG_System.st
+  PRG_Ventilation.st
+  ST_BlackBox_Record.dut
+  snapshots/project_clean_state_2026_04_16/E_System_Operating_Mode.dut
+  snapshots/project_clean_state_2026_04_16/FB_Access_Control.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  ... +10 more
+E_System_Root_Cause.dut | type=.dut | symbol=E_System_Root_Cause | external_refs=11
+  FB_Fault_Logger.st
+  FB_HMI_Interface.st
+  FB_State_Manager.st
+  FB_System_Health.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/E_System_Root_Cause.dut
+  snapshots/project_clean_state_2026_04_16/FB_Fault_Logger.st
+  snapshots/project_clean_state_2026_04_16/FB_HMI_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_System_Health.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+E_System_Severity.dut | type=.dut | symbol=E_System_Severity | external_refs=9
+  FB_Fault_Logger.st
+  FB_HMI_Interface.st
+  FB_State_Manager.st
+  FB_System_Health.st
+  snapshots/project_clean_state_2026_04_16/E_System_Severity.dut
+  snapshots/project_clean_state_2026_04_16/FB_Fault_Logger.st
+  snapshots/project_clean_state_2026_04_16/FB_HMI_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_System_Health.st
+E_Trend_Parameter_Type.dut | type=.dut | symbol=E_Trend_Parameter_Type | external_refs=5
+  ST_Trend_Config.dut
+  ST_Trend_Header.dut
+  snapshots/project_clean_state_2026_04_16/E_Trend_Parameter_Type.dut
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Header.dut
+E_TwoFactor_Method.dut | type=.dut | symbol=E_TwoFactor_Method | external_refs=9
+  FB_Security_System_Manager.st
+  FB_TwoFactor_Auth.st
+  ST_TwoFactor_Auth_State.dut
+  ST_TwoFactor_Data.dut
+  snapshots/project_clean_state_2026_04_16/E_TwoFactor_Method.dut
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/ST_TwoFactor_Auth_State.dut
+  snapshots/project_clean_state_2026_04_16/ST_TwoFactor_Data.dut
+E_VALVE_TYPE.dut | type=.dut | symbol=E_VALVE_TYPE | external_refs=5
+  ST_Flood_Global_Config.dut
+  ST_Gas_Valve_Configuration.dut
+  snapshots/project_clean_state_2026_04_16/E_VALVE_TYPE.dut
+  snapshots/project_clean_state_2026_04_16/ST_Flood_Global_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_Gas_Valve_Configuration.dut
+E_VENTILATION_LOCATION.dut | type=.dut | symbol=E_VENTILATION_LOCATION | external_refs=3
+  ST_Ventilation_Unit_Config.dut
+  snapshots/project_clean_state_2026_04_16/E_VENTILATION_LOCATION.dut
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Unit_Config.dut
+E_VENTILATION_UNIT_TYPE.dut | type=.dut | symbol=E_VENTILATION_UNIT_TYPE | external_refs=3
+  ST_Ventilation_Unit_Config.dut
+  snapshots/project_clean_state_2026_04_16/E_VENTILATION_UNIT_TYPE.dut
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Unit_Config.dut
+E_Valve_Test_Result.dut | type=.dut | symbol=E_Valve_Test_Result | external_refs=3
+  FB_Valve_Test.st
+  snapshots/project_clean_state_2026_04_16/E_Valve_Test_Result.dut
+  snapshots/project_clean_state_2026_04_16/FB_Valve_Test.st
+E_WEATHER_COMPENSATION_METHOD.dut | type=.dut | symbol=E_WEATHER_COMPENSATION_METHOD | external_refs=1
+  snapshots/project_clean_state_2026_04_16/E_WEATHER_COMPENSATION_METHOD.dut
+E_Zone_Access_Level.dut | type=.dut | symbol=E_Zone_Access_Level | external_refs=3
+  FB_Zone_Access_Manager.st
+  snapshots/project_clean_state_2026_04_16/E_Zone_Access_Level.dut
+  snapshots/project_clean_state_2026_04_16/FB_Zone_Access_Manager.st
+FB_AccessCode_Manager.st | type=.st | symbol=FB_AccessCode_Manager | external_refs=5
+  FB_Access_Control.st
+  FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_AccessCode_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Access_Control.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+FB_Access_Control.st | type=.st | symbol=FB_Access_Control | external_refs=3
+  PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/FB_Access_Control.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+FB_Alarm_Manager.st | type=.st | symbol=FB_Alarm_Manager | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Analog_Validator.st | type=.st | symbol=FB_Analog_Validator | external_refs=7
+  FB_DHW_Manager.st
+  FB_Heating_System_Manager.st
+  PRG_Test.st
+  snapshots/project_clean_state_2026_04_16/FB_Analog_Validator.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Test.st
+FB_Astro_Timer.st | type=.st | symbol=FB_Astro_Timer | external_refs=7
+  FB_Security_System_Manager.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Astro_Timer.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/export_forensics/sandbox/fb_astro_timer_diff/02_repo_st_source.st
+  workspace/export_forensics/sandbox/fb_astro_timer_diff/02_repo_st_source.st
+FB_BlackBox_Recorder.st | type=.st | symbol=FB_BlackBox_Recorder | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_BlackBox_Recorder.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Boiler_Cascade_Manager.st | type=.st | symbol=FB_Boiler_Cascade_Manager | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Boiler_Cascade_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+FB_Boiler_OpenTherm_Interface.st | type=.st | symbol=FB_Boiler_OpenTherm_Interface | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Boiler_OpenTherm_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+FB_CO_Detector.st | type=.st | symbol=FB_CO_Detector | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_CO_Detector.st
+FB_CRC32_Calculator.st | type=.st | symbol=FB_CRC32_Calculator | external_refs=5
+  FB_AccessCode_Manager.st
+  FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_AccessCode_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_CRC32_Calculator.st
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+FB_Calibration_Manager.st | type=.st | symbol=FB_Calibration_Manager | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Calibration_Manager.st
+FB_Command_Deduplication.st | type=.st | symbol=FB_Command_Deduplication | external_refs=3
+  FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/FB_Command_Deduplication.st
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+FB_CoreKernel_Live_Observer.st | type=.st | symbol=FB_CoreKernel_Live_Observer | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_CoreKernel_Live_Observer.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_DHW_Manager.st | type=.st | symbol=FB_DHW_Manager | external_refs=3
+  PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+FB_Debug_Logger.st | type=.st | symbol=FB_Debug_Logger | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Debug_Logger.st
+FB_Device_Predictive_Diag.st | type=.st | symbol=FB_Device_Predictive_Diag | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Device_Predictive_Diag.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+FB_DryRun_Assertion_Map.st | type=.st | symbol=FB_DryRun_Assertion_Map | external_refs=1
+  PRG_DryRun_TestRig.st
+FB_DryRun_Simulation_Harness.st | type=.st | symbol=FB_DryRun_Simulation_Harness | external_refs=1
+  PRG_DryRun_TestRig.st
+FB_Emergency_Valve_Open.st | type=.st | symbol=FB_Emergency_Valve_Open | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Emergency_Valve_Open.st
+FB_Exhaust_Ventilation_Controller.st | type=.st | symbol=FB_Exhaust_Ventilation_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Exhaust_Ventilation_Controller.st
+FB_Fault_Logger.st | type=.st | symbol=FB_Fault_Logger | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Fault_Logger.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_FloorHeating_Controller.st | type=.st | symbol=FB_FloorHeating_Controller | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+FB_FloorHeating_Freeze_Protection.st | type=.st | symbol=FB_FloorHeating_Freeze_Protection | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Freeze_Protection.st
+FB_FloorHeating_Overheat_Protection.st | type=.st | symbol=FB_FloorHeating_Overheat_Protection | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Overheat_Protection.st
+FB_Gas_Methane_Detector.st | type=.st | symbol=FB_Gas_Methane_Detector | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Methane_Detector.st
+FB_Gas_Smoke_Manager.st | type=.st | symbol=FB_Gas_Smoke_Manager | external_refs=3
+  PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Smoke_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+FB_Gas_Valve_Controller.st | type=.st | symbol=FB_Gas_Valve_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Valve_Controller.st
+FB_Gateway_Interface.st | type=.st | symbol=FB_Gateway_Interface | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_HMAC_SHA1.st | type=.st | symbol=FB_HMAC_SHA1 | external_refs=3
+  FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/FB_HMAC_SHA1.st
+  snapshots/project_clean_state_2026_04_16/FB_TwoFactor_Auth.st
+FB_HMI_Interface.st | type=.st | symbol=FB_HMI_Interface | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_HMI_Interface.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Heating_System_Manager.st | type=.st | symbol=FB_Heating_System_Manager | external_refs=3
+  PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+FB_History_Manager.st | type=.st | symbol=FB_History_Manager | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_History_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_IO_Module_Watchdog.st | type=.st | symbol=FB_IO_Module_Watchdog | external_refs=3
+  PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/FB_IO_Module_Watchdog.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+FB_Lifetime_Predictor.st | type=.st | symbol=FB_Lifetime_Predictor | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lifetime_Predictor.st
+FB_Lighting_Blinds_Manager.st | type=.st | symbol=FB_Lighting_Blinds_Manager | external_refs=3
+  PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+FB_LogEvent.st | type=.st | symbol=FB_LogEvent | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_LogEvent.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Maintenance_Access.st | type=.st | symbol=FB_Maintenance_Access | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Maintenance_Access.st
+FB_Manifold_Pump_Controller.st | type=.st | symbol=FB_Manifold_Pump_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Manifold_Pump_Controller.st
+FB_Manual_Valve_Control.st | type=.st | symbol=FB_Manual_Valve_Control | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Manual_Valve_Control.st
+FB_NVRAM_Manager.st | type=.st | symbol=FB_NVRAM_Manager | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Outdoor_Lighting_Controller.st | type=.st | symbol=FB_Outdoor_Lighting_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Outdoor_Lighting_Controller.st
+FB_PID_Controller.st | type=.st | symbol=FB_PID_Controller | external_refs=9
+  FB_FloorHeating_Controller.st
+  FB_Heating_System_Manager.st
+  FB_Supply_Ventilation_Controller.st
+  FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_PID_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Supply_Ventilation_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+FB_PLC_Heartbeat.st | type=.st | symbol=FB_PLC_Heartbeat | external_refs=3
+  FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_PLC_Heartbeat.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+FB_Pre_Departure_Heating.st | type=.st | symbol=FB_Pre_Departure_Heating | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Pre_Departure_Heating.st
+FB_Presence_Playback.st | type=.st | symbol=FB_Presence_Playback | external_refs=3
+  FB_Presence_Simulator.st
+  snapshots/project_clean_state_2026_04_16/FB_Presence_Playback.st
+  snapshots/project_clean_state_2026_04_16/FB_Presence_Simulator.st
+FB_Presence_Simulator.st | type=.st | symbol=FB_Presence_Simulator | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Presence_Simulator.st
+FB_Random_Generator.st | type=.st | symbol=FB_Random_Generator | external_refs=5
+  FB_Simulation_Manager.st
+  PRG_Test.st
+  snapshots/project_clean_state_2026_04_16/FB_Random_Generator.st
+  snapshots/project_clean_state_2026_04_16/FB_Simulation_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Test.st
+FB_Redundancy_Manager.st | type=.st | symbol=FB_Redundancy_Manager | external_refs=5
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/FB_Redundancy_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/FB_Redundancy_Shadow_Slice_DRAFT.st
+FB_Rule_Engine.st | type=.st | symbol=FB_Rule_Engine | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_SHA1.st | type=.st | symbol=FB_SHA1 | external_refs=3
+  FB_HMAC_SHA1.st
+  snapshots/project_clean_state_2026_04_16/FB_HMAC_SHA1.st
+  snapshots/project_clean_state_2026_04_16/FB_SHA1.st
+FB_Safety_Manager.st | type=.st | symbol=FB_Safety_Manager | external_refs=5
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Safety_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/FB_Safety_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/FB_Safety_Shadow_Slice_DRAFT.st
+FB_Scenario_Manager.st | type=.st | symbol=FB_Scenario_Manager | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Scenario_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Scenario_Transition_Controller.st | type=.st | symbol=FB_Scenario_Transition_Controller | external_refs=5
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Scenario_Transition_Controller.st
+FB_Scenario_Transition_Guard.st | type=.st | symbol=FB_Scenario_Transition_Guard | external_refs=1
+  PRG_System.st
+FB_Security_Alarm.st | type=.st | symbol=FB_Security_Alarm | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Security_Alarm.st
+FB_Security_System_Manager.st | type=.st | symbol=FB_Security_System_Manager | external_refs=3
+  PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+FB_Sensor_Analog_Processing.st | type=.st | symbol=FB_Sensor_Analog_Processing | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Sensor_Analog_Processing.st
+FB_Sensor_Calibration.st | type=.st | symbol=FB_Sensor_Calibration | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Sensor_Calibration.st
+FB_Sensor_Calibration_Processor.st | type=.st | symbol=FB_Sensor_Calibration_Processor | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Sensor_Calibration_Processor.st
+FB_Sensor_Distribution.st | type=.st | symbol=FB_Sensor_Distribution | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Sensor_Distribution.st
+FB_Simulation_Manager.st | type=.st | symbol=FB_Simulation_Manager | external_refs=3
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Simulation_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+FB_Smoke_Detector.st | type=.st | symbol=FB_Smoke_Detector | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Smoke_Detector.st
+FB_Socket_Manager.st | type=.st | symbol=FB_Socket_Manager | external_refs=3
+  PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+FB_State_Manager.st | type=.st | symbol=FB_State_Manager | external_refs=7
+  FB_State_Manager_MVP.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Manager_MVP.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/state_manager_slice/FB_StateManager_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/state_manager_slice/FB_StateManager_Shadow_Slice_DRAFT.st
+FB_State_Manager_MVP.st | type=.st | symbol=FB_State_Manager_MVP | external_refs=0
+FB_State_Replication.st | type=.st | symbol=FB_State_Replication | external_refs=3
+  FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Replication.st
+FB_State_Snapshot_Manager.st | type=.st | symbol=FB_State_Snapshot_Manager | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_State_Snapshot_Manager.st
+FB_State_Snapshot_NVRAM.st | type=.st | symbol=FB_State_Snapshot_NVRAM | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_State_Snapshot_NVRAM.st
+FB_Supply_Ventilation_Controller.st | type=.st | symbol=FB_Supply_Ventilation_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Supply_Ventilation_Controller.st
+FB_System_Health.st | type=.st | symbol=FB_System_Health | external_refs=5
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_System_Health.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_SystemHealth_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_SystemHealth_Shadow_Slice_DRAFT.st
+FB_System_Timer.st | type=.st | symbol=FB_System_Timer | external_refs=21
+  FB_Alarm_Manager.st
+  FB_Calibration_Manager.st
+  FB_DHW_Manager.st
+  FB_Device_Predictive_Diag.st
+  FB_Gas_Smoke_Manager.st
+  FB_Heating_System_Manager.st
+  FB_Redundancy_Manager.st
+  FB_Security_System_Manager.st
+  FB_Water_Leakage_Manager.st
+  PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Calibration_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Device_Predictive_Diag.st
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Smoke_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_System_Timer.st
+  snapshots/project_clean_state_2026_04_16/FB_Water_Leakage_Manager.st
+  ... +1 more
+FB_System_Timer_TOF.st | type=.st | symbol=FB_System_Timer_TOF | external_refs=5
+  FB_Lighting_Blinds_Manager.st
+  FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_System_Timer_TOF.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+FB_Trend_Analyzer.st | type=.st | symbol=FB_Trend_Analyzer | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Trend_Analyzer.st
+FB_Trend_Logger.st | type=.st | symbol=FB_Trend_Logger | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Trend_Logger.st
+FB_TwoFactor_Auth.st | type=.st | symbol=FB_TwoFactor_Auth | external_refs=5
+  FB_Security_System_Manager.st
+  PRG_Test.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/PRG_Test.st
+FB_Valve_Test.st | type=.st | symbol=FB_Valve_Test | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Valve_Test.st
+FB_Valve_Test_Manager.st | type=.st | symbol=FB_Valve_Test_Manager | external_refs=3
+  FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Valve_Test_Manager.st
+FB_Ventilation_System_Manager.st | type=.st | symbol=FB_Ventilation_System_Manager | external_refs=3
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Ventilation.st
+FB_Watchdog.st | type=.st | symbol=FB_Watchdog | external_refs=5
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Watchdog.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_Watchdog_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/watchdog_health_slice/FB_Watchdog_Shadow_Slice_DRAFT.st
+FB_Water_Leakage_Manager.st | type=.st | symbol=FB_Water_Leakage_Manager | external_refs=3
+  PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/FB_Water_Leakage_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+FB_Water_Valve_Controller.st | type=.st | symbol=FB_Water_Valve_Controller | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Water_Valve_Controller.st
+FB_Zone_Access_Manager.st | type=.st | symbol=FB_Zone_Access_Manager | external_refs=1
+  snapshots/project_clean_state_2026_04_16/FB_Zone_Access_Manager.st
+GVL_ALARM.gvl | type=.gvl | symbol=GVL_ALARM | external_refs=10
+  PRG_IO_Write.st
+  PRG_Lighting.st
+  PRG_Safety.st
+  PRG_Security.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+GVL_BlackBox.gvl | type=.gvl | symbol=GVL_BlackBox | external_refs=0
+GVL_COMMAND.gvl | type=.gvl | symbol=GVL_COMMAND | external_refs=16
+  PRG_Heating.st
+  PRG_IO_Read.st
+  PRG_IO_Write.st
+  PRG_Lighting.st
+  PRG_Safety.st
+  PRG_Security.st
+  PRG_System.st
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_Ventilation.st
+GVL_CONFIG.gvl | type=.gvl | symbol=GVL_CONFIG | external_refs=22
+  FB_Access_Control.st
+  FB_DHW_Manager.st
+  FB_Heating_System_Manager.st
+  FB_TwoFactor_Auth.st
+  PRG_Heating.st
+  PRG_IO_Read.st
+  PRG_Lighting.st
+  PRG_Safety.st
+  PRG_Security.st
+  PRG_System.st
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/FB_Access_Control.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+  ... +2 more
+GVL_CONSTANTS.gvl | type=.gvl | symbol=GVL_CONSTANTS | external_refs=124
+  FB_AccessCode_Manager.st
+  FB_Access_Control.st
+  FB_Alarm_Manager.st
+  FB_BlackBox_Recorder.st
+  FB_Boiler_Cascade_Manager.st
+  FB_Boiler_OpenTherm_Interface.st
+  FB_Command_Deduplication.st
+  FB_DHW_Manager.st
+  FB_Debug_Logger.st
+  FB_FloorHeating_Freeze_Protection.st
+  FB_FloorHeating_Overheat_Protection.st
+  FB_Gas_Smoke_Manager.st
+  FB_Gateway_Interface.st
+  FB_Heating_System_Manager.st
+  FB_History_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Maintenance_Access.st
+  FB_Manual_Valve_Control.st
+  FB_Pre_Departure_Heating.st
+  FB_Presence_Playback.st
+  ... +104 more
+GVL_DEBUG.gvl | type=.gvl | symbol=GVL_DEBUG | external_refs=0
+GVL_EVENT.gvl | type=.gvl | symbol=GVL_EVENT | external_refs=2
+  FB_LogEvent.st
+  snapshots/project_clean_state_2026_04_16/FB_LogEvent.st
+GVL_GATEWAY.gvl | type=.gvl | symbol=GVL_GATEWAY | external_refs=2
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+GVL_HEALTH_BRIDGE.gvl | type=.gvl | symbol=GVL_HEALTH_BRIDGE | external_refs=6
+  PRG_Safety.st
+  PRG_System.st
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_Ventilation.st
+GVL_IO.gvl | type=.gvl | symbol=GVL_IO | external_refs=8
+  PRG_Heating.st
+  PRG_IO_Read.st
+  PRG_IO_Write.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+GVL_MODBUS.gvl | type=.gvl | symbol=GVL_MODBUS | external_refs=0
+GVL_PERSISTENT.gvl | type=.gvl | symbol=GVL_PERSISTENT | external_refs=2
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+GVL_Retain.gvl | type=.gvl | symbol=GVL_Retain | external_refs=18
+  FB_BlackBox_Recorder.st
+  FB_Heating_System_Manager.st
+  FB_History_Manager.st
+  FB_NVRAM_Manager.st
+  FB_Presence_Playback.st
+  FB_Valve_Test_Manager.st
+  GVL_BlackBox.gvl
+  PRG_Security.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_BlackBox_Recorder.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_History_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Presence_Playback.st
+  snapshots/project_clean_state_2026_04_16/FB_Valve_Test_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_BlackBox.gvl
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+GVL_STATE.gvl | type=.gvl | symbol=GVL_STATE | external_refs=24
+  FB_DHW_Manager.st
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Ventilation_System_Manager.st
+  PRG_Heating.st
+  PRG_IO_Read.st
+  PRG_IO_Write.st
+  PRG_Lighting.st
+  PRG_Safety.st
+  PRG_Security.st
+  PRG_System.st
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+  ... +4 more
+GVL_STATUS.gvl | type=.gvl | symbol=GVL_STATUS | external_refs=22
+  FB_Astro_Timer.st
+  PRG_Heating.st
+  PRG_IO_Read.st
+  PRG_IO_Write.st
+  PRG_Lighting.st
+  PRG_Safety.st
+  PRG_Security.st
+  PRG_System.st
+  PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/FB_Astro_Timer.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/PRG_Ventilation.st
+  snapshots/project_clean_state_2026_04_16/workspace/export_forensics/sandbox/fb_astro_timer_diff/02_repo_st_source.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/comparison/harness/FB_CoreKernel_First_Live_Binding_DRAFT.st
+  ... +2 more
+GVL_TIME.gvl | type=.gvl | symbol=GVL_TIME | external_refs=0
+IValveController.st | type=.st | symbol=IValveController | external_refs=5
+  FB_Gas_Valve_Controller.st
+  FB_Water_Valve_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Valve_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Water_Valve_Controller.st
+  snapshots/project_clean_state_2026_04_16/IValveController.st
+MAIN.st | type=.st | symbol=MAIN | external_refs=1
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+PRG_DryRun_TestRig.st | type=.st | symbol=PRG_DryRun_TestRig | external_refs=0
+PRG_Heating.st | type=.st | symbol=PRG_Heating | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Heating.st
+PRG_IO_Read.st | type=.st | symbol=PRG_IO_Read | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Read.st
+PRG_IO_Write.st | type=.st | symbol=PRG_IO_Write | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_IO_Write.st
+PRG_Lighting.st | type=.st | symbol=PRG_Lighting | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Lighting.st
+PRG_PLC_A.st | type=.st | symbol=PRG_PLC_A | external_refs=1
+  snapshots/project_clean_state_2026_04_16/PRG_PLC_A.st
+PRG_PLC_B.st | type=.st | symbol=PRG_PLC_B | external_refs=1
+  snapshots/project_clean_state_2026_04_16/PRG_PLC_B.st
+PRG_Safety.st | type=.st | symbol=PRG_Safety | external_refs=7
+  FB_Gas_Smoke_Manager.st
+  FB_Water_Leakage_Manager.st
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Smoke_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Water_Leakage_Manager.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+PRG_Security.st | type=.st | symbol=PRG_Security | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Security.st
+PRG_System.st | type=.st | symbol=PRG_System | external_refs=15
+  MAIN.st
+  PRG_PLC_A.st
+  PRG_PLC_B.st
+  PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_PLC_A.st
+  snapshots/project_clean_state_2026_04_16/PRG_PLC_B.st
+  snapshots/project_clean_state_2026_04_16/PRG_Safety.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/FB_CoreKernel_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/FB_Redundancy_Shadow_Slice_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/FB_Safety_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/FB_CoreKernel_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/redundancy_slice/FB_Redundancy_Shadow_Slice_DRAFT.st
+  workspace/system_layer_cleanup/split_scaffold/core_kernel/safety_slice/FB_Safety_Shadow_Slice_DRAFT.st
+PRG_Test.st | type=.st | symbol=PRG_Test | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Test.st
+PRG_Ventilation.st | type=.st | symbol=PRG_Ventilation | external_refs=3
+  MAIN.st
+  snapshots/project_clean_state_2026_04_16/MAIN.st
+  snapshots/project_clean_state_2026_04_16/PRG_Ventilation.st
+ST_Alarm_Record.dut | type=.dut | symbol=ST_Alarm_Record | external_refs=9
+  FB_Alarm_Manager.st
+  GVL_ALARM.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Compatibility_Package.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_V2_Core.st
+  snapshots/project_clean_state_2026_04_16/GVL_ALARM.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Alarm_Record.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st
+  workspace/dut_rebuild/alarm/v2_core/FB_Alarm_V2_Core_DRAFT.st
+ST_Astro_Time.dut | type=.dut | symbol=ST_Astro_Time | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Astro_Time.dut
+ST_BlackBox_Record.dut | type=.dut | symbol=ST_BlackBox_Record | external_refs=9
+  FB_BlackBox_Recorder.st
+  GVL_Retain.gvl
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_BlackBox_Recorder.st
+  snapshots/project_clean_state_2026_04_16/GVL_Retain.gvl
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/ST_BlackBox_Record.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_BlackBox_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_BlackBox_Legacy_To_V2_Adapter_DRAFT.st
+ST_BlackBox_Snapshot_V2.dut | type=.dut | symbol=ST_BlackBox_Snapshot_V2 | external_refs=11
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_BlackBox_V2_Core.st
+  snapshots/project_clean_state_2026_04_16/ST_BlackBox_Snapshot_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox/ST_BlackBox_Snapshot_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/ST_BlackBox_Snapshot_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_BlackBox_Legacy_To_V2_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_BlackBox_V2_Core_DRAFT.st
+  workspace/dut_rebuild/history_blackbox/ST_BlackBox_Snapshot_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/ST_BlackBox_Snapshot_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_BlackBox_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_BlackBox_V2_Core_DRAFT.st
+ST_Blinds_Command_V2.dut | type=.dut | symbol=ST_Blinds_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Blinds_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/ST_Blinds_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/ST_Blinds_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_Command_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/staging/FB_Blinds_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/v2_core/FB_Blinds_V2_Core_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/ST_Blinds_Command_V2.dut
+  workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_Command_Extractor_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/staging/FB_Blinds_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/v2_core/FB_Blinds_V2_Core_DRAFT.st
+ST_Blinds_State_V2.dut | type=.dut | symbol=ST_Blinds_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Blinds_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/ST_Blinds_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/ST_Blinds_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_State_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/staging/FB_Blinds_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/blinds_v2/v2_core/FB_Blinds_V2_Core_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/ST_Blinds_State_V2.dut
+  workspace/dut_rebuild/blinds_v2/compatibility/FB_Blinds_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/extraction/FB_Blinds_State_Extractor_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/staging/FB_Blinds_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/blinds_v2/v2_core/FB_Blinds_V2_Core_DRAFT.st
+ST_Boiler_Status.dut | type=.dut | symbol=ST_Boiler_Status | external_refs=5
+  FB_Heating_System_Manager.st
+  GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Boiler_Status.dut
+ST_Component_Maintenance.dut | type=.dut | symbol=ST_Component_Maintenance | external_refs=3
+  ST_Zone_Sensors.dut
+  snapshots/project_clean_state_2026_04_16/ST_Component_Maintenance.dut
+  snapshots/project_clean_state_2026_04_16/ST_Zone_Sensors.dut
+ST_DHW_Command_V2.dut | type=.dut | symbol=ST_DHW_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_DHW_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/ST_DHW_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_Command_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/staging/FB_DHW_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/v2_core/FB_DHW_V2_Core_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/ST_DHW_Command_V2.dut
+  workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_Command_Extractor_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/staging/FB_DHW_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/v2_core/FB_DHW_V2_Core_DRAFT.st
+ST_DHW_Config.dut | type=.dut | symbol=ST_DHW_Config | external_refs=5
+  FB_DHW_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_DHW_Config.dut
+ST_DHW_State_V2.dut | type=.dut | symbol=ST_DHW_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_DHW_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_DHW_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/ST_DHW_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_State_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/staging/FB_DHW_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/dhw_v2/v2_core/FB_DHW_V2_Core_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/ST_DHW_State_V2.dut
+  workspace/dut_rebuild/dhw_v2/compatibility/FB_DHW_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/extraction/FB_DHW_State_Extractor_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/staging/FB_DHW_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/dhw_v2/v2_core/FB_DHW_V2_Core_DRAFT.st
+ST_DHW_Status.dut | type=.dut | symbol=ST_DHW_Status | external_refs=5
+  FB_DHW_Manager.st
+  GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/FB_DHW_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/ST_DHW_Status.dut
+ST_Debug_Log_Record.dut | type=.dut | symbol=ST_Debug_Log_Record | external_refs=3
+  FB_Debug_Logger.st
+  snapshots/project_clean_state_2026_04_16/FB_Debug_Logger.st
+  snapshots/project_clean_state_2026_04_16/ST_Debug_Log_Record.dut
+ST_Debug_Logger_Config.dut | type=.dut | symbol=ST_Debug_Logger_Config | external_refs=3
+  FB_Debug_Logger.st
+  snapshots/project_clean_state_2026_04_16/FB_Debug_Logger.st
+  snapshots/project_clean_state_2026_04_16/ST_Debug_Logger_Config.dut
+ST_Device_Health.dut | type=.dut | symbol=ST_Device_Health | external_refs=7
+  FB_Device_Predictive_Diag.st
+  GVL_DEBUG.gvl
+  ST_Manifold_Status.dut
+  snapshots/project_clean_state_2026_04_16/FB_Device_Predictive_Diag.st
+  snapshots/project_clean_state_2026_04_16/GVL_DEBUG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Device_Health.dut
+  snapshots/project_clean_state_2026_04_16/ST_Manifold_Status.dut
+ST_EVENT.dut | type=.dut | symbol=ST_EVENT | external_refs=3
+  GVL_EVENT.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_EVENT.gvl
+  snapshots/project_clean_state_2026_04_16/ST_EVENT.dut
+ST_Flood_Config.dut | type=.dut | symbol=ST_Flood_Config | external_refs=3
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Flood_Config.dut
+ST_Flood_Global_Config.dut | type=.dut | symbol=ST_Flood_Global_Config | external_refs=5
+  FB_Water_Leakage_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Water_Leakage_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Flood_Global_Config.dut
+ST_FloorHeating_Circuit_Config.dut | type=.dut | symbol=ST_FloorHeating_Circuit_Config | external_refs=9
+  FB_FloorHeating_Controller.st
+  FB_Heating_System_Manager.st
+  GVL_CONFIG.gvl
+  ST_FloorHeating_Manifold_Config.dut
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_FloorHeating_Circuit_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_FloorHeating_Manifold_Config.dut
+ST_FloorHeating_Global_Config.dut | type=.dut | symbol=ST_FloorHeating_Global_Config | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_FloorHeating_Global_Config.dut
+ST_FloorHeating_Manifold_Config.dut | type=.dut | symbol=ST_FloorHeating_Manifold_Config | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_FloorHeating_Manifold_Config.dut
+ST_Gas_Valve_Configuration.dut | type=.dut | symbol=ST_Gas_Valve_Configuration | external_refs=5
+  FB_Gas_Valve_Controller.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Gas_Valve_Controller.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Gas_Valve_Configuration.dut
+ST_Gateway_Command.dut | type=.dut | symbol=ST_Gateway_Command | external_refs=5
+  FB_Gateway_Interface.st
+  GVL_GATEWAY.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Gateway_Interface.st
+  snapshots/project_clean_state_2026_04_16/GVL_GATEWAY.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Gateway_Command.dut
+ST_Heating_Command_V2.dut | type=.dut | symbol=ST_Heating_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Heating_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/ST_Heating_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/staging/FB_Heating_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_Command_Path_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_V2_Core_DRAFT.st
+  workspace/dut_rebuild/heating_v2/ST_Heating_Command_V2.dut
+  workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/heating_v2/staging/FB_Heating_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_Command_Path_DRAFT.st
+  workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_V2_Core_DRAFT.st
+ST_Heating_Config.dut | type=.dut | symbol=ST_Heating_Config | external_refs=5
+  FB_Heating_System_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Heating_Config.dut
+ST_Heating_State_V2.dut | type=.dut | symbol=ST_Heating_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Heating_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/ST_Heating_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/staging/FB_Heating_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_State_Path_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_V2_Core_DRAFT.st
+  workspace/dut_rebuild/heating_v2/ST_Heating_State_V2.dut
+  workspace/dut_rebuild/heating_v2/compatibility/FB_Heating_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/heating_v2/staging/FB_Heating_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_State_Path_DRAFT.st
+  workspace/dut_rebuild/heating_v2/v2_core/FB_Heating_V2_Core_DRAFT.st
+ST_History_Event_V2.dut | type=.dut | symbol=ST_History_Event_V2 | external_refs=11
+  snapshots/project_clean_state_2026_04_16/FB_Alarm_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_History_V2_Core.st
+  snapshots/project_clean_state_2026_04_16/ST_History_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox/ST_History_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/ST_History_Event_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_History_V2_Core_DRAFT.st
+  workspace/dut_rebuild/history_blackbox/ST_History_Event_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/ST_History_Event_V2.dut
+  workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/history_blackbox_v2/v2_core/FB_History_V2_Core_DRAFT.st
+ST_History_Record.dut | type=.dut | symbol=ST_History_Record | external_refs=9
+  FB_History_Manager.st
+  GVL_Retain.gvl
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_History_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_Retain.gvl
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/ST_History_Record.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/history_blackbox_v2/compatibility/FB_History_Legacy_To_V2_Adapter_DRAFT.st
+ST_Lifetime_Status.dut | type=.dut | symbol=ST_Lifetime_Status | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Lifetime_Status.dut
+ST_Lighting_Command_V2.dut | type=.dut | symbol=ST_Lighting_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Lighting_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/ST_Lighting_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_Command_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/staging/FB_Lighting_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/v2_core/FB_Lighting_V2_Core_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/ST_Lighting_Command_V2.dut
+  workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_Command_Extractor_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/staging/FB_Lighting_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/v2_core/FB_Lighting_V2_Core_DRAFT.st
+ST_Lighting_State_V2.dut | type=.dut | symbol=ST_Lighting_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Lighting_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/ST_Lighting_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_State_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/staging/FB_Lighting_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/lighting_v2/v2_core/FB_Lighting_V2_Core_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/ST_Lighting_State_V2.dut
+  workspace/dut_rebuild/lighting_v2/compatibility/FB_Lighting_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/extraction/FB_Lighting_State_Extractor_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/staging/FB_Lighting_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/lighting_v2/v2_core/FB_Lighting_V2_Core_DRAFT.st
+ST_Maintenance_Access_Config.dut | type=.dut | symbol=ST_Maintenance_Access_Config | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Maintenance_Access_Config.dut
+ST_Manifold_Status.dut | type=.dut | symbol=ST_Manifold_Status | external_refs=5
+  FB_Heating_System_Manager.st
+  GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Manifold_Status.dut
+ST_Operator_Zone_Rights.dut | type=.dut | symbol=ST_Operator_Zone_Rights | external_refs=3
+  FB_Zone_Access_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Zone_Access_Manager.st
+  snapshots/project_clean_state_2026_04_16/ST_Operator_Zone_Rights.dut
+ST_Outdoor_Zone_Config.dut | type=.dut | symbol=ST_Outdoor_Zone_Config | external_refs=3
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Outdoor_Zone_Config.dut
+ST_Owen_Analog_Value.dut | type=.dut | symbol=ST_Owen_Analog_Value | external_refs=3
+  GVL_IO.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_IO.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Owen_Analog_Value.dut
+ST_Rule.dut | type=.dut | symbol=ST_Rule | external_refs=2
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Compatibility_Package.st
+  snapshots/project_clean_state_2026_04_16/ST_Rule.dut
+ST_Rule_Action.dut | type=.dut | symbol=ST_Rule_Action | external_refs=15
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Rule_Engine.st
+  FB_Socket_Manager.st
+  FB_Ventilation_System_Manager.st
+  GVL_STATE.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_STATE.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Rule_Action.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st
+  workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st
+ST_Scenario_Config.dut | type=.dut | symbol=ST_Scenario_Config | external_refs=9
+  FB_Heating_System_Manager.st
+  FB_Lighting_Blinds_Manager.st
+  FB_Simulation_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Lighting_Blinds_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Simulation_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Scenario_Config.dut
+ST_Scenario_Transition_Config.dut | type=.dut | symbol=ST_Scenario_Transition_Config | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Scenario_Transition_Config.dut
+ST_Security_Global_Config.dut | type=.dut | symbol=ST_Security_Global_Config | external_refs=7
+  FB_Access_Control.st
+  FB_Security_System_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Access_Control.st
+  snapshots/project_clean_state_2026_04_16/FB_Security_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Security_Global_Config.dut
+ST_Security_Zone_State.dut | type=.dut | symbol=ST_Security_Zone_State | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Security_Zone_State.dut
+ST_Sensor_Calibration_Record.dut | type=.dut | symbol=ST_Sensor_Calibration_Record | external_refs=7
+  FB_Calibration_Manager.st
+  FB_Sensor_Calibration_Processor.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Calibration_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Sensor_Calibration_Processor.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Sensor_Calibration_Record.dut
+ST_Socket_Command_V2.dut | type=.dut | symbol=ST_Socket_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Socket_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/ST_Socket_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/extraction/FB_Socket_Command_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/staging/FB_Socket_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/v2_core/FB_Socket_V2_Core_DRAFT.st
+  workspace/dut_rebuild/socket_v2/ST_Socket_Command_V2.dut
+  workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/socket_v2/extraction/FB_Socket_Command_Extractor_DRAFT.st
+  workspace/dut_rebuild/socket_v2/staging/FB_Socket_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/socket_v2/v2_core/FB_Socket_V2_Core_DRAFT.st
+ST_Socket_State_V2.dut | type=.dut | symbol=ST_Socket_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Socket_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Socket_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Socket_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/ST_Socket_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/extraction/FB_Socket_State_Extractor_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/staging/FB_Socket_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/socket_v2/v2_core/FB_Socket_V2_Core_DRAFT.st
+  workspace/dut_rebuild/socket_v2/ST_Socket_State_V2.dut
+  workspace/dut_rebuild/socket_v2/compatibility/FB_Socket_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/socket_v2/extraction/FB_Socket_State_Extractor_DRAFT.st
+  workspace/dut_rebuild/socket_v2/staging/FB_Socket_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/socket_v2/v2_core/FB_Socket_V2_Core_DRAFT.st
+ST_State_Snapshot.dut | type=.dut | symbol=ST_State_Snapshot | external_refs=5
+  FB_State_Snapshot_Manager.st
+  FB_State_Snapshot_NVRAM.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Snapshot_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Snapshot_NVRAM.st
+  snapshots/project_clean_state_2026_04_16/ST_State_Snapshot.dut
+ST_System_Diagnostics.dut | type=.dut | symbol=ST_System_Diagnostics | external_refs=3
+  GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_STATUS.gvl
+  snapshots/project_clean_state_2026_04_16/ST_System_Diagnostics.dut
+ST_System_State_Snapshot.dut | type=.dut | symbol=ST_System_State_Snapshot | external_refs=7
+  FB_Redundancy_Manager.st
+  FB_State_Replication.st
+  PRG_System.st
+  snapshots/project_clean_state_2026_04_16/FB_Redundancy_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_State_Replication.st
+  snapshots/project_clean_state_2026_04_16/PRG_System.st
+  snapshots/project_clean_state_2026_04_16/ST_System_State_Snapshot.dut
+ST_System_State_Summary.dut | type=.dut | symbol=ST_System_State_Summary | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_System_State_Summary.dut
+ST_Tariff_Config.dut | type=.dut | symbol=ST_Tariff_Config | external_refs=7
+  FB_FloorHeating_Controller.st
+  FB_Heating_System_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_FloorHeating_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Tariff_Config.dut
+ST_Trend_Config.dut | type=.dut | symbol=ST_Trend_Config | external_refs=5
+  FB_Trend_Logger.st
+  ST_Trend_Data.dut
+  snapshots/project_clean_state_2026_04_16/FB_Trend_Logger.st
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Data.dut
+ST_Trend_Data.dut | type=.dut | symbol=ST_Trend_Data | external_refs=3
+  FB_Trend_Logger.st
+  snapshots/project_clean_state_2026_04_16/FB_Trend_Logger.st
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Data.dut
+ST_Trend_Header.dut | type=.dut | symbol=ST_Trend_Header | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Trend_Header.dut
+ST_Trend_History_Record.dut | type=.dut | symbol=ST_Trend_History_Record | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Trend_History_Record.dut
+ST_TwoFactor_Auth_State.dut | type=.dut | symbol=ST_TwoFactor_Auth_State | external_refs=3
+  FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/FB_TwoFactor_Auth.st
+  snapshots/project_clean_state_2026_04_16/ST_TwoFactor_Auth_State.dut
+ST_TwoFactor_Data.dut | type=.dut | symbol=ST_TwoFactor_Data | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_TwoFactor_Data.dut
+ST_User_Rule.dut | type=.dut | symbol=ST_User_Rule | external_refs=14
+  FB_Rule_Engine.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Compatibility_Package.st
+  snapshots/project_clean_state_2026_04_16/FB_Rule_Engine.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_User_Rule.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/runtime_hook/FB_Rule_Compatibility_Package_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st
+  workspace/dut_rebuild/integration/FB_Rule_Legacy_To_V2_Adapter_DRAFT.st
+  workspace/dut_rebuild/integration/FB_Rule_V2_To_Legacy_Adapter_DRAFT.st
+  workspace/dut_rebuild/integration/runtime_hook/FB_Rule_Compatibility_Package_DRAFT.st
+  workspace/dut_rebuild/integration/runtime_hook/staging_clone/FB_Rule_Engine_STAGING_BRIDGE_DRAFT.st
+ST_Valve_Test_Config.dut | type=.dut | symbol=ST_Valve_Test_Config | external_refs=7
+  FB_Heating_System_Manager.st
+  FB_Valve_Test_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Heating_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Valve_Test_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Valve_Test_Config.dut
+ST_Ventilation_Command_V2.dut | type=.dut | symbol=ST_Ventilation_Command_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut
+  workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st
+ST_Ventilation_Config.dut | type=.dut | symbol=ST_Ventilation_Config | external_refs=3
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Config.dut
+ST_Ventilation_Global_Config.dut | type=.dut | symbol=ST_Ventilation_Global_Config | external_refs=5
+  FB_Ventilation_System_Manager.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Global_Config.dut
+ST_Ventilation_Scenario_Mode.dut | type=.dut | symbol=ST_Ventilation_Scenario_Mode | external_refs=3
+  ST_Ventilation_Global_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Global_Config.dut
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Scenario_Mode.dut
+ST_Ventilation_State_V2.dut | type=.dut | symbol=ST_Ventilation_State_V2 | external_refs=13
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_System_Manager.st
+  snapshots/project_clean_state_2026_04_16/FB_Ventilation_V2_Staging.st
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st
+  snapshots/project_clean_state_2026_04_16/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut
+  workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st
+  workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st
+ST_Ventilation_Unit.dut | type=.dut | symbol=ST_Ventilation_Unit | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Unit.dut
+ST_Ventilation_Unit_Config.dut | type=.dut | symbol=ST_Ventilation_Unit_Config | external_refs=7
+  FB_Exhaust_Ventilation_Controller.st
+  FB_Supply_Ventilation_Controller.st
+  GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/FB_Exhaust_Ventilation_Controller.st
+  snapshots/project_clean_state_2026_04_16/FB_Supply_Ventilation_Controller.st
+  snapshots/project_clean_state_2026_04_16/GVL_CONFIG.gvl
+  snapshots/project_clean_state_2026_04_16/ST_Ventilation_Unit_Config.dut
+ST_Zone_Sensors.dut | type=.dut | symbol=ST_Zone_Sensors | external_refs=1
+  snapshots/project_clean_state_2026_04_16/ST_Zone_Sensors.dut
+
+-- strong candidates: zero external refs --
+FB_State_Manager_MVP.st | type=.st | symbol=FB_State_Manager_MVP
+GVL_BlackBox.gvl | type=.gvl | symbol=GVL_BlackBox
+GVL_DEBUG.gvl | type=.gvl | symbol=GVL_DEBUG
+GVL_MODBUS.gvl | type=.gvl | symbol=GVL_MODBUS
+GVL_TIME.gvl | type=.gvl | symbol=GVL_TIME
+PRG_DryRun_TestRig.st | type=.st | symbol=PRG_DryRun_TestRig
+
+-- note --
+Zero external refs is only a candidate signal.
+Files may still be entrypoints, reflection-bound, compiler-discovered, or referenced indirectly.
+Need manual review before delete.
+
+=== END STEP 131 ===
