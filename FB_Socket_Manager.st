@@ -21,12 +21,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     // Socket V2 shadow (phase2)
-    L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
-    L_Socket_V2_State_Shadow : ST_Socket_State_V2;
-    L_Socket_V2_Shadow_Diff_Found : BOOL;
-    L_Socket_V2_Switch_Enabled : BOOL;
-    L_Socket_V2_Path_Ready : BOOL;
-    L_Socket_Using_Legacy_Fallback : BOOL;
     L_i : INT;
     L_j : INT;
     L_Rule_State : BOOL;
@@ -37,10 +31,6 @@ END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
-L_Socket_V2_Shadow_Diff_Found := FALSE;
-L_Socket_V2_Switch_Enabled := TRUE;
-L_Socket_V2_Path_Ready := FALSE;
-L_Socket_Using_Legacy_Fallback := TRUE;
 
 // Проверка связи с модулями ввода-вывода
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
@@ -105,41 +95,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
 END_FOR;
 
 VO_Internal_States := L_Internal_State;
-
-// ========================================
-// Socket V2 shadow execution (phase2)
-// Inlined from FB_Socket_V2_Staging
-// ========================================
-L_Socket_V2_Command_Shadow.Target_State := VO_Socket_States[1];
-L_Socket_V2_State_Shadow.Is_On := VO_Socket_States[1];
-L_Socket_V2_State_Shadow.Safety_Blocked := (VI_Fire_Alarm OR VI_Flood_Alarm);
-
-// ========================================
-// Socket V2 shadow validation
-// ========================================
-IF VO_Socket_States[1] <> L_Socket_V2_Command_Shadow.Target_State THEN
-    L_Socket_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF VO_Socket_States[1] <> L_Socket_V2_State_Shadow.Is_On THEN
-    L_Socket_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF (VI_Fire_Alarm OR VI_Flood_Alarm) <> L_Socket_V2_State_Shadow.Safety_Blocked THEN
-    L_Socket_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-// Guarded Socket V2 enable
-IF L_Socket_V2_Switch_Enabled THEN
-    IF NOT L_Socket_V2_Shadow_Diff_Found THEN
-        L_Socket_V2_Path_Ready := TRUE;
-        L_Socket_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_Socket_V2_Path_Ready := FALSE;
-        L_Socket_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_Socket_V2_Path_Ready := FALSE;
-    L_Socket_Using_Legacy_Fallback := TRUE;
-END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Socket_Manager <<<
