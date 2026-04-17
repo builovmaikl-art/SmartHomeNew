@@ -374,13 +374,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
 END_FOR;
 
 // Shadow bridge: Alarm -> History V2 (diagnostic only)
-fbHistoryV2Core(
-    VI_Event_Pulse := VO_Event_Pulse,
-    VI_Event_Code := VO_Event_Code,
-    VI_Event_Value := VO_Event_Value,
-    VI_System_Time_MS := VI_System_Time_MS,
-    VIO_History_Buffer := L_History_V2_Buffer_Shadow
-);
+// Inlined from FB_History_V2_Core
+IF VO_Event_Pulse THEN
+    L_History_V2_Buffer_Shadow[1].Event_Code := TO_UINT(VO_Event_Code);
+    L_History_V2_Buffer_Shadow[1].Event_Value := VO_Event_Value;
+END_IF;
 
 // Shadow bridge: System -> BlackBox V2 (diagnostic only)
 fbBlackBoxV2Core(
