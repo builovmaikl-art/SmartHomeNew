@@ -25,7 +25,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     L_i : INT;
-    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package;
     L_Compat_All_OK : BOOL;
     L_Compat_First_Warning : STRING(255);
     L_Compat_First_Warning_Latched : BOOL;

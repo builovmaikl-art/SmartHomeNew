@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 108: REMOVE UNUSED RULE COMPAT ARRAY ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 108: REMOVE UNUSED RULE COMPAT ARRAY ===
+timestamp_utc=2026-04-17T07:43:58Z
+
+=== BEFORE ===
+28:    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package;
+
+=== APPLY ===
+OK: removed unused fbCompat declaration
+
+=== AFTER ===
+
+=== ROOT REFERENCES AFTER CLEANUP ===
+./FB_Rule_Compatibility_Package.st:1:FUNCTION_BLOCK FB_Rule_Compatibility_Package
+./FB_Rule_Engine.st:68:    // Inlined from FB_Rule_Compatibility_Package:
+
+=== DIFF ===
+diff --git a/FB_Rule_Engine.st b/FB_Rule_Engine.st
+index 22e5968..1030ea9 100644
+--- a/FB_Rule_Engine.st
++++ b/FB_Rule_Engine.st
+@@ -25,7 +25,6 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     L_i : INT;
+-    fbCompat : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF FB_Rule_Compatibility_Package;
+     L_Compat_All_OK : BOOL;
+     L_Compat_First_Warning : STRING(255);
+     L_Compat_First_Warning_Latched : BOOL;
+
+=== END STEP 108 ===
