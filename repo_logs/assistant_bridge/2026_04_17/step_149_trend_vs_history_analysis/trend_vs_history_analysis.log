@@ -1,0 +1,54 @@
+]633;E;echo "=== RUN STEP 149 ===";1082d7f0-2e56-44f1-a435-9222cac375b7]633;C=== RUN STEP 149 ===
+=== STEP 149: TREND VS HISTORY ANALYSIS ===
+
+--- FB_Trend_Logger.st --- tokens=29
+--- FB_Trend_Analyzer.st --- tokens=23
+--- ST_Trend_Config.dut --- tokens=17
+--- ST_Trend_Data.dut --- tokens=18
+--- ST_Trend_Header.dut --- tokens=17
+--- ST_Trend_History_Record.dut --- tokens=11
+--- E_Trend_Parameter_Type.dut --- tokens=13
+
+--- FB_History_Manager.st --- tokens=23
+--- FB_BlackBox_Recorder.st --- tokens=24
+--- FB_NVRAM_Manager.st --- tokens=52
+--- ST_History_Record.dut --- tokens=21
+--- ST_System_State_Snapshot.dut --- tokens=28
+
+=== OVERLAP TOKENS ===
+23
+['ARRAY', 'BOOL', 'BYTE', 'END_FOR', 'END_IF', 'END_STRUCT', 'END_TYPE', 'END_VAR', 'FUNCTION_BLOCK', 'GVL_CONSTANTS', 'REAL', 'RETURN', 'STRUCT', 'THEN', 'TYPE', 'UDINT', 'VAR_INPUT', 'VAR_OUTPUT', 'VI_System_Time_MS', 'attribute', 'pack_mode', 'timestamp_ms', 'zone_id']
+
+=== TREND-ONLY TOKENS (potential gap indicators) ===
+52
+['C_MAX_TREND_DATA_POINTS', 'C_MS_IN_HOUR', 'DWORD', 'Deadband', 'E_Trend_Parameter_Type', 'FB_Trend_Analyzer', 'FB_Trend_Logger', 'INT_TO_REAL', 'L_Deviation', 'L_Last_Log_Time', 'L_Last_Value', 'L_Sum', 'ST_Trend_Config', 'ST_Trend_Data', 'ST_Trend_Header', 'ST_Trend_History_Record', 'TREND_PARAM_GAS_CO', 'TREND_PARAM_GAS_METHANE', 'TREND_PARAM_NONE', 'TREND_PARAM_PRESSURE', 'TREND_PARAM_PUMP_CURRENT', 'TREND_PARAM_TEMP_AIR', 'TREND_PARAM_TEMP_FLOOR', 'USINT', 'VAR_IN_OUT', 'VI_Config', 'VI_Count', 'VI_Current_Value', 'VI_Data', 'VO_Average', 'VO_Data', 'VO_Max', 'VO_Min', 'VO_Trend_Down', 'VO_Trend_Up', 'average_value', 'config', 'deviation_threshold_percent', 'enabled', 'history_days', 'max_value', 'min_value', 'param_type', 'parameter_type', 'record_count', 'records_count', 'strict', 'sum_values', 'timestamps', 'value']
+
+=== GAP SIGNAL WORDS ===
+C_MAX_TREND_DATA_POINTS
+E_Trend_Parameter_Type
+FB_Trend_Analyzer
+FB_Trend_Logger
+L_Deviation
+ST_Trend_Config
+ST_Trend_Data
+ST_Trend_Header
+ST_Trend_History_Record
+TREND_PARAM_GAS_CO
+TREND_PARAM_GAS_METHANE
+TREND_PARAM_NONE
+TREND_PARAM_PRESSURE
+TREND_PARAM_PUMP_CURRENT
+TREND_PARAM_TEMP_AIR
+TREND_PARAM_TEMP_FLOOR
+VO_Average
+VO_Max
+VO_Min
+VO_Trend_Down
+VO_Trend_Up
+average_value
+deviation_threshold_percent
+history_days
+max_value
+min_value
+
+=== END STEP 149 ===
