@@ -18,7 +18,7 @@ VAR
     L_Trend_Max : REAL;
     L_Trend_Up : BOOL;
     L_Trend_Down : BOOL;
-    L_Trend_Average : REAL;
+    L_Trend_Avg : REAL;
     L_Trend_Min : REAL;
     L_Trend_Max : REAL;
     L_Trend_Up : BOOL;
