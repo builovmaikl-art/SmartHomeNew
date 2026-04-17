@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 89: REMOVE UNUSED SOCKET V2 STAGING VAR ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 89: REMOVE UNUSED SOCKET V2 STAGING VAR ===
+timestamp_utc=2026-04-17T05:48:28Z
+
+=== BEFORE ===
+24:    fbSocketV2Staging : FB_Socket_V2_Staging;
+
+=== APPLY ===
+OK: removed unused fbSocketV2Staging declaration
+
+=== AFTER ===
+
+=== ROOT REFERENCES AFTER CLEANUP ===
+./FB_Socket_Manager.st:111:// Inlined from FB_Socket_V2_Staging
+./FB_Socket_V2_Staging.st:1:FUNCTION_BLOCK FB_Socket_V2_Staging
+
+=== DIFF ===
+diff --git a/FB_Socket_Manager.st b/FB_Socket_Manager.st
+index f439ff6..c23aded 100644
+--- a/FB_Socket_Manager.st
++++ b/FB_Socket_Manager.st
+@@ -21,7 +21,6 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     // Socket V2 shadow (phase2)
+-    fbSocketV2Staging : FB_Socket_V2_Staging;
+     L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
+     L_Socket_V2_State_Shadow : ST_Socket_State_V2;
+     L_Socket_V2_Shadow_Diff_Found : BOOL;
+
+=== END STEP 89 ===

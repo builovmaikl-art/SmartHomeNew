@@ -21,7 +21,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     // Socket V2 shadow (phase2)
-    fbSocketV2Staging : FB_Socket_V2_Staging;
     L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
     L_Socket_V2_State_Shadow : ST_Socket_State_V2;
     L_Socket_V2_Shadow_Diff_Found : BOOL;
