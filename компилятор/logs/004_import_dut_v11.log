@@ -1,17 +1,16 @@
-DUT_FILES=76
+DUT_FILES=73
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=23
-STRUCT_INSERTED=53
-STRUCT_FIELDS_TOTAL=448
-STRUCT_FIELDS_WITH_INITIALIZER=138
-INITIALIZERS_INSERTED=138
+ENUM_INSERTED=22
+STRUCT_INSERTED=51
+STRUCT_FIELDS_TOTAL=438
+STRUCT_FIELDS_WITH_INITIALIZER=137
+INITIALIZERS_INSERTED=137
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=323
+XML_INITIALVALUE_TAGS=322
 XML_ARRAYVALUE_TAGS=18
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
-E_Debug_Log_Level.dut: ENUM E_Debug_Log_Level values=4
 E_Gateway_Command_Type.dut: ENUM E_Gateway_Command_Type values=12
 E_Lifetime_Device_Type.dut: ENUM E_Lifetime_Device_Type values=2
 E_Outdoor_Mode.dut: ENUM E_Outdoor_Mode values=5
@@ -40,8 +39,6 @@ ST_Boiler_Status.dut: STRUCT ST_Boiler_Status fields=11
 ST_Component_Maintenance.dut: STRUCT ST_Component_Maintenance fields=4
 ST_DHW_Config.dut: STRUCT ST_DHW_Config fields=9
 ST_DHW_Status.dut: STRUCT ST_DHW_Status fields=7
-ST_Debug_Log_Record.dut: STRUCT ST_Debug_Log_Record fields=8
-ST_Debug_Logger_Config.dut: STRUCT ST_Debug_Logger_Config fields=2
 ST_Device_Health.dut: STRUCT ST_Device_Health fields=9
 ST_EVENT.dut: STRUCT ST_EVENT fields=5
 ST_Flood_Config.dut: STRUCT ST_Flood_Config fields=4
@@ -94,8 +91,6 @@ STRUCT ST_Boiler_Status: total=11 with_initializer=1 without_initializer=10 arra
 STRUCT ST_Component_Maintenance: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Config: total=9 with_initializer=9 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Debug_Log_Record: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Debug_Logger_Config: total=2 with_initializer=1 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Device_Health: total=9 with_initializer=1 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_EVENT: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Flood_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=1 unsupported_initializer=0
