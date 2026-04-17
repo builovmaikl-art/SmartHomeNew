@@ -1,0 +1,20 @@
+]633;E;echo "=== STEP 158: INTEGRATE TREND ADAPTER ===";20f2eee3-a1d4-4679-a172-26c2ebe560e1]633;C=== STEP 158: INTEGRATE TREND ADAPTER ===
+
+=== APPLY ===
+OK: integrated trend adapter into PRG_System
+
+=== VERIFY ===
+15:    L_Trend_Adapter : FB_Trend_Adapter;
+16:    L_Trend_Avg : REAL;
+17:    L_Trend_Min : REAL;
+18:    L_Trend_Max : REAL;
+22:    L_Trend_Min : REAL;
+23:    L_Trend_Max : REAL;
+1104:// === TREND ANALYSIS VIA ADAPTER ===
+1105:L_Trend_Adapter(
+1107:    VO_Average => L_Trend_Avg,
+1108:    VO_Min => L_Trend_Min,
+1109:    VO_Max => L_Trend_Max,
+1121:        L_Trend_Event.event_value := L_Trend_Avg;
+
+=== END STEP 158 ===

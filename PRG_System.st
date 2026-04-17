@@ -12,6 +12,12 @@ VAR
     L_Trend_Logger : FB_Trend_Logger;
     L_Trend_Analyzer : FB_Trend_Analyzer;
     L_Trend_Data : ST_Trend_Data;
+    L_Trend_Adapter : FB_Trend_Adapter;
+    L_Trend_Avg : REAL;
+    L_Trend_Min : REAL;
+    L_Trend_Max : REAL;
+    L_Trend_Up : BOOL;
+    L_Trend_Down : BOOL;
     L_Trend_Average : REAL;
     L_Trend_Min : REAL;
     L_Trend_Max : REAL;
@@ -1095,13 +1101,24 @@ L_Trend_Logger(
 
 L_Trend_Data := L_Trend_Logger.VO_Data;
 
+// === TREND ANALYSIS VIA ADAPTER ===
+L_Trend_Adapter(
+    VI_Data := L_Trend_Data,
+    VO_Average => L_Trend_Avg,
+    VO_Min => L_Trend_Min,
+    VO_Max => L_Trend_Max,
+    VO_Trend_Up => L_Trend_Up,
+    VO_Trend_Down => L_Trend_Down
+);
+
+
 // === TREND → HISTORY WRITE (EDGE, SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
 
 IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
     L_Trend_Event.event_code := 1001;
     IF L_Trend_Data.record_count > 0 THEN
-        L_Trend_Event.event_value := L_Trend_Data.sum_values / UDINT_TO_REAL(L_Trend_Data.record_count);
+        L_Trend_Event.event_value := L_Trend_Avg;
     ELSE
         L_Trend_Event.event_value := 0.0;
     END_IF;
