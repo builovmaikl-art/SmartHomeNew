@@ -10,7 +10,6 @@ VAR
 
     // === TREND SYSTEM (MVP) ===
     L_Trend_Logger : FB_Trend_Logger;
-    L_Trend_Analyzer : FB_Trend_Analyzer;
     L_Trend_Data : ST_Trend_Data;
     L_Trend_Adapter : FB_Trend_Adapter;
     L_Trend_Avg : REAL;
