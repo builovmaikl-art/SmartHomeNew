@@ -60,7 +60,6 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-    // Heating V2 staging layer
 
     L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
     L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
@@ -122,7 +121,7 @@ END_VAR
 
 
 // ========================================
-// Heating policy layer (phase2)
+// Heating policy layer
 // ========================================
 L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
 L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);

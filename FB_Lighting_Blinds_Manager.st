@@ -27,8 +27,6 @@ VAR_OUTPUT
     VO_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL; // Флаги включенного света в мокрых зонах (для вентиляции)
 END_VAR
 VAR
-    // Blinds V2 shadow (phase2)
-    // Lighting V2 shadow (phase2)
     L_i : INT;
     L_j : INT;
     L_Base_Light : BYTE;

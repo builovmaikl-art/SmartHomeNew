@@ -47,8 +47,6 @@ IF L_Elapsed_Time >= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
 END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
-    // Inlined from FB_Rule_Compatibility_Package:
-    // current compatibility path is a trivial field copy from ST_User_Rule to ST_Rule.
 
     VO_Actions[L_i].Active := FALSE;
     IF VI_Rules[L_i].Enabled THEN

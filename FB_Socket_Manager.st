@@ -20,7 +20,6 @@ VAR_OUTPUT
     VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
 END_VAR
 VAR
-    // Socket V2 shadow (phase2)
     L_i : INT;
     L_j : INT;
     L_Rule_State : BOOL;

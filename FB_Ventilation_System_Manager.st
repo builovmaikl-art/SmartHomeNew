@@ -45,7 +45,7 @@ VAR
 END_VAR
 
 // ========================================
-// Ventilation policy layer (phase3/v2)
+// Ventilation policy layer
 // ========================================
 GVL_STATE.G_Ventilation_IO_Fault := FALSE;
 GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;

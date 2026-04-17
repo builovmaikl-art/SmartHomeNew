@@ -19,7 +19,6 @@ VAR_OUTPUT
     VO_Circ_Pump : BOOL; // Выход: Управление насосом рециркуляции ГВС
 END_VAR
 VAR
-    // DHW V2 staging layer
     L_i : INT;
     L_Current_TOD : TOD; // Текущее время суток
     L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)

@@ -173,8 +173,6 @@ END_FOR;
 
 // Обработка очереди новых тревог с учетом приоритетов
 FOR L_i := 1 TO L_Pending_Count DO
-    // Inlined from FB_Alarm_Compatibility_Package:
-    // current compatibility path is a no-op roundtrip with VO_OK always TRUE.
 
     L_Target_Slot := 0;
     

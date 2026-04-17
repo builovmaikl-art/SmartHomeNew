@@ -1,0 +1,127 @@
+]633;E;echo "=== STEP 130: REMOVE STALE PHASE/V2 COMMENTS ===";c91143c6-a704-4775-b84b-ecf25abd49a0]633;C=== STEP 130: REMOVE STALE PHASE/V2 COMMENTS ===
+timestamp_utc=2026-04-17T10:24:52Z
+
+=== BEFORE ===
+FB_Alarm_Manager.st:176:    // Inlined from FB_Alarm_Compatibility_Package:
+FB_Alarm_Manager.st:177:    // current compatibility path is a no-op roundtrip with VO_OK always TRUE.
+FB_Rule_Engine.st:50:    // Inlined from FB_Rule_Compatibility_Package:
+FB_Rule_Engine.st:51:    // current compatibility path is a trivial field copy from ST_User_Rule to ST_Rule.
+FB_Socket_Manager.st:23:    // Socket V2 shadow (phase2)
+FB_DHW_Manager.st:22:    // DHW V2 staging layer
+FB_Ventilation_System_Manager.st:48:// Ventilation policy layer (phase3/v2)
+FB_Lighting_Blinds_Manager.st:30:    // Blinds V2 shadow (phase2)
+FB_Lighting_Blinds_Manager.st:31:    // Lighting V2 shadow (phase2)
+FB_Heating_System_Manager.st:63:    // Heating V2 staging layer
+FB_Heating_System_Manager.st:125:// Heating policy layer (phase2)
+
+=== APPLY ===
+UPDATED: FB_Alarm_Manager.st
+UPDATED: FB_Rule_Engine.st
+UPDATED: FB_Socket_Manager.st
+UPDATED: FB_DHW_Manager.st
+UPDATED: FB_Ventilation_System_Manager.st
+UPDATED: FB_Lighting_Blinds_Manager.st
+UPDATED: FB_Heating_System_Manager.st
+
+=== AFTER ===
+
+=== DIFF ===
+diff --git a/FB_Alarm_Manager.st b/FB_Alarm_Manager.st
+index d0838a8..aff239c 100644
+--- a/FB_Alarm_Manager.st
++++ b/FB_Alarm_Manager.st
+@@ -173,8 +173,6 @@ END_FOR;
+ 
+ // Обработка очереди новых тревог с учетом приоритетов
+ FOR L_i := 1 TO L_Pending_Count DO
+-    // Inlined from FB_Alarm_Compatibility_Package:
+-    // current compatibility path is a no-op roundtrip with VO_OK always TRUE.
+ 
+     L_Target_Slot := 0;
+     
+diff --git a/FB_DHW_Manager.st b/FB_DHW_Manager.st
+index 3fd51dc..038738b 100644
+--- a/FB_DHW_Manager.st
++++ b/FB_DHW_Manager.st
+@@ -19,7 +19,6 @@ VAR_OUTPUT
+     VO_Circ_Pump : BOOL; // Выход: Управление насосом рециркуляции ГВС
+ END_VAR
+ VAR
+-    // DHW V2 staging layer
+     L_i : INT;
+     L_Current_TOD : TOD; // Текущее время суток
+     L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index 2fc00f8..9700351 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -60,7 +60,6 @@ VAR_OUTPUT
+ END_VAR
+ 
+ VAR
+-    // Heating V2 staging layer
+ 
+     L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
+     L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
+@@ -122,7 +121,7 @@ END_VAR
+ 
+ 
+ // ========================================
+-// Heating policy layer (phase2)
++// Heating policy layer
+ // ========================================
+ L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
+ L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+diff --git a/FB_Lighting_Blinds_Manager.st b/FB_Lighting_Blinds_Manager.st
+index ba36441..29f29ac 100644
+--- a/FB_Lighting_Blinds_Manager.st
++++ b/FB_Lighting_Blinds_Manager.st
+@@ -27,8 +27,6 @@ VAR_OUTPUT
+     VO_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL; // Флаги включенного света в мокрых зонах (для вентиляции)
+ END_VAR
+ VAR
+-    // Blinds V2 shadow (phase2)
+-    // Lighting V2 shadow (phase2)
+     L_i : INT;
+     L_j : INT;
+     L_Base_Light : BYTE;
+diff --git a/FB_Rule_Engine.st b/FB_Rule_Engine.st
+index a3ec22a..9aac21b 100644
+--- a/FB_Rule_Engine.st
++++ b/FB_Rule_Engine.st
+@@ -47,8 +47,6 @@ IF L_Elapsed_Time >= GVL_CONSTANTS.C_MS_IN_MINUTE THEN
+ END_IF;
+ 
+ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+-    // Inlined from FB_Rule_Compatibility_Package:
+-    // current compatibility path is a trivial field copy from ST_User_Rule to ST_Rule.
+ 
+     VO_Actions[L_i].Active := FALSE;
+     IF VI_Rules[L_i].Enabled THEN
+diff --git a/FB_Socket_Manager.st b/FB_Socket_Manager.st
+index 64874c0..2845a34 100644
+--- a/FB_Socket_Manager.st
++++ b/FB_Socket_Manager.st
+@@ -20,7 +20,6 @@ VAR_OUTPUT
+     VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+ END_VAR
+ VAR
+-    // Socket V2 shadow (phase2)
+     L_i : INT;
+     L_j : INT;
+     L_Rule_State : BOOL;
+diff --git a/FB_Ventilation_System_Manager.st b/FB_Ventilation_System_Manager.st
+index f67e03e..362cc3a 100644
+--- a/FB_Ventilation_System_Manager.st
++++ b/FB_Ventilation_System_Manager.st
+@@ -45,7 +45,7 @@ VAR
+ END_VAR
+ 
+ // ========================================
+-// Ventilation policy layer (phase3/v2)
++// Ventilation policy layer
+ // ========================================
+ GVL_STATE.G_Ventilation_IO_Fault := FALSE;
+ GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;
+
+=== END STEP 130 ===
