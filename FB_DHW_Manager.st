@@ -234,9 +234,9 @@ fbDHWV2Staging(
     VI_Pump_Enable := VO_Heating_Pump,
     VI_Heating_Priority := FALSE,
 
-    VI_Is_Active := TRUE,
+    VI_Is_Active := VO_Heating_Pump,
     VI_Tank_Temp := VO_Status.Temp,
-    VI_Supply_Temp := VO_Status.Temp,
+    VI_Supply_Temp := VO_Status.Pressure,
     VI_Return_Temp := VO_Status.Temp,
     VI_Pump_Actual := VO_Heating_Pump,
     VI_Alarm_Active := VO_Status.Error,

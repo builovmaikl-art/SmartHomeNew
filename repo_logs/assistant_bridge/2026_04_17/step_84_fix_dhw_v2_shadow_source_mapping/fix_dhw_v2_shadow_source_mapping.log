@@ -1,0 +1,63 @@
+]633;E;echo "=== STEP 84: FIX DHW V2 SHADOW SOURCE MAPPING ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 84: FIX DHW V2 SHADOW SOURCE MAPPING ===
+timestamp_utc=2026-04-17T05:34:21Z
+
+=== BEFORE ===
+fbDHWV2Staging(
+    VI_Tank_ID := 1,
+    VI_Enable := TRUE,
+    VI_Target_Temp := VI_Config.Target_Temp,
+    VI_Pump_Enable := VO_Heating_Pump,
+    VI_Heating_Priority := FALSE,
+
+    VI_Is_Active := TRUE,
+    VI_Tank_Temp := VO_Status.Temp,
+    VI_Supply_Temp := VO_Status.Temp,
+    VI_Return_Temp := VO_Status.Temp,
+    VI_Pump_Actual := VO_Heating_Pump,
+    VI_Alarm_Active := VO_Status.Error,
+
+    VO_Command_Shadow => L_DHW_V2_Command_V2,
+    VO_State_Shadow => L_DHW_V2_State_V2
+);
+
+=== APPLY ===
+OK: fixed DHW V2 shadow source mapping
+
+=== AFTER ===
+fbDHWV2Staging(
+    VI_Tank_ID := 1,
+    VI_Enable := TRUE,
+    VI_Target_Temp := VI_Config.Target_Temp,
+    VI_Pump_Enable := VO_Heating_Pump,
+    VI_Heating_Priority := FALSE,
+
+    VI_Is_Active := VO_Heating_Pump,
+    VI_Tank_Temp := VO_Status.Temp,
+    VI_Supply_Temp := VO_Status.Pressure,
+    VI_Return_Temp := VO_Status.Temp,
+    VI_Pump_Actual := VO_Heating_Pump,
+    VI_Alarm_Active := VO_Status.Error,
+
+    VO_Command_Shadow => L_DHW_V2_Command_V2,
+    VO_State_Shadow => L_DHW_V2_State_V2
+);
+
+=== DIFF ===
+diff --git a/FB_DHW_Manager.st b/FB_DHW_Manager.st
+index 25f3700..933c6bf 100644
+--- a/FB_DHW_Manager.st
++++ b/FB_DHW_Manager.st
+@@ -234,9 +234,9 @@ fbDHWV2Staging(
+     VI_Pump_Enable := VO_Heating_Pump,
+     VI_Heating_Priority := FALSE,
+ 
+-    VI_Is_Active := TRUE,
++    VI_Is_Active := VO_Heating_Pump,
+     VI_Tank_Temp := VO_Status.Temp,
+-    VI_Supply_Temp := VO_Status.Temp,
++    VI_Supply_Temp := VO_Status.Pressure,
+     VI_Return_Temp := VO_Status.Temp,
+     VI_Pump_Actual := VO_Heating_Pump,
+     VI_Alarm_Active := VO_Status.Error,
+
+=== END STEP 84 ===
