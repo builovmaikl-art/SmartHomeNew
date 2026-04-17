@@ -8,6 +8,9 @@ TYPE E_Gateway_Command_Type :
     CMD_SET_TEMP := 5,
     CMD_SET_VENT := 6,
     CMD_SET_BLINDS := 7,
-    CMD_TELEGRAM_MSG := 8
+    CMD_TELEGRAM_MSG := 8,
+    CMD_SYNC_TIME := 9,
+    CMD_RESET_ERRORS := 10,
+    CMD_SET_CONFIG := 11
 ) USINT;
 END_TYPE
