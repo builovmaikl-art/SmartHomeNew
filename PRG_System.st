@@ -1,5 +1,10 @@
 PROGRAM PRG_System
 VAR
+
+    // === TREND SYSTEM (MVP) ===
+    L_Trend_Logger : FB_Trend_Logger;
+    L_Trend_Analyzer : FB_Trend_Analyzer;
+    L_Trend_Data : ST_Trend_Data;
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
