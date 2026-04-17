@@ -1,0 +1,10 @@
+]633;E;echo "=== STEP 156C: REPAIR PRG_SYSTEM HMI MESSAGE AGAIN ===";97c733cc-4931-43bf-9971-18bae8e8cedb]633;C=== STEP 156C: REPAIR PRG_SYSTEM HMI MESSAGE AGAIN ===
+timestamp_utc=2026-04-17T21:07:05Z
+
+=== BEFORE ===
+270:GVL_GATEWAY.G_Gateway_HMI_Status_Message := fbHMIInterface.VO_HMI_Status_Text;
+499:    VO_HMI_Status_Message => GVL_GATEWAY.G_Gateway_HMI_Status_Message,
+700:    GVL_GATEWAY.G_Gateway_HMI_Status_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
+
+=== APPLY ===
+Target HMI_Last_Message assignment not found in PRG_System.st
