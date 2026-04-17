@@ -1,17 +1,10 @@
 ]633;E;echo "=== STEP 143: FIX PRG_SYSTEM HMI_LAST_MESSAGE ASSIGNMENT ===";a64e9a30-0949-4009-9084-293430865c4e]633;C=== STEP 143: FIX PRG_SYSTEM HMI_LAST_MESSAGE ASSIGNMENT ===
-timestamp_utc=2026-04-17T17:02:18Z
+timestamp_utc=2026-04-17T17:03:00Z
 
 === BEFORE ===
 253:GVL_GATEWAY.G_Gateway_HMI_Status_Message := fbHMIInterface.VO_HMI_Status_Text;
 482:    VO_HMI_Status_Message => GVL_GATEWAY.G_Gateway_HMI_Status_Message,
-683:    GVL_STATUS.G_Diagnostics.HMI_Last_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
-
-=== APPLY ===
-OK: redirected scenario guard HMI message to GVL_GATEWAY.G_Gateway_HMI_Status_Message
-
-=== AFTER ===
-253:GVL_GATEWAY.G_Gateway_HMI_Status_Message := fbHMIInterface.VO_HMI_Status_Text;
-482:    VO_HMI_Status_Message => GVL_GATEWAY.G_Gateway_HMI_Status_Message,
 683:    GVL_GATEWAY.G_Gateway_HMI_Status_Message := CONCAT('Scenario guard: ', fbScenarioGuard.VO_Reason);
 
-=== END STEP 143 ===
+=== APPLY ===
+Target assignment not found in PRG_System.st
