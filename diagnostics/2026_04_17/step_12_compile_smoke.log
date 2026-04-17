@@ -1,4 +1,4 @@
-]633;E;echo "== START COMPILE SMOKE ==";19d0ba79-a966-4906-8ae2-19ed462a8504]633;C== START COMPILE SMOKE ==
+]633;E;echo "== START COMPILE SMOKE ==";a64e9a30-0949-4009-9084-293430865c4e]633;C== START COMPILE SMOKE ==
 -- ROOT --
 /workspaces/SmartHomeNew
 
@@ -8,16 +8,16 @@ Python 3.12.1
 -- COMPILER DIR --
 total 560
 drwxrwxrwx+  5 codespace codespace   4096 Apr 16 14:14 .
-drwxrwxrwx+ 12 codespace root       16384 Apr 17 11:47 ..
+drwxrwxrwx+ 12 codespace root       16384 Apr 17 16:33 ..
 drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 __pycache__
 -rw-rw-rw-   1 codespace codespace  34293 Apr 16 14:00 import_codesys_FINAL.py
 -rw-rw-rw-   1 codespace codespace  33804 Apr 16 14:00 import_codesys_FINAL.py.bak
 -rw-rw-rw-   1 codespace codespace   3227 Apr 16 14:00 import_codesys_FINAL_METHODS_V2.py
 -rw-rw-rw-   1 codespace codespace     54 Apr 16 14:00 import_codesys_FINAL_METHODS_V3.py
-drwxrwxrwx+  2 codespace codespace   4096 Apr 16 15:25 logs
+drwxrwxrwx+  2 codespace codespace   4096 Apr 17 13:41 logs
 -rw-rw-rw-   1 codespace codespace   7227 Apr 16 14:00 method_overlay_clean.py
 -rw-rw-rw-   1 codespace codespace   7163 Apr 16 14:00 method_overlay_clean.py.bak
-drwxrwxrwx+  2 codespace codespace   4096 Apr 16 15:25 out
+drwxrwxrwx+  2 codespace codespace   4096 Apr 17 13:41 out
 -rwxrwxrwx   1 codespace codespace    822 Apr 16 14:14 run_compile_smoke.sh
 -rw-rw-rw-   1 codespace codespace 428970 Apr 16 14:00 Система умного дома.xml
 -rw-rw-rw-   1 codespace codespace    456 Apr 16 14:00 запуск_сборки.md
@@ -47,7 +47,7 @@ METHOD OVERLAY DONE
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/003_RESULT.xml
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/004_RESULT.xml
 CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
-]633;E;echo;19d0ba79-a966-4906-8ae2-19ed462a8504]633;C
+]633;E;echo;a64e9a30-0949-4009-9084-293430865c4e]633;C
 -- OUTPUT CHECK --
 компилятор
 компилятор/__pycache__

@@ -1,0 +1,3 @@
+]633;E;echo "=== RESTORE ST_Persist FROM SNAPSHOT ===";47a4f756-7d34-49f9-912c-0956e39590b6]633;C=== RESTORE ST_Persist FROM SNAPSHOT ===
+SOURCE: snapshots/project_clean_state_2026_04_16/DUT/ST_Persist.dut
+ERROR: SOURCE NOT FOUND
