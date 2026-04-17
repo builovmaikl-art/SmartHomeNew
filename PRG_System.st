@@ -7,12 +7,16 @@ VAR
 
     // === TREND → HISTORY BRIDGE ===
     L_Trend_Event : ST_History_Record;
-    L_Trend_Write : BOOL;
 
     // === TREND SYSTEM (MVP) ===
     L_Trend_Logger : FB_Trend_Logger;
     L_Trend_Analyzer : FB_Trend_Analyzer;
     L_Trend_Data : ST_Trend_Data;
+    L_Trend_Average : REAL;
+    L_Trend_Min : REAL;
+    L_Trend_Max : REAL;
+    L_Trend_Up : BOOL;
+    L_Trend_Down : BOOL;
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
@@ -1074,6 +1078,65 @@ GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
 
 GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
 GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+
+
+// === TREND EXECUTION (MVP) ===
+L_Trend_Logger(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Config := (
+        param_type := 1,
+        zone_id := 0,
+        enabled := TRUE,
+        deviation_threshold_percent := 1.0,
+        history_days := 1
+    ),
+    VI_Current_Value := GVL_STATE.G_Outdoor_Temp
+);
+
+L_Trend_Data := L_Trend_Logger.VO_Data;
+
+L_Trend_Analyzer(
+    VI_Count := INT(L_Trend_Data.record_count),
+    VI_Data := L_Trend_Data.values,
+    VO_Average => L_Trend_Average,
+    VO_Max => L_Trend_Max,
+    VO_Min => L_Trend_Min,
+    VO_Trend_Up => L_Trend_Up,
+    VO_Trend_Down => L_Trend_Down
+);
+
+// === TREND → HISTORY WRITE (EDGE, EXTENDED METRICS) ===
+L_Trend_Write := (L_Trend_Data.record_count > 0);
+
+IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
+    L_Trend_Event.event_code := 1001;
+    L_Trend_Event.event_value := L_Trend_Average;
+    L_Trend_Event.zone_id := 0;
+    L_Trend_Event.operator_id := '';
+
+    IF L_Trend_Min < L_Trend_Average THEN
+        L_Trend_Event.event_code := 1002;
+        L_Trend_Event.event_value := L_Trend_Min;
+    END_IF;
+
+    IF L_Trend_Max > L_Trend_Average THEN
+        L_Trend_Event.event_code := 1003;
+        L_Trend_Event.event_value := L_Trend_Max;
+    END_IF;
+
+    IF L_Trend_Up THEN
+        L_Trend_Event.event_code := 1004;
+        L_Trend_Event.event_value := 1.0;
+    ELSIF L_Trend_Down THEN
+        L_Trend_Event.event_code := 1005;
+        L_Trend_Event.event_value := -1.0;
+    END_IF;
+
+    L_History_Write_Event := TRUE;
+    L_History_Event := L_Trend_Event;
+END_IF;
+
+L_Trend_Write_Prev := L_Trend_Write;
 
 // >>> BULK_SYNC_ANCHOR: PRG_System <<<
 

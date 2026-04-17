@@ -1,0 +1,95 @@
+]633;E;echo "=== STEP 156B: FIX EXTEND TREND METRICS EXACT ===";97c733cc-4931-43bf-9971-18bae8e8cedb]633;C=== STEP 156B: FIX EXTEND TREND METRICS EXACT ===
+timestamp_utc=2026-04-17T21:01:39Z
+
+=== APPLY ===
+OK: fixed trend execution and extended metrics with exact field names
+
+=== VERIFY TOP VARS ===
+PROGRAM PRG_System
+VAR
+
+    // === TREND WRITE CONTROL ===
+    L_Trend_Write : BOOL;
+    L_Trend_Write_Prev : BOOL;
+
+    // === TREND → HISTORY BRIDGE ===
+    L_Trend_Event : ST_History_Record;
+
+    // === TREND SYSTEM (MVP) ===
+    L_Trend_Logger : FB_Trend_Logger;
+    L_Trend_Analyzer : FB_Trend_Analyzer;
+    L_Trend_Data : ST_Trend_Data;
+    L_Trend_Average : REAL;
+    L_Trend_Min : REAL;
+    L_Trend_Max : REAL;
+    L_Trend_Up : BOOL;
+    L_Trend_Down : BOOL;
+    L_i : INT;
+    L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    // --- ADAPTER LAYER ---
+    L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
+    L_Lighting_32   : ARRAY[1..32] OF BYTE;
+    L_Lighting_Bool_32 : ARRAY[1..32] OF BOOL;
+    L_FloorTemps_8  : ARRAY[1..8] OF REAL;
+    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;
+    fbSystemHealth : FB_System_Health;
+    fbRedundancy : FB_Redundancy_Manager;
+    fbGateway : FB_Gateway_Interface;
+    fbScenarioManager : FB_Scenario_Manager;
+    fbScenarioGuard : FB_Scenario_Transition_Guard;
+    fbSimulationManager : FB_Simulation_Manager;
+    fbRuleEngine : FB_Rule_Engine;
+    fbNVRAMManager : FB_NVRAM_Manager;
+
+    fbBlackBox : FB_BlackBox_Recorder;
+    fbAstroTimer : FB_Astro_Timer;
+    fbAlarmManager : FB_Alarm_Manager;
+    fbHistoryManager : FB_History_Manager;
+    fbSafety : FB_Safety_Manager;
+    fbStateManager : FB_State_Manager;
+    fbWatchdog : FB_Watchdog;
+    fbHMIInterface : FB_HMI_Interface;
+    fbFaultLogger : FB_Fault_Logger;
+    fbLogEvent : FB_LogEvent;
+    
+    L_Time_Diff : UDINT;
+    L_Local_State : ST_System_State_Snapshot;
+    L_Remote_State : ST_System_State_Snapshot;
+    L_NVRAM_Cmd : BYTE;
+    L_NVRAM_Offset : UDINT;
+    L_NVRAM_Done : BOOL;
+    L_NVRAM_Err : BOOL;
+    L_NVRAM_ErrID : UDINT;
+    L_BB_Record : ST_BlackBox_Record;
+    L_BB_Freeze : BOOL;
+    L_Scenario_Idx : INT;
+        L_Last_Operator_Blocked : BOOL;
+    L_Last_DHW_Heating_In_Service : BOOL;
+
+=== VERIFY TREND BLOCK ===
+15:    L_Trend_Average : REAL;
+16:    L_Trend_Min : REAL;
+17:    L_Trend_Max : REAL;
+18:    L_Trend_Up : BOOL;
+19:    L_Trend_Down : BOOL;
+853:    L_History_Event.event_code := 1001; // Scenario transition
+1083:// === TREND EXECUTION (MVP) ===
+1101:    VO_Average => L_Trend_Average,
+1102:    VO_Max => L_Trend_Max,
+1103:    VO_Min => L_Trend_Min,
+1104:    VO_Trend_Up => L_Trend_Up,
+1105:    VO_Trend_Down => L_Trend_Down
+1112:    L_Trend_Event.event_code := 1001;
+1113:    L_Trend_Event.event_value := L_Trend_Average;
+1117:    IF L_Trend_Min < L_Trend_Average THEN
+1118:        L_Trend_Event.event_code := 1002;
+1119:        L_Trend_Event.event_value := L_Trend_Min;
+1122:    IF L_Trend_Max > L_Trend_Average THEN
+1123:        L_Trend_Event.event_code := 1003;
+1124:        L_Trend_Event.event_value := L_Trend_Max;
+1127:    IF L_Trend_Up THEN
+1128:        L_Trend_Event.event_code := 1004;
+1130:    ELSIF L_Trend_Down THEN
+1131:        L_Trend_Event.event_code := 1005;
+
+=== END STEP 156B ===
