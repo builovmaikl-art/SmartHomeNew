@@ -1,0 +1,318 @@
+]633;E;echo "=== RUN STEP 144 ===";b1b004be-84e9-4c4a-907f-ec53559384c2]633;C=== RUN STEP 144 ===
+=== STEP 144: BUILD LIVE ROOT DEPENDENCY MAP ===
+
+=== ROOT FILE COUNTS ===
+DUT_OR_ENUM=76
+FUNCTION_BLOCK=79
+GLOBAL_VAR_LIST=12
+MAIN=1
+OTHER=1
+PROGRAM=11
+TOTAL=180
+
+=== PROGRAM ROOTS ===
+MAIN.st
+PRG_Heating.st
+PRG_IO_Read.st
+PRG_IO_Write.st
+PRG_Lighting.st
+PRG_PLC_A.st
+PRG_PLC_B.st
+PRG_Safety.st
+PRG_Security.st
+PRG_System.st
+PRG_Test.st
+PRG_Ventilation.st
+
+=== ZERO INCOMING REFERENCES ===
+E_Lifetime_Device_Type.dut | class=DUT_OR_ENUM
+E_Outdoor_Mode.dut | class=DUT_OR_ENUM
+E_Valve_Test_Result.dut | class=DUT_OR_ENUM
+E_WEATHER_COMPENSATION_METHOD.dut | class=DUT_OR_ENUM
+FB_CO_Detector.st | class=FUNCTION_BLOCK
+FB_Calibration_Manager.st | class=FUNCTION_BLOCK
+FB_DryRun_Assertion_Map.st | class=FUNCTION_BLOCK
+FB_DryRun_Simulation_Harness.st | class=FUNCTION_BLOCK
+FB_Emergency_Valve_Open.st | class=FUNCTION_BLOCK
+FB_Exhaust_Ventilation_Controller.st | class=FUNCTION_BLOCK
+FB_FloorHeating_Freeze_Protection.st | class=FUNCTION_BLOCK
+FB_FloorHeating_Overheat_Protection.st | class=FUNCTION_BLOCK
+FB_Gas_Methane_Detector.st | class=FUNCTION_BLOCK
+FB_Gas_Valve_Controller.st | class=FUNCTION_BLOCK
+FB_Maintenance_Access.st | class=FUNCTION_BLOCK
+FB_Manifold_Pump_Controller.st | class=FUNCTION_BLOCK
+FB_Manual_Valve_Control.st | class=FUNCTION_BLOCK
+FB_Outdoor_Lighting_Controller.st | class=FUNCTION_BLOCK
+FB_Pre_Departure_Heating.st | class=FUNCTION_BLOCK
+FB_Presence_Simulator.st | class=FUNCTION_BLOCK
+FB_Security_Alarm.st | class=FUNCTION_BLOCK
+FB_Sensor_Analog_Processing.st | class=FUNCTION_BLOCK
+FB_Sensor_Calibration.st | class=FUNCTION_BLOCK
+FB_Sensor_Calibration_Processor.st | class=FUNCTION_BLOCK
+FB_Sensor_Distribution.st | class=FUNCTION_BLOCK
+FB_Smoke_Detector.st | class=FUNCTION_BLOCK
+FB_State_Snapshot_Manager.st | class=FUNCTION_BLOCK
+FB_State_Snapshot_NVRAM.st | class=FUNCTION_BLOCK
+FB_Supply_Ventilation_Controller.st | class=FUNCTION_BLOCK
+FB_Trend_Analyzer.st | class=FUNCTION_BLOCK
+FB_Trend_Logger.st | class=FUNCTION_BLOCK
+FB_Water_Valve_Controller.st | class=FUNCTION_BLOCK
+FB_Zone_Access_Manager.st | class=FUNCTION_BLOCK
+MAIN.st | class=MAIN
+PRG_PLC_A.st | class=PROGRAM
+PRG_PLC_B.st | class=PROGRAM
+ST_Astro_Time.dut | class=DUT_OR_ENUM
+ST_Debug_Log_Record.dut | class=DUT_OR_ENUM
+ST_Debug_Logger_Config.dut | class=DUT_OR_ENUM
+ST_FloorHeating_Global_Config.dut | class=DUT_OR_ENUM
+ST_FloorHeating_Manifold_Config.dut | class=DUT_OR_ENUM
+ST_Lifetime_Status.dut | class=DUT_OR_ENUM
+ST_Maintenance_Access_Config.dut | class=DUT_OR_ENUM
+ST_Rule.dut | class=DUT_OR_ENUM
+ST_Scenario_Transition_Config.dut | class=DUT_OR_ENUM
+ST_Security_Zone_State.dut | class=DUT_OR_ENUM
+ST_System_State_Summary.dut | class=DUT_OR_ENUM
+ST_Trend_Header.dut | class=DUT_OR_ENUM
+ST_Trend_History_Record.dut | class=DUT_OR_ENUM
+ST_TwoFactor_Data.dut | class=DUT_OR_ENUM
+ST_Ventilation_Unit.dut | class=DUT_OR_ENUM
+ST_Zone_Sensors.dut | class=DUT_OR_ENUM
+
+=== ZERO OUTGOING REFERENCES ===
+E_ALERT_PRIORITY.dut | class=DUT_OR_ENUM
+E_Debug_Log_Level.dut | class=DUT_OR_ENUM
+E_Gateway_Command_Type.dut | class=DUT_OR_ENUM
+E_Lifetime_Device_Type.dut | class=DUT_OR_ENUM
+E_Outdoor_Mode.dut | class=DUT_OR_ENUM
+E_PLC_ROLE.dut | class=DUT_OR_ENUM
+E_Rule_Action_Type.dut | class=DUT_OR_ENUM
+E_Rule_Comparison.dut | class=DUT_OR_ENUM
+E_Rule_Condition_Type.dut | class=DUT_OR_ENUM
+E_SCENARIO_SOURCE.dut | class=DUT_OR_ENUM
+E_SCENARIO_TYPE.dut | class=DUT_OR_ENUM
+E_SENSOR_TYPE.dut | class=DUT_OR_ENUM
+E_System_Operating_Mode.dut | class=DUT_OR_ENUM
+E_System_Root_Cause.dut | class=DUT_OR_ENUM
+E_System_Severity.dut | class=DUT_OR_ENUM
+E_Trend_Parameter_Type.dut | class=DUT_OR_ENUM
+E_TwoFactor_Method.dut | class=DUT_OR_ENUM
+E_VALVE_TYPE.dut | class=DUT_OR_ENUM
+E_VENTILATION_LOCATION.dut | class=DUT_OR_ENUM
+E_VENTILATION_UNIT_TYPE.dut | class=DUT_OR_ENUM
+E_Valve_Test_Result.dut | class=DUT_OR_ENUM
+E_WEATHER_COMPENSATION_METHOD.dut | class=DUT_OR_ENUM
+E_Zone_Access_Level.dut | class=DUT_OR_ENUM
+FB_Analog_Validator.st | class=FUNCTION_BLOCK
+FB_CO_Detector.st | class=FUNCTION_BLOCK
+FB_CRC32_Calculator.st | class=FUNCTION_BLOCK
+FB_CoreKernel_Live_Observer.st | class=FUNCTION_BLOCK
+FB_DryRun_Assertion_Map.st | class=FUNCTION_BLOCK
+FB_DryRun_Simulation_Harness.st | class=FUNCTION_BLOCK
+FB_Emergency_Valve_Open.st | class=FUNCTION_BLOCK
+FB_Gas_Methane_Detector.st | class=FUNCTION_BLOCK
+FB_IO_Module_Watchdog.st | class=FUNCTION_BLOCK
+FB_Lifetime_Predictor.st | class=FUNCTION_BLOCK
+FB_Manifold_Pump_Controller.st | class=FUNCTION_BLOCK
+FB_Outdoor_Lighting_Controller.st | class=FUNCTION_BLOCK
+FB_PID_Controller.st | class=FUNCTION_BLOCK
+FB_PLC_Heartbeat.st | class=FUNCTION_BLOCK
+FB_Random_Generator.st | class=FUNCTION_BLOCK
+FB_SHA1.st | class=FUNCTION_BLOCK
+FB_Safety_Manager.st | class=FUNCTION_BLOCK
+FB_Scenario_Transition_Controller.st | class=FUNCTION_BLOCK
+FB_Security_Alarm.st | class=FUNCTION_BLOCK
+FB_Sensor_Calibration.st | class=FUNCTION_BLOCK
+FB_Sensor_Distribution.st | class=FUNCTION_BLOCK
+FB_Smoke_Detector.st | class=FUNCTION_BLOCK
+FB_System_Timer.st | class=FUNCTION_BLOCK
+FB_System_Timer_TOF.st | class=FUNCTION_BLOCK
+FB_Watchdog.st | class=FUNCTION_BLOCK
+GVL_CONSTANTS.gvl | class=GLOBAL_VAR_LIST
+GVL_HEALTH_BRIDGE.gvl | class=GLOBAL_VAR_LIST
+IValveController.st | class=OTHER
+ST_Astro_Time.dut | class=DUT_OR_ENUM
+ST_Boiler_Status.dut | class=DUT_OR_ENUM
+ST_Component_Maintenance.dut | class=DUT_OR_ENUM
+ST_DHW_Config.dut | class=DUT_OR_ENUM
+ST_DHW_Status.dut | class=DUT_OR_ENUM
+ST_Device_Health.dut | class=DUT_OR_ENUM
+ST_EVENT.dut | class=DUT_OR_ENUM
+ST_FloorHeating_Circuit_Config.dut | class=DUT_OR_ENUM
+ST_FloorHeating_Global_Config.dut | class=DUT_OR_ENUM
+ST_Heating_Config.dut | class=DUT_OR_ENUM
+ST_Lifetime_Status.dut | class=DUT_OR_ENUM
+ST_Maintenance_Access_Config.dut | class=DUT_OR_ENUM
+ST_Operator_Zone_Rights.dut | class=DUT_OR_ENUM
+ST_Outdoor_Zone_Config.dut | class=DUT_OR_ENUM
+ST_Owen_Analog_Value.dut | class=DUT_OR_ENUM
+ST_Rule.dut | class=DUT_OR_ENUM
+ST_Security_Zone_State.dut | class=DUT_OR_ENUM
+ST_Tariff_Config.dut | class=DUT_OR_ENUM
+ST_Trend_History_Record.dut | class=DUT_OR_ENUM
+ST_Valve_Test_Config.dut | class=DUT_OR_ENUM
+ST_Ventilation_Config.dut | class=DUT_OR_ENUM
+ST_Ventilation_Unit.dut | class=DUT_OR_ENUM
+
+=== HIGH-VALUE PROGRAM EDGES ===
+--- MAIN.st ---
+  -> PRG_Heating.st [PROGRAM]
+  -> PRG_IO_Read.st [PROGRAM]
+  -> PRG_IO_Write.st [PROGRAM]
+  -> PRG_Lighting.st [PROGRAM]
+  -> PRG_Safety.st [PROGRAM]
+  -> PRG_Security.st [PROGRAM]
+  -> PRG_System.st [PROGRAM]
+  -> PRG_Test.st [PROGRAM]
+  -> PRG_Ventilation.st [PROGRAM]
+
+--- PRG_Heating.st ---
+  -> E_System_Operating_Mode.dut [DUT_OR_ENUM]
+  -> FB_DHW_Manager.st [FUNCTION_BLOCK]
+  -> FB_Heating_System_Manager.st [FUNCTION_BLOCK]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_IO.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+--- PRG_IO_Read.st ---
+  -> FB_IO_Module_Watchdog.st [FUNCTION_BLOCK]
+  -> FB_System_Timer.st [FUNCTION_BLOCK]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_IO.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+--- PRG_IO_Write.st ---
+  -> GVL_ALARM.gvl [GLOBAL_VAR_LIST]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_IO.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+--- PRG_Lighting.st ---
+  -> FB_Lighting_Blinds_Manager.st [FUNCTION_BLOCK]
+  -> FB_Socket_Manager.st [FUNCTION_BLOCK]
+  -> GVL_ALARM.gvl [GLOBAL_VAR_LIST]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+--- PRG_PLC_A.st ---
+  -> PRG_System.st [PROGRAM]
+
+--- PRG_PLC_B.st ---
+  -> PRG_System.st [PROGRAM]
+
+--- PRG_Safety.st ---
+  -> E_System_Operating_Mode.dut [DUT_OR_ENUM]
+  -> FB_Gas_Smoke_Manager.st [FUNCTION_BLOCK]
+  -> FB_Water_Leakage_Manager.st [FUNCTION_BLOCK]
+  -> GVL_ALARM.gvl [GLOBAL_VAR_LIST]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_HEALTH_BRIDGE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+  -> PRG_System.st [PROGRAM]
+
+--- PRG_Security.st ---
+  -> FB_Access_Control.st [FUNCTION_BLOCK]
+  -> FB_Security_System_Manager.st [FUNCTION_BLOCK]
+  -> GVL_ALARM.gvl [GLOBAL_VAR_LIST]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_Retain.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+--- PRG_System.st ---
+  -> E_ALERT_PRIORITY.dut [DUT_OR_ENUM]
+  -> E_PLC_ROLE.dut [DUT_OR_ENUM]
+  -> E_Rule_Action_Type.dut [DUT_OR_ENUM]
+  -> E_SCENARIO_SOURCE.dut [DUT_OR_ENUM]
+  -> E_SCENARIO_TYPE.dut [DUT_OR_ENUM]
+  -> E_System_Operating_Mode.dut [DUT_OR_ENUM]
+  -> E_System_Root_Cause.dut [DUT_OR_ENUM]
+  -> FB_Alarm_Manager.st [FUNCTION_BLOCK]
+  -> FB_Astro_Timer.st [FUNCTION_BLOCK]
+  -> FB_BlackBox_Recorder.st [FUNCTION_BLOCK]
+  -> FB_CoreKernel_Live_Observer.st [FUNCTION_BLOCK]
+  -> FB_Fault_Logger.st [FUNCTION_BLOCK]
+  -> FB_Gateway_Interface.st [FUNCTION_BLOCK]
+  -> FB_HMI_Interface.st [FUNCTION_BLOCK]
+  -> FB_History_Manager.st [FUNCTION_BLOCK]
+  -> FB_LogEvent.st [FUNCTION_BLOCK]
+  -> FB_NVRAM_Manager.st [FUNCTION_BLOCK]
+  -> FB_Redundancy_Manager.st [FUNCTION_BLOCK]
+  -> FB_Rule_Engine.st [FUNCTION_BLOCK]
+  -> FB_Safety_Manager.st [FUNCTION_BLOCK]
+  -> FB_Scenario_Manager.st [FUNCTION_BLOCK]
+  -> FB_Scenario_Transition_Guard.st [FUNCTION_BLOCK]
+  -> FB_Simulation_Manager.st [FUNCTION_BLOCK]
+  -> FB_State_Manager.st [FUNCTION_BLOCK]
+  -> FB_System_Health.st [FUNCTION_BLOCK]
+  -> FB_Watchdog.st [FUNCTION_BLOCK]
+  -> GVL_ALARM.gvl [GLOBAL_VAR_LIST]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_GATEWAY.gvl [GLOBAL_VAR_LIST]
+  -> GVL_HEALTH_BRIDGE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_IO.gvl [GLOBAL_VAR_LIST]
+  -> GVL_PERSISTENT.gvl [GLOBAL_VAR_LIST]
+  -> GVL_Retain.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+  -> ST_BlackBox_Record.dut [DUT_OR_ENUM]
+  -> ST_History_Record.dut [DUT_OR_ENUM]
+  -> ST_Persist.dut [DUT_OR_ENUM]
+  -> ST_System_State_Snapshot.dut [DUT_OR_ENUM]
+
+--- PRG_Test.st ---
+  -> FB_Analog_Validator.st [FUNCTION_BLOCK]
+  -> FB_Random_Generator.st [FUNCTION_BLOCK]
+  -> FB_TwoFactor_Auth.st [FUNCTION_BLOCK]
+
+--- PRG_Ventilation.st ---
+  -> E_System_Operating_Mode.dut [DUT_OR_ENUM]
+  -> FB_Ventilation_System_Manager.st [FUNCTION_BLOCK]
+  -> GVL_COMMAND.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONFIG.gvl [GLOBAL_VAR_LIST]
+  -> GVL_CONSTANTS.gvl [GLOBAL_VAR_LIST]
+  -> GVL_HEALTH_BRIDGE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATE.gvl [GLOBAL_VAR_LIST]
+  -> GVL_STATUS.gvl [GLOBAL_VAR_LIST]
+
+=== SELECTED CORE MANAGER REVERSE DEPS ===
+--- FB_Heating_System_Manager.st ---
+  <- PRG_Heating.st [PROGRAM]
+
+--- FB_DHW_Manager.st ---
+  <- PRG_Heating.st [PROGRAM]
+
+--- FB_Lighting_Blinds_Manager.st ---
+  <- PRG_Lighting.st [PROGRAM]
+
+--- FB_Ventilation_System_Manager.st ---
+  <- PRG_Ventilation.st [PROGRAM]
+
+--- FB_Rule_Engine.st ---
+  <- PRG_System.st [PROGRAM]
+
+--- FB_Alarm_Manager.st ---
+  <- PRG_System.st [PROGRAM]
+
+--- FB_Socket_Manager.st ---
+  <- PRG_Lighting.st [PROGRAM]
+
+=== ARTIFACT ===
+workspace/dependency_map_live_root.md
+
+=== END STEP 144 ===
