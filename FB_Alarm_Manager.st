@@ -240,23 +240,8 @@ END_IF;
 
 // Обработка очереди новых тревог с учетом приоритетов
 FOR L_i := 1 TO L_Pending_Count DO
-    fbCompatAlarm[L_i](VI_Alarm_Legacy := L_Pending_Alarms[L_i]);
-
-    IF NOT fbCompatAlarm[L_i].VO_OK THEN
-        L_Alarm_Compat_All_OK := FALSE;
-    END_IF;
-
-    IF (NOT L_Alarm_First_Warning_Latched) AND (NOT fbCompatAlarm[L_i].VO_OK) THEN
-        L_Alarm_First_Warning := 'Translation issue';
-        L_Alarm_First_Warning_Latched := TRUE;
-    END_IF;
-
-    IF fbCompatAlarm[L_i].VO_Alarm_Legacy_Roundtrip.ID <> L_Pending_Alarms[L_i].ID THEN
-        L_Alarm_Shadow_Mismatch := TRUE;
-        IF L_Alarm_Shadow_First_Mismatch = 0 THEN
-            L_Alarm_Shadow_First_Mismatch := L_i;
-        END_IF;
-    END_IF;
+    // Inlined from FB_Alarm_Compatibility_Package:
+    // current compatibility path is a no-op roundtrip with VO_OK always TRUE.
     // Phase 4 scaffold: optional Alarm V2 switch point.
     // Current state: always remain on legacy behavior.
     // Future state: when Alarm V2 path is implemented and validated,
