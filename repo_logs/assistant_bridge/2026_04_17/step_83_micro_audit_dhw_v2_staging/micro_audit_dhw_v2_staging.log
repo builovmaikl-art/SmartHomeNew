@@ -1,0 +1,167 @@
+]633;E;echo "=== STEP 83: MICRO AUDIT DHW V2 STAGING ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 83: MICRO AUDIT DHW V2 STAGING ===
+timestamp_utc=2026-04-17T05:30:50Z
+
+=== FILE: FB_DHW_V2_Staging.st ===
+FUNCTION_BLOCK FB_DHW_V2_Staging
+VAR_INPUT
+    VI_Tank_ID : INT;
+    VI_Enable : BOOL;
+    VI_Target_Temp : REAL;
+    VI_Pump_Enable : BOOL;
+    VI_Heating_Priority : BOOL;
+    VI_Is_Active : BOOL;
+    VI_Tank_Temp : REAL;
+    VI_Supply_Temp : REAL;
+    VI_Return_Temp : REAL;
+    VI_Pump_Actual : BOOL;
+    VI_Alarm_Active : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Command_Shadow : ST_DHW_Command_V2;
+    VO_State_Shadow : ST_DHW_State_V2;
+END_VAR
+
+IF VI_Pump_Enable THEN
+    VO_Command_Shadow.Pump_Enable := 1.0;
+ELSE
+    VO_Command_Shadow.Pump_Enable := 0.0;
+END_IF;
+
+VO_State_Shadow.Tank_Temp := VI_Tank_Temp;
+VO_State_Shadow.Supply_Temp := VI_Supply_Temp;
+END_FUNCTION_BLOCK
+
+=== POSSIBLE OWNER MANAGERS (search) ===
+./FB_DHW_Manager.st:23:    fbDHWV2Staging : FB_DHW_V2_Staging;
+./FB_DHW_Manager.st:230:fbDHWV2Staging(
+
+=== CONTEXT OF USAGE ===
+----- ./FB_DHW_Manager.st : line 23 -----
+    VI_Current_Day_Of_Week : UINT; // Текущий день недели (1-7)
+    VI_Reset_Errors : BOOL; // Сброс ошибок
+    VI_Emergency_Stop : BOOL; // Агрегированный аварийный стоп от подсистемы безопасности
+    VI_System_Mode : E_System_Operating_Mode; // Агрегированный режим системы
+    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода (только чтение)
+END_VAR
+// >>> SYNC_TEST_MARKER_001 <<<
+VAR_OUTPUT
+    VO_Status : ST_DHW_Status; // Сводный статус системы ГВС для HMI
+    VO_Heating_Pump : BOOL; // Выход: Управление насосом нагрева (загрузка бойлера)
+    VO_Circ_Pump : BOOL; // Выход: Управление насосом рециркуляции ГВС
+END_VAR
+VAR
+    // DHW V2 staging layer
+    fbDHWV2Staging : FB_DHW_V2_Staging;
+    L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
+    L_DHW_V2_State_V2 : ST_DHW_State_V2;
+    L_DHW_V2_Shadow_Diff_Found : BOOL;
+    L_DHW_V2_Switch_Enabled : BOOL;
+    L_DHW_V2_Path_Ready : BOOL;
+    L_DHW_Using_Legacy_Fallback : BOOL;
+    L_i : INT;
+    L_Current_TOD : TOD; // Текущее время суток
+    L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)
+    L_Legionella_Timer : FB_System_Timer; // Таймер удержания температуры для дезинфекции
+    L_Last_Good_Temp : REAL := 55.0; // Последнее достоверное значение температуры (для Fallback)
+    L_Legionella_Done_Today : BOOL; // Признак выполнения термодезинфекции в текущие сутки
+    L_Last_Legionella_Day : UINT; // День недели последнего сброса/контроля цикла легионеллы
+    fbTempValidator : FB_Analog_Validator;
+    fbPressValidator : FB_Analog_Validator;
+    L_Error_Latched : BOOL;
+    L_Error_ID_Latched : WORD;
+    L_Policy_Degraded : BOOL;
+    L_Policy_Freeze_Protection : BOOL;
+    L_Policy_Safe_Stop : BOOL;
+    L_Target_Temp_Adjusted : REAL;
+END_VAR
+
+IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+
+L_DHW_V2_Shadow_Diff_Found := FALSE;
+L_DHW_V2_Switch_Enabled := TRUE;
+L_DHW_V2_Path_Ready := FALSE;
+L_DHW_Using_Legacy_Fallback := TRUE;
+
+GVL_STATE.G_DHW_IO_Fault := FALSE;
+GVL_STATE.G_DHW_Sensor_Fault := FALSE;
+
+----- ./FB_DHW_Manager.st : line 230 -----
+// 3. Управление циркуляционным насосом ГВС по расписанию
+// Рециркуляция обеспечивает мгновенное наличие горячей воды у потребителя
+VO_Circ_Pump := SEL(VI_Config.Circulation_Schedule_Enabled AND NOT (VI_Config.Night_Mode_Enabled AND (L_Current_TOD < VI_Config.Circulation_Start OR L_Current_TOD > VI_Config.Circulation_End)), FALSE, TRUE);
+
+// Формирование статусных данных для визуализации.
+// К этому моменту статус уже консистентен:
+// - Error = критическая ошибка с остановкой ГВС
+// - Warning = деградация без остановки
+VO_Status.Heating_Pump_On := VO_Heating_Pump;
+VO_Status.Circ_Pump_On := VO_Circ_Pump;
+
+// ========================================
+// DHW V2 staging execution
+// ========================================
+fbDHWV2Staging(
+    VI_Tank_ID := 1,
+    VI_Enable := TRUE,
+    VI_Target_Temp := VI_Config.Target_Temp,
+    VI_Pump_Enable := VO_Heating_Pump,
+    VI_Heating_Priority := FALSE,
+
+    VI_Is_Active := TRUE,
+    VI_Tank_Temp := VO_Status.Temp,
+    VI_Supply_Temp := VO_Status.Temp,
+    VI_Return_Temp := VO_Status.Temp,
+    VI_Pump_Actual := VO_Heating_Pump,
+    VI_Alarm_Active := VO_Status.Error,
+
+    VO_Command_Shadow => L_DHW_V2_Command_V2,
+    VO_State_Shadow => L_DHW_V2_State_V2
+);
+
+// ========================================
+// DHW V2 staging validation
+// ========================================
+IF VO_Heating_Pump <> (L_DHW_V2_Command_V2.Pump_Enable > 0.5) THEN
+    L_DHW_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF ABS(VO_Status.Temp - L_DHW_V2_State_V2.Tank_Temp) > 0.1 THEN
+    L_DHW_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF ABS(VO_Status.Pressure - L_DHW_V2_State_V2.Supply_Temp) > 0.1 THEN
+    L_DHW_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+
+// Guarded DHW V2 enable
+IF L_DHW_V2_Switch_Enabled THEN
+
+
+=== V2 SHADOW TYPES ===
+TYPE ST_DHW_Command_V2 :
+STRUCT
+    Pump_Enable : REAL;
+END_STRUCT
+END_TYPE
+
+TYPE ST_DHW_State_V2 : STRUCT
+    Tank_Temp : REAL;
+    Supply_Temp : REAL;
+END_STRUCT
+END_TYPE
+=== ROOT REFERENCES ===
+./FB_DHW_Manager.st:23:    fbDHWV2Staging : FB_DHW_V2_Staging;
+./FB_DHW_V2_Staging.st:1:FUNCTION_BLOCK FB_DHW_V2_Staging
+
+./FB_DHW_Manager.st:24:    L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
+./FB_DHW_V2_Staging.st:16:    VO_Command_Shadow : ST_DHW_Command_V2;
+./ST_DHW_Command_V2.dut:1:TYPE ST_DHW_Command_V2 :
+
+./FB_DHW_Manager.st:25:    L_DHW_V2_State_V2 : ST_DHW_State_V2;
+./FB_DHW_V2_Staging.st:17:    VO_State_Shadow : ST_DHW_State_V2;
+./ST_DHW_State_V2.dut:1:TYPE ST_DHW_State_V2 : STRUCT
+
+=== PRELIMINARY COLLAPSE QUESTIONS ===
+1. Is there real DHW control logic inside staging?
+2. Are temperature/setpoint interactions present?
+3. Can we inline safely or need mapping step (like heating)?
+
+=== END STEP 83 ===
