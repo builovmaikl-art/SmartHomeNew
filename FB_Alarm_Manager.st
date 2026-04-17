@@ -380,18 +380,12 @@ IF VO_Event_Pulse THEN
 END_IF;
 
 // Shadow bridge: System -> BlackBox V2 (diagnostic only)
-fbBlackBoxV2Core(
-    VI_System_Time_MS := VI_System_Time_MS,
-    VI_System_Mode := 0,
-    VI_Critical_Alarm_Active := VO_Global_Critical,
-    VI_Warning_Active := VO_Global_Warning,
-    VI_First_Fault_Type := TO_BYTE(VI_First_Fault_Type),
-    VI_First_Fault_Source := TO_BYTE(VI_First_Fault_Source),
-    VI_Gas_Alarm := VI_Gas_Alarm,
-    VI_Fire_Alarm := VI_Fire_Alarm,
-    VI_Flood_Alarm := VI_Flood_Alarm,
-    VO_Snapshot => L_BlackBox_V2_Snapshot_Shadow
-);
+// Inlined from FB_BlackBox_V2_Core
+L_BlackBox_V2_Snapshot_Shadow.Gas_Alarm := VI_Gas_Alarm;
+L_BlackBox_V2_Snapshot_Shadow.Fire_Alarm := VI_Fire_Alarm;
+L_BlackBox_V2_Snapshot_Shadow.Flood_Alarm := VI_Flood_Alarm;
+L_BlackBox_V2_Snapshot_Shadow.First_Fault_Type := TO_BYTE(VI_First_Fault_Type);
+L_BlackBox_V2_Snapshot_Shadow.First_Fault_Source := TO_BYTE(VI_First_Fault_Source);
 
 // Shadow validation: History V2 / BlackBox V2
 IF VO_Event_Pulse THEN
