@@ -18,11 +18,6 @@ VAR
     L_Trend_Max : REAL;
     L_Trend_Up : BOOL;
     L_Trend_Down : BOOL;
-    L_Trend_Avg : REAL;
-    L_Trend_Min : REAL;
-    L_Trend_Max : REAL;
-    L_Trend_Up : BOOL;
-    L_Trend_Down : BOOL;
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
