@@ -28,19 +28,7 @@ VAR_OUTPUT
 END_VAR
 VAR
     // Blinds V2 shadow (phase2)
-    L_Blinds_V2_Command_Shadow : ST_Blinds_Command_V2;
-    L_Blinds_V2_State_Shadow : ST_Blinds_State_V2;
-    L_Blinds_V2_Shadow_Diff_Found : BOOL;
-    L_Blinds_V2_Switch_Enabled : BOOL;
-    L_Blinds_V2_Path_Ready : BOOL;
-    L_Blinds_Using_Legacy_Fallback : BOOL;
     // Lighting V2 shadow (phase2)
-    L_Lighting_V2_Command_Shadow : ST_Lighting_Command_V2;
-    L_Lighting_V2_State_Shadow : ST_Lighting_State_V2;
-    L_Lighting_V2_Shadow_Diff_Found : BOOL;
-    L_Lighting_V2_Switch_Enabled : BOOL;
-    L_Lighting_V2_Path_Ready : BOOL;
-    L_Lighting_Using_Legacy_Fallback : BOOL;
     L_i : INT;
     L_j : INT;
     L_Base_Light : BYTE;
@@ -66,14 +54,6 @@ END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
-L_Lighting_V2_Shadow_Diff_Found := FALSE;
-L_Blinds_V2_Shadow_Diff_Found := FALSE;
-L_Blinds_V2_Switch_Enabled := TRUE;
-L_Blinds_V2_Path_Ready := FALSE;
-L_Blinds_Using_Legacy_Fallback := TRUE;
-L_Lighting_V2_Switch_Enabled := TRUE;
-L_Lighting_V2_Path_Ready := FALSE;
-L_Lighting_Using_Legacy_Fallback := TRUE;
 
 GVL_STATE.G_Lighting_IO_Fault := FALSE;
 GVL_STATE.G_Lighting_Subsystem_Degraded := FALSE;
@@ -268,72 +248,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
     END_IF;
 END_FOR;
 
-// ========================================
-// Lighting V2 shadow execution (phase2)
-// Inlined from FB_Lighting_V2_Staging
-// ========================================
-L_Lighting_V2_Command_Shadow.Brightness_Setpoint := BYTE_TO_REAL(VO_Lighting_Levels[1]);
-L_Lighting_V2_State_Shadow.Brightness_Actual := BYTE_TO_REAL(VO_Lighting_Levels[1]);
-L_Lighting_V2_State_Shadow.Motion_Active := VI_Motion_Sensors[1];
-
-// ========================================
-// Lighting V2 shadow validation
-// ========================================
-IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_Command_Shadow.Brightness_Setpoint) > 0.1 THEN
-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_State_Shadow.Brightness_Actual) > 0.1 THEN
-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF VI_Motion_Sensors[1] <> L_Lighting_V2_State_Shadow.Motion_Active THEN
-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-// Guarded Lighting V2 enable
-IF L_Lighting_V2_Switch_Enabled THEN
-    IF NOT L_Lighting_V2_Shadow_Diff_Found THEN
-        L_Lighting_V2_Path_Ready := TRUE;
-        L_Lighting_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_Lighting_V2_Path_Ready := FALSE;
-        L_Lighting_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_Lighting_V2_Path_Ready := FALSE;
-    L_Lighting_Using_Legacy_Fallback := TRUE;
-END_IF;
-
-
-
-// ========================================
-// Blinds V2 shadow execution (phase2)
-// Inlined from FB_Blinds_V2_Staging
-// ========================================
-L_Blinds_V2_Command_Shadow.Position_Setpoint := VO_Blinds_Positions[1];
-L_Blinds_V2_State_Shadow.Position_Actual := VO_Blinds_Positions[1];
-
-// Blinds validation
-IF VO_Blinds_Positions[1] <> L_Blinds_V2_Command_Shadow.Position_Setpoint THEN
-    L_Blinds_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF VO_Blinds_Positions[1] <> L_Blinds_V2_State_Shadow.Position_Actual THEN
-    L_Blinds_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-
-// Guarded Blinds V2 enable
-IF L_Blinds_V2_Switch_Enabled THEN
-    IF NOT L_Blinds_V2_Shadow_Diff_Found THEN
-        L_Blinds_V2_Path_Ready := TRUE;
-        L_Blinds_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_Blinds_V2_Path_Ready := FALSE;
-        L_Blinds_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_Blinds_V2_Path_Ready := FALSE;
-    L_Blinds_Using_Legacy_Fallback := TRUE;
-END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Lighting_Blinds_Manager <<<

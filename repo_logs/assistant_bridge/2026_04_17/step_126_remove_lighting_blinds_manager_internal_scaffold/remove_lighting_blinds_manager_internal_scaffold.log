@@ -1,0 +1,348 @@
+]633;E;echo "=== STEP 126: REMOVE LIGHTING/BLINDS MANAGER INTERNAL SCAFFOLD ===";b6f813eb-cece-44d7-b1c9-eeab6bd16f84]633;C=== STEP 126: REMOVE LIGHTING/BLINDS MANAGER INTERNAL SCAFFOLD ===
+timestamp_utc=2026-04-17T09:59:36Z
+
+=== BEFORE ===
+31:    L_Blinds_V2_Command_Shadow : ST_Blinds_Command_V2;
+32:    L_Blinds_V2_State_Shadow : ST_Blinds_State_V2;
+33:    L_Blinds_V2_Shadow_Diff_Found : BOOL;
+34:    L_Blinds_V2_Switch_Enabled : BOOL;
+35:    L_Blinds_V2_Path_Ready : BOOL;
+36:    L_Blinds_Using_Legacy_Fallback : BOOL;
+38:    L_Lighting_V2_Command_Shadow : ST_Lighting_Command_V2;
+39:    L_Lighting_V2_State_Shadow : ST_Lighting_State_V2;
+40:    L_Lighting_V2_Shadow_Diff_Found : BOOL;
+41:    L_Lighting_V2_Switch_Enabled : BOOL;
+42:    L_Lighting_V2_Path_Ready : BOOL;
+43:    L_Lighting_Using_Legacy_Fallback : BOOL;
+69:L_Lighting_V2_Shadow_Diff_Found := FALSE;
+70:L_Blinds_V2_Shadow_Diff_Found := FALSE;
+71:L_Blinds_V2_Switch_Enabled := TRUE;
+72:L_Blinds_V2_Path_Ready := FALSE;
+73:L_Blinds_Using_Legacy_Fallback := TRUE;
+74:L_Lighting_V2_Switch_Enabled := TRUE;
+75:L_Lighting_V2_Path_Ready := FALSE;
+76:L_Lighting_Using_Legacy_Fallback := TRUE;
+275:L_Lighting_V2_Command_Shadow.Brightness_Setpoint := BYTE_TO_REAL(VO_Lighting_Levels[1]);
+276:L_Lighting_V2_State_Shadow.Brightness_Actual := BYTE_TO_REAL(VO_Lighting_Levels[1]);
+277:L_Lighting_V2_State_Shadow.Motion_Active := VI_Motion_Sensors[1];
+282:IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_Command_Shadow.Brightness_Setpoint) > 0.1 THEN
+283:    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+285:IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_State_Shadow.Brightness_Actual) > 0.1 THEN
+286:    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+288:IF VI_Motion_Sensors[1] <> L_Lighting_V2_State_Shadow.Motion_Active THEN
+289:    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+293:IF L_Lighting_V2_Switch_Enabled THEN
+294:    IF NOT L_Lighting_V2_Shadow_Diff_Found THEN
+295:        L_Lighting_V2_Path_Ready := TRUE;
+296:        L_Lighting_Using_Legacy_Fallback := FALSE;
+298:        L_Lighting_V2_Path_Ready := FALSE;
+299:        L_Lighting_Using_Legacy_Fallback := TRUE;
+302:    L_Lighting_V2_Path_Ready := FALSE;
+303:    L_Lighting_Using_Legacy_Fallback := TRUE;
+312:L_Blinds_V2_Command_Shadow.Position_Setpoint := VO_Blinds_Positions[1];
+313:L_Blinds_V2_State_Shadow.Position_Actual := VO_Blinds_Positions[1];
+316:IF VO_Blinds_Positions[1] <> L_Blinds_V2_Command_Shadow.Position_Setpoint THEN
+317:    L_Blinds_V2_Shadow_Diff_Found := TRUE;
+319:IF VO_Blinds_Positions[1] <> L_Blinds_V2_State_Shadow.Position_Actual THEN
+320:    L_Blinds_V2_Shadow_Diff_Found := TRUE;
+325:IF L_Blinds_V2_Switch_Enabled THEN
+326:    IF NOT L_Blinds_V2_Shadow_Diff_Found THEN
+327:        L_Blinds_V2_Path_Ready := TRUE;
+328:        L_Blinds_Using_Legacy_Fallback := FALSE;
+330:        L_Blinds_V2_Path_Ready := FALSE;
+331:        L_Blinds_Using_Legacy_Fallback := TRUE;
+334:    L_Blinds_V2_Path_Ready := FALSE;
+335:    L_Blinds_Using_Legacy_Fallback := TRUE;
+
+=== APPLY ===
+OK: removed internal scaffold from FB_Lighting_Blinds_Manager.st
+
+=== AFTER ===
+
+=== CORE LIGHTING/BLINDS FLOW STILL PRESENT ===
+17:    VI_Physical_Switches : ARRAY[1..32] OF BOOL; // Состояния физических выключателей
+18:    VI_Motion_Sensors : ARRAY[1..32] OF BOOL; // Состояния датчиков движения
+19:    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+25:    VO_Lighting_Levels : ARRAY[1..32] OF BYTE; // Выходные уровни освещения (0-100%)
+26:    VO_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE; // Выходные позиции штор (0-100%)
+27:    VO_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL; // Флаги включенного света в мокрых зонах (для вентиляции)
+41:    L_Light_States : ARRAY[1..32] OF BOOL;
+45:    L_Motion_Timers : ARRAY[1..32] OF FB_System_Timer_TOF;
+46:    L_Rule_Light_Active : BOOL;
+48:    L_Rule_Blinds_Active : BOOL;
+67:            VO_Lighting_Levels[L_j] := 0;
+70:            VO_Blinds_Positions[L_j] := 100;
+73:            VO_Wet_Zone_Light_Active[L_j] := FALSE;
+87:    VO_Wet_Zone_Light_Active[L_i] := FALSE;
+97:            VO_Lighting_Levels[L_j] := 0;
+100:            VO_Blinds_Positions[L_j] := 100;
+159:    L_Rule_Light_Active := FALSE;
+164:        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+165:            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_LIGHTING_BASE THEN
+166:                L_Rule_Light_Active := TRUE;
+167:                L_Rule_Light_Val := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+168:                L_Light_States[L_i] := (L_Rule_Light_Val > 0);
+169:            ELSIF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_TOGGLE_LIGHTING AND VI_Rule_Actions[L_j].Triggered THEN
+170:                L_Light_States[L_i] := NOT L_Light_States[L_i];
+176:    IF VI_Physical_Switches[L_i] AND NOT L_Prev_Switches[L_i] THEN
+177:        L_Light_States[L_i] := NOT L_Light_States[L_i];
+180:    L_Prev_Switches[L_i] := VI_Physical_Switches[L_i];
+184:    L_Motion_Timers[L_i](IN := VI_Motion_Sensors[L_i], PT := T#5m, VI_System_Time_MS := VI_System_Time_MS);
+187:    IF L_Prev_Motion_Q[L_i] AND NOT L_Motion_Timers[L_i].Q THEN
+190:    L_Prev_Motion_Q[L_i] := L_Motion_Timers[L_i].Q;
+192:    IF L_Motion_Timers[L_i].Q THEN
+194:            L_Light_States[L_i] := TRUE;
+199:            L_Light_States[L_i] := FALSE;
+205:        L_Light_States[L_i] := VI_Simulation_Lights[L_i];
+210:        VO_Lighting_Levels[L_i] := VI_Manual_Light_Override[L_i];
+211:    ELSIF L_Rule_Light_Active THEN
+212:        VO_Lighting_Levels[L_i] := L_Rule_Light_Val;
+214:        VO_Lighting_Levels[L_i] := SEL(L_Light_States[L_i], 0, L_Base_Light);
+219:        VO_Wet_Zone_Light_Active[L_Wet_Zone_Idx] := (VO_Lighting_Levels[L_i] > 10);
+226:    L_Rule_Blinds_Active := FALSE;
+231:        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+232:            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_BLINDS THEN
+233:                L_Rule_Blinds_Active := TRUE;
+234:                L_Rule_Blinds_Val := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+241:        VO_Blinds_Positions[L_i] := VI_Manual_Blinds_Override[L_i];
+243:    ELSIF L_Rule_Blinds_Active THEN
+244:        VO_Blinds_Positions[L_i] := L_Rule_Blinds_Val;
+247:        VO_Blinds_Positions[L_i] := L_Base_Blinds;
+
+=== TAIL CONTEXT ===
+        VI_End_Value := TO_REAL(L_Target_Base_Blinds)
+    );
+    L_Prev_Scenario := L_Effective_Scenario;
+ELSE
+    L_Transition_Light(
+        VI_System_Time := VI_System_Time_MS,
+        VI_Start_Time := L_Transition_Light.VI_Start_Time,
+        VI_Duration := L_Transition_Light.VI_Duration,
+        VI_Start_Value := L_Transition_Light.VI_Start_Value,
+        VI_End_Value := TO_REAL(L_Target_Base_Light)
+    );
+    L_Transition_Blinds(
+        VI_System_Time := VI_System_Time_MS,
+        VI_Start_Time := L_Transition_Blinds.VI_Start_Time,
+        VI_Duration := L_Transition_Blinds.VI_Duration,
+        VI_Start_Value := L_Transition_Blinds.VI_Start_Value,
+        VI_End_Value := TO_REAL(L_Target_Base_Blinds)
+    );
+END_IF;
+
+L_Base_Light := TO_BYTE(L_Transition_Light.VO_Current_Value);
+L_Base_Blinds := TO_BYTE(L_Transition_Blinds.VO_Current_Value);
+
+// 2. Управление освещением
+FOR L_i := 1 TO 32 DO
+    L_Rule_Light_Active := FALSE;
+    L_Rule_Light_Val := 0;
+    
+    // Проверка правил
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_LIGHTING_BASE THEN
+                L_Rule_Light_Active := TRUE;
+                L_Rule_Light_Val := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+                L_Light_States[L_i] := (L_Rule_Light_Val > 0);
+            ELSIF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_TOGGLE_LIGHTING AND VI_Rule_Actions[L_j].Triggered THEN
+                L_Light_States[L_i] := NOT L_Light_States[L_i];
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    // Приоритет 1: Физические выключатели (ТЗ 1.0)
+    IF VI_Physical_Switches[L_i] AND NOT L_Prev_Switches[L_i] THEN
+        L_Light_States[L_i] := NOT L_Light_States[L_i];
+        L_Manual_Override[L_i] := TRUE; // Запоминаем ручное переопределение
+    END_IF;
+    L_Prev_Switches[L_i] := VI_Physical_Switches[L_i];
+
+    // Приоритет 2: Датчики движения (ТЗ 2.0)
+    // Защита от дребезга и удержание сигнала движения с помощью TOF
+    L_Motion_Timers[L_i](IN := VI_Motion_Sensors[L_i], PT := T#5m, VI_System_Time_MS := VI_System_Time_MS);
+    
+    // Сброс ручного переопределения, когда комната становится пустой (задний фронт таймера движения)
+    IF L_Prev_Motion_Q[L_i] AND NOT L_Motion_Timers[L_i].Q THEN
+        L_Manual_Override[L_i] := FALSE;
+    END_IF;
+    L_Prev_Motion_Q[L_i] := L_Motion_Timers[L_i].Q;
+
+    IF L_Motion_Timers[L_i].Q THEN
+        IF NOT L_Manual_Override[L_i] THEN
+            L_Light_States[L_i] := TRUE;
+        END_IF;
+    ELSE
+        // Выключаем свет только если нет ручного переопределения
+        IF NOT L_Manual_Override[L_i] THEN
+            L_Light_States[L_i] := FALSE;
+        END_IF;
+    END_IF;
+
+    // Приоритет 3: Симуляция (только в режиме Away)
+    IF L_Effective_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY AND L_Effective_Simulation_Active THEN
+        L_Light_States[L_i] := VI_Simulation_Lights[L_i];
+    END_IF;
+
+    // Приоритет 4: Ручное управление и правила
+    IF VI_Manual_Light_Override[L_i] > 0 THEN
+        VO_Lighting_Levels[L_i] := VI_Manual_Light_Override[L_i];
+    ELSIF L_Rule_Light_Active THEN
+        VO_Lighting_Levels[L_i] := L_Rule_Light_Val;
+    ELSE
+        VO_Lighting_Levels[L_i] := SEL(L_Light_States[L_i], 0, L_Base_Light);
+    END_IF;
+    
+    // 5. Мокрые зоны
+    IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx <= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
+        VO_Wet_Zone_Light_Active[L_Wet_Zone_Idx] := (VO_Lighting_Levels[L_i] > 10);
+        L_Wet_Zone_Idx := L_Wet_Zone_Idx + 1;
+    END_IF;
+END_FOR;
+
+// 3. Управление шторами
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+    L_Rule_Blinds_Active := FALSE;
+    L_Rule_Blinds_Val := 0;
+    
+    // Проверка правил
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_BLINDS THEN
+                L_Rule_Blinds_Active := TRUE;
+                L_Rule_Blinds_Val := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    // Приоритет 1: Ручное управление
+    IF VI_Manual_Blinds_Override[L_i] > 0 THEN
+        VO_Blinds_Positions[L_i] := VI_Manual_Blinds_Override[L_i];
+    // Приоритет 2: Правила
+    ELSIF L_Rule_Blinds_Active THEN
+        VO_Blinds_Positions[L_i] := L_Rule_Blinds_Val;
+    // Приоритет 3: Сценарий
+    ELSE
+        VO_Blinds_Positions[L_i] := L_Base_Blinds;
+    END_IF;
+END_FOR;
+
+
+END_FUNCTION_BLOCK
+// >>> BULK_SYNC_ANCHOR: FB_Lighting_Blinds_Manager <<<
+
+=== DIFF ===
+diff --git a/FB_Lighting_Blinds_Manager.st b/FB_Lighting_Blinds_Manager.st
+index c6247b2..ba36441 100644
+--- a/FB_Lighting_Blinds_Manager.st
++++ b/FB_Lighting_Blinds_Manager.st
+@@ -28,19 +28,7 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     // Blinds V2 shadow (phase2)
+-    L_Blinds_V2_Command_Shadow : ST_Blinds_Command_V2;
+-    L_Blinds_V2_State_Shadow : ST_Blinds_State_V2;
+-    L_Blinds_V2_Shadow_Diff_Found : BOOL;
+-    L_Blinds_V2_Switch_Enabled : BOOL;
+-    L_Blinds_V2_Path_Ready : BOOL;
+-    L_Blinds_Using_Legacy_Fallback : BOOL;
+     // Lighting V2 shadow (phase2)
+-    L_Lighting_V2_Command_Shadow : ST_Lighting_Command_V2;
+-    L_Lighting_V2_State_Shadow : ST_Lighting_State_V2;
+-    L_Lighting_V2_Shadow_Diff_Found : BOOL;
+-    L_Lighting_V2_Switch_Enabled : BOOL;
+-    L_Lighting_V2_Path_Ready : BOOL;
+-    L_Lighting_Using_Legacy_Fallback : BOOL;
+     L_i : INT;
+     L_j : INT;
+     L_Base_Light : BYTE;
+@@ -66,14 +54,6 @@ END_VAR
+ 
+ IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+ 
+-L_Lighting_V2_Shadow_Diff_Found := FALSE;
+-L_Blinds_V2_Shadow_Diff_Found := FALSE;
+-L_Blinds_V2_Switch_Enabled := TRUE;
+-L_Blinds_V2_Path_Ready := FALSE;
+-L_Blinds_Using_Legacy_Fallback := TRUE;
+-L_Lighting_V2_Switch_Enabled := TRUE;
+-L_Lighting_V2_Path_Ready := FALSE;
+-L_Lighting_Using_Legacy_Fallback := TRUE;
+ 
+ GVL_STATE.G_Lighting_IO_Fault := FALSE;
+ GVL_STATE.G_Lighting_Subsystem_Degraded := FALSE;
+@@ -268,72 +248,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+     END_IF;
+ END_FOR;
+ 
+-// ========================================
+-// Lighting V2 shadow execution (phase2)
+-// Inlined from FB_Lighting_V2_Staging
+-// ========================================
+-L_Lighting_V2_Command_Shadow.Brightness_Setpoint := BYTE_TO_REAL(VO_Lighting_Levels[1]);
+-L_Lighting_V2_State_Shadow.Brightness_Actual := BYTE_TO_REAL(VO_Lighting_Levels[1]);
+-L_Lighting_V2_State_Shadow.Motion_Active := VI_Motion_Sensors[1];
+-
+-// ========================================
+-// Lighting V2 shadow validation
+-// ========================================
+-IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_Command_Shadow.Brightness_Setpoint) > 0.1 THEN
+-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF ABS(BYTE_TO_REAL(VO_Lighting_Levels[1]) - L_Lighting_V2_State_Shadow.Brightness_Actual) > 0.1 THEN
+-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF VI_Motion_Sensors[1] <> L_Lighting_V2_State_Shadow.Motion_Active THEN
+-    L_Lighting_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-
+-// Guarded Lighting V2 enable
+-IF L_Lighting_V2_Switch_Enabled THEN
+-    IF NOT L_Lighting_V2_Shadow_Diff_Found THEN
+-        L_Lighting_V2_Path_Ready := TRUE;
+-        L_Lighting_Using_Legacy_Fallback := FALSE;
+-    ELSE
+-        L_Lighting_V2_Path_Ready := FALSE;
+-        L_Lighting_Using_Legacy_Fallback := TRUE;
+-    END_IF;
+-ELSE
+-    L_Lighting_V2_Path_Ready := FALSE;
+-    L_Lighting_Using_Legacy_Fallback := TRUE;
+-END_IF;
+-
+-
+-
+-// ========================================
+-// Blinds V2 shadow execution (phase2)
+-// Inlined from FB_Blinds_V2_Staging
+-// ========================================
+-L_Blinds_V2_Command_Shadow.Position_Setpoint := VO_Blinds_Positions[1];
+-L_Blinds_V2_State_Shadow.Position_Actual := VO_Blinds_Positions[1];
+-
+-// Blinds validation
+-IF VO_Blinds_Positions[1] <> L_Blinds_V2_Command_Shadow.Position_Setpoint THEN
+-    L_Blinds_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF VO_Blinds_Positions[1] <> L_Blinds_V2_State_Shadow.Position_Actual THEN
+-    L_Blinds_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-
+-
+-// Guarded Blinds V2 enable
+-IF L_Blinds_V2_Switch_Enabled THEN
+-    IF NOT L_Blinds_V2_Shadow_Diff_Found THEN
+-        L_Blinds_V2_Path_Ready := TRUE;
+-        L_Blinds_Using_Legacy_Fallback := FALSE;
+-    ELSE
+-        L_Blinds_V2_Path_Ready := FALSE;
+-        L_Blinds_Using_Legacy_Fallback := TRUE;
+-    END_IF;
+-ELSE
+-    L_Blinds_V2_Path_Ready := FALSE;
+-    L_Blinds_Using_Legacy_Fallback := TRUE;
+-END_IF;
+ 
+ END_FUNCTION_BLOCK
+ // >>> BULK_SYNC_ANCHOR: FB_Lighting_Blinds_Manager <<<
+
+=== END STEP 126 ===
