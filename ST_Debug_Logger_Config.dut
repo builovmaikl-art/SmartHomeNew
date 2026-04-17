@@ -1,7 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Debug_Logger_Config :
-STRUCT
-    enabled : BOOL;
-    sampling_period_ms : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND;
-END_STRUCT
-END_TYPE
