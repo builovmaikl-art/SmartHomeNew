@@ -1,0 +1,302 @@
+]633;E;echo "=== STEP 87: MICRO AUDIT SOCKET V2 STAGING ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 87: MICRO AUDIT SOCKET V2 STAGING ===
+timestamp_utc=2026-04-17T05:43:49Z
+
+=== FILE: FB_Socket_V2_Staging.st ===
+FUNCTION_BLOCK FB_Socket_V2_Staging
+VAR_INPUT
+    VI_Socket_ID : INT;
+    VI_Enable : BOOL;
+    VI_Target_State : BOOL;
+    VI_Manual_Override : BOOL;
+    VI_Safety_Lock : BOOL;
+    VI_Scenario_ID : INT;
+    VI_Is_On : BOOL;
+    VI_Manual_Override_Active : BOOL;
+    VI_Safety_Blocked : BOOL;
+    VI_Alarm_Active : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Command_Shadow : ST_Socket_Command_V2;
+    VO_State_Shadow : ST_Socket_State_V2;
+END_VAR
+
+VO_Command_Shadow.Target_State := VI_Target_State;
+VO_State_Shadow.Is_On := VI_Is_On;
+VO_State_Shadow.Safety_Blocked := VI_Safety_Blocked;
+END_FUNCTION_BLOCK
+
+=== FILE: FB_Socket_Manager.st (header / vars) ===
+FUNCTION_BLOCK FB_Socket_Manager
+// Менеджер управления розетками.
+// Обеспечивает работу по сценариям, правилам и аварийное отключение (без локальных выключателей розеток).
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время в миллисекундах
+    VI_IsActivePLC : BOOL; // Флаг активности ПЛК (TRUE = ведущий)
+    VI_Scenario : E_SCENARIO_TYPE; // Текущий глобальный сценарий
+    VI_Fire_Alarm : BOOL; // Флаг пожарной тревоги
+    VI_Flood_Alarm : BOOL; // Флаг тревоги протечки
+    VI_Security_Armed : BOOL; // Состояние охраны (TRUE = включена)
+END_VAR
+VAR_IN_OUT
+    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+END_VAR
+VAR_OUTPUT
+    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+END_VAR
+VAR
+    // Socket V2 shadow (phase2)
+    fbSocketV2Staging : FB_Socket_V2_Staging;
+    L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
+    L_Socket_V2_State_Shadow : ST_Socket_State_V2;
+    L_Socket_V2_Shadow_Diff_Found : BOOL;
+    L_Socket_V2_Switch_Enabled : BOOL;
+    L_Socket_V2_Path_Ready : BOOL;
+    L_Socket_Using_Legacy_Fallback : BOOL;
+    L_i : INT;
+    L_j : INT;
+    L_Rule_State : BOOL;
+    L_Rule_Active : BOOL;
+    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+END_VAR
+
+IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+
+L_Socket_V2_Shadow_Diff_Found := FALSE;
+L_Socket_V2_Switch_Enabled := TRUE;
+L_Socket_V2_Path_Ready := FALSE;
+L_Socket_Using_Legacy_Fallback := TRUE;
+
+// Проверка связи с модулями ввода-вывода
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    IF NOT VI_IO_Modules_Online[L_i] THEN
+        // Переход в безопасное состояние при потере связи (отключение всех розеток)
+        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+            VO_Socket_States[L_j] := FALSE;
+        END_FOR;
+        RETURN;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    L_Rule_Active := FALSE;
+    L_Rule_State := FALSE;
+    
+    L_Manual_Trig[L_i](CLK := VI_Manual_Override[L_i]);
+    
+    // Ручное переключение
+    IF L_Manual_Trig[L_i].Q THEN
+        L_Internal_State[L_i] := NOT L_Internal_State[L_i];
+    END_IF;
+
+    // Проверка правил для текущей розетки
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_SOCKET THEN
+                L_Rule_Active := TRUE;
+                L_Rule_State := (VI_Rule_Actions[L_j].Value > 0.5);
+                L_Internal_State[L_i] := L_Rule_State; // Синхронизация внутреннего состояния
+            ELSIF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_TOGGLE_SOCKET AND VI_Rule_Actions[L_j].Triggered THEN
+                L_Internal_State[L_i] := NOT L_Internal_State[L_i]; // Toggle
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    // Аварийное отключение
+    IF VI_Fire_Alarm OR VI_Flood_Alarm THEN
+        // Розетки 1-4 неотключаемые (холодильник, сервер и т.д.)
+        IF L_i > 4 THEN
+            VO_Socket_States[L_i] := FALSE;
+        ELSE
+            // Критические розетки сохраняют свое текущее внутреннее состояние, а не форсируются в TRUE
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    ELSIF VI_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY OR VI_Security_Armed THEN
+        // Master Off
+        IF L_i > 4 THEN
+            VO_Socket_States[L_i] := FALSE;
+        ELSE
+            // Неотключаемые розетки могут управляться вручную
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    ELSE
+        // Нормальный режим: состояние определяется внутренним состоянием (ручным или правилом)
+        IF L_Rule_Active THEN
+            VO_Socket_States[L_i] := L_Rule_State;
+        ELSE
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    END_IF;
+END_FOR;
+
+VO_Internal_States := L_Internal_State;
+
+// ========================================
+// Socket V2 shadow execution (phase2)
+// ========================================
+fbSocketV2Staging(
+    VI_Socket_ID := 1,
+    VI_Enable := TRUE,
+    VI_Target_State := VO_Socket_States[1],
+    VI_Manual_Override := VI_Manual_Override[1],
+    VI_Safety_Lock := (VI_Fire_Alarm OR VI_Flood_Alarm),
+    VI_Scenario_ID := TO_INT(VI_Scenario),
+
+    VI_Is_On := VO_Socket_States[1],
+    VI_Manual_Override_Active := VI_Manual_Override[1],
+    VI_Safety_Blocked := (VI_Fire_Alarm OR VI_Flood_Alarm),
+    VI_Alarm_Active := (VI_Fire_Alarm OR VI_Flood_Alarm),
+
+    VO_Command_Shadow => L_Socket_V2_Command_Shadow,
+    VO_State_Shadow => L_Socket_V2_State_Shadow
+);
+
+// ========================================
+// Socket V2 shadow validation
+// ========================================
+IF VO_Socket_States[1] <> L_Socket_V2_Command_Shadow.Target_State THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF VO_Socket_States[1] <> L_Socket_V2_State_Shadow.Is_On THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF (VI_Fire_Alarm OR VI_Flood_Alarm) <> L_Socket_V2_State_Shadow.Safety_Blocked THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+
+=== FILE: FB_Socket_Manager.st (staging call area) ===
+24:    fbSocketV2Staging : FB_Socket_V2_Staging;
+113:fbSocketV2Staging(
+
+----- CONTEXT line 24 -----
+    VI_Security_Armed : BOOL; // Состояние охраны (TRUE = включена)
+END_VAR
+VAR_IN_OUT
+    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+END_VAR
+VAR_OUTPUT
+    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+END_VAR
+VAR
+    // Socket V2 shadow (phase2)
+    fbSocketV2Staging : FB_Socket_V2_Staging;
+    L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
+    L_Socket_V2_State_Shadow : ST_Socket_State_V2;
+    L_Socket_V2_Shadow_Diff_Found : BOOL;
+    L_Socket_V2_Switch_Enabled : BOOL;
+    L_Socket_V2_Path_Ready : BOOL;
+    L_Socket_Using_Legacy_Fallback : BOOL;
+    L_i : INT;
+    L_j : INT;
+    L_Rule_State : BOOL;
+    L_Rule_Active : BOOL;
+    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+END_VAR
+
+IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+
+L_Socket_V2_Shadow_Diff_Found := FALSE;
+L_Socket_V2_Switch_Enabled := TRUE;
+L_Socket_V2_Path_Ready := FALSE;
+L_Socket_Using_Legacy_Fallback := TRUE;
+
+// Проверка связи с модулями ввода-вывода
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    IF NOT VI_IO_Modules_Online[L_i] THEN
+        // Переход в безопасное состояние при потере связи (отключение всех розеток)
+        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+            VO_Socket_States[L_j] := FALSE;
+        END_FOR;
+        RETURN;
+    END_IF;
+END_FOR;
+
+
+----- CONTEXT line 113 -----
+        // Нормальный режим: состояние определяется внутренним состоянием (ручным или правилом)
+        IF L_Rule_Active THEN
+            VO_Socket_States[L_i] := L_Rule_State;
+        ELSE
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    END_IF;
+END_FOR;
+
+VO_Internal_States := L_Internal_State;
+
+// ========================================
+// Socket V2 shadow execution (phase2)
+// ========================================
+fbSocketV2Staging(
+    VI_Socket_ID := 1,
+    VI_Enable := TRUE,
+    VI_Target_State := VO_Socket_States[1],
+    VI_Manual_Override := VI_Manual_Override[1],
+    VI_Safety_Lock := (VI_Fire_Alarm OR VI_Flood_Alarm),
+    VI_Scenario_ID := TO_INT(VI_Scenario),
+
+    VI_Is_On := VO_Socket_States[1],
+    VI_Manual_Override_Active := VI_Manual_Override[1],
+    VI_Safety_Blocked := (VI_Fire_Alarm OR VI_Flood_Alarm),
+    VI_Alarm_Active := (VI_Fire_Alarm OR VI_Flood_Alarm),
+
+    VO_Command_Shadow => L_Socket_V2_Command_Shadow,
+    VO_State_Shadow => L_Socket_V2_State_Shadow
+);
+
+// ========================================
+// Socket V2 shadow validation
+// ========================================
+IF VO_Socket_States[1] <> L_Socket_V2_Command_Shadow.Target_State THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF VO_Socket_States[1] <> L_Socket_V2_State_Shadow.Is_On THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+IF (VI_Fire_Alarm OR VI_Flood_Alarm) <> L_Socket_V2_State_Shadow.Safety_Blocked THEN
+    L_Socket_V2_Shadow_Diff_Found := TRUE;
+END_IF;
+
+// Guarded Socket V2 enable
+IF L_Socket_V2_Switch_Enabled THEN
+    IF NOT L_Socket_V2_Shadow_Diff_Found THEN
+
+
+=== V2 SHADOW TYPES ===
+TYPE ST_Socket_Command_V2 : STRUCT
+    Target_State : BOOL;
+END_STRUCT
+END_TYPE
+
+TYPE ST_Socket_State_V2 : STRUCT
+    Is_On : BOOL;
+    Safety_Blocked : BOOL;
+END_STRUCT
+END_TYPE
+
+=== ROOT REFERENCES ===
+./FB_Socket_Manager.st:24:    fbSocketV2Staging : FB_Socket_V2_Staging;
+./FB_Socket_V2_Staging.st:1:FUNCTION_BLOCK FB_Socket_V2_Staging
+
+./FB_Socket_Manager.st:25:    L_Socket_V2_Command_Shadow : ST_Socket_Command_V2;
+./FB_Socket_V2_Staging.st:15:    VO_Command_Shadow : ST_Socket_Command_V2;
+./ST_Socket_Command_V2.dut:1:TYPE ST_Socket_Command_V2 : STRUCT
+
+./FB_Socket_Manager.st:26:    L_Socket_V2_State_Shadow : ST_Socket_State_V2;
+./FB_Socket_V2_Staging.st:16:    VO_State_Shadow : ST_Socket_State_V2;
+./ST_Socket_State_V2.dut:1:TYPE ST_Socket_State_V2 : STRUCT
+
+=== PRELIMINARY COLLAPSE QUESTIONS ===
+1. Does staging contain real control logic or only shadow packing/unpacking?
+2. Can command/state shadow fields move directly into FB_Socket_Manager?
+3. Are there external references beyond FB_Socket_Manager?
+
+=== END STEP 87 ===
