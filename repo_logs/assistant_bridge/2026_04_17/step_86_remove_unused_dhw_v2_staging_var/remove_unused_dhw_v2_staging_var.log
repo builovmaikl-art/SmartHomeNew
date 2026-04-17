@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 86: REMOVE UNUSED DHW V2 STAGING VAR ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 86: REMOVE UNUSED DHW V2 STAGING VAR ===
+timestamp_utc=2026-04-17T05:41:16Z
+
+=== BEFORE ===
+23:    fbDHWV2Staging : FB_DHW_V2_Staging;
+
+=== APPLY ===
+OK: removed unused fbDHWV2Staging declaration
+
+=== AFTER ===
+
+=== ROOT REFERENCES AFTER CLEANUP ===
+./FB_DHW_Manager.st:228:// Inlined from FB_DHW_V2_Staging
+./FB_DHW_V2_Staging.st:1:FUNCTION_BLOCK FB_DHW_V2_Staging
+
+=== DIFF ===
+diff --git a/FB_DHW_Manager.st b/FB_DHW_Manager.st
+index bf9ab85..84a5c9f 100644
+--- a/FB_DHW_Manager.st
++++ b/FB_DHW_Manager.st
+@@ -20,7 +20,6 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     // DHW V2 staging layer
+-    fbDHWV2Staging : FB_DHW_V2_Staging;
+     L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
+     L_DHW_V2_State_V2 : ST_DHW_State_V2;
+     L_DHW_V2_Shadow_Diff_Found : BOOL;
+
+=== END STEP 86 ===

@@ -20,7 +20,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     // DHW V2 staging layer
-    fbDHWV2Staging : FB_DHW_V2_Staging;
     L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
     L_DHW_V2_State_V2 : ST_DHW_State_V2;
     L_DHW_V2_Shadow_Diff_Found : BOOL;
