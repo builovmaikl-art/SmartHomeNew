@@ -1,0 +1,37 @@
+]633;E;echo "=== RUN STEP 137 ===";c91143c6-a704-4775-b84b-ecf25abd49a0]633;C=== RUN STEP 137 ===
+=== STEP 137: AUDIT ZERO-REF GVL CANDIDATES ===
+
+--- GVL_BlackBox.gvl ---
+live_external_refs=0
+line_count= 1
+flags: retain=False, io_mapping=False, constants=False, system_like=False
+--- CONTENT PREVIEW ---
+// Переменные перенесены в GVL_Retain.gvl
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- GVL_MODBUS.gvl ---
+live_external_refs=0
+line_count= 0
+flags: retain=False, io_mapping=False, constants=False, system_like=False
+--- CONTENT PREVIEW ---
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- GVL_TIME.gvl ---
+live_external_refs=0
+line_count= 3
+flags: retain=False, io_mapping=False, constants=False, system_like=False
+--- CONTENT PREVIEW ---
+{attribute 'qualified_only'}
+VAR_GLOBAL
+END_VAR
+candidate_status=SAFE_DELETE_CANDIDATE
+
+=== SAFE DELETE CANDIDATES ===
+GVL_BlackBox.gvl
+GVL_MODBUS.gvl
+GVL_TIME.gvl
+
+=== HOLD ===
+NONE
+
+=== END STEP 137 ===
