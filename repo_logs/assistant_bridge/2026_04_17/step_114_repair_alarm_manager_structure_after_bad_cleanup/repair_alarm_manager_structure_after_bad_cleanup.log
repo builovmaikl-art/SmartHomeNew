@@ -1,3 +1,88 @@
+]633;E;echo "=== STEP 114: REPAIR ALARM MANAGER STRUCTURE AFTER BAD CLEANUP ===";d2f9cd72-cf3a-446c-b425-a96632cf891c]633;C=== STEP 114: REPAIR ALARM MANAGER STRUCTURE AFTER BAD CLEANUP ===
+timestamp_utc=2026-04-17T08:18:35Z
+
+=== BEFORE: BROKEN FRAGMENTS SNAPSHOT ===
+60:    L_Event_Pulse_Latched : BOOL;    L_Alarm_First_Warning : STRING(255);
+61:    L_Alarm_First_Warning_Latched : BOOL;    L_Alarm_Shadow_First_Mismatch : INT;    L_Alarm_Using_Legacy_Fallback : BOOL;    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;END_VAR
+65:VO_Event_Value := 0.0;L_Alarm_First_Warning := '';
+66:L_Alarm_First_Warning_Latched := FALSE;L_Alarm_Shadow_First_Mismatch := 0;// 1. Детекция новых тревог (антидребезг + передний фронт)
+174:IF L_Alarm_V2_Switch_Enabled AND L_Alarm_V2_Path_Ready THEN
+186:    IF L_Alarm_V2_Switch_Enabled AND L_Alarm_V2_Path_Ready THEN        // Guarded V2 pipeline is allowed by shadow validation.
+300:IF (L_BlackBox_V2_Snapshot_Shadow.Gas_Alarm <> VI_Gas_Alarm)
+301:   OR (L_BlackBox_V2_Snapshot_Shadow.Fire_Alarm <> VI_Fire_Alarm)
+302:   OR (L_BlackBox_V2_Snapshot_Shadow.Flood_Alarm <> VI_Flood_Alarm)
+303:   OR (L_BlackBox_V2_Snapshot_Shadow.First_Fault_Type <> TO_BYTE(VI_First_Fault_Type))
+304:   OR (L_BlackBox_V2_Snapshot_Shadow.First_Fault_Source <> TO_BYTE(VI_First_Fault_Source)) THENEND_IF;
+306:ELSEEND_IF;
+
+=== APPLY ===
+OK: repaired FB_Alarm_Manager.st structure after bad cleanup
+
+=== AFTER: RESIDUAL CHECK ===
+
+
+=== CORE ALARM FLOW STILL PRESENT ===
+29:    VO_Global_Critical : BOOL; // Есть неквитированные критические аварии
+30:    VO_Global_Warning : BOOL;  // Есть неквитированные предупреждения
+31:    VO_Siren_Active : BOOL;    // Требуется включение сирены
+32:    VO_Active_Count : INT;     // Количество активных тревог
+33:    VO_Unacked_Count : INT;    // Количество неквитированных тревог
+34:    VO_Event_Pulse : BOOL;     // Пульс события для History bridge
+35:    VO_Event_Code : UDINT;     // 1201=ack all, 1202=alarm cleared, 1203=alarm created
+36:    VO_Event_Value : REAL;     // Доп. значение события
+38:    VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
+63:VO_Event_Pulse := FALSE;
+64:VO_Event_Code := 0;
+65:VO_Event_Value := 0.0;
+183:        IF VO_Alarm_List[L_k].ID = 0 THEN
+193:            IF VO_Alarm_List[L_k].Is_Acknowledged AND TO_INT(VO_Alarm_List[L_k].Severity) < L_Min_Pri THEN
+194:                L_Min_Pri := TO_INT(VO_Alarm_List[L_k].Severity);
+204:            IF TO_INT(VO_Alarm_List[L_k].Severity) < L_Min_Pri AND TO_INT(VO_Alarm_List[L_k].Severity) < TO_INT(L_Pending_Alarms[L_i].Severity) THEN
+205:                L_Min_Pri := TO_INT(VO_Alarm_List[L_k].Severity);
+216:    VO_Alarm_List[L_Target_Slot] := L_Pending_Alarms[L_i];
+217:    VO_Alarm_List[L_Target_Slot].ID := VIO_Next_Alarm_ID;
+221:        VO_Event_Pulse := TRUE;
+222:        VO_Event_Code := 1203;
+223:        VO_Event_Value := TO_REAL(VO_Alarm_List[L_Target_Slot].Severity);
+230:    IF VO_Alarm_List[L_i].ID <> 0 THEN
+231:        IF VO_Alarm_List[L_i].Source = 'Gas' THEN VO_Alarm_List[L_i].Is_Active := VI_Gas_Alarm;
+232:        ELSIF VO_Alarm_List[L_i].Source = 'Fire' THEN VO_Alarm_List[L_i].Is_Active := VI_Fire_Alarm;
+233:        ELSIF VO_Alarm_List[L_i].Source = 'Flood' THEN VO_Alarm_List[L_i].Is_Active := VI_Flood_Alarm;
+234:        ELSIF VO_Alarm_List[L_i].Source = 'Security' THEN VO_Alarm_List[L_i].Is_Active := VI_Security_Alarm;
+235:        ELSIF VO_Alarm_List[L_i].Source = 'Diagnostics' THEN VO_Alarm_List[L_i].Is_Active := VI_First_Fault_Active;
+236:        ELSIF VO_Alarm_List[L_i].Source = 'Boiler' THEN 
+237:            IF TO_INT(VO_Alarm_List[L_i].Source_ID) >= 1 AND TO_INT(VO_Alarm_List[L_i].Source_ID) <= GVL_CONSTANTS.C_MAX_BOILERS THEN
+238:                VO_Alarm_List[L_i].Is_Active := VI_Boiler_Errors[TO_INT(VO_Alarm_List[L_i].Source_ID)];
+247:        IF VO_Alarm_List[L_i].ID <> 0 THEN
+248:            VO_Alarm_List[L_i].Is_Acknowledged := TRUE;
+253:        VO_Event_Pulse := TRUE;
+254:        VO_Event_Code := 1201;
+255:        VO_Event_Value := TO_REAL(VO_Unacked_Count);
+262:    IF VO_Alarm_List[L_i].ID <> 0 AND NOT VO_Alarm_List[L_i].Is_Active AND NOT VO_Alarm_List[L_i].Is_Acknowledged THEN
+263:        IF VO_Alarm_List[L_i].Severity <> E_ALERT_PRIORITY.ALERT_PRIORITY_CRITICAL THEN
+264:            VO_Alarm_List[L_i].Is_Acknowledged := TRUE;
+272:    IF VO_Alarm_List[L_i].ID <> 0 AND NOT VO_Alarm_List[L_i].Is_Active AND VO_Alarm_List[L_i].Is_Acknowledged THEN
+274:        VO_Alarm_List[L_i].ID := 0;
+276:            VO_Event_Pulse := TRUE;
+277:            VO_Event_Code := 1202;
+278:            VO_Event_Value := 0.0;
+286:VO_Global_Critical := FALSE;
+287:VO_Global_Warning := FALSE;
+288:VO_Siren_Active := FALSE;
+289:VO_Active_Count := 0;
+290:VO_Unacked_Count := 0;
+293:    IF VO_Alarm_List[L_i].ID <> 0 THEN
+294:        IF VO_Alarm_List[L_i].Is_Active THEN
+295:            VO_Active_Count := VO_Active_Count + 1;
+298:        IF NOT VO_Alarm_List[L_i].Is_Acknowledged THEN
+299:            VO_Unacked_Count := VO_Unacked_Count + 1;
+301:            IF VO_Alarm_List[L_i].Severity = E_ALERT_PRIORITY.ALERT_PRIORITY_CRITICAL THEN
+302:                VO_Global_Critical := TRUE;
+305:                    VO_Siren_Active := TRUE;
+307:            ELSIF VO_Alarm_List[L_i].Severity = E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH THEN
+308:                VO_Global_Warning := TRUE;
+
+=== HEAD/TAIL CONTEXT ===
 FUNCTION_BLOCK FB_Alarm_Manager
 VAR_INPUT
     VI_System_Time_MS : UDINT; // Системное время (мс)
@@ -108,55 +193,7 @@ END_IF;
 IF R_Trig_Flood.Q AND L_Pending_Count < 10 THEN
     L_Pending_Count := L_Pending_Count + 1;
     L_Pending_Alarms[L_Pending_Count].Timestamp_MS := VI_System_Time_MS;
-    L_Pending_Alarms[L_Pending_Count].Source := 'Flood';
-    L_Pending_Alarms[L_Pending_Count].Source_ID := 0;
-    L_Pending_Alarms[L_Pending_Count].Message := 'Обнаружена протечка воды!';
-    L_Pending_Alarms[L_Pending_Count].Severity := E_ALERT_PRIORITY.ALERT_PRIORITY_CRITICAL;
-    L_Pending_Alarms[L_Pending_Count].Is_Active := TRUE;
-    L_Pending_Alarms[L_Pending_Count].Is_Acknowledged := FALSE;
-END_IF;
-
-IF R_Trig_Security.Q AND L_Pending_Count < 10 THEN
-    L_Pending_Count := L_Pending_Count + 1;
-    L_Pending_Alarms[L_Pending_Count].Timestamp_MS := VI_System_Time_MS;
-    L_Pending_Alarms[L_Pending_Count].Source := 'Security';
-    L_Pending_Alarms[L_Pending_Count].Source_ID := 0;
-    L_Pending_Alarms[L_Pending_Count].Message := VI_Security_Msg;
-    L_Pending_Alarms[L_Pending_Count].Severity := E_ALERT_PRIORITY.ALERT_PRIORITY_CRITICAL;
-    L_Pending_Alarms[L_Pending_Count].Is_Active := TRUE;
-    L_Pending_Alarms[L_Pending_Count].Is_Acknowledged := FALSE;
-END_IF;
-
-IF R_Trig_First_Fault.Q AND L_Pending_Count < 10 THEN
-    L_Pending_Count := L_Pending_Count + 1;
-    L_Pending_Alarms[L_Pending_Count].Timestamp_MS := VI_System_Time_MS;
-    L_Pending_Alarms[L_Pending_Count].Source := 'Diagnostics';
-    L_Pending_Alarms[L_Pending_Count].Source_ID := TO_BYTE(VI_First_Fault_Source);
-
-    CASE VI_First_Fault_Type OF
-        1: L_First_Fault_Type_Text := 'IO';
-        2: L_First_Fault_Type_Text := 'Sensor';
-        3: L_First_Fault_Type_Text := 'Comm';
-        4: L_First_Fault_Type_Text := 'Subsystem';
-        ELSE L_First_Fault_Type_Text := 'Unknown';
-    END_CASE;
-
-    CASE VI_First_Fault_Source OF
-        1: L_First_Fault_Source_Text := 'Heating';
-        2: L_First_Fault_Source_Text := 'DHW';
-        3: L_First_Fault_Source_Text := 'Ventilation';
-        4: L_First_Fault_Source_Text := 'Lighting';
-        5: L_First_Fault_Source_Text := 'Access';
-        ELSE L_First_Fault_Source_Text := 'Unknown';
-    END_CASE;
-
-    L_Pending_Alarms[L_Pending_Count].Message := CONCAT('Diagnostics root cause: ', CONCAT(L_First_Fault_Source_Text, CONCAT(' / ', L_First_Fault_Type_Text)));
-    L_Pending_Alarms[L_Pending_Count].Severity := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
-    L_Pending_Alarms[L_Pending_Count].Is_Active := TRUE;
-    L_Pending_Alarms[L_Pending_Count].Is_Acknowledged := FALSE;
-END_IF;
-
-FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+-----
     IF R_Trig_Boiler[L_j].Q AND L_Pending_Count < 10 THEN
         L_Pending_Count := L_Pending_Count + 1;
         L_Pending_Alarms[L_Pending_Count].Timestamp_MS := VI_System_Time_MS;
@@ -311,3 +348,80 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
     END_IF;
 END_FOR;
 // >>> BULK_SYNC_ANCHOR: FB_Alarm_Manager <<<
+
+=== DIFF ===
+diff --git a/FB_Alarm_Manager.st b/FB_Alarm_Manager.st
+index c3d10a0..d0838a8 100644
+--- a/FB_Alarm_Manager.st
++++ b/FB_Alarm_Manager.st
+@@ -57,13 +57,14 @@ VAR
+     R_Trig_Boiler : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF R_TRIG;
+     L_First_Fault_Source_Text : STRING(32);
+     L_First_Fault_Type_Text : STRING(32);
+-    L_Event_Pulse_Latched : BOOL;    L_Alarm_First_Warning : STRING(255);
+-    L_Alarm_First_Warning_Latched : BOOL;    L_Alarm_Shadow_First_Mismatch : INT;    L_Alarm_Using_Legacy_Fallback : BOOL;    L_History_V2_Buffer_Shadow : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Event_V2;END_VAR
++    L_Event_Pulse_Latched : BOOL;
++END_VAR
+ 
+ VO_Event_Pulse := FALSE;
+ VO_Event_Code := 0;
+-VO_Event_Value := 0.0;L_Alarm_First_Warning := '';
+-L_Alarm_First_Warning_Latched := FALSE;L_Alarm_Shadow_First_Mismatch := 0;// 1. Детекция новых тревог (антидребезг + передний фронт)
++VO_Event_Value := 0.0;
++
++// 1. Детекция новых тревог (антидребезг + передний фронт)
+ T_Debounce_Gas(IN := VI_Gas_Alarm, PT := T#100ms, VI_System_Time_MS := VI_System_Time_MS);
+ T_Debounce_Fire(IN := VI_Fire_Alarm, PT := T#100ms, VI_System_Time_MS := VI_System_Time_MS);
+ T_Debounce_Flood(IN := VI_Flood_Alarm, PT := T#500ms, VI_System_Time_MS := VI_System_Time_MS);
+@@ -169,23 +170,11 @@ FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+ END_FOR;
+ 
+ 
+-// Staging integration: Alarm V2 core is currently a no-op.
+-// Inlined from FB_Alarm_V2_Core
+-IF L_Alarm_V2_Switch_Enabled AND L_Alarm_V2_Path_Ready THEN
+-    // No runtime mutation in current V2 core.
+-END_IF;
+ 
+ // Обработка очереди новых тревог с учетом приоритетов
+ FOR L_i := 1 TO L_Pending_Count DO
+     // Inlined from FB_Alarm_Compatibility_Package:
+     // current compatibility path is a no-op roundtrip with VO_OK always TRUE.
+-    // Phase 4 scaffold: optional Alarm V2 switch point.
+-    // Current state: always remain on legacy behavior.
+-    // Future state: when Alarm V2 path is implemented and validated,
+-    // this block becomes the controlled branch point.
+-    IF L_Alarm_V2_Switch_Enabled AND L_Alarm_V2_Path_Ready THEN        // Guarded V2 pipeline is allowed by shadow validation.
+-        // Current runtime logic still keeps legacy action flow authoritative until next package.
+-    ELSE    END_IF;
+ 
+     L_Target_Slot := 0;
+     
+@@ -236,10 +225,6 @@ FOR L_i := 1 TO L_Pending_Count DO
+     END_IF;
+ END_FOR;
+ 
+-        END_IF;
+-    END_FOR;
+-END_IF;
+-
+ // 3. Обновление статуса существующих тревог (ушли ли они?)
+ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+     IF VO_Alarm_List[L_i].ID <> 0 THEN
+@@ -297,14 +282,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
+ END_FOR;
+ 
+ 
+-IF (L_BlackBox_V2_Snapshot_Shadow.Gas_Alarm <> VI_Gas_Alarm)
+-   OR (L_BlackBox_V2_Snapshot_Shadow.Fire_Alarm <> VI_Fire_Alarm)
+-   OR (L_BlackBox_V2_Snapshot_Shadow.Flood_Alarm <> VI_Flood_Alarm)
+-   OR (L_BlackBox_V2_Snapshot_Shadow.First_Fault_Type <> TO_BYTE(VI_First_Fault_Type))
+-   OR (L_BlackBox_V2_Snapshot_Shadow.First_Fault_Source <> TO_BYTE(VI_First_Fault_Source)) THENEND_IF;
+-
+-ELSEEND_IF;
+-
+ // 6. Подсчет статистики и формирование глобальных флагов
+ VO_Global_Critical := FALSE;
+ VO_Global_Warning := FALSE;
+
+=== END STEP 114 ===
