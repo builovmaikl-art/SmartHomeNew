@@ -67,7 +67,6 @@ VAR
     L_Alarm_V2_Path_Ready : BOOL;
     L_Alarm_Using_Legacy_Fallback : BOOL;
     fbAlarmV2Core : FB_Alarm_V2_Core;
-    fbHistoryV2Core : FB_History_V2_Core;
     fbBlackBoxV2Core : FB_BlackBox_V2_Core;
     L_BlackBox_V2_Snapshot_Shadow : ST_BlackBox_Snapshot_V2;
     L_History_V2_Shadow_Diff_Found : BOOL;
