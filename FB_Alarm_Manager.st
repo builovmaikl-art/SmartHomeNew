@@ -38,7 +38,6 @@ VAR_OUTPUT
     VO_Alarm_List : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF ST_Alarm_Record; // Список активных тревог для HMI
 END_VAR
 VAR
-    fbCompatAlarm : ARRAY[1..GVL_CONSTANTS.C_MAX_ALARMS] OF FB_Alarm_Compatibility_Package;
     L_i, L_j, L_k : INT;
     L_Target_Slot : INT;
     L_Min_Pri : INT;
