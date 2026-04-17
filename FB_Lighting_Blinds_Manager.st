@@ -28,7 +28,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     // Blinds V2 shadow (phase2)
-    fbBlindsV2Staging : FB_Blinds_V2_Staging;
     L_Blinds_V2_Command_Shadow : ST_Blinds_Command_V2;
     L_Blinds_V2_State_Shadow : ST_Blinds_State_V2;
     L_Blinds_V2_Shadow_Diff_Found : BOOL;
