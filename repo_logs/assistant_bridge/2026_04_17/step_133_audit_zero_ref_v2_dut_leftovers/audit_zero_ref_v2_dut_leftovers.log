@@ -1,0 +1,121 @@
+]633;E;echo "=== RUN STEP 133 ===";c91143c6-a704-4775-b84b-ecf25abd49a0]633;C=== RUN STEP 133 ===
+=== STEP 133: AUDIT ZERO-REF V2 DUT LEFTOVERS ===
+
+--- ST_BlackBox_Snapshot_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=8
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Blinds_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Blinds_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_DHW_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_DHW_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Heating_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=4
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Heating_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_History_Event_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Lighting_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=4
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Lighting_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Socket_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=4
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Socket_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=5
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Ventilation_Command_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=4
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+--- ST_Ventilation_State_V2.dut ---
+exists=True
+live_external_refs=0
+line_count=4
+contains_v2_markers=True
+candidate_status=SAFE_DELETE_CANDIDATE
+
+=== SAFE DELETE CANDIDATES ===
+ST_BlackBox_Snapshot_V2.dut
+ST_Blinds_Command_V2.dut
+ST_Blinds_State_V2.dut
+ST_DHW_Command_V2.dut
+ST_DHW_State_V2.dut
+ST_Heating_Command_V2.dut
+ST_Heating_State_V2.dut
+ST_History_Event_V2.dut
+ST_Lighting_Command_V2.dut
+ST_Lighting_State_V2.dut
+ST_Socket_Command_V2.dut
+ST_Socket_State_V2.dut
+ST_Ventilation_Command_V2.dut
+ST_Ventilation_State_V2.dut
+
+=== HOLD ===
+NONE
+
+=== END STEP 133 ===
