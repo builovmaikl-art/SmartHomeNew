@@ -1,6 +1,10 @@
 PROGRAM PRG_System
 VAR
 
+    // === TREND → HISTORY BRIDGE ===
+    L_Trend_Event : ST_History_Record;
+    L_Trend_Write : BOOL;
+
     // === TREND SYSTEM (MVP) ===
     L_Trend_Logger : FB_Trend_Logger;
     L_Trend_Analyzer : FB_Trend_Analyzer;

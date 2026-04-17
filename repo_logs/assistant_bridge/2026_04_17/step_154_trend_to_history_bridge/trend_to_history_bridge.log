@@ -1,0 +1,10 @@
+]633;E;echo "=== STEP 154: TREND TO HISTORY BRIDGE ===";06e11507-ba50-40ef-9a65-cbe3e8e68da5]633;C=== STEP 154: TREND TO HISTORY BRIDGE ===
+
+=== APPLY ===
+OK: Trend → History bridge added
+
+=== VERIFY ===
+4:    // === TREND → HISTORY BRIDGE ===
+8:    // === TREND SYSTEM (MVP) ===
+
+=== END STEP 154 ===
