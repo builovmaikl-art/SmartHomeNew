@@ -1,10 +1,8 @@
-]633;E;echo "=== STEP 109: DELETE LAST RULE COMPAT FILE ===";10d0c29c-b3a2-4a8b-83d2-50752c6e8f09]633;C=== STEP 109: DELETE LAST RULE COMPAT FILE ===
-timestamp_utc=2026-04-17T07:46:37Z
+]633;E;echo "=== STEP 109: DELETE LAST RULE COMPAT FILE ===";07c383c3-f84e-4a4b-a980-0893b0246d2b]633;C=== STEP 109: DELETE LAST RULE COMPAT FILE ===
+timestamp_utc=2026-04-17T07:49:24Z
 
 === BEFORE DELETE ===
-FB_Rule_Compatibility_Package.st
 
-./FB_Rule_Compatibility_Package.st:1:FUNCTION_BLOCK FB_Rule_Compatibility_Package
 ./FB_Rule_Engine.st:68:    // Inlined from FB_Rule_Compatibility_Package:
 
 === DELETE ===
