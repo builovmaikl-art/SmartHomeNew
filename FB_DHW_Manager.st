@@ -20,12 +20,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     // DHW V2 staging layer
-    L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
-    L_DHW_V2_State_V2 : ST_DHW_State_V2;
-    L_DHW_V2_Shadow_Diff_Found : BOOL;
-    L_DHW_V2_Switch_Enabled : BOOL;
-    L_DHW_V2_Path_Ready : BOOL;
-    L_DHW_Using_Legacy_Fallback : BOOL;
     L_i : INT;
     L_Current_TOD : TOD; // Текущее время суток
     L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)
@@ -45,10 +39,6 @@ END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
-L_DHW_V2_Shadow_Diff_Found := FALSE;
-L_DHW_V2_Switch_Enabled := TRUE;
-L_DHW_V2_Path_Ready := FALSE;
-L_DHW_Using_Legacy_Fallback := TRUE;
 
 GVL_STATE.G_DHW_IO_Fault := FALSE;
 GVL_STATE.G_DHW_Sensor_Fault := FALSE;
@@ -222,46 +212,6 @@ VO_Circ_Pump := SEL(VI_Config.Circulation_Schedule_Enabled AND NOT (VI_Config.Ni
 // - Warning = деградация без остановки
 VO_Status.Heating_Pump_On := VO_Heating_Pump;
 VO_Status.Circ_Pump_On := VO_Circ_Pump;
-
-// ========================================
-// DHW V2 shadow execution (phase2)
-// Inlined from FB_DHW_V2_Staging
-// ========================================
-IF VO_Heating_Pump THEN
-    L_DHW_V2_Command_V2.Pump_Enable := 1.0;
-ELSE
-    L_DHW_V2_Command_V2.Pump_Enable := 0.0;
-END_IF;
-
-L_DHW_V2_State_V2.Tank_Temp := VO_Status.Temp;
-L_DHW_V2_State_V2.Supply_Temp := VO_Status.Pressure;
-
-// ========================================
-// DHW V2 staging validation
-// ========================================
-IF VO_Heating_Pump <> (L_DHW_V2_Command_V2.Pump_Enable > 0.5) THEN
-    L_DHW_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(VO_Status.Temp - L_DHW_V2_State_V2.Tank_Temp) > 0.1 THEN
-    L_DHW_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(VO_Status.Pressure - L_DHW_V2_State_V2.Supply_Temp) > 0.1 THEN
-    L_DHW_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-// Guarded DHW V2 enable
-IF L_DHW_V2_Switch_Enabled THEN
-    IF NOT L_DHW_V2_Shadow_Diff_Found THEN
-        L_DHW_V2_Path_Ready := TRUE;
-        L_DHW_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_DHW_V2_Path_Ready := FALSE;
-        L_DHW_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_DHW_V2_Path_Ready := FALSE;
-    L_DHW_Using_Legacy_Fallback := TRUE;
-END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_DHW_Manager <<<

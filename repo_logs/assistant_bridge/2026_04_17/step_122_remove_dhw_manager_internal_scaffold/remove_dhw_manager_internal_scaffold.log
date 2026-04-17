@@ -1,0 +1,285 @@
+]633;E;echo "=== STEP 122: REMOVE DHW MANAGER INTERNAL SCAFFOLD ===";e9fe5ff0-5ac1-4404-827a-11fa413f6dea]633;C=== STEP 122: REMOVE DHW MANAGER INTERNAL SCAFFOLD ===
+timestamp_utc=2026-04-17T09:21:43Z
+
+=== BEFORE ===
+23:    L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
+24:    L_DHW_V2_State_V2 : ST_DHW_State_V2;
+25:    L_DHW_V2_Shadow_Diff_Found : BOOL;
+26:    L_DHW_V2_Switch_Enabled : BOOL;
+27:    L_DHW_V2_Path_Ready : BOOL;
+28:    L_DHW_Using_Legacy_Fallback : BOOL;
+48:L_DHW_V2_Shadow_Diff_Found := FALSE;
+49:L_DHW_V2_Switch_Enabled := TRUE;
+50:L_DHW_V2_Path_Ready := FALSE;
+51:L_DHW_Using_Legacy_Fallback := TRUE;
+231:    L_DHW_V2_Command_V2.Pump_Enable := 1.0;
+233:    L_DHW_V2_Command_V2.Pump_Enable := 0.0;
+236:L_DHW_V2_State_V2.Tank_Temp := VO_Status.Temp;
+237:L_DHW_V2_State_V2.Supply_Temp := VO_Status.Pressure;
+242:IF VO_Heating_Pump <> (L_DHW_V2_Command_V2.Pump_Enable > 0.5) THEN
+243:    L_DHW_V2_Shadow_Diff_Found := TRUE;
+245:IF ABS(VO_Status.Temp - L_DHW_V2_State_V2.Tank_Temp) > 0.1 THEN
+246:    L_DHW_V2_Shadow_Diff_Found := TRUE;
+248:IF ABS(VO_Status.Pressure - L_DHW_V2_State_V2.Supply_Temp) > 0.1 THEN
+249:    L_DHW_V2_Shadow_Diff_Found := TRUE;
+253:IF L_DHW_V2_Switch_Enabled THEN
+254:    IF NOT L_DHW_V2_Shadow_Diff_Found THEN
+255:        L_DHW_V2_Path_Ready := TRUE;
+256:        L_DHW_Using_Legacy_Fallback := FALSE;
+258:        L_DHW_V2_Path_Ready := FALSE;
+259:        L_DHW_Using_Legacy_Fallback := TRUE;
+262:    L_DHW_V2_Path_Ready := FALSE;
+263:    L_DHW_Using_Legacy_Fallback := TRUE;
+
+=== APPLY ===
+OK: removed internal scaffold from FB_DHW_Manager.st
+
+=== AFTER ===
+
+=== CORE DHW FLOW STILL PRESENT ===
+6:    VI_Temp : REAL; // Текущая температура воды в бойлере (°C)
+7:    VI_Pressure : REAL; // Текущее давление в системе ГВС (бар)
+17:    VO_Status : ST_DHW_Status; // Сводный статус системы ГВС для HMI
+18:    VO_Heating_Pump : BOOL; // Выход: Управление насосом нагрева (загрузка бойлера)
+19:    VO_Circ_Pump : BOOL; // Выход: Управление насосом рециркуляции ГВС
+25:    L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)
+26:    L_Legionella_Timer : FB_System_Timer; // Таймер удержания температуры для дезинфекции
+28:    L_Legionella_Done_Today : BOOL; // Признак выполнения термодезинфекции в текущие сутки
+30:    fbTempValidator : FB_Analog_Validator;
+31:    fbPressValidator : FB_Analog_Validator;
+32:    L_Error_Latched : BOOL;
+33:    L_Error_ID_Latched : WORD;
+48:    VO_Heating_Pump := FALSE;
+49:    VO_Circ_Pump := FALSE;
+50:    VO_Status.Warning := FALSE;
+51:    VO_Status.Error := TRUE;
+52:    VO_Status.Error_ID := TO_WORD(GVL_CONFIG.ERR_DHW_IO_OFFLINE); // временно используем общий аварийный код до детализации safety-кодов
+53:    VO_Status.Heating_Pump_On := FALSE;
+54:    VO_Status.Circ_Pump_On := FALSE;
+76:    VO_Heating_Pump := FALSE;
+77:    VO_Circ_Pump := FALSE;
+82:    VO_Heating_Pump := FALSE;
+83:    VO_Circ_Pump := FALSE;
+89:    L_Legionella_Done_Today := FALSE;
+95:VO_Status.Warning := FALSE;
+96:VO_Status.Error := FALSE;
+97:VO_Status.Error_ID := 0;
+101:    L_Error_Latched := FALSE;
+102:    L_Error_ID_Latched := 0;
+108:        L_Error_Latched := TRUE;
+110:        L_Error_ID_Latched := TO_WORD(GVL_CONFIG.ERR_DHW_IO_OFFLINE); // Потеря связи с модулями ввода-вывода
+115:fbTempValidator(
+116:    VI_Value := VI_Temp,
+123:fbPressValidator(
+124:    VI_Value := VI_Pressure,
+130:VO_Status.Temp := fbTempValidator.VO_Value;
+131:VO_Status.Pressure := fbPressValidator.VO_Value;
+135:IF NOT fbTempValidator.VO_Error THEN
+136:    L_Last_Good_Temp := VO_Status.Temp;
+139:IF fbTempValidator.VO_Error THEN
+141:    L_Error_Latched := TRUE;
+142:    L_Error_ID_Latched := TO_WORD(GVL_CONFIG.ERR_DHW_TEMP_SENSOR_FAULT); // Критическая ошибка датчика температуры
+143:ELSIF (VO_Status.Pressure < 1.0 OR VO_Status.Pressure > 4.0) AND NOT fbPressValidator.VO_Error THEN
+144:    L_Error_Latched := TRUE;
+145:    L_Error_ID_Latched := TO_WORD(GVL_CONFIG.ERR_DHW_PRESSURE_OUT_OF_RANGE); // Давление вне нормы
+148:IF L_Error_Latched THEN
+150:    VO_Heating_Pump := FALSE;
+151:    VO_Circ_Pump := FALSE;
+152:    VO_Status.Warning := FALSE;
+153:    VO_Status.Error := TRUE;
+154:    VO_Status.Error_ID := L_Error_ID_Latched;
+155:    VO_Status.Heating_Pump_On := FALSE;
+156:    VO_Status.Circ_Pump_On := FALSE;
+162:IF fbPressValidator.VO_Error THEN
+165:    VO_Status.Warning := TRUE;
+166:    VO_Status.Error := FALSE;
+167:    VO_Status.Error_ID := TO_WORD(GVL_CONFIG.ERR_DHW_PRESSURE_SENSOR_FAULT);
+178:   AND NOT L_Legionella_Done_Today THEN
+179:    L_Legionella_Active := TRUE;
+181:    L_Legionella_Active := FALSE;
+184:L_Legionella_Timer(IN := L_Legionella_Active AND VO_Status.Temp >= 70.0, PT := T#30m, VI_System_Time_MS := VI_System_Time_MS);
+185:IF L_Legionella_Timer.Q THEN
+186:    L_Legionella_Active := FALSE; // Дезинфекция завершена
+187:    L_Legionella_Done_Today := TRUE; // Повторно в те же сутки не запускать
+191:IF L_Legionella_Active THEN
+192:    IF VO_Status.Temp < 70.0 THEN
+193:        VO_Heating_Pump := TRUE;
+194:    ELSIF VO_Status.Temp > 72.0 THEN
+195:        VO_Heating_Pump := FALSE;
+198:    IF VO_Status.Temp < (L_Target_Temp_Adjusted - VI_Config.Hysteresis) THEN
+199:        VO_Heating_Pump := TRUE;
+200:    ELSIF VO_Status.Temp > (L_Target_Temp_Adjusted + VI_Config.Hysteresis) THEN
+201:        VO_Heating_Pump := FALSE;
+207:VO_Circ_Pump := SEL(VI_Config.Circulation_Schedule_Enabled AND NOT (VI_Config.Night_Mode_Enabled AND (L_Current_TOD < VI_Config.Circulation_Start OR L_Current_TOD > VI_Config.Circulation_End)), FALSE, TRUE);
+213:VO_Status.Heating_Pump_On := VO_Heating_Pump;
+214:VO_Status.Circ_Pump_On := VO_Circ_Pump;
+
+=== TAIL CONTEXT ===
+);
+
+VO_Status.Temp := fbTempValidator.VO_Value;
+VO_Status.Pressure := fbPressValidator.VO_Value;
+
+// Сохраняем последнее достоверное значение температуры ГВС.
+// Используется только для диагностики/сервиса, не для fallback-управления.
+IF NOT fbTempValidator.VO_Error THEN
+    L_Last_Good_Temp := VO_Status.Temp;
+END_IF;
+
+IF fbTempValidator.VO_Error THEN
+    GVL_STATE.G_DHW_Sensor_Fault := TRUE;
+    L_Error_Latched := TRUE;
+    L_Error_ID_Latched := TO_WORD(GVL_CONFIG.ERR_DHW_TEMP_SENSOR_FAULT); // Критическая ошибка датчика температуры
+ELSIF (VO_Status.Pressure < 1.0 OR VO_Status.Pressure > 4.0) AND NOT fbPressValidator.VO_Error THEN
+    L_Error_Latched := TRUE;
+    L_Error_ID_Latched := TO_WORD(GVL_CONFIG.ERR_DHW_PRESSURE_OUT_OF_RANGE); // Давление вне нормы
+END_IF;
+
+IF L_Error_Latched THEN
+    // Критическая ошибка: переход в безопасное состояние с полной остановкой насосов.
+    VO_Heating_Pump := FALSE;
+    VO_Circ_Pump := FALSE;
+    VO_Status.Warning := FALSE;
+    VO_Status.Error := TRUE;
+    VO_Status.Error_ID := L_Error_ID_Latched;
+    VO_Status.Heating_Pump_On := FALSE;
+    VO_Status.Circ_Pump_On := FALSE;
+    RETURN;
+END_IF;
+
+// Ошибка датчика давления не останавливает ГВС,
+// но переводит подсистему в режим предупреждения (degraded mode).
+IF fbPressValidator.VO_Error THEN
+    GVL_STATE.G_DHW_Sensor_Fault := TRUE;
+    GVL_STATE.G_DHW_Subsystem_Degraded := TRUE;
+    VO_Status.Warning := TRUE;
+    VO_Status.Error := FALSE;
+    VO_Status.Error_ID := TO_WORD(GVL_CONFIG.ERR_DHW_PRESSURE_SENSOR_FAULT);
+END_IF;
+
+// 2. Логика поддержания температуры воды в бойлере (Нагрев)
+// На этом этапе FB уже выполняется только на активном ПЛК.
+    
+// Термическая дезинфекция (Легионелла)
+IF VI_Config.Anti_Legionella_Enabled
+   AND (VI_Current_Day_Of_Week = VI_Config.Anti_Legionella_Day)
+   AND (L_Current_TOD >= TOD#02:00)
+   AND (L_Current_TOD <= TOD#04:00)
+   AND NOT L_Legionella_Done_Today THEN
+    L_Legionella_Active := TRUE;
+ELSE
+    L_Legionella_Active := FALSE;
+END_IF;
+
+L_Legionella_Timer(IN := L_Legionella_Active AND VO_Status.Temp >= 70.0, PT := T#30m, VI_System_Time_MS := VI_System_Time_MS);
+IF L_Legionella_Timer.Q THEN
+    L_Legionella_Active := FALSE; // Дезинфекция завершена
+    L_Legionella_Done_Today := TRUE; // Повторно в те же сутки не запускать
+END_IF;
+
+// Двухпозиционное регулирование с гистерезисом
+IF L_Legionella_Active THEN
+    IF VO_Status.Temp < 70.0 THEN
+        VO_Heating_Pump := TRUE;
+    ELSIF VO_Status.Temp > 72.0 THEN
+        VO_Heating_Pump := FALSE;
+    END_IF;
+ELSE
+    IF VO_Status.Temp < (L_Target_Temp_Adjusted - VI_Config.Hysteresis) THEN
+        VO_Heating_Pump := TRUE;
+    ELSIF VO_Status.Temp > (L_Target_Temp_Adjusted + VI_Config.Hysteresis) THEN
+        VO_Heating_Pump := FALSE;
+    END_IF;
+END_IF;
+
+// 3. Управление циркуляционным насосом ГВС по расписанию
+// Рециркуляция обеспечивает мгновенное наличие горячей воды у потребителя
+VO_Circ_Pump := SEL(VI_Config.Circulation_Schedule_Enabled AND NOT (VI_Config.Night_Mode_Enabled AND (L_Current_TOD < VI_Config.Circulation_Start OR L_Current_TOD > VI_Config.Circulation_End)), FALSE, TRUE);
+
+// Формирование статусных данных для визуализации.
+// К этому моменту статус уже консистентен:
+// - Error = критическая ошибка с остановкой ГВС
+// - Warning = деградация без остановки
+VO_Status.Heating_Pump_On := VO_Heating_Pump;
+VO_Status.Circ_Pump_On := VO_Circ_Pump;
+
+END_FUNCTION_BLOCK
+// >>> BULK_SYNC_ANCHOR: FB_DHW_Manager <<<
+
+=== DIFF ===
+diff --git a/FB_DHW_Manager.st b/FB_DHW_Manager.st
+index 84a5c9f..3fd51dc 100644
+--- a/FB_DHW_Manager.st
++++ b/FB_DHW_Manager.st
+@@ -20,12 +20,6 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     // DHW V2 staging layer
+-    L_DHW_V2_Command_V2 : ST_DHW_Command_V2;
+-    L_DHW_V2_State_V2 : ST_DHW_State_V2;
+-    L_DHW_V2_Shadow_Diff_Found : BOOL;
+-    L_DHW_V2_Switch_Enabled : BOOL;
+-    L_DHW_V2_Path_Ready : BOOL;
+-    L_DHW_Using_Legacy_Fallback : BOOL;
+     L_i : INT;
+     L_Current_TOD : TOD; // Текущее время суток
+     L_Legionella_Active : BOOL; // Флаг активного режима термической дезинфекции (Легионелла)
+@@ -45,10 +39,6 @@ END_VAR
+ 
+ IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+ 
+-L_DHW_V2_Shadow_Diff_Found := FALSE;
+-L_DHW_V2_Switch_Enabled := TRUE;
+-L_DHW_V2_Path_Ready := FALSE;
+-L_DHW_Using_Legacy_Fallback := TRUE;
+ 
+ GVL_STATE.G_DHW_IO_Fault := FALSE;
+ GVL_STATE.G_DHW_Sensor_Fault := FALSE;
+@@ -223,45 +213,5 @@ VO_Circ_Pump := SEL(VI_Config.Circulation_Schedule_Enabled AND NOT (VI_Config.Ni
+ VO_Status.Heating_Pump_On := VO_Heating_Pump;
+ VO_Status.Circ_Pump_On := VO_Circ_Pump;
+ 
+-// ========================================
+-// DHW V2 shadow execution (phase2)
+-// Inlined from FB_DHW_V2_Staging
+-// ========================================
+-IF VO_Heating_Pump THEN
+-    L_DHW_V2_Command_V2.Pump_Enable := 1.0;
+-ELSE
+-    L_DHW_V2_Command_V2.Pump_Enable := 0.0;
+-END_IF;
+-
+-L_DHW_V2_State_V2.Tank_Temp := VO_Status.Temp;
+-L_DHW_V2_State_V2.Supply_Temp := VO_Status.Pressure;
+-
+-// ========================================
+-// DHW V2 staging validation
+-// ========================================
+-IF VO_Heating_Pump <> (L_DHW_V2_Command_V2.Pump_Enable > 0.5) THEN
+-    L_DHW_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF ABS(VO_Status.Temp - L_DHW_V2_State_V2.Tank_Temp) > 0.1 THEN
+-    L_DHW_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF ABS(VO_Status.Pressure - L_DHW_V2_State_V2.Supply_Temp) > 0.1 THEN
+-    L_DHW_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-
+-// Guarded DHW V2 enable
+-IF L_DHW_V2_Switch_Enabled THEN
+-    IF NOT L_DHW_V2_Shadow_Diff_Found THEN
+-        L_DHW_V2_Path_Ready := TRUE;
+-        L_DHW_Using_Legacy_Fallback := FALSE;
+-    ELSE
+-        L_DHW_V2_Path_Ready := FALSE;
+-        L_DHW_Using_Legacy_Fallback := TRUE;
+-    END_IF;
+-ELSE
+-    L_DHW_V2_Path_Ready := FALSE;
+-    L_DHW_Using_Legacy_Fallback := TRUE;
+-END_IF;
+-
+ END_FUNCTION_BLOCK
+ // >>> BULK_SYNC_ANCHOR: FB_DHW_Manager <<<
+
+=== END STEP 122 ===
