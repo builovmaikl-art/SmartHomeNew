@@ -1,0 +1,139 @@
+]633;E;echo "=== STEP 117: REMOVE RULE ENGINE INTERNAL SCAFFOLD ===";d2f9cd72-cf3a-446c-b425-a96632cf891c]633;C=== STEP 117: REMOVE RULE ENGINE INTERNAL SCAFFOLD ===
+timestamp_utc=2026-04-17T08:51:50Z
+
+=== BEFORE ===
+28:    L_Compat_All_OK : BOOL;
+29:    L_Compat_First_Warning : STRING(255);
+30:    L_Compat_First_Warning_Latched : BOOL;
+31:    L_Shadow_V2_Enabled : BOOL;
+32:    L_Shadow_V2_Roundtrip_Mismatch : BOOL;
+33:    L_Shadow_V2_First_Mismatch_Rule : INT;
+34:    L_V2_Switch_Enabled : BOOL;
+35:    L_V2_Path_Ready : BOOL;
+36:    L_V2_Using_Legacy_Fallback : BOOL;
+47:L_Compat_All_OK := TRUE;
+48:L_Compat_First_Warning := '';
+49:L_Compat_First_Warning_Latched := FALSE;
+50:L_Shadow_V2_Enabled := TRUE;
+51:L_Shadow_V2_Roundtrip_Mismatch := FALSE;
+52:L_Shadow_V2_First_Mismatch_Rule := 0;
+53:L_V2_Switch_Enabled := FALSE;
+54:L_V2_Path_Ready := FALSE;
+55:L_V2_Using_Legacy_Fallback := TRUE;
+70:    IF L_Shadow_V2_Enabled THEN
+80:    IF L_V2_Switch_Enabled AND L_V2_Path_Ready THEN
+81:        L_V2_Using_Legacy_Fallback := FALSE;
+85:        L_V2_Using_Legacy_Fallback := TRUE;
+
+=== APPLY ===
+OK: removed internal scaffold from FB_Rule_Engine.st
+
+=== AFTER ===
+52:    IF L_Shadow_V2_Enabled THEN
+62:    IF L_V2_Switch_Enabled AND L_V2_Path_Ready THEN
+63:        L_V2_Using_Legacy_Fallback := FALSE;
+
+=== CORE RULE FLOW STILL PRESENT ===
+10:    VI_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Массив пользовательских правил
+24:    VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
+28:    L_Condition_Met : BOOL;
+29:    L_Current_Value : REAL;
+30:    L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+31:    L_Trigger_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF UINT;
+45:        L_Trigger_Count[L_i] := 0;
+69:    VO_Actions[L_i].Active := FALSE;
+70:    IF VI_Rules[L_i].Enabled THEN
+71:        L_Condition_Met := FALSE;
+72:        L_Current_Value := 0.0;
+75:        IF VI_Rules[L_i].Condition_Target_ID > 0 THEN
+76:            CASE VI_Rules[L_i].Condition_Type OF
+77:                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+78:                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID <= 8 THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+79:                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+80:                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+81:                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+83:                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
+84:                        L_Current_Value := SEL(VI_Door_Sensors[VI_Rules[L_i].Condition_Target_ID] OR VI_Window_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
+85:                    ELSIF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
+86:                        L_Current_Value := SEL(VI_Window_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
+88:                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+89:                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
+90:                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+91:                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
+92:                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+93:                E_Rule_Condition_Type.COND_DAY_OF_WEEK: L_Current_Value := TO_REAL(VI_Day_Of_Week);
+96:            IF VI_Rules[L_i].Condition_Type = E_Rule_Condition_Type.COND_TIME_OF_DAY THEN
+97:                L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE); // Время в минутах
+98:            ELSIF VI_Rules[L_i].Condition_Type = E_Rule_Condition_Type.COND_DAY_OF_WEEK THEN
+99:                L_Current_Value := TO_REAL(VI_Day_Of_Week);
+104:        CASE VI_Rules[L_i].Condition_Op OF
+105:            E_Rule_Comparison.COMP_GT: L_Condition_Met := (L_Current_Value > VI_Rules[L_i].Condition_Value);
+106:            E_Rule_Comparison.COMP_LT: L_Condition_Met := (L_Current_Value < VI_Rules[L_i].Condition_Value);
+107:            E_Rule_Comparison.COMP_EQ: L_Condition_Met := (ABS(L_Current_Value - VI_Rules[L_i].Condition_Value) < 0.1);
+108:            E_Rule_Comparison.COMP_GE: L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value);
+109:            E_Rule_Comparison.COMP_LE: L_Condition_Met := (L_Current_Value <= VI_Rules[L_i].Condition_Value);
+110:            E_Rule_Comparison.COMP_IN_RANGE: L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value) AND (L_Current_Value <= VI_Rules[L_i].Condition_Value_Max);
+111:            E_Rule_Comparison.COMP_TRUE: L_Condition_Met := (L_Current_Value > 0.5);
+112:            E_Rule_Comparison.COMP_FALSE: L_Condition_Met := (L_Current_Value < 0.5);
+116:        L_Triggers[L_i](CLK := L_Condition_Met);
+118:        IF L_Triggers[L_i].Q THEN
+119:            L_Trigger_Count[L_i] := L_Trigger_Count[L_i] + 1;
+120:            IF L_Trigger_Count[L_i] > 10 THEN
+122:                VO_Actions[L_i].Active := FALSE;
+123:                VO_Actions[L_i].Triggered := FALSE;
+128:        IF L_Condition_Met AND (L_Trigger_Count[L_i] <= 10) THEN
+129:            VO_Actions[L_i].Active := TRUE;
+130:            VO_Actions[L_i].Triggered := L_Triggers[L_i].Q;
+131:            VO_Actions[L_i].Action_Type := VI_Rules[L_i].Action_Type;
+132:            VO_Actions[L_i].Target_ID := VI_Rules[L_i].Action_Target_ID;
+133:            VO_Actions[L_i].Value := VI_Rules[L_i].Action_Value;
+
+=== DIFF ===
+diff --git a/FB_Rule_Engine.st b/FB_Rule_Engine.st
+index 1030ea9..8c7b1d7 100644
+--- a/FB_Rule_Engine.st
++++ b/FB_Rule_Engine.st
+@@ -25,15 +25,6 @@ VAR_OUTPUT
+ END_VAR
+ VAR
+     L_i : INT;
+-    L_Compat_All_OK : BOOL;
+-    L_Compat_First_Warning : STRING(255);
+-    L_Compat_First_Warning_Latched : BOOL;
+-    L_Shadow_V2_Enabled : BOOL;
+-    L_Shadow_V2_Roundtrip_Mismatch : BOOL;
+-    L_Shadow_V2_First_Mismatch_Rule : INT;
+-    L_V2_Switch_Enabled : BOOL;
+-    L_V2_Path_Ready : BOOL;
+-    L_V2_Using_Legacy_Fallback : BOOL;
+     L_Condition_Met : BOOL;
+     L_Current_Value : REAL;
+     L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
+@@ -44,15 +35,6 @@ END_VAR
+ 
+ IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+ 
+-L_Compat_All_OK := TRUE;
+-L_Compat_First_Warning := '';
+-L_Compat_First_Warning_Latched := FALSE;
+-L_Shadow_V2_Enabled := TRUE;
+-L_Shadow_V2_Roundtrip_Mismatch := FALSE;
+-L_Shadow_V2_First_Mismatch_Rule := 0;
+-L_V2_Switch_Enabled := FALSE;
+-L_V2_Path_Ready := FALSE;
+-L_V2_Using_Legacy_Fallback := TRUE;
+ 
+ // Сброс счетчиков срабатываний каждую минуту (защита от циклических зависимостей/дребезга)
+ L_Elapsed_Time := (SEL(VI_System_Time_MS >= L_Last_Reset_Time, VI_System_Time_MS - L_Last_Reset_Time, (4294967295 - L_Last_Reset_Time) + VI_System_Time_MS + 1));
+@@ -82,8 +64,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+         // V2 action-generation path placeholder.
+         // No runtime behavior change yet.
+     ELSE
+-        L_V2_Using_Legacy_Fallback := TRUE;
+-    END_IF;
++            END_IF;
+ 
+     VO_Actions[L_i].Active := FALSE;
+     IF VI_Rules[L_i].Enabled THEN
+
+=== END STEP 117 ===

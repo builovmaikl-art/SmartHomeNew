@@ -25,15 +25,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     L_i : INT;
-    L_Compat_All_OK : BOOL;
-    L_Compat_First_Warning : STRING(255);
-    L_Compat_First_Warning_Latched : BOOL;
-    L_Shadow_V2_Enabled : BOOL;
-    L_Shadow_V2_Roundtrip_Mismatch : BOOL;
-    L_Shadow_V2_First_Mismatch_Rule : INT;
-    L_V2_Switch_Enabled : BOOL;
-    L_V2_Path_Ready : BOOL;
-    L_V2_Using_Legacy_Fallback : BOOL;
     L_Condition_Met : BOOL;
     L_Current_Value : REAL;
     L_Triggers : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF R_TRIG;
@@ -44,15 +35,6 @@ END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
-L_Compat_All_OK := TRUE;
-L_Compat_First_Warning := '';
-L_Compat_First_Warning_Latched := FALSE;
-L_Shadow_V2_Enabled := TRUE;
-L_Shadow_V2_Roundtrip_Mismatch := FALSE;
-L_Shadow_V2_First_Mismatch_Rule := 0;
-L_V2_Switch_Enabled := FALSE;
-L_V2_Path_Ready := FALSE;
-L_V2_Using_Legacy_Fallback := TRUE;
 
 // Сброс счетчиков срабатываний каждую минуту (защита от циклических зависимостей/дребезга)
 L_Elapsed_Time := (SEL(VI_System_Time_MS >= L_Last_Reset_Time, VI_System_Time_MS - L_Last_Reset_Time, (4294967295 - L_Last_Reset_Time) + VI_System_Time_MS + 1));
@@ -82,8 +64,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
         // V2 action-generation path placeholder.
         // No runtime behavior change yet.
     ELSE
-        L_V2_Using_Legacy_Fallback := TRUE;
-    END_IF;
+            END_IF;
 
     VO_Actions[L_i].Active := FALSE;
     IF VI_Rules[L_i].Enabled THEN
