@@ -42,12 +42,6 @@ VAR
     L_Target_Temp : REAL;
     L_PID_Heaters : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_PID_Controller;
     L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
-    L_Vent_Command_Shadow : ST_Ventilation_Command_V2;
-    L_Vent_State_Shadow : ST_Ventilation_State_V2;
-    L_Vent_V2_Shadow_Diff_Found : BOOL;
-    L_Vent_V2_Switch_Enabled : BOOL;
-    L_Vent_V2_Path_Ready : BOOL;
-    L_Vent_Using_Legacy_Fallback : BOOL;
 END_VAR
 
 // ========================================
@@ -55,10 +49,6 @@ END_VAR
 // ========================================
 GVL_STATE.G_Ventilation_IO_Fault := FALSE;
 GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;
-L_Vent_V2_Shadow_Diff_Found := FALSE;
-L_Vent_V2_Switch_Enabled := TRUE;
-L_Vent_V2_Path_Ready := FALSE;
-L_Vent_Using_Legacy_Fallback := TRUE;
 L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
 L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
@@ -223,33 +213,6 @@ IF L_Policy_Degraded THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         VO_Exhaust_Fans[L_i] := MIN(VO_Exhaust_Fans[L_i], VI_Config.Degraded_Exhaust_Limit);
     END_FOR;
-END_IF;
-
-// Ventilation V2 shadow runtime integration (diagnostic only)
-// Inlined from FB_Ventilation_V2_Staging
-L_Vent_Command_Shadow.Fan_Speed_Setpoint := BYTE_TO_REAL(VO_Supply_Fans[1]);
-L_Vent_State_Shadow.Supply_Temp := VI_Supply_Temps[1];
-
-// Ventilation V2 shadow validation
-IF ABS(BYTE_TO_REAL(VO_Supply_Fans[1]) - L_Vent_Command_Shadow.Fan_Speed_Setpoint) > 0.1 THEN
-    L_Vent_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-IF ABS(VI_Supply_Temps[1] - L_Vent_State_Shadow.Supply_Temp) > 0.1 THEN
-    L_Vent_V2_Shadow_Diff_Found := TRUE;
-END_IF;
-
-// Guarded Ventilation V2 enable
-IF L_Vent_V2_Switch_Enabled THEN
-    IF NOT L_Vent_V2_Shadow_Diff_Found THEN
-        L_Vent_V2_Path_Ready := TRUE;
-        L_Vent_Using_Legacy_Fallback := FALSE;
-    ELSE
-        L_Vent_V2_Path_Ready := FALSE;
-        L_Vent_Using_Legacy_Fallback := TRUE;
-    END_IF;
-ELSE
-    L_Vent_V2_Path_Ready := FALSE;
-    L_Vent_Using_Legacy_Fallback := TRUE;
 END_IF;
 
 // 4. Формирование статусного сообщения

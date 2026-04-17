@@ -1,0 +1,268 @@
+]633;E;echo "=== STEP 124: REMOVE VENTILATION MANAGER INTERNAL SCAFFOLD ===";b6f813eb-cece-44d7-b1c9-eeab6bd16f84]633;C=== STEP 124: REMOVE VENTILATION MANAGER INTERNAL SCAFFOLD ===
+timestamp_utc=2026-04-17T09:42:22Z
+
+=== BEFORE ===
+45:    L_Vent_Command_Shadow : ST_Ventilation_Command_V2;
+46:    L_Vent_State_Shadow : ST_Ventilation_State_V2;
+47:    L_Vent_V2_Shadow_Diff_Found : BOOL;
+48:    L_Vent_V2_Switch_Enabled : BOOL;
+49:    L_Vent_V2_Path_Ready : BOOL;
+50:    L_Vent_Using_Legacy_Fallback : BOOL;
+58:L_Vent_V2_Shadow_Diff_Found := FALSE;
+59:L_Vent_V2_Switch_Enabled := TRUE;
+60:L_Vent_V2_Path_Ready := FALSE;
+61:L_Vent_Using_Legacy_Fallback := TRUE;
+230:L_Vent_Command_Shadow.Fan_Speed_Setpoint := BYTE_TO_REAL(VO_Supply_Fans[1]);
+231:L_Vent_State_Shadow.Supply_Temp := VI_Supply_Temps[1];
+234:IF ABS(BYTE_TO_REAL(VO_Supply_Fans[1]) - L_Vent_Command_Shadow.Fan_Speed_Setpoint) > 0.1 THEN
+235:    L_Vent_V2_Shadow_Diff_Found := TRUE;
+237:IF ABS(VI_Supply_Temps[1] - L_Vent_State_Shadow.Supply_Temp) > 0.1 THEN
+238:    L_Vent_V2_Shadow_Diff_Found := TRUE;
+242:IF L_Vent_V2_Switch_Enabled THEN
+243:    IF NOT L_Vent_V2_Shadow_Diff_Found THEN
+244:        L_Vent_V2_Path_Ready := TRUE;
+245:        L_Vent_Using_Legacy_Fallback := FALSE;
+247:        L_Vent_V2_Path_Ready := FALSE;
+248:        L_Vent_Using_Legacy_Fallback := TRUE;
+251:    L_Vent_V2_Path_Ready := FALSE;
+252:    L_Vent_Using_Legacy_Fallback := TRUE;
+
+=== APPLY ===
+OK: removed internal scaffold from FB_Ventilation_System_Manager.st
+
+=== AFTER ===
+
+=== CORE VENT FLOW STILL PRESENT ===
+27:    VO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE; // Выход: Управление приточными вентиляторами (0-100%)
+28:    VO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE; // Выход: Управление вытяжными вентиляторами (0-100%)
+29:    VO_Heater_Power : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Выход: Мощность калориферов (0-100%)
+30:    VO_Status_Msg : STRING(200); // Строковое сообщение о статусе
+33:    L_Policy_Normal : BOOL;
+34:    L_Policy_Safe_Stop : BOOL;
+35:    L_Policy_Degraded : BOOL;
+36:    L_Policy_Freeze_Protection : BOOL;
+39:    L_Max_CO2 : REAL;
+40:    L_Max_Hum : REAL;
+41:    L_Base_Speed : BYTE;
+42:    L_Target_Temp : REAL;
+43:    L_PID_Heaters : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_PID_Controller;
+44:    L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
+52:L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
+53:L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+54:L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
+55:L_Policy_Freeze_Protection := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+59:        VO_Supply_Fans[L_i] := 0;
+61:            VO_Heater_Power[L_i] := 0.0;
+65:        VO_Exhaust_Fans[L_i] := 0;
+67:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: РЕЗЕРВНЫЙ ПЛК';
+77:            VO_Supply_Fans[L_j] := 0;
+80:            VO_Exhaust_Fans[L_j] := 0;
+83:            VO_Heater_Power[L_j] := 0.0;
+85:        VO_Status_Msg := 'ОШИБКА: Потеря связи с модулями ввода-вывода';
+94:IF L_Policy_Safe_Stop THEN
+96:        VO_Supply_Fans[L_i] := 0;
+99:        VO_Exhaust_Fans[L_i] := 0;
+102:        VO_Heater_Power[L_i] := 0.0;
+104:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: ОСТАНОВЛЕНА POLICY SAFE_STOP';
+108:IF L_Policy_Degraded THEN
+110:        VO_Supply_Fans[L_i] := 0;
+113:        VO_Heater_Power[L_i] := 0.0;
+116:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: DEGRADED POLICY';
+119:IF L_Policy_Freeze_Protection THEN
+121:        VO_Supply_Fans[L_i] := 0;
+124:        VO_Exhaust_Fans[L_i] := 0;
+127:        VO_Heater_Power[L_i] := 0.0;
+129:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: FREEZE_PROTECTION POLICY (stop)';
+138:        L_Base_Speed := VI_Config.Scenario_Modes[3].Base_Fan_Speed;
+139:        L_Target_Temp := VI_Config.Scenario_Modes[3].Target_Temp;
+141:        L_Base_Speed := VI_Config.Scenario_Modes[2].Base_Fan_Speed;
+142:        L_Target_Temp := VI_Config.Scenario_Modes[2].Target_Temp;
+144:        L_Base_Speed := VI_Config.Scenario_Modes[1].Base_Fan_Speed;
+145:        L_Target_Temp := VI_Config.Scenario_Modes[1].Target_Temp;
+152:        L_PID_Heaters[L_i](
+153:            VI_SetPoint := L_Target_Temp,
+157:            VO_Output => VO_Heater_Power[L_i]
+162:    VO_Supply_Fans[L_i] := L_Base_Speed;
+168:                VO_Supply_Fans[L_i] := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+181:    VO_Exhaust_Fans[L_i] := L_Base_Speed;
+187:            L_Wet_Zone_Timers[L_j](IN := VI_Wet_Zone_Active[L_j], PT := T#5m, VI_System_Time_MS := VI_System_Time_MS);
+189:                VO_Exhaust_Fans[L_i] := 80; // Повышенная скорость при присутствии
+190:            ELSIF L_Wet_Zone_Timers[L_j].Q THEN
+191:                VO_Exhaust_Fans[L_i] := 50; // Скорость выбега (пока таймер TOF активен)
+212:IF L_Policy_Degraded THEN
+214:        VO_Exhaust_Fans[L_i] := MIN(VO_Exhaust_Fans[L_i], VI_Config.Degraded_Exhaust_Limit);
+219:IF L_Policy_Safe_Stop THEN
+220:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: ОСТАНОВЛЕНА POLICY SAFE_STOP';
+221:ELSIF L_Policy_Freeze_Protection THEN
+222:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: FREEZE_PROTECTION POLICY (stop)';
+223:ELSIF L_Policy_Degraded THEN
+224:    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: DEGRADED POLICY';
+226:    VO_Status_Msg := 'Вентиляция работает в штатном режиме';
+
+=== TAIL CONTEXT ===
+    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: FREEZE_PROTECTION POLICY (stop)';
+    RETURN;
+END_IF;
+
+// MODE_FREEZE_PROTECTION пока оставляем на текущей штатной логике
+
+// 1. Определение базовой скорости и целевой температуры по сценарию (ТЗ 7.1)
+CASE VI_Current_Scenario OF
+    E_SCENARIO_TYPE.SCENARIO_AWAY:
+        L_Base_Speed := VI_Config.Scenario_Modes[3].Base_Fan_Speed;
+        L_Target_Temp := VI_Config.Scenario_Modes[3].Target_Temp;
+    E_SCENARIO_TYPE.SCENARIO_SLEEP:
+        L_Base_Speed := VI_Config.Scenario_Modes[2].Base_Fan_Speed;
+        L_Target_Temp := VI_Config.Scenario_Modes[2].Target_Temp;
+    ELSE // PRESENCE, MORNING, EVENING
+        L_Base_Speed := VI_Config.Scenario_Modes[1].Base_Fan_Speed;
+        L_Target_Temp := VI_Config.Scenario_Modes[1].Target_Temp;
+END_CASE;
+
+// 2. Логика управления приточными установками (П-1, П-2, П-3)
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    // ПИД-регулирование мощности электрического калорифера
+    IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+        L_PID_Heaters[L_i](
+            VI_SetPoint := L_Target_Temp,
+            VI_ProcessValue := VI_Supply_Temps[L_i], // Используем датчик температуры после калорифера
+            VI_Kp := 4.0, VI_Tn := 120.0, VI_Tv := 0.0,
+            VI_Y_Min := 0.0, VI_Y_Max := 100.0, VI_Cycle_Time_S := 1.0,
+            VO_Output => VO_Heater_Power[L_i]
+        );
+    END_IF;
+
+    // Определение скорости приточного вентилятора
+    VO_Supply_Fans[L_i] := L_Base_Speed;
+    
+    // Обработка действий от Rule Engine
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_VENTILATION THEN
+                VO_Supply_Fans[L_i] := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+            END_IF;
+        END_IF;
+    END_FOR;
+    
+    // Requests are observed but must not bypass policy directly.
+    IF VI_Supply_100_Req OR VI_Supply_80_Req OR VI_Fire_Alarm OR VI_Vent_Stop OR VI_Gas_Alarm OR VI_PV3_Boost_Req THEN
+        GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+    END_IF;
+END_FOR;
+
+// 3. Логика управления вытяжными установками (В-1 .. В-5)
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    VO_Exhaust_Fans[L_i] := L_Base_Speed;
+    
+    // ТЗ 4.0: Логика вытяжки в санузлах
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+        IF VI_Config.wet_zone_to_exhaust_map[L_j] = L_i THEN
+            // Включение по свету, выключение с задержкой 5 минут (используем TOF)
+            L_Wet_Zone_Timers[L_j](IN := VI_Wet_Zone_Active[L_j], PT := T#5m, VI_System_Time_MS := VI_System_Time_MS);
+            IF VI_Wet_Zone_Active[L_j] THEN
+                VO_Exhaust_Fans[L_i] := 80; // Повышенная скорость при присутствии
+            ELSIF L_Wet_Zone_Timers[L_j].Q THEN
+                VO_Exhaust_Fans[L_i] := 50; // Скорость выбега (пока таймер TOF активен)
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    // Requests are observed but must not bypass policy directly.
+    IF (L_i = VI_Config.pv3_exhaust_index AND VI_PV3_Boost_Req) OR VI_Exhaust_100_Req OR VI_Fire_Alarm OR VI_Vent_Stop OR VI_Gas_Alarm THEN
+        GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+    END_IF;
+END_FOR;
+
+
+
+
+
+
+
+
+// ========================================
+// VENT_FINAL_CLAMP
+// ========================================
+IF L_Policy_Degraded THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        VO_Exhaust_Fans[L_i] := MIN(VO_Exhaust_Fans[L_i], VI_Config.Degraded_Exhaust_Limit);
+    END_FOR;
+END_IF;
+
+// 4. Формирование статусного сообщения
+IF L_Policy_Safe_Stop THEN
+    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: ОСТАНОВЛЕНА POLICY SAFE_STOP';
+ELSIF L_Policy_Freeze_Protection THEN
+    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: FREEZE_PROTECTION POLICY (stop)';
+ELSIF L_Policy_Degraded THEN
+    VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: DEGRADED POLICY';
+ELSE
+    VO_Status_Msg := 'Вентиляция работает в штатном режиме';
+END_IF;
+// >>> BULK_SYNC_ANCHOR: FB_Ventilation_System_Manager <<<
+
+=== DIFF ===
+diff --git a/FB_Ventilation_System_Manager.st b/FB_Ventilation_System_Manager.st
+index aa3e66e..f67e03e 100644
+--- a/FB_Ventilation_System_Manager.st
++++ b/FB_Ventilation_System_Manager.st
+@@ -42,12 +42,6 @@ VAR
+     L_Target_Temp : REAL;
+     L_PID_Heaters : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_PID_Controller;
+     L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
+-    L_Vent_Command_Shadow : ST_Ventilation_Command_V2;
+-    L_Vent_State_Shadow : ST_Ventilation_State_V2;
+-    L_Vent_V2_Shadow_Diff_Found : BOOL;
+-    L_Vent_V2_Switch_Enabled : BOOL;
+-    L_Vent_V2_Path_Ready : BOOL;
+-    L_Vent_Using_Legacy_Fallback : BOOL;
+ END_VAR
+ 
+ // ========================================
+@@ -55,10 +49,6 @@ END_VAR
+ // ========================================
+ GVL_STATE.G_Ventilation_IO_Fault := FALSE;
+ GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;
+-L_Vent_V2_Shadow_Diff_Found := FALSE;
+-L_Vent_V2_Switch_Enabled := TRUE;
+-L_Vent_V2_Path_Ready := FALSE;
+-L_Vent_Using_Legacy_Fallback := TRUE;
+ L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
+ L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+ L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
+@@ -225,33 +215,6 @@ IF L_Policy_Degraded THEN
+     END_FOR;
+ END_IF;
+ 
+-// Ventilation V2 shadow runtime integration (diagnostic only)
+-// Inlined from FB_Ventilation_V2_Staging
+-L_Vent_Command_Shadow.Fan_Speed_Setpoint := BYTE_TO_REAL(VO_Supply_Fans[1]);
+-L_Vent_State_Shadow.Supply_Temp := VI_Supply_Temps[1];
+-
+-// Ventilation V2 shadow validation
+-IF ABS(BYTE_TO_REAL(VO_Supply_Fans[1]) - L_Vent_Command_Shadow.Fan_Speed_Setpoint) > 0.1 THEN
+-    L_Vent_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-IF ABS(VI_Supply_Temps[1] - L_Vent_State_Shadow.Supply_Temp) > 0.1 THEN
+-    L_Vent_V2_Shadow_Diff_Found := TRUE;
+-END_IF;
+-
+-// Guarded Ventilation V2 enable
+-IF L_Vent_V2_Switch_Enabled THEN
+-    IF NOT L_Vent_V2_Shadow_Diff_Found THEN
+-        L_Vent_V2_Path_Ready := TRUE;
+-        L_Vent_Using_Legacy_Fallback := FALSE;
+-    ELSE
+-        L_Vent_V2_Path_Ready := FALSE;
+-        L_Vent_Using_Legacy_Fallback := TRUE;
+-    END_IF;
+-ELSE
+-    L_Vent_V2_Path_Ready := FALSE;
+-    L_Vent_Using_Legacy_Fallback := TRUE;
+-END_IF;
+-
+ // 4. Формирование статусного сообщения
+ IF L_Policy_Safe_Stop THEN
+     VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: ОСТАНОВЛЕНА POLICY SAFE_STOP';
+
+=== END STEP 124 ===
