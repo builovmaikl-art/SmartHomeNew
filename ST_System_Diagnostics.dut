@@ -106,6 +106,17 @@ STRUCT
     IO_Offline : BOOL;
     Subsystem_Degraded : BOOL;
 
+    Sensor_Shadow_CO_Active : BOOL;
+    Sensor_Shadow_CO_Diff : REAL;
+    Sensor_Shadow_CO_Status_Text : STRING(80);
+
+    Sensor_Shadow_Methane_Active : BOOL;
+    Sensor_Shadow_Methane_Diff : REAL;
+    Sensor_Shadow_Methane_Status_Text : STRING(80);
+
+    Sensor_Shadow_Smoke_Active : BOOL;
+    Sensor_Shadow_Smoke_Status_Text : STRING(80);
+
 
 END_STRUCT
 END_TYPE
