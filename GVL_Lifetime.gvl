@@ -9,4 +9,12 @@ VAR_GLOBAL
     // === HMI / HEALTH READY FLAGS ===
     G_Pump_Maintenance_Required : BOOL;
     G_Fan_Maintenance_Required  : BOOL;
+
+    // === LIFETIME LIMITS ===
+    G_Pump_Nominal_Hours : REAL := 10000.0;
+    G_Fan_Nominal_Hours  : REAL := 15000.0;
+
+    // === WARNING THRESHOLDS ===
+    G_Maintenance_Threshold_Percent : REAL := 20.0;
+
 END_VAR

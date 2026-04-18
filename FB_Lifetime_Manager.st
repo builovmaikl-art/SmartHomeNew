@@ -3,6 +3,7 @@ VAR_INPUT
     VI_System_Time_MS : UDINT;
     VI_Device_Active  : BOOL;
     VI_Device_ID      : BYTE;
+    VI_Nominal_Hours : REAL;
 END_VAR
 
 VAR_IN_OUT
@@ -36,6 +37,22 @@ L_Prev_State := VI_Device_Active;
 IF VI_Device_Active THEN
     VIO_Status.runtime_hours := VIO_Status.runtime_hours + (L_Delta_MS / 3600000);
 END_IF;
+
+// === BASIC LIFETIME ESTIMATION ===
+IF VI_Nominal_Hours > 0.0 THEN
+    IF VIO_Status.runtime_hours >= VI_Nominal_Hours THEN
+        VIO_Status.remaining_hours := 0.0;
+        VIO_Status.remaining_percent := 0.0;
+    ELSE
+        VIO_Status.remaining_hours := VI_Nominal_Hours - VIO_Status.runtime_hours;
+        VIO_Status.remaining_percent := (VIO_Status.remaining_hours / VI_Nominal_Hours) * 100.0;
+    END_IF;
+ELSE
+    VIO_Status.remaining_hours := 0.0;
+    VIO_Status.remaining_percent := 0.0;
+END_IF;
+
+VIO_Status.maintenance_required := VIO_Status.remaining_percent <= 20.0;
 
 // === BASIC FLAGS ===
 VIO_Status.device_id := VI_Device_ID;

@@ -1207,6 +1207,7 @@ fbLifetimePump(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Device_Active  := GVL_PERSISTENT.P_DHW_Heating_Active,
     VI_Device_ID      := GVL_Lifetime.G_Device_Pump,
+    VI_Nominal_Hours  := GVL_Lifetime.G_Pump_Nominal_Hours,
     VIO_Status        := GVL_Lifetime.G_Status[1]
 );
 
@@ -1218,6 +1219,7 @@ fbLifetimeFan(
         GVL_STATE.G_Exhaust_Fans[1] > 0
     ),
     VI_Device_ID      := GVL_Lifetime.G_Device_Fan,
+    VI_Nominal_Hours  := GVL_Lifetime.G_Fan_Nominal_Hours,
     VIO_Status        := GVL_Lifetime.G_Status[2]
 );
 
