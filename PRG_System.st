@@ -1224,6 +1224,14 @@ fbCalibCO(
 );
 L_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
 
+// === SHADOW EXPORT ===
+GVL_Sensor_Shadow.G_CO_Raw := GVL_STATE.G_CO_Sensors[1];
+GVL_Sensor_Shadow.G_CO_Processed := L_CO_Processed;
+GVL_Sensor_Shadow.G_CO_Calibrated := L_CO_Calibrated;
+GVL_Sensor_Shadow.G_CO_Error := fbSensorCO.VO_Error;
+GVL_Sensor_Shadow.G_CO_Diag_Code := fbSensorCO.VO_Diag_Code;
+
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)
