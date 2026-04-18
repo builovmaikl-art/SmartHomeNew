@@ -191,6 +191,12 @@ STRUCT
     Heating_Zone_Lock_Bridge_Active : BOOL;
     Heating_Real_Enforcement_Text : STRING(160);
 
+    // === HEATING ENFORCEMENT TELEMETRY ===
+    Heating_Pump_Force_Event_Count : UDINT;
+    Heating_Zone_Lock_Event_Count : UDINT;
+    Heating_Last_Event_Time_MS : UDINT;
+    Heating_Last_Event_Text : STRING(160);
+
 
 
 END_STRUCT

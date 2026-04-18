@@ -2,7 +2,7 @@ DUT_FILES=73
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=22
 STRUCT_INSERTED=51
-STRUCT_FIELDS_TOTAL=501
+STRUCT_FIELDS_TOTAL=505
 STRUCT_FIELDS_WITH_INITIALIZER=137
 INITIALIZERS_INSERTED=137
 ARRAY_INITIALIZERS_INSERTED=4
@@ -65,7 +65,7 @@ ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=17
 ST_Security_Zone_State.dut: STRUCT ST_Security_Zone_State fields=5
 ST_Sensor_Calibration_Record.dut: STRUCT ST_Sensor_Calibration_Record fields=7
 ST_State_Snapshot.dut: STRUCT ST_State_Snapshot fields=7
-ST_System_Diagnostics.dut: STRUCT ST_System_Diagnostics fields=157
+ST_System_Diagnostics.dut: STRUCT ST_System_Diagnostics fields=161
 ST_System_State_Snapshot.dut: STRUCT ST_System_State_Snapshot fields=12
 ST_System_State_Summary.dut: STRUCT ST_System_State_Summary fields=10
 ST_Tariff_Config.dut: STRUCT ST_Tariff_Config fields=4
@@ -117,7 +117,7 @@ STRUCT ST_Security_Global_Config: total=17 with_initializer=13 without_initializ
 STRUCT ST_Security_Zone_State: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Sensor_Calibration_Record: total=7 with_initializer=6 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_State_Snapshot: total=7 with_initializer=5 without_initializer=2 array_initializer=0 unsupported_initializer=0
-STRUCT ST_System_Diagnostics: total=157 with_initializer=0 without_initializer=157 array_initializer=0 unsupported_initializer=0
+STRUCT ST_System_Diagnostics: total=161 with_initializer=0 without_initializer=161 array_initializer=0 unsupported_initializer=0
 STRUCT ST_System_State_Snapshot: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_System_State_Summary: total=10 with_initializer=0 without_initializer=10 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Tariff_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0

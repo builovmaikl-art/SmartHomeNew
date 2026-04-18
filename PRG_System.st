@@ -21,6 +21,8 @@ L_Snapshot : ST_State_Snapshot;
 L_Snapshot_Trigger_Prev : BOOL;
 L_Snapshot_Fallback_Prev : BOOL;
 L_Snapshot_Recovery_Prev : BOOL;
+L_Heating_Pump_Force_Bridge_Prev : BOOL;
+L_Heating_Zone_Lock_Bridge_Prev : BOOL;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1842,6 +1844,26 @@ ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active THEN
 ELSE
     GVL_STATUS.G_Diagnostics.Heating_Real_Enforcement_Text := 'No real heating enforcement applied';
 END_IF;
+
+// === HEATING ENFORCEMENT TELEMETRY ===
+IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active AND
+   (NOT L_Heating_Pump_Force_Bridge_Prev) THEN
+    GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Event_Count :=
+        GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Event_Count + 1;
+    GVL_STATUS.G_Diagnostics.Heating_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+    GVL_STATUS.G_Diagnostics.Heating_Last_Event_Text := 'Pump force bridge activated';
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active AND
+   (NOT L_Heating_Zone_Lock_Bridge_Prev) THEN
+    GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Event_Count :=
+        GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Event_Count + 1;
+    GVL_STATUS.G_Diagnostics.Heating_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+    GVL_STATUS.G_Diagnostics.Heating_Last_Event_Text := 'Zone lock bridge activated';
+END_IF;
+
+L_Heating_Pump_Force_Bridge_Prev := GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active;
+L_Heating_Zone_Lock_Bridge_Prev := GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active;
 
 // === SNAPSHOT LAYER (PHASE 1) ===
 // safe in-memory snapshot using real ST_State_Snapshot fields
