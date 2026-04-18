@@ -131,6 +131,12 @@ STRUCT
     Sensor_Shadow_Total_Fallback_Count : UDINT;
     Sensor_Shadow_Total_Recovery_Count : UDINT;
 
+    Sensor_Shadow_CO_Healthy : BOOL;
+    Sensor_Shadow_Methane_Healthy : BOOL;
+    Sensor_Shadow_Smoke_Healthy : BOOL;
+    Sensor_Shadow_Dominant_Channel : STRING(32);
+    Sensor_Shadow_Policy_Summary_Text : STRING(160);
+
 
 END_STRUCT
 END_TYPE

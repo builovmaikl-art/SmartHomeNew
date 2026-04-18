@@ -1533,6 +1533,46 @@ L_Shadow_CO_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_CO;
 L_Shadow_Methane_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Methane;
 L_Shadow_Smoke_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Smoke;
 
+// === SHADOW POLICY STATS SUMMARY ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count <=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recovery_Count;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count <=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recovery_Count;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count <=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recovery_Count;
+
+// dominant channel by fallback count
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Dominant_Channel := 'CO';
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count >
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Dominant_Channel := 'Methane';
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count >
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count AND
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count >
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Dominant_Channel := 'Smoke';
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count = 0 THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'No shadow fallback events';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count =
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'Shadow policy balanced';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count >
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'Fallbacks exceed recoveries';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'Recoveries exceed fallbacks';
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)
