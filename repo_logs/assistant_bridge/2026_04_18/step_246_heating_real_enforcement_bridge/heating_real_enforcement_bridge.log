@@ -29,3 +29,17 @@ OK: heating real enforcement bridge integrated
 1843:    GVL_STATUS.G_Diagnostics.Heating_Real_Enforcement_Text := 'No real heating enforcement applied';
 
 === COMPILE ===
+[main 77f3f9b] test: compile smoke after migration
+ 7 files changed, 582 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_246_heating_real_enforcement_bridge/heating_real_enforcement_bridge.log
+ create mode 100644 steps/2026-04-18_heating_real_enforcement_bridge/01_heating_real_enforcement_bridge.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   d932062..77f3f9b  main -> main
+compile_exit=0
+
+=== END STEP 246 ===
