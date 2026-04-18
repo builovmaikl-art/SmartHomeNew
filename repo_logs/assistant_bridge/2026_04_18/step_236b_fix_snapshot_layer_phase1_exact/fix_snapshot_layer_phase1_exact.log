@@ -1,0 +1,67 @@
+]633;E;echo "=== STEP 236B: FIX SNAPSHOT LAYER PHASE 1 EXACT ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 236B: FIX SNAPSHOT LAYER PHASE 1 EXACT ===
+timestamp_utc=2026-04-18T17:50:09Z
+
+=== APPLY ===
+OK: snapshot layer phase1 fixed to real ST_State_Snapshot fields
+
+=== VERIFY MAIN VAR ===
+3:    fbSnapshotMgr : FB_State_Snapshot_Manager;
+17:L_Window_Hours : REAL;
+1633:    L_Window_Hours :=
+1636:    L_Window_Hours := 1.0;
+1641:    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
+1644:    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
+1648:    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours;
+1651:    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours;
+1654:    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours;
+1775:fbSnapshotMgr(
+
+=== VERIFY SNAPSHOT BLOCK ===
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour;
+
+GVL_External_Monitoring.G_Shadow_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+// === SNAPSHOT LAYER (PHASE 1) ===
+// safe in-memory snapshot using real ST_State_Snapshot fields
+L_Snapshot.timestamp_ms := GVL_STATUS.G_System_Time_MS;
+L_Snapshot.operator_id := 'SYSTEM';
+L_Snapshot.scenario_id := GVL_STATUS.G_Current_Scenario;
+L_Snapshot.lighting_levels := GVL_STATE.G_Lighting_Levels;
+L_Snapshot.floor_heating_setpoints := GVL_CONFIG.G_HMI_Heating_Setpoints;
+L_Snapshot.alarm_active := GVL_ALARM.G_Global_Critical OR GVL_ALARM.G_Global_Warning;
+L_Snapshot.crc32 := DWORD#0;
+
+fbSnapshotMgr(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Trigger_Event  := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active,
+    VI_Event_Code     := WORD#1,
+    VI_Current_State  := L_Snapshot
+);
+
+// === LIFETIME UPDATE ===
+
+// pump (временно FALSE — до реального сигнала)
+fbLifetimePump(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Device_Active  := GVL_PERSISTENT.P_DHW_Heating_Active,
+    VI_Device_ID      := GVL_Lifetime.G_Device_Pump,
+    VI_Nominal_Hours  := GVL_Lifetime.G_Pump_Nominal_Hours,
+    VIO_Status        := GVL_Lifetime.G_Status[1]
+);
+
+// fan (временно FALSE — до реального сигнала)
+fbLifetimeFan(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Device_Active  := (
+        GVL_STATE.G_Supply_Fans[1] > 0 OR
+        GVL_STATE.G_Exhaust_Fans[1] > 0
+    ),
+    VI_Device_ID      := GVL_Lifetime.G_Device_Fan,
+    VI_Nominal_Hours  := GVL_Lifetime.G_Fan_Nominal_Hours,
+    VIO_Status        := GVL_Lifetime.G_Status[2]
+);
+
+
+
+=== COMPILE ===
