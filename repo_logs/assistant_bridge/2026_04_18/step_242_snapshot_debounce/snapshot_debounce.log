@@ -1,0 +1,27 @@
+]633;E;echo "=== STEP 242: SNAPSHOT DEBOUNCE ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 242: SNAPSHOT DEBOUNCE ===
+timestamp_utc=2026-04-18T19:44:57Z
+
+=== APPLY ===
+OK: snapshot debounce inserted
+
+=== VERIFY ===
+3:    fbSnapshotMgr : FB_State_Snapshot_Manager;
+22:L_Snapshot_Last_Event_MS : UDINT;
+23:L_Snapshot_Min_Interval_MS : UDINT;
+1786:// === SNAPSHOT MULTI EVENT TRIGGER ===
+1787:IF L_Snapshot_Min_Interval_MS = 0 THEN
+1788:    L_Snapshot_Min_Interval_MS := 5000;
+1794:   ((L_Snapshot_Last_Event_MS = 0) OR
+1795:    ((GVL_STATUS.G_System_Time_MS - L_Snapshot_Last_Event_MS) >= L_Snapshot_Min_Interval_MS)) THEN
+1796:    fbSnapshotMgr(
+1802:    L_Snapshot_Last_Event_MS := GVL_STATUS.G_System_Time_MS;
+1808:   ((L_Snapshot_Last_Event_MS = 0) OR
+1809:    ((GVL_STATUS.G_System_Time_MS - L_Snapshot_Last_Event_MS) >= L_Snapshot_Min_Interval_MS)) THEN
+1810:    fbSnapshotMgr(
+1816:    L_Snapshot_Last_Event_MS := GVL_STATUS.G_System_Time_MS;
+1822:   ((L_Snapshot_Last_Event_MS = 0) OR
+1823:    ((GVL_STATUS.G_System_Time_MS - L_Snapshot_Last_Event_MS) >= L_Snapshot_Min_Interval_MS)) THEN
+1824:    fbSnapshotMgr(
+1830:    L_Snapshot_Last_Event_MS := GVL_STATUS.G_System_Time_MS;
+
+=== COMPILE ===
