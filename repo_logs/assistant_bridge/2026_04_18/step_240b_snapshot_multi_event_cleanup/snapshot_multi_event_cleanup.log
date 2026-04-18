@@ -18,3 +18,17 @@ OK: cleaned broken safe-add insertion and restored valid snapshot multi-event bl
 1819:L_Snapshot_Recovery_Prev := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour > 10.0;
 
 === COMPILE ===
+[main 791fd49] test: compile smoke after migration
+ 5 files changed, 504 insertions(+), 394 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_240b_snapshot_multi_event_cleanup/snapshot_multi_event_cleanup.log
+ create mode 100644 steps/2026-04-18_snapshot_multi_event_cleanup/01_snapshot_multi_event_cleanup.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   2d469c4..791fd49  main -> main
+compile_exit=0
+
+=== END STEP 240B ===
