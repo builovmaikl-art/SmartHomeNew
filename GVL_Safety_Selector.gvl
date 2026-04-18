@@ -9,6 +9,11 @@ VAR_GLOBAL
     G_Methane_Effective : REAL;
     G_Smoke_Effective : BOOL;
 
+    // === SHADOW QUALITY THRESHOLDS / POLICY ===
+    G_CO_Shadow_Max_Diff : REAL := 5.0;
+    G_Methane_Shadow_Max_Diff : REAL := 5.0;
+    G_Block_Shadow_On_Mismatch : BOOL := TRUE;
+
     // === EFFECTIVE ARRAYS FOR SAFETY FB ===
     G_CO_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
     G_Methane_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;

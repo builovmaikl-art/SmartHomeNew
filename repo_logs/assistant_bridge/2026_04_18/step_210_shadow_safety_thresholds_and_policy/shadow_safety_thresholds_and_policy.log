@@ -1,0 +1,28 @@
+]633;E;echo "=== STEP 210: SHADOW SAFETY THRESHOLDS AND POLICY ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 210: SHADOW SAFETY THRESHOLDS AND POLICY ===
+timestamp_utc=2026-04-18T14:39:34Z
+
+=== APPLY ===
+OK: added configurable thresholds and simple shadow safety policy
+
+=== VERIFY GVL_SAFETY_SELECTOR ===
+13:    G_CO_Shadow_Max_Diff : REAL := 5.0;
+14:    G_Methane_Shadow_Max_Diff : REAL := 5.0;
+15:    G_Block_Shadow_On_Mismatch : BOOL := TRUE;
+
+=== VERIFY PRG_SYSTEM ===
+1363:// === SHADOW SAFETY QUALITY FLAGS ===
+1364:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable :=
+1365:    GVL_Safety_Bridge.G_CO_Diff > GVL_Safety_Selector.G_CO_Shadow_Max_Diff;
+1367:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable :=
+1368:    GVL_Safety_Bridge.G_Methane_Diff > GVL_Safety_Selector.G_Methane_Shadow_Max_Diff;
+1370:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch :=
+1373:// === SHADOW SAFETY POLICY ===
+1374:IF GVL_Safety_Selector.G_Block_Shadow_On_Mismatch THEN
+1375:    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+1379:    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+1383:    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+1388:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+1390:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+1392:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+
+=== END STEP 210 ===

@@ -1361,9 +1361,29 @@ ELSE
 END_IF;
 
 // === SHADOW SAFETY QUALITY FLAGS ===
-GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable := GVL_Safety_Bridge.G_CO_Diff > 5.0;
-GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable := GVL_Safety_Bridge.G_Methane_Diff > 5.0;
-GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch := GVL_Safety_Bridge.G_Smoke_Diff;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable :=
+    GVL_Safety_Bridge.G_CO_Diff > GVL_Safety_Selector.G_CO_Shadow_Max_Diff;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable :=
+    GVL_Safety_Bridge.G_Methane_Diff > GVL_Safety_Selector.G_Methane_Shadow_Max_Diff;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch :=
+    GVL_Safety_Bridge.G_Smoke_Diff;
+
+// === SHADOW SAFETY POLICY ===
+IF GVL_Safety_Selector.G_Block_Shadow_On_Mismatch THEN
+    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+        GVL_Safety_Selector.G_Use_Shadow_CO := FALSE;
+    END_IF;
+
+    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+        GVL_Safety_Selector.G_Use_Shadow_Methane := FALSE;
+    END_IF;
+
+    IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+        GVL_Safety_Selector.G_Use_Shadow_Smoke := FALSE;
+    END_IF;
+END_IF;
 
 IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Smoke shadow mismatch';
