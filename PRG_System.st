@@ -1291,6 +1291,7 @@ GVL_Safety_Bridge.G_Smoke_Shadow  := GVL_Sensor_Shadow.G_Smoke_Detected;
 GVL_Safety_Bridge.G_Smoke_Diff    := GVL_Safety_Bridge.G_Smoke_Runtime XOR GVL_Safety_Bridge.G_Smoke_Shadow;
 
 // === SAFETY SELECTOR LAYER ===
+GVL_Safety_Selector.G_Use_Shadow_CO := TRUE;
 
 // base copy from runtime arrays
 FOR L_Safety_Selector_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
