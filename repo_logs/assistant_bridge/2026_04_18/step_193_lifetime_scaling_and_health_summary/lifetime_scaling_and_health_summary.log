@@ -1,0 +1,35 @@
+]633;E;echo "=== STEP 193: LIFETIME SCALING + HEALTH SUMMARY ===";cb07821a-d34c-4035-be1a-7133cf9aa4fd]633;C=== STEP 193: LIFETIME SCALING + HEALTH SUMMARY ===
+timestamp_utc=2026-04-18T11:03:06Z
+
+=== PATCH GVL_LIFETIME ===
+OK: patched GVL_Lifetime scaling + health summary fields
+
+=== PATCH PRG_SYSTEM ===
+OK: patched PRG_System lifetime active-view + health summary
+
+=== VERIFY GVL_LIFETIME ===
+3:    G_Status : ARRAY[1..4] OF ST_Lifetime_Status;
+35:    G_Device_Reserved_3 : BYTE := 3;
+36:    G_Device_Reserved_4 : BYTE := 4;
+39:    G_Device_Labels : ARRAY[1..4] OF STRING(32) := ['Pump', 'Vent Fan', 'Reserved 3', 'Reserved 4'];
+42:    G_Any_Maintenance_Required : BOOL;
+43:    G_Maintenance_Warning : BOOL;
+44:    G_Maintenance_Critical : BOOL;
+
+=== VERIFY PRG_SYSTEM ===
+1227:// === LIFETIME HMI ACTIVE VIEW ===
+1228:IF GVL_Lifetime.G_Active_Device_Index < 1 THEN
+1229:    GVL_Lifetime.G_Active_Device_Index := 1;
+1230:ELSIF GVL_Lifetime.G_Active_Device_Index > 4 THEN
+1231:    GVL_Lifetime.G_Active_Device_Index := 4;
+1234:GVL_Lifetime.G_Active_Runtime_Hours := GVL_Lifetime.G_Status[GVL_Lifetime.G_Active_Device_Index].runtime_hours;
+1235:GVL_Lifetime.G_Active_Remaining_Hours := GVL_Lifetime.G_Status[GVL_Lifetime.G_Active_Device_Index].remaining_hours;
+1236:GVL_Lifetime.G_Active_Remaining_Percent := GVL_Lifetime.G_Status[GVL_Lifetime.G_Active_Device_Index].remaining_percent;
+1237:GVL_Lifetime.G_Active_Maintenance_Required := GVL_Lifetime.G_Status[GVL_Lifetime.G_Active_Device_Index].maintenance_required;
+1238:GVL_Lifetime.G_Active_Label := GVL_Lifetime.G_Device_Labels[GVL_Lifetime.G_Active_Device_Index];
+1240:// === LIFETIME HEALTH SUMMARY ===
+1241:GVL_Lifetime.G_Any_Maintenance_Required :=
+1247:GVL_Lifetime.G_Maintenance_Warning :=
+1253:GVL_Lifetime.G_Maintenance_Critical :=
+
+=== END STEP 193 ===

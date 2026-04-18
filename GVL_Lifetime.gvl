@@ -1,6 +1,6 @@
 VAR_GLOBAL
     // === LIFETIME STATUS STORAGE ===
-    G_Status : ARRAY[1..2] OF ST_Lifetime_Status;
+    G_Status : ARRAY[1..4] OF ST_Lifetime_Status;
 
     // === DEVICE IDS ===
     G_Device_Pump : BYTE := 1;
@@ -29,5 +29,18 @@ VAR_GLOBAL
     G_Device1_Label : STRING(32) := 'Pump';
     G_Device2_Label : STRING(32) := 'Vent Fan';
     G_Active_Label : STRING(32);
+
+
+    // === RESERVED DEVICE IDS ===
+    G_Device_Reserved_3 : BYTE := 3;
+    G_Device_Reserved_4 : BYTE := 4;
+
+    // === HMI LABEL ARRAY ===
+    G_Device_Labels : ARRAY[1..4] OF STRING(32) := ['Pump', 'Vent Fan', 'Reserved 3', 'Reserved 4'];
+
+    // === HEALTH SUMMARY ===
+    G_Any_Maintenance_Required : BOOL;
+    G_Maintenance_Warning : BOOL;
+    G_Maintenance_Critical : BOOL;
 
 END_VAR
