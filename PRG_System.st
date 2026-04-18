@@ -1629,27 +1629,27 @@ END_IF;
 // === SHADOW POLICY RATE METRICS ===
 IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS > 0 THEN
     L_Window_Hours :=
-        REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS) / 3600000.0;
+        TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS) / 3600000.0;
 ELSE
     L_Window_Hours := 1.0;
 END_IF;
 
 // total rates
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour :=
-    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
+    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
 
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour :=
-    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
+    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
 
 // per-channel fallback rates
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Fallback_Per_Hour :=
-    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours;
+    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours;
 
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Fallback_Per_Hour :=
-    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours;
+    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours;
 
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour :=
-    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours;
+    TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours;
 
 // simple activity classification
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_High_Activity :=
