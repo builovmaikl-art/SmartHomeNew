@@ -1,0 +1,38 @@
+]633;E;echo "=== STEP 199B: SHADOW CO PIPELINE ROBUST ===";4814f090-3d5d-4e1b-935c-8ecfd945514a]633;C=== STEP 199B: SHADOW CO PIPELINE ROBUST ===
+timestamp_utc=2026-04-18T11:49:23Z
+
+=== APPLY ===
+OK: robust shadow CO pipeline applied
+
+=== VERIFY GVL_SENSOR_SHADOW ===
+VAR_GLOBAL
+    // === CO SHADOW PIPELINE ===
+    G_CO_Raw_Word : WORD;
+    G_CO_Processed : REAL;
+    G_CO_Calibrated : REAL;
+    G_CO_Error : BOOL;
+    G_CO_Diag_Code : WORD;
+END_VAR
+
+=== VERIFY PRG_SYSTEM VARS ===
+5:L_CO_Raw_Word := REAL_TO_WORD(GVL_STATE.G_CO_Sensors[1]);
+6:GVL_Sensor_Shadow.G_CO_Raw_Word := L_CO_Raw_Word;
+8:fbSensorCO(
+9:    VI_Raw_Value := L_CO_Raw_Word,
+17:L_CO_Processed := fbSensorCO.VO_Value;
+19:fbCalibCO(
+20:    VI_Raw_Value := L_CO_Processed,
+24:GVL_Sensor_Shadow.G_CO_Processed := L_CO_Processed;
+25:GVL_Sensor_Shadow.G_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
+26:GVL_Sensor_Shadow.G_CO_Error := fbSensorCO.VO_Error;
+27:GVL_Sensor_Shadow.G_CO_Diag_Code := fbSensorCO.VO_Diag_Code;
+
+=== VERIFY PRG_SYSTEM SHADOW BLOCK ===
+6:GVL_Sensor_Shadow.G_CO_Raw_Word := L_CO_Raw_Word;
+21:    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[1]
+24:GVL_Sensor_Shadow.G_CO_Processed := L_CO_Processed;
+25:GVL_Sensor_Shadow.G_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
+26:GVL_Sensor_Shadow.G_CO_Error := fbSensorCO.VO_Error;
+27:GVL_Sensor_Shadow.G_CO_Diag_Code := fbSensorCO.VO_Diag_Code;
+
+=== END STEP 199B ===
