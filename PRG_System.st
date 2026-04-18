@@ -1289,6 +1289,29 @@ GVL_Safety_Bridge.G_Smoke_Runtime := GVL_STATE.G_Smoke_Sensors[1];
 GVL_Safety_Bridge.G_Smoke_Shadow  := GVL_Sensor_Shadow.G_Smoke_Detected;
 GVL_Safety_Bridge.G_Smoke_Diff    := GVL_Safety_Bridge.G_Smoke_Runtime XOR GVL_Safety_Bridge.G_Smoke_Shadow;
 
+// === SAFETY SELECTOR LAYER ===
+
+// CO
+IF GVL_Safety_Selector.G_Use_Shadow_CO THEN
+    GVL_Safety_Selector.G_CO_Effective := GVL_Sensor_Shadow.G_CO_Calibrated;
+ELSE
+    GVL_Safety_Selector.G_CO_Effective := GVL_STATE.G_CO_Sensors[1];
+END_IF;
+
+// METHANE
+IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
+    GVL_Safety_Selector.G_Methane_Effective := GVL_Sensor_Shadow.G_Methane_Calibrated;
+ELSE
+    GVL_Safety_Selector.G_Methane_Effective := GVL_STATE.G_Methane_Sensors[1];
+END_IF;
+
+// SMOKE
+IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
+    GVL_Safety_Selector.G_Smoke_Effective := GVL_Sensor_Shadow.G_Smoke_Detected;
+ELSE
+    GVL_Safety_Selector.G_Smoke_Effective := GVL_STATE.G_Smoke_Sensors[1];
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)

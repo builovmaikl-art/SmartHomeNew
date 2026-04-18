@@ -1,0 +1,32 @@
+]633;E;echo "=== STEP 203: SAFETY SELECTOR LAYER ===";99e447e3-9fca-4946-9726-64c2e121d464]633;C=== STEP 203: SAFETY SELECTOR LAYER ===
+timestamp_utc=2026-04-18T13:22:46Z
+
+=== APPLY ===
+OK: safety selector layer added
+
+=== VERIFY GVL ===
+VAR_GLOBAL
+    // === CONFIG SWITCHES ===
+    G_Use_Shadow_CO : BOOL := FALSE;
+    G_Use_Shadow_Methane : BOOL := FALSE;
+    G_Use_Shadow_Smoke : BOOL := FALSE;
+
+    // === EFFECTIVE SIGNALS ===
+    G_CO_Effective : REAL;
+    G_Methane_Effective : REAL;
+    G_Smoke_Effective : BOOL;
+END_VAR
+
+=== VERIFY SELECTOR ===
+1292:// === SAFETY SELECTOR LAYER ===
+1295:IF GVL_Safety_Selector.G_Use_Shadow_CO THEN
+1296:    GVL_Safety_Selector.G_CO_Effective := GVL_Sensor_Shadow.G_CO_Calibrated;
+1298:    GVL_Safety_Selector.G_CO_Effective := GVL_STATE.G_CO_Sensors[1];
+1302:IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
+1303:    GVL_Safety_Selector.G_Methane_Effective := GVL_Sensor_Shadow.G_Methane_Calibrated;
+1305:    GVL_Safety_Selector.G_Methane_Effective := GVL_STATE.G_Methane_Sensors[1];
+1309:IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
+1310:    GVL_Safety_Selector.G_Smoke_Effective := GVL_Sensor_Shadow.G_Smoke_Detected;
+1312:    GVL_Safety_Selector.G_Smoke_Effective := GVL_STATE.G_Smoke_Sensors[1];
+
+=== END STEP 203 ===
