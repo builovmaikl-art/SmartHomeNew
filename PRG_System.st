@@ -114,6 +114,10 @@ L_Mode_Prev : E_System_Operating_Mode;
 L_User_Access_Denied_Prev : BOOL;
 L_Dangerous_Action_Request_Prev : BOOL;
 
+L_Shadow_CO_Enabled_Prev : BOOL;
+L_Shadow_Methane_Enabled_Prev : BOOL;
+L_Shadow_Smoke_Enabled_Prev : BOOL;
+
     L_Persist_Buffer : ARRAY[0..4] OF BYTE;
     L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
     L_Persist_Buffer_Changed : BOOL;
@@ -1449,6 +1453,73 @@ ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
 ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Shadow safety quality OK';
 END_IF;
+
+// === SHADOW POLICY EVENT LOGGING ===
+// Event codes:
+// 2101 CO shadow fallback
+// 2102 CO shadow recovery
+// 2111 Methane shadow fallback
+// 2112 Methane shadow recovery
+// 2121 Smoke shadow fallback
+// 2122 Smoke shadow recovery
+
+IF (NOT GVL_Safety_Selector.G_Use_Shadow_CO) AND L_Shadow_CO_Enabled_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 21,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2101,
+        VI_Param2 := 0
+    );
+END_IF;
+
+IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
+    fbLogEvent(
+        VI_Event_Type := 22,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2102,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 23,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2111,
+        VI_Param2 := 0
+    );
+END_IF;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Prev) THEN
+    fbLogEvent(
+        VI_Event_Type := 24,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2112,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 25,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2121,
+        VI_Param2 := 0
+    );
+END_IF;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) THEN
+    fbLogEvent(
+        VI_Event_Type := 26,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 2122,
+        VI_Param2 := 1
+    );
+END_IF;
+
+L_Shadow_CO_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_CO;
+L_Shadow_Methane_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Methane;
+L_Shadow_Smoke_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Smoke;
 
 // === LIFETIME UPDATE ===
 

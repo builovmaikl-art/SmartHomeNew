@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 216: SHADOW POLICY EVENT LOGGING ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 216: SHADOW POLICY EVENT LOGGING ===
+timestamp_utc=2026-04-18T15:14:57Z
+
+=== APPLY ===
+OK: added shadow policy event logging
+
+=== VERIFY VARS ===
+117:L_Shadow_CO_Enabled_Prev : BOOL;
+118:L_Shadow_Methane_Enabled_Prev : BOOL;
+119:L_Shadow_Smoke_Enabled_Prev : BOOL;
+1466:IF (NOT GVL_Safety_Selector.G_Use_Shadow_CO) AND L_Shadow_CO_Enabled_Prev THEN
+1475:IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
+1484:IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_Prev THEN
+1493:IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Prev) THEN
+1502:IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev THEN
+1511:IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) THEN
+1520:L_Shadow_CO_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_CO;
+1521:L_Shadow_Methane_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Methane;
+1522:L_Shadow_Smoke_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_Smoke;
+
+=== VERIFY EVENT LOGGING BLOCK ===
+1457:// === SHADOW POLICY EVENT LOGGING ===
+1468:        VI_Event_Type := 21,
+1477:        VI_Event_Type := 22,
+1486:        VI_Event_Type := 23,
+1495:        VI_Event_Type := 24,
+1504:        VI_Event_Type := 25,
+1513:        VI_Event_Type := 26,
+
+=== END STEP 216 ===
