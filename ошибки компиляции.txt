@@ -1,23 +1,23 @@
                 ------ Компиляция : Приложение: Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени13: PRG_System(Строка 1503, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1503, Столбец 1 (Реализ.)): C0018:  'L_Window_Hours' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1506, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1506, Столбец 1 (Реализ.)): C0018:  'L_Window_Hours' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1510, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(UDINT_TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours)'' в тип 'REAL'
-[ERROR]         Без имени13: PRG_System(Строка 1511, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'L_Window_Hours'
-[ERROR]         Без имени13: PRG_System(Строка 1511, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1513, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(UDINT_TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours)'' в тип 'REAL'
-[ERROR]         Без имени13: PRG_System(Строка 1514, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'L_Window_Hours'
-[ERROR]         Без имени13: PRG_System(Строка 1514, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1517, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(UDINT_TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours)'' в тип 'REAL'
-[ERROR]         Без имени13: PRG_System(Строка 1518, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'L_Window_Hours'
-[ERROR]         Без имени13: PRG_System(Строка 1518, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1520, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(UDINT_TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours)'' в тип 'REAL'
-[ERROR]         Без имени13: PRG_System(Строка 1521, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'L_Window_Hours'
-[ERROR]         Без имени13: PRG_System(Строка 1521, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
-[ERROR]         Без имени13: PRG_System(Строка 1523, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(UDINT_TO_REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours)'' в тип 'REAL'
-[ERROR]         Без имени13: PRG_System(Строка 1524, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'L_Window_Hours'
-[ERROR]         Без имени13: PRG_System(Строка 1524, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Window_Hours' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1637, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.timestamp_ms' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1637, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1638, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.operator_id' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1638, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1639, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.scenario_id' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1639, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1640, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.lighting_levels' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1640, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1641, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.floor_heating_setpoints' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1641, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1641, Столбец 1 (Реализ.)): C0004:  'G_HMI_Heating_Setpoints' не является компонентом 'GVL_CONFIG'
+[ERROR]         Без имени13: PRG_System(Строка 1642, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.alarm_active' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1642, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1643, Столбец 1 (Реализ.)): C0018:  'L_Snapshot.crc32' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 1643, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1649, Столбец 1 (Реализ.)): C0046:  Идентификатор 'L_Snapshot' не задан
+[ERROR]         Без имени13: PRG_System(Строка 1649, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'L_Snapshot'' в тип 'ST_State_Snapshot'
+[ERROR]         Без имени13: FB_State_Snapshot_Manager(Строка 4, Столбец 1 (Реализ.)): C0018:  'L_Snapshot_Buffer[L_Write_Idx].trigger_event_code' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_State_Snapshot_Manager(Строка 4, Столбец 1 (Реализ.)): C0004:  'trigger_event_code' не является компонентом 'ST_State_Snapshot'
                 Компиляция завершена -- 19 ошибок, 0 предупреждений : загрузка невозможна
