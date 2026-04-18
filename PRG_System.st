@@ -7,6 +7,8 @@ fbSensorCO : FB_Sensor_Analog_Processing;
 fbCalibCO  : FB_Sensor_Calibration_Processor;
 fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibMethane  : FB_Sensor_Calibration_Processor;
+fbCalibVerifyCO : FB_Calibration_Manager;
+fbCalibVerifyMethane : FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -25,6 +27,8 @@ L_Heating_Pump_Force_Bridge_Prev : BOOL;
 L_Heating_Zone_Lock_Bridge_Prev : BOOL;
 L_Heating_Pump_Force_Hold_MS : UDINT;
 L_Heating_Zone_Lock_Hold_MS : UDINT;
+L_CO_Calib_TS_Prev : UDINT;
+L_Methane_Calib_TS_Prev : UDINT;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1274,6 +1278,57 @@ fbCalibMethane(
     VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[2]
 );
 L_Methane_Calibrated := fbCalibMethane.VO_Calibrated_Value;
+
+// === CALIBRATION VERIFICATION OBSERVER ===
+fbCalibVerifyCO(
+    VI_Raw_Value := L_CO_Processed,
+    VI_Type := 3,
+    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[1],
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Start_Verification := (
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp <> 0 AND
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp <> L_CO_Calib_TS_Prev
+    )
+);
+
+fbCalibVerifyMethane(
+    VI_Raw_Value := L_Methane_Processed,
+    VI_Type := 3,
+    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[2],
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Start_Verification := (
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp <> 0 AND
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp <> L_Methane_Calib_TS_Prev
+    )
+);
+
+GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Active :=
+    fbCalibVerifyCO.VO_Verification_Active;
+GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Failed :=
+    fbCalibVerifyCO.VO_Verification_Failed;
+GVL_STATUS.G_Diagnostics.Calibration_CO_Deviation_Percent :=
+    fbCalibVerifyCO.VO_Deviation_Percent;
+
+GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Active :=
+    fbCalibVerifyMethane.VO_Verification_Active;
+GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Failed :=
+    fbCalibVerifyMethane.VO_Verification_Failed;
+GVL_STATUS.G_Diagnostics.Calibration_Methane_Deviation_Percent :=
+    fbCalibVerifyMethane.VO_Deviation_Percent;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'CO calibration verification failed';
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Methane calibration verification failed';
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Active OR
+      GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Calibration verification active';
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Calibration verification idle';
+END_IF;
+
+L_CO_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp;
+L_Methane_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp;
 
 // === METHANE SHADOW EXPORT ===
 GVL_Sensor_Shadow.G_Methane_Raw := GVL_STATE.G_Methane_Sensors[1];

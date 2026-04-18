@@ -209,6 +209,17 @@ STRUCT
     Heating_Zone_Lock_Hold_Until_MS : UDINT;
     Heating_Cooldown_Text : STRING(160);
 
+    // === CALIBRATION VERIFICATION OBSERVER ===
+    Calibration_CO_Verification_Active : BOOL;
+    Calibration_CO_Verification_Failed : BOOL;
+    Calibration_CO_Deviation_Percent : REAL;
+
+    Calibration_Methane_Verification_Active : BOOL;
+    Calibration_Methane_Verification_Failed : BOOL;
+    Calibration_Methane_Deviation_Percent : REAL;
+
+    Calibration_Verification_Summary_Text : STRING(160);
+
 
 
 END_STRUCT

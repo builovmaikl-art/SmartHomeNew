@@ -1,0 +1,39 @@
+]633;E;echo "=== STEP 252: CALIBRATION VERIFICATION OBSERVER ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 252: CALIBRATION VERIFICATION OBSERVER ===
+timestamp_utc=2026-04-18T21:17:39Z
+
+=== APPLY ===
+OK: calibration verification observer integrated
+
+=== VERIFY DUT ===
+213:    Calibration_CO_Verification_Active : BOOL;
+214:    Calibration_CO_Verification_Failed : BOOL;
+215:    Calibration_CO_Deviation_Percent : REAL;
+217:    Calibration_Methane_Verification_Active : BOOL;
+218:    Calibration_Methane_Verification_Failed : BOOL;
+219:    Calibration_Methane_Deviation_Percent : REAL;
+221:    Calibration_Verification_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+10:fbCalibVerifyCO : FB_Calibration_Manager;
+11:fbCalibVerifyMethane : FB_Calibration_Manager;
+30:L_CO_Calib_TS_Prev : UDINT;
+31:L_Methane_Calib_TS_Prev : UDINT;
+1282:// === CALIBRATION VERIFICATION OBSERVER ===
+1283:fbCalibVerifyCO(
+1290:        GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp <> L_CO_Calib_TS_Prev
+1294:fbCalibVerifyMethane(
+1301:        GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp <> L_Methane_Calib_TS_Prev
+1306:    fbCalibVerifyCO.VO_Verification_Active;
+1308:    fbCalibVerifyCO.VO_Verification_Failed;
+1310:    fbCalibVerifyCO.VO_Deviation_Percent;
+1313:    fbCalibVerifyMethane.VO_Verification_Active;
+1315:    fbCalibVerifyMethane.VO_Verification_Failed;
+1317:    fbCalibVerifyMethane.VO_Deviation_Percent;
+1320:    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'CO calibration verification failed';
+1322:    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Methane calibration verification failed';
+1325:    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Calibration verification active';
+1327:    GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Calibration verification idle';
+1330:L_CO_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp;
+1331:L_Methane_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp;
+
+=== COMPILE ===
