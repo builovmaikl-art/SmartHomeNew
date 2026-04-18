@@ -1,0 +1,5 @@
+]633;E;echo "=== STEP 199C: RESTORE PRG_SYSTEM + REAPPLY SHADOW CO ===";4814f090-3d5d-4e1b-935c-8ecfd945514a]633;C=== STEP 199C: RESTORE PRG_SYSTEM + REAPPLY SHADOW CO ===
+timestamp_utc=2026-04-18T11:58:25Z
+
+=== APPLY ===
+Expected restored shadow VAR block not found
