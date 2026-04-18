@@ -117,6 +117,11 @@ STRUCT
     Sensor_Shadow_Smoke_Active : BOOL;
     Sensor_Shadow_Smoke_Status_Text : STRING(80);
 
+    Sensor_Shadow_CO_Unstable : BOOL;
+    Sensor_Shadow_Methane_Unstable : BOOL;
+    Sensor_Shadow_Smoke_Mismatch : BOOL;
+    Sensor_Shadow_Quality_Text : STRING(160);
+
 
 END_STRUCT
 END_TYPE

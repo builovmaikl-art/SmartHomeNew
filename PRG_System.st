@@ -1360,6 +1360,21 @@ ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow OFF';
 END_IF;
 
+// === SHADOW SAFETY QUALITY FLAGS ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable := GVL_Safety_Bridge.G_CO_Diff > 5.0;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable := GVL_Safety_Bridge.G_Methane_Diff > 5.0;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch := GVL_Safety_Bridge.G_Smoke_Diff;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Smoke shadow mismatch';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Methane shadow unstable';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'CO shadow unstable';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Shadow safety quality OK';
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)
