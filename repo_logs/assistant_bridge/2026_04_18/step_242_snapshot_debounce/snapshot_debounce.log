@@ -25,3 +25,17 @@ OK: snapshot debounce inserted
 1830:    L_Snapshot_Last_Event_MS := GVL_STATUS.G_System_Time_MS;
 
 === COMPILE ===
+[main 17cf372] test: compile smoke after migration
+ 5 files changed, 570 insertions(+), 390 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_242_snapshot_debounce/snapshot_debounce.log
+ create mode 100644 steps/2026-04-18_snapshot_debounce/01_snapshot_debounce.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   f88b0d6..17cf372  main -> main
+compile_exit=0
+
+=== END STEP 242 ===
