@@ -1,0 +1,25 @@
+]633;E;echo "=== STEP 212: SHADOW POLICY DEBOUNCE ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 212: SHADOW POLICY DEBOUNCE ===
+timestamp_utc=2026-04-18T14:51:23Z
+
+=== APPLY ===
+OK: debounce policy applied
+
+=== VERIFY SELECTOR ===
+18:    G_Shadow_Unstable_Cycles_Limit : INT := 5;
+20:    G_CO_Unstable_Counter : INT := 0;
+21:    G_Methane_Unstable_Counter : INT := 0;
+22:    G_Smoke_Unstable_Counter : INT := 0;
+
+=== VERIFY PRG_SYSTEM ===
+1373:// === SHADOW SAFETY POLICY (DEBOUNCE) ===
+1375:    GVL_Safety_Selector.G_CO_Unstable_Counter := GVL_Safety_Selector.G_CO_Unstable_Counter + 1;
+1377:    GVL_Safety_Selector.G_CO_Unstable_Counter := 0;
+1381:    GVL_Safety_Selector.G_Methane_Unstable_Counter := GVL_Safety_Selector.G_Methane_Unstable_Counter + 1;
+1383:    GVL_Safety_Selector.G_Methane_Unstable_Counter := 0;
+1387:    GVL_Safety_Selector.G_Smoke_Unstable_Counter := GVL_Safety_Selector.G_Smoke_Unstable_Counter + 1;
+1389:    GVL_Safety_Selector.G_Smoke_Unstable_Counter := 0;
+1395:    IF GVL_Safety_Selector.G_CO_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+1399:    IF GVL_Safety_Selector.G_Methane_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+1403:    IF GVL_Safety_Selector.G_Smoke_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+
+=== END STEP 212 ===

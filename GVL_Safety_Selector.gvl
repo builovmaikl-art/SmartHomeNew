@@ -14,6 +14,14 @@ VAR_GLOBAL
     G_Methane_Shadow_Max_Diff : REAL := 5.0;
     G_Block_Shadow_On_Mismatch : BOOL := TRUE;
 
+    // === DEBOUNCE POLICY ===
+    G_Shadow_Unstable_Cycles_Limit : INT := 5;
+
+    G_CO_Unstable_Counter : INT := 0;
+    G_Methane_Unstable_Counter : INT := 0;
+    G_Smoke_Unstable_Counter : INT := 0;
+
+
     // === EFFECTIVE ARRAYS FOR SAFETY FB ===
     G_CO_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
     G_Methane_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
