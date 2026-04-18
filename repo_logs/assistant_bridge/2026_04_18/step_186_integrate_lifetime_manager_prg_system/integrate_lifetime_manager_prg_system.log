@@ -1,0 +1,13 @@
+]633;E;echo "=== STEP 186: INTEGRATE LIFETIME MANAGER ===";cb07821a-d34c-4035-be1a-7133cf9aa4fd]633;C=== STEP 186: INTEGRATE LIFETIME MANAGER ===
+
+=== APPLY ===
+OK: integrated FB_Lifetime_Manager into PRG_System
+
+=== VERIFY ===
+5:fbLifetimePump : FB_Lifetime_Manager;
+6:fbLifetimeFan  : FB_Lifetime_Manager;
+1203:// === LIFETIME UPDATE ===
+1206:fbLifetimePump(
+1214:fbLifetimeFan(
+
+=== END STEP 186 ===

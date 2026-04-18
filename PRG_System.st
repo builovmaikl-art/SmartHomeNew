@@ -1,6 +1,11 @@
 PROGRAM PRG_System
 VAR
 
+// === LIFETIME MANAGERS ===
+fbLifetimePump : FB_Lifetime_Manager;
+fbLifetimeFan  : FB_Lifetime_Manager;
+
+
     // === TREND WRITE CONTROL ===
     L_Trend_Write : BOOL;
     L_Trend_Write_Prev : BOOL;
@@ -1193,6 +1198,25 @@ ELSE
         GVL_Trend.G_Trend_Active_Timestamp := GVL_Trend.G_Trend_Buffer_Timestamps[GVL_Trend.G_Trend_Buffer_Index];
     END_IF;
 END_IF;
+
+
+// === LIFETIME UPDATE ===
+
+// pump (временно FALSE — до реального сигнала)
+fbLifetimePump(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Device_Active  := FALSE,
+    VI_Device_ID      := GVL_Lifetime.G_Device_Pump,
+    VIO_Status        := GVL_Lifetime.G_Status[1]
+);
+
+// fan (временно FALSE — до реального сигнала)
+fbLifetimeFan(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Device_Active  := FALSE,
+    VI_Device_ID      := GVL_Lifetime.G_Device_Fan,
+    VIO_Status        := GVL_Lifetime.G_Status[2]
+);
 
 // === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
