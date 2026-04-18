@@ -1626,6 +1626,47 @@ ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'No recent shadow policy activity';
 END_IF;
 
+// === SHADOW POLICY RATE METRICS ===
+VAR
+    L_Window_Hours : REAL;
+END_VAR
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS > 0 THEN
+    L_Window_Hours :=
+        REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS) / 3600000.0;
+ELSE
+    L_Window_Hours := 1.0;
+END_IF;
+
+// total rates
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
+
+// per-channel fallback rates
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Fallback_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Fallback_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours;
+
+// simple activity classification
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_High_Activity :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour > 10.0;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_High_Activity THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'High shadow fallback rate';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour > 0.0 THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'Moderate shadow activity';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'No shadow fallback activity';
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)

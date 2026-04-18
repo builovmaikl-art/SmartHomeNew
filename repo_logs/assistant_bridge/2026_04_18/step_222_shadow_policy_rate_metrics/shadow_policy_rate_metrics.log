@@ -1,0 +1,30 @@
+]633;E;echo "=== STEP 222: SHADOW POLICY RATE METRICS ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 222: SHADOW POLICY RATE METRICS ===
+timestamp_utc=2026-04-18T15:44:11Z
+
+=== APPLY ===
+OK: added isolated shadow policy rate metrics
+
+=== VERIFY DUT ===
+159:    Sensor_Shadow_Rate_Fallback_Per_Hour : REAL;
+160:    Sensor_Shadow_Rate_Recovery_Per_Hour : REAL;
+162:    Sensor_Shadow_CO_Rate_Fallback_Per_Hour : REAL;
+163:    Sensor_Shadow_Methane_Rate_Fallback_Per_Hour : REAL;
+164:    Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour : REAL;
+166:    Sensor_Shadow_Rate_High_Activity : BOOL;
+167:    Sensor_Shadow_Rate_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1629:// === SHADOW POLICY RATE METRICS ===
+1642:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour :=
+1649:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Fallback_Per_Hour :=
+1652:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Fallback_Per_Hour :=
+1655:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour :=
+1659:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_High_Activity :=
+1660:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour > 10.0;
+1662:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_High_Activity THEN
+1663:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'High shadow fallback rate';
+1664:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour > 0.0 THEN
+1665:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'Moderate shadow activity';
+1667:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'No shadow fallback activity';
+
+=== END STEP 222 ===

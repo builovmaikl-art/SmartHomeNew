@@ -155,6 +155,18 @@ STRUCT
 
     Sensor_Shadow_Recent_Activity_Text : STRING(160);
 
+    // === RATE METRICS (ISOLATED) ===
+    Sensor_Shadow_Rate_Fallback_Per_Hour : REAL;
+    Sensor_Shadow_Rate_Recovery_Per_Hour : REAL;
+
+    Sensor_Shadow_CO_Rate_Fallback_Per_Hour : REAL;
+    Sensor_Shadow_Methane_Rate_Fallback_Per_Hour : REAL;
+    Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour : REAL;
+
+    Sensor_Shadow_Rate_High_Activity : BOOL;
+    Sensor_Shadow_Rate_Summary_Text : STRING(160);
+
+
 
 END_STRUCT
 END_TYPE
