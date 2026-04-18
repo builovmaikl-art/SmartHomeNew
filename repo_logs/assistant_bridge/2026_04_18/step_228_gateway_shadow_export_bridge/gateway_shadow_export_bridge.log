@@ -1,0 +1,22 @@
+]633;E;echo "=== STEP 228: GATEWAY SHADOW EXPORT BRIDGE ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 228: GATEWAY SHADOW EXPORT BRIDGE ===
+timestamp_utc=2026-04-18T16:29:44Z
+
+=== APPLY ===
+OK: added gateway shadow export bridge
+
+=== VERIFY GVL_GATEWAY ===
+14:    G_Shadow_Alert_Active : BOOL;
+15:    G_Shadow_Dominant_Channel : STRING(32);
+16:    G_Shadow_Policy_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1700:// === GATEWAY SHADOW EXPORT BRIDGE ===
+1701:GVL_GATEWAY.G_Shadow_Alert_Active :=
+1704:GVL_GATEWAY.G_Shadow_Dominant_Channel :=
+1707:GVL_GATEWAY.G_Shadow_Policy_Summary_Text :=
+1710:GVL_GATEWAY.G_Shadow_Recent_Activity_Text :=
+1713:GVL_GATEWAY.G_Shadow_Rate_Summary_Text :=
+1716:GVL_GATEWAY.G_Shadow_Total_Fallback_Count :=
+1719:GVL_GATEWAY.G_Shadow_Total_Recovery_Count :=
+
+=== END STEP 228 ===

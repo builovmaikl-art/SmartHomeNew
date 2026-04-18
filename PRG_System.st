@@ -1697,6 +1697,29 @@ ELSE
 END_IF;
 
 // === EXTERNAL MONITORING EXPORT ===
+// === GATEWAY SHADOW EXPORT BRIDGE ===
+GVL_GATEWAY.G_Shadow_Alert_Active :=
+    GVL_External_Monitoring.G_Shadow_Any_Alert_Active;
+
+GVL_GATEWAY.G_Shadow_Dominant_Channel :=
+    GVL_External_Monitoring.G_Shadow_Dominant_Channel;
+
+GVL_GATEWAY.G_Shadow_Policy_Summary_Text :=
+    GVL_External_Monitoring.G_Shadow_Policy_Summary_Text;
+
+GVL_GATEWAY.G_Shadow_Recent_Activity_Text :=
+    GVL_External_Monitoring.G_Shadow_Recent_Activity_Text;
+
+GVL_GATEWAY.G_Shadow_Rate_Summary_Text :=
+    GVL_External_Monitoring.G_Shadow_Rate_Summary_Text;
+
+GVL_GATEWAY.G_Shadow_Total_Fallback_Count :=
+    GVL_External_Monitoring.G_Shadow_Total_Fallback_Count;
+
+GVL_GATEWAY.G_Shadow_Total_Recovery_Count :=
+    GVL_External_Monitoring.G_Shadow_Total_Recovery_Count;
+
+
 GVL_External_Monitoring.G_Shadow_Any_Alert_Active :=
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
 
