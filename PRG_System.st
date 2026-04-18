@@ -1472,6 +1472,7 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_CO) AND L_Shadow_CO_Enabled_Prev THEN
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
@@ -1483,6 +1484,7 @@ IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recovery_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_Prev THEN
@@ -1494,6 +1496,7 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_P
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Prev) THEN
@@ -1505,6 +1508,7 @@ IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Pr
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recovery_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev THEN
@@ -1516,6 +1520,7 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev 
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) THEN
@@ -1527,6 +1532,7 @@ IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) 
     );
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recovery_Count + 1;
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
 END_IF;
 
 L_Shadow_CO_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_CO;
@@ -1571,6 +1577,53 @@ ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count >
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'Fallbacks exceed recoveries';
 ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text := 'Recoveries exceed fallbacks';
+END_IF;
+
+// === SHADOW POLICY RECENT ACTIVITY WINDOW ===
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS = 0 THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS := 3600000; // 1 hour default
+END_IF;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Fallback :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Recovery :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Fallback :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Recovery :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Fallback :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Recovery :=
+    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS > 0) AND
+    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS) <=
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Fallback OR
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Fallback OR
+   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Fallback THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'Recent shadow fallback activity';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Recovery OR
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Recovery OR
+      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Recovery THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'Recent shadow recovery activity';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'No recent shadow policy activity';
 END_IF;
 
 // === LIFETIME UPDATE ===

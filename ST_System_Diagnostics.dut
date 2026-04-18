@@ -137,6 +137,24 @@ STRUCT
     Sensor_Shadow_Dominant_Channel : STRING(32);
     Sensor_Shadow_Policy_Summary_Text : STRING(160);
 
+    Sensor_Shadow_Recent_Window_MS : UDINT;
+
+    Sensor_Shadow_CO_Last_Fallback_MS : UDINT;
+    Sensor_Shadow_CO_Last_Recovery_MS : UDINT;
+    Sensor_Shadow_Methane_Last_Fallback_MS : UDINT;
+    Sensor_Shadow_Methane_Last_Recovery_MS : UDINT;
+    Sensor_Shadow_Smoke_Last_Fallback_MS : UDINT;
+    Sensor_Shadow_Smoke_Last_Recovery_MS : UDINT;
+
+    Sensor_Shadow_CO_Recent_Fallback : BOOL;
+    Sensor_Shadow_CO_Recent_Recovery : BOOL;
+    Sensor_Shadow_Methane_Recent_Fallback : BOOL;
+    Sensor_Shadow_Methane_Recent_Recovery : BOOL;
+    Sensor_Shadow_Smoke_Recent_Fallback : BOOL;
+    Sensor_Shadow_Smoke_Recent_Recovery : BOOL;
+
+    Sensor_Shadow_Recent_Activity_Text : STRING(160);
+
 
 END_STRUCT
 END_TYPE

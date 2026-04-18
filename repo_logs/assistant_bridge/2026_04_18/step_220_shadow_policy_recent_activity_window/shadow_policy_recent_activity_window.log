@@ -1,0 +1,67 @@
+]633;E;echo "=== STEP 220: SHADOW POLICY RECENT ACTIVITY WINDOW ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 220: SHADOW POLICY RECENT ACTIVITY WINDOW ===
+timestamp_utc=2026-04-18T15:36:43Z
+
+=== APPLY ===
+OK: added shadow policy recent activity window
+
+=== VERIFY DUT ===
+140:    Sensor_Shadow_Recent_Window_MS : UDINT;
+142:    Sensor_Shadow_CO_Last_Fallback_MS : UDINT;
+143:    Sensor_Shadow_CO_Last_Recovery_MS : UDINT;
+144:    Sensor_Shadow_Methane_Last_Fallback_MS : UDINT;
+145:    Sensor_Shadow_Methane_Last_Recovery_MS : UDINT;
+146:    Sensor_Shadow_Smoke_Last_Fallback_MS : UDINT;
+147:    Sensor_Shadow_Smoke_Last_Recovery_MS : UDINT;
+149:    Sensor_Shadow_CO_Recent_Fallback : BOOL;
+150:    Sensor_Shadow_CO_Recent_Recovery : BOOL;
+151:    Sensor_Shadow_Methane_Recent_Fallback : BOOL;
+152:    Sensor_Shadow_Methane_Recent_Recovery : BOOL;
+153:    Sensor_Shadow_Smoke_Recent_Fallback : BOOL;
+154:    Sensor_Shadow_Smoke_Recent_Recovery : BOOL;
+156:    Sensor_Shadow_Recent_Activity_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1475:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
+1487:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
+1499:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
+1511:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
+1523:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS := GVL_STATUS.G_System_Time_MS;
+1535:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS := GVL_STATUS.G_System_Time_MS;
+1582:// === SHADOW POLICY RECENT ACTIVITY WINDOW ===
+1583:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS = 0 THEN
+1584:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS := 3600000; // 1 hour default
+1587:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Fallback :=
+1588:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS > 0) AND
+1589:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Fallback_MS) <=
+1590:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1592:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Recovery :=
+1593:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS > 0) AND
+1594:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Last_Recovery_MS) <=
+1595:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1597:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Fallback :=
+1598:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS > 0) AND
+1599:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Fallback_MS) <=
+1600:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1602:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Recovery :=
+1603:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS > 0) AND
+1604:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Last_Recovery_MS) <=
+1605:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1607:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Fallback :=
+1608:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS > 0) AND
+1609:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Fallback_MS) <=
+1610:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1612:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Recovery :=
+1613:    (GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS > 0) AND
+1614:    ((GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Last_Recovery_MS) <=
+1615:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS);
+1617:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Fallback OR
+1618:   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Fallback OR
+1619:   GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Fallback THEN
+1620:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'Recent shadow fallback activity';
+1621:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recent_Recovery OR
+1622:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recent_Recovery OR
+1623:      GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recent_Recovery THEN
+1624:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'Recent shadow recovery activity';
+1626:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'No recent shadow policy activity';
+
+=== END STEP 220 ===
