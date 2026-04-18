@@ -1,0 +1,14 @@
+]633;E;echo "=== STEP 206: LOG SHADOW CO STATUS AND DIFF ===";048f1674-a031-43cb-9e47-f7004f3b361c]633;C=== STEP 206: LOG SHADOW CO STATUS AND DIFF ===
+timestamp_utc=2026-04-18T14:03:17Z
+
+=== APPLY ===
+OK: added shadow CO diagnostic export to PRG_System
+
+=== VERIFY PRG_SYSTEM ===
+1334:// === SHADOW CO DIAGNOSTIC EXPORT ===
+1335:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active := GVL_Safety_Selector.G_Use_Shadow_CO;
+1336:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Diff := GVL_Safety_Bridge.G_CO_Diff;
+1339:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow ACTIVE';
+1341:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow OFF';
+
+=== END STEP 206 ===

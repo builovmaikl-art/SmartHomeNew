@@ -1331,6 +1331,16 @@ ELSE
 END_IF;
 
 
+// === SHADOW CO DIAGNOSTIC EXPORT ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active := GVL_Safety_Selector.G_Use_Shadow_CO;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Diff := GVL_Safety_Bridge.G_CO_Diff;
+
+IF GVL_Safety_Selector.G_Use_Shadow_CO THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow OFF';
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)
