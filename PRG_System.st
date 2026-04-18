@@ -1109,6 +1109,14 @@ L_Trend_Adapter(
 );
 
 
+
+// === TREND → GVL FOR HMI ===
+GVL_Trend.G_Trend_Avg := L_Trend_Avg;
+GVL_Trend.G_Trend_Min := L_Trend_Min;
+GVL_Trend.G_Trend_Max := L_Trend_Max;
+GVL_Trend.G_Trend_Up := L_Trend_Up;
+GVL_Trend.G_Trend_Down := L_Trend_Down;
+
 // === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
 L_Trend_Write_Allowed := FALSE;
