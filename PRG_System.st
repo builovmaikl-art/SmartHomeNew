@@ -9,6 +9,7 @@ fbCalibMethane  : FB_Sensor_Calibration_Processor;
 fbSmokeDetector : FB_Smoke_Detector;
 L_CO_Processed : REAL;
 L_CO_Calibrated : REAL;
+L_Safety_Selector_i : INT;
 L_Methane_Processed : REAL;
 L_Methane_Calibrated : REAL;
 L_Smoke_Detected : BOOL;
@@ -1291,9 +1292,23 @@ GVL_Safety_Bridge.G_Smoke_Diff    := GVL_Safety_Bridge.G_Smoke_Runtime XOR GVL_S
 
 // === SAFETY SELECTOR LAYER ===
 
+// base copy from runtime arrays
+FOR L_Safety_Selector_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+    GVL_Safety_Selector.G_CO_Effective_Array[L_Safety_Selector_i] := GVL_STATE.G_CO_Sensors[L_Safety_Selector_i];
+END_FOR;
+
+FOR L_Safety_Selector_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+    GVL_Safety_Selector.G_Methane_Effective_Array[L_Safety_Selector_i] := GVL_STATE.G_Methane_Sensors[L_Safety_Selector_i];
+END_FOR;
+
+FOR L_Safety_Selector_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+    GVL_Safety_Selector.G_Smoke_Effective_Array[L_Safety_Selector_i] := GVL_STATE.G_Smoke_Sensors[L_Safety_Selector_i];
+END_FOR;
+
 // CO
 IF GVL_Safety_Selector.G_Use_Shadow_CO THEN
     GVL_Safety_Selector.G_CO_Effective := GVL_Sensor_Shadow.G_CO_Calibrated;
+    GVL_Safety_Selector.G_CO_Effective_Array[1] := GVL_Sensor_Shadow.G_CO_Calibrated;
 ELSE
     GVL_Safety_Selector.G_CO_Effective := GVL_STATE.G_CO_Sensors[1];
 END_IF;
@@ -1301,6 +1316,7 @@ END_IF;
 // METHANE
 IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
     GVL_Safety_Selector.G_Methane_Effective := GVL_Sensor_Shadow.G_Methane_Calibrated;
+    GVL_Safety_Selector.G_Methane_Effective_Array[1] := GVL_Sensor_Shadow.G_Methane_Calibrated;
 ELSE
     GVL_Safety_Selector.G_Methane_Effective := GVL_STATE.G_Methane_Sensors[1];
 END_IF;
@@ -1308,9 +1324,11 @@ END_IF;
 // SMOKE
 IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
     GVL_Safety_Selector.G_Smoke_Effective := GVL_Sensor_Shadow.G_Smoke_Detected;
+    GVL_Safety_Selector.G_Smoke_Effective_Array[1] := GVL_Sensor_Shadow.G_Smoke_Detected;
 ELSE
     GVL_Safety_Selector.G_Smoke_Effective := GVL_STATE.G_Smoke_Sensors[1];
 END_IF;
+
 
 // === LIFETIME UPDATE ===
 

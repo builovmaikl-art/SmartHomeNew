@@ -65,9 +65,9 @@ GVL_ALARM.G_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
 fbGasSmokeManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Methane_LEL := GVL_STATE.G_Methane_Sensors,
-    VI_CO_PPM := GVL_STATE.G_CO_Sensors,
-    VI_Smoke_Sensors := GVL_STATE.G_Smoke_Sensors,
+    VI_Methane_LEL := GVL_Safety_Selector.G_Methane_Effective_Array,
+    VI_CO_PPM := GVL_Safety_Selector.G_CO_Effective_Array,
+    VI_Smoke_Sensors := GVL_Safety_Selector.G_Smoke_Effective_Array,
     VI_Mute_Request := GVL_CONFIG.G_HMI_Mute_Alarm,
     VO_Smoke_Detected => GVL_HEALTH_BRIDGE.G_Smoke_Detected,
     VO_Gas_Detected => GVL_HEALTH_BRIDGE.G_Gas_Detected,
