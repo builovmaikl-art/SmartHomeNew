@@ -1,5 +1,6 @@
 PROGRAM PRG_System
 VAR
+    fbSnapshotMgr : FB_State_Snapshot_Manager;
 
 // === SENSOR PROCESSING (SHADOW) ===
 fbSensorCO : FB_Sensor_Analog_Processing;
@@ -1760,6 +1761,36 @@ GVL_External_Monitoring.G_Shadow_Rate_Recovery_Per_Hour :=
 
 GVL_External_Monitoring.G_Shadow_Rate_Alert_Active :=
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+// === SNAPSHOT LAYER (PHASE 1) ===
+VAR
+    L_Snapshot : ST_State_Snapshot;
+END_VAR
+
+// заполнение snapshot
+L_Snapshot.timestamp_ms := GVL_SYSTEM.G_System_Time;
+L_Snapshot.trigger_event_code := 0;
+
+// минимальный набор
+L_Snapshot.shadow_alert_active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+L_Snapshot.shadow_dominant_channel :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Dominant_Channel;
+
+L_Snapshot.total_fallback :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count;
+
+L_Snapshot.total_recovery :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count;
+
+// trigger (пока простой)
+fbSnapshotMgr(
+    VI_System_Time_MS := GVL_SYSTEM.G_System_Time,
+    VI_Trigger_Event  := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active,
+    VI_Event_Code     := WORD#1,
+    VI_Current_State  := L_Snapshot
+);
 
 // === LIFETIME UPDATE ===
 
