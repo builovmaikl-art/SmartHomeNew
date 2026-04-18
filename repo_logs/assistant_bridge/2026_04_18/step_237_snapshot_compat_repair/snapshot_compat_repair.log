@@ -72,3 +72,20 @@ ELSE
     VO_Snapshot_Saved := FALSE;
 END_IF;
 === COMPILE ===
+[main c2b7c28] test: compile smoke after migration
+ 6 files changed, 604 insertions(+), 411 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_237_snapshot_compat_repair/snapshot_compat_repair.log
+ create mode 100644 steps/2026-04-18_snapshot_compat_repair/01_snapshot_compat_repair.py
+From https://github.com/builovmaikl-art/SmartHomeNew
+   2428e47..99687a0  main       -> origin/main
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Merge made by the 'ort' strategy.
+ ...70\320\273\321\217\321\206\320\270\320\270.txt" | 38 +++++++++++-----------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+To https://github.com/builovmaikl-art/SmartHomeNew
+   99687a0..903cd0c  main -> main
+
+=== END STEP 237 ===
