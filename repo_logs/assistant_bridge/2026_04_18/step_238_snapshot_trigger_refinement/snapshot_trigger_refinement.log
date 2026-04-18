@@ -12,3 +12,16 @@ OK: refined snapshot trigger to rising-edge behavior
 1788:L_Snapshot_Trigger_Prev := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
 
 === COMPILE ===
+[main 1e8c386] test: compile smoke after migration
+ 5 files changed, 445 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_238_snapshot_trigger_refinement/snapshot_trigger_refinement.log
+ create mode 100644 steps/2026-04-18_snapshot_trigger_refinement/01_snapshot_trigger_refinement.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   3cf594f..1e8c386  main -> main
+
+=== END STEP 238 ===
