@@ -1785,11 +1785,7 @@ L_Snapshot.crc32 := DWORD#0;
 
 // rate alert
 IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active AND (NOT L_Snapshot_Trigger_Prev) THEN
-    // === SNAPSHOT MULTI EVENT (SAFE ADD) ===
-L_Snapshot_Event_Trigger := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active AND (NOT L_Snapshot_Trigger_Prev);
-L_Snapshot_Event_Code := WORD#1;
-
-fbSnapshotMgr(
+    fbSnapshotMgr(
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
         VI_Trigger_Event  := TRUE,
         VI_Event_Code     := WORD#1,
