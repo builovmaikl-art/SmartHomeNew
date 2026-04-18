@@ -1,6 +1,11 @@
 PROGRAM PRG_System
 VAR
 
+// === SENSOR PROCESSING (SHADOW) ===
+fbSensorCO : FB_Sensor_Analog_Processing;
+L_CO_Processed : REAL;
+
+
 // === LIFETIME MANAGERS ===
 fbLifetimePump : FB_Lifetime_Manager;
 fbLifetimeFan  : FB_Lifetime_Manager;
