@@ -1,0 +1,21 @@
+]633;E;echo "=== STEP 162: ADD TREND RATE LIMIT AND ANTISPAM ===";c69abe9d-8ccc-4cf8-8e5f-d5c0d5c396b0]633;C=== STEP 162: ADD TREND RATE LIMIT AND ANTISPAM ===
+timestamp_utc=2026-04-18T07:59:00Z
+
+=== APPLY ===
+OK: added trend rate limit and anti-spam logic
+
+=== VERIFY ===
+20:    L_Trend_Last_Write_MS : UDINT;
+21:    L_Trend_Last_Written_Avg : REAL;
+22:    L_Trend_Write_Allowed : BOOL;
+1112:// === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
+1114:L_Trend_Write_Allowed := FALSE;
+1117:    IF (L_Trend_Last_Write_MS = 0) OR
+1118:       ((GVL_STATUS.G_System_Time_MS - L_Trend_Last_Write_MS) >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
+1119:        IF ABS(L_Trend_Avg - L_Trend_Last_Written_Avg) >= 0.5 THEN
+1120:            L_Trend_Write_Allowed := TRUE;
+1124:    IF L_Trend_Write_Allowed THEN
+1132:        L_Trend_Last_Write_MS := GVL_STATUS.G_System_Time_MS;
+1133:        L_Trend_Last_Written_Avg := L_Trend_Avg;
+
+=== END STEP 162 ===

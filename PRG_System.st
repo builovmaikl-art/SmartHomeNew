@@ -17,6 +17,9 @@ VAR
     L_Trend_Max : REAL;
     L_Trend_Up : BOOL;
     L_Trend_Down : BOOL;
+    L_Trend_Last_Write_MS : UDINT;
+    L_Trend_Last_Written_Avg : REAL;
+    L_Trend_Write_Allowed : BOOL;
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
@@ -1106,20 +1109,29 @@ L_Trend_Adapter(
 );
 
 
-// === TREND → HISTORY WRITE (EDGE, SAFE MVP) ===
+// === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
+L_Trend_Write_Allowed := FALSE;
 
 IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
-    L_Trend_Event.event_code := 1001;
-    IF L_Trend_Data.record_count > 0 THEN
-        L_Trend_Event.event_value := L_Trend_Avg;
-    ELSE
-        L_Trend_Event.event_value := 0.0;
+    IF (L_Trend_Last_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Trend_Last_Write_MS) >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
+        IF ABS(L_Trend_Avg - L_Trend_Last_Written_Avg) >= 0.5 THEN
+            L_Trend_Write_Allowed := TRUE;
+        END_IF;
     END_IF;
-    L_Trend_Event.zone_id := 0;
-    L_Trend_Event.operator_id := '';
-    L_History_Write_Event := TRUE;
-    L_History_Event := L_Trend_Event;
+
+    IF L_Trend_Write_Allowed THEN
+        L_Trend_Event.event_code := 1001;
+        L_Trend_Event.event_value := L_Trend_Avg;
+        L_Trend_Event.zone_id := 0;
+        L_Trend_Event.operator_id := '';
+        L_History_Write_Event := TRUE;
+        L_History_Event := L_Trend_Event;
+
+        L_Trend_Last_Write_MS := GVL_STATUS.G_System_Time_MS;
+        L_Trend_Last_Written_Avg := L_Trend_Avg;
+    END_IF;
 END_IF;
 
 L_Trend_Write_Prev := L_Trend_Write;
