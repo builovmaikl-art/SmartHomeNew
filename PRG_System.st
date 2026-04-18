@@ -1110,6 +1110,12 @@ L_Trend_Adapter(
 
 
 
+
+// === TREND MULTI-SIGNAL FOUNDATION ===
+// Channel 1 is currently active (Outdoor Temp / TEMP_AIR).
+// Channel 2 reserved for future integration.
+// HMI may use GVL_Trend.G_Trend_Selected_Channel to switch active graph source.
+
 // === TREND → GVL FOR HMI ===
 
 // === TREND BUFFER UPDATE ===
