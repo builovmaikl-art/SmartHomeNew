@@ -1,26 +1,5 @@
                 ------ Компиляция : Приложение: Device.Application -------
                 типизировать код...
-                генерировать код...
-[ERROR]         Без имени13: PRG_System(Строка 1213, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Active' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1213, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Methane_Active' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1214, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Diff' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1214, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Methane_Diff' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1215, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Active' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1215, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Smoke_Active' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1218, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1218, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Methane_Status_Text' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1220, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1220, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Methane_Status_Text' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1224, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1224, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Smoke_Status_Text' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1226, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1226, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_Smoke_Status_Text' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1230, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1230, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_CO_Active' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1231, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Diff' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1231, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_CO_Diff' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1234, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1234, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_CO_Status_Text' не является компонентом 'ST_System_Diagnostics'
-[ERROR]         Без имени13: PRG_System(Строка 1236, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени13: PRG_System(Строка 1236, Столбец 1 (Реализ.)): C0004:  'Sensor_Shadow_CO_Status_Text' не является компонентом 'ST_System_Diagnostics'
-                Компиляция завершена -- 22 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени13: PRG_System(Строка 1344, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'END_IF'
+                Компиляция завершена -- 1 ошибок, 0 предупреждений
+                Компиляция завершена -- 1 ошибок, 0 предупреждений : загрузка невозможна
