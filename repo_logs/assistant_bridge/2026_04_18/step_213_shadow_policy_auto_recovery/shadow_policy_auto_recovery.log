@@ -1,0 +1,28 @@
+]633;E;echo "=== STEP 213: SHADOW POLICY AUTO RECOVERY ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 213: SHADOW POLICY AUTO RECOVERY ===
+timestamp_utc=2026-04-18T14:56:05Z
+
+=== APPLY ===
+OK: added auto-recovery hysteresis policy
+
+=== VERIFY SELECTOR ===
+21:    G_CO_Shadow_Recovery_Diff : REAL := 2.0;
+22:    G_Methane_Shadow_Recovery_Diff : REAL := 2.0;
+24:    G_CO_Stable_Counter : INT := 0;
+25:    G_Methane_Stable_Counter : INT := 0;
+26:    G_Smoke_Stable_Counter : INT := 0;
+
+=== VERIFY PRG_SYSTEM ===
+152:// === NVRAM RECOVERY (ONCE AFTER BOOT) ===
+1373:// === SHADOW SAFETY POLICY (DEBOUNCE + RECOVERY) ===
+1378:    GVL_Safety_Selector.G_CO_Stable_Counter := 0;
+1385:    GVL_Safety_Selector.G_Methane_Stable_Counter := 0;
+1392:    GVL_Safety_Selector.G_Smoke_Stable_Counter := 0;
+1400:    GVL_Safety_Selector.G_CO_Stable_Counter := GVL_Safety_Selector.G_CO_Stable_Counter + 1;
+1405:    GVL_Safety_Selector.G_Methane_Stable_Counter := GVL_Safety_Selector.G_Methane_Stable_Counter + 1;
+1409:    GVL_Safety_Selector.G_Smoke_Stable_Counter := GVL_Safety_Selector.G_Smoke_Stable_Counter + 1;
+1429:// --- RECOVERY ---
+1430:IF GVL_Safety_Selector.G_CO_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+1434:IF GVL_Safety_Selector.G_Methane_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+1438:IF GVL_Safety_Selector.G_Smoke_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+
+=== END STEP 213 ===

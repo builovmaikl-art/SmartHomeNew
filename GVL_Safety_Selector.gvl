@@ -17,6 +17,15 @@ VAR_GLOBAL
     // === DEBOUNCE POLICY ===
     G_Shadow_Unstable_Cycles_Limit : INT := 5;
 
+    // === RECOVERY POLICY (HYSTERESIS) ===
+    G_CO_Shadow_Recovery_Diff : REAL := 2.0;
+    G_Methane_Shadow_Recovery_Diff : REAL := 2.0;
+
+    G_CO_Stable_Counter : INT := 0;
+    G_Methane_Stable_Counter : INT := 0;
+    G_Smoke_Stable_Counter : INT := 0;
+
+
     G_CO_Unstable_Counter : INT := 0;
     G_Methane_Unstable_Counter : INT := 0;
     G_Smoke_Unstable_Counter : INT := 0;
