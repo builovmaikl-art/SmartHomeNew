@@ -65,3 +65,16 @@ fbLifetimeFan(
 
 
 === COMPILE ===
+[main b3e095c] test: compile smoke after migration
+ 7 files changed, 687 insertions(+), 409 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_236b_fix_snapshot_layer_phase1_exact/fix_snapshot_layer_phase1_exact.log
+ create mode 100644 steps/2026-04-18_fix_snapshot_layer_phase1_exact/01_fix_snapshot_layer_phase1_exact.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   2a515a1..b3e095c  main -> main
+
+=== END STEP 236B ===
