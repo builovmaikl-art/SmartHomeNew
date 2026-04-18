@@ -12,4 +12,11 @@ VAR_GLOBAL
 
     G_Trend_Buffer_Timestamps : ARRAY[1..50] OF UDINT;
 
+
+    // === TREND META FOR HMI ===
+    G_Trend_Valid_Count : INT;
+    G_Trend_Is_Wrapped : BOOL;
+    G_Trend_Last_Update_MS : UDINT;
+    G_Trend_Param_Type : BYTE;
+
 END_VAR

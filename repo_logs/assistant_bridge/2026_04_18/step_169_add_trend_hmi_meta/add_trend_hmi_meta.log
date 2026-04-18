@@ -1,0 +1,17 @@
+]633;E;echo "=== STEP 169: ADD TREND HMI META ===";c69abe9d-8ccc-4cf8-8e5f-d5c0d5c396b0]633;C=== STEP 169: ADD TREND HMI META ===
+
+=== APPLY GVL ===
+OK: added trend meta to GVL_Trend
+
+=== APPLY PRG ===
+OK: added trend meta logic
+
+=== VERIFY ===
+17:    G_Trend_Valid_Count : INT;
+18:    G_Trend_Is_Wrapped : BOOL;
+19:    G_Trend_Last_Update_MS : UDINT;
+20:    G_Trend_Param_Type : BYTE;
+
+1117:// === TREND META UPDATE ===
+
+=== END STEP 169 ===
