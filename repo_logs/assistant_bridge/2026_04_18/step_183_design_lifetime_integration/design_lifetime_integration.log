@@ -1,0 +1,62 @@
+]633;E;echo "=== STEP 183: DESIGN LIFETIME INTEGRATION ===";cb07821a-d34c-4035-be1a-7133cf9aa4fd]633;C=== STEP 183: DESIGN LIFETIME INTEGRATION ===
+timestamp_utc=2026-04-18T10:10:57Z
+
+=== CURRENT STATE ===
+has_enum=E_Lifetime_Device_Type
+has_struct=ST_Lifetime_Status
+runtime_integration=NONE
+retain_integration=NONE
+health_integration=NONE
+
+=== PROPOSED ARCHITECTURE ===
+--- DATA SOURCES ---
+pump_runtime=from FB_Heating_System_Manager / pump control
+fan_runtime=from ventilation manager
+start_count=increment on rising edge of device active
+
+--- STORAGE ---
+retain=GVL_Retain (preferred)
+structure=array_of_ST_Lifetime_Status
+index=device_id
+
+--- PROCESSING ---
+new_fb=FB_Lifetime_Manager
+responsibility:
+  - accumulate runtime_hours
+  - count starts
+  - compute remaining_hours
+  - compute remaining_percent
+  - set maintenance_required
+
+--- INTEGRATION POINT ---
+PRG_System:
+  call FB_Lifetime_Manager
+  pass system_time
+
+--- HEALTH INTEGRATION ---
+maintenance_required → FB_System_Health
+possible mapping:
+  warning when <20%
+  critical when <5%
+
+--- HMI ---
+expose via GVL_Lifetime
+fields:
+  runtime_hours
+  remaining_percent
+  maintenance_required
+
+--- DEVICE SET (INITIAL) ---
+1 = pump
+2 = ventilation fan
+
+=== DESIGN RISKS ===
+double counting runtime
+incorrect wrap of UDINT time
+retain overflow / wear
+
+=== DESIGN DECISION ===
+lifetime_cluster=KEEP_AND_IMPLEMENT
+next_step=FB_Lifetime_Manager skeleton
+
+=== END STEP 183 ===
