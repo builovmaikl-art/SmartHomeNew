@@ -1120,14 +1120,10 @@ L_Trend_Adapter(
 
 // === TREND BUFFER UPDATE ===
 
-// === TREND CHANNEL 2 (FLOOR TEMP) ===
+// === TREND CHANNEL 2 (FLOOR TEMP, SHARED INDEX) ===
 IF GVL_Trend.G_Trend_Channel2_Enabled THEN
 
-    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_2_Index + 1;
-    IF GVL_Trend.G_Trend_Buffer_2_Index > 50 THEN
-        GVL_Trend.G_Trend_Buffer_2_Index := 1;
-    END_IF;
-
+    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_Index;
     GVL_Trend.G_Trend_Buffer_2[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATE.G_Floor_Temp;
     GVL_Trend.G_Trend_Buffer_2_Timestamps[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATUS.G_System_Time_MS;
 
