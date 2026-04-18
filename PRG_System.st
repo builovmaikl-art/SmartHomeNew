@@ -1272,6 +1272,23 @@ L_Smoke_Detected := fbSmokeDetector.VO_Smoke_Detected;
 GVL_Sensor_Shadow.G_Smoke_Raw := GVL_STATE.G_Smoke_Sensors[1];
 GVL_Sensor_Shadow.G_Smoke_Detected := L_Smoke_Detected;
 
+// === SAFETY SHADOW VS RUNTIME BRIDGE ===
+
+// CO
+GVL_Safety_Bridge.G_CO_Runtime := GVL_STATE.G_CO_Sensors[1];
+GVL_Safety_Bridge.G_CO_Shadow  := GVL_Sensor_Shadow.G_CO_Calibrated;
+GVL_Safety_Bridge.G_CO_Diff    := ABS(GVL_Safety_Bridge.G_CO_Runtime - GVL_Safety_Bridge.G_CO_Shadow);
+
+// METHANE
+GVL_Safety_Bridge.G_Methane_Runtime := GVL_STATE.G_Methane_Sensors[1];
+GVL_Safety_Bridge.G_Methane_Shadow  := GVL_Sensor_Shadow.G_Methane_Calibrated;
+GVL_Safety_Bridge.G_Methane_Diff    := ABS(GVL_Safety_Bridge.G_Methane_Runtime - GVL_Safety_Bridge.G_Methane_Shadow);
+
+// SMOKE
+GVL_Safety_Bridge.G_Smoke_Runtime := GVL_STATE.G_Smoke_Sensors[1];
+GVL_Safety_Bridge.G_Smoke_Shadow  := GVL_Sensor_Shadow.G_Smoke_Detected;
+GVL_Safety_Bridge.G_Smoke_Diff    := GVL_Safety_Bridge.G_Smoke_Runtime XOR GVL_Safety_Bridge.G_Smoke_Shadow;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)

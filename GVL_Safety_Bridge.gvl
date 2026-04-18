@@ -1,0 +1,16 @@
+VAR_GLOBAL
+    // === CO COMPARISON ===
+    G_CO_Runtime : REAL;
+    G_CO_Shadow  : REAL;
+    G_CO_Diff    : REAL;
+
+    // === METHANE COMPARISON ===
+    G_Methane_Runtime : REAL;
+    G_Methane_Shadow  : REAL;
+    G_Methane_Diff    : REAL;
+
+    // === SMOKE COMPARISON ===
+    G_Smoke_Runtime : BOOL;
+    G_Smoke_Shadow  : BOOL;
+    G_Smoke_Diff    : BOOL;
+END_VAR

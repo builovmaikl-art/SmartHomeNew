@@ -1,0 +1,28 @@
+]633;E;echo "=== STEP 202: SAFETY SHADOW VS RUNTIME BRIDGE ===";99e447e3-9fca-4946-9726-64c2e121d464]633;C=== STEP 202: SAFETY SHADOW VS RUNTIME BRIDGE ===
+timestamp_utc=2026-04-18T13:16:50Z
+
+=== APPLY ===
+OK: safety shadow vs runtime bridge added
+
+=== VERIFY GVL ===
+VAR_GLOBAL
+    // === CO COMPARISON ===
+    G_CO_Runtime : REAL;
+    G_CO_Shadow  : REAL;
+    G_CO_Diff    : REAL;
+
+    // === METHANE COMPARISON ===
+    G_Methane_Runtime : REAL;
+    G_Methane_Shadow  : REAL;
+    G_Methane_Diff    : REAL;
+
+    // === SMOKE COMPARISON ===
+    G_Smoke_Runtime : BOOL;
+    G_Smoke_Shadow  : BOOL;
+    G_Smoke_Diff    : BOOL;
+END_VAR
+
+=== VERIFY BRIDGE ===
+1275:// === SAFETY SHADOW VS RUNTIME BRIDGE ===
+
+=== END STEP 202 ===
