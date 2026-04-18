@@ -1,0 +1,196 @@
+]633;E;echo "=== STEP 172A: DIAG SYNC TREND CHANNELS FAILURE ===";1dc2b904-849c-403d-87a0-48c87b276465]633;C=== STEP 172A: DIAG SYNC TREND CHANNELS FAILURE ===
+timestamp_utc=2026-04-18T08:46:19Z
+
+=== PRG_SYSTEM TREND BLOCKS ===
+1121:// === TREND BUFFER UPDATE ===
+1123:// === TREND CHANNEL 2 (FLOOR TEMP) ===
+1126:    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_2_Index + 1;
+1127:    IF GVL_Trend.G_Trend_Buffer_2_Index > 50 THEN
+1128:        GVL_Trend.G_Trend_Buffer_2_Index := 1;
+1131:    GVL_Trend.G_Trend_Buffer_2[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATE.G_Floor_Temp;
+1132:    GVL_Trend.G_Trend_Buffer_2_Timestamps[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATUS.G_System_Time_MS;
+1155:GVL_Trend.G_Trend_Buffer_Index := GVL_Trend.G_Trend_Buffer_Index + 1;
+1156:IF GVL_Trend.G_Trend_Buffer_Index > 50 THEN
+1157:    GVL_Trend.G_Trend_Buffer_Index := 1;
+1160:GVL_Trend.G_Trend_Buffer[GVL_Trend.G_Trend_Buffer_Index] := L_Trend_Avg;
+1161:GVL_Trend.G_Trend_Buffer_Timestamps[GVL_Trend.G_Trend_Buffer_Index] := GVL_STATUS.G_System_Time_MS;
+
+=== PRG_SYSTEM CONTEXT ===
+// === TREND ANALYSIS VIA ADAPTER ===
+L_Trend_Adapter(
+    VI_Data := L_Trend_Data,
+    VO_Average => L_Trend_Avg,
+    VO_Min => L_Trend_Min,
+    VO_Max => L_Trend_Max,
+    VO_Trend_Up => L_Trend_Up,
+    VO_Trend_Down => L_Trend_Down
+);
+
+
+
+
+// === TREND MULTI-SIGNAL FOUNDATION ===
+// Channel 1 is currently active (Outdoor Temp / TEMP_AIR).
+// Channel 2 reserved for future integration.
+// HMI may use GVL_Trend.G_Trend_Selected_Channel to switch active graph source.
+
+// === TREND → GVL FOR HMI ===
+
+// === TREND BUFFER UPDATE ===
+
+// === TREND CHANNEL 2 (FLOOR TEMP) ===
+IF GVL_Trend.G_Trend_Channel2_Enabled THEN
+
+    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_2_Index + 1;
+    IF GVL_Trend.G_Trend_Buffer_2_Index > 50 THEN
+        GVL_Trend.G_Trend_Buffer_2_Index := 1;
+    END_IF;
+
+    GVL_Trend.G_Trend_Buffer_2[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATE.G_Floor_Temp;
+    GVL_Trend.G_Trend_Buffer_2_Timestamps[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATUS.G_System_Time_MS;
+
+    IF GVL_Trend.G_Trend_Buffer_2_Valid_Count < 50 THEN
+        GVL_Trend.G_Trend_Buffer_2_Valid_Count := GVL_Trend.G_Trend_Buffer_2_Valid_Count + 1;
+    ELSE
+        GVL_Trend.G_Trend_Buffer_2_Is_Wrapped := TRUE;
+    END_IF;
+
+    GVL_Trend.G_Trend_Channel2_Param_Type := 2; // TEMP_FLOOR
+
+END_IF;
+
+
+// === TREND META UPDATE ===
+GVL_Trend.G_Trend_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_Trend.G_Trend_Param_Type := 1; // TEMP_AIR (пока фикс)
+
+IF GVL_Trend.G_Trend_Valid_Count < 50 THEN
+    GVL_Trend.G_Trend_Valid_Count := GVL_Trend.G_Trend_Valid_Count + 1;
+ELSE
+    GVL_Trend.G_Trend_Is_Wrapped := TRUE;
+END_IF;
+
+GVL_Trend.G_Trend_Buffer_Index := GVL_Trend.G_Trend_Buffer_Index + 1;
+IF GVL_Trend.G_Trend_Buffer_Index > 50 THEN
+    GVL_Trend.G_Trend_Buffer_Index := 1;
+END_IF;
+
+GVL_Trend.G_Trend_Buffer[GVL_Trend.G_Trend_Buffer_Index] := L_Trend_Avg;
+GVL_Trend.G_Trend_Buffer_Timestamps[GVL_Trend.G_Trend_Buffer_Index] := GVL_STATUS.G_System_Time_MS;
+
+GVL_Trend.G_Trend_Avg := L_Trend_Avg;
+GVL_Trend.G_Trend_Min := L_Trend_Min;
+GVL_Trend.G_Trend_Max := L_Trend_Max;
+GVL_Trend.G_Trend_Up := L_Trend_Up;
+GVL_Trend.G_Trend_Down := L_Trend_Down;
+
+// === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
+L_Trend_Write := (L_Trend_Data.record_count > 0);
+L_Trend_Write_Allowed := FALSE;
+
+IF L_Trend_Write AND NOT L_Trend_Write_Prev THEN
+    IF (L_Trend_Last_Write_MS = 0) OR
+       ((GVL_STATUS.G_System_Time_MS - L_Trend_Last_Write_MS) >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
+        IF ABS(L_Trend_Avg - L_Trend_Last_Written_Avg) >= 0.5 THEN
+            L_Trend_Write_Allowed := TRUE;
+        END_IF;
+    END_IF;
+
+    IF L_Trend_Write_Allowed THEN
+        L_Trend_Event.event_code := 1001;
+        L_Trend_Event.event_value := L_Trend_Avg;
+        L_Trend_Event.zone_id := 0;
+        L_Trend_Event.operator_id := '';
+        L_History_Write_Event := TRUE;
+        L_History_Event := L_Trend_Event;
+
+        L_Trend_Last_Write_MS := GVL_STATUS.G_System_Time_MS;
+        L_Trend_Last_Written_Avg := L_Trend_Avg;
+    END_IF;
+END_IF;
+
+L_Trend_Write_Prev := L_Trend_Write;
+
+// >>> BULK_SYNC_ANCHOR: PRG_System <<<
+
+// === EVENT LOGGING: FAULTS ===
+
+// WATCHDOG
+IF fbWatchdog.VO_Watchdog_Fault AND NOT L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 11,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbWatchdog.VO_Watchdog_Fault AND L_Watchdog_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 12,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_Watchdog_Fault_Prev := fbWatchdog.VO_Watchdog_Fault;
+
+// IO
+IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 2,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 1
+    );
+END_IF;
+
+IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+    fbLogEvent(
+        VI_Event_Type := 3,
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Param1 := 1,
+        VI_Param2 := 0
+    );
+END_IF;
+
+L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+
+
+=== GVL_TREND ===
+VAR_GLOBAL
+    // === TREND HMI DATA ===
+    G_Trend_Avg : REAL;
+    G_Trend_Min : REAL;
+    G_Trend_Max : REAL;
+    G_Trend_Up : BOOL;
+    G_Trend_Down : BOOL;
+
+    // === TREND BUFFER FOR HMI ===
+    G_Trend_Buffer : ARRAY[1..50] OF REAL;
+    G_Trend_Buffer_Index : INT;
+
+    G_Trend_Buffer_Timestamps : ARRAY[1..50] OF UDINT;
+
+
+    // === TREND META FOR HMI ===
+    G_Trend_Valid_Count : INT;
+    G_Trend_Is_Wrapped : BOOL;
+    G_Trend_Last_Update_MS : UDINT;
+    G_Trend_Param_Type : BYTE;
+
+
+    // === MULTI-SIGNAL TREND FOUNDATION ===
+    G_Trend_Selected_Channel : BYTE := 1;
+    G_Trend_Channel2_Enabled : BOOL := FALSE;
+    G_Trend_Buffer_2 : ARRAY[1..50] OF REAL;
+    G_Trend_Buffer_2_Timestamps : ARRAY[1..50] OF UDINT;
+    G_Trend_Buffer_2_Index : INT;
+    G_Trend_Buffer_2_Valid_Count : INT;
+    G_Trend_Buffer_2_Is_Wrapped : BOOL;
+    G_Trend_Channel2_Param_Type : BYTE := 0;
+
+END_VAR
+
+=== END STEP 172A ===
