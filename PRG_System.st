@@ -1111,6 +1111,15 @@ L_Trend_Adapter(
 
 
 // === TREND → GVL FOR HMI ===
+
+// === TREND BUFFER UPDATE ===
+GVL_Trend.G_Trend_Buffer_Index := GVL_Trend.G_Trend_Buffer_Index + 1;
+IF GVL_Trend.G_Trend_Buffer_Index > 50 THEN
+    GVL_Trend.G_Trend_Buffer_Index := 1;
+END_IF;
+
+GVL_Trend.G_Trend_Buffer[GVL_Trend.G_Trend_Buffer_Index] := L_Trend_Avg;
+
 GVL_Trend.G_Trend_Avg := L_Trend_Avg;
 GVL_Trend.G_Trend_Min := L_Trend_Min;
 GVL_Trend.G_Trend_Max := L_Trend_Max;

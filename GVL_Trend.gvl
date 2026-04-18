@@ -5,4 +5,9 @@ VAR_GLOBAL
     G_Trend_Max : REAL;
     G_Trend_Up : BOOL;
     G_Trend_Down : BOOL;
+
+    // === TREND BUFFER FOR HMI ===
+    G_Trend_Buffer : ARRAY[1..50] OF REAL;
+    G_Trend_Buffer_Index : INT;
+
 END_VAR
