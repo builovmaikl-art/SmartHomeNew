@@ -16,6 +16,7 @@ L_Methane_Calibrated : REAL;
 L_Smoke_Detected : BOOL;
 L_Window_Hours : REAL;
 L_Snapshot : ST_State_Snapshot;
+L_Snapshot_Trigger_Prev : BOOL;
 
 
 // === LIFETIME MANAGERS ===
@@ -1779,10 +1780,12 @@ L_Snapshot.crc32 := DWORD#0;
 
 fbSnapshotMgr(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Trigger_Event  := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active,
+    VI_Trigger_Event  := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active AND (NOT L_Snapshot_Trigger_Prev),
     VI_Event_Code     := WORD#1,
     VI_Current_State  := L_Snapshot
 );
+
+L_Snapshot_Trigger_Prev := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
 
 // === LIFETIME UPDATE ===
 

@@ -1,0 +1,14 @@
+]633;E;echo "=== STEP 238: SNAPSHOT TRIGGER REFINEMENT ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 238: SNAPSHOT TRIGGER REFINEMENT ===
+timestamp_utc=2026-04-18T18:13:54Z
+
+=== APPLY ===
+OK: refined snapshot trigger to rising-edge behavior
+
+=== VERIFY SNAPSHOT TRIGGER ===
+3:    fbSnapshotMgr : FB_State_Snapshot_Manager;
+19:L_Snapshot_Trigger_Prev : BOOL;
+1781:fbSnapshotMgr(
+1783:    VI_Trigger_Event  := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active AND (NOT L_Snapshot_Trigger_Prev),
+1788:L_Snapshot_Trigger_Prev := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+=== COMPILE ===
