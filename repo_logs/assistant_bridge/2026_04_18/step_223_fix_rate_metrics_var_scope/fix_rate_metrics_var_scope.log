@@ -1,0 +1,41 @@
+]633;E;echo "=== STEP 223: FIX RATE METRICS VAR SCOPE ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 223: FIX RATE METRICS VAR SCOPE ===
+timestamp_utc=2026-04-18T15:50:44Z
+
+=== APPLY ===
+OK: moved L_Window_Hours into main VAR and removed local VAR block
+
+=== VERIFY MAIN VAR ===
+15:L_Smoke_Detected : BOOL;
+1274:L_Smoke_Detected := fbSmokeDetector.VO_Smoke_Detected;
+1278:GVL_Sensor_Shadow.G_Smoke_Detected := L_Smoke_Detected;
+1631:    L_Window_Hours :=
+1634:    L_Window_Hours := 1.0;
+1639:    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
+1642:    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
+1646:    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count) / L_Window_Hours;
+1649:    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count) / L_Window_Hours;
+1652:    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count) / L_Window_Hours;
+
+=== VERIFY RATE BLOCK ===
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text := 'No recent shadow policy activity';
+END_IF;
+
+// === SHADOW POLICY RATE METRICS ===
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS > 0 THEN
+    L_Window_Hours :=
+        REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS) / 3600000.0;
+ELSE
+    L_Window_Hours := 1.0;
+END_IF;
+
+// total rates
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count) / L_Window_Hours;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour :=
+    REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count) / L_Window_Hours;
+
+// per-channel fallback rates
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Fallback_Per_Hour :=
+
+=== END STEP 223 ===

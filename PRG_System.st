@@ -1627,10 +1627,6 @@ ELSE
 END_IF;
 
 // === SHADOW POLICY RATE METRICS ===
-VAR
-    L_Window_Hours : REAL;
-END_VAR
-
 IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS > 0 THEN
     L_Window_Hours :=
         REAL(GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Window_MS) / 3600000.0;
