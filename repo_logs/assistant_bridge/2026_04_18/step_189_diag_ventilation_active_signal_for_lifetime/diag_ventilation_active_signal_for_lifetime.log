@@ -1,0 +1,319 @@
+]633;E;echo "=== STEP 189: DIAG VENTILATION ACTIVE SIGNAL FOR LIFETIME ===";cb07821a-d34c-4035-be1a-7133cf9aa4fd]633;C=== STEP 189: DIAG VENTILATION ACTIVE SIGNAL FOR LIFETIME ===
+timestamp_utc=2026-04-18T10:27:08Z
+
+=== PRG_VENTILATION ===
+PROGRAM PRG_Ventilation
+VAR
+    fbVentilationManager : FB_Ventilation_System_Manager;
+    L_i : INT;
+    L_Supply_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE;
+    L_Exhaust_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE;
+    L_Wet_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
+    L_Vent_PV3_Boost_Req : BOOL;
+    L_Supply_100_Req : BOOL;
+    L_Exhaust_100_Req : BOOL;
+    L_Supply_80_Req : BOOL;
+    L_Vent_Stop_Req : BOOL;
+END_VAR
+
+// Wet-zone adapter
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+    L_Wet_Zone_Active[L_i] := FALSE;
+END_FOR;
+IF GVL_STATUS.G_Wet_Zone_Light_Active THEN
+    L_Wet_Zone_Active[1] := TRUE;
+END_IF;
+
+// === Ventilation Arbitration ===
+
+// default: pass-through
+L_Vent_PV3_Boost_Req := GVL_COMMAND.G_Vent_PV3_Boost;
+L_Supply_100_Req := GVL_COMMAND.G_Supply_100_Req;
+L_Exhaust_100_Req := GVL_COMMAND.G_Exhaust_100_Req;
+L_Supply_80_Req := GVL_COMMAND.G_Supply_80_Req;
+L_Vent_Stop_Req := GVL_COMMAND.G_Vent_Stop;
+
+// Priority 1: SMOKE
+IF GVL_STATE.G_Safety_Smoke_Latched THEN
+    L_Vent_Stop_Req := TRUE;
+    L_Vent_PV3_Boost_Req := FALSE;
+    L_Supply_100_Req := FALSE;
+    L_Supply_80_Req := FALSE;
+    L_Exhaust_100_Req := FALSE;
+
+// Priority 2: GAS
+ELSIF GVL_STATE.G_Safety_Gas_Latched THEN
+    L_Vent_PV3_Boost_Req := TRUE;
+    L_Supply_100_Req := TRUE;
+    L_Vent_Stop_Req := FALSE;
+
+// Priority 3: CO
+ELSIF GVL_HEALTH_BRIDGE.G_CO_Warning_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level THEN
+    L_Supply_80_Req := TRUE;
+    L_Vent_Stop_Req := FALSE;
+END_IF;
+
+// Priority 4: DEGRADED
+IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
+    L_Vent_PV3_Boost_Req := FALSE;
+    L_Supply_100_Req := FALSE;
+    L_Exhaust_100_Req := FALSE;
+    L_Supply_80_Req := TRUE;
+END_IF;
+
+
+// 11. Управление вентиляцией
+fbVentilationManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
+    VI_Supply_Temps := GVL_STATE.G_Supply_Temps,
+    VI_Room_Temps := GVL_STATE.G_Room_Temps,
+    VI_Room_Humidities := GVL_STATE.G_Room_Hum,
+    VI_Room_CO2 := GVL_STATE.G_Room_CO2,
+    VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VI_Config := GVL_CONFIG.G_HMI_Vent_Global_Config,
+    VI_Fire_Alarm := GVL_STATE.G_Safety_Smoke_Latched,
+    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Latched,
+    VI_PV3_Boost_Req := L_Vent_PV3_Boost_Req,
+    VI_Supply_100_Req := L_Supply_100_Req,
+    VI_Exhaust_100_Req := L_Exhaust_100_Req,
+    VI_Supply_80_Req := L_Supply_80_Req,
+    VI_Vent_Stop := L_Vent_Stop_Req,
+    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+    VI_Wet_Zone_Active := L_Wet_Zone_Active,
+    VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
+    VO_Supply_Fans => L_Supply_Fans_Byte,
+    VO_Exhaust_Fans => L_Exhaust_Fans_Byte,
+    VO_Heater_Power => GVL_STATE.G_Vent_Heater_Power,
+    VO_Status_Msg => GVL_STATUS.G_Vent_Status_Msg
+);
+// >>> BULK_SYNC_ANCHOR: PRG_Ventilation <<<
+
+
+// Ventilation copy-out adapters
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    GVL_STATE.G_Supply_Fans[L_i] := BYTE_TO_REAL(L_Supply_Fans_Byte[L_i]);
+END_FOR;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    GVL_STATE.G_Exhaust_Fans[L_i] := BYTE_TO_REAL(L_Exhaust_Fans_Byte[L_i]);
+END_FOR;
+
+=== SEARCH VENTILATION MANAGER CALLS ===
+./TZ_NEW.txt:19:3.3. Diagnostics identifies source: `Heating / DHW / Ventilation / Lighting / Access`.
+./TZ_NEW.txt:44:6.3. Ventilation
+./ST_Ventilation_Global_Config.dut:2:TYPE ST_Ventilation_Global_Config :
+./ST_Ventilation_Global_Config.dut:9:    Scenario_Modes : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Ventilation_Scenario_Mode;
+./Система умного дома.xml:2741:      <dataType name="ST_Ventilation_Config">
+./Система умного дома.xml:2784:      <dataType name="ST_Ventilation_Global_Config">
+./Система умного дома.xml:2827:      <dataType name="ST_Ventilation_Scenario_Mode">
+./Система умного дома.xml:2883:      <dataType name="ST_Ventilation_Unit">
+./Система умного дома.xml:2922:      <dataType name="ST_Ventilation_Unit_Config">
+./Система умного дома.xml:4354:      <pou name="FB_Exhaust_Ventilation_Controller" pouType="functionBlock">
+./Система умного дома.xml:4369:                <derived name="ST_Ventilation_Unit_Config" />
+./Система умного дома.xml:9140:      <pou name="FB_Supply_Ventilation_Controller" pouType="functionBlock">
+./Система умного дома.xml:9638:      <pou name="FB_Ventilation_System_Manager" pouType="functionBlock">
+./Система умного дома.xml:9688:                <derived name="ST_Ventilation_Config" />
+./Система умного дома.xml:9769:                    <derived name="ST_Ventilation_Unit" />
+./Система умного дома.xml:10452:            <variable name="fbVentilation">
+./Система умного дома.xml:10454:                <derived name="FB_Ventilation_System_Manager" />
+./Система умного дома.xml:10804:fbVentilation(
+./Система умного дома.xml:10812:    VI_Config := GVL_Vars.G_Ventilation_Config,
+./Система умного дома.xml:10820:FOR L_i := 1 TO 3 DO GVL_IO.AO_Supply_Fans[L_i] := TO_UINT(fbVentilation.VO_Supply_Fans[L_i] * 10.0); END_FOR;
+./Система умного дома.xml:10821:FOR L_i := 1 TO 5 DO GVL_IO.AO_Exhaust_Fans[L_i] := TO_UINT(fbVentilation.VO_Exhaust_Fans[L_i] * 10.0); END_FOR;
+./Система умного дома.xml:11094:            <derived name="ST_Ventilation_Global_Config" />
+./Система умного дома.xml:11105:                <derived name="ST_Ventilation_Unit_Config" />
+./Система умного дома.xml:11802:        <variable name="G_Ventilation_Config">
+./Система умного дома.xml:11804:            <derived name="ST_Ventilation_Config" />
+./Система умного дома.xml:12040:            <Object Name="ST_Ventilation_Config" ObjectId="b616f8de-463c-48ae-ab6d-c5cfcbcd9f9d" />
+./Система умного дома.xml:12041:            <Object Name="ST_Ventilation_Unit_Config" ObjectId="cc6d6d6a-d3ad-4eac-9a41-44a4d1d24686" />
+./Система умного дома.xml:12043:            <Object Name="ST_Ventilation_Global_Config" ObjectId="36f6a8cf-c93f-46c5-8150-9e8f9aaee3b1" />
+./Система умного дома.xml:12050:            <Object Name="ST_Ventilation_Scenario_Mode" ObjectId="43450d58-acdd-481a-a89a-70a7669a8d8d" />
+./Система умного дома.xml:12070:            <Object Name="ST_Ventilation_Unit" ObjectId="d571a35a-f77b-46c1-81d3-4d371c9ccfb8" />
+./Система умного дома.xml:12143:          <Object Name="FB_Exhaust_Ventilation_Controller" ObjectId="e7556d29-1665-42f5-93f0-a0ffa40ad6c1" />
+./Система умного дома.xml:12149:          <Object Name="FB_Ventilation_System_Manager" ObjectId="564fb610-0c19-487a-9ebb-8c1d1cd68513" />
+./Система умного дома.xml:12177:          <Object Name="FB_Supply_Ventilation_Controller" ObjectId="1a39770a-498e-4487-a354-5035040a88b3" />
+./ST_BlackBox_Record.dut:14:    First_Fault_Source : BYTE; // 1=Heating,2=DHW,3=Ventilation,4=Lighting,5=Access
+./GVL_STATE.gvl:59:    G_Ventilation_IO_Fault : BOOL;
+./GVL_STATE.gvl:60:    G_Ventilation_Subsystem_Degraded : BOOL;
+./FB_Exhaust_Ventilation_Controller.st:1:FUNCTION_BLOCK FB_Exhaust_Ventilation_Controller
+./FB_Exhaust_Ventilation_Controller.st:5:    VI_Config   : ST_Ventilation_Unit_Config;
+./ST_Ventilation_Unit.dut:2:TYPE ST_Ventilation_Unit :
+./FB_Supply_Ventilation_Controller.st:1:FUNCTION_BLOCK FB_Supply_Ventilation_Controller
+./FB_Supply_Ventilation_Controller.st:6:    VI_Config       : ST_Ventilation_Unit_Config;
+./диагностика/file_access_audit.log:87:FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:140:FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:149:FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:150:FB_Ventilation_V2_Staging.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:183:PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:242:ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:243:ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:244:ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:245:ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:246:ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:247:ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:248:ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:362:archive/parked_dut/unused/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:363:archive/parked_dut/unused/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:364:archive/parked_dut/unused/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:365:archive/parked_dut/unused/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:389:archive/parked_fb/draft/ventilation/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:390:archive/parked_fb/draft/ventilation/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:600:save_2026-04-07/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:629:save_2026-04-07/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:649:save_2026-04-07/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:697:snapshots/clean_build_20260414_0820/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:749:snapshots/clean_build_20260414_0820/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:758:snapshots/clean_build_20260414_0820/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:759:snapshots/clean_build_20260414_0820/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:791:snapshots/clean_build_20260414_0820/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:849:snapshots/clean_build_20260414_0820/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:850:snapshots/clean_build_20260414_0820/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:851:snapshots/clean_build_20260414_0820/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:852:snapshots/clean_build_20260414_0820/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:853:snapshots/clean_build_20260414_0820/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:854:snapshots/clean_build_20260414_0820/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:855:snapshots/clean_build_20260414_0820/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:899:snapshots/clean_build_20260414_0820/archive/parked_dut/unused/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:900:snapshots/clean_build_20260414_0820/archive/parked_dut/unused/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:901:snapshots/clean_build_20260414_0820/archive/parked_dut/unused/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:902:snapshots/clean_build_20260414_0820/archive/parked_dut/unused/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:926:snapshots/clean_build_20260414_0820/archive/parked_fb/draft/ventilation/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:927:snapshots/clean_build_20260414_0820/archive/parked_fb/draft/ventilation/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1027:snapshots/clean_build_20260414_0820/save_2026-04-07/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1056:snapshots/clean_build_20260414_0820/save_2026-04-07/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1076:snapshots/clean_build_20260414_0820/save_2026-04-07/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1291:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1292:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1294:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1295:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1302:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1304:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1305:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1306:snapshots/clean_build_20260414_0820/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1577:snapshots/clean_build_2026_04_14/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1629:snapshots/clean_build_2026_04_14/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1638:snapshots/clean_build_2026_04_14/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1639:snapshots/clean_build_2026_04_14/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1671:snapshots/clean_build_2026_04_14/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1729:snapshots/clean_build_2026_04_14/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1730:snapshots/clean_build_2026_04_14/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1731:snapshots/clean_build_2026_04_14/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1732:snapshots/clean_build_2026_04_14/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1733:snapshots/clean_build_2026_04_14/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1734:snapshots/clean_build_2026_04_14/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1735:snapshots/clean_build_2026_04_14/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1779:snapshots/clean_build_2026_04_14/archive/parked_dut/unused/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1780:snapshots/clean_build_2026_04_14/archive/parked_dut/unused/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1781:snapshots/clean_build_2026_04_14/archive/parked_dut/unused/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1782:snapshots/clean_build_2026_04_14/archive/parked_dut/unused/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1806:snapshots/clean_build_2026_04_14/archive/parked_fb/draft/ventilation/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1807:snapshots/clean_build_2026_04_14/archive/parked_fb/draft/ventilation/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1908:snapshots/clean_build_2026_04_14/save_2026-04-07/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1937:snapshots/clean_build_2026_04_14/save_2026-04-07/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:1957:snapshots/clean_build_2026_04_14/save_2026-04-07/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2172:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2173:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2175:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2176:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2183:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2185:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2186:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2187:snapshots/clean_build_2026_04_14/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2441:snapshots/clean_build_2026_04_15/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2493:snapshots/clean_build_2026_04_15/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2502:snapshots/clean_build_2026_04_15/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2503:snapshots/clean_build_2026_04_15/FB_Ventilation_V2_Staging.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2535:snapshots/clean_build_2026_04_15/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2593:snapshots/clean_build_2026_04_15/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2594:snapshots/clean_build_2026_04_15/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2595:snapshots/clean_build_2026_04_15/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2596:snapshots/clean_build_2026_04_15/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2597:snapshots/clean_build_2026_04_15/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2598:snapshots/clean_build_2026_04_15/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2599:snapshots/clean_build_2026_04_15/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2646:snapshots/clean_build_2026_04_15/archive/parked_dut/unused/ST_Ventilation_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2647:snapshots/clean_build_2026_04_15/archive/parked_dut/unused/ST_Ventilation_Scenario_Mode.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2648:snapshots/clean_build_2026_04_15/archive/parked_dut/unused/ST_Ventilation_Unit.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2649:snapshots/clean_build_2026_04_15/archive/parked_dut/unused/ST_Ventilation_Unit_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2673:snapshots/clean_build_2026_04_15/archive/parked_fb/draft/ventilation/FB_Exhaust_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2674:snapshots/clean_build_2026_04_15/archive/parked_fb/draft/ventilation/FB_Supply_Ventilation_Controller.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2774:snapshots/clean_build_2026_04_15/save_2026-04-07/FB_Ventilation_System_Manager.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2803:snapshots/clean_build_2026_04_15/save_2026-04-07/PRG_Ventilation.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:2823:snapshots/clean_build_2026_04_15/save_2026-04-07/ST_Ventilation_Global_Config.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3047:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3048:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3050:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3051:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3058:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3060:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3061:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3062:snapshots/clean_build_2026_04_15/workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3459:workspace/dut_rebuild/ventilation_v2/ST_Ventilation_Command_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3460:workspace/dut_rebuild/ventilation_v2/ST_Ventilation_State_V2.dut	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3462:workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_Command_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3463:workspace/dut_rebuild/ventilation_v2/compatibility/FB_Ventilation_Legacy_To_V2_State_Adapter_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3470:workspace/dut_rebuild/ventilation_v2/staging/FB_Ventilation_V2_Staging_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3472:workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_Command_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3473:workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_State_Path_DRAFT.st	file	yes	yes	yes	0o666
+./диагностика/file_access_audit.log:3474:workspace/dut_rebuild/ventilation_v2/v2_core/FB_Ventilation_V2_Core_DRAFT.st	file	yes	yes	yes	0o666
+./FB_Alarm_Manager.st:13:    VI_First_Fault_Source : INT; // 1=Heating,2=DHW,3=Ventilation,4=Lighting,5=Access
+./FB_Alarm_Manager.st:147:        3: L_First_Fault_Source_Text := 'Ventilation';
+./docs/FB_INVENTORY_AUDIT.md:87:| FB_Exhaust_Ventilation_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+./docs/FB_INVENTORY_AUDIT.md:130:| FB_Supply_Ventilation_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+./docs/FB_INVENTORY_AUDIT.md:138:| FB_Ventilation_System_Manager | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+./docs/FB_INVENTORY_AUDIT.md:158:10. `FB_Ventilation_System_Manager`
+./docs/FB_INVENTORY_AUDIT_BATCH_03.md:120:- FB_Ventilation_System_Manager
+./docs/FB_INVENTORY_AUDIT_BATCH_02.md:123:6. `FB_Ventilation_System_Manager`
+./docs/FB_INVENTORY_AUDIT_BATCH_02.md:127:10. `FB_Supply_Ventilation_Controller`
+./docs/REFACTOR_PLAN_ARCH_ALIGNMENT.md:201:- `FB_Ventilation_System_Manager`
+./docs/REFACTOR_PLAN_ARCH_ALIGNMENT.md:215:- `FB_Policy_Ventilation`
+./docs/REFACTOR_PLAN_ARCH_ALIGNMENT.md:251:- `FB_Supply_Ventilation_Controller`
+./docs/REFACTOR_PLAN_ARCH_ALIGNMENT.md:252:- `FB_Exhaust_Ventilation_Controller`
+./docs/DEVELOPMENT_WORKFLOW.md:120:## Heating/Ventilation lessons learned
+./docs/PROJECT_ROADMAP.md:56:- [ ] Ventilation
+./docs/systems/ventilation.md:1:# Ventilation
+./docs/systems/ventilation.md:4:Ventilation is subordinate to Policy and consumes `System Mode`.
+./docs/systems/ventilation.md:13:- Ventilation publishes IO and degraded state upward.
+./docs/systems/ventilation.md:14:- Ventilation does not arbitrate global mode locally.
+./docs/RECOVERY_STRATEGY.md:76:Based on Ventilation V2 recovery experience
+./docs/PROJECT_STATUS_2026-04-06_FULL.md:78:- FB_Ventilation_Manager
+./docs/SYSTEM_PRIORITIES.md:14:## Ventilation (V2 - Implemented)
+./docs/SYSTEM_PRIORITIES.md:76:Aligned with Ventilation V2 and DHW planning
+./docs/FB_INVENTORY_AUDIT_BATCH_04.md:113:9. Ventilation_System_Manager
+./ST_Ventilation_Unit_Config.dut:2:TYPE ST_Ventilation_Unit_Config :
+./ST_Ventilation_Config.dut:2:TYPE ST_Ventilation_Config :
+./FB_Ventilation_System_Manager.st:1:FUNCTION_BLOCK FB_Ventilation_System_Manager
+./FB_Ventilation_System_Manager.st:8:    VI_Config : ST_Ventilation_Global_Config; // Конфигурация системы вентиляции
+./FB_Ventilation_System_Manager.st:48:// Ventilation policy layer
+./FB_Ventilation_System_Manager.st:50:GVL_STATE.G_Ventilation_IO_Fault := FALSE;
+./FB_Ventilation_System_Manager.st:51:GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;
+./FB_Ventilation_System_Manager.st:74:        GVL_STATE.G_Ventilation_IO_Fault := TRUE;
+./FB_Ventilation_System_Manager.st:115:    GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+./FB_Ventilation_System_Manager.st:175:        GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+./FB_Ventilation_System_Manager.st:198:        GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+./FB_Ventilation_System_Manager.st:228:// >>> BULK_SYNC_ANCHOR: FB_Ventilation_System_Manager <<<
+./PRG_Ventilation.st:1:PROGRAM PRG_Ventilation
+./PRG_Ventilation.st:3:    fbVentilationManager : FB_Ventilation_System_Manager;
+./PRG_Ventilation.st:23:// === Ventilation Arbitration ===
+./PRG_Ventilation.st:62:fbVentilationManager(
+./PRG_Ventilation.st:88:// >>> BULK_SYNC_ANCHOR: PRG_Ventilation <<<
+./PRG_Ventilation.st:91:// Ventilation copy-out adapters
+./ST_Ventilation_Scenario_Mode.dut:2:TYPE ST_Ventilation_Scenario_Mode :
+./PRG_System.st:234:    VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault OR GVL_STATE.G_Ventilation_IO_Fault OR GVL_STATE.G_Lighting_IO_Fault,
+./PRG_System.st:237:    VI_Subsystem_Fault := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded OR GVL_STATE.G_Ventilation_Subsystem_Degraded
+./PRG_System.st:270:    GVL_STATE.G_Ventilation_IO_Fault OR
+./PRG_System.st:276:    GVL_STATE.G_Ventilation_Subsystem_Degraded;
+./GVL_CONFIG.gvl:5:    G_Ventilation_Config : ST_Ventilation_Config; // Настройки системы вентиляции
+./GVL_CONFIG.gvl:14:    G_HMI_Vent_Global_Config : ST_Ventilation_Global_Config; // Глобальные настройки вентиляции
+./GVL_CONFIG.gvl:15:    G_HMI_Vent_Unit_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_VENT_UNITS] OF ST_Ventilation_Unit_Config; // Конфигурации отдельных вентустановок
+./MAIN.st:11:PRG_Ventilation();
+
+=== SEARCH POSSIBLE ACTIVE/RUN/ENABLE SIGNALS ===
+./ST_Scenario_Config.dut:8:    ventilation_speed_percent : BYTE := 50;
+./ST_Ventilation_Global_Config.dut:4:    enable_ventilation : BOOL := TRUE;
+
+=== GVL_STATE / GVL_STATUS / GVL_COMMAND VENT KEYS ===
+
+=== END STEP 189 ===
