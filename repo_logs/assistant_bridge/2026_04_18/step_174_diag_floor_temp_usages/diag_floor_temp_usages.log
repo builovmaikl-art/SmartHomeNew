@@ -1,0 +1,166 @@
+]633;E;echo "=== STEP 174: DIAG FLOOR TEMP USAGES ===";cb07821a-d34c-4035-be1a-7133cf9aa4fd]633;C=== STEP 174: DIAG FLOOR TEMP USAGES ===
+timestamp_utc=2026-04-18T09:30:40Z
+
+=== ALL MATCHES ===
+413:    VI_Floor_Temps := L_FloorTemps_8,
+
+=== GVL_STATE USAGE ===
+136:        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
+137:        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
+138:        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
+139:        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+165:L_Local_State.Zone_Valves := GVL_STATE.G_Zone_Valves;
+166:L_Local_State.Manifold_Pumps := GVL_STATE.G_Manifold_Pumps;
+167:L_Local_State.Lighting_States := GVL_STATE.G_Lighting_Levels;
+168:L_Local_State.Blinds_Positions := GVL_STATE.G_Blinds_Positions;
+169:L_Local_State.Socket_States := GVL_STATE.G_Socket_States;
+192:    GVL_STATE.G_Zone_Valves := fbRedundancy.VO_Synced_State.Zone_Valves;
+193:    GVL_STATE.G_Manifold_Pumps := fbRedundancy.VO_Synced_State.Manifold_Pumps;
+194:    GVL_STATE.G_Lighting_Levels := fbRedundancy.VO_Synced_State.Lighting_States;
+195:    GVL_STATE.G_Blinds_Positions := fbRedundancy.VO_Synced_State.Blinds_Positions;
+196:    GVL_STATE.G_Socket_States := fbRedundancy.VO_Synced_State.Socket_States;
+203:    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
+204:    VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
+205:    VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm,
+207:    VO_Gas_Latched => GVL_STATE.G_Safety_Gas_Latched,
+208:    VO_Leak_Latched => GVL_STATE.G_Safety_Leak_Latched,
+209:    VO_Smoke_Latched => GVL_STATE.G_Safety_Smoke_Latched,
+210:    VO_Emergency_Stop => GVL_STATE.G_Safety_Emergency_Stop
+214:GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+215:GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+223:    VI_Smoke_Detected := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched,
+224:    VI_Gas_Detected := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_STATE.G_Safety_Gas_Latched,
+227:    VI_Leak_Detected := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched,
+228:    VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault,
+229:    VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault OR GVL_STATE.G_Ventilation_IO_Fault OR GVL_STATE.G_Lighting_IO_Fault,
+230:    VI_Comm_Fault := GVL_STATE.G_Access_Comm_Fault,
+232:    VI_Subsystem_Fault := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded OR GVL_STATE.G_Ventilation_Subsystem_Degraded
+239:    VI_Freeze_Risk := GVL_STATE.G_Safety_Freeze_Risk
+259:    GVL_STATE.G_Heating_Sensor_Fault OR
+260:    GVL_STATE.G_DHW_Sensor_Fault;
+263:    GVL_STATE.G_Heating_IO_Fault OR
+264:    GVL_STATE.G_DHW_IO_Fault OR
+265:    GVL_STATE.G_Ventilation_IO_Fault OR
+266:    GVL_STATE.G_Lighting_IO_Fault;
+269:    GVL_STATE.G_Heating_Subsystem_Degraded OR
+270:    GVL_STATE.G_DHW_Subsystem_Degraded OR
+271:    GVL_STATE.G_Ventilation_Subsystem_Degraded;
+279:GVL_STATE.G_System_Mode := fbStateManager.VO_System_Mode;
+281:CASE GVL_STATE.G_System_Mode OF
+283:        GVL_STATE.G_System_Mode_Text := 'SAFE_STOP';
+286:        GVL_STATE.G_System_Mode_Text := 'FREEZE_PROTECTION';
+289:        GVL_STATE.G_System_Mode_Text := 'DEGRADED';
+292:        GVL_STATE.G_System_Mode_Text := 'NORMAL';
+325:    GVL_STATE.G_Evac_Guidance[L_i] := 0;
+327:    IF GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
+328:        GVL_STATE.G_Evac_Guidance[L_i] := -1;
+331:    IF GVL_CONFIG.G_Evac_Exit_Zones[L_i] AND NOT GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
+332:        GVL_STATE.G_Evac_Guidance[L_i] := 1;
+341:    IF (GVL_STATUS.G_Evac_Hazard_Zone_Name = '') AND GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
+348:    IF (GVL_STATUS.G_Evac_Target_Zone_Name = '') AND (GVL_STATE.G_Evac_Guidance[L_i] = 1) THEN
+357:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP AND GVL_STATE.G_Safety_Smoke_Latched THEN
+358:    GVL_STATE.G_Evacuation_Lighting_Active := TRUE;
+360:    GVL_STATE.G_Evacuation_Lighting_Active := FALSE;
+375:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
+400:    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC AND (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL),
+403:    VO_Sim_Lights => GVL_STATE.G_Sim_Lights,
+412:    VI_Indoor_Temps := GVL_STATE.G_Room_Temps,
+414:    VI_Humidities := GVL_STATE.G_Room_Hum,
+415:    VI_CO2_Levels := GVL_STATE.G_Room_CO2,
+417:    VI_Door_Sensors := GVL_STATE.G_Door_Sensors,
+418:    VI_Window_Sensors := GVL_STATE.G_Window_Sensors,
+419:    VI_Water_Sensors := GVL_STATE.G_Water_Sensors,
+420:    VI_Smoke_Sensors := GVL_STATE.G_Smoke_Sensors,
+421:    VI_Methane_Sensors := GVL_STATE.G_Methane_Sensors,
+422:    VI_CO_Sensors := GVL_STATE.G_CO_Sensors,
+426:    VO_Actions => GVL_STATE.G_Rule_Actions
+430:    IF GVL_STATE.G_Rule_Actions[L_i].Active AND GVL_STATE.G_Rule_Actions[L_i].Action_Type = E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO THEN
+431:        L_Scenario_Req_Rule := TO_BYTE(GVL_STATE.G_Rule_Actions[L_i].Value);
+448:    VI_Boiler_Errors := GVL_STATE.G_Boiler_Error,
+483:    VI_Room_Temps := GVL_STATE.G_Room_Temps,
+485:    VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
+486:    VI_Manifold_Pump_States := GVL_STATE.G_Manifold_Pumps,
+487:    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
+492:    VI_Methane_Concentration := GVL_STATE.G_Methane_Sensors[1],
+494:    VI_Socket_States := GVL_STATE.G_Socket_States,
+495:    VI_Blinds_Positions := GVL_STATE.G_Blinds_Positions,
+519:   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
+520:    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
+526:   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+532:   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+538:   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+544:   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+564:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
+585:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
+605:CASE GVL_STATE.G_System_Mode OF
+627:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
+655:IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
+711:    VI_System_Mode := GVL_STATE.G_System_Mode,
+790:L_BB_Record.Gas_Methane_LEL := GVL_STATE.G_Methane_Sensors[1];
+791:L_BB_Record.Gas_CO_PPM := GVL_STATE.G_CO_Sensors[1];
+797:L_BB_Record.System_Mode := TO_BYTE(TO_INT(GVL_STATE.G_System_Mode));
+823:IF GVL_STATE.G_System_Mode <> L_Last_System_Mode THEN
+826:    L_History_Event.event_value := TO_REAL(TO_INT(GVL_STATE.G_System_Mode));
+829:    IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
+834:    L_Last_System_Mode := GVL_STATE.G_System_Mode;
+956:   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
+957:    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
+1066:L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
+1068:L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+1069:L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+1070:L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
+1072:L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
+1096:    VI_Current_Value := GVL_STATE.G_Outdoor_Temp
+1239:IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
+1244:        VI_Param2 := TO_UDINT(GVL_STATE.G_System_Mode)
+1248:L_Mode_Prev := GVL_STATE.G_System_Mode;
+
+=== TREND CHANNEL 2 BLOCK ===
+
+// === TREND → GVL FOR HMI ===
+
+// === TREND BUFFER UPDATE ===
+
+// === TREND CHANNEL 2 (FLOOR TEMP, SHARED INDEX) ===
+IF GVL_Trend.G_Trend_Channel2_Enabled THEN
+
+    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_Index;
+    GVL_Trend.G_Trend_Buffer_2[GVL_Trend.G_Trend_Buffer_2_Index] := L_FloorTemps_8[1];
+    GVL_Trend.G_Trend_Buffer_2_Timestamps[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATUS.G_System_Time_MS;
+
+    IF GVL_Trend.G_Trend_Buffer_2_Valid_Count < 50 THEN
+        GVL_Trend.G_Trend_Buffer_2_Valid_Count := GVL_Trend.G_Trend_Buffer_2_Valid_Count + 1;
+    ELSE
+        GVL_Trend.G_Trend_Buffer_2_Is_Wrapped := TRUE;
+    END_IF;
+
+    GVL_Trend.G_Trend_Channel2_Param_Type := 2; // TEMP_FLOOR
+
+END_IF;
+
+
+// === TREND META UPDATE ===
+GVL_Trend.G_Trend_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_Trend.G_Trend_Param_Type := 1; // TEMP_AIR (пока фикс)
+
+IF GVL_Trend.G_Trend_Valid_Count < 50 THEN
+    GVL_Trend.G_Trend_Valid_Count := GVL_Trend.G_Trend_Valid_Count + 1;
+ELSE
+    GVL_Trend.G_Trend_Is_Wrapped := TRUE;
+END_IF;
+
+GVL_Trend.G_Trend_Buffer_Index := GVL_Trend.G_Trend_Buffer_Index + 1;
+IF GVL_Trend.G_Trend_Buffer_Index > 50 THEN
+    GVL_Trend.G_Trend_Buffer_Index := 1;
+END_IF;
+
+GVL_Trend.G_Trend_Buffer[GVL_Trend.G_Trend_Buffer_Index] := L_Trend_Avg;
+GVL_Trend.G_Trend_Buffer_Timestamps[GVL_Trend.G_Trend_Buffer_Index] := GVL_STATUS.G_System_Time_MS;
+
+GVL_Trend.G_Trend_Avg := L_Trend_Avg;
+GVL_Trend.G_Trend_Min := L_Trend_Min;
+GVL_Trend.G_Trend_Max := L_Trend_Max;
+GVL_Trend.G_Trend_Up := L_Trend_Up;
+GVL_Trend.G_Trend_Down := L_Trend_Down;
+
+=== END STEP 174 ===
