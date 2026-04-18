@@ -1,0 +1,22 @@
+]633;E;echo "=== STEP 245: HEATING ENFORCEMENT REQUEST LAYER ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 245: HEATING ENFORCEMENT REQUEST LAYER ===
+timestamp_utc=2026-04-18T20:31:45Z
+
+=== APPLY ===
+OK: heating enforcement request layer integrated
+
+=== VERIFY DUT ===
+185:    Heating_Pump_Force_Request_Active : BOOL;
+186:    Heating_Overheat_Enforcement_Request_Active : BOOL;
+187:    Heating_Enforcement_Request_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1799:// === HEATING ENFORCEMENT REQUEST LAYER ===
+1800:GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active :=
+1803:GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active :=
+1806:IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active THEN
+1807:    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'Request: lock overheated circuits';
+1808:ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
+1809:    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'Request: force heating pump';
+1811:    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'No heating enforcement requests';
+
+=== COMPILE ===

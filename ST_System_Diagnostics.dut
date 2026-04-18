@@ -181,6 +181,11 @@ STRUCT
     Heating_Overheat_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     Heating_Protection_Summary_Text : STRING(160);
 
+    // === HEATING ENFORCEMENT REQUEST LAYER (ISOLATED) ===
+    Heating_Pump_Force_Request_Active : BOOL;
+    Heating_Overheat_Enforcement_Request_Active : BOOL;
+    Heating_Enforcement_Request_Text : STRING(160);
+
 
 
 END_STRUCT

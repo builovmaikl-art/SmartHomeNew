@@ -1796,6 +1796,21 @@ ELSE
     GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating protection normal';
 END_IF;
 
+// === HEATING ENFORCEMENT REQUEST LAYER ===
+GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active :=
+    GVL_STATUS.G_Diagnostics.Heating_Freeze_Pump_Force_Request;
+
+GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active :=
+    GVL_STATUS.G_Diagnostics.Heating_Overheat_Detected;
+
+IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'Request: lock overheated circuits';
+ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'Request: force heating pump';
+ELSE
+    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'No heating enforcement requests';
+END_IF;
+
 // === SNAPSHOT LAYER (PHASE 1) ===
 // safe in-memory snapshot using real ST_State_Snapshot fields
 L_Snapshot.timestamp_ms := GVL_STATUS.G_System_Time_MS;
