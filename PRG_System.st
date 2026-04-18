@@ -1213,7 +1213,10 @@ fbLifetimePump(
 // fan (временно FALSE — до реального сигнала)
 fbLifetimeFan(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Device_Active  := FALSE,
+    VI_Device_Active  := (
+        GVL_STATE.G_Supply_Fans[1] > 0 OR
+        GVL_STATE.G_Exhaust_Fans[1] > 0
+    ),
     VI_Device_ID      := GVL_Lifetime.G_Device_Fan,
     VIO_Status        := GVL_Lifetime.G_Status[2]
 );
