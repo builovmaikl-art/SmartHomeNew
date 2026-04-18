@@ -1120,6 +1120,28 @@ L_Trend_Adapter(
 
 // === TREND BUFFER UPDATE ===
 
+// === TREND CHANNEL 2 (FLOOR TEMP) ===
+IF GVL_Trend.G_Trend_Channel2_Enabled THEN
+
+    GVL_Trend.G_Trend_Buffer_2_Index := GVL_Trend.G_Trend_Buffer_2_Index + 1;
+    IF GVL_Trend.G_Trend_Buffer_2_Index > 50 THEN
+        GVL_Trend.G_Trend_Buffer_2_Index := 1;
+    END_IF;
+
+    GVL_Trend.G_Trend_Buffer_2[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATE.G_Floor_Temp;
+    GVL_Trend.G_Trend_Buffer_2_Timestamps[GVL_Trend.G_Trend_Buffer_2_Index] := GVL_STATUS.G_System_Time_MS;
+
+    IF GVL_Trend.G_Trend_Buffer_2_Valid_Count < 50 THEN
+        GVL_Trend.G_Trend_Buffer_2_Valid_Count := GVL_Trend.G_Trend_Buffer_2_Valid_Count + 1;
+    ELSE
+        GVL_Trend.G_Trend_Buffer_2_Is_Wrapped := TRUE;
+    END_IF;
+
+    GVL_Trend.G_Trend_Channel2_Param_Type := 2; // TEMP_FLOOR
+
+END_IF;
+
+
 // === TREND META UPDATE ===
 GVL_Trend.G_Trend_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
 GVL_Trend.G_Trend_Param_Type := 1; // TEMP_AIR (пока фикс)
