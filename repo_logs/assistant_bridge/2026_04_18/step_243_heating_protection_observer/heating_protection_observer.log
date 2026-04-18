@@ -1,0 +1,31 @@
+]633;E;echo "=== STEP 243: HEATING PROTECTION OBSERVER ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 243: HEATING PROTECTION OBSERVER ===
+timestamp_utc=2026-04-18T20:13:24Z
+
+=== APPLY ===
+OK: heating protection observer integrated
+
+=== VERIFY DUT ===
+178:    Heating_Freeze_Alert : BOOL;
+179:    Heating_Freeze_Pump_Force_Request : BOOL;
+180:    Heating_Overheat_Detected : BOOL;
+181:    Heating_Overheat_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+182:    Heating_Protection_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+11:fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
+12:fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
+1774:// === HEATING PROTECTION OBSERVER ===
+1775:fbFreezeProtection(
+1780:fbOverheatProtection(
+1784:GVL_STATUS.G_Diagnostics.Heating_Freeze_Alert := fbFreezeProtection.VO_Freeze_Alert;
+1785:GVL_STATUS.G_Diagnostics.Heating_Freeze_Pump_Force_Request := fbFreezeProtection.VO_Pump_Force_On;
+1786:GVL_STATUS.G_Diagnostics.Heating_Overheat_Detected := fbOverheatProtection.VO_Overheat_Detected;
+1787:GVL_STATUS.G_Diagnostics.Heating_Overheat_Locked_Circuits := fbOverheatProtection.VO_Locked_Circuits;
+1789:IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Detected THEN
+1790:    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating overheat detected';
+1791:ELSIF GVL_STATUS.G_Diagnostics.Heating_Freeze_Alert THEN
+1792:    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating freeze protection alert';
+1794:    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating anti-freeze pump request';
+1796:    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating protection normal';
+
+=== COMPILE ===

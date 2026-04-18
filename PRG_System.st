@@ -8,6 +8,8 @@ fbCalibCO  : FB_Sensor_Calibration_Processor;
 fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibMethane  : FB_Sensor_Calibration_Processor;
 fbSmokeDetector : FB_Smoke_Detector;
+fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
+fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
 L_CO_Processed : REAL;
 L_CO_Calibrated : REAL;
 L_Safety_Selector_i : INT;
@@ -1768,6 +1770,31 @@ GVL_External_Monitoring.G_Shadow_Rate_Recovery_Per_Hour :=
 
 GVL_External_Monitoring.G_Shadow_Rate_Alert_Active :=
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+// === HEATING PROTECTION OBSERVER ===
+fbFreezeProtection(
+    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
+    VI_Floor_Temps := L_FloorTemps_8
+);
+
+fbOverheatProtection(
+    VI_Temps := L_FloorTemps_8
+);
+
+GVL_STATUS.G_Diagnostics.Heating_Freeze_Alert := fbFreezeProtection.VO_Freeze_Alert;
+GVL_STATUS.G_Diagnostics.Heating_Freeze_Pump_Force_Request := fbFreezeProtection.VO_Pump_Force_On;
+GVL_STATUS.G_Diagnostics.Heating_Overheat_Detected := fbOverheatProtection.VO_Overheat_Detected;
+GVL_STATUS.G_Diagnostics.Heating_Overheat_Locked_Circuits := fbOverheatProtection.VO_Locked_Circuits;
+
+IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Detected THEN
+    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating overheat detected';
+ELSIF GVL_STATUS.G_Diagnostics.Heating_Freeze_Alert THEN
+    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating freeze protection alert';
+ELSIF GVL_STATUS.G_Diagnostics.Heating_Freeze_Pump_Force_Request THEN
+    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating anti-freeze pump request';
+ELSE
+    GVL_STATUS.G_Diagnostics.Heating_Protection_Summary_Text := 'Heating protection normal';
+END_IF;
 
 // === SNAPSHOT LAYER (PHASE 1) ===
 // safe in-memory snapshot using real ST_State_Snapshot fields
