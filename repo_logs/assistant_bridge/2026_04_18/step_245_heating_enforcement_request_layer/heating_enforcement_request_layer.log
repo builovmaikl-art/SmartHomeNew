@@ -20,3 +20,17 @@ OK: heating enforcement request layer integrated
 1811:    GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'No heating enforcement requests';
 
 === COMPILE ===
+[main 9f77a20] test: compile smoke after migration
+ 7 files changed, 522 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_245_heating_enforcement_request_layer/heating_enforcement_request_layer.log
+ create mode 100644 steps/2026-04-18_heating_enforcement_request_layer/01_heating_enforcement_request_layer.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   e768d40..9f77a20  main -> main
+compile_exit=0
+
+=== END STEP 245 ===
