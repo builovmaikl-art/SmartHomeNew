@@ -37,4 +37,12 @@ VAR_GLOBAL
     G_Trend_Channel1_Label : STRING(32) := 'Outdoor Temp';
     G_Trend_Channel2_Label : STRING(32) := 'Floor Temp';
 
+
+    // === ACTIVE TREND VIEW FOR HMI ===
+    G_Trend_Active_Value : REAL;
+    G_Trend_Active_Timestamp : UDINT;
+    G_Trend_Active_Index : INT;
+    G_Trend_Active_Valid_Count : INT;
+    G_Trend_Active_Is_Wrapped : BOOL;
+
 END_VAR
