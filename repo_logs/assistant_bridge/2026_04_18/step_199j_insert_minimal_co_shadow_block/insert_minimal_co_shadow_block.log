@@ -1,0 +1,46 @@
+]633;E;echo "=== STEP 199J: INSERT MINIMAL CO SHADOW BLOCK ===";99e447e3-9fca-4946-9726-64c2e121d464]633;C=== STEP 199J: INSERT MINIMAL CO SHADOW BLOCK ===
+timestamp_utc=2026-04-18T12:45:20Z
+
+=== APPLY ===
+OK: inserted minimal executable CO shadow block
+
+=== VERIFY VARS ===
+5:fbSensorCO : FB_Sensor_Analog_Processing;
+6:fbCalibCO  : FB_Sensor_Calibration_Processor;
+7:L_CO_Processed : REAL;
+8:L_CO_Calibrated : REAL;
+1211:fbSensorCO(
+1219:L_CO_Processed := fbSensorCO.VO_Value;
+1221:fbCalibCO(
+1222:    VI_Raw_Value := L_CO_Processed,
+1225:L_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
+
+=== VERIFY EXEC BLOCK ===
+1210:// === SENSOR PROCESSING (SHADOW EXEC) ===
+1223:    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[1]
+1225:L_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
+
+=== AROUND EXEC BLOCK ===
+// === SENSOR PROCESSING (SHADOW EXEC) ===
+fbSensorCO(
+    VI_Raw_Value := REAL_TO_WORD(GVL_STATE.G_CO_Sensors[1]),
+    VI_Sensor_Type := 0,
+    VI_Min_Scale := 0.0,
+    VI_Max_Scale := 100.0,
+    VI_Offset := 0.0,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+L_CO_Processed := fbSensorCO.VO_Value;
+
+fbCalibCO(
+    VI_Raw_Value := L_CO_Processed,
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[1]
+);
+L_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
+
+// === LIFETIME UPDATE ===
+
+// pump (временно FALSE — до реального сигнала)
+fbLifetimePump(
+
+=== END STEP 199J ===

@@ -3,7 +3,9 @@ VAR
 
 // === SENSOR PROCESSING (SHADOW) ===
 fbSensorCO : FB_Sensor_Analog_Processing;
+fbCalibCO  : FB_Sensor_Calibration_Processor;
 L_CO_Processed : REAL;
+L_CO_Calibrated : REAL;
 
 
 // === LIFETIME MANAGERS ===
@@ -1204,6 +1206,23 @@ ELSE
     END_IF;
 END_IF;
 
+
+// === SENSOR PROCESSING (SHADOW EXEC) ===
+fbSensorCO(
+    VI_Raw_Value := REAL_TO_WORD(GVL_STATE.G_CO_Sensors[1]),
+    VI_Sensor_Type := 0,
+    VI_Min_Scale := 0.0,
+    VI_Max_Scale := 100.0,
+    VI_Offset := 0.0,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+L_CO_Processed := fbSensorCO.VO_Value;
+
+fbCalibCO(
+    VI_Raw_Value := L_CO_Processed,
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[1]
+);
+L_CO_Calibrated := fbCalibCO.VO_Calibrated_Value;
 
 // === LIFETIME UPDATE ===
 
