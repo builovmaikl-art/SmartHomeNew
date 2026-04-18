@@ -1811,6 +1811,38 @@ ELSE
     GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'No heating enforcement requests';
 END_IF;
 
+// === HEATING REAL ENFORCEMENT BRIDGE ===
+GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active := FALSE;
+GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active := FALSE;
+
+// real bridge: force manifold pumps if freeze protection requests pump support
+IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
+            GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+            GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active := TRUE;
+        END_IF;
+    END_FOR;
+END_IF;
+
+// real bridge: close overheated floor-heating circuits
+IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Locked_Circuits[L_i] THEN
+            GVL_STATE.G_Zone_Valves[L_i] := FALSE;
+            GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active := TRUE;
+        END_IF;
+    END_FOR;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Real_Enforcement_Text := 'Applied: overheated circuits locked';
+ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Real_Enforcement_Text := 'Applied: heating pumps forced on';
+ELSE
+    GVL_STATUS.G_Diagnostics.Heating_Real_Enforcement_Text := 'No real heating enforcement applied';
+END_IF;
+
 // === SNAPSHOT LAYER (PHASE 1) ===
 // safe in-memory snapshot using real ST_State_Snapshot fields
 L_Snapshot.timestamp_ms := GVL_STATUS.G_System_Time_MS;
