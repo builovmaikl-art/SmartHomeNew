@@ -24,3 +24,17 @@ OK: heating priority arbitration integrated
 1851:   GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
 
 === COMPILE ===
+[main 2051fdd] test: compile smoke after migration
+ 7 files changed, 590 insertions(+), 391 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_249_heating_priority_arbitration/heating_priority_arbitration.log
+ create mode 100644 steps/2026-04-18_heating_priority_arbitration/01_heating_priority_arbitration.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   7de1721..2051fdd  main -> main
+compile_exit=0
+
+=== END STEP 249 ===
