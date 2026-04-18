@@ -1,0 +1,67 @@
+]633;E;echo "=== STEP 199I: COLLECT SHADOW CO ANCHOR LOGS ===";99e447e3-9fca-4946-9726-64c2e121d464]633;C=== STEP 199I: COLLECT SHADOW CO ANCHOR LOGS ===
+timestamp_utc=2026-04-18T12:39:44Z
+
+=== PRG_SYSTEM TOP 1..40 ===
+PROGRAM PRG_System
+VAR
+
+// === SENSOR PROCESSING (SHADOW) ===
+fbSensorCO : FB_Sensor_Analog_Processing;
+L_CO_Processed : REAL;
+
+
+// === LIFETIME MANAGERS ===
+fbLifetimePump : FB_Lifetime_Manager;
+fbLifetimeFan  : FB_Lifetime_Manager;
+
+
+    // === TREND WRITE CONTROL ===
+    L_Trend_Write : BOOL;
+    L_Trend_Write_Prev : BOOL;
+
+    // === TREND → HISTORY BRIDGE ===
+    L_Trend_Event : ST_History_Record;
+
+    // === TREND SYSTEM (MVP) ===
+    L_Trend_Logger : FB_Trend_Logger;
+    L_Trend_Data : ST_Trend_Data;
+    L_Trend_Adapter : FB_Trend_Adapter;
+    L_Trend_Avg : REAL;
+    L_Trend_Min : REAL;
+    L_Trend_Max : REAL;
+    L_Trend_Up : BOOL;
+    L_Trend_Down : BOOL;
+    L_Trend_Last_Write_MS : UDINT;
+    L_Trend_Last_Written_Avg : REAL;
+    L_Trend_Write_Allowed : BOOL;
+    L_i : INT;
+    L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    // --- ADAPTER LAYER ---
+    L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
+    L_Lighting_32   : ARRAY[1..32] OF BYTE;
+    L_Lighting_Bool_32 : ARRAY[1..32] OF BOOL;
+    L_FloorTemps_8  : ARRAY[1..8] OF REAL;
+    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;
+
+=== FIND SENSOR SHADOW MARKERS ===
+4:// === SENSOR PROCESSING (SHADOW) ===
+5:fbSensorCO : FB_Sensor_Analog_Processing;
+
+=== PRG_SYSTEM AROUND SHADOW CALL ===
+shadow assignment marker not found
+
+=== CONFIG CALIBRATION DECLARATION ===
+20:    G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record; // Данные калибровки датчиков
+
+=== FB CALIBRATION PROCESSOR HEADER ===
+FUNCTION_BLOCK FB_Sensor_Calibration_Processor
+VAR_INPUT
+    VI_Raw_Value : REAL;
+    VI_Record    : ST_Sensor_Calibration_Record;
+END_VAR
+VAR_OUTPUT
+    VO_Calibrated_Value : REAL;
+END_VAR
+
+VO_Calibrated_Value := (VI_Raw_Value * VI_Record.multiplier) + VI_Record.offset;
+=== END STEP 199I ===
