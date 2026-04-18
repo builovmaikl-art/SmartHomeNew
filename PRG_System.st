@@ -1439,33 +1439,6 @@ IF GVL_Safety_Selector.G_Smoke_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Un
     GVL_Safety_Selector.G_Use_Shadow_Smoke := TRUE;
 END_IF;
 
-IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
-    GVL_Safety_Selector.G_Smoke_Unstable_Counter := GVL_Safety_Selector.G_Smoke_Unstable_Counter + 1;
-ELSE
-    GVL_Safety_Selector.G_Smoke_Unstable_Counter := 0;
-END_IF;
-
-// apply fallback only after N cycles
-IF GVL_Safety_Selector.G_Block_Shadow_On_Mismatch THEN
-
-    IF GVL_Safety_Selector.G_CO_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
-        GVL_Safety_Selector.G_Use_Shadow_CO := FALSE;
-    END_IF;
-
-    IF GVL_Safety_Selector.G_Methane_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
-        GVL_Safety_Selector.G_Use_Shadow_Methane := FALSE;
-    END_IF;
-
-    IF GVL_Safety_Selector.G_Smoke_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
-        GVL_Safety_Selector.G_Use_Shadow_Smoke := FALSE;
-    END_IF;
-
-END_IF;
-
-IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
-        GVL_Safety_Selector.G_Use_Shadow_Smoke := FALSE;
-    END_IF;
-END_IF;
 
 IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Smoke shadow mismatch';

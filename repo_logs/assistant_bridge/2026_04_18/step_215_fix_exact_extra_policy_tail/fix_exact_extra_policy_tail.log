@@ -1,0 +1,140 @@
+]633;E;echo "=== STEP 215: FIX EXACT EXTRA POLICY TAIL ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 215: FIX EXACT EXTRA POLICY TAIL ===
+timestamp_utc=2026-04-18T15:09:02Z
+
+=== APPLY ===
+OK: removed exact duplicated policy tail and extra END_IF
+
+=== VERIFY CONTEXT ===
+IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
+    GVL_Safety_Selector.G_Methane_Effective := GVL_Sensor_Shadow.G_Methane_Calibrated;
+    GVL_Safety_Selector.G_Methane_Effective_Array[1] := GVL_Sensor_Shadow.G_Methane_Calibrated;
+ELSE
+    GVL_Safety_Selector.G_Methane_Effective := GVL_STATE.G_Methane_Sensors[1];
+END_IF;
+
+// SMOKE
+IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
+    GVL_Safety_Selector.G_Smoke_Effective := GVL_Sensor_Shadow.G_Smoke_Detected;
+    GVL_Safety_Selector.G_Smoke_Effective_Array[1] := GVL_Sensor_Shadow.G_Smoke_Detected;
+ELSE
+    GVL_Safety_Selector.G_Smoke_Effective := GVL_STATE.G_Smoke_Sensors[1];
+END_IF;
+
+
+// === SHADOW METHANE/SMOKE DIAGNOSTIC EXPORT ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Active := GVL_Safety_Selector.G_Use_Shadow_Methane;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Diff := GVL_Safety_Bridge.G_Methane_Diff;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Active := GVL_Safety_Selector.G_Use_Shadow_Smoke;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow OFF';
+END_IF;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow OFF';
+END_IF;
+
+// === SHADOW CO DIAGNOSTIC EXPORT ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active := GVL_Safety_Selector.G_Use_Shadow_CO;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Diff := GVL_Safety_Bridge.G_CO_Diff;
+
+IF GVL_Safety_Selector.G_Use_Shadow_CO THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Status_Text := 'CO shadow OFF';
+END_IF;
+
+// === SHADOW SAFETY QUALITY FLAGS ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable :=
+    GVL_Safety_Bridge.G_CO_Diff > GVL_Safety_Selector.G_CO_Shadow_Max_Diff;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable :=
+    GVL_Safety_Bridge.G_Methane_Diff > GVL_Safety_Selector.G_Methane_Shadow_Max_Diff;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch :=
+    GVL_Safety_Bridge.G_Smoke_Diff;
+
+// === SHADOW SAFETY POLICY (DEBOUNCE + RECOVERY) ===
+
+// --- UNSTABLE COUNTERS ---
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+    GVL_Safety_Selector.G_CO_Unstable_Counter := GVL_Safety_Selector.G_CO_Unstable_Counter + 1;
+    GVL_Safety_Selector.G_CO_Stable_Counter := 0;
+ELSE
+    GVL_Safety_Selector.G_CO_Unstable_Counter := 0;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+    GVL_Safety_Selector.G_Methane_Unstable_Counter := GVL_Safety_Selector.G_Methane_Unstable_Counter + 1;
+    GVL_Safety_Selector.G_Methane_Stable_Counter := 0;
+ELSE
+    GVL_Safety_Selector.G_Methane_Unstable_Counter := 0;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+    GVL_Safety_Selector.G_Smoke_Unstable_Counter := GVL_Safety_Selector.G_Smoke_Unstable_Counter + 1;
+    GVL_Safety_Selector.G_Smoke_Stable_Counter := 0;
+ELSE
+    GVL_Safety_Selector.G_Smoke_Unstable_Counter := 0;
+END_IF;
+
+// --- STABLE COUNTERS (for recovery) ---
+IF NOT GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable AND
+   GVL_Safety_Bridge.G_CO_Diff < GVL_Safety_Selector.G_CO_Shadow_Recovery_Diff THEN
+    GVL_Safety_Selector.G_CO_Stable_Counter := GVL_Safety_Selector.G_CO_Stable_Counter + 1;
+END_IF;
+
+IF NOT GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable AND
+   GVL_Safety_Bridge.G_Methane_Diff < GVL_Safety_Selector.G_Methane_Shadow_Recovery_Diff THEN
+    GVL_Safety_Selector.G_Methane_Stable_Counter := GVL_Safety_Selector.G_Methane_Stable_Counter + 1;
+END_IF;
+
+IF NOT GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+    GVL_Safety_Selector.G_Smoke_Stable_Counter := GVL_Safety_Selector.G_Smoke_Stable_Counter + 1;
+END_IF;
+
+// --- FALLBACK ---
+IF GVL_Safety_Selector.G_Block_Shadow_On_Mismatch THEN
+
+    IF GVL_Safety_Selector.G_CO_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+        GVL_Safety_Selector.G_Use_Shadow_CO := FALSE;
+    END_IF;
+
+    IF GVL_Safety_Selector.G_Methane_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+        GVL_Safety_Selector.G_Use_Shadow_Methane := FALSE;
+    END_IF;
+
+    IF GVL_Safety_Selector.G_Smoke_Unstable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+        GVL_Safety_Selector.G_Use_Shadow_Smoke := FALSE;
+    END_IF;
+
+END_IF;
+
+// --- RECOVERY ---
+IF GVL_Safety_Selector.G_CO_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+    GVL_Safety_Selector.G_Use_Shadow_CO := TRUE;
+END_IF;
+
+IF GVL_Safety_Selector.G_Methane_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+    GVL_Safety_Selector.G_Use_Shadow_Methane := TRUE;
+END_IF;
+
+IF GVL_Safety_Selector.G_Smoke_Stable_Counter >= GVL_Safety_Selector.G_Shadow_Unstable_Cycles_Limit THEN
+    GVL_Safety_Selector.G_Use_Shadow_Smoke := TRUE;
+END_IF;
+
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Mismatch THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Smoke shadow mismatch';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Unstable THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Methane shadow unstable';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Unstable THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'CO shadow unstable';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Quality_Text := 'Shadow safety quality OK';
+
+=== END STEP 215 ===
