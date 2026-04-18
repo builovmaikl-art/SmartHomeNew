@@ -1223,6 +1223,22 @@ fbLifetimeFan(
     VIO_Status        := GVL_Lifetime.G_Status[2]
 );
 
+
+// === LIFETIME HMI ACTIVE VIEW ===
+IF GVL_Lifetime.G_Active_Device_Index = 2 THEN
+    GVL_Lifetime.G_Active_Runtime_Hours := GVL_Lifetime.G_Status[2].runtime_hours;
+    GVL_Lifetime.G_Active_Remaining_Hours := GVL_Lifetime.G_Status[2].remaining_hours;
+    GVL_Lifetime.G_Active_Remaining_Percent := GVL_Lifetime.G_Status[2].remaining_percent;
+    GVL_Lifetime.G_Active_Maintenance_Required := GVL_Lifetime.G_Status[2].maintenance_required;
+    GVL_Lifetime.G_Active_Label := GVL_Lifetime.G_Device2_Label;
+ELSE
+    GVL_Lifetime.G_Active_Runtime_Hours := GVL_Lifetime.G_Status[1].runtime_hours;
+    GVL_Lifetime.G_Active_Remaining_Hours := GVL_Lifetime.G_Status[1].remaining_hours;
+    GVL_Lifetime.G_Active_Remaining_Percent := GVL_Lifetime.G_Status[1].remaining_percent;
+    GVL_Lifetime.G_Active_Maintenance_Required := GVL_Lifetime.G_Status[1].maintenance_required;
+    GVL_Lifetime.G_Active_Label := GVL_Lifetime.G_Device1_Label;
+END_IF;
+
 // === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
 L_Trend_Write_Allowed := FALSE;
