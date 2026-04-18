@@ -122,6 +122,15 @@ STRUCT
     Sensor_Shadow_Smoke_Mismatch : BOOL;
     Sensor_Shadow_Quality_Text : STRING(160);
 
+    Sensor_Shadow_CO_Fallback_Count : UDINT;
+    Sensor_Shadow_CO_Recovery_Count : UDINT;
+    Sensor_Shadow_Methane_Fallback_Count : UDINT;
+    Sensor_Shadow_Methane_Recovery_Count : UDINT;
+    Sensor_Shadow_Smoke_Fallback_Count : UDINT;
+    Sensor_Shadow_Smoke_Recovery_Count : UDINT;
+    Sensor_Shadow_Total_Fallback_Count : UDINT;
+    Sensor_Shadow_Total_Recovery_Count : UDINT;
+
 
 END_STRUCT
 END_TYPE

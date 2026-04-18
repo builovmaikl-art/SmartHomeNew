@@ -1470,6 +1470,8 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_CO) AND L_Shadow_CO_Enabled_Prev THEN
         VI_Param1 := 2101,
         VI_Param2 := 0
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
@@ -1479,6 +1481,8 @@ IF GVL_Safety_Selector.G_Use_Shadow_CO AND (NOT L_Shadow_CO_Enabled_Prev) THEN
         VI_Param1 := 2102,
         VI_Param2 := 1
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
 END_IF;
 
 IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_Prev THEN
@@ -1488,6 +1492,8 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_Methane) AND L_Shadow_Methane_Enabled_P
         VI_Param1 := 2111,
         VI_Param2 := 0
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Prev) THEN
@@ -1497,6 +1503,8 @@ IF GVL_Safety_Selector.G_Use_Shadow_Methane AND (NOT L_Shadow_Methane_Enabled_Pr
         VI_Param1 := 2112,
         VI_Param2 := 1
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
 END_IF;
 
 IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev THEN
@@ -1506,6 +1514,8 @@ IF (NOT GVL_Safety_Selector.G_Use_Shadow_Smoke) AND L_Shadow_Smoke_Enabled_Prev 
         VI_Param1 := 2121,
         VI_Param2 := 0
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Fallback_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count + 1;
 END_IF;
 
 IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) THEN
@@ -1515,6 +1525,8 @@ IF GVL_Safety_Selector.G_Use_Shadow_Smoke AND (NOT L_Shadow_Smoke_Enabled_Prev) 
         VI_Param1 := 2122,
         VI_Param2 := 1
     );
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Recovery_Count + 1;
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count := GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count + 1;
 END_IF;
 
 L_Shadow_CO_Enabled_Prev := GVL_Safety_Selector.G_Use_Shadow_CO;
