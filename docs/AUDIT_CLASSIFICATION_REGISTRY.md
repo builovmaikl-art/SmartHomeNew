@@ -1,0 +1,114 @@
+# AUDIT CLASSIFICATION REGISTRY
+
+Updated: 2026-04-18
+
+## Status legend
+
+- `PROTECTED_RUNTIME` — active runtime / integrated subsystem / do not remove
+- `PROTECTED_DOMAIN_TYPE` — used domain type / do not remove
+- `KEEP_UNINTEGRATED` — not connected to runtime now, but meaningful feature or leaf library
+- `ROADMAP_FEATURE` — intentionally kept for future implementation / extension
+- `HOLD` — keep for now, not enough reason to integrate or delete
+- `DELETE_DONE` — already removed earlier as safe cleanup
+- `NOT_REVIEWED` — not yet classified
+
+---
+
+## Stable integrated waves
+
+| Object / Cluster | Classification | Notes |
+|---|---|---|
+| TREND cluster | PROTECTED_RUNTIME | Stable integrated subsystem, HMI-facing, history-connected |
+| LIFETIME cluster | PROTECTED_RUNTIME | Stable integrated subsystem, runtime tracking + HMI + health summary |
+| PRG_System.st | PROTECTED_RUNTIME | Main orchestration |
+| MAIN.st | PROTECTED_RUNTIME | Entry point |
+| PRG_PLC_A.st | PROTECTED_RUNTIME | Active program |
+| PRG_PLC_B.st | PROTECTED_RUNTIME | Active program |
+| GVL_Trend.gvl | PROTECTED_RUNTIME | Trend storage / HMI |
+| GVL_Lifetime.gvl | PROTECTED_RUNTIME | Lifetime storage / HMI / health summary |
+| FB_Trend_Logger.st | PROTECTED_RUNTIME | Trend runtime |
+| FB_Trend_Analyzer.st | PROTECTED_RUNTIME | Trend runtime |
+| FB_Trend_Adapter.st | PROTECTED_RUNTIME | Trend runtime |
+| FB_Lifetime_Manager.st | PROTECTED_RUNTIME | Lifetime runtime |
+
+---
+
+## Presence cluster
+
+| Object | Classification | Notes |
+|---|---|---|
+| FB_Presence_Playback.st | KEEP_UNINTEGRATED | Meaningful weekly presence playback feature |
+| FB_Presence_Simulator.st | KEEP_UNINTEGRATED | Wrapper/simulation shell around playback logic |
+
+---
+
+## Maintenance / access cluster
+
+| Object | Classification | Notes |
+|---|---|---|
+| FB_Maintenance_Access.st | KEEP_UNINTEGRATED | Maintenance access time-window feature |
+| FB_Zone_Access_Manager.st | KEEP_UNINTEGRATED | Zone access logic |
+| E_Zone_Access_Level.dut | PROTECTED_DOMAIN_TYPE | Enum used by zone access logic |
+| ST_Maintenance_Access_Config.dut | HOLD | Policy/config type, not integrated yet |
+| ST_Component_Maintenance.dut | PROTECTED_DOMAIN_TYPE | Used by ST_Zone_Sensors |
+
+---
+
+## Lifetime cluster
+
+| Object | Classification | Notes |
+|---|---|---|
+| E_Lifetime_Device_Type.dut | ROADMAP_FEATURE | Kept for further scaling / richer modeling |
+| ST_Lifetime_Status.dut | PROTECTED_DOMAIN_TYPE | Active lifetime data model |
+
+---
+
+## Sensors / safety leaves
+
+| Object | Classification | Notes |
+|---|---|---|
+| FB_Gas_Smoke_Manager.st | PROTECTED_RUNTIME | Active safety orchestrator referenced by PRG_Safety |
+| FB_CO_Detector.st | KEEP_UNINTEGRATED | Valid leaf detector block |
+| FB_Gas_Methane_Detector.st | KEEP_UNINTEGRATED | Valid leaf detector block |
+| FB_Smoke_Detector.st | KEEP_UNINTEGRATED | Valid leaf detector block |
+| FB_Gas_Valve_Controller.st | KEEP_UNINTEGRATED | Valid actuator/controller block |
+| FB_Sensor_Analog_Processing.st | KEEP_UNINTEGRATED | Valid analog processing leaf block |
+| FB_Sensor_Calibration.st | KEEP_UNINTEGRATED | Valid calibration leaf block |
+| FB_Sensor_Calibration_Processor.st | KEEP_UNINTEGRATED | Valid calibration processor leaf block |
+| FB_Sensor_Distribution.st | KEEP_UNINTEGRATED | Valid sensor fan-out leaf block |
+| ST_Gas_Valve_Configuration.dut | PROTECTED_DOMAIN_TYPE | Used by config/controller |
+| ST_Sensor_Calibration_Record.dut | PROTECTED_DOMAIN_TYPE | Used by calibration/config |
+| E_SENSOR_TYPE.dut | PROTECTED_DOMAIN_TYPE | Used by calibration record |
+| ST_Zone_Sensors.dut | PROTECTED_DOMAIN_TYPE | Zone-level domain struct |
+| ST_Component_Maintenance.dut | PROTECTED_DOMAIN_TYPE | Referenced from ST_Zone_Sensors |
+
+---
+
+## Snapshot / parked capability
+
+| Object / Cluster | Classification | Notes |
+|---|---|---|
+| SNAPSHOT cluster | HOLD | Keep as parked/alternative feature set, not runtime cleanup target |
+
+---
+
+## Historical cleanup decisions
+
+| Object / Cluster | Classification | Notes |
+|---|---|---|
+| DEBUG cluster | DELETE_DONE | Removed earlier as safe cleanup |
+| DRY-RUN cluster | DELETE_DONE | Removed earlier as safe cleanup |
+
+---
+
+## Current cleanup rule
+
+Do not remove anything marked:
+- `PROTECTED_RUNTIME`
+- `PROTECTED_DOMAIN_TYPE`
+- `KEEP_UNINTEGRATED`
+- `ROADMAP_FEATURE`
+- `HOLD`
+
+Only consider future removal for objects explicitly reclassified after a dedicated audit.
+
