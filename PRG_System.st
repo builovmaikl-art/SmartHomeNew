@@ -1205,7 +1205,7 @@ END_IF;
 // pump (временно FALSE — до реального сигнала)
 fbLifetimePump(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Device_Active  := FALSE,
+    VI_Device_Active  := GVL_PERSISTENT.P_DHW_Heating_Active,
     VI_Device_ID      := GVL_Lifetime.G_Device_Pump,
     VIO_Status        := GVL_Lifetime.G_Status[1]
 );
