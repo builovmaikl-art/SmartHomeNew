@@ -4,8 +4,14 @@ VAR
 // === SENSOR PROCESSING (SHADOW) ===
 fbSensorCO : FB_Sensor_Analog_Processing;
 fbCalibCO  : FB_Sensor_Calibration_Processor;
+fbSensorMethane : FB_Sensor_Analog_Processing;
+fbCalibMethane  : FB_Sensor_Calibration_Processor;
+fbSmokeDetector : FB_Smoke_Detector;
 L_CO_Processed : REAL;
 L_CO_Calibrated : REAL;
+L_Methane_Processed : REAL;
+L_Methane_Calibrated : REAL;
+L_Smoke_Detected : BOOL;
 
 
 // === LIFETIME MANAGERS ===
@@ -1231,6 +1237,40 @@ GVL_Sensor_Shadow.G_CO_Calibrated := L_CO_Calibrated;
 GVL_Sensor_Shadow.G_CO_Error := fbSensorCO.VO_Error;
 GVL_Sensor_Shadow.G_CO_Diag_Code := fbSensorCO.VO_Diag_Code;
 
+
+// === METHANE SHADOW EXEC ===
+fbSensorMethane(
+    VI_Raw_Value := REAL_TO_WORD(GVL_STATE.G_Methane_Sensors[1]),
+    VI_Sensor_Type := 0,
+    VI_Min_Scale := 0.0,
+    VI_Max_Scale := 100.0,
+    VI_Offset := 0.0,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+L_Methane_Processed := fbSensorMethane.VO_Value;
+
+fbCalibMethane(
+    VI_Raw_Value := L_Methane_Processed,
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[2]
+);
+L_Methane_Calibrated := fbCalibMethane.VO_Calibrated_Value;
+
+// === METHANE SHADOW EXPORT ===
+GVL_Sensor_Shadow.G_Methane_Raw := GVL_STATE.G_Methane_Sensors[1];
+GVL_Sensor_Shadow.G_Methane_Processed := L_Methane_Processed;
+GVL_Sensor_Shadow.G_Methane_Calibrated := L_Methane_Calibrated;
+GVL_Sensor_Shadow.G_Methane_Error := fbSensorMethane.VO_Error;
+GVL_Sensor_Shadow.G_Methane_Diag_Code := fbSensorMethane.VO_Diag_Code;
+
+// === SMOKE SHADOW EXEC ===
+fbSmokeDetector(
+    VI_Smoke_Signal := GVL_STATE.G_Smoke_Sensors[1]
+);
+L_Smoke_Detected := fbSmokeDetector.VO_Smoke_Detected;
+
+// === SMOKE SHADOW EXPORT ===
+GVL_Sensor_Shadow.G_Smoke_Raw := GVL_STATE.G_Smoke_Sensors[1];
+GVL_Sensor_Shadow.G_Smoke_Detected := L_Smoke_Detected;
 
 // === LIFETIME UPDATE ===
 

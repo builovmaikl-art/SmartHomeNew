@@ -5,4 +5,15 @@ VAR_GLOBAL
     G_CO_Calibrated : REAL;
     G_CO_Error : BOOL;
     G_CO_Diag_Code : WORD;
+
+    // === METHANE SHADOW PIPELINE EXPORT ===
+    G_Methane_Raw : REAL;
+    G_Methane_Processed : REAL;
+    G_Methane_Calibrated : REAL;
+    G_Methane_Error : BOOL;
+    G_Methane_Diag_Code : WORD;
+
+    // === SMOKE SHADOW PIPELINE EXPORT ===
+    G_Smoke_Raw : BOOL;
+    G_Smoke_Detected : BOOL;
 END_VAR
