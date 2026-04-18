@@ -1,0 +1,8 @@
+]633;E;echo "=== STEP 163: ADD REPO GUARD ===";c69abe9d-8ccc-4cf8-8e5f-d5c0d5c396b0]633;C=== STEP 163: ADD REPO GUARD ===
+
+=== REPO GUARD START ===
+OK: critical files present
+OK: pattern checks passed
+Running compile smoke...
+OK: compile passed
+=== REPO GUARD OK ===
