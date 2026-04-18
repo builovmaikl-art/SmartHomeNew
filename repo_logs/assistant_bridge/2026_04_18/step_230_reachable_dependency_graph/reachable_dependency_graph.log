@@ -1,0 +1,112 @@
+]633;E;echo "=== STEP 230: REACHABLE DEPENDENCY GRAPH ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 230: REACHABLE DEPENDENCY GRAPH ===
+timestamp_utc=2026-04-18T16:44:42Z
+
+=== APPLY ===
+=== ROOT PROGRAMS ===
+PRG_Lighting
+PRG_Safety
+PRG_System
+PRG_Security
+PRG_IO_Write
+PRG_Ventilation
+PRG_Test
+PRG_IO_Read
+PRG_Heating
+
+=== REACHABLE DEFINITIONS ===
+FB_AccessCode_Manager (FB_AccessCode_Manager.st)
+FB_Access_Control (FB_Access_Control.st)
+FB_Alarm_Manager (FB_Alarm_Manager.st)
+FB_Analog_Validator (FB_Analog_Validator.st)
+FB_Astro_Timer (FB_Astro_Timer.st)
+FB_BlackBox_Recorder (FB_BlackBox_Recorder.st)
+FB_Boiler_Cascade_Manager (FB_Boiler_Cascade_Manager.st)
+FB_Boiler_OpenTherm_Interface (FB_Boiler_OpenTherm_Interface.st)
+FB_CRC32_Calculator (FB_CRC32_Calculator.st)
+FB_Command_Deduplication (FB_Command_Deduplication.st)
+FB_CoreKernel_Live_Observer (FB_CoreKernel_Live_Observer.st)
+FB_DHW_Manager (FB_DHW_Manager.st)
+FB_Device_Predictive_Diag (FB_Device_Predictive_Diag.st)
+FB_Fault_Logger (FB_Fault_Logger.st)
+FB_FloorHeating_Controller (FB_FloorHeating_Controller.st)
+FB_Gas_Smoke_Manager (FB_Gas_Smoke_Manager.st)
+FB_Gateway_Interface (FB_Gateway_Interface.st)
+FB_HMAC_SHA1 (FB_HMAC_SHA1.st)
+FB_HMI_Interface (FB_HMI_Interface.st)
+FB_Heating_System_Manager (FB_Heating_System_Manager.st)
+FB_History_Manager (FB_History_Manager.st)
+FB_IO_Module_Watchdog (FB_IO_Module_Watchdog.st)
+FB_Lifetime_Manager (FB_Lifetime_Manager.st)
+FB_Lifetime_Predictor (FB_Lifetime_Predictor.st)
+FB_Lighting_Blinds_Manager (FB_Lighting_Blinds_Manager.st)
+FB_LogEvent (FB_LogEvent.st)
+FB_NVRAM_Manager (FB_NVRAM_Manager.st)
+FB_PID_Controller (FB_PID_Controller.st)
+FB_PLC_Heartbeat (FB_PLC_Heartbeat.st)
+FB_Random_Generator (FB_Random_Generator.st)
+FB_Redundancy_Manager (FB_Redundancy_Manager.st)
+FB_Rule_Engine (FB_Rule_Engine.st)
+FB_SHA1 (FB_SHA1.st)
+FB_Safety_Manager (FB_Safety_Manager.st)
+FB_Scenario_Manager (FB_Scenario_Manager.st)
+FB_Scenario_Transition_Controller (FB_Scenario_Transition_Controller.st)
+FB_Scenario_Transition_Guard (FB_Scenario_Transition_Guard.st)
+FB_Security_System_Manager (FB_Security_System_Manager.st)
+FB_Sensor_Analog_Processing (FB_Sensor_Analog_Processing.st)
+FB_Sensor_Calibration_Processor (FB_Sensor_Calibration_Processor.st)
+FB_Simulation_Manager (FB_Simulation_Manager.st)
+FB_Smoke_Detector (FB_Smoke_Detector.st)
+FB_Socket_Manager (FB_Socket_Manager.st)
+FB_State_Manager (FB_State_Manager.st)
+FB_State_Replication (FB_State_Replication.st)
+FB_System_Health (FB_System_Health.st)
+FB_System_Timer (FB_System_Timer.st)
+FB_System_Timer_TOF (FB_System_Timer_TOF.st)
+FB_Trend_Adapter (FB_Trend_Adapter.st)
+FB_Trend_Analyzer (FB_Trend_Analyzer.st)
+FB_Trend_Logger (FB_Trend_Logger.st)
+FB_TwoFactor_Auth (FB_TwoFactor_Auth.st)
+FB_Valve_Test_Manager (FB_Valve_Test_Manager.st)
+FB_Ventilation_System_Manager (FB_Ventilation_System_Manager.st)
+FB_Watchdog (FB_Watchdog.st)
+FB_Water_Leakage_Manager (FB_Water_Leakage_Manager.st)
+PRG_Heating (PRG_Heating.st)
+PRG_IO_Read (PRG_IO_Read.st)
+PRG_IO_Write (PRG_IO_Write.st)
+PRG_Lighting (PRG_Lighting.st)
+PRG_Safety (PRG_Safety.st)
+PRG_Security (PRG_Security.st)
+PRG_System (PRG_System.st)
+PRG_Test (PRG_Test.st)
+PRG_Ventilation (PRG_Ventilation.st)
+
+=== UNREACHABLE DEFINITIONS (REAL ORPHANS) ===
+FB_CO_Detector (FB_CO_Detector.st)
+FB_Calibration_Manager (FB_Calibration_Manager.st)
+FB_Emergency_Valve_Open (FB_Emergency_Valve_Open.st)
+FB_Exhaust_Ventilation_Controller (FB_Exhaust_Ventilation_Controller.st)
+FB_FloorHeating_Freeze_Protection (FB_FloorHeating_Freeze_Protection.st)
+FB_FloorHeating_Overheat_Protection (FB_FloorHeating_Overheat_Protection.st)
+FB_Gas_Methane_Detector (FB_Gas_Methane_Detector.st)
+FB_Gas_Valve_Controller (FB_Gas_Valve_Controller.st)
+FB_Maintenance_Access (FB_Maintenance_Access.st)
+FB_Manifold_Pump_Controller (FB_Manifold_Pump_Controller.st)
+FB_Manual_Valve_Control (FB_Manual_Valve_Control.st)
+FB_Outdoor_Lighting_Controller (FB_Outdoor_Lighting_Controller.st)
+FB_Pre_Departure_Heating (FB_Pre_Departure_Heating.st)
+FB_Presence_Playback (FB_Presence_Playback.st)
+FB_Presence_Simulator (FB_Presence_Simulator.st)
+FB_Security_Alarm (FB_Security_Alarm.st)
+FB_Sensor_Calibration (FB_Sensor_Calibration.st)
+FB_Sensor_Distribution (FB_Sensor_Distribution.st)
+FB_State_Snapshot_Manager (FB_State_Snapshot_Manager.st)
+FB_State_Snapshot_NVRAM (FB_State_Snapshot_NVRAM.st)
+FB_Supply_Ventilation_Controller (FB_Supply_Ventilation_Controller.st)
+FB_Water_Valve_Controller (FB_Water_Valve_Controller.st)
+FB_Zone_Access_Manager (FB_Zone_Access_Manager.st)
+
+=== SUMMARY ===
+reachable=65
+unreachable=23
+
+=== END STEP 230 ===
