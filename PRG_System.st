@@ -1291,6 +1291,8 @@ GVL_Safety_Bridge.G_Smoke_Shadow  := GVL_Sensor_Shadow.G_Smoke_Detected;
 GVL_Safety_Bridge.G_Smoke_Diff    := GVL_Safety_Bridge.G_Smoke_Runtime XOR GVL_Safety_Bridge.G_Smoke_Shadow;
 
 // === SAFETY SELECTOR LAYER ===
+GVL_Safety_Selector.G_Use_Shadow_Methane := TRUE;
+GVL_Safety_Selector.G_Use_Shadow_Smoke := TRUE;
 GVL_Safety_Selector.G_Use_Shadow_CO := TRUE;
 
 // base copy from runtime arrays
@@ -1330,6 +1332,23 @@ ELSE
     GVL_Safety_Selector.G_Smoke_Effective := GVL_STATE.G_Smoke_Sensors[1];
 END_IF;
 
+
+// === SHADOW METHANE/SMOKE DIAGNOSTIC EXPORT ===
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Active := GVL_Safety_Selector.G_Use_Shadow_Methane;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Diff := GVL_Safety_Bridge.G_Methane_Diff;
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Active := GVL_Safety_Selector.G_Use_Shadow_Smoke;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Methane THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow OFF';
+END_IF;
+
+IF GVL_Safety_Selector.G_Use_Shadow_Smoke THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow ACTIVE';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow OFF';
+END_IF;
 
 // === SHADOW CO DIAGNOSTIC EXPORT ===
 GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active := GVL_Safety_Selector.G_Use_Shadow_CO;

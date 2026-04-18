@@ -1,0 +1,22 @@
+]633;E;echo "=== STEP 207: ENABLE SHADOW METHANE/SMOKE WITH DIAG ===";048f1674-a031-43cb-9e47-f7004f3b361c]633;C=== STEP 207: ENABLE SHADOW METHANE/SMOKE WITH DIAG ===
+timestamp_utc=2026-04-18T14:06:29Z
+
+=== APPLY ===
+OK: enabled methane/smoke shadow and added diagnostics
+
+=== VERIFY SELECTOR ENABLES ===
+1294:GVL_Safety_Selector.G_Use_Shadow_Methane := TRUE;
+1295:GVL_Safety_Selector.G_Use_Shadow_Smoke := TRUE;
+1296:GVL_Safety_Selector.G_Use_Shadow_CO := TRUE;
+
+=== VERIFY DIAGNOSTICS ===
+1336:// === SHADOW METHANE/SMOKE DIAGNOSTIC EXPORT ===
+1337:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Active := GVL_Safety_Selector.G_Use_Shadow_Methane;
+1338:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Diff := GVL_Safety_Bridge.G_Methane_Diff;
+1339:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Active := GVL_Safety_Selector.G_Use_Shadow_Smoke;
+1342:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow ACTIVE';
+1344:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Status_Text := 'Methane shadow OFF';
+1348:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow ACTIVE';
+1350:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Status_Text := 'Smoke shadow OFF';
+
+=== END STEP 207 ===
