@@ -10,4 +10,6 @@ VAR_GLOBAL
     G_Trend_Buffer : ARRAY[1..50] OF REAL;
     G_Trend_Buffer_Index : INT;
 
+    G_Trend_Buffer_Timestamps : ARRAY[1..50] OF UDINT;
+
 END_VAR

@@ -1119,6 +1119,7 @@ IF GVL_Trend.G_Trend_Buffer_Index > 50 THEN
 END_IF;
 
 GVL_Trend.G_Trend_Buffer[GVL_Trend.G_Trend_Buffer_Index] := L_Trend_Avg;
+GVL_Trend.G_Trend_Buffer_Timestamps[GVL_Trend.G_Trend_Buffer_Index] := GVL_STATUS.G_System_Time_MS;
 
 GVL_Trend.G_Trend_Avg := L_Trend_Avg;
 GVL_Trend.G_Trend_Min := L_Trend_Min;
