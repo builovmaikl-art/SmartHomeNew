@@ -1,0 +1,34 @@
+]633;E;echo "=== STEP 225: ADD MISSING L_WINDOW_HOURS VAR ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 225: ADD MISSING L_WINDOW_HOURS VAR ===
+timestamp_utc=2026-04-18T16:05:33Z
+
+=== APPLY ===
+OK: added L_Window_Hours : REAL; to PRG_System VAR section
+
+=== VERIFY TOP VAR ===
+PROGRAM PRG_System
+VAR
+
+// === SENSOR PROCESSING (SHADOW) ===
+fbSensorCO : FB_Sensor_Analog_Processing;
+fbCalibCO  : FB_Sensor_Calibration_Processor;
+fbSensorMethane : FB_Sensor_Analog_Processing;
+fbCalibMethane  : FB_Sensor_Calibration_Processor;
+fbSmokeDetector : FB_Smoke_Detector;
+L_CO_Processed : REAL;
+L_CO_Calibrated : REAL;
+L_Safety_Selector_i : INT;
+L_Methane_Processed : REAL;
+L_Methane_Calibrated : REAL;
+L_Smoke_Detected : BOOL;
+L_Window_Hours : REAL;
+
+
+// === LIFETIME MANAGERS ===
+fbLifetimePump : FB_Lifetime_Manager;
+fbLifetimeFan  : FB_Lifetime_Manager;
+
+
+    // === TREND WRITE CONTROL ===
+    L_Trend_Write : BOOL;
+
+=== END STEP 225 ===

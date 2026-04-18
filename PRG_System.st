@@ -13,6 +13,7 @@ L_Safety_Selector_i : INT;
 L_Methane_Processed : REAL;
 L_Methane_Calibrated : REAL;
 L_Smoke_Detected : BOOL;
+L_Window_Hours : REAL;
 
 
 // === LIFETIME MANAGERS ===
