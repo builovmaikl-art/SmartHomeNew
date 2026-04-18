@@ -1,0 +1,451 @@
+]633;E;echo "=== STEP 233: SEMANTIC AUDIT BATCH 3 ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 233: SEMANTIC AUDIT BATCH 3 ===
+timestamp_utc=2026-04-18T17:12:55Z
+
+=== SEMANTIC AUDIT BATCH 3 ===
+
+=== FB_Maintenance_Access.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Maintenance_Access
+VAR_INPUT
+    VI_System_Time : UDINT;
+    VI_Activate    : BOOL;
+    VI_Duration    : UDINT := 60; // мин
+END_VAR
+VAR_OUTPUT
+    VO_Active      : BOOL;
+    VO_Time_Left   : UDINT;
+END_VAR
+VAR
+    L_Start_Time   : UDINT;
+    L_elapsed      : UDINT;
+END_VAR
+
+IF VI_Activate AND NOT VO_Active THEN
+    VO_Active := TRUE;
+    L_Start_Time := VI_System_Time;
+END_IF;
+
+IF VO_Active THEN
+    L_elapsed := (SEL(VI_System_Time >= L_Start_Time, VI_System_Time - L_Start_Time, (4294967295 - L_Start_Time) + VI_System_Time + 1)) / GVL_CONSTANTS.C_MS_IN_MINUTE;
+    IF L_elapsed >= VI_Duration THEN
+        VO_Active := FALSE;
+    ELSE
+        VO_Time_Left := VI_Duration - L_elapsed;
+    END_IF;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_System_Time : UDINT;
+    VI_Activate    : BOOL;
+    VI_Duration    : UDINT := 60; // мин
+END_VAR
+VAR_OUTPUT
+    VO_Active      : BOOL;
+    VO_Time_Left   : UDINT;
+END_VAR
+VAR
+    L_Start_Time   : UDINT;
+    L_elapsed      : UDINT;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Maintenance_Access
+VAR_INPUT
+    VI_System_Time : UDINT;
+    VI_Activate    : BOOL;
+    VI_Duration    : UDINT := 60; // мин
+END_VAR
+VAR_OUTPUT
+    VO_Active      : BOOL;
+    VO_Time_Left   : UDINT;
+END_VAR
+VAR
+    L_Start_Time   : UDINT;
+    L_elapsed      : UDINT;
+END_VAR
+
+IF VI_Activate AND NOT VO_Active THEN
+    VO_Active := TRUE;
+    L_Start_Time := VI_System_Time;
+END_IF;
+
+IF VO_Active THEN
+    L_elapsed := (SEL(VI_System_Time >= L_Start_Time, VI_System_Time - L_Start_Time, (4294967295 - L_Start_Time) + VI_System_Time + 1)) / GVL_CONSTANTS.C_MS_IN_MINUTE;
+    IF L_elapsed >= VI_Duration THEN
+        VO_Active := FALSE;
+    ELSE
+        VO_Time_Left := VI_Duration - L_elapsed;
+    END_IF;
+END_IF;
+
+
+
+=== FB_Zone_Access_Manager.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Zone_Access_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+    VI_Operator_ID    : STRING(10); // Идентификатор оператора
+    VI_Target_Zone    : INT; // Номер целевой зоны
+    VI_Rights         : ST_Operator_Zone_Rights; // Права доступа оператора к зоне
+END_VAR
+VAR_OUTPUT
+    VO_Access_Granted : BOOL; // Флаг: Доступ разрешен
+END_VAR
+
+// Проверка прав доступа к зоне
+IF VI_Target_Zone >= 1 AND VI_Target_Zone <= 32 THEN
+    // Если глобальный уровень доступа высокий (например, CONFIG или FULL), разрешаем доступ ко всем зонам
+    IF VI_Rights.global_access_level >= TO_BYTE(E_Zone_Access_Level.ZONE_ACCESS_CONFIG) THEN
+        VO_Access_Granted := TRUE;
+    ELSE
+        // Иначе проверяем битовую маску для конкретной зоны
+        // Бит 0 соответствует зоне 1, бит 1 - зоне 2 и т.д.
+        VO_Access_Granted := (VI_Rights.zone_masks AND SHL(DWORD#1, VI_Target_Zone - 1)) <> 0;
+    END_IF;
+ELSE
+    VO_Access_Granted := FALSE;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+    VI_Operator_ID    : STRING(10); // Идентификатор оператора
+    VI_Target_Zone    : INT; // Номер целевой зоны
+    VI_Rights         : ST_Operator_Zone_Rights; // Права доступа оператора к зоне
+END_VAR
+VAR_OUTPUT
+    VO_Access_Granted : BOOL; // Флаг: Доступ разрешен
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Zone_Access_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время (мс)
+    VI_Operator_ID    : STRING(10); // Идентификатор оператора
+    VI_Target_Zone    : INT; // Номер целевой зоны
+    VI_Rights         : ST_Operator_Zone_Rights; // Права доступа оператора к зоне
+END_VAR
+VAR_OUTPUT
+    VO_Access_Granted : BOOL; // Флаг: Доступ разрешен
+END_VAR
+
+// Проверка прав доступа к зоне
+IF VI_Target_Zone >= 1 AND VI_Target_Zone <= 32 THEN
+    // Если глобальный уровень доступа высокий (например, CONFIG или FULL), разрешаем доступ ко всем зонам
+    IF VI_Rights.global_access_level >= TO_BYTE(E_Zone_Access_Level.ZONE_ACCESS_CONFIG) THEN
+        VO_Access_Granted := TRUE;
+    ELSE
+        // Иначе проверяем битовую маску для конкретной зоны
+        // Бит 0 соответствует зоне 1, бит 1 - зоне 2 и т.д.
+        VO_Access_Granted := (VI_Rights.zone_masks AND SHL(DWORD#1, VI_Target_Zone - 1)) <> 0;
+    END_IF;
+ELSE
+    VO_Access_Granted := FALSE;
+END_IF;
+
+
+
+=== FB_Security_Alarm.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Security_Alarm
+VAR_INPUT
+    VI_Armed       : BOOL;
+    VI_Motion      : BOOL;
+    VI_Door        : BOOL;
+    VI_Delay_MS    : UDINT := 30000;
+    VI_System_Time : UDINT;
+END_VAR
+VAR_OUTPUT
+    VO_Alarm       : BOOL;
+END_VAR
+VAR
+    L_Trigger_Time : UDINT;
+    L_Triggered    : BOOL;
+END_VAR
+
+IF VI_Armed AND (VI_Motion OR VI_Door) AND NOT L_Triggered THEN
+    L_Triggered := TRUE;
+    L_Trigger_Time := VI_System_Time;
+END_IF;
+
+IF L_Triggered AND ((SEL(VI_System_Time >= L_Trigger_Time, VI_System_Time - L_Trigger_Time, (4294967295 - L_Trigger_Time) + VI_System_Time + 1)) >= VI_Delay_MS) THEN
+    VO_Alarm := TRUE;
+ELSIF NOT VI_Armed THEN
+    L_Triggered := FALSE;
+    VO_Alarm := FALSE;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Armed       : BOOL;
+    VI_Motion      : BOOL;
+    VI_Door        : BOOL;
+    VI_Delay_MS    : UDINT := 30000;
+    VI_System_Time : UDINT;
+END_VAR
+VAR_OUTPUT
+    VO_Alarm       : BOOL;
+END_VAR
+VAR
+    L_Trigger_Time : UDINT;
+    L_Triggered    : BOOL;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Security_Alarm
+VAR_INPUT
+    VI_Armed       : BOOL;
+    VI_Motion      : BOOL;
+    VI_Door        : BOOL;
+    VI_Delay_MS    : UDINT := 30000;
+    VI_System_Time : UDINT;
+END_VAR
+VAR_OUTPUT
+    VO_Alarm       : BOOL;
+END_VAR
+VAR
+    L_Trigger_Time : UDINT;
+    L_Triggered    : BOOL;
+END_VAR
+
+IF VI_Armed AND (VI_Motion OR VI_Door) AND NOT L_Triggered THEN
+    L_Triggered := TRUE;
+    L_Trigger_Time := VI_System_Time;
+END_IF;
+
+IF L_Triggered AND ((SEL(VI_System_Time >= L_Trigger_Time, VI_System_Time - L_Trigger_Time, (4294967295 - L_Trigger_Time) + VI_System_Time + 1)) >= VI_Delay_MS) THEN
+    VO_Alarm := TRUE;
+ELSIF NOT VI_Armed THEN
+    L_Triggered := FALSE;
+    VO_Alarm := FALSE;
+END_IF;
+
+
+
+=== FB_State_Snapshot_Manager.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_State_Snapshot_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Trigger_Event  : BOOL; // Сигнал на создание снимка
+    VI_Event_Code     : WORD;
+    VI_Current_State  : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Snapshot_Saved : BOOL;
+END_VAR
+VAR
+    L_Snapshot_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot;
+    L_Write_Idx       : INT := 1;
+END_VAR
+
+IF VI_Trigger_Event THEN
+    L_Snapshot_Buffer[L_Write_Idx] := VI_Current_State;
+    L_Snapshot_Buffer[L_Write_Idx].timestamp_ms := VI_System_Time_MS;
+    L_Snapshot_Buffer[L_Write_Idx].trigger_event_code := VI_Event_Code;
+    
+    L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
+    VO_Snapshot_Saved := TRUE;
+ELSE
+    VO_Snapshot_Saved := FALSE;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Trigger_Event  : BOOL; // Сигнал на создание снимка
+    VI_Event_Code     : WORD;
+    VI_Current_State  : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Snapshot_Saved : BOOL;
+END_VAR
+VAR
+    L_Snapshot_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot;
+    L_Write_Idx       : INT := 1;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_State_Snapshot_Manager
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Trigger_Event  : BOOL; // Сигнал на создание снимка
+    VI_Event_Code     : WORD;
+    VI_Current_State  : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Snapshot_Saved : BOOL;
+END_VAR
+VAR
+    L_Snapshot_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS] OF ST_State_Snapshot;
+    L_Write_Idx       : INT := 1;
+END_VAR
+
+IF VI_Trigger_Event THEN
+    L_Snapshot_Buffer[L_Write_Idx] := VI_Current_State;
+    L_Snapshot_Buffer[L_Write_Idx].timestamp_ms := VI_System_Time_MS;
+    L_Snapshot_Buffer[L_Write_Idx].trigger_event_code := VI_Event_Code;
+    
+    L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
+    VO_Snapshot_Saved := TRUE;
+ELSE
+    VO_Snapshot_Saved := FALSE;
+END_IF;
+
+
+
+=== FB_State_Snapshot_NVRAM.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Save_Req       : BOOL;
+    VI_Snapshot       : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Saved          : BOOL;
+    VO_Error          : BOOL;
+END_VAR
+VAR
+    L_FileName        : STRING := '/home/root/snapshot.bin';
+    L_State           : INT := 0;
+    
+    // Асинхронные блоки из библиотеки CAA_File
+    fbFileOpen        : FILE.Open;
+    fbFileWrite       : FILE.Write;
+    fbFileClose       : FILE.Close;
+    L_FileHandle      : FILE.HANDLE;
+END_VAR
+
+CASE L_State OF
+    0: // Ожидание
+        VO_Saved := FALSE;
+        VO_Error := FALSE;
+        IF VI_Save_Req THEN
+            L_State := 10;
+            fbFileOpen(xExecute := FALSE);
+            fbFileWrite(xExecute := FALSE);
+            fbFileClose(xExecute := FALSE);
+        END_IF;
+        
+    10: // Открытие файла
+        fbFileOpen(
+            xExecute := TRUE,
+            sFileName := L_FileName,
+            eFileMode := FILE.MODE.MWRITE
+        );
+        IF fbFileOpen.xDone THEN
+            L_FileHandle := fbFileOpen.hFile;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Save_Req       : BOOL;
+    VI_Snapshot       : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Saved          : BOOL;
+    VO_Error          : BOOL;
+END_VAR
+VAR
+    L_FileName        : STRING := '/home/root/snapshot.bin';
+    L_State           : INT := 0;
+    
+    // Асинхронные блоки из библиотеки CAA_File
+    fbFileOpen        : FILE.Open;
+    fbFileWrite       : FILE.Write;
+    fbFileClose       : FILE.Close;
+    L_FileHandle      : FILE.HANDLE;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+VAR_INPUT
+    VI_System_Time_MS : UDINT;
+    VI_Save_Req       : BOOL;
+    VI_Snapshot       : ST_State_Snapshot;
+END_VAR
+VAR_OUTPUT
+    VO_Saved          : BOOL;
+    VO_Error          : BOOL;
+END_VAR
+VAR
+    L_FileName        : STRING := '/home/root/snapshot.bin';
+    L_State           : INT := 0;
+    
+    // Асинхронные блоки из библиотеки CAA_File
+    fbFileOpen        : FILE.Open;
+    fbFileWrite       : FILE.Write;
+    fbFileClose       : FILE.Close;
+    L_FileHandle      : FILE.HANDLE;
+END_VAR
+
+CASE L_State OF
+    0: // Ожидание
+        VO_Saved := FALSE;
+        VO_Error := FALSE;
+        IF VI_Save_Req THEN
+            L_State := 10;
+            fbFileOpen(xExecute := FALSE);
+            fbFileWrite(xExecute := FALSE);
+            fbFileClose(xExecute := FALSE);
+        END_IF;
+        
+    10: // Открытие файла
+        fbFileOpen(
+            xExecute := TRUE,
+            sFileName := L_FileName,
+            eFileMode := FILE.MODE.MWRITE
+        );
+        IF fbFileOpen.xDone THEN
+            L_FileHandle := fbFileOpen.hFile;
+            fbFileOpen(xExecute := FALSE);
+            L_State := 20;
+        ELSIF fbFileOpen.xError THEN
+            VO_Error := TRUE;
+            L_State := 0;
+        END_IF;
+        
+    20: // Запись
+        fbFileWrite(
+            xExecute := TRUE,
+            hFile := L_FileHandle,
+            pBuffer := ADR(VI_Snapshot),
+            szSize := SIZEOF(VI_Snapshot)
+        );
+        IF fbFileWrite.xDone THEN
+            fbFileWrite(xExecute := FALSE);
+            L_State := 30;
+        ELSIF fbFileWrite.xError THEN
+            VO_Error := TRUE;
+            L_State := 30; // Все равно закрываем файл
+        END_IF;
+        
+    30: // Закрытие
+        fbFileClose(
+            xExecute := TRUE,
+            hFile := L_FileHandle
+        );
+        IF fbFileClose.xDone THEN
+            fbFileClose(xExecute := FALSE);
+            IF NOT VO_Error THEN
+                VO_Saved := TRUE;
+            END_IF;
+            L_State := 0;
+        ELSIF fbFileClose.xError THEN
+            VO_Error := TRUE;
+            L_State := 0;
+        END_IF;
+END_CASE;
+
+
+
+
+=== END STEP 233 ===
