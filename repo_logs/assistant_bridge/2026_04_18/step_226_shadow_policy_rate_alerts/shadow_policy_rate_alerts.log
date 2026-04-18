@@ -1,0 +1,37 @@
+]633;E;echo "=== STEP 226: SHADOW POLICY RATE ALERTS ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 226: SHADOW POLICY RATE ALERTS ===
+timestamp_utc=2026-04-18T16:09:56Z
+
+=== APPLY ===
+OK: added isolated shadow policy rate alerts
+
+=== VERIFY DUT ===
+170:    Sensor_Shadow_Rate_Alert_Threshold_Per_Hour : REAL;
+171:    Sensor_Shadow_Rate_Alert_Active : BOOL;
+172:    Sensor_Shadow_CO_Rate_Alert_Active : BOOL;
+173:    Sensor_Shadow_Methane_Rate_Alert_Active : BOOL;
+174:    Sensor_Shadow_Smoke_Rate_Alert_Active : BOOL;
+175:    Sensor_Shadow_Rate_Alert_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1667:// === SHADOW POLICY RATE ALERTS ===
+1668:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour <= 0.0 THEN
+1669:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour := 10.0;
+1672:GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active :=
+1674:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+1676:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active :=
+1678:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+1680:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active :=
+1682:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+1684:GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active :=
+1685:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active OR
+1686:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active OR
+1687:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active;
+1689:IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active THEN
+1690:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'Smoke fallback rate alert';
+1691:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active THEN
+1692:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'Methane fallback rate alert';
+1693:ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active THEN
+1694:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'CO fallback rate alert';
+1696:    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'No shadow rate alerts';
+
+=== END STEP 226 ===

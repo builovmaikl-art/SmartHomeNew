@@ -1664,6 +1664,38 @@ ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text := 'No shadow fallback activity';
 END_IF;
 
+// === SHADOW POLICY RATE ALERTS ===
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour <= 0.0 THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour := 10.0;
+END_IF;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Fallback_Per_Hour >
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Fallback_Per_Hour >
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Fallback_Per_Hour >
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Threshold_Per_Hour;
+
+GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active OR
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active OR
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active;
+
+IF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Rate_Alert_Active THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'Smoke fallback rate alert';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Rate_Alert_Active THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'Methane fallback rate alert';
+ELSIF GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Rate_Alert_Active THEN
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'CO fallback rate alert';
+ELSE
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'No shadow rate alerts';
+END_IF;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)

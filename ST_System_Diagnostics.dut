@@ -166,6 +166,14 @@ STRUCT
     Sensor_Shadow_Rate_High_Activity : BOOL;
     Sensor_Shadow_Rate_Summary_Text : STRING(160);
 
+    // === RATE ALERTS (ISOLATED) ===
+    Sensor_Shadow_Rate_Alert_Threshold_Per_Hour : REAL;
+    Sensor_Shadow_Rate_Alert_Active : BOOL;
+    Sensor_Shadow_CO_Rate_Alert_Active : BOOL;
+    Sensor_Shadow_Methane_Rate_Alert_Active : BOOL;
+    Sensor_Shadow_Smoke_Rate_Alert_Active : BOOL;
+    Sensor_Shadow_Rate_Alert_Text : STRING(160);
+
 
 
 END_STRUCT
