@@ -16,7 +16,10 @@ END_VAR
 IF VI_Trigger_Event THEN
     L_Snapshot_Buffer[L_Write_Idx] := VI_Current_State;
     L_Snapshot_Buffer[L_Write_Idx].timestamp_ms := VI_System_Time_MS;
-    L_Snapshot_Buffer[L_Write_Idx].trigger_event_code := VI_Event_Code;
+    
+    // NOTE:
+    // ST_State_Snapshot no longer contains trigger_event_code in live project.
+    // VI_Event_Code is reserved for future snapshot metadata extension.
     
     L_Write_Idx := (L_Write_Idx MOD GVL_CONSTANTS.C_MAX_STATE_SNAPSHOTS) + 1;
     VO_Snapshot_Saved := TRUE;

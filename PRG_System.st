@@ -15,6 +15,7 @@ L_Methane_Processed : REAL;
 L_Methane_Calibrated : REAL;
 L_Smoke_Detected : BOOL;
 L_Window_Hours : REAL;
+L_Snapshot : ST_State_Snapshot;
 
 
 // === LIFETIME MANAGERS ===
@@ -1768,7 +1769,11 @@ L_Snapshot.timestamp_ms := GVL_STATUS.G_System_Time_MS;
 L_Snapshot.operator_id := 'SYSTEM';
 L_Snapshot.scenario_id := GVL_STATUS.G_Current_Scenario;
 L_Snapshot.lighting_levels := GVL_STATE.G_Lighting_Levels;
-L_Snapshot.floor_heating_setpoints := GVL_CONFIG.G_HMI_Heating_Setpoints;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    L_Snapshot.floor_heating_setpoints[L_i] := GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i].design_temp;
+END_FOR;
+
 L_Snapshot.alarm_active := GVL_ALARM.G_Global_Critical OR GVL_ALARM.G_Global_Warning;
 L_Snapshot.crc32 := DWORD#0;
 
