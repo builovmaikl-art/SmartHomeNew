@@ -1162,6 +1162,16 @@ GVL_Trend.G_Trend_Max := L_Trend_Max;
 GVL_Trend.G_Trend_Up := L_Trend_Up;
 GVL_Trend.G_Trend_Down := L_Trend_Down;
 
+
+// === TREND HMI NORMALIZATION ===
+IF GVL_Trend.G_Trend_Selected_Channel = 2 AND GVL_Trend.G_Trend_Channel2_Enabled THEN
+    GVL_Trend.G_Trend_Active_Param_Type := GVL_Trend.G_Trend_Channel2_Param_Type;
+    GVL_Trend.G_Trend_Active_Label := GVL_Trend.G_Trend_Channel2_Label;
+ELSE
+    GVL_Trend.G_Trend_Active_Param_Type := GVL_Trend.G_Trend_Param_Type;
+    GVL_Trend.G_Trend_Active_Label := GVL_Trend.G_Trend_Channel1_Label;
+END_IF;
+
 // === TREND → HISTORY WRITE (RATE-LIMITED SAFE MVP) ===
 L_Trend_Write := (L_Trend_Data.record_count > 0);
 L_Trend_Write_Allowed := FALSE;

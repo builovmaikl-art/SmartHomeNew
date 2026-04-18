@@ -30,4 +30,11 @@ VAR_GLOBAL
     G_Trend_Buffer_2_Is_Wrapped : BOOL;
     G_Trend_Channel2_Param_Type : BYTE := 0;
 
+
+    // === HMI-FACING TREND NORMALIZATION ===
+    G_Trend_Active_Param_Type : BYTE;
+    G_Trend_Active_Label : STRING(32);
+    G_Trend_Channel1_Label : STRING(32) := 'Outdoor Temp';
+    G_Trend_Channel2_Label : STRING(32) := 'Floor Temp';
+
 END_VAR
