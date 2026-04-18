@@ -1,0 +1,485 @@
+]633;E;echo "=== STEP 232: SEMANTIC AUDIT BATCH 2 ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 232: SEMANTIC AUDIT BATCH 2 ===
+timestamp_utc=2026-04-18T17:04:44Z
+
+=== SEMANTIC AUDIT BATCH 2 ===
+
+=== FB_FloorHeating_Freeze_Protection.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_FloorHeating_Freeze_Protection
+VAR_INPUT
+    VI_Outdoor_Temp : REAL;
+    VI_Threshold : REAL := 7.0;
+END_VAR
+VAR_IN_OUT
+    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Freeze_Alert : BOOL;
+    VO_Pump_Force_On : BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+VO_Freeze_Alert := FALSE;
+VO_Pump_Force_On := FALSE;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF VI_Floor_Temps[L_i] < VI_Threshold THEN
+        VO_Freeze_Alert := TRUE;
+        VO_Pump_Force_On := TRUE;
+        RETURN;
+    END_IF;
+END_FOR;
+
+IF VI_Outdoor_Temp < -5.0 THEN
+    VO_Pump_Force_On := TRUE;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Outdoor_Temp : REAL;
+    VI_Threshold : REAL := 7.0;
+END_VAR
+VAR_IN_OUT
+    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Freeze_Alert : BOOL;
+    VO_Pump_Force_On : BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_FloorHeating_Freeze_Protection
+VAR_INPUT
+    VI_Outdoor_Temp : REAL;
+    VI_Threshold : REAL := 7.0;
+END_VAR
+VAR_IN_OUT
+    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Freeze_Alert : BOOL;
+    VO_Pump_Force_On : BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+VO_Freeze_Alert := FALSE;
+VO_Pump_Force_On := FALSE;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF VI_Floor_Temps[L_i] < VI_Threshold THEN
+        VO_Freeze_Alert := TRUE;
+        VO_Pump_Force_On := TRUE;
+        RETURN;
+    END_IF;
+END_FOR;
+
+IF VI_Outdoor_Temp < -5.0 THEN
+    VO_Pump_Force_On := TRUE;
+END_IF;
+
+
+
+=== FB_FloorHeating_Overheat_Protection.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_FloorHeating_Overheat_Protection
+VAR_INPUT
+    VI_Threshold : REAL := 45.0;
+END_VAR
+VAR_IN_OUT
+    VI_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Overheat_Detected : BOOL;
+    VO_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+VO_Overheat_Detected := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF VI_Temps[L_i] > VI_Threshold THEN
+        VO_Overheat_Detected := TRUE;
+        VO_Locked_Circuits[L_i] := TRUE;
+    END_IF;
+END_FOR;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Threshold : REAL := 45.0;
+END_VAR
+VAR_IN_OUT
+    VI_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Overheat_Detected : BOOL;
+    VO_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_FloorHeating_Overheat_Protection
+VAR_INPUT
+    VI_Threshold : REAL := 45.0;
+END_VAR
+VAR_IN_OUT
+    VI_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Overheat_Detected : BOOL;
+    VO_Locked_Circuits : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+VO_Overheat_Detected := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF VI_Temps[L_i] > VI_Threshold THEN
+        VO_Overheat_Detected := TRUE;
+        VO_Locked_Circuits[L_i] := TRUE;
+    END_IF;
+END_FOR;
+
+
+
+=== FB_Manifold_Pump_Controller.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Manifold_Pump_Controller
+VAR_INPUT
+    VI_Enable_Request : BOOL;
+    VI_System_Time : UDINT;
+    VI_Stop_Ramp_MS : UDINT := 5000;
+END_VAR
+VAR_OUTPUT
+    VO_Speed_Percent : BYTE;
+    VO_Running : BOOL;
+END_VAR
+VAR
+    L_Stop_Start_Time : UDINT;
+    L_Stopping : BOOL;
+    L_elapsed : UDINT;
+END_VAR
+
+IF VI_Enable_Request THEN
+    VO_Speed_Percent := 100;
+    VO_Running := TRUE;
+    L_Stopping := FALSE;
+ELSE
+    IF VO_Running AND NOT L_Stopping THEN
+        L_Stopping := TRUE;
+        L_Stop_Start_Time := VI_System_Time;
+    END_IF;
+    
+    IF L_Stopping THEN
+        L_elapsed := (SEL(VI_System_Time >= L_Stop_Start_Time, VI_System_Time - L_Stop_Start_Time, (4294967295 - L_Stop_Start_Time) + VI_System_Time + 1));
+        IF L_elapsed < VI_Stop_Ramp_MS THEN
+            // Исправлено: защита от отрицательного значения
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Enable_Request : BOOL;
+    VI_System_Time : UDINT;
+    VI_Stop_Ramp_MS : UDINT := 5000;
+END_VAR
+VAR_OUTPUT
+    VO_Speed_Percent : BYTE;
+    VO_Running : BOOL;
+END_VAR
+VAR
+    L_Stop_Start_Time : UDINT;
+    L_Stopping : BOOL;
+    L_elapsed : UDINT;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Manifold_Pump_Controller
+VAR_INPUT
+    VI_Enable_Request : BOOL;
+    VI_System_Time : UDINT;
+    VI_Stop_Ramp_MS : UDINT := 5000;
+END_VAR
+VAR_OUTPUT
+    VO_Speed_Percent : BYTE;
+    VO_Running : BOOL;
+END_VAR
+VAR
+    L_Stop_Start_Time : UDINT;
+    L_Stopping : BOOL;
+    L_elapsed : UDINT;
+END_VAR
+
+IF VI_Enable_Request THEN
+    VO_Speed_Percent := 100;
+    VO_Running := TRUE;
+    L_Stopping := FALSE;
+ELSE
+    IF VO_Running AND NOT L_Stopping THEN
+        L_Stopping := TRUE;
+        L_Stop_Start_Time := VI_System_Time;
+    END_IF;
+    
+    IF L_Stopping THEN
+        L_elapsed := (SEL(VI_System_Time >= L_Stop_Start_Time, VI_System_Time - L_Stop_Start_Time, (4294967295 - L_Stop_Start_Time) + VI_System_Time + 1));
+        IF L_elapsed < VI_Stop_Ramp_MS THEN
+            // Исправлено: защита от отрицательного значения
+            VO_Speed_Percent := REAL_TO_BYTE(100.0 * (1.0 - TO_REAL(L_elapsed) / TO_REAL(VI_Stop_Ramp_MS)));
+        ELSE
+            VO_Speed_Percent := 0;
+            VO_Running := FALSE;
+            L_Stopping := FALSE;
+        END_IF;
+    END_IF;
+END_IF;
+
+
+
+=== FB_Pre_Departure_Heating.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Pre_Departure_Heating
+VAR_INPUT
+    VI_Departure_Time : UDINT;
+    VI_System_Time    : UDINT;
+END_VAR
+VAR_IN_OUT
+    VI_Selected       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Heating_Active : BOOL;
+    VO_Setpoints      : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+
+VAR
+    L_i : INT;
+END_VAR
+
+// Запуск за 3 часа (10800000 мс)
+IF (SEL(VI_Departure_Time >= VI_System_Time, VI_Departure_Time - VI_System_Time, (4294967295 - VI_System_Time) + VI_Departure_Time + 1)) < 10800000 THEN
+    VO_Heating_Active := TRUE;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        IF VI_Selected[L_i] THEN VO_Setpoints[L_i] := 22.0; END_IF;
+    END_FOR;
+ELSE
+    VO_Heating_Active := FALSE;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Departure_Time : UDINT;
+    VI_System_Time    : UDINT;
+END_VAR
+VAR_IN_OUT
+    VI_Selected       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Heating_Active : BOOL;
+    VO_Setpoints      : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+VAR
+    L_i : INT;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Pre_Departure_Heating
+VAR_INPUT
+    VI_Departure_Time : UDINT;
+    VI_System_Time    : UDINT;
+END_VAR
+VAR_IN_OUT
+    VI_Selected       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Heating_Active : BOOL;
+    VO_Setpoints      : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+END_VAR
+
+VAR
+    L_i : INT;
+END_VAR
+
+// Запуск за 3 часа (10800000 мс)
+IF (SEL(VI_Departure_Time >= VI_System_Time, VI_Departure_Time - VI_System_Time, (4294967295 - VI_System_Time) + VI_Departure_Time + 1)) < 10800000 THEN
+    VO_Heating_Active := TRUE;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        IF VI_Selected[L_i] THEN VO_Setpoints[L_i] := 22.0; END_IF;
+    END_FOR;
+ELSE
+    VO_Heating_Active := FALSE;
+END_IF;
+
+
+
+=== FB_Calibration_Manager.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Calibration_Manager
+VAR_INPUT
+    VI_Raw_Value : REAL;
+    VI_Type : BYTE; // 1-Temp, 2-Pressure, 3-Gas
+    VI_Calib_Record : ST_Sensor_Calibration_Record;
+    VI_System_Time_MS : UDINT;
+    VI_Start_Verification : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Calibrated_Value : REAL;
+    VO_Verification_Active : BOOL;
+    VO_Verification_Failed : BOOL;
+    VO_Deviation_Percent : REAL;
+END_VAR
+VAR
+    L_Verification_Timer : FB_System_Timer;
+    L_Initial_Value : REAL;
+END_VAR
+
+// 1. Расчет калиброванного значения
+CASE VI_Type OF
+    1: VO_Calibrated_Value := VI_Raw_Value + VI_Calib_Record.offset;
+    2, 3: VO_Calibrated_Value := (VI_Raw_Value * VI_Calib_Record.multiplier) + VI_Calib_Record.offset;
+END_CASE;
+
+// 2. Верификация через 1 час (ТЗ 9.5)
+IF VI_Start_Verification AND NOT VO_Verification_Active THEN
+    VO_Verification_Active := TRUE;
+    L_Initial_Value := VO_Calibrated_Value;
+END_IF;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Raw_Value : REAL;
+    VI_Type : BYTE; // 1-Temp, 2-Pressure, 3-Gas
+    VI_Calib_Record : ST_Sensor_Calibration_Record;
+    VI_System_Time_MS : UDINT;
+    VI_Start_Verification : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Calibrated_Value : REAL;
+    VO_Verification_Active : BOOL;
+    VO_Verification_Failed : BOOL;
+    VO_Deviation_Percent : REAL;
+END_VAR
+VAR
+    L_Verification_Timer : FB_System_Timer;
+    L_Initial_Value : REAL;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Calibration_Manager
+VAR_INPUT
+    VI_Raw_Value : REAL;
+    VI_Type : BYTE; // 1-Temp, 2-Pressure, 3-Gas
+    VI_Calib_Record : ST_Sensor_Calibration_Record;
+    VI_System_Time_MS : UDINT;
+    VI_Start_Verification : BOOL;
+END_VAR
+VAR_OUTPUT
+    VO_Calibrated_Value : REAL;
+    VO_Verification_Active : BOOL;
+    VO_Verification_Failed : BOOL;
+    VO_Deviation_Percent : REAL;
+END_VAR
+VAR
+    L_Verification_Timer : FB_System_Timer;
+    L_Initial_Value : REAL;
+END_VAR
+
+// 1. Расчет калиброванного значения
+CASE VI_Type OF
+    1: VO_Calibrated_Value := VI_Raw_Value + VI_Calib_Record.offset;
+    2, 3: VO_Calibrated_Value := (VI_Raw_Value * VI_Calib_Record.multiplier) + VI_Calib_Record.offset;
+END_CASE;
+
+// 2. Верификация через 1 час (ТЗ 9.5)
+IF VI_Start_Verification AND NOT VO_Verification_Active THEN
+    VO_Verification_Active := TRUE;
+    L_Initial_Value := VO_Calibrated_Value;
+END_IF;
+
+L_Verification_Timer(IN := VO_Verification_Active, PT := T#1h, VI_System_Time_MS := VI_System_Time_MS);
+
+IF L_Verification_Timer.Q THEN
+    VO_Verification_Active := FALSE;
+    
+    // ТЗ 9.5: Отклонение ≤2.0% (норма) / >5.0% (ошибка)
+    IF L_Initial_Value <> 0 THEN
+        VO_Deviation_Percent := ABS(VO_Calibrated_Value - L_Initial_Value) / L_Initial_Value * 100.0;
+    ELSE
+        VO_Deviation_Percent := 0.0;
+    END_IF;
+    
+    VO_Verification_Failed := (VO_Deviation_Percent > 5.0);
+END_IF;
+
+
+
+=== FB_Sensor_Distribution.st ===
+
+--- HEADER ---
+FUNCTION_BLOCK FB_Sensor_Distribution
+VAR_INPUT
+    VI_Raw_Temp : REAL;
+    VI_Raw_Hum  : REAL;
+    VI_Raw_CO2  : REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Temp_Heating : REAL;
+    VO_Temp_Vent    : REAL;
+    VO_Hum_Vent     : REAL;
+    VO_CO2_Vent     : REAL;
+END_VAR
+
+// Распределение данных по подсистемам
+VO_Temp_Heating := VI_Raw_Temp;
+VO_Temp_Vent    := VI_Raw_Temp;
+VO_Hum_Vent     := VI_Raw_Hum;
+VO_CO2_Vent     := VI_Raw_CO2;
+
+--- VAR BLOCK (trimmed) ---
+VAR_INPUT
+    VI_Raw_Temp : REAL;
+    VI_Raw_Hum  : REAL;
+    VI_Raw_CO2  : REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Temp_Heating : REAL;
+    VO_Temp_Vent    : REAL;
+    VO_Hum_Vent     : REAL;
+    VO_CO2_Vent     : REAL;
+END_VAR
+
+--- BODY PREVIEW ---
+FUNCTION_BLOCK FB_Sensor_Distribution
+VAR_INPUT
+    VI_Raw_Temp : REAL;
+    VI_Raw_Hum  : REAL;
+    VI_Raw_CO2  : REAL;
+END_VAR
+VAR_OUTPUT
+    VO_Temp_Heating : REAL;
+    VO_Temp_Vent    : REAL;
+    VO_Hum_Vent     : REAL;
+    VO_CO2_Vent     : REAL;
+END_VAR
+
+// Распределение данных по подсистемам
+VO_Temp_Heating := VI_Raw_Temp;
+VO_Temp_Vent    := VI_Raw_Temp;
+VO_Hum_Vent     := VI_Raw_Hum;
+VO_CO2_Vent     := VI_Raw_CO2;
+
+
+
+
+=== END STEP 232 ===
