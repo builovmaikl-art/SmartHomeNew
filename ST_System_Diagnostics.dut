@@ -202,6 +202,13 @@ STRUCT
     Heating_Zone_Lock_Allowed : BOOL;
     Heating_Arbitration_Text : STRING(160);
 
+    // === HEATING ENFORCEMENT COOLDOWN ===
+    Heating_Pump_Force_Hold_Active : BOOL;
+    Heating_Zone_Lock_Hold_Active : BOOL;
+    Heating_Pump_Force_Hold_Until_MS : UDINT;
+    Heating_Zone_Lock_Hold_Until_MS : UDINT;
+    Heating_Cooldown_Text : STRING(160);
+
 
 
 END_STRUCT

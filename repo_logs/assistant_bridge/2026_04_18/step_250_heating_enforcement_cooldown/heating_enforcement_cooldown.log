@@ -1,0 +1,34 @@
+]633;E;echo "=== STEP 250: HEATING ENFORCEMENT COOLDOWN ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 250: HEATING ENFORCEMENT COOLDOWN ===
+timestamp_utc=2026-04-18T21:05:02Z
+
+=== APPLY ===
+OK: heating enforcement cooldown integrated
+
+=== VERIFY DUT ===
+206:    Heating_Pump_Force_Hold_Active : BOOL;
+207:    Heating_Zone_Lock_Hold_Active : BOOL;
+208:    Heating_Pump_Force_Hold_Until_MS : UDINT;
+209:    Heating_Zone_Lock_Hold_Until_MS : UDINT;
+210:    Heating_Cooldown_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+26:L_Heating_Pump_Force_Hold_MS : UDINT;
+27:L_Heating_Zone_Lock_Hold_MS : UDINT;
+1836:// === HEATING ENFORCEMENT COOLDOWN ===
+1837:IF L_Heating_Pump_Force_Hold_MS = 0 THEN
+1838:    L_Heating_Pump_Force_Hold_MS := 30000;
+1841:IF L_Heating_Zone_Lock_Hold_MS = 0 THEN
+1842:    L_Heating_Zone_Lock_Hold_MS := 60000;
+1848:        GVL_STATUS.G_System_Time_MS + L_Heating_Pump_Force_Hold_MS;
+1853:        GVL_STATUS.G_System_Time_MS + L_Heating_Zone_Lock_Hold_MS;
+1856:GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active :=
+1860:GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active :=
+1864:IF GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active THEN
+1865:    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'Zone lock hold active';
+1866:ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active THEN
+1867:    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'Pump force hold active';
+1869:    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'No heating cooldown hold active';
+1878:    GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active) AND
+1890:    GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active) AND
+
+=== COMPILE ===

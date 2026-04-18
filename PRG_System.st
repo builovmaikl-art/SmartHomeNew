@@ -23,6 +23,8 @@ L_Snapshot_Fallback_Prev : BOOL;
 L_Snapshot_Recovery_Prev : BOOL;
 L_Heating_Pump_Force_Bridge_Prev : BOOL;
 L_Heating_Zone_Lock_Bridge_Prev : BOOL;
+L_Heating_Pump_Force_Hold_MS : UDINT;
+L_Heating_Zone_Lock_Hold_MS : UDINT;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1831,12 +1833,49 @@ ELSE
     GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Heating arbitration allows enforcement';
 END_IF;
 
+// === HEATING ENFORCEMENT COOLDOWN ===
+IF L_Heating_Pump_Force_Hold_MS = 0 THEN
+    L_Heating_Pump_Force_Hold_MS := 30000;
+END_IF;
+
+IF L_Heating_Zone_Lock_Hold_MS = 0 THEN
+    L_Heating_Zone_Lock_Hold_MS := 60000;
+END_IF;
+
+// start/refresh holds from active requests
+IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Until_MS :=
+        GVL_STATUS.G_System_Time_MS + L_Heating_Pump_Force_Hold_MS;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Until_MS :=
+        GVL_STATUS.G_System_Time_MS + L_Heating_Zone_Lock_Hold_MS;
+END_IF;
+
+GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active :=
+    (GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Until_MS > 0) AND
+    (GVL_STATUS.G_System_Time_MS < GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Until_MS);
+
+GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active :=
+    (GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Until_MS > 0) AND
+    (GVL_STATUS.G_System_Time_MS < GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Until_MS);
+
+IF GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'Zone lock hold active';
+ELSIF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active THEN
+    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'Pump force hold active';
+ELSE
+    GVL_STATUS.G_Diagnostics.Heating_Cooldown_Text := 'No heating cooldown hold active';
+END_IF;
+
 // === HEATING REAL ENFORCEMENT BRIDGE ===
 GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active := FALSE;
 
 // real bridge: force manifold pumps if freeze protection requests pump support
-IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active AND
+IF (GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active OR
+    GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Hold_Active) AND
    GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         IF GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
@@ -1847,7 +1886,8 @@ IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active AND
 END_IF;
 
 // real bridge: close overheated floor-heating circuits
-IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active AND
+IF (GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active OR
+    GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Hold_Active) AND
    GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Locked_Circuits[L_i] THEN
