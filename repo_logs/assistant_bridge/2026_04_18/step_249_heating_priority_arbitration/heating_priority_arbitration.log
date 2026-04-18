@@ -1,0 +1,26 @@
+]633;E;echo "=== STEP 249: HEATING PRIORITY ARBITRATION ===";3f963cfa-c5e1-4422-a669-b5592924710d]633;C=== STEP 249: HEATING PRIORITY ARBITRATION ===
+timestamp_utc=2026-04-18T20:56:44Z
+
+=== APPLY ===
+OK: heating priority arbitration integrated
+
+=== VERIFY DUT ===
+201:    Heating_Pump_Force_Allowed : BOOL;
+202:    Heating_Zone_Lock_Allowed : BOOL;
+203:    Heating_Arbitration_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1816:// === HEATING PRIORITY ARBITRATION ===
+1820:GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed :=
+1824:GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed := TRUE;
+1826:IF NOT GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed THEN
+1827:    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Pump force blocked by mode/safety';
+1828:ELSIF NOT GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
+1829:    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Zone lock blocked by arbitration';
+1831:    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Heating arbitration allows enforcement';
+1839:IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active AND
+1840:   GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed THEN
+1850:IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active AND
+1851:   GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
+
+=== COMPILE ===

@@ -197,6 +197,11 @@ STRUCT
     Heating_Last_Event_Time_MS : UDINT;
     Heating_Last_Event_Text : STRING(160);
 
+    // === HEATING PRIORITY ARBITRATION ===
+    Heating_Pump_Force_Allowed : BOOL;
+    Heating_Zone_Lock_Allowed : BOOL;
+    Heating_Arbitration_Text : STRING(160);
+
 
 
 END_STRUCT

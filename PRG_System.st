@@ -1813,12 +1813,31 @@ ELSE
     GVL_STATUS.G_Diagnostics.Heating_Enforcement_Request_Text := 'No heating enforcement requests';
 END_IF;
 
+// === HEATING PRIORITY ARBITRATION ===
+// Safe policy:
+// - pump force is blocked in SAFE_STOP and on emergency stop
+// - overheated circuit lock remains allowed as a protective restriction
+GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed :=
+    (GVL_STATE.G_System_Mode <> E_System_Operating_Mode.MODE_SAFE_STOP) AND
+    (NOT GVL_STATE.G_Safety_Emergency_Stop);
+
+GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed := TRUE;
+
+IF NOT GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed THEN
+    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Pump force blocked by mode/safety';
+ELSIF NOT GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
+    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Zone lock blocked by arbitration';
+ELSE
+    GVL_STATUS.G_Diagnostics.Heating_Arbitration_Text := 'Heating arbitration allows enforcement';
+END_IF;
+
 // === HEATING REAL ENFORCEMENT BRIDGE ===
 GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Bridge_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Bridge_Active := FALSE;
 
 // real bridge: force manifold pumps if freeze protection requests pump support
-IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
+IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active AND
+   GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Allowed THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         IF GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
             GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
@@ -1828,7 +1847,8 @@ IF GVL_STATUS.G_Diagnostics.Heating_Pump_Force_Request_Active THEN
 END_IF;
 
 // real bridge: close overheated floor-heating circuits
-IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active THEN
+IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Enforcement_Request_Active AND
+   GVL_STATUS.G_Diagnostics.Heating_Zone_Lock_Allowed THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF GVL_STATUS.G_Diagnostics.Heating_Overheat_Locked_Circuits[L_i] THEN
             GVL_STATE.G_Zone_Valves[L_i] := FALSE;
