@@ -1,0 +1,12 @@
+VAR_GLOBAL
+    // === LIFETIME STATUS STORAGE ===
+    G_Status : ARRAY[1..2] OF ST_Lifetime_Status;
+
+    // === DEVICE IDS ===
+    G_Device_Pump : BYTE := 1;
+    G_Device_Fan  : BYTE := 2;
+
+    // === HMI / HEALTH READY FLAGS ===
+    G_Pump_Maintenance_Required : BOOL;
+    G_Fan_Maintenance_Required  : BOOL;
+END_VAR
