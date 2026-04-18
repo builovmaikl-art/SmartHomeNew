@@ -37,3 +37,17 @@ OK: calibration verification observer integrated
 1331:L_Methane_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp;
 
 === COMPILE ===
+[main 7b67192] test: compile smoke after migration
+ 7 files changed, 734 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_252_calibration_verification_observer/calibration_verification_observer.log
+ create mode 100644 steps/2026-04-18_calibration_verification_observer/01_calibration_verification_observer.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   c0f7aff..7b67192  main -> main
+compile_exit=0
+
+=== END STEP 252 ===
