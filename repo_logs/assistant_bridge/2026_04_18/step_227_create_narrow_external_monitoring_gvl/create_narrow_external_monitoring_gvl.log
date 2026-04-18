@@ -1,0 +1,55 @@
+]633;E;echo "=== STEP 227: CREATE NARROW EXTERNAL MONITORING GVL ===";5d3a4a2f-9043-4f2a-b7ba-cc078720fce7]633;C=== STEP 227: CREATE NARROW EXTERNAL MONITORING GVL ===
+timestamp_utc=2026-04-18T16:26:40Z
+
+=== APPLY ===
+OK: created GVL_External_Monitoring.gvl
+OK: added external monitoring export block to PRG_System.st
+
+=== VERIFY GVL ===
+VAR_GLOBAL
+    // === EXTERNAL SHADOW POLICY CONTRACT ===
+    G_Shadow_Any_Alert_Active : BOOL;
+    G_Shadow_CO_Active : BOOL;
+    G_Shadow_Methane_Active : BOOL;
+    G_Shadow_Smoke_Active : BOOL;
+
+    G_Shadow_CO_Healthy : BOOL;
+    G_Shadow_Methane_Healthy : BOOL;
+    G_Shadow_Smoke_Healthy : BOOL;
+
+    G_Shadow_Dominant_Channel : STRING(32);
+    G_Shadow_Policy_Summary_Text : STRING(160);
+    G_Shadow_Recent_Activity_Text : STRING(160);
+    G_Shadow_Rate_Summary_Text : STRING(160);
+    G_Shadow_Rate_Alert_Text : STRING(160);
+
+    G_Shadow_Total_Fallback_Count : UDINT;
+    G_Shadow_Total_Recovery_Count : UDINT;
+
+    G_Shadow_Rate_Fallback_Per_Hour : REAL;
+    G_Shadow_Rate_Recovery_Per_Hour : REAL;
+
+    G_Shadow_Rate_Alert_Active : BOOL;
+END_VAR
+
+=== VERIFY PRG_SYSTEM EXPORT BLOCK ===
+1699:// === EXTERNAL MONITORING EXPORT ===
+1700:GVL_External_Monitoring.G_Shadow_Any_Alert_Active :=
+1703:GVL_External_Monitoring.G_Shadow_CO_Active :=
+1705:GVL_External_Monitoring.G_Shadow_Methane_Active :=
+1707:GVL_External_Monitoring.G_Shadow_Smoke_Active :=
+1710:GVL_External_Monitoring.G_Shadow_CO_Healthy :=
+1712:GVL_External_Monitoring.G_Shadow_Methane_Healthy :=
+1714:GVL_External_Monitoring.G_Shadow_Smoke_Healthy :=
+1717:GVL_External_Monitoring.G_Shadow_Dominant_Channel :=
+1719:GVL_External_Monitoring.G_Shadow_Policy_Summary_Text :=
+1721:GVL_External_Monitoring.G_Shadow_Recent_Activity_Text :=
+1723:GVL_External_Monitoring.G_Shadow_Rate_Summary_Text :=
+1725:GVL_External_Monitoring.G_Shadow_Rate_Alert_Text :=
+1728:GVL_External_Monitoring.G_Shadow_Total_Fallback_Count :=
+1730:GVL_External_Monitoring.G_Shadow_Total_Recovery_Count :=
+1733:GVL_External_Monitoring.G_Shadow_Rate_Fallback_Per_Hour :=
+1735:GVL_External_Monitoring.G_Shadow_Rate_Recovery_Per_Hour :=
+1738:GVL_External_Monitoring.G_Shadow_Rate_Alert_Active :=
+
+=== END STEP 227 ===

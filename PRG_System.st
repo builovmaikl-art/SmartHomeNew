@@ -1696,6 +1696,48 @@ ELSE
     GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text := 'No shadow rate alerts';
 END_IF;
 
+// === EXTERNAL MONITORING EXPORT ===
+GVL_External_Monitoring.G_Shadow_Any_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
+GVL_External_Monitoring.G_Shadow_CO_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Active;
+GVL_External_Monitoring.G_Shadow_Methane_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Active;
+GVL_External_Monitoring.G_Shadow_Smoke_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Active;
+
+GVL_External_Monitoring.G_Shadow_CO_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_CO_Healthy;
+GVL_External_Monitoring.G_Shadow_Methane_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Methane_Healthy;
+GVL_External_Monitoring.G_Shadow_Smoke_Healthy :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Smoke_Healthy;
+
+GVL_External_Monitoring.G_Shadow_Dominant_Channel :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Dominant_Channel;
+GVL_External_Monitoring.G_Shadow_Policy_Summary_Text :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Policy_Summary_Text;
+GVL_External_Monitoring.G_Shadow_Recent_Activity_Text :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Recent_Activity_Text;
+GVL_External_Monitoring.G_Shadow_Rate_Summary_Text :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Summary_Text;
+GVL_External_Monitoring.G_Shadow_Rate_Alert_Text :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Text;
+
+GVL_External_Monitoring.G_Shadow_Total_Fallback_Count :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Fallback_Count;
+GVL_External_Monitoring.G_Shadow_Total_Recovery_Count :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Total_Recovery_Count;
+
+GVL_External_Monitoring.G_Shadow_Rate_Fallback_Per_Hour :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Fallback_Per_Hour;
+GVL_External_Monitoring.G_Shadow_Rate_Recovery_Per_Hour :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Recovery_Per_Hour;
+
+GVL_External_Monitoring.G_Shadow_Rate_Alert_Active :=
+    GVL_STATUS.G_Diagnostics.Sensor_Shadow_Rate_Alert_Active;
+
 // === LIFETIME UPDATE ===
 
 // pump (временно FALSE — до реального сигнала)
