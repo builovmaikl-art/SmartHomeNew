@@ -247,6 +247,11 @@ STRUCT
     Calibration_OutdoorTemp_Deviation_Percent : REAL;
     Calibration_OutdoorTemp_Summary_Text : STRING(160);
 
+    // === HUMIDITY FAMILY PILOT ===
+    Calibration_RoomHum1_Active : BOOL;
+    Calibration_RoomHum1_Calibrated_Value : REAL;
+    Calibration_RoomHum1_Summary_Text : STRING(160);
+
 
 
 END_STRUCT

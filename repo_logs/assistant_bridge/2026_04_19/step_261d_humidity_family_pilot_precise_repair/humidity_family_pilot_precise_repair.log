@@ -1,0 +1,17 @@
+]633;E;echo "=== STEP 261D: HUMIDITY FAMILY PILOT PRECISE REPAIR ===";c870ef84-c345-440d-bb94-ec329c217085]633;C=== STEP 261D: HUMIDITY FAMILY PILOT PRECISE REPAIR ===
+timestamp_utc=2026-04-19T13:48:51Z
+
+=== APPLY ===
+OK: precise humidity pilot repair applied
+
+=== VERIFY PRG_SYSTEM ===
+12:fbCalibRoomHum1 : FB_Sensor_Calibration_Processor;
+26:L_RoomHum1_Calibrated : REAL;
+1487:// === HUMIDITY FAMILY PILOT ===
+1493:fbCalibRoomHum1(
+1497:L_RoomHum1_Calibrated := fbCalibRoomHum1.VO_Calibrated_Value;
+1499:GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
+1500:GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
+1501:GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
+
+=== COMPILE ===

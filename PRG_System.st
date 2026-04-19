@@ -9,6 +9,7 @@ fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibVerifyGasFamily : ARRAY[1..2] OF FB_Calibration_Manager;
 fbCalibTempFamily : ARRAY[1..3] OF FB_Sensor_Calibration_Processor;
 fbCalibVerifyTempFamily : ARRAY[1..3] OF FB_Calibration_Manager;
+fbCalibRoomHum1 : FB_Sensor_Calibration_Processor;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -22,6 +23,7 @@ L_GasFamily_Calibrated : ARRAY[1..2] OF REAL;
 L_FloorTemp1_Calibrated : REAL;
 L_FloorTemp2_Calibrated : REAL;
 L_OutdoorTemp_Calibrated : REAL;
+L_RoomHum1_Calibrated : REAL;
 L_TempFamily_Raw : REAL;
 L_TempFamily_Calibrated : ARRAY[1..3] OF REAL;
 L_Smoke_Detected : BOOL;
@@ -1481,6 +1483,22 @@ FOR L_TempFamily_i := 1 TO 3 DO
     L_TempFamily_Verification_Active_Prev[L_TempFamily_i] := fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
     L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp;
 END_FOR;
+
+// === HUMIDITY FAMILY PILOT ===
+// NOTE:
+// FB_Calibration_Manager currently supports only:
+//   1 = Temp, 2 = Pressure, 3 = Gas
+// Therefore humidity is added first as calibration/export pilot,
+// without fake verification semantics.
+fbCalibRoomHum1(
+    VI_Raw_Value := GVL_STATE.G_Room_Hum[1],
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[6]
+);
+L_RoomHum1_Calibrated := fbCalibRoomHum1.VO_Calibrated_Value;
+
+GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
+GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
+GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
 
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(
