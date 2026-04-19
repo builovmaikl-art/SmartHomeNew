@@ -25,3 +25,17 @@ OK: config-driven mapping stage 1 integrated
 1513:        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_HumidityFamily_Record_Index[L_HumidityFamily_i]]
 
 === COMPILE ===
+[main ff18508] test: compile smoke after migration
+ 5 files changed, 607 insertions(+), 410 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_265_config_driven_mapping_stage1/config_driven_mapping_stage1.log
+ create mode 100644 steps/2026-04-19_config_driven_mapping_stage1/01_config_driven_mapping_stage1.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   41aeb0c..ff18508  main -> main
+compile_exit=0
+
+=== END STEP 265 ===
