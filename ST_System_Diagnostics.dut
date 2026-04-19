@@ -220,6 +220,12 @@ STRUCT
 
     Calibration_Verification_Summary_Text : STRING(160);
 
+    // === CALIBRATION VERIFICATION TELEMETRY ===
+    Calibration_CO_Verification_Event_Count : UDINT;
+    Calibration_Methane_Verification_Event_Count : UDINT;
+    Calibration_Last_Event_Time_MS : UDINT;
+    Calibration_Last_Event_Text : STRING(160);
+
 
 
 END_STRUCT

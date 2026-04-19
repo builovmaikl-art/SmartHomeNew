@@ -1,0 +1,26 @@
+]633;E;echo "=== STEP 255: CALIBRATION VERIFICATION TELEMETRY ===";1b7a776b-58f7-45ba-99db-33164feac7d0]633;C=== STEP 255: CALIBRATION VERIFICATION TELEMETRY ===
+timestamp_utc=2026-04-19T07:48:58Z
+
+=== APPLY ===
+OK: calibration verification telemetry integrated
+
+=== VERIFY DUT ===
+224:    Calibration_CO_Verification_Event_Count : UDINT;
+225:    Calibration_Methane_Verification_Event_Count : UDINT;
+226:    Calibration_Last_Event_Time_MS : UDINT;
+227:    Calibration_Last_Event_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1346:// === CALIBRATION VERIFICATION TELEMETRY ===
+1349:    GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Event_Count :=
+1350:        GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Event_Count + 1;
+1351:    GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+1354:        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'CO verification failed';
+1356:        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'CO verification passed';
+1362:    GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Event_Count :=
+1363:        GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Event_Count + 1;
+1364:    GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+1367:        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'Methane verification failed';
+1369:        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'Methane verification passed';
+
+=== COMPILE ===

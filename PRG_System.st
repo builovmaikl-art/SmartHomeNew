@@ -1343,6 +1343,33 @@ IF L_Methane_Verification_Active_Prev AND
         NOT fbCalibVerifyMethane.VO_Verification_Failed;
 END_IF;
 
+// === CALIBRATION VERIFICATION TELEMETRY ===
+IF L_CO_Verification_Active_Prev AND
+   (NOT fbCalibVerifyCO.VO_Verification_Active) THEN
+    GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Event_Count :=
+        GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Event_Count + 1;
+    GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+
+    IF fbCalibVerifyCO.VO_Verification_Failed THEN
+        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'CO verification failed';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'CO verification passed';
+    END_IF;
+END_IF;
+
+IF L_Methane_Verification_Active_Prev AND
+   (NOT fbCalibVerifyMethane.VO_Verification_Active) THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Event_Count :=
+        GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Event_Count + 1;
+    GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
+
+    IF fbCalibVerifyMethane.VO_Verification_Failed THEN
+        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'Methane verification failed';
+    ELSE
+        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'Methane verification passed';
+    END_IF;
+END_IF;
+
 L_CO_Verification_Active_Prev := fbCalibVerifyCO.VO_Verification_Active;
 L_Methane_Verification_Active_Prev := fbCalibVerifyMethane.VO_Verification_Active;
 
