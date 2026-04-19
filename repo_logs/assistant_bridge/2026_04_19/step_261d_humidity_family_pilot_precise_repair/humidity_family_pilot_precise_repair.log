@@ -15,3 +15,21 @@ OK: precise humidity pilot repair applied
 1501:GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
 
 === COMPILE ===
+[main 8214b04] test: compile smoke after migration
+ 11 files changed, 709 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_261_humidity_family_pilot/humidity_family_pilot.log
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_261b_humidity_family_pilot_repair/humidity_family_pilot_repair.log
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_261d_humidity_family_pilot_precise_repair/humidity_family_pilot_precise_repair.log
+ create mode 100644 steps/2026-04-19_humidity_family_pilot/01_humidity_family_pilot.py
+ create mode 100644 steps/2026-04-19_humidity_family_pilot_precise_repair/01_humidity_family_pilot_precise_repair.py
+ create mode 100644 steps/2026-04-19_humidity_family_pilot_repair/01_humidity_family_pilot_repair.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   ceaf8f9..8214b04  main -> main
+compile_exit=0
+
+=== END STEP 261D ===
