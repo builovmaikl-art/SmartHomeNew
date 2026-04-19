@@ -1,0 +1,93 @@
+]633;E;echo "=== STEP 268 SNAPSHOT ===";ac9a1c38-5032-4d46-a5fa-298d7d53ba4f]633;C=== STEP 268 SNAPSHOT ===
+timestamp_utc=2026-04-19T18:58:30Z
+file=docs/PROJECT_ROADMAP_2026_04_19.md
+
+=== PREVIEW ===
+# 🚀 PROJECT ROADMAP (REALITY SNAPSHOT)
+**Project:** SmartHomeNew  
+**Snapshot Date:** 2026-04-19
+
+---
+
+# CURRENT STAGE
+STAGE: ARCHITECTURE CONSOLIDATION
+
+---
+
+# CORE — STATUS
+
+Heating Protection        ✅ DONE  
+Calibration Pipeline      ✅ DONE  
+Verification              ✅ DONE  
+
+---
+
+# DATA LAYER (HMI READY)
+
+Sensor Families           ✅ DONE  
+Config Mapping            ✅ DONE  
+Status Aggregator         ✅ DONE  
+Family Summary            ✅ DONE  
+Sensor Summary            ✅ DONE  
+
+---
+
+# PENDING CORE
+
+Snapshot Manager          ⚠ PARTIAL  
+Snapshot NVRAM            ❌ PLANNED  
+Manual Calibration        ❌ PLANNED  
+Analog Processing         ⚠ PARTIAL  
+
+---
+
+# FEATURE LAYER
+
+Presence Playback         ❌ PLANNED  
+Zone Access               ❌ PLANNED  
+Maintenance Access        🟡 PARKED  
+
+---
+
+# PRIORITY (NEXT)
+
+1. Snapshot / Persistence
+2. Command Model
+3. Severity Model
+4. Coverage Expansion
+
+---
+
+# MATRIX (SHORT)
+
+DONE:
+- Heating
+- Calibration (full pipeline)
+- HMI data model
+
+PARTIAL:
+- Snapshot (history only)
+
+PLANNED:
+- Snapshot NVRAM
+- Manual calibration
+- Command model
+- Severity model
+- Presence playback
+- Zone access
+
+PARKED:
+- Maintenance access
+- Sensor distribution
+
+---
+
+# GOAL
+
+Полностью детерминированная система  
+с HMI как thin layer над PLC  
+
+---
+
+
+=== END ===
