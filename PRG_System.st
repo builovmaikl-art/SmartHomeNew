@@ -9,12 +9,8 @@ fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibMethane  : FB_Sensor_Calibration_Processor;
 fbCalibVerifyCO : FB_Calibration_Manager;
 fbCalibVerifyMethane : FB_Calibration_Manager;
-fbCalibFloorTemp1 : FB_Sensor_Calibration_Processor;
-fbCalibVerifyFloorTemp1 : FB_Calibration_Manager;
-fbCalibFloorTemp2 : FB_Sensor_Calibration_Processor;
-fbCalibVerifyFloorTemp2 : FB_Calibration_Manager;
-fbCalibOutdoorTemp : FB_Sensor_Calibration_Processor;
-fbCalibVerifyOutdoorTemp : FB_Calibration_Manager;
+fbCalibTempFamily : ARRAY[1..3] OF FB_Sensor_Calibration_Processor;
+fbCalibVerifyTempFamily : ARRAY[1..3] OF FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -23,9 +19,8 @@ L_CO_Calibrated : REAL;
 L_Safety_Selector_i : INT;
 L_Methane_Processed : REAL;
 L_Methane_Calibrated : REAL;
-L_FloorTemp1_Calibrated : REAL;
-L_FloorTemp2_Calibrated : REAL;
-L_OutdoorTemp_Calibrated : REAL;
+L_TempFamily_Raw : REAL;
+L_TempFamily_Calibrated : ARRAY[1..3] OF REAL;
 L_Smoke_Detected : BOOL;
 L_Window_Hours : REAL;
 L_Snapshot : ST_State_Snapshot;
@@ -40,12 +35,8 @@ L_CO_Calib_TS_Prev : UDINT;
 L_Methane_Calib_TS_Prev : UDINT;
 L_CO_Verification_Active_Prev : BOOL;
 L_Methane_Verification_Active_Prev : BOOL;
-L_FloorTemp1_Calib_TS_Prev : UDINT;
-L_FloorTemp1_Verification_Active_Prev : BOOL;
-L_FloorTemp2_Calib_TS_Prev : UDINT;
-L_FloorTemp2_Verification_Active_Prev : BOOL;
-L_OutdoorTemp_Calib_TS_Prev : UDINT;
-L_OutdoorTemp_Verification_Active_Prev : BOOL;
+L_TempFamily_Calib_TS_Prev : ARRAY[1..3] OF UDINT;
+L_TempFamily_Verification_Active_Prev : ARRAY[1..3] OF BOOL;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1398,134 +1389,102 @@ GVL_Sensor_Shadow.G_Methane_Calibrated := L_Methane_Calibrated;
 GVL_Sensor_Shadow.G_Methane_Error := fbSensorMethane.VO_Error;
 GVL_Sensor_Shadow.G_Methane_Diag_Code := fbSensorMethane.VO_Diag_Code;
 
-// === FLOOR TEMP 1 CALIBRATION OBSERVER (PILOT) ===
-fbCalibFloorTemp1(
-    VI_Raw_Value := GVL_STATE.G_Floor_Temps[1],
-    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[3]
-);
-L_FloorTemp1_Calibrated := fbCalibFloorTemp1.VO_Calibrated_Value;
+// === TEMPERATURE FAMILY CALIBRATION GENERIC LOOP ===
+// Mapping:
+// 1 -> FloorTemp1, calibration record 3
+// 2 -> FloorTemp2, calibration record 4
+// 3 -> OutdoorTemp, calibration record 5
+FOR L_i := 1 TO 3 DO
+    CASE L_i OF
+        1:
+            L_TempFamily_Raw := GVL_STATE.G_Floor_Temps[1];
+        2:
+            L_TempFamily_Raw := GVL_STATE.G_Floor_Temps[2];
+        3:
+            L_TempFamily_Raw := GVL_STATE.G_Outdoor_Temp;
+    ELSE
+        L_TempFamily_Raw := 0.0;
+    END_CASE;
 
-fbCalibVerifyFloorTemp1(
-    VI_Raw_Value := GVL_STATE.G_Floor_Temps[1],
-    VI_Type := 1,
-    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[3],
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Start_Verification := (
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp <> 0 AND
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp <> L_FloorTemp1_Calib_TS_Prev
-    )
-);
+    fbCalibTempFamily[L_i](
+        VI_Raw_Value := L_TempFamily_Raw,
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2]
+    );
+    L_TempFamily_Calibrated[L_i] := fbCalibTempFamily[L_i].VO_Calibrated_Value;
 
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Active := TRUE;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active :=
-    fbCalibVerifyFloorTemp1.VO_Verification_Active;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed :=
-    fbCalibVerifyFloorTemp1.VO_Verification_Failed;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent :=
-    fbCalibVerifyFloorTemp1.VO_Deviation_Percent;
+    fbCalibVerifyTempFamily[L_i](
+        VI_Raw_Value := L_TempFamily_Raw,
+        VI_Type := 1,
+        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2],
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Start_Verification := (
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2].last_calibration_timestamp <> 0 AND
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2].last_calibration_timestamp <> L_TempFamily_Calib_TS_Prev[L_i]
+        )
+    );
 
-IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed THEN
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification failed';
-ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active THEN
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification active';
-ELSE
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification idle';
-END_IF;
+    CASE L_i OF
+        1:
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Active := TRUE;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Active;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Failed;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent :=
+                fbCalibVerifyTempFamily[L_i].VO_Deviation_Percent;
 
-IF L_FloorTemp1_Verification_Active_Prev AND
-   (NOT fbCalibVerifyFloorTemp1.VO_Verification_Active) THEN
-    GVL_CONFIG.G_HMI_Sensor_Calibrations[3].verification_passed :=
-        NOT fbCalibVerifyFloorTemp1.VO_Verification_Failed;
-END_IF;
+            IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed THEN
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification failed';
+            ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active THEN
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification active';
+            ELSE
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification idle';
+            END_IF;
 
-L_FloorTemp1_Verification_Active_Prev := fbCalibVerifyFloorTemp1.VO_Verification_Active;
-L_FloorTemp1_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp;
+        2:
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Active := TRUE;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Active;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Failed;
+            GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Deviation_Percent :=
+                fbCalibVerifyTempFamily[L_i].VO_Deviation_Percent;
 
-// === FLOOR TEMP 2 CALIBRATION OBSERVER ===
-fbCalibFloorTemp2(
-    VI_Raw_Value := GVL_STATE.G_Floor_Temps[2],
-    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[4]
-);
-L_FloorTemp2_Calibrated := fbCalibFloorTemp2.VO_Calibrated_Value;
+            IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed THEN
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification failed';
+            ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active THEN
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification active';
+            ELSE
+                GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification idle';
+            END_IF;
 
-fbCalibVerifyFloorTemp2(
-    VI_Raw_Value := GVL_STATE.G_Floor_Temps[2],
-    VI_Type := 1,
-    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[4],
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Start_Verification := (
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[4].last_calibration_timestamp <> 0 AND
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[4].last_calibration_timestamp <> L_FloorTemp2_Calib_TS_Prev
-    )
-);
+        3:
+            GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Active := TRUE;
+            GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Active;
+            GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed :=
+                fbCalibVerifyTempFamily[L_i].VO_Verification_Failed;
+            GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Deviation_Percent :=
+                fbCalibVerifyTempFamily[L_i].VO_Deviation_Percent;
 
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Active := TRUE;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active :=
-    fbCalibVerifyFloorTemp2.VO_Verification_Active;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed :=
-    fbCalibVerifyFloorTemp2.VO_Verification_Failed;
-GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Deviation_Percent :=
-    fbCalibVerifyFloorTemp2.VO_Deviation_Percent;
+            IF GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed THEN
+                GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification failed';
+            ELSIF GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active THEN
+                GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification active';
+            ELSE
+                GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification idle';
+            END_IF;
+    END_CASE;
 
-IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed THEN
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification failed';
-ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active THEN
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification active';
-ELSE
-    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Summary_Text := 'FloorTemp2 verification idle';
-END_IF;
+    IF L_TempFamily_Verification_Active_Prev[L_i] AND
+       (NOT fbCalibVerifyTempFamily[L_i].VO_Verification_Active) THEN
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2].verification_passed :=
+            NOT fbCalibVerifyTempFamily[L_i].VO_Verification_Failed;
+    END_IF;
 
-IF L_FloorTemp2_Verification_Active_Prev AND
-   (NOT fbCalibVerifyFloorTemp2.VO_Verification_Active) THEN
-    GVL_CONFIG.G_HMI_Sensor_Calibrations[4].verification_passed :=
-        NOT fbCalibVerifyFloorTemp2.VO_Verification_Failed;
-END_IF;
-
-L_FloorTemp2_Verification_Active_Prev := fbCalibVerifyFloorTemp2.VO_Verification_Active;
-L_FloorTemp2_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[4].last_calibration_timestamp;
-
-// === OUTDOOR TEMP CALIBRATION OBSERVER ===
-fbCalibOutdoorTemp(
-    VI_Raw_Value := GVL_STATE.G_Outdoor_Temp,
-    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[5]
-);
-L_OutdoorTemp_Calibrated := fbCalibOutdoorTemp.VO_Calibrated_Value;
-
-fbCalibVerifyOutdoorTemp(
-    VI_Raw_Value := GVL_STATE.G_Outdoor_Temp,
-    VI_Type := 1,
-    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[5],
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Start_Verification := (
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp <> 0 AND
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp <> L_OutdoorTemp_Calib_TS_Prev
-    )
-);
-
-GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Active := TRUE;
-GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active :=
-    fbCalibVerifyOutdoorTemp.VO_Verification_Active;
-GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed :=
-    fbCalibVerifyOutdoorTemp.VO_Verification_Failed;
-GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Deviation_Percent :=
-    fbCalibVerifyOutdoorTemp.VO_Deviation_Percent;
-
-IF GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed THEN
-    GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification failed';
-ELSIF GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active THEN
-    GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification active';
-ELSE
-    GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Summary_Text := 'OutdoorTemp verification idle';
-END_IF;
-
-IF L_OutdoorTemp_Verification_Active_Prev AND
-   (NOT fbCalibVerifyOutdoorTemp.VO_Verification_Active) THEN
-    GVL_CONFIG.G_HMI_Sensor_Calibrations[5].verification_passed :=
-        NOT fbCalibVerifyOutdoorTemp.VO_Verification_Failed;
-END_IF;
-
-L_OutdoorTemp_Verification_Active_Prev := fbCalibVerifyOutdoorTemp.VO_Verification_Active;
-L_OutdoorTemp_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp;
+    L_TempFamily_Verification_Active_Prev[L_i] := fbCalibVerifyTempFamily[L_i].VO_Verification_Active;
+    L_TempFamily_Calib_TS_Prev[L_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_i + 2].last_calibration_timestamp;
+END_FOR;
 
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(
