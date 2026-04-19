@@ -233,6 +233,20 @@ STRUCT
     Calibration_FloorTemp1_Deviation_Percent : REAL;
     Calibration_FloorTemp1_Summary_Text : STRING(160);
 
+    // === FLOOR TEMP 2 CALIBRATION OBSERVER ===
+    Calibration_FloorTemp2_Active : BOOL;
+    Calibration_FloorTemp2_Verification_Active : BOOL;
+    Calibration_FloorTemp2_Verification_Failed : BOOL;
+    Calibration_FloorTemp2_Deviation_Percent : REAL;
+    Calibration_FloorTemp2_Summary_Text : STRING(160);
+
+    // === OUTDOOR TEMP CALIBRATION OBSERVER ===
+    Calibration_OutdoorTemp_Active : BOOL;
+    Calibration_OutdoorTemp_Verification_Active : BOOL;
+    Calibration_OutdoorTemp_Verification_Failed : BOOL;
+    Calibration_OutdoorTemp_Deviation_Percent : REAL;
+    Calibration_OutdoorTemp_Summary_Text : STRING(160);
+
 
 
 END_STRUCT

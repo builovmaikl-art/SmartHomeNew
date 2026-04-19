@@ -1,0 +1,58 @@
+]633;E;echo "=== STEP 257: FLOORTEMP2 + OUTDOOR CALIBRATION OBSERVERS ===";ebffa28d-1a19-46e5-823e-2ee795fb6d69]633;C=== STEP 257: FLOORTEMP2 + OUTDOOR CALIBRATION OBSERVERS ===
+timestamp_utc=2026-04-19T10:02:14Z
+
+=== APPLY ===
+OK: FloorTemp2 and OutdoorTemp calibration observers integrated
+
+=== VERIFY DUT ===
+237:    Calibration_FloorTemp2_Active : BOOL;
+238:    Calibration_FloorTemp2_Verification_Active : BOOL;
+239:    Calibration_FloorTemp2_Verification_Failed : BOOL;
+240:    Calibration_FloorTemp2_Deviation_Percent : REAL;
+241:    Calibration_FloorTemp2_Summary_Text : STRING(160);
+244:    Calibration_OutdoorTemp_Active : BOOL;
+245:    Calibration_OutdoorTemp_Verification_Active : BOOL;
+246:    Calibration_OutdoorTemp_Verification_Failed : BOOL;
+247:    Calibration_OutdoorTemp_Deviation_Percent : REAL;
+248:    Calibration_OutdoorTemp_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+14:fbCalibFloorTemp2 : FB_Sensor_Calibration_Processor;
+15:fbCalibVerifyFloorTemp2 : FB_Calibration_Manager;
+16:fbCalibOutdoorTemp : FB_Sensor_Calibration_Processor;
+17:fbCalibVerifyOutdoorTemp : FB_Calibration_Manager;
+27:L_FloorTemp2_Calibrated : REAL;
+28:L_OutdoorTemp_Calibrated : REAL;
+45:L_FloorTemp2_Calib_TS_Prev : UDINT;
+47:L_OutdoorTemp_Calib_TS_Prev : UDINT;
+1351:    GVL_CONFIG.G_HMI_Sensor_Calibrations[1].verification_passed :=
+1357:    GVL_CONFIG.G_HMI_Sensor_Calibrations[2].verification_passed :=
+1437:    GVL_CONFIG.G_HMI_Sensor_Calibrations[3].verification_passed :=
+1444:// === FLOOR TEMP 2 CALIBRATION OBSERVER ===
+1445:fbCalibFloorTemp2(
+1449:L_FloorTemp2_Calibrated := fbCalibFloorTemp2.VO_Calibrated_Value;
+1451:fbCalibVerifyFloorTemp2(
+1458:        GVL_CONFIG.G_HMI_Sensor_Calibrations[4].last_calibration_timestamp <> L_FloorTemp2_Calib_TS_Prev
+1464:    fbCalibVerifyFloorTemp2.VO_Verification_Active;
+1466:    fbCalibVerifyFloorTemp2.VO_Verification_Failed;
+1468:    fbCalibVerifyFloorTemp2.VO_Deviation_Percent;
+1479:   (NOT fbCalibVerifyFloorTemp2.VO_Verification_Active) THEN
+1480:    GVL_CONFIG.G_HMI_Sensor_Calibrations[4].verification_passed :=
+1481:        NOT fbCalibVerifyFloorTemp2.VO_Verification_Failed;
+1484:L_FloorTemp2_Verification_Active_Prev := fbCalibVerifyFloorTemp2.VO_Verification_Active;
+1485:L_FloorTemp2_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[4].last_calibration_timestamp;
+1487:// === OUTDOOR TEMP CALIBRATION OBSERVER ===
+1488:fbCalibOutdoorTemp(
+1492:L_OutdoorTemp_Calibrated := fbCalibOutdoorTemp.VO_Calibrated_Value;
+1494:fbCalibVerifyOutdoorTemp(
+1501:        GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp <> L_OutdoorTemp_Calib_TS_Prev
+1507:    fbCalibVerifyOutdoorTemp.VO_Verification_Active;
+1509:    fbCalibVerifyOutdoorTemp.VO_Verification_Failed;
+1511:    fbCalibVerifyOutdoorTemp.VO_Deviation_Percent;
+1522:   (NOT fbCalibVerifyOutdoorTemp.VO_Verification_Active) THEN
+1523:    GVL_CONFIG.G_HMI_Sensor_Calibrations[5].verification_passed :=
+1524:        NOT fbCalibVerifyOutdoorTemp.VO_Verification_Failed;
+1527:L_OutdoorTemp_Verification_Active_Prev := fbCalibVerifyOutdoorTemp.VO_Verification_Active;
+1528:L_OutdoorTemp_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp;
+
+=== COMPILE ===
