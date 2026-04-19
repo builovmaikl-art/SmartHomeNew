@@ -40,3 +40,17 @@ OK: pressure family pilot integrated
 1547:L_DHWPressure_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
 
 === COMPILE ===
+[main 0b2723b] test: compile smoke after migration
+ 7 files changed, 702 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_262_pressure_family_pilot/pressure_family_pilot.log
+ create mode 100644 steps/2026-04-19_pressure_family_pilot/01_pressure_family_pilot.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   a5d9e7c..0b2723b  main -> main
+compile_exit=0
+
+=== END STEP 262 ===
