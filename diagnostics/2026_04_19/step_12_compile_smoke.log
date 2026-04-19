@@ -14,10 +14,10 @@ drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 __pycache__
 -rw-rw-rw-   1 codespace codespace  33804 Apr 16 14:00 import_codesys_FINAL.py.bak
 -rw-rw-rw-   1 codespace codespace   3227 Apr 16 14:00 import_codesys_FINAL_METHODS_V2.py
 -rw-rw-rw-   1 codespace codespace     54 Apr 16 14:00 import_codesys_FINAL_METHODS_V3.py
-drwxrwxrwx+  2 codespace codespace   4096 Apr 19 10:02 logs
+drwxrwxrwx+  2 codespace codespace   4096 Apr 19 10:31 logs
 -rw-rw-rw-   1 codespace codespace   7227 Apr 16 14:00 method_overlay_clean.py
 -rw-rw-rw-   1 codespace codespace   7163 Apr 16 14:00 method_overlay_clean.py.bak
-drwxrwxrwx+  2 codespace codespace   4096 Apr 19 10:02 out
+drwxrwxrwx+  2 codespace codespace   4096 Apr 19 10:31 out
 -rwxrwxrwx   1 codespace codespace    822 Apr 16 14:14 run_compile_smoke.sh
 -rw-rw-rw-   1 codespace codespace 428970 Apr 16 14:00 Система умного дома.xml
 -rw-rw-rw-   1 codespace codespace    456 Apr 16 14:00 запуск_сборки.md

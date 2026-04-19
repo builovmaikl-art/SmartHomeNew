@@ -1,0 +1,42 @@
+]633;E;echo "=== STEP 259: TEMPERATURE FAMILY LOOP STABILIZATION ===";f1915c3a-7f99-448c-ac22-957dada914d0]633;C=== STEP 259: TEMPERATURE FAMILY LOOP STABILIZATION ===
+timestamp_utc=2026-04-19T12:18:40Z
+
+=== APPLY ===
+OK: stabilized temperature family generic loop
+
+=== VERIFY PRG_SYSTEM ===
+22:L_FloorTemp1_Calibrated : REAL;
+23:L_FloorTemp2_Calibrated : REAL;
+24:L_OutdoorTemp_Calibrated : REAL;
+73:    L_TempFamily_i : INT;
+1396:// === TEMPERATURE FAMILY CALIBRATION GENERIC LOOP ===
+1401:FOR L_TempFamily_i := 1 TO 3 DO
+1402:    CASE L_TempFamily_i OF
+1413:    fbCalibTempFamily[L_TempFamily_i](
+1415:        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2]
+1417:    L_TempFamily_Calibrated[L_TempFamily_i] := fbCalibTempFamily[L_TempFamily_i].VO_Calibrated_Value;
+1419:    fbCalibVerifyTempFamily[L_TempFamily_i](
+1422:        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2],
+1425:            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp <> 0 AND
+1426:            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp <> L_TempFamily_Calib_TS_Prev[L_TempFamily_i]
+1430:    CASE L_TempFamily_i OF
+1432:            L_FloorTemp1_Calibrated := L_TempFamily_Calibrated[1];
+1436:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
+1438:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Failed;
+1440:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Deviation_Percent;
+1451:            L_FloorTemp2_Calibrated := L_TempFamily_Calibrated[2];
+1455:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
+1457:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Failed;
+1459:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Deviation_Percent;
+1470:            L_OutdoorTemp_Calibrated := L_TempFamily_Calibrated[3];
+1474:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
+1476:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Failed;
+1478:                fbCalibVerifyTempFamily[L_TempFamily_i].VO_Deviation_Percent;
+1489:    IF L_TempFamily_Verification_Active_Prev[L_TempFamily_i] AND
+1490:       (NOT fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active) THEN
+1491:        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].verification_passed :=
+1492:            NOT fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Failed;
+1495:    L_TempFamily_Verification_Active_Prev[L_TempFamily_i] := fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
+1496:    L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp;
+
+=== COMPILE ===
