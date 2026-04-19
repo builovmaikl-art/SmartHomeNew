@@ -10,8 +10,8 @@ fbCalibVerifyGasFamily : ARRAY[1..2] OF FB_Calibration_Manager;
 fbCalibTempFamily : ARRAY[1..3] OF FB_Sensor_Calibration_Processor;
 fbCalibVerifyTempFamily : ARRAY[1..3] OF FB_Calibration_Manager;
 fbCalibRoomHum1 : FB_Sensor_Calibration_Processor;
-fbCalibDHWPressure : FB_Sensor_Calibration_Processor;
-fbCalibVerifyDHWPressure : FB_Calibration_Manager;
+fbCalibPressureFamily : ARRAY[1..1] OF FB_Sensor_Calibration_Processor;
+fbCalibVerifyPressureFamily : ARRAY[1..1] OF FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -27,6 +27,8 @@ L_FloorTemp2_Calibrated : REAL;
 L_OutdoorTemp_Calibrated : REAL;
 L_RoomHum1_Calibrated : REAL;
 L_DHWPressure_Calibrated : REAL;
+L_PressureFamily_Raw : REAL;
+L_PressureFamily_Calibrated : ARRAY[1..1] OF REAL;
 L_TempFamily_Raw : REAL;
 L_TempFamily_Calibrated : ARRAY[1..3] OF REAL;
 L_Smoke_Detected : BOOL;
@@ -75,8 +77,9 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     L_i : INT;
     L_TempFamily_i : INT;
     L_GasFamily_i : INT;
-    L_DHWPressure_Calib_TS_Prev : UDINT;
-    L_DHWPressure_Verification_Active_Prev : BOOL;
+    L_PressureFamily_i : INT;
+    L_PressureFamily_Calib_TS_Prev : ARRAY[1..1] OF UDINT;
+    L_PressureFamily_Verification_Active_Prev : ARRAY[1..1] OF BOOL;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
     L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
@@ -1505,47 +1508,55 @@ GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
 GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
 GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
 
-// === PRESSURE FAMILY PILOT ===
-fbCalibDHWPressure(
-    VI_Raw_Value := GVL_STATE.G_DHW_Pressure,
-    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7]
-);
-L_DHWPressure_Calibrated := fbCalibDHWPressure.VO_Calibrated_Value;
+// === PRESSURE FAMILY GENERIC LOOP ===
+// Mapping:
+// 1 -> DHW pressure (record[7])
+FOR L_PressureFamily_i := 1 TO 1 DO
 
-fbCalibVerifyDHWPressure(
-    VI_Raw_Value := GVL_STATE.G_DHW_Pressure,
-    VI_Type := 2,
-    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7],
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Start_Verification := (
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> 0 AND
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> L_DHWPressure_Calib_TS_Prev
-    )
-);
+    L_PressureFamily_Raw := GVL_STATE.G_DHW_Pressure;
 
-GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Active := TRUE;
-GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Calibrated_Value := L_DHWPressure_Calibrated;
-GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active := fbCalibVerifyDHWPressure.VO_Verification_Active;
-GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed := fbCalibVerifyDHWPressure.VO_Verification_Failed;
-GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent := fbCalibVerifyDHWPressure.VO_Deviation_Percent;
+    fbCalibPressureFamily[L_PressureFamily_i](
+        VI_Raw_Value := L_PressureFamily_Raw,
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7]
+    );
+    L_PressureFamily_Calibrated[L_PressureFamily_i] :=
+        fbCalibPressureFamily[L_PressureFamily_i].VO_Calibrated_Value;
 
-IF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed THEN
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification failed';
-ELSIF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active THEN
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification active';
-ELSE
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification idle';
-END_IF;
+    fbCalibVerifyPressureFamily[L_PressureFamily_i](
+        VI_Raw_Value := L_PressureFamily_Raw,
+        VI_Type := 2,
+        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7],
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Start_Verification := (
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> 0 AND
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> L_PressureFamily_Calib_TS_Prev[1]
+        )
+    );
 
-IF L_DHWPressure_Verification_Active_Prev AND
-   (NOT fbCalibVerifyDHWPressure.VO_Verification_Active) THEN
-    GVL_CONFIG.G_HMI_Sensor_Calibrations[7].verification_passed :=
-        NOT fbCalibVerifyDHWPressure.VO_Verification_Failed;
-END_IF;
+    L_DHWPressure_Calibrated := L_PressureFamily_Calibrated[1];
 
-L_DHWPressure_Verification_Active_Prev := fbCalibVerifyDHWPressure.VO_Verification_Active;
-L_DHWPressure_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Active := TRUE;
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Calibrated_Value := L_DHWPressure_Calibrated;
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active :=
+        fbCalibVerifyPressureFamily[1].VO_Verification_Active;
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed :=
+        fbCalibVerifyPressureFamily[1].VO_Verification_Failed;
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent :=
+        fbCalibVerifyPressureFamily[1].VO_Deviation_Percent;
 
+    IF L_PressureFamily_Verification_Active_Prev[1] AND
+       (NOT fbCalibVerifyPressureFamily[1].VO_Verification_Active) THEN
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].verification_passed :=
+            NOT fbCalibVerifyPressureFamily[1].VO_Verification_Failed;
+    END_IF;
+
+    L_PressureFamily_Verification_Active_Prev[1] :=
+        fbCalibVerifyPressureFamily[1].VO_Verification_Active;
+
+    L_PressureFamily_Calib_TS_Prev[1] :=
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
+
+END_FOR;
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(
     VI_Smoke_Signal := GVL_STATE.G_Smoke_Sensors[1]
