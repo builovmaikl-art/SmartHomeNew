@@ -1,8 +1,8 @@
-DUT_FILES=73
+DUT_FILES=75
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=22
-STRUCT_INSERTED=51
-STRUCT_FIELDS_TOTAL=554
+STRUCT_INSERTED=53
+STRUCT_FIELDS_TOTAL=581
 STRUCT_FIELDS_WITH_INITIALIZER=137
 INITIALIZERS_INSERTED=137
 ARRAY_INITIALIZERS_INSERTED=4
@@ -36,6 +36,8 @@ ST_Alarm_Record.dut: STRUCT ST_Alarm_Record fields=8
 ST_Astro_Time.dut: STRUCT ST_Astro_Time fields=3
 ST_BlackBox_Record.dut: STRUCT ST_BlackBox_Record fields=15
 ST_Boiler_Status.dut: STRUCT ST_Boiler_Status fields=11
+ST_Calibration_Family_Summary.dut: STRUCT ST_Calibration_Family_Summary fields=7
+ST_Calibration_Sensor_Summary.dut: STRUCT ST_Calibration_Sensor_Summary fields=9
 ST_Component_Maintenance.dut: STRUCT ST_Component_Maintenance fields=4
 ST_DHW_Config.dut: STRUCT ST_DHW_Config fields=9
 ST_DHW_Status.dut: STRUCT ST_DHW_Status fields=7
@@ -65,7 +67,7 @@ ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=17
 ST_Security_Zone_State.dut: STRUCT ST_Security_Zone_State fields=5
 ST_Sensor_Calibration_Record.dut: STRUCT ST_Sensor_Calibration_Record fields=7
 ST_State_Snapshot.dut: STRUCT ST_State_Snapshot fields=7
-ST_System_Diagnostics.dut: STRUCT ST_System_Diagnostics fields=210
+ST_System_Diagnostics.dut: STRUCT ST_System_Diagnostics fields=221
 ST_System_State_Snapshot.dut: STRUCT ST_System_State_Snapshot fields=12
 ST_System_State_Summary.dut: STRUCT ST_System_State_Summary fields=10
 ST_Tariff_Config.dut: STRUCT ST_Tariff_Config fields=4
@@ -88,6 +90,8 @@ STRUCT ST_Alarm_Record: total=8 with_initializer=0 without_initializer=8 array_i
 STRUCT ST_Astro_Time: total=3 with_initializer=3 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_BlackBox_Record: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Boiler_Status: total=11 with_initializer=1 without_initializer=10 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Calibration_Family_Summary: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Calibration_Sensor_Summary: total=9 with_initializer=0 without_initializer=9 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Component_Maintenance: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Config: total=9 with_initializer=9 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
@@ -117,7 +121,7 @@ STRUCT ST_Security_Global_Config: total=17 with_initializer=13 without_initializ
 STRUCT ST_Security_Zone_State: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Sensor_Calibration_Record: total=7 with_initializer=6 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_State_Snapshot: total=7 with_initializer=5 without_initializer=2 array_initializer=0 unsupported_initializer=0
-STRUCT ST_System_Diagnostics: total=210 with_initializer=0 without_initializer=210 array_initializer=0 unsupported_initializer=0
+STRUCT ST_System_Diagnostics: total=221 with_initializer=0 without_initializer=221 array_initializer=0 unsupported_initializer=0
 STRUCT ST_System_State_Snapshot: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_System_State_Summary: total=10 with_initializer=0 without_initializer=10 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Tariff_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0

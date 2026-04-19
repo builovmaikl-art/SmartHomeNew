@@ -270,5 +270,19 @@ STRUCT
     Calibration_Status_Humidity : INT;
     Calibration_Status_Summary_Text : STRING(160);
 
+    // === CALIBRATION FAMILY/SENSOR SUMMARY RECORDS ===
+    Calibration_Family_Gas : ST_Calibration_Family_Summary;
+    Calibration_Family_Temperature : ST_Calibration_Family_Summary;
+    Calibration_Family_Pressure : ST_Calibration_Family_Summary;
+    Calibration_Family_Humidity : ST_Calibration_Family_Summary;
+
+    Calibration_Sensor_CO : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_Methane : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_FloorTemp1 : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_FloorTemp2 : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_OutdoorTemp : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_RoomHum1 : ST_Calibration_Sensor_Summary;
+    Calibration_Sensor_DHWPressure : ST_Calibration_Sensor_Summary;
+
 END_STRUCT
 END_TYPE

@@ -1,0 +1,142 @@
+]633;E;echo "=== STEP 267: CALIBRATION FAMILY/SENSOR SUMMARY RECORDS ===";3a3e0170-d62b-4ca0-afcd-50a4e5bb3d7a]633;C=== STEP 267: CALIBRATION FAMILY/SENSOR SUMMARY RECORDS ===
+timestamp_utc=2026-04-19T16:43:37Z
+
+=== APPLY ===
+OK: calibration family/sensor summary records integrated
+
+=== VERIFY DUT ===
+274:    Calibration_Family_Gas : ST_Calibration_Family_Summary;
+275:    Calibration_Family_Temperature : ST_Calibration_Family_Summary;
+276:    Calibration_Family_Pressure : ST_Calibration_Family_Summary;
+277:    Calibration_Family_Humidity : ST_Calibration_Family_Summary;
+279:    Calibration_Sensor_CO : ST_Calibration_Sensor_Summary;
+280:    Calibration_Sensor_Methane : ST_Calibration_Sensor_Summary;
+281:    Calibration_Sensor_FloorTemp1 : ST_Calibration_Sensor_Summary;
+282:    Calibration_Sensor_FloorTemp2 : ST_Calibration_Sensor_Summary;
+283:    Calibration_Sensor_OutdoorTemp : ST_Calibration_Sensor_Summary;
+284:    Calibration_Sensor_RoomHum1 : ST_Calibration_Sensor_Summary;
+285:    Calibration_Sensor_DHWPressure : ST_Calibration_Sensor_Summary;
+
+=== VERIFY PRG_SYSTEM ===
+1614:// === CALIBRATION FAMILY/SENSOR SUMMARY RECORDS ===
+1616:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.active := TRUE;
+1617:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Gas;
+1618:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.sensor_count := 2;
+1619:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.verification_active_count := 0;
+1621:    GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.verification_active_count :=
+1622:        GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.verification_active_count + 1;
+1625:    GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.verification_active_count :=
+1626:        GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.verification_active_count + 1;
+1628:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.failed_count := 0;
+1630:    GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.failed_count :=
+1631:        GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.failed_count + 1;
+1634:    GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.failed_count :=
+1635:        GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.failed_count + 1;
+1637:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.max_deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_CO_Deviation_Percent;
+1639:   GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.max_deviation_percent THEN
+1640:    GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.max_deviation_percent :=
+1643:GVL_STATUS.G_Diagnostics.Calibration_Family_Gas.summary_text := 'Gas family';
+1645:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.active := TRUE;
+1646:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+1647:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.sensor_count := 3;
+1648:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count := 0;
+1650:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count :=
+1651:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count + 1;
+1654:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count :=
+1655:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count + 1;
+1658:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count :=
+1659:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.verification_active_count + 1;
+1661:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count := 0;
+1663:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count :=
+1664:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count + 1;
+1667:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count :=
+1668:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count + 1;
+1671:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count :=
+1672:        GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.failed_count + 1;
+1674:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.max_deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent;
+1676:   GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.max_deviation_percent THEN
+1677:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.max_deviation_percent :=
+1681:   GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.max_deviation_percent THEN
+1682:    GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.max_deviation_percent :=
+1685:GVL_STATUS.G_Diagnostics.Calibration_Family_Temperature.summary_text := 'Temperature family';
+1687:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.active := TRUE;
+1688:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure;
+1689:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.sensor_count := 1;
+1690:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.verification_active_count := 0;
+1692:    GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.verification_active_count := 1;
+1694:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.failed_count := 0;
+1696:    GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.failed_count := 1;
+1698:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.max_deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent;
+1699:GVL_STATUS.G_Diagnostics.Calibration_Family_Pressure.summary_text := 'Pressure family';
+1701:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.active := TRUE;
+1702:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity;
+1703:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.sensor_count := 1;
+1704:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.verification_active_count := 0;
+1705:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.failed_count := 0;
+1706:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.max_deviation_percent := 0.0;
+1707:GVL_STATUS.G_Diagnostics.Calibration_Family_Humidity.summary_text := 'Humidity family';
+1710:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.active := TRUE;
+1711:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Gas;
+1712:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.calibrated_value := L_CO_Calibrated;
+1713:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_CO_Deviation_Percent;
+1714:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.verification_active := GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Active;
+1715:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Failed;
+1716:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.record_index := 1;
+1717:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.label := 'CO';
+1718:GVL_STATUS.G_Diagnostics.Calibration_Sensor_CO.summary_text := 'CO sensor';
+1720:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.active := TRUE;
+1721:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Gas;
+1722:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.calibrated_value := L_Methane_Calibrated;
+1723:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_Methane_Deviation_Percent;
+1724:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.verification_active := GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Active;
+1725:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Failed;
+1726:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.record_index := 2;
+1727:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.label := 'Methane';
+1728:GVL_STATUS.G_Diagnostics.Calibration_Sensor_Methane.summary_text := 'Methane sensor';
+1730:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.active := TRUE;
+1731:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+1732:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.calibrated_value := L_FloorTemp1_Calibrated;
+1733:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent;
+1734:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.verification_active := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active;
+1735:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed;
+1736:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.record_index := 3;
+1737:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.label := 'FloorTemp1';
+1738:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp1.summary_text := 'Floor temperature 1';
+1740:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.active := TRUE;
+1741:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+1742:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.calibrated_value := L_FloorTemp2_Calibrated;
+1743:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Deviation_Percent;
+1744:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.verification_active := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active;
+1745:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed;
+1746:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.record_index := 4;
+1747:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.label := 'FloorTemp2';
+1748:GVL_STATUS.G_Diagnostics.Calibration_Sensor_FloorTemp2.summary_text := 'Floor temperature 2';
+1750:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.active := TRUE;
+1751:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+1752:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.calibrated_value := L_OutdoorTemp_Calibrated;
+1753:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Deviation_Percent;
+1754:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.verification_active := GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active;
+1755:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed;
+1756:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.record_index := 5;
+1757:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.label := 'OutdoorTemp';
+1758:GVL_STATUS.G_Diagnostics.Calibration_Sensor_OutdoorTemp.summary_text := 'Outdoor temperature';
+1760:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.active := TRUE;
+1761:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity;
+1762:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.calibrated_value := L_RoomHum1_Calibrated;
+1763:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.deviation_percent := 0.0;
+1764:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.verification_active := FALSE;
+1765:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.verification_failed := FALSE;
+1766:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.record_index := 6;
+1767:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.label := 'RoomHum1';
+1768:GVL_STATUS.G_Diagnostics.Calibration_Sensor_RoomHum1.summary_text := 'Room humidity 1';
+1770:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.active := TRUE;
+1771:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.status := GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure;
+1772:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.calibrated_value := L_DHWPressure_Calibrated;
+1773:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.deviation_percent := GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent;
+1774:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.verification_active := GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active;
+1775:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.verification_failed := GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed;
+1776:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.record_index := 7;
+1777:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.label := 'DHWPressure';
+1778:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.summary_text := 'DHW pressure';
+
+=== COMPILE ===
