@@ -56,3 +56,17 @@ OK: FloorTemp2 and OutdoorTemp calibration observers integrated
 1528:L_OutdoorTemp_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[5].last_calibration_timestamp;
 
 === COMPILE ===
+[main 6b1914b] test: compile smoke after migration
+ 7 files changed, 923 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_257_floortemp2_outdoor_calibration_observers/floortemp2_outdoor_calibration_observers.log
+ create mode 100644 steps/2026-04-19_floortemp2_outdoor_calibration_observers/01_floortemp2_outdoor_calibration_observers.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   f17ce77..6b1914b  main -> main
+compile_exit=0
+
+=== END STEP 257 ===
