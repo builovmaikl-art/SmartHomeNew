@@ -2,85 +2,32 @@
 **Project:** SmartHomeNew  
 **Snapshot Date:** 2026-04-19
 
----
-
-# CURRENT STAGE
 STAGE: ARCHITECTURE CONSOLIDATION
 
----
+CORE:
+Heating Protection        ✅
+Calibration Pipeline      ✅
+Verification              ✅
 
-# CORE — STATUS
+DATA LAYER:
+Sensor Families           ✅
+Config Mapping            ✅
+Status Aggregator         ✅
+Family Summary            ✅
+Sensor Summary            ✅
 
-Heating Protection        ✅ DONE  
-Calibration Pipeline      ✅ DONE  
-Verification              ✅ DONE  
+PENDING:
+Snapshot Manager          ⚠
+Snapshot NVRAM            ❌
+Manual Calibration        ❌
 
----
+FEATURE:
+Presence Playback         ❌
+Zone Access               ❌
+Maintenance               🟡
 
-# DATA LAYER (HMI READY)
-
-Sensor Families           ✅ DONE  
-Config Mapping            ✅ DONE  
-Status Aggregator         ✅ DONE  
-Family Summary            ✅ DONE  
-Sensor Summary            ✅ DONE  
-
----
-
-# PENDING CORE
-
-Snapshot Manager          ⚠ PARTIAL  
-Snapshot NVRAM            ❌ PLANNED  
-Manual Calibration        ❌ PLANNED  
-Analog Processing         ⚠ PARTIAL  
-
----
-
-# FEATURE LAYER
-
-Presence Playback         ❌ PLANNED  
-Zone Access               ❌ PLANNED  
-Maintenance Access        🟡 PARKED  
-
----
-
-# PRIORITY (NEXT)
-
-1. Snapshot / Persistence
-2. Command Model
-3. Severity Model
-4. Coverage Expansion
-
----
-
-# MATRIX (SHORT)
-
-DONE:
-- Heating
-- Calibration (full pipeline)
-- HMI data model
-
-PARTIAL:
-- Snapshot (history only)
-
-PLANNED:
-- Snapshot NVRAM
-- Manual calibration
-- Command model
-- Severity model
-- Presence playback
-- Zone access
-
-PARKED:
-- Maintenance access
-- Sensor distribution
-
----
-
-# GOAL
-
-Полностью детерминированная система  
-с HMI как thin layer над PLC  
-
----
-
+NEXT:
+1. Snapshot
+2. Command model
+3. Severity
+4. Coverage
