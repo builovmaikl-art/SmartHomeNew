@@ -1,0 +1,52 @@
+]633;E;echo "=== STEP 260: CALIBRATION PHASE3 BASELINE + GAS FAMILY GENERIC LOOP ===";99525b74-ad6c-4785-b485-c6be69527e08]633;C=== STEP 260: CALIBRATION PHASE3 BASELINE + GAS FAMILY GENERIC LOOP ===
+timestamp_utc=2026-04-19T12:50:48Z
+
+=== APPLY ===
+OK: gas family generic loop integrated
+
+=== VERIFY DOC ===
+doc_ok=1
+
+=== VERIFY PRG_SYSTEM ===
+7:fbCalibGasFamily : ARRAY[1..2] OF FB_Sensor_Calibration_Processor;
+9:fbCalibVerifyGasFamily : ARRAY[1..2] OF FB_Calibration_Manager;
+20:L_GasFamily_Processed : REAL;
+21:L_GasFamily_Calibrated : ARRAY[1..2] OF REAL;
+37:L_GasFamily_Calib_TS_Prev : ARRAY[1..2] OF UDINT;
+38:L_GasFamily_Verification_Active_Prev : ARRAY[1..2] OF BOOL;
+72:    L_GasFamily_i : INT;
+1280:// === GAS FAMILY CALIBRATION GENERIC LOOP ===
+1284:FOR L_GasFamily_i := 1 TO 2 DO
+1285:    CASE L_GasFamily_i OF
+1287:            L_GasFamily_Processed := L_CO_Processed;
+1289:            L_GasFamily_Processed := L_Methane_Processed;
+1291:        L_GasFamily_Processed := 0.0;
+1294:    fbCalibGasFamily[L_GasFamily_i](
+1295:        VI_Raw_Value := L_GasFamily_Processed,
+1296:        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i]
+1298:    L_GasFamily_Calibrated[L_GasFamily_i] := fbCalibGasFamily[L_GasFamily_i].VO_Calibrated_Value;
+1300:    fbCalibVerifyGasFamily[L_GasFamily_i](
+1301:        VI_Raw_Value := L_GasFamily_Processed,
+1303:        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i],
+1306:            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp <> 0 AND
+1307:            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp <> L_GasFamily_Calib_TS_Prev[L_GasFamily_i]
+1311:    CASE L_GasFamily_i OF
+1313:            L_CO_Calibrated := L_GasFamily_Calibrated[1];
+1315:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active;
+1317:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed;
+1319:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Deviation_Percent;
+1322:            L_Methane_Calibrated := L_GasFamily_Calibrated[2];
+1324:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active;
+1326:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed;
+1328:                fbCalibVerifyGasFamily[L_GasFamily_i].VO_Deviation_Percent;
+1331:    IF L_GasFamily_Verification_Active_Prev[L_GasFamily_i] AND
+1332:       (NOT fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active) THEN
+1333:        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].verification_passed :=
+1334:            NOT fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed;
+1336:        CASE L_GasFamily_i OF
+1341:                IF fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed THEN
+1351:                IF fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed THEN
+1359:    L_GasFamily_Verification_Active_Prev[L_GasFamily_i] := fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active;
+1360:    L_GasFamily_Calib_TS_Prev[L_GasFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp;
+
+=== COMPILE ===
