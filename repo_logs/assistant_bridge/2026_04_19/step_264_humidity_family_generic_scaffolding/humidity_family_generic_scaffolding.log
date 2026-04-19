@@ -19,3 +19,17 @@ OK: humidity family generic scaffolding integrated
 1513:    L_RoomHum1_Calibrated := L_HumidityFamily_Calibrated[1];
 
 === COMPILE ===
+[main 3d935e7] test: compile smoke after migration
+ 5 files changed, 526 insertions(+), 499 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_264_humidity_family_generic_scaffolding/humidity_family_generic_scaffolding.log
+ create mode 100644 steps/2026-04-19_humidity_family_generic_scaffolding/01_humidity_family_generic_scaffolding.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   3f100b9..3d935e7  main -> main
+compile_exit=0
+
+=== END STEP 264 ===
