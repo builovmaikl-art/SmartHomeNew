@@ -140,3 +140,19 @@ OK: calibration family/sensor summary records integrated
 1778:GVL_STATUS.G_Diagnostics.Calibration_Sensor_DHWPressure.summary_text := 'DHW pressure';
 
 === COMPILE ===
+[main adc96c3] test: compile smoke after migration
+ 9 files changed, 1306 insertions(+), 390 deletions(-)
+ create mode 100644 ST_Calibration_Family_Summary.dut
+ create mode 100644 ST_Calibration_Sensor_Summary.dut
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_267_calibration_family_sensor_summary_records/calibration_family_sensor_summary_records.log
+ create mode 100644 steps/2026-04-19_calibration_family_sensor_summary_records/01_calibration_family_sensor_summary_records.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   a496544..adc96c3  main -> main
+compile_exit=0
+
+=== END STEP 267 ===
