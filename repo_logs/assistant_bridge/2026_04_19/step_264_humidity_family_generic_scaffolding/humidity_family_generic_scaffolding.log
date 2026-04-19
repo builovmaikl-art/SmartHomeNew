@@ -1,0 +1,21 @@
+]633;E;echo "=== STEP 264: HUMIDITY FAMILY GENERIC SCAFFOLDING ===";ce0f91dc-fae3-4e2f-a224-60e9467d4b5d]633;C=== STEP 264: HUMIDITY FAMILY GENERIC SCAFFOLDING ===
+timestamp_utc=2026-04-19T14:06:20Z
+
+=== APPLY ===
+OK: humidity family generic scaffolding integrated
+
+=== VERIFY ===
+12:fbCalibHumidityFamily : ARRAY[1..1] OF FB_Sensor_Calibration_Processor;
+29:L_HumidityFamily_Raw : REAL;
+30:L_HumidityFamily_Calibrated : ARRAY[1..1] OF REAL;
+83:    L_HumidityFamily_i : INT;
+1498:// === HUMIDITY FAMILY GENERIC LOOP ===
+1501:FOR L_HumidityFamily_i := 1 TO 1 DO
+1503:    L_HumidityFamily_Raw := GVL_STATE.G_Room_Hum[1];
+1505:    fbCalibHumidityFamily[L_HumidityFamily_i](
+1506:        VI_Raw_Value := L_HumidityFamily_Raw,
+1510:    L_HumidityFamily_Calibrated[L_HumidityFamily_i] :=
+1511:        fbCalibHumidityFamily[L_HumidityFamily_i].VO_Calibrated_Value;
+1513:    L_RoomHum1_Calibrated := L_HumidityFamily_Calibrated[1];
+
+=== COMPILE ===

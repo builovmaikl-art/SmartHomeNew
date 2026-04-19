@@ -9,7 +9,7 @@ fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibVerifyGasFamily : ARRAY[1..2] OF FB_Calibration_Manager;
 fbCalibTempFamily : ARRAY[1..3] OF FB_Sensor_Calibration_Processor;
 fbCalibVerifyTempFamily : ARRAY[1..3] OF FB_Calibration_Manager;
-fbCalibRoomHum1 : FB_Sensor_Calibration_Processor;
+fbCalibHumidityFamily : ARRAY[1..1] OF FB_Sensor_Calibration_Processor;
 fbCalibPressureFamily : ARRAY[1..1] OF FB_Sensor_Calibration_Processor;
 fbCalibVerifyPressureFamily : ARRAY[1..1] OF FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
@@ -26,6 +26,8 @@ L_FloorTemp1_Calibrated : REAL;
 L_FloorTemp2_Calibrated : REAL;
 L_OutdoorTemp_Calibrated : REAL;
 L_RoomHum1_Calibrated : REAL;
+L_HumidityFamily_Raw : REAL;
+L_HumidityFamily_Calibrated : ARRAY[1..1] OF REAL;
 L_DHWPressure_Calibrated : REAL;
 L_PressureFamily_Raw : REAL;
 L_PressureFamily_Calibrated : ARRAY[1..1] OF REAL;
@@ -78,6 +80,7 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     L_TempFamily_i : INT;
     L_GasFamily_i : INT;
     L_PressureFamily_i : INT;
+    L_HumidityFamily_i : INT;
     L_PressureFamily_Calib_TS_Prev : ARRAY[1..1] OF UDINT;
     L_PressureFamily_Verification_Active_Prev : ARRAY[1..1] OF BOOL;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
@@ -1492,69 +1495,27 @@ FOR L_TempFamily_i := 1 TO 3 DO
     L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp;
 END_FOR;
 
-// === HUMIDITY FAMILY PILOT ===
-// NOTE:
-// FB_Calibration_Manager currently supports only:
-//   1 = Temp, 2 = Pressure, 3 = Gas
-// Therefore humidity is added first as calibration/export pilot,
-// without fake verification semantics.
-fbCalibRoomHum1(
-    VI_Raw_Value := GVL_STATE.G_Room_Hum[1],
-    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[6]
-);
-L_RoomHum1_Calibrated := fbCalibRoomHum1.VO_Calibrated_Value;
-
-GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
-GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
-GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
-
-// === PRESSURE FAMILY GENERIC LOOP ===
+// === HUMIDITY FAMILY GENERIC LOOP ===
 // Mapping:
-// 1 -> DHW pressure (record[7])
-FOR L_PressureFamily_i := 1 TO 1 DO
+// 1 -> RoomHum1 (record[6])
+FOR L_HumidityFamily_i := 1 TO 1 DO
 
-    L_PressureFamily_Raw := GVL_STATE.G_DHW_Pressure;
+    L_HumidityFamily_Raw := GVL_STATE.G_Room_Hum[1];
 
-    fbCalibPressureFamily[L_PressureFamily_i](
-        VI_Raw_Value := L_PressureFamily_Raw,
-        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7]
-    );
-    L_PressureFamily_Calibrated[L_PressureFamily_i] :=
-        fbCalibPressureFamily[L_PressureFamily_i].VO_Calibrated_Value;
-
-    fbCalibVerifyPressureFamily[L_PressureFamily_i](
-        VI_Raw_Value := L_PressureFamily_Raw,
-        VI_Type := 2,
-        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7],
-        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-        VI_Start_Verification := (
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> 0 AND
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> L_PressureFamily_Calib_TS_Prev[1]
-        )
+    fbCalibHumidityFamily[L_HumidityFamily_i](
+        VI_Raw_Value := L_HumidityFamily_Raw,
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[6]
     );
 
-    L_DHWPressure_Calibrated := L_PressureFamily_Calibrated[1];
+    L_HumidityFamily_Calibrated[L_HumidityFamily_i] :=
+        fbCalibHumidityFamily[L_HumidityFamily_i].VO_Calibrated_Value;
 
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Active := TRUE;
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Calibrated_Value := L_DHWPressure_Calibrated;
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active :=
-        fbCalibVerifyPressureFamily[1].VO_Verification_Active;
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed :=
-        fbCalibVerifyPressureFamily[1].VO_Verification_Failed;
-    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent :=
-        fbCalibVerifyPressureFamily[1].VO_Deviation_Percent;
+    L_RoomHum1_Calibrated := L_HumidityFamily_Calibrated[1];
 
-    IF L_PressureFamily_Verification_Active_Prev[1] AND
-       (NOT fbCalibVerifyPressureFamily[1].VO_Verification_Active) THEN
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].verification_passed :=
-            NOT fbCalibVerifyPressureFamily[1].VO_Verification_Failed;
-    END_IF;
-
-    L_PressureFamily_Verification_Active_Prev[1] :=
-        fbCalibVerifyPressureFamily[1].VO_Verification_Active;
-
-    L_PressureFamily_Calib_TS_Prev[1] :=
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
+    GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
+    GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
+    GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text :=
+        'RoomHum1 calibration (generic loop)';
 
 END_FOR;
 // === SMOKE SHADOW EXEC ===
