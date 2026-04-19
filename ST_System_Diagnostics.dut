@@ -262,5 +262,13 @@ STRUCT
     Calibration_DHWPressure_Calibrated_Value : REAL;
     Calibration_DHWPressure_Summary_Text : STRING(160);
 
+    // === CALIBRATION STATUS AGGREGATOR ===
+    Calibration_Status_Global : INT;
+    Calibration_Status_Gas : INT;
+    Calibration_Status_Temperature : INT;
+    Calibration_Status_Pressure : INT;
+    Calibration_Status_Humidity : INT;
+    Calibration_Status_Summary_Text : STRING(160);
+
 END_STRUCT
 END_TYPE

@@ -1,0 +1,46 @@
+]633;E;echo "=== STEP 266: CALIBRATION STATUS AGGREGATOR ===";3a3e0170-d62b-4ca0-afcd-50a4e5bb3d7a]633;C=== STEP 266: CALIBRATION STATUS AGGREGATOR ===
+timestamp_utc=2026-04-19T16:25:52Z
+
+=== APPLY ===
+OK: calibration status aggregator integrated
+
+=== VERIFY DUT ===
+266:    Calibration_Status_Global : INT;
+267:    Calibration_Status_Gas : INT;
+268:    Calibration_Status_Temperature : INT;
+269:    Calibration_Status_Pressure : INT;
+270:    Calibration_Status_Humidity : INT;
+271:    Calibration_Status_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+1528:// === CALIBRATION STATUS AGGREGATOR ===
+1538:    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 3;
+1541:    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 1;
+1544:    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 2;
+1546:    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 0;
+1553:    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 3;
+1557:    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 1;
+1561:    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 2;
+1563:    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 0;
+1568:    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 3;
+1570:    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 1;
+1572:    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 2;
+1574:    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 0;
+1579:    GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity := 0;
+1581:    GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity := 2;
+1585:GVL_STATUS.G_Diagnostics.Calibration_Status_Global := 0;
+1587:IF GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+1588:    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity;
+1591:IF GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+1592:    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure;
+1595:IF GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+1596:    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+1599:IF GVL_STATUS.G_Diagnostics.Calibration_Status_Gas > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+1600:    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Gas;
+1603:CASE GVL_STATUS.G_Diagnostics.Calibration_Status_Global OF
+1605:        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: ERROR';
+1607:        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: WARNING';
+1609:        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: IN_PROGRESS';
+1611:    GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: OK';
+
+=== COMPILE ===

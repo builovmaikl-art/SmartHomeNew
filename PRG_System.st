@@ -1524,6 +1524,93 @@ FOR L_HumidityFamily_i := 1 TO 1 DO
         'RoomHum1 calibration (generic loop)';
 
 END_FOR;
+
+// === CALIBRATION STATUS AGGREGATOR ===
+// Status codes:
+// 0 = OK
+// 1 = IN_PROGRESS
+// 2 = WARNING
+// 3 = ERROR
+
+// Gas family
+IF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Failed OR
+   GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 3;
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Active OR
+      GVL_STATUS.G_Diagnostics.Calibration_Methane_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 1;
+ELSIF (GVL_STATUS.G_Diagnostics.Calibration_CO_Deviation_Percent > 2.0) OR
+      (GVL_STATUS.G_Diagnostics.Calibration_Methane_Deviation_Percent > 2.0) THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 2;
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Gas := 0;
+END_IF;
+
+// Temperature family
+IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed OR
+   GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Failed OR
+   GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 3;
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active OR
+      GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Verification_Active OR
+      GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 1;
+ELSIF (GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent > 2.0) OR
+      (GVL_STATUS.G_Diagnostics.Calibration_FloorTemp2_Deviation_Percent > 2.0) OR
+      (GVL_STATUS.G_Diagnostics.Calibration_OutdoorTemp_Deviation_Percent > 2.0) THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 2;
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature := 0;
+END_IF;
+
+// Pressure family
+IF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 3;
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 1;
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent > 2.0 THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 2;
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure := 0;
+END_IF;
+
+// Humidity family
+IF GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity := 0;
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity := 2;
+END_IF;
+
+// Global
+GVL_STATUS.G_Diagnostics.Calibration_Status_Global := 0;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Humidity;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Pressure;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Temperature;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_Status_Gas > GVL_STATUS.G_Diagnostics.Calibration_Status_Global THEN
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Global := GVL_STATUS.G_Diagnostics.Calibration_Status_Gas;
+END_IF;
+
+CASE GVL_STATUS.G_Diagnostics.Calibration_Status_Global OF
+    3:
+        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: ERROR';
+    2:
+        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: WARNING';
+    1:
+        GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: IN_PROGRESS';
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: OK';
+END_CASE;
+
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(
     VI_Smoke_Signal := GVL_STATE.G_Smoke_Sensors[1]
