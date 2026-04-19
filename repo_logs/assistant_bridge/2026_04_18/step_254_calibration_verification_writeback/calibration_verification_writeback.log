@@ -16,3 +16,18 @@ OK: calibration verification write-back integrated
 1347:L_Methane_Verification_Active_Prev := fbCalibVerifyMethane.VO_Verification_Active;
 
 === COMPILE ===
+[main 914fb70] test: compile smoke after migration
+ 5 files changed, 574 insertions(+), 382 deletions(-)
+ create mode 100644 diagnostics/2026_04_19/step_12_compile_smoke.log
+ create mode 100644 repo_logs/assistant_bridge/2026_04_18/step_254_calibration_verification_writeback/calibration_verification_writeback.log
+ create mode 100644 steps/2026-04-18_calibration_verification_writeback/01_calibration_verification_writeback.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   bfd246f..914fb70  main -> main
+compile_exit=0
+
+=== END STEP 254 ===
