@@ -1,0 +1,18 @@
+]633;E;echo "=== STEP 254: CALIBRATION VERIFICATION WRITE-BACK ===";1b7a776b-58f7-45ba-99db-33164feac7d0]633;C=== STEP 254: CALIBRATION VERIFICATION WRITE-BACK ===
+timestamp_utc=2026-04-19T07:34:17Z
+
+=== APPLY ===
+OK: calibration verification write-back integrated
+
+=== VERIFY PRG_SYSTEM ===
+32:L_CO_Verification_Active_Prev : BOOL;
+33:L_Methane_Verification_Active_Prev : BOOL;
+1332:// === CALIBRATION VERIFICATION WRITE-BACK ===
+1334:IF L_CO_Verification_Active_Prev AND
+1336:    GVL_CONFIG.G_HMI_Sensor_Calibrations[1].verification_passed :=
+1340:IF L_Methane_Verification_Active_Prev AND
+1342:    GVL_CONFIG.G_HMI_Sensor_Calibrations[2].verification_passed :=
+1346:L_CO_Verification_Active_Prev := fbCalibVerifyCO.VO_Verification_Active;
+1347:L_Methane_Verification_Active_Prev := fbCalibVerifyMethane.VO_Verification_Active;
+
+=== COMPILE ===

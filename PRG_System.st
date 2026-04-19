@@ -29,6 +29,8 @@ L_Heating_Pump_Force_Hold_MS : UDINT;
 L_Heating_Zone_Lock_Hold_MS : UDINT;
 L_CO_Calib_TS_Prev : UDINT;
 L_Methane_Calib_TS_Prev : UDINT;
+L_CO_Verification_Active_Prev : BOOL;
+L_Methane_Verification_Active_Prev : BOOL;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1326,6 +1328,23 @@ ELSIF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Active OR
 ELSE
     GVL_STATUS.G_Diagnostics.Calibration_Verification_Summary_Text := 'Calibration verification idle';
 END_IF;
+
+// === CALIBRATION VERIFICATION WRITE-BACK ===
+// write result once on verification completion edge
+IF L_CO_Verification_Active_Prev AND
+   (NOT fbCalibVerifyCO.VO_Verification_Active) THEN
+    GVL_CONFIG.G_HMI_Sensor_Calibrations[1].verification_passed :=
+        NOT fbCalibVerifyCO.VO_Verification_Failed;
+END_IF;
+
+IF L_Methane_Verification_Active_Prev AND
+   (NOT fbCalibVerifyMethane.VO_Verification_Active) THEN
+    GVL_CONFIG.G_HMI_Sensor_Calibrations[2].verification_passed :=
+        NOT fbCalibVerifyMethane.VO_Verification_Failed;
+END_IF;
+
+L_CO_Verification_Active_Prev := fbCalibVerifyCO.VO_Verification_Active;
+L_Methane_Verification_Active_Prev := fbCalibVerifyMethane.VO_Verification_Active;
 
 L_CO_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[1].last_calibration_timestamp;
 L_Methane_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[2].last_calibration_timestamp;
