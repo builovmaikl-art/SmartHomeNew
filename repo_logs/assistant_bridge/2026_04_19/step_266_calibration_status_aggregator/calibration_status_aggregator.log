@@ -44,3 +44,17 @@ OK: calibration status aggregator integrated
 1611:    GVL_STATUS.G_Diagnostics.Calibration_Status_Summary_Text := 'Calibration status: OK';
 
 === COMPILE ===
+[main cb2c655] test: compile smoke after migration
+ 7 files changed, 779 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_266_calibration_status_aggregator/calibration_status_aggregator.log
+ create mode 100644 steps/2026-04-19_calibration_status_aggregator/01_calibration_status_aggregator.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   f943db4..cb2c655  main -> main
+compile_exit=0
+
+=== END STEP 266 ===
