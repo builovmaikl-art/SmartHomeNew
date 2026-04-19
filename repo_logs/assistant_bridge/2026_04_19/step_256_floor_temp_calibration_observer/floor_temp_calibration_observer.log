@@ -1,0 +1,37 @@
+]633;E;echo "=== STEP 256: FLOOR TEMP CALIBRATION OBSERVER ===";1b7a776b-58f7-45ba-99db-33164feac7d0]633;C=== STEP 256: FLOOR TEMP CALIBRATION OBSERVER ===
+timestamp_utc=2026-04-19T07:59:23Z
+
+=== APPLY ===
+OK: floor temperature calibration observer integrated
+
+=== VERIFY DUT ===
+230:    Calibration_FloorTemp1_Active : BOOL;
+231:    Calibration_FloorTemp1_Verification_Active : BOOL;
+232:    Calibration_FloorTemp1_Verification_Failed : BOOL;
+233:    Calibration_FloorTemp1_Deviation_Percent : REAL;
+234:    Calibration_FloorTemp1_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+12:fbCalibFloorTemp1 : FB_Sensor_Calibration_Processor;
+13:fbCalibVerifyFloorTemp1 : FB_Calibration_Manager;
+22:L_FloorTemp1_Calibrated : REAL;
+37:L_FloorTemp1_Calib_TS_Prev : UDINT;
+38:L_FloorTemp1_Verification_Active_Prev : BOOL;
+1341:    GVL_CONFIG.G_HMI_Sensor_Calibrations[1].verification_passed :=
+1347:    GVL_CONFIG.G_HMI_Sensor_Calibrations[2].verification_passed :=
+1391:// === FLOOR TEMP 1 CALIBRATION OBSERVER (PILOT) ===
+1392:fbCalibFloorTemp1(
+1396:L_FloorTemp1_Calibrated := fbCalibFloorTemp1.VO_Calibrated_Value;
+1398:fbCalibVerifyFloorTemp1(
+1405:        GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp <> L_FloorTemp1_Calib_TS_Prev
+1411:    fbCalibVerifyFloorTemp1.VO_Verification_Active;
+1413:    fbCalibVerifyFloorTemp1.VO_Verification_Failed;
+1415:    fbCalibVerifyFloorTemp1.VO_Deviation_Percent;
+1425:IF L_FloorTemp1_Verification_Active_Prev AND
+1426:   (NOT fbCalibVerifyFloorTemp1.VO_Verification_Active) THEN
+1427:    GVL_CONFIG.G_HMI_Sensor_Calibrations[3].verification_passed :=
+1428:        NOT fbCalibVerifyFloorTemp1.VO_Verification_Failed;
+1431:L_FloorTemp1_Verification_Active_Prev := fbCalibVerifyFloorTemp1.VO_Verification_Active;
+1432:L_FloorTemp1_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp;
+
+=== COMPILE ===

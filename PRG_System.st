@@ -9,6 +9,8 @@ fbSensorMethane : FB_Sensor_Analog_Processing;
 fbCalibMethane  : FB_Sensor_Calibration_Processor;
 fbCalibVerifyCO : FB_Calibration_Manager;
 fbCalibVerifyMethane : FB_Calibration_Manager;
+fbCalibFloorTemp1 : FB_Sensor_Calibration_Processor;
+fbCalibVerifyFloorTemp1 : FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -17,6 +19,7 @@ L_CO_Calibrated : REAL;
 L_Safety_Selector_i : INT;
 L_Methane_Processed : REAL;
 L_Methane_Calibrated : REAL;
+L_FloorTemp1_Calibrated : REAL;
 L_Smoke_Detected : BOOL;
 L_Window_Hours : REAL;
 L_Snapshot : ST_State_Snapshot;
@@ -31,6 +34,8 @@ L_CO_Calib_TS_Prev : UDINT;
 L_Methane_Calib_TS_Prev : UDINT;
 L_CO_Verification_Active_Prev : BOOL;
 L_Methane_Verification_Active_Prev : BOOL;
+L_FloorTemp1_Calib_TS_Prev : UDINT;
+L_FloorTemp1_Verification_Active_Prev : BOOL;
 L_Snapshot_Last_Event_MS : UDINT;
 L_Snapshot_Min_Interval_MS : UDINT;
 
@@ -1382,6 +1387,49 @@ GVL_Sensor_Shadow.G_Methane_Processed := L_Methane_Processed;
 GVL_Sensor_Shadow.G_Methane_Calibrated := L_Methane_Calibrated;
 GVL_Sensor_Shadow.G_Methane_Error := fbSensorMethane.VO_Error;
 GVL_Sensor_Shadow.G_Methane_Diag_Code := fbSensorMethane.VO_Diag_Code;
+
+// === FLOOR TEMP 1 CALIBRATION OBSERVER (PILOT) ===
+fbCalibFloorTemp1(
+    VI_Raw_Value := GVL_STATE.G_Floor_Temps[1],
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[3]
+);
+L_FloorTemp1_Calibrated := fbCalibFloorTemp1.VO_Calibrated_Value;
+
+fbCalibVerifyFloorTemp1(
+    VI_Raw_Value := GVL_STATE.G_Floor_Temps[1],
+    VI_Type := 1,
+    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[3],
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Start_Verification := (
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp <> 0 AND
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp <> L_FloorTemp1_Calib_TS_Prev
+    )
+);
+
+GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Active := TRUE;
+GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active :=
+    fbCalibVerifyFloorTemp1.VO_Verification_Active;
+GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed :=
+    fbCalibVerifyFloorTemp1.VO_Verification_Failed;
+GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Deviation_Percent :=
+    fbCalibVerifyFloorTemp1.VO_Deviation_Percent;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification failed';
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification active';
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_FloorTemp1_Summary_Text := 'FloorTemp1 verification idle';
+END_IF;
+
+IF L_FloorTemp1_Verification_Active_Prev AND
+   (NOT fbCalibVerifyFloorTemp1.VO_Verification_Active) THEN
+    GVL_CONFIG.G_HMI_Sensor_Calibrations[3].verification_passed :=
+        NOT fbCalibVerifyFloorTemp1.VO_Verification_Failed;
+END_IF;
+
+L_FloorTemp1_Verification_Active_Prev := fbCalibVerifyFloorTemp1.VO_Verification_Active;
+L_FloorTemp1_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[3].last_calibration_timestamp;
 
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(

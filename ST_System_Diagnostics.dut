@@ -226,6 +226,13 @@ STRUCT
     Calibration_Last_Event_Time_MS : UDINT;
     Calibration_Last_Event_Text : STRING(160);
 
+    // === FLOOR TEMP CALIBRATION OBSERVER (PILOT) ===
+    Calibration_FloorTemp1_Active : BOOL;
+    Calibration_FloorTemp1_Verification_Active : BOOL;
+    Calibration_FloorTemp1_Verification_Failed : BOOL;
+    Calibration_FloorTemp1_Deviation_Percent : REAL;
+    Calibration_FloorTemp1_Summary_Text : STRING(160);
+
 
 
 END_STRUCT
