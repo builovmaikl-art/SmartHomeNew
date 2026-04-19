@@ -50,3 +50,18 @@ doc_ok=1
 1360:    L_GasFamily_Calib_TS_Prev[L_GasFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp;
 
 === COMPILE ===
+[main 23e9c5b] test: compile smoke after migration
+ 6 files changed, 984 insertions(+), 606 deletions(-)
+ create mode 100644 docs/architecture/calibration_phase3_generic_families.md
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_260_calibration_phase3_baseline_and_gas_family_generic_loop/calibration_phase3_baseline_and_gas_family_generic_loop.log
+ create mode 100644 steps/2026-04-19_calibration_phase3_baseline_and_gas_family_generic_loop/01_gas_family_generic_loop.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   fed022d..23e9c5b  main -> main
+compile_exit=0
+
+=== END STEP 260 ===
