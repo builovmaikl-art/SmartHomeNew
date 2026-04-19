@@ -34,3 +34,17 @@ OK: pressure family generic loop integrated
 1556:    L_PressureFamily_Calib_TS_Prev[1] :=
 
 === COMPILE ===
+[main 8cead81] test: compile smoke after migration
+ 5 files changed, 646 insertions(+), 466 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_263_pressure_family_generic_loop/pressure_family_generic_loop.log
+ create mode 100644 steps/2026-04-19_pressure_family_generic_loop/01_pressure_family_generic_loop.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   6f97849..8cead81  main -> main
+compile_exit=0
+
+=== END STEP 263 ===
