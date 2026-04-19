@@ -81,6 +81,11 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     L_GasFamily_i : INT;
     L_PressureFamily_i : INT;
     L_HumidityFamily_i : INT;
+    // === CALIBRATION CONFIG-DRIVEN MAPPING (STAGE 1) ===
+    L_GasFamily_Record_Index : ARRAY[1..2] OF INT := [1, 2];
+    L_TempFamily_Record_Index : ARRAY[1..3] OF INT := [3, 4, 5];
+    L_PressureFamily_Record_Index : ARRAY[1..1] OF INT := [7];
+    L_HumidityFamily_Record_Index : ARRAY[1..1] OF INT := [6];
     L_PressureFamily_Calib_TS_Prev : ARRAY[1..1] OF UDINT;
     L_PressureFamily_Verification_Active_Prev : ARRAY[1..1] OF BOOL;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
@@ -1290,6 +1295,7 @@ fbSensorMethane(
 );
 L_Methane_Processed := fbSensorMethane.VO_Value;
 
+// === CALIBRATION CONFIG-DRIVEN MAPPING STAGE 1 ===
 // === GAS FAMILY CALIBRATION GENERIC LOOP ===
 // Mapping:
 // 1 -> CO, calibration record 1
@@ -1306,18 +1312,18 @@ FOR L_GasFamily_i := 1 TO 2 DO
 
     fbCalibGasFamily[L_GasFamily_i](
         VI_Raw_Value := L_GasFamily_Processed,
-        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i]
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]]
     );
     L_GasFamily_Calibrated[L_GasFamily_i] := fbCalibGasFamily[L_GasFamily_i].VO_Calibrated_Value;
 
     fbCalibVerifyGasFamily[L_GasFamily_i](
         VI_Raw_Value := L_GasFamily_Processed,
         VI_Type := 3,
-        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i],
+        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]],
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
         VI_Start_Verification := (
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp <> 0 AND
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp <> L_GasFamily_Calib_TS_Prev[L_GasFamily_i]
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]].last_calibration_timestamp <> 0 AND
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]].last_calibration_timestamp <> L_GasFamily_Calib_TS_Prev[L_GasFamily_i]
         )
     );
 
@@ -1343,7 +1349,7 @@ FOR L_GasFamily_i := 1 TO 2 DO
 
     IF L_GasFamily_Verification_Active_Prev[L_GasFamily_i] AND
        (NOT fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active) THEN
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].verification_passed :=
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]].verification_passed :=
             NOT fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Failed;
 
         CASE L_GasFamily_i OF
@@ -1370,7 +1376,7 @@ FOR L_GasFamily_i := 1 TO 2 DO
     END_IF;
 
     L_GasFamily_Verification_Active_Prev[L_GasFamily_i] := fbCalibVerifyGasFamily[L_GasFamily_i].VO_Verification_Active;
-    L_GasFamily_Calib_TS_Prev[L_GasFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_i].last_calibration_timestamp;
+    L_GasFamily_Calib_TS_Prev[L_GasFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_GasFamily_Record_Index[L_GasFamily_i]].last_calibration_timestamp;
 END_FOR;
 
 IF GVL_STATUS.G_Diagnostics.Calibration_CO_Verification_Failed THEN
@@ -1411,18 +1417,18 @@ FOR L_TempFamily_i := 1 TO 3 DO
 
     fbCalibTempFamily[L_TempFamily_i](
         VI_Raw_Value := L_TempFamily_Raw,
-        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2]
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]]
     );
     L_TempFamily_Calibrated[L_TempFamily_i] := fbCalibTempFamily[L_TempFamily_i].VO_Calibrated_Value;
 
     fbCalibVerifyTempFamily[L_TempFamily_i](
         VI_Raw_Value := L_TempFamily_Raw,
         VI_Type := 1,
-        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2],
+        VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]],
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
         VI_Start_Verification := (
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp <> 0 AND
-            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp <> L_TempFamily_Calib_TS_Prev[L_TempFamily_i]
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]].last_calibration_timestamp <> 0 AND
+            GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]].last_calibration_timestamp <> L_TempFamily_Calib_TS_Prev[L_TempFamily_i]
         )
     );
 
@@ -1487,12 +1493,12 @@ FOR L_TempFamily_i := 1 TO 3 DO
 
     IF L_TempFamily_Verification_Active_Prev[L_TempFamily_i] AND
        (NOT fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active) THEN
-        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].verification_passed :=
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]].verification_passed :=
             NOT fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Failed;
     END_IF;
 
     L_TempFamily_Verification_Active_Prev[L_TempFamily_i] := fbCalibVerifyTempFamily[L_TempFamily_i].VO_Verification_Active;
-    L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp;
+    L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_Record_Index[L_TempFamily_i]].last_calibration_timestamp;
 END_FOR;
 
 // === HUMIDITY FAMILY GENERIC LOOP ===
@@ -1504,7 +1510,7 @@ FOR L_HumidityFamily_i := 1 TO 1 DO
 
     fbCalibHumidityFamily[L_HumidityFamily_i](
         VI_Raw_Value := L_HumidityFamily_Raw,
-        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[6]
+        VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_HumidityFamily_Record_Index[L_HumidityFamily_i]]
     );
 
     L_HumidityFamily_Calibrated[L_HumidityFamily_i] :=
