@@ -254,5 +254,13 @@ STRUCT
 
 
 
+    // === PRESSURE FAMILY PILOT ===
+    Calibration_DHWPressure_Active : BOOL;
+    Calibration_DHWPressure_Verification_Active : BOOL;
+    Calibration_DHWPressure_Verification_Failed : BOOL;
+    Calibration_DHWPressure_Deviation_Percent : REAL;
+    Calibration_DHWPressure_Calibrated_Value : REAL;
+    Calibration_DHWPressure_Summary_Text : STRING(160);
+
 END_STRUCT
 END_TYPE

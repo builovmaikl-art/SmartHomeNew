@@ -10,6 +10,8 @@ fbCalibVerifyGasFamily : ARRAY[1..2] OF FB_Calibration_Manager;
 fbCalibTempFamily : ARRAY[1..3] OF FB_Sensor_Calibration_Processor;
 fbCalibVerifyTempFamily : ARRAY[1..3] OF FB_Calibration_Manager;
 fbCalibRoomHum1 : FB_Sensor_Calibration_Processor;
+fbCalibDHWPressure : FB_Sensor_Calibration_Processor;
+fbCalibVerifyDHWPressure : FB_Calibration_Manager;
 fbSmokeDetector : FB_Smoke_Detector;
 fbFreezeProtection : FB_FloorHeating_Freeze_Protection;
 fbOverheatProtection : FB_FloorHeating_Overheat_Protection;
@@ -24,6 +26,7 @@ L_FloorTemp1_Calibrated : REAL;
 L_FloorTemp2_Calibrated : REAL;
 L_OutdoorTemp_Calibrated : REAL;
 L_RoomHum1_Calibrated : REAL;
+L_DHWPressure_Calibrated : REAL;
 L_TempFamily_Raw : REAL;
 L_TempFamily_Calibrated : ARRAY[1..3] OF REAL;
 L_Smoke_Detected : BOOL;
@@ -72,6 +75,8 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     L_i : INT;
     L_TempFamily_i : INT;
     L_GasFamily_i : INT;
+    L_DHWPressure_Calib_TS_Prev : UDINT;
+    L_DHWPressure_Verification_Active_Prev : BOOL;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
     // --- ADAPTER LAYER ---
     L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
@@ -1499,6 +1504,47 @@ L_RoomHum1_Calibrated := fbCalibRoomHum1.VO_Calibrated_Value;
 GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Active := TRUE;
 GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Calibrated_Value := L_RoomHum1_Calibrated;
 GVL_STATUS.G_Diagnostics.Calibration_RoomHum1_Summary_Text := 'RoomHum1 calibration pilot active';
+
+// === PRESSURE FAMILY PILOT ===
+fbCalibDHWPressure(
+    VI_Raw_Value := GVL_STATE.G_DHW_Pressure,
+    VI_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7]
+);
+L_DHWPressure_Calibrated := fbCalibDHWPressure.VO_Calibrated_Value;
+
+fbCalibVerifyDHWPressure(
+    VI_Raw_Value := GVL_STATE.G_DHW_Pressure,
+    VI_Type := 2,
+    VI_Calib_Record := GVL_CONFIG.G_HMI_Sensor_Calibrations[7],
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Start_Verification := (
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> 0 AND
+        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> L_DHWPressure_Calib_TS_Prev
+    )
+);
+
+GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Active := TRUE;
+GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Calibrated_Value := L_DHWPressure_Calibrated;
+GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active := fbCalibVerifyDHWPressure.VO_Verification_Active;
+GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed := fbCalibVerifyDHWPressure.VO_Verification_Failed;
+GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent := fbCalibVerifyDHWPressure.VO_Deviation_Percent;
+
+IF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed THEN
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification failed';
+ELSIF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active THEN
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification active';
+ELSE
+    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification idle';
+END_IF;
+
+IF L_DHWPressure_Verification_Active_Prev AND
+   (NOT fbCalibVerifyDHWPressure.VO_Verification_Active) THEN
+    GVL_CONFIG.G_HMI_Sensor_Calibrations[7].verification_passed :=
+        NOT fbCalibVerifyDHWPressure.VO_Verification_Failed;
+END_IF;
+
+L_DHWPressure_Verification_Active_Prev := fbCalibVerifyDHWPressure.VO_Verification_Active;
+L_DHWPressure_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
 
 // === SMOKE SHADOW EXEC ===
 fbSmokeDetector(

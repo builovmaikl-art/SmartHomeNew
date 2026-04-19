@@ -1,0 +1,42 @@
+]633;E;echo "=== STEP 262: PRESSURE FAMILY PILOT ===";ce0f91dc-fae3-4e2f-a224-60e9467d4b5d]633;C=== STEP 262: PRESSURE FAMILY PILOT ===
+timestamp_utc=2026-04-19T13:57:38Z
+
+=== APPLY ===
+OK: pressure family pilot integrated
+
+=== VERIFY DUT ===
+258:    Calibration_DHWPressure_Active : BOOL;
+259:    Calibration_DHWPressure_Verification_Active : BOOL;
+260:    Calibration_DHWPressure_Verification_Failed : BOOL;
+261:    Calibration_DHWPressure_Deviation_Percent : REAL;
+262:    Calibration_DHWPressure_Calibrated_Value : REAL;
+263:    Calibration_DHWPressure_Summary_Text : STRING(160);
+
+=== VERIFY PRG_SYSTEM ===
+13:fbCalibDHWPressure : FB_Sensor_Calibration_Processor;
+14:fbCalibVerifyDHWPressure : FB_Calibration_Manager;
+29:L_DHWPressure_Calibrated : REAL;
+78:    L_DHWPressure_Calib_TS_Prev : UDINT;
+79:    L_DHWPressure_Verification_Active_Prev : BOOL;
+1508:// === PRESSURE FAMILY PILOT ===
+1509:fbCalibDHWPressure(
+1513:L_DHWPressure_Calibrated := fbCalibDHWPressure.VO_Calibrated_Value;
+1515:fbCalibVerifyDHWPressure(
+1522:        GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp <> L_DHWPressure_Calib_TS_Prev
+1526:GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Active := TRUE;
+1527:GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Calibrated_Value := L_DHWPressure_Calibrated;
+1528:GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active := fbCalibVerifyDHWPressure.VO_Verification_Active;
+1529:GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed := fbCalibVerifyDHWPressure.VO_Verification_Failed;
+1530:GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Deviation_Percent := fbCalibVerifyDHWPressure.VO_Deviation_Percent;
+1532:IF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Failed THEN
+1533:    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification failed';
+1534:ELSIF GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Verification_Active THEN
+1535:    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification active';
+1537:    GVL_STATUS.G_Diagnostics.Calibration_DHWPressure_Summary_Text := 'DHW pressure verification idle';
+1540:IF L_DHWPressure_Verification_Active_Prev AND
+1541:   (NOT fbCalibVerifyDHWPressure.VO_Verification_Active) THEN
+1543:        NOT fbCalibVerifyDHWPressure.VO_Verification_Failed;
+1546:L_DHWPressure_Verification_Active_Prev := fbCalibVerifyDHWPressure.VO_Verification_Active;
+1547:L_DHWPressure_Calib_TS_Prev := GVL_CONFIG.G_HMI_Sensor_Calibrations[7].last_calibration_timestamp;
+
+=== COMPILE ===
