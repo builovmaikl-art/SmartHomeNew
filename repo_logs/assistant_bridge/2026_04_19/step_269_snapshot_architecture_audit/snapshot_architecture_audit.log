@@ -9921,3 +9921,16 @@ PRG_System.st:2487:L_Snapshot_Recovery_Prev := GVL_STATUS.G_Diagnostics.Sensor_S
 
 
 === 8) COMPILE BASELINE BEFORE SNAPSHOT WORK ===
+[main 69140da] test: compile smoke after migration
+ 3 files changed, 10311 insertions(+), 388 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_269_snapshot_architecture_audit/snapshot_architecture_audit.log
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   ee3a0d8..69140da  main -> main
+compile_exit=0
+
+=== END STEP 269 ===
