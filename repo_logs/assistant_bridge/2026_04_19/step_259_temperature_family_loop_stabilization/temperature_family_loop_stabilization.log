@@ -40,3 +40,17 @@ OK: stabilized temperature family generic loop
 1496:    L_TempFamily_Calib_TS_Prev[L_TempFamily_i] := GVL_CONFIG.G_HMI_Sensor_Calibrations[L_TempFamily_i + 2].last_calibration_timestamp;
 
 === COMPILE ===
+[main 3849ad3] test: compile smoke after migration
+ 5 files changed, 754 insertions(+), 434 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_259_temperature_family_loop_stabilization/temperature_family_loop_stabilization.log
+ create mode 100644 steps/2026-04-19_temperature_family_loop_stabilization/01_temperature_family_loop_stabilization.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   f2d6540..3849ad3  main -> main
+compile_exit=0
+
+=== END STEP 259 ===
