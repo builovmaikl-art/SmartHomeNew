@@ -24,3 +24,17 @@ OK: calibration verification telemetry integrated
 1369:        GVL_STATUS.G_Diagnostics.Calibration_Last_Event_Text := 'Methane verification passed';
 
 === COMPILE ===
+[main 06e96ca] test: compile smoke after migration
+ 7 files changed, 577 insertions(+), 387 deletions(-)
+ create mode 100644 repo_logs/assistant_bridge/2026_04_19/step_255_calibration_verification_telemetry/calibration_verification_telemetry.log
+ create mode 100644 steps/2026-04-19_calibration_verification_telemetry/01_calibration_verification_telemetry.py
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+From https://github.com/builovmaikl-art/SmartHomeNew
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+To https://github.com/builovmaikl-art/SmartHomeNew
+   b1279ce..06e96ca  main -> main
+compile_exit=0
+
+=== END STEP 255 ===
