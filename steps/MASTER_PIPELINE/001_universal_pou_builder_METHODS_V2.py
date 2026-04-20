@@ -511,9 +511,6 @@ def main() -> int:
 
     OUTPUT_XML.write_text(xml_text, encoding='utf-8')
     verify_text = OUTPUT_XML.read_text(encoding='utf-8', errors='ignore')
-    pou_count_in_output = len(re.findall(r'<pou name="', verify_text))
-    method_count_in_output = len(re.findall(r'<Method name="', verify_text))
-    objectid_count_in_output = len(re.findall(r'<ObjectId>', verify_text))
     log(f'POU_TOTAL={len(pou_entries)}')
     log(f'POUS_FOLDER_COUNT={len(pous_entries)}')
     log(f'PRG_FOLDER_COUNT={len(prg_entries)}')
@@ -522,9 +519,9 @@ def main() -> int:
     log(f'POU_WITH_WARNINGS={warn_count}')
     log(f'OUTPUT_XML={OUTPUT_XML}')
     log(f'OUTPUT_SIZE={len(verify_text)}')
-    log(f'POU_COUNT_IN_OUTPUT={pou_count_in_output}')
-    log(f'METHOD_COUNT_IN_OUTPUT={method_count_in_output}')
-    log(f'OBJECTID_COUNT_IN_OUTPUT={objectid_count_in_output}')
+    log(f'POU_COUNT_IN_OUTPUT={len(re.findall(r"<pou name=\"", verify_text))}')
+    log(f'METHOD_COUNT_IN_OUTPUT={len(re.findall(r"<Method name=\"", verify_text))}')
+    log(f'OBJECTID_COUNT_IN_OUTPUT={len(re.findall(r"<ObjectId>", verify_text))}')
     log('=== STEP 001 UNIVERSAL METHODS V2 DONE ===')
     return 0
 
