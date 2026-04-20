@@ -1,9 +1,5 @@
 event=push
 ref=refs/heads/main
-<<<<<<< HEAD
-sha=bb805eea72d491af3f94ec15a522b33f3399b542
-=======
-sha=54570f555513ce3750c2c74f3edeaacc88adb72e
->>>>>>> 883eed1 (ci: update automation logs)
+sha=341fe04face26203e162a0cd1da6bca04369dcb9
 task=compile
 note=
