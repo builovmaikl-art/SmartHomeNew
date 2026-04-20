@@ -6,22 +6,24 @@
 Python 3.12.1
 
 -- COMPILER DIR --
-total 560
-drwxrwxrwx+  5 codespace codespace   4096 Apr 16 14:14 .
-drwxrwxrwx+ 16 codespace root       16384 Apr 20 16:43 ..
+total 568
+drwxrwxrwx+  7 codespace codespace   4096 Apr 20 19:18 .
+drwxrwxrwx+ 16 codespace root       16384 Apr 20 19:14 ..
 drwxrwxrwx+  2 codespace codespace   4096 Apr 16 14:06 __pycache__
+drwxrwxrwx+  3 codespace codespace   4096 Apr 20 19:18 diagnostics
 -rw-rw-rw-   1 codespace codespace  34293 Apr 16 14:00 import_codesys_FINAL.py
 -rw-rw-rw-   1 codespace codespace  33804 Apr 16 14:00 import_codesys_FINAL.py.bak
 -rw-rw-rw-   1 codespace codespace   3227 Apr 16 14:00 import_codesys_FINAL_METHODS_V2.py
 -rw-rw-rw-   1 codespace codespace     54 Apr 16 14:00 import_codesys_FINAL_METHODS_V3.py
-drwxrwxrwx+  2 codespace codespace   4096 Apr 20 18:29 logs
+drwxrwxrwx+  2 codespace codespace   4096 Apr 20 19:19 logs
 -rw-rw-rw-   1 codespace codespace   7227 Apr 16 14:00 method_overlay_clean.py
 -rw-rw-rw-   1 codespace codespace   7163 Apr 16 14:00 method_overlay_clean.py.bak
-drwxrwxrwx+  2 codespace codespace   4096 Apr 20 18:29 out
+drwxrwxrwx+  2 codespace codespace   4096 Apr 20 19:04 out
 -rwxrwxrwx   1 codespace codespace    822 Apr 16 14:14 run_compile_smoke.sh
 -rw-rw-rw-   1 codespace codespace 428970 Apr 16 14:00 Система умного дома.xml
 -rw-rw-rw-   1 codespace codespace    456 Apr 16 14:00 запуск_сборки.md
 -rw-rw-rw-   1 codespace codespace    177 Apr 16 14:00 запуск_сборки.sh
+drwxrwxrwx+  3 codespace codespace   4096 Apr 20 19:18 компилятор
 
 -- RUN --
 OVERLAY_OK=FB_CRC32_Calculator METHODS=1
@@ -50,6 +52,8 @@ CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
 компилятор
 компилятор/__pycache__
 компилятор/__pycache__/import_codesys_FINAL.cpython-312.pyc
+компилятор/diagnostics
+компилятор/diagnostics/2026_04_20
 компилятор/import_codesys_FINAL.py
 компилятор/import_codesys_FINAL.py.bak
 компилятор/import_codesys_FINAL_METHODS_V2.py
@@ -82,5 +86,7 @@ CLEANED: /workspaces/SmartHomeNew/компилятор/out/RESULT.xml
 компилятор/Система умного дома.xml
 компилятор/запуск_сборки.md
 компилятор/запуск_сборки.sh
+компилятор/компилятор
+компилятор/компилятор/logs
 
 == END ==
