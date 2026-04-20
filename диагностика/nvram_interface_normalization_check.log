@@ -1,0 +1,7 @@
+]633;E;echo "=== CHECK: command comment ===";77dba1e9-8a6b-4528-ae85-51178ce6af70]633;C=== CHECK: command comment ===
+3:    VI_Command                  : BYTE; // 1=WRITE (READ not implemented)
+71:    VO_HMI_Status_Message := 'NVRAM: READ not implemented';
+
+=== CHECK: READ guard ===
+68:    IF VI_Command = 2 THEN
+70:    VO_ErrorID := 16#150D;

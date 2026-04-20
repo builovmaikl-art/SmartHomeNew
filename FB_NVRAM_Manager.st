@@ -1,6 +1,6 @@
 FUNCTION_BLOCK FB_NVRAM_Manager
 VAR_INPUT
-    VI_Command                  : BYTE; // 1=WRITE, 2=READ
+    VI_Command                  : BYTE; // 1=WRITE (READ not implemented)
     VI_Offset                   : UDINT; // Смещение в байтах
     VI_DataRef                  : REFERENCE TO BYTE;
     VI_DataSize                 : UDINT; // КРИТИЧНО: используем этот размер вместо SIZEOF
@@ -65,7 +65,15 @@ IF L_cmd_rising THEN
         RETURN;
     END_IF;
 
-    IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
+    IF VI_Command = 2 THEN
+    VO_Error := TRUE;
+    VO_ErrorID := 16#150D;
+    VO_HMI_Status_Message := 'NVRAM: READ not implemented';
+    VO_Done := TRUE;
+    RETURN;
+END_IF;
+
+IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
         IF NOT VI_IsActivePLC THEN
             VO_Error := TRUE;
             VO_ErrorID := 16#1509;
