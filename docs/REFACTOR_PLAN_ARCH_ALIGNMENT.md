@@ -1,6 +1,6 @@
 # REFACTOR PLAN — ARCHITECTURE ALIGNMENT
 
-Status: Draft plan for controlled repository refactor
+Status: Active working plan with partial implementation checkpoints reflected
 Scope: Whole project, with safety-first execution
 Priority: Bring implementation in line with `docs/MASTER_GUIDE.md`, `docs/WORKFLOW.md`, and `AGENTS.md`
 
@@ -14,6 +14,18 @@ Bring the repository from the current mixed legacy architecture to the required 
 
 This plan is intended as project memory and execution roadmap.
 
+
+### Current verified implementation checkpoints
+
+The following items are already reflected in the current repository code and must not be treated as TODO-only aspirations:
+
+- `FB_System_Health` exists and is integrated in `PRG_System`
+- persistence architecture is aligned as `GVL_PERSISTENT` primary recovery + NVRAM secondary mirror
+- `FB_Persist_Builder` is introduced for build/mirror responsibilities
+- `FB_Persist_Pipeline` is introduced for serialize/throttle/write responsibilities
+- `FB_NVRAM_Manager` is normalized as explicit write-only executor (`READ` is not implemented by design)
+
+
 ---
 
 ## 2. Confirmed systemic issues
@@ -24,7 +36,7 @@ Observed during repository audit:
 - some subsystem FBs directly issue actuator commands
 - warning/alarm qualification is distributed instead of centralized
 - policy is not explicitly separated from subsystem logic
-- `FB_System_Health` is not present as a visible dedicated block
+- `FB_System_Health` now exists and is integrated, but broader subsystem role separation remains incomplete
 - `*_Manager` blocks are likely carrying mixed responsibilities
 - project documentation is ahead of implementation
 
@@ -268,6 +280,15 @@ Exit criteria:
 ## Stage 7 — Clean state ownership and persistence boundaries
 Purpose: Remove duplicated state authority.
 
+Implementation note (current status):
+- persistence sub-scope is partially completed
+- `GVL_PERSISTENT` is the primary recovery source
+- `FB_Persist_Builder` performs persist struct build + mirror
+- `FB_Persist_Pipeline` performs serialize + controlled NVRAM write
+- `FB_NVRAM_Manager` is low-level write-only and no longer carries duplicate rate-limit policy
+
+Purpose: Remove duplicated state authority.
+
 Candidates:
 - `FB_State_Manager`
 - `FB_State_Replication`
@@ -397,6 +418,11 @@ For every actual change step:
 ---
 
 ## 7. First execution queue (recommended order)
+
+Checkpoint already completed before the next queue item selection:
+- persistence architecture alignment completed to stable code-compiling checkpoint
+- documentation alignment is now being updated to match that reality
+
 
 1. complete full FB inventory and disposition table
 2. implement `FB_System_Health` contract and skeleton

@@ -101,7 +101,9 @@ Allowed dispositions:
 | FB_Maintenance_Access | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_Manifold_Pump_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_Manual_Valve_Control | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
-| FB_NVRAM_Manager | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+| FB_NVRAM_Manager | REVIEWED | Persistence / Diagnostics / History | Low-level NVRAM/RETAIN writer with validation and explicit no-read guard; now write-only by design | Historical interface ambiguity around READ resolved; no current policy-layer mixing after cleanup | Keep with constraints | Keep low-level only; do not reintroduce read-path or throttling policy here without separate design |
+| FB_Persist_Builder | REVIEWED | Persistence / Diagnostics / History | Builds `ST_Persist` from runtime state and mirrors it into `GVL_PERSISTENT` | Still coupled to `GVL_STATE` directly, but responsibility is now narrow and explicit | Keep with constraints | Keep as persistence builder only; consider future interface decoupling after wider architecture audit |
+| FB_Persist_Pipeline | REVIEWED | Persistence / Diagnostics / History | Serializes persist struct, applies single throttling policy, and triggers controlled NVRAM write | No critical current violation after `Apply_Settings` and throttling fixes | Keep | Preserve as the only persistence write-policy layer |
 | FB_Outdoor_Lighting_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_PID_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_PLC_Heartbeat | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
@@ -139,6 +141,16 @@ Allowed dispositions:
 | FB_Water_Leakage_Manager | REVIEWED | Mixed legacy block | Water leak block contains detection, warning/alarm timing, valve mapping, and direct valve close outputs | Detector+Health+Policy+Actuation merged in one block | Split / Rewrite | Extract detector signals, move qualification to Health, remove direct valve commands |
 | FB_Water_Valve_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_Zone_Access_Manager | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+
+---
+
+## 5. Persistence checkpoint note
+
+As of the current repository state:
+- persistence compile checkpoint is achieved
+- `FB_Persist_Builder`, `FB_Persist_Pipeline`, and `FB_NVRAM_Manager` have been brought into a consistent write-path architecture
+- `GVL_PERSISTENT` remains the primary recovery source
+- NVRAM remains a secondary mirror layer
 
 ---
 

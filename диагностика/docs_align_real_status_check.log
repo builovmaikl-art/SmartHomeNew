@@ -1,0 +1,11 @@
+]633;E;echo "=== CHECK: refactor plan status ===";77dba1e9-8a6b-4528-ae85-51178ce6af70]633;C=== CHECK: refactor plan status ===
+3:Status: Active working plan with partial implementation checkpoints reflected
+24:- `FB_Persist_Builder` is introduced for build/mirror responsibilities
+286:- `FB_Persist_Builder` performs persist struct build + mirror
+25:- `FB_Persist_Pipeline` is introduced for serialize/throttle/write responsibilities
+287:- `FB_Persist_Pipeline` performs serialize + controlled NVRAM write
+
+=== CHECK: audit rows ===
+104:| FB_NVRAM_Manager | REVIEWED | Persistence / Diagnostics / History | Low-level NVRAM/RETAIN writer with validation and explicit no-read guard; now write-only by design | Historical interface ambiguity around READ resolved; no current policy-layer mixing after cleanup | Keep with constraints | Keep low-level only; do not reintroduce read-path or throttling policy here without separate design |
+105:| FB_Persist_Builder | REVIEWED | Persistence / Diagnostics / History | Builds `ST_Persist` from runtime state and mirrors it into `GVL_PERSISTENT` | Still coupled to `GVL_STATE` directly, but responsibility is now narrow and explicit | Keep with constraints | Keep as persistence builder only; consider future interface decoupling after wider architecture audit |
+106:| FB_Persist_Pipeline | REVIEWED | Persistence / Diagnostics / History | Serializes persist struct, applies single throttling policy, and triggers controlled NVRAM write | No critical current violation after `Apply_Settings` and throttling fixes | Keep | Preserve as the only persistence write-policy layer |
