@@ -2555,3 +2555,6 @@ IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
 END_IF;
 
 L_Mode_Prev := GVL_STATE.G_System_Mode;
+
+// --- HEATING REQUEST LAYER ---
+GVL_HEATING_REQUEST.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;

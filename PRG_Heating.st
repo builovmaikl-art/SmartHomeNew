@@ -32,6 +32,7 @@ END_IF;
 
 // 9. Управление климатом (Отопление)
 fbHeatingManager(
+    VI_Preheat_Request := GVL_HEATING_REQUEST.G_Preheat_Request,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,

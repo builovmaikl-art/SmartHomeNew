@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: GVL created ===";822ba416-8f08-405d-9da8-9a89f94c658a]633;C=== CHECK: GVL created ===
+GVL_HEATING_REQUEST exists
+
+=== CHECK: system writes ===
+2560:GVL_HEATING_REQUEST.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
+
+=== CHECK: heating reads ===
+35:    VI_Preheat_Request := GVL_HEATING_REQUEST.G_Preheat_Request,
