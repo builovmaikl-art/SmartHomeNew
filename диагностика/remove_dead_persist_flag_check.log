@@ -1,0 +1,5 @@
+]633;E;echo "=== CHECK: dead variable removed ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: dead variable removed ===
+
+=== CHECK: persist pipeline still present ===
+785:fbPersistBuilder(
+790:fbPersistPipeline(

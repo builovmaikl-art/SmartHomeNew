@@ -164,7 +164,6 @@ L_Shadow_Smoke_Enabled_Prev : BOOL;
 
     L_Persist_Buffer : ARRAY[0..4] OF BYTE;
     L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
-    L_Persist_Buffer_Changed : BOOL;
     L_Last_Persist_Write_MS : UDINT;
     L_Recovery_Done : BOOL;
     L_Persist_Struct : ST_Persist;
