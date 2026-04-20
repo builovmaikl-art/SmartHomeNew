@@ -1,0 +1,10 @@
+]633;E;echo "=== CHECK: checkpoint doc ===";97785a81-f8a8-44a0-ab7e-2ace04bdf2a3]633;C=== CHECK: checkpoint doc ===
+HEATING_CHECKPOINT_2026-04-20.md present
+
+=== CHECK: key terms ===
+8:  - writes `GVL_STATE.G_Preheat_Request`
+27:- `GVL_STATE.G_Preheat_Request`
+9:  - writes `GVL_STATE.G_Freeze_Request`
+28:- `GVL_STATE.G_Freeze_Request`
+13:  - writes `GVL_STATE.G_Target_Temperature`
+29:- `GVL_STATE.G_Target_Temperature`
