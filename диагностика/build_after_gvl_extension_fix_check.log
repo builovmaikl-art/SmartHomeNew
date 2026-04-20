@@ -1,0 +1,8 @@
+]633;E;echo "=== BUILD STATUS ===";17fdba17-10ed-4f0f-b59a-05f6d7a4f42c]633;C=== BUILD STATUS ===
+16:BUILD_OK
+15:FINAL_RESULT_OK=/workspaces/SmartHomeNew/компилятор/out/RESULT.xml
+
+=== ERROR SUMMARY ===
+
+=== GVL FILE ===
+-rw-rw-rw- 1 codespace codespace 136 Apr 20 09:17 GVL_HEATING_REQUEST.gvl
