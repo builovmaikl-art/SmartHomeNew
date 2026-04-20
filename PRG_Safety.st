@@ -53,8 +53,6 @@ fbWaterLeakageManager(
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Sensors := GVL_STATE.G_Water_Sensors,
     VI_Config := GVL_CONFIG.G_HMI_Flood_Config,
-    VO_Close_Valve_35 => GVL_COMMAND.G_Close_Valve_35,
-    VO_Close_Valve_36 => GVL_COMMAND.G_Close_Valve_36,
     VO_Status_Msg => GVL_STATUS.G_Flood_Status_Msg,
     VO_Leak_Detected => GVL_HEALTH_BRIDGE.G_Leak_Detected,
     VO_Leak_Warning_Level => GVL_HEALTH_BRIDGE.G_Leak_Warning_Level
@@ -73,15 +71,7 @@ fbGasSmokeManager(
     VO_Gas_Detected => GVL_HEALTH_BRIDGE.G_Gas_Detected,
     VO_CO_Warning_Level => GVL_HEALTH_BRIDGE.G_CO_Warning_Level,
     VO_CO_Alarm_Level => GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
-    VO_Siren_Active => GVL_ALARM.G_Gas_Fire_Siren,
-    VO_Status_Msg => GVL_STATUS.G_Gas_Status_Msg,
-    VO_Gas_Valve_Close => GVL_COMMAND.G_Gas_Valve_Close,
-    VO_Boiler_Stop => GVL_COMMAND.G_Boiler_Stop,
-    VO_Supply_100_Req => GVL_COMMAND.G_Supply_100_Req,
-    VO_Supply_80_Req => GVL_COMMAND.G_Supply_80_Req,
-    VO_Vent_PV3_Boost => GVL_COMMAND.G_Vent_PV3_Boost,
-    VO_Exhaust_100_Req => GVL_COMMAND.G_Exhaust_100_Req,
-    VO_Vent_Stop => GVL_COMMAND.G_Vent_Stop
+    VO_Status_Msg => GVL_STATUS.G_Gas_Status_Msg
 );
 GVL_ALARM.G_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_ALARM.G_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
