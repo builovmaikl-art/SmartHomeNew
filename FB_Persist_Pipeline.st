@@ -68,9 +68,9 @@ VO_NVRAM_Cmd := 0;
 VO_NVRAM_Offset := 0;
 
 IF VIO_Apply_Settings THEN
-    // explicit config apply may request a controlled write
+    // explicit config apply requests a controlled write
+    // keep flag set until successful write confirmation
     VO_NVRAM_Cmd := 1;
-    VIO_Apply_Settings := FALSE;
 
 ELSIF L_Persist_Buffer_Changed THEN
     // controlled write: no more often than once per 60 seconds
@@ -101,4 +101,5 @@ IF (VO_NVRAM_Cmd = 1) AND VO_NVRAM_Done AND NOT VO_NVRAM_Err THEN
     VIO_Last_Written_Persist_Buffer[3] := VIO_Persist_Buffer[3];
     VIO_Last_Written_Persist_Buffer[4] := VIO_Persist_Buffer[4];
     VIO_Last_Persist_Write_MS := VI_System_Time_MS;
+    VIO_Apply_Settings := FALSE;
 END_IF;

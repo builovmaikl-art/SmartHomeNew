@@ -1,0 +1,6 @@
+]633;E;echo "=== CHECK: early reset removed ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: early reset removed ===
+104:    VIO_Apply_Settings := FALSE;
+
+=== CHECK: success-path reset exists ===
+103:    VIO_Last_Persist_Write_MS := VI_System_Time_MS;
+104:    VIO_Apply_Settings := FALSE;
