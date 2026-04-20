@@ -1,5 +1,6 @@
 FUNCTION_BLOCK FB_Scenario_Manager
 VAR_INPUT
+    VI_Preheat_Request : BOOL;
     VI_System_Time_MS : UDINT; // Системное время (мс)
     VI_Activate_Request : E_SCENARIO_TYPE; // Запрос на активацию сценария
     VI_IsActivePLC : BOOL; // Флаг: Данный ПЛК является ведущим
@@ -52,3 +53,9 @@ IF VI_Activate_Request <> VO_Current_Scenario THEN
     END_IF;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Scenario_Manager <<<
+
+
+// --- PREHEAT SCENARIO INSERT ---
+IF VI_Preheat_Request THEN
+    GVL_HEATING.G_Preheat_Active := TRUE;
+END_IF;

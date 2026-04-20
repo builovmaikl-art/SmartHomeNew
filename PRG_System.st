@@ -775,6 +775,7 @@ IF NOT fbScenarioGuard.VO_Transition_Allowed THEN
 END_IF;
 
 fbScenarioManager(
+        VI_Preheat_Request := fbRuleEngine.VO_Preheat_Request,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Activate_Request := L_Scenario_Intent,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,

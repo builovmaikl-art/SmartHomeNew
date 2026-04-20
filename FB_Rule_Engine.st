@@ -21,6 +21,7 @@ VAR_IN_OUT
     VI_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL; // Датчики угарного газа
 END_VAR
 VAR_OUTPUT
+    VO_Preheat_Request : BOOL; // pre-departure heating trigger
     VO_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Сформированные действия по правилам
 END_VAR
 VAR
@@ -117,3 +118,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
     END_IF;
 END_FOR;
 // >>> BULK_SYNC_ANCHOR: FB_Rule_Engine <<<
+
+
+// --- PREHEAT RULE INSERT ---
+IF (GVL_STATUS.G_Departure_Time > 0) THEN
+    IF (GVL_STATUS.G_Departure_Time - GVL_STATUS.G_System_Time_MS) < 10800000 THEN
+        IF GVL_STATE.G_System_Mode <> MODE_SAFE_STOP THEN
+            VO_Preheat_Request := TRUE;
+        END_IF;
+    END_IF;
+END_IF;
