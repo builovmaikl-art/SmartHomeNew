@@ -1,0 +1,1 @@
+OK: reordered persistence pipeline (build/mirror before serialize/write)
