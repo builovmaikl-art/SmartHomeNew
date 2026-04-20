@@ -795,7 +795,7 @@ fbPersistPipeline(
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VIO_Persist_Buffer := L_Persist_Buffer,
     VIO_Last_Written_Persist_Buffer := L_Last_Written_Persist_Buffer,
-    VIO_Last_Persist_Write_MS := L_Last_Persist_Write_MS,
+    VIO_Last_Persist_Write_MS := L_Last_Persist_Write_MS
 );
 
 // 15. Черный ящик
