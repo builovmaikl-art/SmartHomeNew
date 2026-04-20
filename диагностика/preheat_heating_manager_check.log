@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: heating manager input ===";8f3adcea-804a-4201-99bb-fb513c0f4b3b]633;C=== CHECK: heating manager input ===
+12:    VI_Preheat_Request : BOOL; // preheat scenario trigger
+692:IF VI_Preheat_Request THEN
+
+=== CHECK: scenario no GVL ===
+
+=== CHECK: wiring ===
+778:        VI_Preheat_Request := fbRuleEngine.VO_Preheat_Request,

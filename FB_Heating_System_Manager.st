@@ -9,6 +9,7 @@
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_System_Manager
 VAR_INPUT
+    VI_Preheat_Request : BOOL; // preheat scenario trigger
     L_Climate_Zone_ID : INT;
 
     VI_System_Mode : E_System_Operating_Mode; // System mode from State Manager
@@ -685,3 +686,10 @@ GVL_STATE.G_Heating_Subsystem_Degraded := L_Any_Subsystem_Degraded;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_System_Manager <<<
+
+
+// --- PREHEAT HEATING INSERT ---
+IF VI_Preheat_Request THEN
+    // simple safe preheat: raise target temp slightly
+    GVL_HEATING.G_Preheat_Mode := TRUE;
+END_IF;

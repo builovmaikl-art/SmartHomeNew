@@ -57,5 +57,5 @@ END_IF;
 
 // --- PREHEAT SCENARIO INSERT ---
 IF VI_Preheat_Request THEN
-    GVL_HEATING.G_Preheat_Active := TRUE;
+    // removed: direct heating write (moved to Heating Manager)
 END_IF;
