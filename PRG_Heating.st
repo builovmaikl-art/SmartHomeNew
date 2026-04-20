@@ -143,3 +143,13 @@ ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
 ELSE
     GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
 END_IF;
+
+
+// --- HEATING FINAL TARGET ---
+IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
+    GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
+ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
+    GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
+ELSE
+    GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
+END_IF;

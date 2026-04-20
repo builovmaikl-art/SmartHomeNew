@@ -272,6 +272,13 @@ IF L_IO_Failsafe_Active THEN
     RETURN;
 END_IF;
 
+
+
+// --- HEATING TARGET INJECTION ---
+IF GVL_HEATING_REQUEST.G_Target_Temperature > 0.0 THEN
+    L_Target_Supply_Temp := GVL_HEATING_REQUEST.G_Target_Temperature;
+END_IF;
+
 // 2. Расчет целевой температуры подачи теплоносителя (Погодозависимая автоматика ТЗ 2.3)
 L_Target_Supply_Temp := 35.0; // Базовая уставка
 IF VI_Config.Weather_Comp_Enabled AND VI_Outdoor_Temp < 15.0 THEN

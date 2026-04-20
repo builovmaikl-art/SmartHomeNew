@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: freeze source ===";17fdba17-10ed-4f0f-b59a-05f6d7a4f42c]633;C=== CHECK: freeze source ===
+2562:// --- FREEZE REQUEST ---
+
+=== CHECK: arbitration ===
+148:// --- HEATING FINAL TARGET ---
+
+=== CHECK: manager uses target ===
+277:// --- HEATING TARGET INJECTION ---

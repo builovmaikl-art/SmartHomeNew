@@ -2558,3 +2558,7 @@ L_Mode_Prev := GVL_STATE.G_System_Mode;
 
 // --- HEATING REQUEST LAYER ---
 GVL_HEATING_REQUEST.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
+
+// --- FREEZE REQUEST ---
+GVL_HEATING_REQUEST.G_Freeze_Request :=
+    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
