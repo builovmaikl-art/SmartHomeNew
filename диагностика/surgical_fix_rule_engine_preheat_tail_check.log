@@ -1,0 +1,7 @@
+]633;E;echo "=== CHECK: no broken heating command tail ===";822ba416-8f08-405d-9da8-9a89f94c658a]633;C=== CHECK: no broken heating command tail ===
+
+=== CHECK: preheat output still exists ===
+24:    VO_Preheat_Request : BOOL; // pre-departure heating trigger
+39:VO_Preheat_Request := FALSE;
+
+=== CHECK: no stale command wiring in heating ===

@@ -36,6 +36,8 @@ END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
+VO_Preheat_Request := FALSE;
+
 
 // Сброс счетчиков срабатываний каждую минуту (защита от циклических зависимостей/дребезга)
 L_Elapsed_Time := (SEL(VI_System_Time_MS >= L_Last_Reset_Time, VI_System_Time_MS - L_Last_Reset_Time, (4294967295 - L_Last_Reset_Time) + VI_System_Time_MS + 1));
@@ -119,10 +121,3 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
 END_FOR;
 // >>> BULK_SYNC_ANCHOR: FB_Rule_Engine <<<
 
-
-// --- PREHEAT COMMAND INSERT ---
-IF VO_Preheat_Request THEN
-    VO_Heating_Command.Enable := TRUE;
-    VO_Heating_Command.Target_Temperature := 22.0;
-    VO_Heating_Command.Priority := 10;
-END_IF;

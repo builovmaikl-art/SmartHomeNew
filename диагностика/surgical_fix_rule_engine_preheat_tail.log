@@ -1,0 +1,2 @@
+OK: removed broken PREHEAT COMMAND INSERT tail from FB_Rule_Engine.st
+OK: added deterministic reset for VO_Preheat_Request
