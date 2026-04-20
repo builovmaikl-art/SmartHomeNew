@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: PRG_System direct FB_NVRAM_Manager usage ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: PRG_System direct FB_NVRAM_Manager usage ===
+
+=== CHECK: PRG_System direct fbNVRAMManager usage ===
+
+=== CHECK: FB_Persist_Pipeline internal NVRAM usage ===
+21:    fbNVRAMManager : FB_NVRAM_Manager;
+21:    fbNVRAMManager : FB_NVRAM_Manager;
+83:fbNVRAMManager(

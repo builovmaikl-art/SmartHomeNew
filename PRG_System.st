@@ -102,7 +102,6 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     fbScenarioGuard : FB_Scenario_Transition_Guard;
     fbSimulationManager : FB_Simulation_Manager;
     fbRuleEngine : FB_Rule_Engine;
-    fbNVRAMManager : FB_NVRAM_Manager;
     fbPersistPipeline : FB_Persist_Pipeline;
 
     fbBlackBox : FB_BlackBox_Recorder;
