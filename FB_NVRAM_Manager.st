@@ -20,7 +20,6 @@ VAR
     L_prev_Command              : BYTE;
     L_cmd_rising                : BOOL;
     L_i                         : UDINT;
-    L_Last_Write_Time_MS        : UDINT := 0; // Время последней записи
     L_Data_Changed              : BOOL; // Флаг изменения данных
     L_pData                      : POINTER TO BYTE;
 END_VAR
@@ -72,31 +71,23 @@ IF L_cmd_rising THEN
             VO_ErrorID := 16#1509;
             VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
         ELSE
-            // Ограничение частоты записи (не чаще 1 раза в 60 секунд)
-            IF (VI_System_Time_MS - L_Last_Write_Time_MS) < 60000 AND L_Last_Write_Time_MS <> 0 THEN
-                VO_Error := TRUE;
-                VO_ErrorID := 16#150C;
-                VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
-            ELSE
-                // Проверка на изменение данных перед записью
-                L_Data_Changed := FALSE;
-                FOR L_i := 0 TO VI_DataSize - 1 DO
-                    IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
-                        L_Data_Changed := TRUE;
-                        EXIT;
-                    END_IF;
-                END_FOR;
-                
-                IF L_Data_Changed THEN
-                    // Безопасное копирование (WRITE)
-                    FOR L_i := 0 TO VI_DataSize - 1 DO
-                        GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
-                    END_FOR;
-                    L_Last_Write_Time_MS := VI_System_Time_MS;
-                    VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
-                ELSE
-                    VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+            // Проверка на изменение данных перед записью
+            L_Data_Changed := FALSE;
+            FOR L_i := 0 TO VI_DataSize - 1 DO
+                IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+                    L_Data_Changed := TRUE;
+                    EXIT;
                 END_IF;
+            END_FOR;
+            
+            IF L_Data_Changed THEN
+                // Безопасное копирование (WRITE)
+                FOR L_i := 0 TO VI_DataSize - 1 DO
+                    GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+                END_FOR;
+                VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+            ELSE
+                VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
             END_IF;
         END_IF;
         VO_Done := TRUE;
