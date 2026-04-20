@@ -36,6 +36,32 @@ ELSIF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
     L_Heating_DHW_Demand := FALSE;
 END_IF;
 
+// --- CONSOLIDATED HEATING REQUEST / ARBITRATION / STABILIZATION ---
+L_Mode_Hold_Timer(
+    IN := TRUE,
+    PT := T#30s,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+IF L_Mode_Hold_Timer.Q THEN
+    IF GVL_STATE.G_Freeze_Request THEN
+        L_Last_Mode := 2; // freeze
+    ELSIF GVL_STATE.G_Preheat_Request THEN
+        L_Last_Mode := 1; // preheat
+    ELSE
+        L_Last_Mode := 0; // normal
+    END_IF;
+END_IF;
+
+CASE L_Last_Mode OF
+    2:
+        GVL_STATE.G_Target_Temperature := 5.0;
+    1:
+        GVL_STATE.G_Target_Temperature := 22.0;
+    ELSE
+        GVL_STATE.G_Target_Temperature := 20.0;
+END_CASE;
+
 // 9. Управление климатом (Отопление)
 fbHeatingManager(
     VI_Preheat_Request := GVL_HEATING_REQUEST.G_Preheat_Request,
@@ -141,48 +167,7 @@ FOR L_i := 1 TO 8 DO
 END_FOR;
 
 
-// --- HEATING PRIORITY ARBITRATION ---
-IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
-    GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
-ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
-    GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
-ELSE
-    GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
-END_IF;
 
 
-// --- HEATING FINAL TARGET ---
-IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
-    GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
-ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
-    GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
-ELSE
-    GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
-END_IF;
 
 
-// --- HEATING STABILIZATION ---
-L_Mode_Hold_Timer(
-    IN := TRUE,
-    PT := T#30s,
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
-);
-
-IF NOT L_Mode_Hold_Timer.Q THEN
-    // hold previous mode
-ELSE
-    IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
-        L_Last_Mode := 2;
-    ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
-        L_Last_Mode := 1;
-    ELSE
-        L_Last_Mode := 0;
-    END_IF;
-END_IF;
-
-// apply stabilized mode
-CASE L_Last_Mode OF
-    2: GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
-    1: GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
-    ELSE GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
-END_CASE;

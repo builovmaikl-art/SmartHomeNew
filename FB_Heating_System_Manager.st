@@ -275,8 +275,8 @@ END_IF;
 
 
 // --- HEATING TARGET INJECTION ---
-IF GVL_HEATING_REQUEST.G_Target_Temperature > 0.0 THEN
-    L_Target_Supply_Temp := GVL_HEATING_REQUEST.G_Target_Temperature;
+IF GVL_STATE.G_Target_Temperature > 0.0 THEN
+    L_Target_Supply_Temp := GVL_STATE.G_Target_Temperature;
 END_IF;
 
 // 2. Расчет целевой температуры подачи теплоносителя (Погодозависимая автоматика ТЗ 2.3)

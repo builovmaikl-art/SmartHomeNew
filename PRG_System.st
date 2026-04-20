@@ -502,6 +502,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
     END_IF;
 END_FOR;
 
+// --- HEATING REQUEST WRITE LAYER ---
+GVL_STATE.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
+GVL_STATE.G_Freeze_Request := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+
 
 
 // 8.5 Менеджер тревог (Сбор всех аварий)
@@ -2556,9 +2560,5 @@ END_IF;
 
 L_Mode_Prev := GVL_STATE.G_System_Mode;
 
-// --- HEATING REQUEST LAYER ---
-GVL_HEATING_REQUEST.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
 
-// --- FREEZE REQUEST ---
-GVL_HEATING_REQUEST.G_Freeze_Request :=
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);

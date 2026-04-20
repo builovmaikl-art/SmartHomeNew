@@ -1,0 +1,17 @@
+]633;E;echo "=== CHECK: PRG_System request layer ===";263aaeff-cdea-4f73-b7a8-3b16792200d9]633;C=== CHECK: PRG_System request layer ===
+506:GVL_STATE.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
+507:GVL_STATE.G_Freeze_Request := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+
+=== CHECK: PRG_Heating consolidated layer ===
+39:// --- CONSOLIDATED HEATING REQUEST / ARBITRATION / STABILIZATION ---
+58:        GVL_STATE.G_Target_Temperature := 5.0;
+60:        GVL_STATE.G_Target_Temperature := 22.0;
+62:        GVL_STATE.G_Target_Temperature := 20.0;
+
+=== CHECK: Manager target injection ===
+277:// --- HEATING TARGET INJECTION ---
+278:IF GVL_STATE.G_Target_Temperature > 0.0 THEN
+279:    L_Target_Supply_Temp := GVL_STATE.G_Target_Temperature;
+
+=== CHECK: Build ===
+16:BUILD_OK
