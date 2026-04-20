@@ -787,27 +787,40 @@ fbScenarioManager(
 
 // 14. Менеджер NVRAM
 // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+// === SERIALIZE PERSIST STRUCT → BUFFER ===
+
+// System Mode
 L_Persist_Buffer[0] := TO_BYTE(TO_INT(L_Persist_Struct.System_Mode));
+
+// Gas
 IF L_Persist_Struct.Safety_Gas_Latched THEN
     L_Persist_Buffer[1] := BYTE#1;
 ELSE
     L_Persist_Buffer[1] := BYTE#0;
 END_IF;
+
+// Smoke
 IF L_Persist_Struct.Safety_Smoke_Latched THEN
     L_Persist_Buffer[2] := BYTE#1;
 ELSE
     L_Persist_Buffer[2] := BYTE#0;
 END_IF;
+
+// Leak
 IF L_Persist_Struct.Safety_Leak_Latched THEN
     L_Persist_Buffer[3] := BYTE#1;
 ELSE
     L_Persist_Buffer[3] := BYTE#0;
 END_IF;
+
+// DHW Pump
 IF L_Persist_Struct.DHW_Heating_Pump THEN
     L_Persist_Buffer[4] := BYTE#1;
 ELSE
     L_Persist_Buffer[4] := BYTE#0;
 END_IF;
+
+// === END SERIALIZE ===
 
 L_Persist_Buffer_Changed :=
     (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
