@@ -1,4 +1,10 @@
 PROGRAM PRG_Heating
+
+VAR
+    L_Last_Mode : INT := 0; // 0=normal,1=preheat,2=freeze
+    L_Mode_Hold_Timer : FB_System_Timer;
+END_VAR
+
 VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
@@ -153,3 +159,30 @@ ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
 ELSE
     GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
 END_IF;
+
+
+// --- HEATING STABILIZATION ---
+L_Mode_Hold_Timer(
+    IN := TRUE,
+    PT := T#30s,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+IF NOT L_Mode_Hold_Timer.Q THEN
+    // hold previous mode
+ELSE
+    IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
+        L_Last_Mode := 2;
+    ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
+        L_Last_Mode := 1;
+    ELSE
+        L_Last_Mode := 0;
+    END_IF;
+END_IF;
+
+// apply stabilized mode
+CASE L_Last_Mode OF
+    2: GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
+    1: GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
+    ELSE GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
+END_CASE;
