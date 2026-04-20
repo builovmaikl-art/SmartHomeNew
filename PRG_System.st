@@ -1,5 +1,6 @@
 PROGRAM PRG_System
 VAR
+    fbPersistBuilder : FB_Persist_Builder;
     fbSnapshotMgr : FB_State_Snapshot_Manager;
 
 // === SENSOR PROCESSING (SHADOW) ===
@@ -782,25 +783,10 @@ fbScenarioManager(
 
 // 14. Менеджер NVRAM
 // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
-// === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
-L_Persist_Struct.System_Mode := GVL_STATE.G_System_Mode;
-
-L_Persist_Struct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
-L_Persist_Struct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
-L_Persist_Struct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
-
-L_Persist_Struct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
-L_Persist_Struct.Valid := TRUE;
-
-// mirror to legacy persistent variables
-GVL_PERSISTENT.P_System_Mode := L_Persist_Struct.System_Mode;
-
-GVL_PERSISTENT.P_Safety_Gas_Latched := L_Persist_Struct.Safety_Gas_Latched;
-GVL_PERSISTENT.P_Safety_Smoke_Latched := L_Persist_Struct.Safety_Smoke_Latched;
-GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
-
-GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
-GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
+fbPersistBuilder(
+    VI_State := GVL_STATE,
+    VIO_PersistStruct := L_Persist_Struct
+);
 
 fbPersistPipeline(
     VI_PersistStruct := L_Persist_Struct,
