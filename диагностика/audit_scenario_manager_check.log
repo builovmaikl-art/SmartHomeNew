@@ -1,0 +1,16 @@
+]633;E;echo "=== SCENARIO MANAGER AUDIT ===";114bfee5-edf5-475f-b9ce-1b33b324778a]633;C=== SCENARIO MANAGER AUDIT ===
+=== GVL DIRECT ACCESS ===
+NONE
+
+=== OUTPUT SIGNALS (VO_*) ===
+VO_Current_Scenario
+VO_Status_Msg
+
+=== INOUT SIGNALS (VIO_*) ===
+NONE
+
+=== POSSIBLE ACTUATOR SIGNALS ===
+NONE
+
+=== TOTAL ASSIGNMENTS === 0
+=== TIMERS === 0
