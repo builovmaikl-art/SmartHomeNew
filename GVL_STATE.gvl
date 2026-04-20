@@ -74,4 +74,7 @@ VAR_GLOBAL
     G_Water_Zone_Open_FB : ARRAY[1..32] OF BOOL; // Обратная связь: зональный клапан открыт
     G_Water_Zone_Close_FB : ARRAY[1..32] OF BOOL; // Обратная связь: зональный клапан закрыт
     G_Water_Zone_Exercise_Active : ARRAY[1..32] OF BOOL; // Профилактическая прокрутка шаровых кранов
+    G_Preheat_Request : BOOL; // Heating request: preheat
+    G_Freeze_Request : BOOL; // Heating request: freeze
+    G_Target_Temperature : REAL; // Heating arbitration target
 END_VAR

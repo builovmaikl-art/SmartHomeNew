@@ -2565,4 +2565,3 @@ END_IF;
 L_Mode_Prev := GVL_STATE.G_System_Mode;
 
 
-    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
