@@ -117,6 +117,9 @@ VAR
     L_Policy_Freeze_Protection : BOOL; // Policy: freeze protection mode
     L_Any_Sensor_Error : BOOL;
     L_Any_Subsystem_Degraded : BOOL;
+    L_Adaptive_Max_Delta : REAL;
+    L_Adaptive_Delta : REAL;
+    L_Adaptive_Zone_i : INT;
 END_VAR
 
 
@@ -282,30 +285,28 @@ END_IF;
 
 
 // --- MULTI-ZONE ADAPTIVE CORRECTION ---
-VAR
-    L_Max_Delta : REAL := 0.0;
-    L_Delta : REAL := 0.0;
-    i : INT;
-END_VAR
+L_Adaptive_Max_Delta := 0.0;
 
-L_Max_Delta := 0.0;
+FOR L_Adaptive_Zone_i := 1 TO 8 DO
+    IF VI_Zone_Configs[L_Adaptive_Zone_i].enabled THEN
+        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
+            L_Adaptive_Delta :=
+                VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+                VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
 
-FOR i := 1 TO 32 DO
-    IF VI_Zone_Configs[i].Enabled THEN
-        L_Delta := VI_Zone_Configs[i].Target_Temperature - VI_Room_Temps[i];
-        IF L_Delta > L_Max_Delta THEN
-            L_Max_Delta := L_Delta;
+            IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+                L_Adaptive_Max_Delta := L_Adaptive_Delta;
+            END_IF;
         END_IF;
     END_IF;
 END_FOR;
 
 // apply correction
-IF L_Max_Delta > 1.0 THEN
+IF L_Adaptive_Max_Delta > 1.0 THEN
     L_Target_Supply_Temp := L_Target_Supply_Temp + 2.0;
-ELSIF L_Max_Delta < -1.0 THEN
+ELSIF L_Adaptive_Max_Delta < -1.0 THEN
     L_Target_Supply_Temp := L_Target_Supply_Temp - 2.0;
 END_IF;
-
 
 // 2. Расчет целевой температуры подачи теплоносителя (Погодозависимая автоматика ТЗ 2.3)
 L_Target_Supply_Temp := 35.0; // Базовая уставка

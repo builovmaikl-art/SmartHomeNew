@@ -1,0 +1,21 @@
+]633;E;echo "=== CHECK: normalized vars in main VAR section ===";7dba4886-71af-46cd-8c26-36e082ca0f18]633;C=== CHECK: normalized vars in main VAR section ===
+120:    L_Adaptive_Max_Delta : REAL;
+288:L_Adaptive_Max_Delta := 0.0;
+297:            IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+298:                L_Adaptive_Max_Delta := L_Adaptive_Delta;
+305:IF L_Adaptive_Max_Delta > 1.0 THEN
+307:ELSIF L_Adaptive_Max_Delta < -1.0 THEN
+121:    L_Adaptive_Delta : REAL;
+293:            L_Adaptive_Delta :=
+297:            IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+298:                L_Adaptive_Max_Delta := L_Adaptive_Delta;
+122:    L_Adaptive_Zone_i : INT;
+290:FOR L_Adaptive_Zone_i := 1 TO 8 DO
+291:    IF VI_Zone_Configs[L_Adaptive_Zone_i].enabled THEN
+292:        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
+294:                VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+295:                VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+
+=== CHECK: no inner VAR in adaptive block ===
+287:// --- MULTI-ZONE ADAPTIVE CORRECTION ---
+63:VAR
