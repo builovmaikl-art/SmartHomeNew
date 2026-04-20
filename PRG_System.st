@@ -118,11 +118,6 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     L_Time_Diff : UDINT;
     L_Local_State : ST_System_State_Snapshot;
     L_Remote_State : ST_System_State_Snapshot;
-    L_NVRAM_Cmd : BYTE;
-    L_NVRAM_Offset : UDINT;
-    L_NVRAM_Done : BOOL;
-    L_NVRAM_Err : BOOL;
-    L_NVRAM_ErrID : UDINT;
     L_BB_Record : ST_BlackBox_Record;
     L_BB_Freeze : BOOL;
     L_Scenario_Idx : INT;
@@ -815,11 +810,6 @@ fbPersistPipeline(
     VIO_Persist_Buffer := L_Persist_Buffer,
     VIO_Last_Written_Persist_Buffer := L_Last_Written_Persist_Buffer,
     VIO_Last_Persist_Write_MS := L_Last_Persist_Write_MS,
-    VO_NVRAM_Cmd => L_NVRAM_Cmd,
-    VO_NVRAM_Offset => L_NVRAM_Offset,
-    VO_NVRAM_Done => L_NVRAM_Done,
-    VO_NVRAM_Err => L_NVRAM_Err,
-    VO_NVRAM_ErrID => L_NVRAM_ErrID
 );
 
 // 15. Черный ящик
