@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: target injection count ===";f326a2c9-42a9-4960-ae0b-e9f9d48f24f4]633;C=== CHECK: target injection count ===
+285:// --- HEATING TARGET INJECTION ---
+
+=== CHECK: adaptive block count ===
+291:// --- MULTI-ZONE ADAPTIVE CORRECTION ---
+
+=== CHECK: build ===
+16:BUILD_OK

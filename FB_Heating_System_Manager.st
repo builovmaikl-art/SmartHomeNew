@@ -283,13 +283,13 @@ END_IF;
 
 
 // --- HEATING TARGET INJECTION ---
+// Global arbitration target is applied after base policy calculation.
 IF GVL_STATE.G_Target_Temperature > 0.0 THEN
     L_Target_Supply_Temp := GVL_STATE.G_Target_Temperature;
 END_IF;
 
-
-
 // --- MULTI-ZONE ADAPTIVE CORRECTION ---
+// Final adaptive refinement layer.
 L_Adaptive_Max_Delta := 0.0;
 L_Adaptive_Weighted_Sum := 0.0;
 L_Adaptive_Weight_Total := 0.0;
@@ -297,50 +297,42 @@ L_Adaptive_Effective_Delta := 0.0;
 L_Adaptive_Correction := 0.0;
 
 FOR L_Adaptive_Zone_i := 1 TO 8 DO
-    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
-        // select temperature source based on control type
-CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
-    0:
-        L_Adaptive_Delta :=
-            VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
-            VI_Floor_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
-    ELSE
-        L_Adaptive_Delta :=
-            VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
-            VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
-END_CASE;
-
-        IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
-            L_Adaptive_Max_Delta := L_Adaptive_Delta;
-        END_IF;
-
-        // Weight by control strategy:
-        // air-controlled circuits influence supply stronger than floor-controlled circuits
+    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 8 THEN
         CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
+            0:
+                L_Adaptive_Delta :=
+                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+                    VI_Floor_Temps[L_Adaptive_Zone_i];
+                L_Adaptive_Weight := 0.6;
             1, 2:
+                L_Adaptive_Delta :=
+                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
                 L_Adaptive_Weight := 1.0;
+            ELSE
+                L_Adaptive_Delta :=
+                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+                L_Adaptive_Weight := 0.8;
+        END_CASE;
 
-        // --- ZONE PRIORITY WEIGHT ---
         IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 4 THEN
             L_Adaptive_Weight := L_Adaptive_Weight * 1.2;
         ELSIF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 9 THEN
             L_Adaptive_Weight := L_Adaptive_Weight * 0.7;
         END_IF;
-            ELSE
-                L_Adaptive_Weight := 0.6;
-        END_CASE;
 
-        // Only heating demand contributes positively here.
-        // Strong overheating should still be allowed to soften the target via weighted average.
-        L_Adaptive_Weighted_Sum := L_Adaptive_Weighted_Sum + (L_Adaptive_Delta * L_Adaptive_Weight);
-        
-
-        // --- WEIGHT CLAMP ---
         IF L_Adaptive_Weight > 2.0 THEN
             L_Adaptive_Weight := 2.0;
         ELSIF L_Adaptive_Weight < 0.2 THEN
             L_Adaptive_Weight := 0.2;
         END_IF;
+
+        IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+            L_Adaptive_Max_Delta := L_Adaptive_Delta;
+        END_IF;
+
+        L_Adaptive_Weighted_Sum := L_Adaptive_Weighted_Sum + (L_Adaptive_Delta * L_Adaptive_Weight);
         L_Adaptive_Weight_Total := L_Adaptive_Weight_Total + L_Adaptive_Weight;
     END_IF;
 END_FOR;
@@ -349,9 +341,6 @@ IF L_Adaptive_Weight_Total > 0.0 THEN
     L_Adaptive_Effective_Delta := L_Adaptive_Weighted_Sum / L_Adaptive_Weight_Total;
 END_IF;
 
-// Conservative correction layer:
-// 1) average demand drives the main correction
-// 2) single-zone cold outlier can still boost support if it is significant
 IF L_Adaptive_Effective_Delta > 1.5 THEN
     L_Adaptive_Correction := 2.0;
 ELSIF L_Adaptive_Effective_Delta > 0.7 THEN
@@ -364,79 +353,16 @@ ELSE
     L_Adaptive_Correction := 0.0;
 END_IF;
 
-// protect against one very cold room being fully diluted by the average
-IF L_Adaptive_Max_Delta > 2.5 THEN
-    IF L_Adaptive_Correction < 2.0 THEN
-        L_Adaptive_Correction := 2.0;
-    END_IF;
+IF L_Adaptive_Max_Delta > 2.5 AND L_Adaptive_Correction < 2.0 THEN
+    L_Adaptive_Correction := 2.0;
 END_IF;
 
 L_Target_Supply_Temp := L_Target_Supply_Temp + L_Adaptive_Correction;
 
-// final clamp for adaptive influence only
 IF L_Target_Supply_Temp < 20.0 THEN
     L_Target_Supply_Temp := 20.0;
 ELSIF L_Target_Supply_Temp > 45.0 THEN
     L_Target_Supply_Temp := 45.0;
-END_IF;
-
-// 2. Расчет целевой температуры подачи теплоносителя (Погодозависимая автоматика ТЗ 2.3)
-L_Target_Supply_Temp := 35.0; // Базовая уставка
-IF VI_Config.Weather_Comp_Enabled AND VI_Outdoor_Temp < 15.0 THEN
-    // Коррекция по уличному датчику с использованием коэффициента кривой
-    L_Target_Supply_Temp := L_Target_Supply_Temp + (15.0 - VI_Outdoor_Temp) * VI_Config.Weather_Coef;
-END_IF;
-L_Target_Supply_Temp := LIMIT(20.0, L_Target_Supply_Temp, 45.0); // Ограничение диапазона для теплого пола
-
-IF L_Policy_Degraded THEN
-    IF L_Target_Supply_Temp > 35.0 THEN
-        L_Target_Supply_Temp := 35.0;
-    END_IF;
-END_IF;
-
-// Плавный переход уставки по сценарию
-IF VI_Current_Scenario >= 1 AND VI_Current_Scenario <= GVL_CONSTANTS.C_MAX_SCENARIOS THEN
-    L_Target_Scenario_Adjust := VI_Scenario_Configs[VI_Current_Scenario].floor_heating_adjust_celsius;
-ELSE
-    L_Target_Scenario_Adjust := 0.0;
-END_IF;
-
-IF VI_Current_Scenario <> L_Prev_Scenario THEN
-    L_Transition_Temp(
-        VI_System_Time := VI_System_Time_MS,
-        VI_Start_Time := VI_System_Time_MS,
-        VI_Duration := 300000, // 5 минут на плавное изменение температуры
-        VI_Start_Value := L_Scenario_Adjust,
-        VI_End_Value := L_Target_Scenario_Adjust
-    );
-    L_Prev_Scenario := VI_Current_Scenario;
-ELSE
-    L_Transition_Temp(
-        VI_System_Time := VI_System_Time_MS,
-        VI_Start_Time := L_Transition_Temp.VI_Start_Time,
-        VI_Duration := L_Transition_Temp.VI_Duration,
-        VI_Start_Value := L_Transition_Temp.VI_Start_Value,
-        VI_End_Value := L_Target_Scenario_Adjust
-    );
-END_IF;
-L_Scenario_Adjust := L_Transition_Temp.VO_Current_Value;
-
-// ТЗ 2.4: Защита от замерзания по температуре пола < 7°C или наружной < -5°C
-L_Freeze_Mode_Active := L_Policy_Freeze_Protection OR (VI_Outdoor_Temp < -5.0);
-IF NOT L_Freeze_Mode_Active THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        IF VI_Floor_Temps[L_i] < 7.0 THEN
-            L_Freeze_Mode_Active := TRUE;
-            EXIT;
-        END_IF;
-    END_FOR;
-END_IF;
-
-IF L_Freeze_Mode_Active THEN
-    L_Freeze_Target_Supply := LIMIT(20.0, VI_Config.Freeze_Threshold + 2.0, 45.0);
-    IF L_Target_Supply_Temp < L_Freeze_Target_Supply THEN
-        L_Target_Supply_Temp := L_Freeze_Target_Supply;
-    END_IF;
 END_IF;
 
 // 2. Индивидуальное управление зонами отопления (ТЗ 1.1, 2.5)
