@@ -1,5 +1,5 @@
 event=workflow_dispatch
 ref=refs/heads/main
-sha=545a9132340e1390b8d597b2d2314a24db46d65e
-task=compile
+sha=803d8b5d4d7363b32d0b3bc9ce148e7b9aa1fde3
+task=diagnostics
 note=
