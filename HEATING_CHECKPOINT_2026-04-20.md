@@ -56,3 +56,33 @@ That next step should:
 - `FB_Heating_System_Manager.st`
 - `GVL_STATE.gvl`
 
+
+
+## Heating evolution status update
+
+The heating stack has advanced beyond the earlier checkpoint and now includes:
+
+- request flags in `GVL_STATE`
+- arbitration / stabilization in `PRG_Heating`
+- target temperature injection in `FB_Heating_System_Manager`
+- multi-zone adaptive correction
+- weighted adaptive correction
+- floor-vs-air adaptive bias
+- zone priority weighting
+
+## Current practical interpretation
+
+The current heating path is no longer only a request bridge.
+It is now a layered control path:
+
+`Rule Engine -> PRG_System -> GVL_STATE requests -> PRG_Heating arbitration/stabilization -> FB_Heating_System_Manager adaptive weighted correction`
+
+## Recommended next engineering step
+
+Do not merge all remaining adaptation ideas into a single mega-step.
+Prefer 2-3 large controlled packages:
+
+1. adaptive v3: per-zone hysteresis / time stability
+2. policy refinement: freeze/preheat/normal semantics cleanup
+3. optional later tuning: zone classes / comfort policy / learning
+

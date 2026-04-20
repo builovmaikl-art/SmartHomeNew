@@ -93,7 +93,7 @@ Allowed dispositions:
 | FB_Gas_Valve_Controller | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_Gateway_Interface | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_HMAC_SHA1 | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
-| FB_Heating_System_Manager | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
+| FB_Heating_System_Manager | REVIEWED | Heating / Control / Policy | Live heating manager now sits behind request/arbitration/stabilization layers and includes adaptive weighted zone-aware correction | Complexity has increased; future changes must preserve current layering and avoid random direct writes | Keep | Continue with controlled refinement only (per-zone hysteresis, policy cleanup, no mega-refactor) |
 | FB_History_Manager | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_IO_Module_Watchdog | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
 | FB_Lifetime_Predictor | NOT_REVIEWED | TBD | TBD | TBD | Needs deeper audit | Open code and classify |
@@ -198,3 +198,13 @@ Stage 0 is complete only when:
 ---
 
 End of register.
+
+
+## 5. Heating checkpoint note
+
+Current heating status:
+- request routing is active through `GVL_STATE`
+- arbitration / stabilization lives in `PRG_Heating`
+- adaptive weighted correction lives in `FB_Heating_System_Manager`
+- current contour is compile-verified and should be evolved in large controlled packages, not one mega-step
+

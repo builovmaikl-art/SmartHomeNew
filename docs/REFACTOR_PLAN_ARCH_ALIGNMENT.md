@@ -17,6 +17,12 @@ This plan is intended as project memory and execution roadmap.
 
 ### Current verified implementation checkpoints
 
+Additional verified heating architecture checkpoint:
+- request flags are routed through `GVL_STATE`
+- `PRG_Heating` performs arbitration / stabilization
+- `FB_Heating_System_Manager` now includes adaptive zone-aware correction
+- heating adaptive layer already includes weighted correction, floor-vs-air bias, and zone priority weighting
+
 The following items are already reflected in the current repository code and must not be treated as TODO-only aspirations:
 
 - `FB_System_Health` exists and is integrated in `PRG_System`
@@ -481,3 +487,13 @@ For any next assistant session:
 ---
 
 End of plan.
+
+
+## Heating adaptation note
+
+Heating adaptation is now beyond basic orchestration.
+The next safe step is not a full redesign, but controlled refinement:
+- per-zone hysteresis / time stability
+- semantic cleanup of freeze/preheat/normal policy
+- only then possible deeper adaptive intelligence
+
