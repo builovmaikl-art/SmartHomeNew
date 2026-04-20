@@ -9,6 +9,7 @@
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_System_Manager
 VAR_INPUT
+    VI_Command : ST_Heating_Command;
     VI_Preheat_Request : BOOL; // preheat scenario trigger
     L_Climate_Zone_ID : INT;
 
@@ -692,4 +693,11 @@ END_FUNCTION_BLOCK
 IF VI_Preheat_Request THEN
     // simple safe preheat: raise target temp slightly
     GVL_HEATING.G_Preheat_Mode := TRUE;
+END_IF;
+
+
+// --- HEATING COMMAND INSERT ---
+IF VI_Command.Enable THEN
+    // apply temperature with priority concept (simplified for now)
+    GVL_HEATING.G_Target_Temperature := VI_Command.Target_Temperature;
 END_IF;
