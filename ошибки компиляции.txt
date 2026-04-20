@@ -1,33 +1,45 @@
                 ------ Компиляция : Приложение: Device.Application -------
                 типизировать код...
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_STATUS.G_Departure_Time'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0004:  'G_Departure_Time' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_STATUS.G_Departure_Time - GVL_STATUS.G_System_Time_MS)'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_STATUS.G_Departure_Time'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0004:  'G_Departure_Time' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Enable' не является корректным объектом присваивания
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Enable'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Target_Temperature' не является корректным объектом присваивания
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Target_Temperature'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Priority' не является корректным объектом присваивания
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Priority'
-[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'fbRuleEngine.VO_Heating_Command'' в тип 'ST_Heating_Command'
-[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'fbRuleEngine' не задан
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 584, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING.G_Preheat_Mode' не является корректным объектом присваивания
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 584, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING' не задан
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Enable'
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING.G_Target_Temperature' не является корректным объектом присваивания
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING' не задан
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
-[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Target_Temperature'
-                Компиляция завершена -- 29 ошибок, 0 предупреждений
-                Компиляция завершена -- 29 ошибок, 0 предупреждений : загрузка невозможна
+                генерировать код...
+[ERROR]         Без имени13: PRG_System(Строка 2389, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Preheat_Request' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 2389, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_System(Строка 2392, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Freeze_Request' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_System(Строка 2392, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_HEATING_REQUEST.G_Preheat_Request'' в тип 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 127, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 127, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 128, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 128, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 129, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 129, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 130, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 130, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 132, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 132, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 137, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 137, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 138, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 138, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 139, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 139, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 140, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 140, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 142, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 142, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 156, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 156, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 158, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: PRG_Heating(Строка 158, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 167, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 167, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 168, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 168, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: PRG_Heating(Строка 169, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING_REQUEST.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: PRG_Heating(Строка 169, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 169, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 169, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_HEATING_REQUEST.G_Target_Temperature'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 169, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 170, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_HEATING_REQUEST.G_Target_Temperature'' в тип 'REAL'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 170, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_REQUEST' не задан
+                Компиляция завершена -- 41 ошибок, 0 предупреждений : загрузка невозможна
