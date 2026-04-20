@@ -80,7 +80,7 @@ IF ((VI_Arm_Request AND L_Valid_PIN) OR R_Trig_Auto_Arm.Q) AND NOT VO_Armed AND 
     // Проверка, что все двери/окна закрыты перед постановкой (с учетом байпаса)
     L_Any_Sensor_Active := FALSE;
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+    FOR L_i := 1 TO 16 DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
     
     IF NOT L_Any_Sensor_Active THEN
         L_Arming_In_Progress := TRUE;
@@ -145,9 +145,9 @@ END_IF;
 // 4. Логика тревоги (с задержкой на вход)
 IF VO_Armed THEN
     L_Any_Sensor_Active := FALSE;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+    FOR L_i := 1 TO 16 DO IF VI_Motion_Sensors[L_i] AND NOT VI_Bypass_Motion[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO IF VI_Door_Sensors[L_i] AND NOT VI_Bypass_Doors[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CLIMATE_ZONES DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
+    FOR L_i := 1 TO 16 DO IF VI_Window_Sensors[L_i] AND NOT VI_Bypass_Windows[L_i] THEN L_Any_Sensor_Active := TRUE; END_IF; END_FOR;
     
     // Защелкиваем факт нарушения периметра, чтобы кратковременное срабатывание датчика не сбрасывало таймер
     IF L_Any_Sensor_Active THEN
