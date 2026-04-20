@@ -17,18 +17,7 @@ VAR_OUTPUT
     VO_Gas_Detected     : BOOL;
     VO_CO_Warning_Level : BOOL;
     VO_CO_Alarm_Level   : BOOL;
-
-    // Actuators
-    VO_Siren_Active      : BOOL;
-    VO_Gas_Valve_Close   : BOOL;
-    VO_Boiler_Stop       : BOOL;
-    VO_Vent_PV3_Boost    : BOOL;
-    VO_Supply_100_Req    : BOOL;
-    VO_Exhaust_100_Req   : BOOL;
-    VO_Supply_80_Req     : BOOL;
-    VO_Vent_Stop         : BOOL;
-
-    VO_Status_Msg        : STRING(200);
+    VO_Status_Msg       : STRING(200);
 END_VAR
 
 VAR
@@ -56,15 +45,6 @@ VO_Smoke_Detected := FALSE;
 VO_Gas_Detected := FALSE;
 VO_CO_Warning_Level := FALSE;
 VO_CO_Alarm_Level := FALSE;
-
-VO_Siren_Active := FALSE;
-VO_Gas_Valve_Close := FALSE;
-VO_Boiler_Stop := FALSE;
-VO_Vent_PV3_Boost := FALSE;
-VO_Supply_100_Req := FALSE;
-VO_Exhaust_100_Req := FALSE;
-VO_Supply_80_Req := FALSE;
-VO_Vent_Stop := FALSE;
 VO_Status_Msg := 'ОК';
 
 // --- Methane ---
@@ -75,15 +55,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
     END_IF;
 END_FOR;
 
-IF L_Methane_Max >= 10.0 THEN
-    VO_Vent_PV3_Boost := FALSE; // ownership moved to PRG_Safety
-END_IF;
-
 IF L_Methane_Max >= 20.0 THEN
     VO_Gas_Detected := TRUE;
-    VO_Gas_Valve_Close := FALSE; // ownership moved to PRG_Safety
-    VO_Boiler_Stop := FALSE; // ownership moved to PRG_Safety
-    VO_Supply_100_Req := FALSE; // ownership moved to PRG_Safety
 END_IF;
 
 // --- CO ---
@@ -104,12 +77,10 @@ L_CO_Timer_400ppm(IN := L_CO_Level_400, PT := T#15m, VI_System_Time_MS := VI_Sys
 
 IF L_CO_Timer_30ppm.Q THEN
     VO_CO_Warning_Level := TRUE;
-    VO_Supply_80_Req := FALSE; // ownership moved to PRG_Safety
 END_IF;
 
 IF L_CO_Timer_70ppm.Q OR L_CO_Timer_400ppm.Q THEN
     VO_CO_Alarm_Level := TRUE;
-    VO_Supply_80_Req := FALSE; // ownership moved to PRG_Safety
 END_IF;
 
 // --- Smoke ---
@@ -130,8 +101,6 @@ END_FOR;
 
 IF L_Smoke_Active THEN
     VO_Smoke_Detected := TRUE;
-    VO_Vent_Stop := FALSE; // ownership moved to PRG_Safety
-    VO_Boiler_Stop := FALSE; // ownership moved to PRG_Safety
 END_IF;
 
 // Status
