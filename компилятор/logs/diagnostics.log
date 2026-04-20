@@ -233,9 +233,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 20 20:31 out
 -rw-r--r--  1 runner runner    177 Apr 20 20:31 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1620
+total 792
 drwxr-xr-x 2 runner runner   4096 Apr 20 20:31 .
 drwxr-xr-x 6 runner runner   4096 Apr 20 20:31 ..
 -rw-r--r-- 1 runner runner      0 Apr 20 20:31 .gitkeep
 -rw-r--r-- 1 runner runner 800019 Apr 20 20:31 003_RESULT.xml
--rw-r--r-- 1 runner runner 845993 Apr 20 20:31 004_RESULT.xml
