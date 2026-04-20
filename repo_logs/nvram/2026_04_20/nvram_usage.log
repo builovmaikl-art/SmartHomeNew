@@ -1,0 +1,98 @@
+./FB_NVRAM_Manager.st:1: FUNCTION_BLOCK FB_NVRAM_Manager
+./FB_NVRAM_Manager.st:1: FUNCTION_BLOCK FB_NVRAM_Manager
+./FB_NVRAM_Manager.st:28: C_MAX_NVRAM_SIZE            : UDINT := 12800;
+./FB_NVRAM_Manager.st:42: IF VI_Offset >= C_MAX_NVRAM_SIZE THEN
+./FB_NVRAM_Manager.st:45: VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./FB_NVRAM_Manager.st:54: VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./FB_NVRAM_Manager.st:61: IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+./FB_NVRAM_Manager.st:64: VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./FB_NVRAM_Manager.st:73: VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./FB_NVRAM_Manager.st:79: VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./FB_NVRAM_Manager.st:84: IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+./FB_NVRAM_Manager.st:84: IF GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] <> L_pData[L_i] THEN
+./FB_NVRAM_Manager.st:93: GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./FB_NVRAM_Manager.st:93: GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./FB_NVRAM_Manager.st:96: VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./FB_NVRAM_Manager.st:98: VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./FB_NVRAM_Manager.st:109: // >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+./FB_NVRAM_Manager.st:109: // >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+./FB_State_Snapshot_NVRAM.st:1: FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+./GVL_CONSTANTS.gvl:48: C_MAX_NVRAM_RECORDS    : INT := 100; // Максимальное количество записей NVRAM
+./GVL_CONSTANTS.gvl:49: C_MAX_NVRAM_DATA       : INT := 128; // Максимальный размер данных NVRAM
+./GVL_Retain.gvl:5: // Энергонезависимая память (NVRAM) для хранения настроек и логов
+./GVL_Retain.gvl:6: G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+./GVL_Retain.gvl:6: G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+./PRG_System.st:105: fbNVRAMManager : FB_NVRAM_Manager;
+./PRG_System.st:105: fbNVRAMManager : FB_NVRAM_Manager;
+./PRG_System.st:121: L_NVRAM_Cmd : BYTE;
+./PRG_System.st:122: L_NVRAM_Offset : UDINT;
+./PRG_System.st:123: L_NVRAM_Done : BOOL;
+./PRG_System.st:124: L_NVRAM_Err : BOOL;
+./PRG_System.st:125: L_NVRAM_ErrID : UDINT;
+./PRG_System.st:204: // === NVRAM RECOVERY (ONCE AFTER BOOT) ===
+./PRG_System.st:216: // NVRAM CONTROLLED WRITE ENABLED (step 8B)
+./PRG_System.st:788: // 14. Менеджер NVRAM
+./PRG_System.st:789: // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+./PRG_System.st:819: L_NVRAM_Cmd := 0;
+./PRG_System.st:820: L_NVRAM_Offset := 0;
+./PRG_System.st:824: L_NVRAM_Cmd := 1;
+./PRG_System.st:831: L_NVRAM_Cmd := 1;
+./PRG_System.st:835: fbNVRAMManager(
+./PRG_System.st:836: VI_Command := L_NVRAM_Cmd,
+./PRG_System.st:837: VI_Offset := L_NVRAM_Offset,
+./PRG_System.st:844: VO_Done => L_NVRAM_Done,
+./PRG_System.st:845: VO_Error => L_NVRAM_Err,
+./PRG_System.st:846: VO_ErrorID => L_NVRAM_ErrID
+./PRG_System.st:849: IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
+./PRG_System.st:1136: // === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:1: FUNCTION_BLOCK FB_NVRAM_Manager
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:1: FUNCTION_BLOCK FB_NVRAM_Manager
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:28: C_MAX_NVRAM_SIZE            : UDINT := 12800;
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:42: IF VI_Offset >= C_MAX_NVRAM_SIZE THEN
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:45: VO_HMI_Status_Message := 'NVRAM: Неверное смещение';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:54: VO_HMI_Status_Message := 'NVRAM: Недействительная ссылка на данные';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:61: IF (VI_Offset + VI_DataSize) > C_MAX_NVRAM_SIZE THEN
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:64: VO_HMI_Status_Message := 'NVRAM: Размер данных превышает доступный объем';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:73: VO_HMI_Status_Message := 'NVRAM: Запись запрещена (STANDBY)';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:79: VO_HMI_Status_Message := 'NVRAM: Превышена частота записи (лимит 1 раз в 60с)';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:90: GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:90: GVL_Retain.G_NVRAM_Data[VI_Offset + L_i] := L_pData[L_i];
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:93: VO_HMI_Status_Message := 'NVRAM: Данные успешно сохранены в RETAIN';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:95: VO_HMI_Status_Message := 'NVRAM: Данные не изменились, запись пропущена';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:104: L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:104: L_pData[L_i] := GVL_Retain.G_NVRAM_Data[VI_Offset + L_i];
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:106: VO_HMI_Status_Message := 'NVRAM: Данные успешно прочитаны из RETAIN';
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:114: // >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+./snapshots/project_clean_state_2026_04_16/FB_NVRAM_Manager.st:114: // >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+./snapshots/project_clean_state_2026_04_16/FB_State_Snapshot_NVRAM.st:1: FUNCTION_BLOCK FB_State_Snapshot_NVRAM
+./snapshots/project_clean_state_2026_04_16/GVL_CONSTANTS.gvl:48: C_MAX_NVRAM_RECORDS    : INT := 100; // Максимальное количество записей NVRAM
+./snapshots/project_clean_state_2026_04_16/GVL_CONSTANTS.gvl:49: C_MAX_NVRAM_DATA       : INT := 128; // Максимальный размер данных NVRAM
+./snapshots/project_clean_state_2026_04_16/GVL_Retain.gvl:5: // Энергонезависимая память (NVRAM) для хранения настроек и логов
+./snapshots/project_clean_state_2026_04_16/GVL_Retain.gvl:6: G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+./snapshots/project_clean_state_2026_04_16/GVL_Retain.gvl:6: G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:17: fbNVRAMManager : FB_NVRAM_Manager;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:17: fbNVRAMManager : FB_NVRAM_Manager;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:34: L_NVRAM_Cmd : BYTE;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:35: L_NVRAM_Offset : UDINT;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:36: L_NVRAM_Done : BOOL;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:37: L_NVRAM_Err : BOOL;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:38: L_NVRAM_ErrID : UDINT;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:110: // === NVRAM RECOVERY (ONCE AFTER BOOT) ===
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:122: // NVRAM CONTROLLED WRITE ENABLED (step 8B)
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:672: // 14. Менеджер NVRAM
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:673: // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:703: L_NVRAM_Cmd := 0;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:704: L_NVRAM_Offset := 0;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:708: L_NVRAM_Cmd := 2;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:713: L_NVRAM_Cmd := 1;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:720: L_NVRAM_Cmd := 1;
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:724: fbNVRAMManager(
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:725: VI_Command := L_NVRAM_Cmd,
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:726: VI_Offset := L_NVRAM_Offset,
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:733: VO_Done => L_NVRAM_Done,
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:734: VO_Error => L_NVRAM_Err,
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:735: VO_ErrorID => L_NVRAM_ErrID
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:738: IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
+./snapshots/project_clean_state_2026_04_16/PRG_System.st:994: // === NVRAM SNAPSHOT (NO WRITE YET) ===
+./snapshots/project_clean_state_2026_04_16/workspace/system_layer_cleanup/split_scaffold/persistence/FB_PersistenceLayer_DRAFT.st:7: // NVRAM + BlackBox + History
+./workspace/system_layer_cleanup/split_scaffold/persistence/FB_PersistenceLayer_DRAFT.st:7: // NVRAM + BlackBox + History

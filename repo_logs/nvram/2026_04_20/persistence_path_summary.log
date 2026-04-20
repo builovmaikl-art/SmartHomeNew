@@ -1,0 +1,9 @@
+=== FILE PRESENCE ===
+FB_NVRAM_Manager.st: YES
+FB_State_Snapshot_NVRAM.st: YES
+
+=== QUICK SIGNALS ===
+Snapshot refs: 140
+NVRAM refs: 98
+PRG refs: 62
+RETAIN refs: 100
