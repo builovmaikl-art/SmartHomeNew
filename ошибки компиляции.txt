@@ -1,21 +1,33 @@
                 ------ Компиляция : Приложение: Device.Application -------
                 типизировать код...
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: PRG_System(Строка 615, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'GVL_STATE' в тип 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 3, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_State.G_System_Mode'' в тип 'E_SYSTEM_OPERATING_MODE'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 3, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 3, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'G_System_Mode'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 5, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_State.G_Safety_Gas_Latched'' в тип 'BOOL'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 5, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 5, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'G_Safety_Gas_Latched'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_State.G_Safety_Smoke_Latched'' в тип 'BOOL'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 6, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 6, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'G_Safety_Smoke_Latched'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 7, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_State.G_Safety_Leak_Latched'' в тип 'BOOL'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 7, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 7, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'G_Safety_Leak_Latched'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 9, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_State.G_DHW_Heating_Pump'' в тип 'BOOL'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 9, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_System_State'
-[ERROR]         Без имени13: FB_Persist_Builder(Строка 9, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'G_DHW_Heating_Pump'
-                Компиляция завершена -- 17 ошибок, 0 предупреждений
-                Компиляция завершена -- 17 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_STATUS.G_Departure_Time'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 88, Столбец 1 (Реализ.)): C0004:  'G_Departure_Time' не является компонентом 'GVL_STATUS'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_STATUS.G_Departure_Time - GVL_STATUS.G_System_Time_MS)'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_STATUS.G_Departure_Time'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 89, Столбец 1 (Реализ.)): C0004:  'G_Departure_Time' не является компонентом 'GVL_STATUS'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Enable' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 99, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Enable'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 100, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Target_Temperature'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0018:  'VO_Heating_Command.Priority' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Rule_Engine(Строка 101, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Priority'
+[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'fbRuleEngine.VO_Heating_Command'' в тип 'ST_Heating_Command'
+[ERROR]         Без имени13: PRG_Heating(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'fbRuleEngine' не задан
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 584, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING.G_Preheat_Mode' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 584, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING' не задан
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 589, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Enable'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0018:  'GVL_HEATING.G_Target_Temperature' не является корректным объектом присваивания
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING' не задан
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Heating_Command'
+[ERROR]         Без имени13: FB_Heating_System_Manager(Строка 591, Столбец 1 (Реализ.)): C0063:  '' не содержит определения для 'Target_Temperature'
+                Компиляция завершена -- 29 ошибок, 0 предупреждений
+                Компиляция завершена -- 29 ошибок, 0 предупреждений : загрузка невозможна
