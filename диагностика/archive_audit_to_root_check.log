@@ -1,0 +1,7 @@
+]633;E;echo "=== CHECK: root archive audit exists ===";8f3adcea-804a-4201-99bb-fb513c0f4b3b]633;C=== CHECK: root archive audit exists ===
+ARCHIVE_AUDIT_2026-04-20.md present
+
+=== CHECK: sections ===
+13:## 1. Unintegrated controllers
+21:## 2. Good ideas / not integrated yet
+28:## 3. Needs manual review
