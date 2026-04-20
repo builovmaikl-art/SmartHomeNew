@@ -319,6 +319,13 @@ END_CASE;
         CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
             1, 2:
                 L_Adaptive_Weight := 1.0;
+
+        // --- ZONE PRIORITY WEIGHT ---
+        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 4 THEN
+            L_Adaptive_Weight := L_Adaptive_Weight * 1.2;
+        ELSIF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 9 THEN
+            L_Adaptive_Weight := L_Adaptive_Weight * 0.7;
+        END_IF;
             ELSE
                 L_Adaptive_Weight := 0.6;
         END_CASE;
@@ -326,6 +333,14 @@ END_CASE;
         // Only heating demand contributes positively here.
         // Strong overheating should still be allowed to soften the target via weighted average.
         L_Adaptive_Weighted_Sum := L_Adaptive_Weighted_Sum + (L_Adaptive_Delta * L_Adaptive_Weight);
+        
+
+        // --- WEIGHT CLAMP ---
+        IF L_Adaptive_Weight > 2.0 THEN
+            L_Adaptive_Weight := 2.0;
+        ELSIF L_Adaptive_Weight < 0.2 THEN
+            L_Adaptive_Weight := 0.2;
+        END_IF;
         L_Adaptive_Weight_Total := L_Adaptive_Weight_Total + L_Adaptive_Weight;
     END_IF;
 END_FOR;
