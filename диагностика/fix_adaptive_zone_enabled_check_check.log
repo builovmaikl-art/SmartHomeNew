@@ -1,0 +1,4 @@
+]633;E;echo "=== CHECK: no invalid enabled field ===";443c8a76-9310-41d7-b47e-91f874f5f7be]633;C=== CHECK: no invalid enabled field ===
+
+=== CHECK: adaptive zone guard ===
+291:    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN

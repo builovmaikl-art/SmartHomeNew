@@ -288,8 +288,7 @@ END_IF;
 L_Adaptive_Max_Delta := 0.0;
 
 FOR L_Adaptive_Zone_i := 1 TO 8 DO
-    IF VI_Zone_Configs[L_Adaptive_Zone_i].enabled THEN
-        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
+    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
             L_Adaptive_Delta :=
                 VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
                 VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
@@ -298,7 +297,6 @@ FOR L_Adaptive_Zone_i := 1 TO 8 DO
                 L_Adaptive_Max_Delta := L_Adaptive_Delta;
             END_IF;
         END_IF;
-    END_IF;
 END_FOR;
 
 // apply correction
