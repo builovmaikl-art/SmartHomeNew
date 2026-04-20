@@ -298,9 +298,17 @@ L_Adaptive_Correction := 0.0;
 
 FOR L_Adaptive_Zone_i := 1 TO 8 DO
     IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 16 THEN
+        // select temperature source based on control type
+CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
+    0:
+        L_Adaptive_Delta :=
+            VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+            VI_Floor_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+    ELSE
         L_Adaptive_Delta :=
             VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
             VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+END_CASE;
 
         IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
             L_Adaptive_Max_Delta := L_Adaptive_Delta;
