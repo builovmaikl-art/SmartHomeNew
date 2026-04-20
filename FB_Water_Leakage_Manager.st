@@ -10,8 +10,6 @@ VAR_IN_OUT
 END_VAR
 
 VAR_OUTPUT
-    VO_Close_Valve_35 : BOOL;
-    VO_Close_Valve_36 : BOOL;
     VO_Status_Msg     : STRING(200);
 
     // Health signals
@@ -43,12 +41,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
         IF L_Sensor_Timers[L_i].Q THEN
             L_Any_Leak := TRUE;
-
-            IF VI_Config.sensor_to_valve_map[L_i] = 1 THEN
-                VO_Close_Valve_35 := FALSE; // ownership moved to PRG_Safety
-            ELSIF VI_Config.sensor_to_valve_map[L_i] = 2 THEN
-                VO_Close_Valve_36 := FALSE; // ownership moved to PRG_Safety
-            END_IF;
         END_IF;
     END_IF;
 END_FOR;
@@ -59,12 +51,10 @@ VO_Leak_Warning_Level := L_Any_Warning;
 
 // Status
 IF L_Any_Leak THEN
-    VO_Status_Msg := 'АВАРИЯ: ПРОТЕЧКА ВОДЫ. КЛАПАНЫ ЗАКРЫТЫ.';
+    VO_Status_Msg := 'АВАРИЯ: ПРОТЕЧКА ВОДЫ.';
 ELSIF L_Any_Warning THEN
     VO_Status_Msg := 'ПРЕДУПРЕЖДЕНИЕ: ОБНАРУЖЕНА ВОДА.';
 ELSE
     VO_Status_Msg := 'Система контроля протечек в норме';
-    VO_Close_Valve_35 := FALSE;
-    VO_Close_Valve_36 := FALSE;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Water_Leakage_Manager <<<
