@@ -1,20 +1,7 @@
-ERROR=f-string expression part cannot include a backslash (001_universal_pou_builder_METHODS_V2.py, line 522)
-Traceback (most recent call last):
-  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 191, in <module>
-    main()
-  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 116, in main
-    methods_v2 = load_module("methods_v2_builder", ROOT / "steps" / "MASTER_PIPELINE" / "001_universal_pou_builder_METHODS_V2.py")
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 24, in load_module
-    spec.loader.exec_module(module)
-  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
-  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
-  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/home/runner/work/SmartHomeNew/SmartHomeNew/steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V2.py", line 522
-    log(f'POU_COUNT_IN_OUTPUT={len(re.findall(r"<pou name=\"", verify_text))}')
-                                                                              ^
-SyntaxError: f-string expression part cannot include a backslash
+OVERLAY_OK=FB_CRC32_Calculator METHODS=1
+OVERLAY_OK=FB_Random_Generator METHODS=2
+TARGET_POUS=2
+TOTAL_METHODS=3
 COMPILER_DIR=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор
 PROJECT_ROOT=/home/runner/work/SmartHomeNew/SmartHomeNew
 BASE_XML=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/Система умного дома.xml
@@ -28,13 +15,7 @@ STEP_004_OK
 FINAL_RESULT_OK=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
 BUILD_OK
 RUN METHOD OVERLAY...
-OVERLAY_ERROR: method_overlay_clean.py failed
-ERROR: expected final file not found: компилятор/out/RESULT_methods_clean.xml
-=== compiler out dir after compile ===
-total 2448
-drwxr-xr-x 2 runner runner   4096 Apr 20 20:49 .
-drwxr-xr-x 6 runner runner   4096 Apr 20 20:49 ..
--rw-r--r-- 1 runner runner      0 Apr 20 20:49 .gitkeep
--rw-r--r-- 1 runner runner 800019 Apr 20 20:49 003_RESULT.xml
--rw-r--r-- 1 runner runner 845993 Apr 20 20:49 004_RESULT.xml
--rw-r--r-- 1 runner runner 845993 Apr 20 20:49 RESULT.xml
+METHOD OVERLAY DONE
+CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/003_RESULT.xml
+CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/004_RESULT.xml
+CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
