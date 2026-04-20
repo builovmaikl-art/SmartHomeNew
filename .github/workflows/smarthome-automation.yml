@@ -1,0 +1,95 @@
+name: SmartHome Automation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Что запускать"
+        required: true
+        default: "compile"
+        type: choice
+        options:
+          - compile
+          - diagnostics
+      note:
+        description: "Комментарий к запуску"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  run-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prepare folders
+        run: |
+          mkdir -p "компилятор/logs"
+
+      - name: Show trigger info
+        run: |
+          echo "event=${{ github.event_name }}" | tee "компилятор/logs/workflow_meta.log"
+          echo "ref=${{ github.ref }}" | tee -a "компилятор/logs/workflow_meta.log"
+          echo "sha=${{ github.sha }}" | tee -a "компилятор/logs/workflow_meta.log"
+          echo "task=${{ inputs.task || 'compile' }}" | tee -a "компилятор/logs/workflow_meta.log"
+          echo "note=${{ inputs.note || '' }}" | tee -a "компилятор/logs/workflow_meta.log"
+
+      - name: Install dependencies if needed
+        run: |
+          python -V > "компилятор/logs/python_version.log" 2>&1
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt > "компилятор/logs/pip_install.log" 2>&1 || true
+          fi
+
+      - name: Run diagnostics
+        if: ${{ github.event_name == 'push' || inputs.task == 'diagnostics' }}
+        run: |
+          {
+            echo "=== git status ==="
+            git status
+            echo
+            echo "=== repo tree root ==="
+            ls -la
+            echo
+            echo "=== compiler dir ==="
+            ls -la "компилятор" || true
+          } > "компилятор/logs/diagnostics.log" 2>&1
+
+      - name: Run compile script
+        if: ${{ github.event_name == 'push' || inputs.task == 'compile' }}
+        run: |
+          if [ -f "компилятор/import_codesys_FINAL.py" ]; then
+            python "компилятор/import_codesys_FINAL.py" > "компилятор/logs/final_test.log" 2>&1
+          else
+            echo "File not found: компилятор/import_codesys_FINAL.py" > "компилятор/logs/final_test.log"
+            exit 1
+          fi
+
+      - name: Upload logs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: smarthome-logs
+          path: компилятор/logs/
+
+      - name: Commit logs back to repo
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "компилятор/logs" || true
+          git diff --cached --quiet || git commit -m "ci: update automation logs"
+          git push
