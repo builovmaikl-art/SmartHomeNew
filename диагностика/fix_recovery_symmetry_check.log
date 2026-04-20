@@ -1,0 +1,2 @@
+]633;E;echo "=== CHECK: DHW recovery ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: DHW recovery ===
+208:    GVL_STATE.G_DHW_Heating_Pump := GVL_PERSISTENT.P_DHW_Heating_Active;

@@ -203,6 +203,10 @@ IF NOT L_Recovery_Done THEN
         GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
         GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
         GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
+
+    // restore DHW pump state (symmetry with persist builder)
+    GVL_STATE.G_DHW_Heating_Pump := GVL_PERSISTENT.P_DHW_Heating_Active;
+
     END_IF;
 
     L_Recovery_Done := TRUE;
