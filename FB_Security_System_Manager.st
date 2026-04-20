@@ -42,7 +42,19 @@ VAR
     R_Trig_Auto_Arm : R_TRIG;
 END_VAR
 
-IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+IF NOT VI_IsActivePLC THEN
+    VO_Armed := FALSE;
+    VO_Alarm_Active := FALSE;
+    VO_Siren_Active := FALSE;
+    VO_Send_Code_Req := FALSE;
+    VO_Code_To_Send := '';
+    VO_Status_Msg := 'Охрана: резервный ПЛК';
+    L_Arming_In_Progress := FALSE;
+    L_Disarm_Pending := FALSE;
+    L_2FA_Required := FALSE;
+    L_Reset_2FA := FALSE;
+    RETURN;
+END_IF;
 
 // 1. Проверка PIN-кода или RFID-метки через менеджер кодов
 fbAccessCode(
