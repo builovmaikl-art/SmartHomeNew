@@ -103,6 +103,7 @@ fbLifetimeFan  : FB_Lifetime_Manager;
     fbSimulationManager : FB_Simulation_Manager;
     fbRuleEngine : FB_Rule_Engine;
     fbNVRAMManager : FB_NVRAM_Manager;
+    fbPersistPipeline : FB_Persist_Pipeline;
 
     fbBlackBox : FB_BlackBox_Recorder;
     fbAstroTimer : FB_Astro_Timer;
@@ -807,86 +808,20 @@ GVL_PERSISTENT.P_Safety_Leak_Latched := L_Persist_Struct.Safety_Leak_Latched;
 GVL_PERSISTENT.P_DHW_Heating_Active := L_Persist_Struct.DHW_Heating_Pump;
 GVL_PERSISTENT.P_Valid := L_Persist_Struct.Valid;
 
-// === SERIALIZE PERSIST STRUCT → BUFFER ===
-
-// System Mode
-L_Persist_Buffer[0] := TO_BYTE(TO_INT(L_Persist_Struct.System_Mode));
-
-// Gas
-IF L_Persist_Struct.Safety_Gas_Latched THEN
-    L_Persist_Buffer[1] := BYTE#1;
-ELSE
-    L_Persist_Buffer[1] := BYTE#0;
-END_IF;
-
-// Smoke
-IF L_Persist_Struct.Safety_Smoke_Latched THEN
-    L_Persist_Buffer[2] := BYTE#1;
-ELSE
-    L_Persist_Buffer[2] := BYTE#0;
-END_IF;
-
-// Leak
-IF L_Persist_Struct.Safety_Leak_Latched THEN
-    L_Persist_Buffer[3] := BYTE#1;
-ELSE
-    L_Persist_Buffer[3] := BYTE#0;
-END_IF;
-
-// DHW Pump
-IF L_Persist_Struct.DHW_Heating_Pump THEN
-    L_Persist_Buffer[4] := BYTE#1;
-ELSE
-    L_Persist_Buffer[4] := BYTE#0;
-END_IF;
-
-// === END SERIALIZE ===
-
-L_Persist_Buffer_Changed :=
-    (L_Persist_Buffer[0] <> L_Last_Written_Persist_Buffer[0]) OR
-    (L_Persist_Buffer[1] <> L_Last_Written_Persist_Buffer[1]) OR
-    (L_Persist_Buffer[2] <> L_Last_Written_Persist_Buffer[2]) OR
-    (L_Persist_Buffer[3] <> L_Last_Written_Persist_Buffer[3]) OR
-    (L_Persist_Buffer[4] <> L_Last_Written_Persist_Buffer[4]);
-
-L_NVRAM_Cmd := 0;
-L_NVRAM_Offset := 0;
-
-IF GVL_CONFIG.G_HMI_Apply_Settings THEN
-    // explicit config apply may request a controlled write
-    L_NVRAM_Cmd := 1;
-    GVL_CONFIG.G_HMI_Apply_Settings := FALSE;
-
-ELSIF L_Persist_Buffer_Changed THEN
-    // controlled write: no more often than once per 60 seconds
-    IF (L_Last_Persist_Write_MS = 0) OR
-       ((GVL_STATUS.G_System_Time_MS - L_Last_Persist_Write_MS) >= 60000) THEN
-        L_NVRAM_Cmd := 1;
-    END_IF;
-END_IF;
-
-fbNVRAMManager(
-    VI_Command := L_NVRAM_Cmd,
-    VI_Offset := L_NVRAM_Offset,
-    VI_DataRef := L_Persist_Buffer[0],
-    VI_DataSize := 5,
+fbPersistPipeline(
+    VI_PersistStruct := L_Persist_Struct,
+    VIO_Apply_Settings := GVL_CONFIG.G_HMI_Apply_Settings,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Operator_ID := 'SYSTEM',
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_TwoPersonConfirmation := FALSE,
-    VO_Done => L_NVRAM_Done,
-    VO_Error => L_NVRAM_Err,
-    VO_ErrorID => L_NVRAM_ErrID
+    VIO_Persist_Buffer := L_Persist_Buffer,
+    VIO_Last_Written_Persist_Buffer := L_Last_Written_Persist_Buffer,
+    VIO_Last_Persist_Write_MS := L_Last_Persist_Write_MS,
+    VO_NVRAM_Cmd => L_NVRAM_Cmd,
+    VO_NVRAM_Offset => L_NVRAM_Offset,
+    VO_NVRAM_Done => L_NVRAM_Done,
+    VO_NVRAM_Err => L_NVRAM_Err,
+    VO_NVRAM_ErrID => L_NVRAM_ErrID
 );
-
-IF (L_NVRAM_Cmd = 1) AND L_NVRAM_Done AND NOT L_NVRAM_Err THEN
-    L_Last_Written_Persist_Buffer[0] := L_Persist_Buffer[0];
-    L_Last_Written_Persist_Buffer[1] := L_Persist_Buffer[1];
-    L_Last_Written_Persist_Buffer[2] := L_Persist_Buffer[2];
-    L_Last_Written_Persist_Buffer[3] := L_Persist_Buffer[3];
-    L_Last_Written_Persist_Buffer[4] := L_Persist_Buffer[4];
-    L_Last_Persist_Write_MS := GVL_STATUS.G_System_Time_MS;
-END_IF;
 
 // 15. Черный ящик
 L_BB_Record.Timestamp := GVL_STATUS.G_System_Time_MS;
