@@ -133,3 +133,13 @@ END_IF;
 FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves_8[L_i];
 END_FOR;
+
+
+// --- HEATING PRIORITY ARBITRATION ---
+IF GVL_HEATING_REQUEST.G_Freeze_Request THEN
+    GVL_HEATING_REQUEST.G_Target_Temperature := 5.0;
+ELSIF GVL_HEATING_REQUEST.G_Preheat_Request THEN
+    GVL_HEATING_REQUEST.G_Target_Temperature := 22.0;
+ELSE
+    GVL_HEATING_REQUEST.G_Target_Temperature := 20.0;
+END_IF;

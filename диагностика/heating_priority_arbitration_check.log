@@ -1,0 +1,8 @@
+]633;E;echo "=== CHECK: arbitration block ===";822ba416-8f08-405d-9da8-9a89f94c658a]633;C=== CHECK: arbitration block ===
+138:// --- HEATING PRIORITY ARBITRATION ---
+
+=== CHECK: freeze signal ===
+2:    G_Freeze_Request : BOOL := FALSE;
+
+=== CHECK: target temp ===
+3:    G_Target_Temperature : REAL := 0.0;
