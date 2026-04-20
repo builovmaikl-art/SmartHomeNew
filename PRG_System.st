@@ -504,7 +504,11 @@ END_FOR;
 
 // --- HEATING REQUEST WRITE LAYER ---
 GVL_STATE.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
-GVL_STATE.G_Freeze_Request := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION THEN
+    GVL_STATE.G_Freeze_Request := TRUE;
+ELSE
+    GVL_STATE.G_Freeze_Request := FALSE;
+END_IF;
 
 
 
