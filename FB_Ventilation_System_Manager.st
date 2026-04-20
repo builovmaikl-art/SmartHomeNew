@@ -190,10 +190,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         END_IF;
     END_FOR;
 
-    // Requests are observed but must not bypass policy directly.
-    IF (L_i = VI_Config.pv3_exhaust_index AND VI_PV3_Boost_Req) OR VI_Exhaust_100_Req OR VI_Fire_Alarm OR VI_Vent_Stop OR VI_Gas_Alarm THEN
-        GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
-    END_IF;
+    // Requests are operational requests and must not be reported as subsystem degradation.
 END_FOR;
 
 
