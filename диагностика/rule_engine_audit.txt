@@ -1,0 +1,13 @@
+=== GVL DIRECT ACCESS ===
+GVL_CONSTANTS.
+
+=== POSSIBLE ACTUATOR SIGNALS ===
+NONE
+
+=== OUTPUT SIGNALS (VO_*) ===
+VO_Actions
+VO_Preheat_Request
+
+=== TOTAL ASSIGNMENTS === 41
+
+=== TIMERS === 0

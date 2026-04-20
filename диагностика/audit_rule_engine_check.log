@@ -1,0 +1,14 @@
+]633;E;echo "=== RULE ENGINE AUDIT ===";114bfee5-edf5-475f-b9ce-1b33b324778a]633;C=== RULE ENGINE AUDIT ===
+=== GVL DIRECT ACCESS ===
+GVL_CONSTANTS.
+
+=== POSSIBLE ACTUATOR SIGNALS ===
+NONE
+
+=== OUTPUT SIGNALS (VO_*) ===
+VO_Actions
+VO_Preheat_Request
+
+=== TOTAL ASSIGNMENTS === 41
+
+=== TIMERS === 0
