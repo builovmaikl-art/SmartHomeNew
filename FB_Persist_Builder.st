@@ -1,21 +1,17 @@
 FUNCTION_BLOCK FB_Persist_Builder
-VAR_INPUT
-    VI_State : ST_System_State;
-END_VAR
-
 VAR_IN_OUT
     VIO_PersistStruct : ST_Persist;
 END_VAR
 
 // === BUILD STRUCT FROM STATE ===
 // === NVRAM SNAPSHOT VIA STRUCT ADAPTER ===
-VIO_PersistStruct.System_Mode := VI_State.G_System_Mode;
+VIO_PersistStruct.System_Mode := GVL_STATE.G_System_Mode;
 
-VIO_PersistStruct.Safety_Gas_Latched := VI_State.G_Safety_Gas_Latched;
-VIO_PersistStruct.Safety_Smoke_Latched := VI_State.G_Safety_Smoke_Latched;
-VIO_PersistStruct.Safety_Leak_Latched := VI_State.G_Safety_Leak_Latched;
+VIO_PersistStruct.Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched;
+VIO_PersistStruct.Safety_Smoke_Latched := GVL_STATE.G_Safety_Smoke_Latched;
+VIO_PersistStruct.Safety_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched;
 
-VIO_PersistStruct.DHW_Heating_Pump := VI_State.G_DHW_Heating_Pump;
+VIO_PersistStruct.DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
 VIO_PersistStruct.Valid := TRUE;
 
 // mirror to legacy persistent variables

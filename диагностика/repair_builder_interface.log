@@ -1,0 +1,1 @@
+OK: repaired FB_Persist_Builder interface to use GVL_STATE directly

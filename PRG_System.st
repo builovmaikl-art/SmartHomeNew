@@ -783,7 +783,6 @@ fbScenarioManager(
 // 14. Менеджер NVRAM
 // Pack persistent snapshot into compact byte buffer for controlled NVRAM mirroring
 fbPersistBuilder(
-    VI_State := GVL_STATE,
     VIO_PersistStruct := L_Persist_Struct
 );
 
