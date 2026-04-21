@@ -550,26 +550,6 @@ IF TO_USINT(L_Scenario_Req_Rule) > 7 THEN
     L_Scenario_Req_Rule := E_SCENARIO_TYPE.SCENARIO_NONE;
 END_IF;
 
-// ================= COMMAND GATE (FINAL) =================
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
-
-    // Блокируем ВСЕ опасные команды после Gateway
-    GVL_COMMAND.G_Scenario_Request_Operator := 0;
-
-    FOR L_i := 1 TO 32 DO
-        GVL_COMMAND.G_Lighting_Override[L_i] := BYTE#0;
-        GVL_COMMAND.G_Blinds_Override[L_i] := BYTE#0;
-        GVL_COMMAND.G_Socket_Override[L_i] := FALSE;
-    END_FOR;
-
-    // НЕ блокируем:
-    // G_Reset_Errors
-    // acknowledge / безопасность
-
-END_IF;
-// =======================================================
-
-
 // === SCENARIO PRIORITY RESOLUTION ===
 // Produces L_Scenario_Req_Final (TRACE ONLY, not executed directly)
 IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
