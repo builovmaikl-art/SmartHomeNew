@@ -4,8 +4,8 @@ END_VAR
 
 // Вызов основных программ
 PRG_IO_Read();
-PRG_System();
 PRG_Policy();
+PRG_System();
 PRG_Safety();
 PRG_Security();
 PRG_Heating();
