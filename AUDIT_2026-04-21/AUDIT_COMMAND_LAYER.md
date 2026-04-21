@@ -69,42 +69,78 @@ GVL_COMMAND используется как:
 
 ---
 
-## 5. Примеры конфликтов
+## 5. Safety-critical analysis (Gas / Water / Ventilation)
 
-### CASE-001 Gas control
-- Safety: CMD_Gas_Close = TRUE
-- User: CMD_Gas_Open = TRUE
-=> конфликт без arbitration
+### Таблица команд
 
-### CASE-002 Ventilation
-- Safety: stop
-- Manager: start
-=> последний writer выигрывает
-
----
-
-## 6. Target ownership (черновой)
-
-| Command Group | Owner |
-|--------------|------|
-| Safety       | PRG_Safety |
-| Security     | PRG_Security |
-| System       | PRG_System |
-| User input   | External (intent only) |
+| Command | Writers | Conflict | Target Owner |
+|--------|--------|----------|--------------|
+| CMD_Gas_Close | PRG_Safety | override possible | Safety |
+| CMD_Gas_Open | User/System | conflicts Close | System |
+| CMD_Water_Close | PRG_Safety | override possible | Safety |
+| CMD_Water_Open | User/System | conflicts Close | System |
+| CMD_Vent_Stop | PRG_Safety | conflicts Start | Safety |
+| CMD_Vent_Start | Ventilation | conflicts Stop | Manager (via arbitration) |
 
 ---
 
-## 7. Проблемы архитектуры
+## 6. Conflict cases
 
-- нет разделения intent / command
-- нет arbitration слоя
-- нет приоритетов
-- нет single owner
+### CASE-001 Gas
+Safety close vs user open → race condition
+
+### CASE-002 Water
+Leak close vs manual open → unsafe override
+
+### CASE-003 Ventilation
+Safety stop vs manager start → safety violation
 
 ---
 
-## 8. Следующий шаг
+## 7. Propagation to IO (critical)
 
-- полный список всех команд
-- маппинг writers по каждой переменной
-- фиксация ownership для каждой команды
+### Observation
+- PRG_IO_Write напрямую использует итоговые команды
+- не выполняет проверку приоритетов
+
+### Problem SA-IO-001
+- конфликт не разрешается перед IO
+- unsafe команда может попасть в физическое устройство
+
+### Problem SA-IO-002
+- нет final safety gate перед IO
+
+---
+
+## 8. Full chain breakdown
+
+Safety → GVL_COMMAND → Managers → GVL_STATE → IO_Write → Physical Output
+
+### Issues
+- команды перезаписываются на каждом этапе
+- нет единой точки контроля
+- нет гарантии выполнения safety
+
+---
+
+## 9. Required target behavior
+
+- Safety формирует ограничения, а не просто команды
+- команды проходят через arbitration
+- перед IO выполняется final validation
+
+---
+
+## 10. Critical conclusion
+
+GVL_COMMAND в текущем виде:
+- не гарантирует безопасность
+- не гарантирует детерминизм
+- допускает unsafe состояния на уровне IO
+
+---
+
+## 11. Next step
+
+- перейти к Security / Access commands
+- затем объединить в единую модель arbitration
