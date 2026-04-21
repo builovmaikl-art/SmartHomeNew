@@ -447,8 +447,10 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
 ELSE
     L_Scenario_Req_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
 END_IF;
-L_Scenario_Req_Gateway := 0;
-L_Scenario_Req_Rule := 0;
+L_Scenario_Req_Gateway := E_SCENARIO_TYPE.SCENARIO_NONE;
+L_Scenario_Req_Rule := E_SCENARIO_TYPE.SCENARIO_NONE;
+GVL_POLICY.G_Scenario_Request_Gateway := E_SCENARIO_TYPE.SCENARIO_NONE;
+GVL_POLICY.G_Scenario_Request_Rule := E_SCENARIO_TYPE.SCENARIO_NONE;
 
 
 
@@ -499,16 +501,12 @@ fbRuleEngine(
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
     IF GVL_STATE.G_Rule_Actions[L_i].Active AND GVL_STATE.G_Rule_Actions[L_i].Action_Type = E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO THEN
         L_Scenario_Req_Rule := TO_BYTE(GVL_STATE.G_Rule_Actions[L_i].Value);
+        GVL_POLICY.G_Scenario_Request_Rule := TO_BYTE(GVL_STATE.G_Rule_Actions[L_i].Value);
     END_IF;
 END_FOR;
 
 // --- HEATING REQUEST WRITE LAYER ---
-GVL_STATE.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION THEN
-    GVL_STATE.G_Freeze_Request := TRUE;
-ELSE
-    GVL_STATE.G_Freeze_Request := FALSE;
-END_IF;
+GVL_POLICY.G_Rule_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
 
 
 
@@ -597,6 +595,7 @@ IF L_Gateway_Writes_Allowed AND
    ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
     L_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
+    GVL_POLICY.G_Scenario_Request_Gateway := fbGateway.VO_Target_Scenario;
 END_IF;
 
 IF L_Gateway_Writes_Allowed AND

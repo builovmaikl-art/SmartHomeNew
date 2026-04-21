@@ -1,0 +1,5 @@
+OK: scenario init mirrored to GVL_POLICY
+OK: gateway request mirrored to GVL_POLICY
+OK: rule request mirrored to GVL_POLICY
+OK: heating request bridged via GVL_POLICY
+DONE: PRG_System.st updated
