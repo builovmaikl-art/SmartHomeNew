@@ -1,0 +1,25 @@
+VAR_GLOBAL
+    // --- meta ---
+    I_Source_Valid : BOOL := FALSE;
+    I_Last_Update_Cycle : UDINT := 0;
+    I_Last_Update_MS : UDINT := 0;
+
+    // --- system mode constraints ---
+    I_Mode_Safe_Stop_Active : BOOL := FALSE;
+    I_Mode_Degraded_Active : BOOL := FALSE;
+    I_Mode_Freeze_Protection_Active : BOOL := FALSE;
+
+    // --- scenario / automation ---
+    I_Preheat_Request : BOOL := FALSE;
+    I_Freeze_Request : BOOL := FALSE;
+
+    // --- gateway / system commands ---
+    I_Gateway_Command_Valid : BOOL := FALSE;
+    I_Gateway_Command_Type : INT := 0;
+    I_Reset_Errors_Request : BOOL := FALSE;
+
+    // --- permissions / constraints ---
+    I_Access_Open_Allowed : BOOL := FALSE;
+    I_Manual_Override_Allowed : BOOL := FALSE;
+    I_Dangerous_Action_Allowed : BOOL := FALSE;
+END_VAR
