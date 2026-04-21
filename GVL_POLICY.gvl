@@ -1,6 +1,7 @@
 VAR_GLOBAL
     // Policy bridges and centralized scenario ownership.
     G_Rule_Preheat_Request : BOOL := FALSE;
+    G_Scenario_Request_Operator : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Scenario_Request_Gateway : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Scenario_Request_Rule : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Scenario_Intent : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
