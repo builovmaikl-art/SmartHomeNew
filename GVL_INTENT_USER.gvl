@@ -1,0 +1,35 @@
+VAR_GLOBAL
+    I_Source_Valid : BOOL := FALSE;
+    I_Last_Update_Cycle : UDINT := 0;
+    I_Last_Update_MS : UDINT := 0;
+
+    I_Arm_Request : BOOL := FALSE;
+    I_Disarm_Request : BOOL := FALSE;
+
+    I_PIN_Code : STRING(8);
+    I_RFID_Tag : STRING(32);
+    I_2FA_Code_In : STRING(8);
+
+    I_Gate_Open_Request : BOOL := FALSE;
+    I_Wicket_Open_Request : BOOL := FALSE;
+
+    I_Lock_1_Open_Request : BOOL := FALSE;
+    I_Lock_1_Close_Request : BOOL := FALSE;
+    I_Lock_2_Open_Request : BOOL := FALSE;
+    I_Lock_2_Close_Request : BOOL := FALSE;
+
+    I_Dangerous_Action_Request : BOOL := FALSE;
+    I_Dangerous_Action_Confirm : BOOL := FALSE;
+    I_User_Access_Level : INT := 0;
+
+    I_Water_Valve_Test_Open : BOOL := FALSE;
+    I_Water_Valve_Test_Close : BOOL := FALSE;
+    I_Water_Valve_Test_Confirm : BOOL := FALSE;
+
+    I_Gas_Valve_Test_Open : BOOL := FALSE;
+    I_Gas_Valve_Test_Close : BOOL := FALSE;
+    I_Gas_Valve_Test_Confirm : BOOL := FALSE;
+
+    I_Water_Selective_Recover : BOOL := FALSE;
+    I_Gas_Selective_Recover : BOOL := FALSE;
+END_VAR
