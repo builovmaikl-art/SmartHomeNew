@@ -1,5 +1,5 @@
-event=workflow_dispatch
+event=push
 ref=refs/heads/main
-sha=0b8bfae10ee07c6fb6be789f643951e67794e0b9
+sha=2193da7bc27eb91cb562ca2bca01b6b21bcf0fd0
 task=compile
 note=
