@@ -12,11 +12,18 @@ VAR_GLOBAL
     // --- scenario / automation ---
     I_Preheat_Request : BOOL := FALSE;
     I_Freeze_Request : BOOL := FALSE;
+    I_Scenario_Request_Allowed : BOOL := FALSE;
 
-    // --- gateway / system commands ---
+    // --- gateway / system permissions ---
     I_Gateway_Command_Valid : BOOL := FALSE;
     I_Gateway_Command_Type : INT := 0;
+    I_Gateway_Writes_Allowed : BOOL := FALSE;
     I_Reset_Errors_Request : BOOL := FALSE;
+    I_Config_Apply_Allowed : BOOL := FALSE;
+    I_Time_Sync_Allowed : BOOL := FALSE;
+    I_Temperature_Write_Allowed : BOOL := FALSE;
+    I_Ventilation_Write_Allowed : BOOL := FALSE;
+    I_Maintenance_Apply_Allowed : BOOL := FALSE;
 
     // --- permissions / constraints ---
     I_Access_Open_Allowed : BOOL := FALSE;
