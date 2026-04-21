@@ -13,6 +13,7 @@ VAR_GLOBAL
     I_Preheat_Request : BOOL := FALSE;
     I_Freeze_Request : BOOL := FALSE;
     I_Scenario_Request_Allowed : BOOL := FALSE;
+    I_Operator_Scenario_Block : BOOL := FALSE;
 
     // --- gateway / system permissions ---
     I_Gateway_Command_Valid : BOOL := FALSE;
@@ -24,6 +25,11 @@ VAR_GLOBAL
     I_Temperature_Write_Allowed : BOOL := FALSE;
     I_Ventilation_Write_Allowed : BOOL := FALSE;
     I_Maintenance_Apply_Allowed : BOOL := FALSE;
+
+    // --- command gate block flags ---
+    I_Lighting_Overrides_Block : BOOL := FALSE;
+    I_Blinds_Overrides_Block : BOOL := FALSE;
+    I_Socket_Overrides_Block : BOOL := FALSE;
 
     // --- permissions / constraints ---
     I_Access_Open_Allowed : BOOL := FALSE;
