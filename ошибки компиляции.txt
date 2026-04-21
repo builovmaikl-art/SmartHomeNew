@@ -1,12 +1,30 @@
-                ------ Компиляция : Приложение: Device.Application -------
+                ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '<'
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '<'
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '<'
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REPLACED'
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0190:  Вместо конца POU требуется ';'
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0020:  '((REPLACED > !!!'ERROR'!!!) > !!!'ERROR'!!!); ' не является корректным заявлением
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0007:  Вместо '>' требуется выражение
-[ERROR]         Без имени13: PRG_System(Строка 1, Столбец 1 (Реализ.)): C0007:  Вместо '' требуется выражение
-                Компиляция завершена -- 8 ошибок, 0 предупреждений
-                Компиляция завершена -- 8 ошибок, 0 предупреждений : загрузка невозможна
+                генерировать код...
+[ERROR]         Без имени6: PRG_Safety(Строка 49, Столбец 1 (Реализ.)): C0038:  'VO_Close_Valve_35' не является выходом 'FB_WATER_LEAKAGE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 49, Столбец 1 (Реализ.)): C0038:  'VO_Close_Valve_36' не является выходом 'FB_WATER_LEAKAGE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 54, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Close_Valve_35' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 55, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Close_Valve_36' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Siren_Active' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Gas_Valve_Close' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Boiler_Stop' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Supply_100_Req' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Supply_80_Req' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Vent_PV3_Boost' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Exhaust_100_Req' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 64, Столбец 1 (Реализ.)): C0038:  'VO_Vent_Stop' не является выходом 'FB_GAS_SMOKE_MANAGER'
+[ERROR]         Без имени6: PRG_Safety(Строка 75, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Siren_Active' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 77, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Gas_Valve_Close' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 78, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Boiler_Stop' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 79, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Supply_100_Req' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 80, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Supply_80_Req' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 81, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Vent_PV3_Boost' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 82, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Exhaust_100_Req' не задан
+[ERROR]         Без имени6: PRG_Safety(Строка 83, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Vent_Stop' не задан
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 64, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Command_Mismatch_Count' не является корректным объектом присваивания
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 64, Столбец 1 (Реализ.)): C0004:  'Command_Mismatch_Count' не является компонентом 'ST_System_Diagnostics'
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 65, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Command_Match_OK' не является корректным объектом присваивания
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 65, Столбец 1 (Реализ.)): C0004:  'Command_Match_OK' не является компонентом 'ST_System_Diagnostics'
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 69, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_Diagnostics.Command_Mismatch_Active' не является корректным объектом присваивания
+[ERROR]         Без имени6: PRG_Command_Verifier(Строка 69, Столбец 1 (Реализ.)): C0004:  'Command_Mismatch_Active' не является компонентом 'ST_System_Diagnostics'
+                Компиляция завершена -- 26 ошибок, 0 предупреждений : загрузка невозможна
