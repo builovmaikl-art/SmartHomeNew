@@ -71,113 +71,87 @@ GVL_COMMAND используется как:
 ---
 
 ## 5. Safety-critical analysis (Gas / Water / Ventilation)
+(см. выше)
+
+---
+
+## 6. Security / Access analysis
+(см. выше)
+
+---
+
+## 7. User / System / Gateway analysis
 
 ### Таблица команд
 
 | Command | Writers | Conflict | Target Owner |
 |--------|--------|----------|--------------|
-| CMD_Gas_Close | PRG_Safety | override possible | Safety |
-| CMD_Gas_Open | User/System | conflicts Close | System |
-| CMD_Water_Close | PRG_Safety | override possible | Safety |
-| CMD_Water_Open | User/System | conflicts Close | System |
-| CMD_Vent_Stop | PRG_Safety | conflicts Start | Safety |
-| CMD_Vent_Start | Ventilation | conflicts Stop | Manager (via arbitration) |
-
----
-
-## 6. Conflict cases
-
-### CASE-001 Gas
-Safety close vs user open → race condition
-
-### CASE-002 Water
-Leak close vs manual open → unsafe override
-
-### CASE-003 Ventilation
-Safety stop vs manager start → safety violation
-
----
-
-## 7. Propagation to IO (critical)
-
-### Observation
-- PRG_IO_Write напрямую использует итоговые команды
-- не выполняет проверку приоритетов
-
-### Problem SA-IO-001
-- конфликт не разрешается перед IO
-- unsafe команда может попасть в физическое устройство
-
-### Problem SA-IO-002
-- нет final safety gate перед IO
-
----
-
-## 8. Full chain breakdown
-
-Safety → GVL_COMMAND → Managers → GVL_STATE → IO_Write → Physical Output
-
-### Issues
-- команды перезаписываются на каждом этапе
-- нет единой точки контроля
-- нет гарантии выполнения safety
-
----
-
-## 9. Security / Access analysis
-
-### Таблица команд
-
-| Command | Writers | Conflict | Target Owner |
-|--------|--------|----------|--------------|
-| G_Gate_Open | PRG_Security | direct to IO without final gate | Security (via arbitration) |
-| G_Wicket_Open | PRG_Security | direct to IO without final gate | Security (via arbitration) |
-| G_Lock_1_Open | PRG_Security, PRG_Safety | fire/smoke override vs normal access logic | Safety constraint + Security owner |
-| G_Lock_1_Close | PRG_Security, PRG_Safety | evacuation unlock may conflict with close | Safety constraint + Security owner |
-| G_Lock_2_Open | PRG_Security, PRG_Safety | fire/smoke override vs normal access logic | Safety constraint + Security owner |
-| G_Lock_2_Close | PRG_Security, PRG_Safety | evacuation unlock may conflict with close | Safety constraint + Security owner |
-| G_Send_2FA_Req | PRG_Security / fbSecurityManager | shared mutable command output | Security |
-| G_2FA_Code_Out | PRG_Security / fbSecurityManager | shared mutable command output | Security |
+| G_Arm_Req | HMI / User | может конфликтовать с текущим alarm state | Policy / Security Intent |
+| G_Disarm_Req | HMI / User | может конфликтовать с активной тревогой | Policy / Security Intent |
+| G_PIN_Code | User / System | shared mutable input | Security Intent |
+| G_RFID_Tag | User / System | shared mutable input | Security Intent |
+| G_2FA_Code_In | User / External | async race risk | Security Intent |
+| Gateway commands | PRG_System | может перезаписывать user intent | System Intent |
 
 ### Observations
-- `PRG_Security` writes gate / wicket / lock outputs into `GVL_COMMAND` via `fbAccessControl`.
-- `PRG_Safety` also writes `G_Lock_1_Open`, `G_Lock_1_Close`, `G_Lock_2_Open`, `G_Lock_2_Close` during fire/smoke evacuation logic.
-- `PRG_IO_Write` directly forwards gate / wicket / lock commands from `GVL_COMMAND` to physical outputs.
+- пользовательские команды приходят напрямую в `GVL_COMMAND`.
+- `PRG_System` может модифицировать или проксировать команды.
+- нет разделения между input (intent) и final command.
 
-### Problem SEC-CMD-001
-- lock commands are multi-writer already in current codebase.
-- normal access logic and evacuation unlock logic share the same final variables.
+### Problem USR-001
+- смешение intent и execution в одном слое.
 
-### Problem SEC-CMD-002
-- no explicit safety-first arbitration exists before lock outputs go to IO.
-- current behavior still depends on execution order.
+### Problem USR-002
+- асинхронные источники могут менять значения в середине цикла.
 
-### Problem SEC-CMD-003
-- gate / wicket commands also bypass any final validation layer and go straight from `GVL_COMMAND` to IO.
+### Problem USR-003
+- нет snapshot механизма (фиксированного состояния на цикл).
 
----
-
-## 10. Required target behavior
-
-- Safety формирует ограничения, а не просто команды.
-- Security / Access формируют intent, а не final command.
-- lock / gate / wicket commands must pass through arbitration.
-- evacuation unlock must act as a higher-priority constraint than regular access control.
-- before IO, final validation must ensure no forbidden lock-close action survives active evacuation state.
+### Problem USR-004
+- нет централизованной валидации пользовательских команд.
 
 ---
 
-## 11. Critical conclusion
+## 8. Full system-level issue
 
-GVL_COMMAND в текущем виде:
-- не гарантирует безопасность
-- не гарантирует детерминизм
-- допускает unsafe состояния на уровне IO
-- already contains confirmed multi-writer conflicts in access/lock commands
+GVL_COMMAND одновременно содержит:
+- intent (user input)
+- control (system decisions)
+- execution commands (IO layer)
+
+=> фундаментальное архитектурное нарушение
 
 ---
 
-## 12. Next step
+## 9. Required target behavior
 
-- перейти к User / System / Gateway command groups
-- затем объединить все группы в единую ownership matrix and arbitration model
+### Разделение слоёв
+
+GVL_INTENT_USER
+GVL_INTENT_SYSTEM
+GVL_INTENT_SAFETY
+↓
+PRG_Command_Arbitration
+↓
+GVL_COMMAND (final only)
+
+---
+
+## 10. Final critical conclusion
+
+Текущая система:
+- не разделяет intent и execution
+- допускает race condition от внешних источников
+- допускает перезапись safety
+- не имеет точки принятия решений
+
+---
+
+## 11. Audit complete for command layer groups
+
+Покрыто:
+- Safety
+- Security
+- User/System/Gateway
+
+=> можно переходить к проектированию arbitration слоя
