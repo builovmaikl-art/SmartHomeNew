@@ -1,0 +1,23 @@
+VAR_GLOBAL
+    // Shadow command layer used by PRG_Command_Arbitration during migration.
+    // Not connected to IO_Write yet.
+
+    // Gas / boiler / ventilation
+    G_Gas_Valve_Close : BOOL := FALSE;
+    G_Boiler_Stop : BOOL := FALSE;
+    G_Supply_100_Req : BOOL := FALSE;
+    G_Supply_80_Req : BOOL := FALSE;
+    G_Vent_PV3_Boost : BOOL := FALSE;
+    G_Exhaust_100_Req : BOOL := FALSE;
+    G_Vent_Stop : BOOL := FALSE;
+
+    // Water
+    G_Close_Valve_35 : BOOL := FALSE;
+    G_Close_Valve_36 : BOOL := FALSE;
+
+    // Access / evacuation locks
+    G_Lock_1_Open : BOOL := FALSE;
+    G_Lock_1_Close : BOOL := FALSE;
+    G_Lock_2_Open : BOOL := FALSE;
+    G_Lock_2_Close : BOOL := FALSE;
+END_VAR
