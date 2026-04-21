@@ -140,7 +140,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 21 14:27 DUT
 -rw-r--r--   1 runner runner    193 Apr 21 14:27 PRG_PLC_B.st
 -rw-r--r--   1 runner runner   3574 Apr 21 14:27 PRG_Policy.st
 -rw-r--r--   1 runner runner   4730 Apr 21 14:27 PRG_Safety.st
--rw-r--r--   1 runner runner   2615 Apr 21 14:27 PRG_Security.st
+-rw-r--r--   1 runner runner   2622 Apr 21 14:27 PRG_Security.st
 -rw-r--r--   1 runner runner 113655 Apr 21 14:27 PRG_System.st
 -rw-r--r--   1 runner runner  82426 Apr 21 14:27 PRG_System.st.bak_step240
 -rw-r--r--   1 runner runner   2738 Apr 21 14:27 PRG_Test.st
