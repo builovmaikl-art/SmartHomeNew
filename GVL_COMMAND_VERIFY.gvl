@@ -1,0 +1,5 @@
+VAR_GLOBAL
+    Command_Mismatch_Count : INT := 0;
+    Command_Match_OK : BOOL := TRUE;
+    Command_Mismatch_Active : BOOL := FALSE;
+END_VAR
