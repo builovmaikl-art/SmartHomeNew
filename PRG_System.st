@@ -297,6 +297,19 @@ END_CASE;
 // final status text comes from State_Manager
 GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
 
+// === STAGE G2b: SYSTEM GATE PARALLEL PUBLICATION ===
+GVL_INTENT_SYSTEM.I_Source_Valid := TRUE;
+GVL_INTENT_SYSTEM.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_INTENT_SYSTEM.I_Mode_Safe_Stop_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+GVL_INTENT_SYSTEM.I_Mode_Degraded_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
+GVL_INTENT_SYSTEM.I_Mode_Freeze_Protection_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+GVL_INTENT_SYSTEM.I_Operator_Scenario_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+GVL_INTENT_SYSTEM.I_Socket_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
+GVL_INTENT_SYSTEM.I_Gateway_Writes_Allowed := L_Gateway_Writes_Allowed;
+GVL_INTENT_SYSTEM.I_Scenario_Request_Allowed := (GVL_STATE.G_System_Mode <> E_System_Operating_Mode.MODE_SAFE_STOP);
+
 // 3.6a. Расчёт направленной эвакуации
 FOR L_i := 1 TO 32 DO
     GVL_STATE.G_Evac_Guidance[L_i] := 0;
