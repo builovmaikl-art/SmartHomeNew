@@ -7,7 +7,7 @@
 
 ## CRITICAL
 
-### CO-001 — Исправить порядок вызовов MAIN
+### CO-001 — Исправить порядок вызовов MAIN ✅ DONE
 - переместить PRG_Policy после PRG_System и PRG_Safety
 
 ### OWN-001 — Убрать запись System_Mode из PRG_Safety
