@@ -447,8 +447,8 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
 ELSE
     L_Scenario_Req_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
 END_IF;
-L_Scenario_Req_Gateway := 0;
-L_Scenario_Req_Rule := 0;
+L_Scenario_Req_Gateway := E_SCENARIO_TYPE.SCENARIO_NONE;
+L_Scenario_Req_Rule := E_SCENARIO_TYPE.SCENARIO_NONE;
 
 
 
@@ -498,19 +498,12 @@ fbRuleEngine(
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
     IF GVL_STATE.G_Rule_Actions[L_i].Active AND GVL_STATE.G_Rule_Actions[L_i].Action_Type = E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO THEN
-        L_Scenario_Req_Rule := TO_BYTE(GVL_STATE.G_Rule_Actions[L_i].Value);
+        GVL_POLICY.G_Scenario_Request_Rule := TO_BYTE(GVL_STATE.G_Rule_Actions[L_i].Value);
     END_IF;
 END_FOR;
 
-// --- HEATING REQUEST WRITE LAYER ---
-GVL_STATE.G_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION THEN
-    GVL_STATE.G_Freeze_Request := TRUE;
-ELSE
-    GVL_STATE.G_Freeze_Request := FALSE;
-END_IF;
-
-
+// --- POLICY BRIDGE: rule-driven heating request ---
+GVL_POLICY.G_Rule_Preheat_Request := fbRuleEngine.VO_Preheat_Request;
 
 // 8.5 Менеджер тревог (Сбор всех аварий)
 fbAlarmManager(
@@ -596,7 +589,7 @@ IF L_Gateway_Writes_Allowed AND
    fbGateway.VO_Set_Scenario_Req AND
    ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
-    L_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
+    GVL_POLICY.G_Scenario_Request_Gateway := fbGateway.VO_Target_Scenario;
 END_IF;
 
 IF L_Gateway_Writes_Allowed AND
@@ -658,119 +651,10 @@ END_IF;
 // =======================================================
 
 
-// === SCENARIO PRIORITY RESOLUTION ===
-// Produces L_Scenario_Req_Final (TRACE ONLY, not executed directly)
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
-    L_Scenario_Req_Final := 0;
-    L_Scenario_Source := SRC_SAFETY;
-ELSIF L_Scenario_Req_Operator <> 0 THEN
-    L_Scenario_Req_Final := L_Scenario_Req_Operator;
-    L_Scenario_Source := SRC_OPERATOR;
-ELSIF L_Scenario_Req_Gateway <> 0 THEN
-    L_Scenario_Req_Final := L_Scenario_Req_Gateway;
-    L_Scenario_Source := SRC_GATEWAY;
-ELSIF L_Scenario_Req_Rule <> 0 THEN
-    L_Scenario_Req_Final := L_Scenario_Req_Rule;
-    L_Scenario_Source := SRC_RULE;
-ELSE
-    L_Scenario_Req_Final := GVL_STATUS.G_Current_Scenario;
-    L_Scenario_Source := SRC_NONE;
-END_IF;
-
-L_Scenario_Intent := L_Scenario_Req_Final;
-
-// === FAIL-SAFE SCENARIO CLAMP ===
-CASE GVL_STATE.G_System_Mode OF
-    E_System_Operating_Mode.MODE_SAFE_STOP:
-        L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_NONE;
-
-    E_System_Operating_Mode.MODE_FREEZE_PROTECTION:
-        L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_NONE;
-
-    E_System_Operating_Mode.MODE_DEGRADED:
-        CASE L_Scenario_Intent OF
-            E_SCENARIO_TYPE.SCENARIO_NONE,
-            E_SCENARIO_TYPE.SCENARIO_PRESENCE,
-            E_SCENARIO_TYPE.SCENARIO_AWAY,
-            E_SCENARIO_TYPE.SCENARIO_SLEEP:
-                ; // allowed in degraded
-        ELSE
-            L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_NONE;
-        END_CASE;
-END_CASE;
-
-// === CONTEXT FAIL-SAFE AUTOMATION ===
-// If security is armed and no explicit source is requesting another scenario,
-// force safe occupancy context to AWAY while system remains in MODE_NORMAL.
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
-    IF GVL_ALARM.G_Security_Armed AND
-       (L_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND
-       (L_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
-       (L_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) AND
-       (L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
-
-        IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
-            L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
-            L_Scenario_Source := SRC_POLICY;
-
-            IF (L_Last_Policy_Event_Time_MS = 0) OR
-               ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
-                fbLogEvent(
-                    VI_Event_Type := 5,
-                    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                    VI_Param1 := TO_UDINT(L_Scenario_Source),
-                    VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
-                );
-                L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
-            END_IF;
-        END_IF;
-    END_IF;
-END_IF;
-
-// === DEGRADED-AWARE SCENARIO ADAPTATION ===
-// Soft adaptation in degraded mode: keep explicit requests intact,
-// but if no source is requesting a scenario, move behavior to a safer baseline.
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
-    IF (L_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND
-       (L_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
-       (L_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) THEN
-
-        IF GVL_ALARM.G_Security_Armed THEN
-            IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
-                L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
-                L_Scenario_Source := SRC_POLICY;
-
-                IF (L_Last_Policy_Event_Time_MS = 0) OR
-                   ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
-                    fbLogEvent(
-                        VI_Event_Type := 6,
-                        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                        VI_Param1 := TO_UDINT(L_Scenario_Source),
-                        VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
-                    );
-                    L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
-                END_IF;
-            END_IF;
-
-        ELSIF L_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_PRESENCE THEN
-            IF L_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_SLEEP THEN
-                L_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_SLEEP;
-                L_Scenario_Source := SRC_POLICY;
-
-                IF (L_Last_Policy_Event_Time_MS = 0) OR
-                   ((GVL_STATUS.G_System_Time_MS - L_Last_Policy_Event_Time_MS) >= 5000) THEN
-                    fbLogEvent(
-                        VI_Event_Type := 7,
-                        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
-                        VI_Param1 := TO_UDINT(L_Scenario_Source),
-                        VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_SLEEP)
-                    );
-                    L_Last_Policy_Event_Time_MS := GVL_STATUS.G_System_Time_MS;
-                END_IF;
-            END_IF;
-        END_IF;
-    END_IF;
-END_IF;
+// === SCENARIO POLICY INPUT ===
+L_Scenario_Req_Final := GVL_POLICY.G_Scenario_Intent;
+L_Scenario_Intent := GVL_POLICY.G_Scenario_Intent;
+L_Scenario_Source := GVL_POLICY.G_Scenario_Source;
 
 fbScenarioGuard(
     VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
