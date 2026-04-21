@@ -5,16 +5,15 @@ END_VAR
 // ============================================================
 // SCENARIO POLICY OWNER
 // ============================================================
-// Single owner for scenario intent.
-// PRG_System may publish requests and consume resolved intent,
-// but must not arbitrate or clamp scenarios anymore.
 
-// ------------------------------------------------------------
 // 1. Base priority resolution
-// ------------------------------------------------------------
 IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP THEN
     GVL_POLICY.G_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_NONE;
     GVL_POLICY.G_Scenario_Source := SRC_SAFETY;
+
+ELSIF GVL_POLICY.G_Scenario_Request_Operator <> E_SCENARIO_TYPE.SCENARIO_NONE THEN
+    GVL_POLICY.G_Scenario_Intent := GVL_POLICY.G_Scenario_Request_Operator;
+    GVL_POLICY.G_Scenario_Source := SRC_OPERATOR;
 
 ELSIF GVL_POLICY.G_Scenario_Request_Gateway <> E_SCENARIO_TYPE.SCENARIO_NONE THEN
     GVL_POLICY.G_Scenario_Intent := GVL_POLICY.G_Scenario_Request_Gateway;
@@ -29,9 +28,7 @@ ELSE
     GVL_POLICY.G_Scenario_Source := SRC_NONE;
 END_IF;
 
-// ------------------------------------------------------------
-// 2. Fail-safe scenario clamp
-// ------------------------------------------------------------
+// 2. Fail-safe clamp
 CASE GVL_STATE.G_System_Mode OF
     E_System_Operating_Mode.MODE_SAFE_STOP:
         GVL_POLICY.G_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_NONE;
@@ -54,11 +51,10 @@ CASE GVL_STATE.G_System_Mode OF
         END_CASE;
 END_CASE;
 
-// ------------------------------------------------------------
-// 3. Context fail-safe automation
-// ------------------------------------------------------------
+// 3. Context automation
 IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
     IF GVL_ALARM.G_Security_Armed AND
+       (GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND
        (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
        (GVL_POLICY.G_Scenario_Request_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) AND
        (GVL_POLICY.G_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
@@ -67,11 +63,10 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------------
-// 4. Degraded-aware adaptation
-// ------------------------------------------------------------
+// 4. Degraded adaptation
 IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
-    IF (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
+    IF (GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND
+       (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
        (GVL_POLICY.G_Scenario_Request_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) THEN
 
         IF GVL_ALARM.G_Security_Armed THEN
@@ -85,9 +80,7 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------------
-// 5. Heating request bridge
-// ------------------------------------------------------------
+// 5. Heating bridge
 GVL_STATE.G_Preheat_Request := GVL_POLICY.G_Rule_Preheat_Request;
 GVL_STATE.G_Freeze_Request :=
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
