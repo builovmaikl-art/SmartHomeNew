@@ -47,6 +47,34 @@ L_CMD_Gas_Valve_Test_Open_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Open;
 L_CMD_Gas_Valve_Test_Close_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Close;
 L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm;
 
+// === STAGE A: PARALLEL SAFETY INTENT RESET/PUBLISH ===
+GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
+GVL_INTENT_SAFETY.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_INTENT_SAFETY.I_Fire_Alarm_Active := FALSE;
+GVL_INTENT_SAFETY.I_Gas_Alarm_Active := FALSE;
+GVL_INTENT_SAFETY.I_Leak_Alarm_Active := FALSE;
+GVL_INTENT_SAFETY.I_CO_Warning_Active := FALSE;
+GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := FALSE;
+GVL_INTENT_SAFETY.I_Freeze_Protection_Required := FALSE;
+GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := FALSE;
+GVL_INTENT_SAFETY.I_Gas_Close_Required := FALSE;
+GVL_INTENT_SAFETY.I_Boiler_Stop_Required := FALSE;
+GVL_INTENT_SAFETY.I_Vent_Stop_Required := FALSE;
+GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := FALSE;
+GVL_INTENT_SAFETY.I_Vent_Force_Supply_100 := FALSE;
+GVL_INTENT_SAFETY.I_Vent_Force_Supply_80 := FALSE;
+GVL_INTENT_SAFETY.I_Vent_Force_Exhaust_100 := FALSE;
+GVL_INTENT_SAFETY.I_Water_Main_Close_Required := FALSE;
+GVL_INTENT_SAFETY.I_Water_Selective_Recovery_Allowed := FALSE;
+GVL_INTENT_SAFETY.I_Water_Recovery_Target_Zone := 0;
+GVL_INTENT_SAFETY.I_Lock_1_Force_Open := FALSE;
+GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
+GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
+GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
+FOR L_i := 1 TO 32 DO
+    GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[L_i] := FALSE;
+END_FOR;
+
 // 7.5 Система защиты от протечек
 fbWaterLeakageManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -60,6 +88,7 @@ fbWaterLeakageManager(
     VO_Leak_Warning_Level => GVL_HEALTH_BRIDGE.G_Leak_Warning_Level
 );
 GVL_ALARM.G_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
+GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_ALARM.G_Flood_Alarm_Active;
 
 // 8. Пожарная и газовая безопасность (Приоритет 1)
 fbGasSmokeManager(
@@ -85,9 +114,20 @@ fbGasSmokeManager(
 );
 GVL_ALARM.G_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_ALARM.G_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
+GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active;
+GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_ALARM.G_Gas_Alarm_Active;
+GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
 // Нормализация приоритетов и защёлкнутых safety-команд
 // 1. Пожар/дым имеет приоритет над газовой вентиляцией
 IF GVL_STATE.G_Safety_Smoke_Latched THEN
+    GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := TRUE;
+    GVL_INTENT_SAFETY.I_Boiler_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_1_Force_Open := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_2_Force_Open := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := TRUE;
     GVL_COMMAND.G_Boiler_Stop := TRUE;
     GVL_COMMAND.G_Vent_Stop := TRUE;
     GVL_COMMAND.G_Supply_100_Req := FALSE;
@@ -104,23 +144,30 @@ END_IF;
 
 // 2. Газовая авария защёлкивает закрытие газа и стоп котлов
 IF GVL_STATE.G_Safety_Gas_Latched THEN
+    GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Boiler_Stop_Required := TRUE;
     GVL_COMMAND.G_Gas_Valve_Close := TRUE;
     GVL_COMMAND.G_Boiler_Stop := TRUE;
 END_IF;
 
 // 3. Протечка защёлкивает перекрытие воды
 IF GVL_STATE.G_Safety_Leak_Latched THEN
+    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
     GVL_COMMAND.G_Close_Valve_35 := TRUE;
     GVL_COMMAND.G_Close_Valve_36 := TRUE;
 END_IF;
 
 // 3.1 Вентиляционные команды: единый owner = PRG_Safety
 IF GVL_STATE.G_Safety_Gas_Latched THEN
+    GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Force_Supply_100 := TRUE;
     GVL_COMMAND.G_Vent_PV3_Boost := TRUE;
     GVL_COMMAND.G_Supply_100_Req := TRUE;
 END_IF;
 
 IF GVL_HEALTH_BRIDGE.G_CO_Warning_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level THEN
+    GVL_INTENT_SAFETY.I_Vent_Force_Supply_80 := TRUE;
     GVL_COMMAND.G_Supply_80_Req := TRUE;
 END_IF;
 
@@ -158,6 +205,9 @@ END_FOR;
 GVL_STATE.G_Safety_Leak_Alarm := GVL_ALARM.G_Flood_Alarm_Active;
 GVL_STATE.G_Safety_Gas_Alarm := GVL_ALARM.G_Gas_Alarm_Active;
 GVL_STATE.G_Safety_Smoke_Alarm := GVL_ALARM.G_Fire_Alarm_Active;
+GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_STATE.G_Safety_Leak_Alarm;
+GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_STATE.G_Safety_Gas_Alarm;
+GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_STATE.G_Safety_Smoke_Alarm;
 
 // Integrated water/freeze/valve/operator safety layer
 GVL_STATUS.G_Diagnostics.Water_Recovery_Physical_Active := FALSE;
@@ -208,6 +258,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
 END_FOR;
 
 IF GVL_STATUS.G_Diagnostics.Active_Leak_Sensor_Index > 0 THEN
+    GVL_INTENT_SAFETY.I_Water_Selective_Recovery_Allowed := TRUE;
+    GVL_INTENT_SAFETY.I_Water_Recovery_Target_Zone := GVL_STATUS.G_Diagnostics.Water_Recovery_Target_Zone_Index;
     GVL_STATUS.G_Diagnostics.Water_Recovery_Selective_Allowed := TRUE;
     GVL_STATUS.G_Diagnostics.Water_Recovery_Selective_Text := CONCAT('Селективное восстановление возможно для зоны ', GVL_STATUS.G_Diagnostics.Active_Leak_Zone_Name);
 END_IF;
@@ -225,6 +277,7 @@ FOR L_i := 1 TO 32 DO
 
     IF NOT GVL_STATE.G_Water_Zone_Enable[L_i] THEN
         IF NOT GVL_STATE.G_Water_Zone_Close_FB[L_i] THEN
+            GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[L_i] := TRUE;
             IF GVL_STATUS.G_Diagnostics.Water_Zone_Close_Retry_Count[L_i] < GVL_CONFIG.G_Water_Valve_Close_Retry_Count THEN
                 IF (GVL_STATUS.G_System_Time_MS - L_Water_Zone_Close_Last_Retry_MS[L_i]) >= GVL_CONFIG.G_Water_Valve_Close_Retry_Delay_MS THEN
                     GVL_STATUS.G_Diagnostics.Water_Zone_Close_Retry_Active[L_i] := TRUE;
@@ -410,6 +463,7 @@ IF GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended THEN
 END_IF;
 
 IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
+    GVL_INTENT_SAFETY.I_Freeze_Protection_Required := TRUE;
     GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending := TRUE;
 END_IF;
 
