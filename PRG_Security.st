@@ -8,7 +8,7 @@ END_VAR
 
 
 FOR L_i := 1 TO 16 DO
-    L_Motion_Sensors_16[L_i] := L_Motion_Sensors_16[L_i];
+    L_Motion_Sensors_16[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
 END_FOR;
 // 7. Система безопасности (Охранная сигнализация)
 fbSecurityManager(
