@@ -1,0 +1,4 @@
+SKIP: pattern not found // --- SCENARIO PRIORITY RESOLUTION ---.*?END_IF;
+SKIP: pattern not found // --- FAIL-SAFE SCENARIO.*?END_IF;
+WARNING: nothing changed
+DONE: old ownership removed
