@@ -138,7 +138,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 21 16:08 DUT
 -rw-r--r--   1 runner runner    294 Apr 21 16:08 IValveController.st
 -rw-r--r--   1 runner runner    388 Apr 21 16:08 MAIN.st
 -rw-r--r--   1 runner runner   2509 Apr 21 16:08 PRG_Command_Arbitration.st
--rw-r--r--   1 runner runner   2278 Apr 21 16:08 PRG_Command_Verifier.st
+-rw-r--r--   1 runner runner   1855 Apr 21 16:08 PRG_Command_Verifier.st
 -rw-r--r--   1 runner runner   6819 Apr 21 16:08 PRG_Heating.st
 -rw-r--r--   1 runner runner   7270 Apr 21 16:08 PRG_IO_Read.st
 -rw-r--r--   1 runner runner   3431 Apr 21 16:08 PRG_IO_Write.st
@@ -249,4 +249,4 @@ total 860
 drwxr-xr-x 2 runner runner   4096 Apr 21 16:08 .
 drwxr-xr-x 6 runner runner   4096 Apr 21 16:08 ..
 -rw-r--r-- 1 runner runner      0 Apr 21 16:08 .gitkeep
--rw-r--r-- 1 runner runner 869777 Apr 21 16:08 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 870570 Apr 21 16:08 RESULT_methods_clean.xml
