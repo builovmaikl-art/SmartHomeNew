@@ -4,6 +4,8 @@ VAR
     fbLightingManager : FB_Lighting_Blinds_Manager;
     fbSocketManager : FB_Socket_Manager;
     L_Manual_Light_Override_32 : ARRAY[1..32] OF BYTE;
+    L_Manual_Blinds_Override_32 : ARRAY[1..32] OF BYTE;
+    L_Manual_Socket_Override_32 : ARRAY[1..32] OF BOOL;
     L_Sim_Lights_32 : ARRAY[1..32] OF BOOL;
     L_Physical_Switches_32 : ARRAY[1..32] OF BOOL;
     L_Motion_Sensors_32 : ARRAY[1..32] OF BOOL;
@@ -25,6 +27,18 @@ FOR L_i := 1 TO 32 DO
         L_Physical_Switches_32[L_i] := FALSE;
         L_Motion_Sensors_32[L_i] := FALSE;
     END_IF;
+
+    IF GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block THEN
+        L_Manual_Blinds_Override_32[L_i] := 0;
+    ELSE
+        L_Manual_Blinds_Override_32[L_i] := GVL_COMMAND.G_Blinds_Override[L_i];
+    END_IF;
+
+    IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block THEN
+        L_Manual_Socket_Override_32[L_i] := FALSE;
+    ELSE
+        L_Manual_Socket_Override_32[L_i] := GVL_COMMAND.G_Socket_Override[L_i];
+    END_IF;
 END_FOR;
 
 // 10. Управление освещением и шторами
@@ -35,7 +49,7 @@ fbLightingManager(
     VI_Away_Level := 1,
     VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
     VI_Manual_Light_Override := L_Manual_Light_Override_32,
-    VI_Manual_Blinds_Override := GVL_COMMAND.G_Blinds_Override,
+    VI_Manual_Blinds_Override := L_Manual_Blinds_Override_32,
     VI_Simulation_Lights := L_Sim_Lights_32,
     VI_Physical_Switches := L_Physical_Switches_32,
     VI_Motion_Sensors := L_Motion_Sensors_32,
@@ -53,7 +67,7 @@ fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Scenario := GVL_STATUS.G_Current_Scenario,
-    VI_Manual_Override := GVL_COMMAND.G_Socket_Override,
+    VI_Manual_Override := L_Manual_Socket_Override_32,
     VI_Physical_Switches := GVL_STATE.G_Socket_Switches,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
     VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
@@ -74,17 +88,15 @@ IF GVL_STATE.G_Evacuation_Lighting_Active THEN
     END_FOR;
 END_IF;
 
-
 // Directional evacuation override
 IF GVL_STATE.G_Evacuation_Lighting_Active THEN
     FOR L_i := 1 TO GVL_CONFIG.C_MAX_LIGHT_ZONES DO
         CASE GVL_STATE.G_Evac_Guidance[L_i] OF
-            -1: // опасная зона — гасим или минимизируем
+            -1:
                 GVL_STATE.G_Lighting_Levels[L_i] := 0;
-            1: // направление к выходу — держим включенным
+            1:
                 GVL_STATE.G_Lighting_Levels[L_i] := 100;
         ELSE
-            // нейтрально — мягкое мигание
             GVL_STATE.G_Lighting_Levels[L_i] := SEL((L_i MOD 2) = 0, 0, 100);
         END_CASE;
     END_FOR;
