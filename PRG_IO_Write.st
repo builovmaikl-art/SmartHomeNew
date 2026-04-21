@@ -13,7 +13,6 @@ END_FOR;
 // 2.2. Коллекторы (Насосы и смесительные клапаны)
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_IO.DO_Manifold_Pumps[L_i] := GVL_STATE.G_Manifold_Pumps[L_i];
-    // Масштабирование 0.0-1.0 в 0-1000 для аналогового выхода (0-10В)
     GVL_IO.AO_Manifold_Valves[L_i] := REAL_TO_UINT(GVL_STATE.G_Manifold_Valves[L_i] * 1000.0);
 END_FOR;
 
@@ -36,7 +35,7 @@ ELSE
     GVL_IO.DO_Electric_Heater_Enable := FALSE;
 END_IF;
 
-// 2.6. Освещение и шторы (полноценная выдача в физические каналы 0-10В)
+// 2.6. Освещение и шторы
 FOR L_i := 1 TO 8 DO
     GVL_IO.AO_Lighting_Levels[L_i] := BYTE_TO_UINT(GVL_STATE.G_Lighting_Levels[L_i]) * 10;
 END_FOR;
@@ -45,49 +44,24 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
 END_FOR;
 
 // 2.7. Аварийные выходы (Сирены и клапаны)
-IF GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Gas_Alarm_Active THEN
-    GVL_IO.DO_Gas_Siren := TRUE;
-ELSE
-    GVL_IO.DO_Gas_Siren := FALSE;
-END_IF;
+GVL_IO.DO_Gas_Siren := (GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Gas_Alarm_Active);
+GVL_IO.DO_Fire_Siren := (GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Fire_Alarm_Active);
+GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren;
 
-IF GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Fire_Alarm_Active THEN
-    GVL_IO.DO_Fire_Siren := TRUE;
-ELSE
-    GVL_IO.DO_Fire_Siren := FALSE;
-END_IF;
+// === STAGE H2: USE SHADOW COMMANDS ===
+GVL_IO.DO_Water_Valve_35_Close := GVL_COMMAND_SHADOW.G_Close_Valve_35;
+GVL_IO.DO_Water_Valve_36_Close := GVL_COMMAND_SHADOW.G_Close_Valve_36;
+GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
-IF GVL_ALARM.G_Security_Siren THEN
-    GVL_IO.DO_Security_Siren := TRUE;
-ELSE
-    GVL_IO.DO_Security_Siren := FALSE;
-END_IF;
+// Access control (partial migration)
+GVL_IO.DO_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
+GVL_IO.DO_Lock_1_Close := GVL_COMMAND_SHADOW.G_Lock_1_Close;
+GVL_IO.DO_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
+GVL_IO.DO_Lock_2_Close := GVL_COMMAND_SHADOW.G_Lock_2_Close;
 
-IF GVL_COMMAND.G_Close_Valve_35 THEN
-    GVL_IO.DO_Water_Valve_35_Close := TRUE;
-ELSE
-    GVL_IO.DO_Water_Valve_35_Close := FALSE;
-END_IF;
-
-IF GVL_COMMAND.G_Close_Valve_36 THEN
-    GVL_IO.DO_Water_Valve_36_Close := TRUE;
-ELSE
-    GVL_IO.DO_Water_Valve_36_Close := FALSE;
-END_IF;
-
-IF GVL_COMMAND.G_Gas_Valve_Close THEN
-    GVL_IO.DO_Gas_Valve_Close := TRUE;
-ELSE
-    GVL_IO.DO_Gas_Valve_Close := FALSE;
-END_IF;
-
-// 2.8. Управление доступом (Периметральная автоматика)
+// Gate/Wicket — still legacy (not yet in arbitration)
 GVL_IO.DO_Gate_Open := GVL_COMMAND.G_Gate_Open;
 GVL_IO.DO_Wicket_Open := GVL_COMMAND.G_Wicket_Open;
-GVL_IO.DO_Lock_1_Open := GVL_COMMAND.G_Lock_1_Open;
-GVL_IO.DO_Lock_1_Close := GVL_COMMAND.G_Lock_1_Close;
-GVL_IO.DO_Lock_2_Open := GVL_COMMAND.G_Lock_2_Open;
-GVL_IO.DO_Lock_2_Close := GVL_COMMAND.G_Lock_2_Close;
 
 // 2.9. Розетки
 GVL_IO.DO_Sockets := GVL_STATE.G_Socket_States;
@@ -96,4 +70,5 @@ GVL_IO.DO_Sockets := GVL_STATE.G_Socket_States;
 FOR L_i := 1 TO 32 DO
     GVL_IO.DO_Water_Zone_Enable[L_i] := GVL_STATE.G_Water_Zone_Enable[L_i];
 END_FOR;
+
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
