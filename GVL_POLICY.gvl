@@ -1,0 +1,3 @@
+VAR_GLOBAL
+    G_Rule_Preheat_Request : BOOL := FALSE;
+END_VAR
