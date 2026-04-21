@@ -7,6 +7,8 @@ PRG_IO_Read();
 PRG_Safety();
 PRG_System();
 PRG_Policy();
+PRG_Command_Arbitration();
+PRG_Command_Verifier();
 PRG_Security();
 PRG_Heating();
 PRG_Ventilation();
