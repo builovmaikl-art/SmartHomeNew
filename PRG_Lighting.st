@@ -11,7 +11,11 @@ END_VAR
 
 FOR L_i := 1 TO 32 DO
     IF L_i <= 16 THEN
-        L_Manual_Light_Override_32[L_i] := GVL_COMMAND.G_Lighting_Override[L_i];
+        IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block THEN
+            L_Manual_Light_Override_32[L_i] := 0;
+        ELSE
+            L_Manual_Light_Override_32[L_i] := GVL_COMMAND.G_Lighting_Override[L_i];
+        END_IF;
         L_Sim_Lights_32[L_i] := GVL_STATE.G_Sim_Lights[L_i];
         L_Physical_Switches_32[L_i] := GVL_STATE.G_Physical_Switches[L_i];
         L_Motion_Sensors_32[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
