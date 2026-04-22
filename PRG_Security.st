@@ -51,11 +51,11 @@ fbAccessControl(
     VI_Access_Codes := GVL_Retain.G_Access_Codes,
     VI_RFID_Tags := GVL_Retain.G_RFID_Tags,
     VI_Config := GVL_CONFIG.G_Security_Config,
-    VO_Gate_Open => GVL_COMMAND.G_Gate_Open,
-    VO_Wicket_Open => GVL_COMMAND.G_Wicket_Open,
-    VO_Lock_1_Open => GVL_COMMAND.G_Lock_1_Open,
-    VO_Lock_1_Close => GVL_COMMAND.G_Lock_1_Close,
-    VO_Lock_2_Open => GVL_COMMAND.G_Lock_2_Open,
-    VO_Lock_2_Close => GVL_COMMAND.G_Lock_2_Close
+    VO_Gate_Open => GVL_INTENT_USER.I_Gate_Open_Request,
+VO_Wicket_Open => GVL_INTENT_USER.I_Wicket_Open_Request,
+VO_Lock_1_Open => GVL_INTENT_USER.I_Lock_1_Open_Request,
+VO_Lock_1_Close => GVL_INTENT_USER.I_Lock_1_Close_Request,
+VO_Lock_2_Open => GVL_INTENT_USER.I_Lock_2_Open_Request,
+VO_Lock_2_Close => GVL_INTENT_USER.I_Lock_2_Close_Request
 );
 // >>> BULK_SYNC_ANCHOR: PRG_Security <<<
