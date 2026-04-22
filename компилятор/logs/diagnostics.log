@@ -182,7 +182,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 22 12:51 DUT
 -rw-r--r--   1 runner runner    206 Apr 22 12:51 ST_Security_Zone_State.dut
 -rw-r--r--   1 runner runner    331 Apr 22 12:51 ST_Sensor_Calibration_Record.dut
 -rw-r--r--   1 runner runner    447 Apr 22 12:51 ST_State_Snapshot.dut
--rw-r--r--   1 runner runner   4281 Apr 22 12:51 ST_System_Diagnostics.dut
+-rw-r--r--   1 runner runner   4105 Apr 22 12:51 ST_System_Diagnostics.dut
 -rw-r--r--   1 runner runner    747 Apr 22 12:51 ST_System_State_Snapshot.dut
 -rw-r--r--   1 runner runner    526 Apr 22 12:51 ST_System_State_Summary.dut
 -rw-r--r--   1 runner runner    215 Apr 22 12:51 ST_Tariff_Config.dut
@@ -240,8 +240,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 22 12:51 out
 -rw-r--r--  1 runner runner    177 Apr 22 12:51 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 700
+total 696
 drwxr-xr-x 2 runner runner   4096 Apr 22 12:51 .
 drwxr-xr-x 6 runner runner   4096 Apr 22 12:51 ..
 -rw-r--r-- 1 runner runner      0 Apr 22 12:51 .gitkeep
--rw-r--r-- 1 runner runner 704531 Apr 22 12:51 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 704402 Apr 22 12:51 RESULT_methods_clean.xml
