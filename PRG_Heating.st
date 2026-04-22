@@ -134,13 +134,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
 
     ELSIF L_SoftDegrade[L_i] THEN
-        IF GVL_CONFIG.G_Manifold_Priority[L_i] >= 2 THEN
-            GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
-            GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
-        ELSE
-            GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
-            GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
-        END_IF;
+        CASE GVL_CONFIG.G_Manifold_Priority[L_i] OF
+            3:
+                GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+                GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
+            2:
+                GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+                // valve remains under fbHeatingManager control
+            ELSE
+                GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+                GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
+        END_CASE;
 
     ELSIF NOT fbRecovery[L_i].Q THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
