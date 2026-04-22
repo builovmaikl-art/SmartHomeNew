@@ -16,7 +16,7 @@ FOR L_i := 1 TO 32 DO
         IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block THEN
             L_Manual_Light_Override_32[L_i] := 0;
         ELSE
-            L_Manual_Light_Override_32[L_i] := GVL_COMMAND.G_Lighting_Override[L_i];
+            L_Manual_Light_Override_32[L_i] := GVL_INTENT_USER.I_Lighting_Override_32[L_i];
         END_IF;
         L_Sim_Lights_32[L_i] := GVL_STATE.G_Sim_Lights[L_i];
         L_Physical_Switches_32[L_i] := GVL_STATE.G_Physical_Switches[L_i];
@@ -31,13 +31,13 @@ FOR L_i := 1 TO 32 DO
     IF GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block THEN
         L_Manual_Blinds_Override_32[L_i] := 0;
     ELSE
-        L_Manual_Blinds_Override_32[L_i] := GVL_COMMAND.G_Blinds_Override[L_i];
+        L_Manual_Blinds_Override_32[L_i] := GVL_INTENT_USER.I_Blinds_Override_32[L_i];
     END_IF;
 
     IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block THEN
         L_Manual_Socket_Override_32[L_i] := FALSE;
     ELSE
-        L_Manual_Socket_Override_32[L_i] := GVL_COMMAND.G_Socket_Override[L_i];
+        L_Manual_Socket_Override_32[L_i] := GVL_INTENT_USER.I_Socket_Override_32[L_i];
     END_IF;
 END_FOR;
 
