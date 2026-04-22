@@ -33,10 +33,6 @@ STRUCT
     DHW_Circ_Pump_Out_Of_Service : BOOL;
 
     Maintenance_Last_Action : STRING(120);
-    Maintenance_Active : BOOL;
-    Maintenance_Deadline_MS : UDINT;
-    Maintenance_Remaining_MS : UDINT;
-    Maintenance_Status_Text : STRING(160);
     Operator_Action_Blocked : BOOL;
     Operator_Block_Reason : STRING(160);
     Operator_Last_Forbidden_Action : STRING(160);
@@ -109,7 +105,5 @@ STRUCT
     Sensor_Fault : BOOL;
     IO_Offline : BOOL;
     Subsystem_Degraded : BOOL;
-
-    // rest unchanged ...
 END_STRUCT
 END_TYPE
