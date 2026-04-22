@@ -512,6 +512,20 @@ GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req;
 GVL_INTENT_USER.I_PIN_Code := GVL_COMMAND.G_PIN_Code;
 GVL_INTENT_USER.I_RFID_Tag := GVL_COMMAND.G_RFID_Tag;
 GVL_INTENT_USER.I_2FA_Code_In := GVL_COMMAND.G_2FA_Code_In;  
+GVL_INTENT_USER.I_Scenario_Request := L_Scenario_Req_Gateway;
+GVL_INTENT_USER.I_Lighting_Override_32 := GVL_COMMAND.G_Lighting_Override;
+GVL_INTENT_USER.I_Blinds_Override_32 := GVL_COMMAND.G_Blinds_Override;
+GVL_INTENT_USER.I_Socket_Override_32 := GVL_COMMAND.G_Socket_Override;
+GVL_INTENT_USER.I_Reset_Errors := GVL_COMMAND.G_Reset_Errors;
+GVL_INTENT_USER.I_Set_Temp_Req := fbGateway.VO_Set_Temp_Req;
+GVL_INTENT_USER.I_Target_Zone := fbGateway.VO_Target_Zone;
+GVL_INTENT_USER.I_Target_Temperature := fbGateway.VO_Target_Temp;
+GVL_INTENT_USER.I_Set_Vent_Req := fbGateway.VO_Set_Vent_Req;
+GVL_INTENT_USER.I_Target_Vent_Speed := fbGateway.VO_Target_Vent_Speed;
+GVL_INTENT_USER.I_Set_Config_Req := fbGateway.VO_Set_Config_Req;
+GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req;
+GVL_INTENT_USER.I_New_Time_MS := fbGateway.VO_New_Time_MS;
+
 
 IF L_Gateway_Writes_Allowed AND
    fbGateway.VO_Set_Scenario_Req AND
