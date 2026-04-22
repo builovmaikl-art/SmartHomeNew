@@ -70,5 +70,6 @@ END_IF;
 
 FOR L_i := 1 TO 32 DO
     IF GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[L_i] THEN
+        ;
     END_IF;
 END_FOR;
