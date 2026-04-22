@@ -20,43 +20,12 @@ IF GVL_STATUS.G_Wet_Zone_Light_Active THEN
     L_Wet_Zone_Active[1] := TRUE;
 END_IF;
 
-// === Ventilation Arbitration ===
-
-// default: pass-through from shadow arbitration
+// === Ventilation Inputs (from arbitration only) ===
 L_Vent_PV3_Boost_Req := GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
 L_Supply_100_Req := GVL_COMMAND_SHADOW.G_Supply_100_Req;
 L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
 L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
 L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
-
-// Priority 1: SMOKE
-IF GVL_STATE.G_Safety_Smoke_Latched THEN
-    L_Vent_Stop_Req := TRUE;
-    L_Vent_PV3_Boost_Req := FALSE;
-    L_Supply_100_Req := FALSE;
-    L_Supply_80_Req := FALSE;
-    L_Exhaust_100_Req := FALSE;
-
-// Priority 2: GAS
-ELSIF GVL_STATE.G_Safety_Gas_Latched THEN
-    L_Vent_PV3_Boost_Req := TRUE;
-    L_Supply_100_Req := TRUE;
-    L_Vent_Stop_Req := FALSE;
-
-// Priority 3: CO
-ELSIF GVL_HEALTH_BRIDGE.G_CO_Warning_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level THEN
-    L_Supply_80_Req := TRUE;
-    L_Vent_Stop_Req := FALSE;
-END_IF;
-
-// Priority 4: DEGRADED
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
-    L_Vent_PV3_Boost_Req := FALSE;
-    L_Supply_100_Req := FALSE;
-    L_Exhaust_100_Req := FALSE;
-    L_Supply_80_Req := TRUE;
-END_IF;
-
 
 // 11. Управление вентиляцией
 fbVentilationManager(
