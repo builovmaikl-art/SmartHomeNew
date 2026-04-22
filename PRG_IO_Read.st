@@ -105,7 +105,15 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
 END_FOR;
 
 IF GVL_IO.AI_Temp_Outdoor.wStatus = 0 THEN
-    GVL_STATE.G_Outdoor_Temp := GVL_IO.AI_Temp_Outdoor.rValue;
+    IF GVL_CONFIG.G_Enable_Sensor_Calibration THEN
+        fbCalib_Outdoor_Temp(
+            VI_Raw_Value := GVL_IO.AI_Temp_Outdoor.rValue,
+            VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
+        );
+        GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
+    ELSE
+        GVL_STATE.G_Outdoor_Temp := GVL_IO.AI_Temp_Outdoor.rValue;
+    END_IF;
 END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
