@@ -20,6 +20,7 @@ VAR
     L_FaultCounter : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     L_FaultActiveStable : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Sensor_OOS_Latch : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_SoftDegrade : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -124,13 +125,20 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         L_FaultCounter[L_i] := 0;
     END_IF;
 
+    L_SoftDegrade[L_i] := L_FaultActiveStable[L_i] AND NOT L_Sensor_OOS_Latch[L_i];
+
     fbRecovery[L_i](
         IN := NOT L_FaultActiveStable[L_i] AND NOT L_Sensor_OOS_Latch[L_i],
         PT := T#10s,
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
     );
 
-    IF NOT fbRecovery[L_i].Q OR L_Sensor_OOS_Latch[L_i] THEN
+    IF L_Sensor_OOS_Latch[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+        GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
+    ELSIF L_SoftDegrade[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+    ELSIF NOT fbRecovery[L_i].Q THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
     END_IF;
