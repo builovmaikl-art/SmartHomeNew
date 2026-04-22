@@ -149,6 +149,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
     END_IF;
+
+    IF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] OR
+       GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] OR
+       GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+        GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
+    END_IF;
 END_FOR;
 GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
 IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
