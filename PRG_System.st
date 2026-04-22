@@ -465,6 +465,7 @@ L_Gateway_Writes_Allowed :=
 
 // 13. Интерфейс шлюза (Modbus TCP)
 fbGateway(
+    
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Local_PLC_Role := SEL(GVL_STATUS.G_Is_Active_PLC, E_PLC_ROLE.ROLE_STANDBY, E_PLC_ROLE.ROLE_ACTIVE),
     VI_Incoming_Command := GVL_GATEWAY.G_Gateway_Command,
@@ -503,6 +504,14 @@ fbGateway(
     VO_Socket_Override => GVL_COMMAND.G_Socket_Override,
     VO_Reset_Errors_Req => GVL_COMMAND.G_Reset_Errors
 );
+
+GVL_INTENT_USER.I_Source_Valid := TRUE;
+GVL_INTENT_USER.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_INTENT_USER.I_Arm_Request := GVL_COMMAND.G_Arm_Req;
+GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req;
+GVL_INTENT_USER.I_PIN_Code := GVL_COMMAND.G_PIN_Code;
+GVL_INTENT_USER.I_RFID_Tag := GVL_COMMAND.G_RFID_Tag;
+GVL_INTENT_USER.I_2FA_Code_In := GVL_COMMAND.G_2FA_Code_In;  
 
 IF L_Gateway_Writes_Allowed AND
    fbGateway.VO_Set_Scenario_Req AND
