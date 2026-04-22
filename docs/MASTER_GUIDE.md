@@ -42,48 +42,72 @@ Diagnostics is part of the core.
 - Always validate in repo, not assumptions
 - No partial completion
 
-## Verification Adjustment (Restricted Environments)
+## Verification Modes Integration
 
-If terminal execution is unavailable:
+The engineering process supports three modes:
 
-- assistant may perform analytical verification based on repository state
-- verification must be explicitly marked as analytical
+### Full Verification Mode
+- terminal execution
+- git diff
+- logs
+→ only source of engineering-confirmed runtime truth
 
-Constraints:
-- analytical verification does not equal execution
-- no task is considered completed without later confirmation in Full Verification Mode
-- no assumptions about applied changes are allowed
+### Analytical Verification Mode
+- repository inspection
+- architecture validation
+→ supports reasoning, not execution
 
-Purpose:
-- allow progress without breaking engineering discipline
-- preserve reproducibility and system integrity
+### Direct Repository Modification Mode
+- assistant performs direct repository updates
+- verification is performed against resulting repository state (GitHub)
+
+Rules:
+- repository state after successful modification is considered real
+- no execution/log confirmation is implied
+- must be explicitly identified as non-terminal verification
+
+Usage constraints:
+- allowed for documentation, workflow, metadata
+- allowed for structural refactors with explicit approval
+- not default for safety-critical runtime logic
 
 
 ## POST TASK REQUIREMENTS
 After each completed task:
 - short summary of changes
-- verification result (from repo/logs)
+- verification result (mode must be specified)
 - next possible steps (2–3 options)
 - recommended next step
 
 
-## STRICT EXECUTION ORDER
-1. Обсуждаем.
-2. Подтверждаем решение.
-3. Я молча готовлю правки.
-4. Сохраняю правки в `steps/YYYY-MM-DD_*`.
-5. По команде собираю единый пакет.
-6. Даю код для терминала: обновить / применить / синхронизировать с `main`.
-7. Ты присылаешь лог терминала.
-8. Я проверяю результат по фактическим файлам репо.
-9. Только если всё корректно встало — идём дальше.
+## STRICT EXECUTION ORDER (UPDATED)
+
+### Standard flow (Full Verification Mode)
+1. Обсуждаем
+2. Подтверждаем
+3. Подготовка
+4. steps/*
+5. пакет
+6. терминал
+7. лог
+8. проверка
+9. дальше
+
+### Direct Repository Mode flow
+1. Обсуждаем
+2. Подтверждаем
+3. Прямое изменение репозитория
+4. Проверка по состоянию файлов (GitHub)
+5. Явное указание режима
+6. дальше
+
 
 ## ENFORCEMENT RULES
-- Не закрывать вход лишним диалогом.
-- Не считать правки внесёнными, пока пакет не применён и лог не проверен.
-- Не описывать результат как факт до проверки по репо.
+- Не закрывать вход лишним диалогом
+- Не путать режимы верификации
+- Не описывать runtime результат без Full Verification Mode
 - После каждого завершённого задания давать:
-  - краткое описание, что сделано
-  - статус проверки
-  - 2–3 варианта следующих шагов
-  - рекомендуемый следующий шаг
+  - краткое описание
+  - режим проверки
+  - варианты следующих шагов
+  - рекомендацию
