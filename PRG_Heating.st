@@ -22,6 +22,10 @@ VAR
     L_FaultActiveStablePrev : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Sensor_OOS_Latch : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_SoftDegrade : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+
+    // Energy management
+    L_ActiveCount : INT;
+    L_DisableMask : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -84,6 +88,32 @@ fbHeatingManager(
     VO_Zone_Valves => L_Zone_Valves_8
 );
 
+// ===== ENERGY LAYER (Wave 4.1) =====
+L_ActiveCount := 0;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_DisableMask[L_i] := FALSE;
+    IF GVL_STATE.G_Manifold_Pumps[L_i] THEN
+        L_ActiveCount := L_ActiveCount + 1;
+    END_IF;
+END_FOR;
+
+IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_ActiveCount > GVL_CONFIG.G_Max_Active_Manifolds) THEN
+    // first pass: disable priority 1
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_CONFIG.G_Manifold_Priority[L_i] = 1 THEN
+            L_DisableMask[L_i] := TRUE;
+        END_IF;
+    END_FOR;
+
+    // second pass if still too many
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF (L_ActiveCount > GVL_CONFIG.G_Max_Active_Manifolds) AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 2) THEN
+            L_DisableMask[L_i] := TRUE;
+        END_IF;
+    END_FOR;
+END_IF;
+// ==================================
+
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := 0;
 
@@ -100,7 +130,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     );
     L_FaultActiveStable[L_i] := fbFaultDebounce[L_i].Q;
 
-    // EDGE-BASED COUNTER
     IF L_FaultActiveStable[L_i] AND NOT L_FaultActiveStablePrev[L_i] THEN
         IF L_FaultCounter[L_i] < 32767 THEN
             L_FaultCounter[L_i] := L_FaultCounter[L_i] + 1;
@@ -129,6 +158,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
 
+    ELSIF L_DisableMask[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+        GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
+
     ELSIF GVL_STATE.G_Safety_Freeze_Risk THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
         GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
@@ -140,7 +173,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
                 GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
             2:
                 GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
-                // valve remains under fbHeatingManager control
             ELSE
                 GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
                 GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
@@ -153,7 +185,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
                 GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
             2:
                 GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
-                // valve remains under fbHeatingManager control
             ELSE
                 GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
                 GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
