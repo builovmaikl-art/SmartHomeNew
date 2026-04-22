@@ -123,5 +123,11 @@ STRUCT
     Manifold_Return_Temp_Fault_Active : BOOL;
     Manifold_Return_Temp_First_Fault_Index : INT;
     Manifold_Return_Temp_Fault_Text : STRING(160);
+
+    Manifold_Sensor_Fault_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    Manifold_Sensor_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Sensor_Out_Of_Service_Active : BOOL;
+    Manifold_Sensor_First_OOS_Index : INT;
+    Manifold_Sensor_OOS_Text : STRING(160);
 END_STRUCT
 END_TYPE
