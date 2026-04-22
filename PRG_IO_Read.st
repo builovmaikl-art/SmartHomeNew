@@ -123,8 +123,22 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
 END_FOR;
 
 FOR L_i := 1 TO 8 DO
-    GVL_STATE.G_Room_Hum[L_i] := GVL_IO.AI_Room_Hum[L_i];
-    GVL_STATE.G_Room_CO2[L_i] := GVL_IO.AI_Room_CO2[L_i];
+    IF GVL_CONFIG.G_Enable_Sensor_Calibration THEN
+        fbCalib_Humidity[L_i](
+            VI_Raw_Value := GVL_IO.AI_Room_Hum[L_i],
+            VI_Record := GVL_CONFIG.G_Calib_Humidity[L_i]
+        );
+        GVL_STATE.G_Room_Hum[L_i] := fbCalib_Humidity[L_i].VO_Calibrated_Value;
+
+        fbCalib_CO2[L_i](
+            VI_Raw_Value := GVL_IO.AI_Room_CO2[L_i],
+            VI_Record := GVL_CONFIG.G_Calib_CO2[L_i]
+        );
+        GVL_STATE.G_Room_CO2[L_i] := fbCalib_CO2[L_i].VO_Calibrated_Value;
+    ELSE
+        GVL_STATE.G_Room_Hum[L_i] := GVL_IO.AI_Room_Hum[L_i];
+        GVL_STATE.G_Room_CO2[L_i] := GVL_IO.AI_Room_CO2[L_i];
+    END_IF;
 END_FOR;
 FOR L_i := 1 TO 8 DO
     IF GVL_CONFIG.G_FloorTemp_Map[L_i] > 0 AND GVL_CONFIG.G_FloorTemp_Map[L_i] <= 8 THEN
