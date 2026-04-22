@@ -161,7 +161,15 @@ FOR L_i := 1 TO 8 DO
         END_IF;
     END_IF;
     IF GVL_CONFIG.G_RoomTemp_Map[L_i] > 0 AND GVL_CONFIG.G_RoomTemp_Map[L_i] <= 8 THEN
-        GVL_STATE.G_Room_Temps[L_i] := GVL_IO.AI_Room_Temps[GVL_CONFIG.G_RoomTemp_Map[L_i]];
+        IF GVL_CONFIG.G_Enable_Sensor_Calibration THEN
+            fbCalib_Room_Temps[L_i](
+                VI_Raw_Value := GVL_IO.AI_Room_Temps[GVL_CONFIG.G_RoomTemp_Map[L_i]],
+                VI_Record := GVL_CONFIG.G_Calib_Room_Temps[L_i]
+            );
+            GVL_STATE.G_Room_Temps[L_i] := fbCalib_Room_Temps[L_i].VO_Calibrated_Value;
+        ELSE
+            GVL_STATE.G_Room_Temps[L_i] := GVL_IO.AI_Room_Temps[GVL_CONFIG.G_RoomTemp_Map[L_i]];
+        END_IF;
     END_IF;
 END_FOR;
 
