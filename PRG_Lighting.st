@@ -9,6 +9,10 @@ VAR
     L_Sim_Lights_32 : ARRAY[1..32] OF BOOL;
     L_Physical_Switches_32 : ARRAY[1..32] OF BOOL;
     L_Motion_Sensors_32 : ARRAY[1..32] OF BOOL;
+
+    // ADAPTER ARRAYS (match FB expected sizes)
+    L_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+    L_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO 32 DO
@@ -41,6 +45,15 @@ FOR L_i := 1 TO 32 DO
     END_IF;
 END_FOR;
 
+// ADAPTER: copy to FB-sized arrays
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+    L_Blinds_Override[L_i] := L_Manual_Blinds_Override_32[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    L_Socket_Override[L_i] := L_Manual_Socket_Override_32[L_i];
+END_FOR;
+
 // 10. Управление освещением и шторами
 fbLightingManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -49,7 +62,7 @@ fbLightingManager(
     VI_Away_Level := 1,
     VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
     VI_Manual_Light_Override := L_Manual_Light_Override_32,
-    VI_Manual_Blinds_Override := L_Manual_Blinds_Override_32,
+    VI_Manual_Blinds_Override := L_Blinds_Override,
     VI_Simulation_Lights := L_Sim_Lights_32,
     VI_Physical_Switches := L_Physical_Switches_32,
     VI_Motion_Sensors := L_Motion_Sensors_32,
@@ -67,7 +80,7 @@ fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Scenario := GVL_STATUS.G_Current_Scenario,
-    VI_Manual_Override := L_Manual_Socket_Override_32,
+    VI_Manual_Override := L_Socket_Override,
     VI_Physical_Switches := GVL_STATE.G_Socket_Switches,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
     VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
