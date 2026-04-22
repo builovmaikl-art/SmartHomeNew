@@ -105,5 +105,11 @@ STRUCT
     Sensor_Fault : BOOL;
     IO_Offline : BOOL;
     Subsystem_Degraded : BOOL;
+
+    Manifold_Return_Temp_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Return_Temp_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Return_Temp_Fault_Active : BOOL;
+    Manifold_Return_Temp_First_Fault_Index : INT;
+    Manifold_Return_Temp_Fault_Text : STRING(160);
 END_STRUCT
 END_TYPE
