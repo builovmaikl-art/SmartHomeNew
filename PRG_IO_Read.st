@@ -14,6 +14,19 @@ VAR
     fbIO_Watchdog_1 : FB_IO_Module_Watchdog;
     fbIO_Watchdog_2 : FB_IO_Module_Watchdog;
     L_IO_Error_Active : BOOL;
+
+    // === SENSOR CALIBRATION PROCESSORS ===
+    fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
+
+    fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+
+    fbCalib_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Calibration_Processor;
+
+    fbCalib_Methane : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF FB_Sensor_Calibration_Processor;
+    fbCalib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF FB_Sensor_Calibration_Processor;
 END_VAR
 
 // 0. КОНТРОЛЬ СВЯЗИ С МОДУЛЯМИ ВВОДА-ВЫВОДА (Watchdog)
