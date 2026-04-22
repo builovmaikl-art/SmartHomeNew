@@ -15,6 +15,7 @@ on:
         options:
           - compile
           - diagnostics
+          - snapshot
       note:
         description: "Комментарий к запуску"
         required: false
@@ -31,10 +32,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Snapshot runtime files from project root
+      - name: Resolve snapshot date folder
+        if: ${{ inputs.task == 'snapshot' }}
         run: |
-          mkdir -p "snapshots/2026-04-22"
-          find . -maxdepth 1 -type f \( -iname "*.st" -o -iname "*.gvl" -o -iname "*.dut" \) -exec cp {} "snapshots/2026-04-22/" \;
+          echo "SNAPSHOT_DATE=$(date +%F)" >> "$GITHUB_ENV"
+
+      - name: Snapshot runtime files from project root
+        if: ${{ inputs.task == 'snapshot' }}
+        run: |
+          mkdir -p "snapshots/${SNAPSHOT_DATE}"
+          find . -maxdepth 1 -type f \( -iname "*.st" -o -iname "*.gvl" -o -iname "*.dut" \) -exec cp {} "snapshots/${SNAPSHOT_DATE}/" \;
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -53,6 +60,7 @@ jobs:
           echo "sha=${{ github.sha }}" | tee -a "компилятор/logs/workflow_meta.log"
           echo "task=${{ inputs.task || 'compile' }}" | tee -a "компилятор/logs/workflow_meta.log"
           echo "note=${{ inputs.note || '' }}" | tee -a "компилятор/logs/workflow_meta.log"
+          echo "snapshot_date=${SNAPSHOT_DATE:-}" | tee -a "компилятор/logs/workflow_meta.log"
 
       - name: Install dependencies if needed
         run: |
@@ -114,6 +122,8 @@ jobs:
           if [ -f "компилятор/out/RESULT_methods_clean.xml" ]; then
             git add "компилятор/out/RESULT_methods_clean.xml"
           fi
-          git add "snapshots/2026-04-22" || true
-          git diff --cached --quiet || git commit -m "ci: update logs, final methods-clean output, and runtime snapshot"
+          if [ -n "${SNAPSHOT_DATE}" ] && [ -d "snapshots/${SNAPSHOT_DATE}" ]; then
+            git add "snapshots/${SNAPSHOT_DATE}" || true
+          fi
+          git diff --cached --quiet || git commit -m "ci: update logs, final methods-clean output, and dated runtime snapshot"
           git push
