@@ -65,18 +65,104 @@ FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Motion_Sensors[L_i] := fbDebounce_Motion[L_i].Q;
 END_FOR;
 
-// ... (unchanged omitted for brevity)
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    // В текущей концепции локальные физические выключатели розеток не используются.
+    // Состояние оставляем FALSE для обратной совместимости структуры.
+    GVL_STATE.G_Socket_Switches[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SECURITY_SENSORS DO
+    fbDebounce_Security_Open[L_i](IN := GVL_IO.DI_Security_Open[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    fbDebounce_Security_Glass[L_i](IN := GVL_IO.DI_Security_Glass[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+END_FOR;
+fbDebounce_Group_2F(IN := GVL_IO.DI_Security_2F_Group, PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+    IF GVL_CONFIG.G_Door_Map[L_i] > 0 AND GVL_CONFIG.G_Door_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+        GVL_STATE.G_Door_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Door_Map[L_i]].Q;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO 8 DO
+    IF GVL_CONFIG.G_Window_Map[L_i] > 0 THEN
+        IF GVL_CONFIG.G_Window_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Window_Map[L_i]].Q;
+        ELSIF GVL_CONFIG.G_Window_Map[L_i] <= (GVL_CONSTANTS.C_MAX_SECURITY_SENSORS * 2) THEN
+            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[GVL_CONFIG.G_Window_Map[L_i] - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS].Q;
+        END_IF;
+    END_IF;
+END_FOR;
+GVL_STATE.G_Window_Sensors[16] := fbDebounce_Group_2F.Q;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    fbDebounce_Flood[L_i](IN := GVL_IO.DI_Flood_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    GVL_STATE.G_Water_Sensors[L_i] := fbDebounce_Flood[L_i].Q;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+    fbDebounce_Smoke[L_i](IN := GVL_IO.DI_Smoke_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    GVL_STATE.G_Smoke_Sensors[L_i] := fbDebounce_Smoke[L_i].Q;
+END_FOR;
 
 IF GVL_IO.AI_Temp_Outdoor.wStatus = 0 THEN
-    IF GVL_CONFIG.G_Enable_Sensor_Calibration THEN
-        fbCalib_Outdoor_Temp(
-            VI_Raw_Value := GVL_IO.AI_Temp_Outdoor.rValue,
-            VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
-        );
-        GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
-    ELSE
-        GVL_STATE.G_Outdoor_Temp := GVL_IO.AI_Temp_Outdoor.rValue;
-    END_IF;
+    GVL_STATE.G_Outdoor_Temp := GVL_IO.AI_Temp_Outdoor.rValue;
 END_IF;
 
-// rest unchanged
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
+    IF GVL_IO.AI_Supply_Temps[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Supply_Temps[L_i] := GVL_IO.AI_Supply_Temps[L_i].rValue;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO 8 DO
+    GVL_STATE.G_Room_Hum[L_i] := GVL_IO.AI_Room_Hum[L_i];
+    GVL_STATE.G_Room_CO2[L_i] := GVL_IO.AI_Room_CO2[L_i];
+END_FOR;
+FOR L_i := 1 TO 8 DO
+    IF GVL_CONFIG.G_FloorTemp_Map[L_i] > 0 AND GVL_CONFIG.G_FloorTemp_Map[L_i] <= 8 THEN
+        GVL_STATE.G_Floor_Temps[L_i] := GVL_IO.AI_Floor_Temps[GVL_CONFIG.G_FloorTemp_Map[L_i]];
+    END_IF;
+    IF GVL_CONFIG.G_RoomTemp_Map[L_i] > 0 AND GVL_CONFIG.G_RoomTemp_Map[L_i] <= 8 THEN
+        GVL_STATE.G_Room_Temps[L_i] := GVL_IO.AI_Room_Temps[GVL_CONFIG.G_RoomTemp_Map[L_i]];
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    GVL_STATE.G_Manifold_Pressures[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Pressures[L_i]) / 10.0;
+    GVL_STATE.G_Manifold_Currents[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Currents[L_i]) / 100.0;
+    IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Manifold_T_Supply[L_i] := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue;
+    END_IF;
+    GVL_STATE.G_Manifold_T_Return[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Temps_Return[L_i]) / 10.0;
+    GVL_STATE.G_Manifold_End_Switches[L_i] := GVL_IO.DI_Manifold_End_Switches[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+    IF GVL_IO.AI_Methane_LEL[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Methane_Sensors[L_i] := GVL_IO.AI_Methane_LEL[L_i].rValue;
+    END_IF;
+END_FOR;
+GVL_STATE.G_Boiler_Flame := GVL_IO.AI_Boiler_Flame_Status;
+GVL_STATE.G_Boiler_Error := GVL_IO.DI_Boiler_Error;
+// --- SAFETY bootstrap mapping (temporary, will be normalized later if dedicated managers exist) ---
+GVL_STATE.G_Safety_Gas_Alarm := FALSE;
+GVL_STATE.G_Safety_Leak_Alarm := FALSE;
+GVL_STATE.G_Safety_Smoke_Alarm := FALSE;
+
+// Временное безопасное поведение:
+// до подключения реального драйвера/шлюза OpenTherm считаем канал котла недоступным.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    GVL_STATE.G_Boiler_OT_Online[L_i] := FALSE;
+END_FOR;
+GVL_STATE.G_CO_Sensors := GVL_IO.AI_CO_PPM;
+
+GVL_STATE.G_DHW_Temp := GVL_IO.AI_DHW_Temp;
+GVL_STATE.G_DHW_Pressure := GVL_IO.AI_DHW_Pressure;
+
+// Water zonal valve feedback mapping
+GVL_STATE.G_Water_Zone_Open_FB := GVL_IO.DI_Water_Zone_Open_FB;
+GVL_STATE.G_Water_Zone_Close_FB := GVL_IO.DI_Water_Zone_Close_FB;
+
+GVL_STATUS.G_Diagnostics.Backup_Pump_Fault := FALSE;
+GVL_STATUS.G_Diagnostics.Electric_Heater_Fault := FALSE;
+// >>> BULK_SYNC_ANCHOR: PRG_IO_Read <<<
