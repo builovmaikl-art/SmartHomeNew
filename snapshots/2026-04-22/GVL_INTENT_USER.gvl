@@ -34,8 +34,8 @@ VAR_GLOBAL
     I_Gas_Selective_Recover : BOOL := FALSE;
     I_Scenario_Request : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     I_Lighting_Override_32 : ARRAY[1..32] OF BYTE;
-    I_Blinds_Override_32 : ARRAY[1..32] OF BYTE;
-    I_Socket_Override_32 : ARRAY[1..32] OF BOOL;
+    I_Blinds_Override_32 : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+    I_Socket_Override_32 : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     I_Reset_Errors : BOOL := FALSE;
 
     I_Set_Temp_Req : BOOL := FALSE;
