@@ -42,6 +42,22 @@ Diagnostics is part of the core.
 - Always validate in repo, not assumptions
 - No partial completion
 
+## Verification Adjustment (Restricted Environments)
+
+If terminal execution is unavailable:
+
+- assistant may perform analytical verification based on repository state
+- verification must be explicitly marked as analytical
+
+Constraints:
+- analytical verification does not equal execution
+- no task is considered completed without later confirmation in Full Verification Mode
+- no assumptions about applied changes are allowed
+
+Purpose:
+- allow progress without breaking engineering discipline
+- preserve reproducibility and system integrity
+
 
 ## POST TASK REQUIREMENTS
 After each completed task:
