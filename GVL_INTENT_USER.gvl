@@ -21,7 +21,6 @@ VAR_GLOBAL
     I_Dangerous_Action_Request : BOOL := FALSE;
     I_Dangerous_Action_Confirm : BOOL := FALSE;
     I_User_Access_Level : INT := 0;
-    I_Maintenance_Request : BOOL := FALSE;
 
     I_Water_Valve_Test_Open : BOOL := FALSE;
     I_Water_Valve_Test_Close : BOOL := FALSE;
