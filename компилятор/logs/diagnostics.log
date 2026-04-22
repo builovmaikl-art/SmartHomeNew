@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1572
+total 1568
 -rw-r--r--   1 runner runner  13067 Apr 22 11:43 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x  18 runner runner  12288 Apr 22 11:43 .
 drwxr-xr-x   3 runner runner   4096 Apr 22 11:43 ..
@@ -127,7 +127,6 @@ drwxr-xr-x   2 runner runner   4096 Apr 22 11:43 DUT
 -rw-r--r--   1 runner runner   1908 Apr 22 11:43 GVL_Retain.gvl
 -rw-r--r--   1 runner runner   5879 Apr 22 11:43 GVL_STATE.gvl
 -rw-r--r--   1 runner runner   2463 Apr 22 11:43 GVL_STATUS.gvl
--rw-r--r--   1 runner runner    365 Apr 22 11:43 GVL_Safety_Bridge.gvl
 -rw-r--r--   1 runner runner   1231 Apr 22 11:43 GVL_Safety_Selector.gvl
 -rw-r--r--   1 runner runner    482 Apr 22 11:43 GVL_Sensor_Shadow.gvl
 -rw-r--r--   1 runner runner   1362 Apr 22 11:43 GVL_Trend.gvl
@@ -242,8 +241,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 22 11:43 out
 -rw-r--r--  1 runner runner    177 Apr 22 11:43 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 728
+total 724
 drwxr-xr-x 2 runner runner   4096 Apr 22 11:43 .
 drwxr-xr-x 6 runner runner   4096 Apr 22 11:43 ..
 -rw-r--r-- 1 runner runner      0 Apr 22 11:43 .gitkeep
--rw-r--r-- 1 runner runner 733869 Apr 22 11:43 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 729104 Apr 22 11:43 RESULT_methods_clean.xml
