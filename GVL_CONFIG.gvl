@@ -19,6 +19,19 @@ VAR_GLOBAL
     G_HMI_Gas_Config : ST_Gas_Valve_Configuration; // Конфигурация системы газового контроля
     G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record; // Данные калибровки датчиков
     G_HMI_User_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Пользовательские правила (Rule Engine)
+
+    // Sensor calibration pipeline
+    G_Enable_Sensor_Calibration : BOOL := TRUE;
+    G_Calib_Outdoor_Temp : ST_Sensor_Calibration_Record;
+    G_Calib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Methane : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF ST_Sensor_Calibration_Record;
+    G_Calib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF ST_Sensor_Calibration_Record;
     
     // Конфигурация тестирования клапанов
     G_Valve_Test_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config;
