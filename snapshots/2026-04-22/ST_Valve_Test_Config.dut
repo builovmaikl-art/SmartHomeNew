@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Valve_Test_Config :
+STRUCT
+    valve_id : BYTE := 0;
+    test_interval_days : UDINT := 7;
+    Nominal_Current : REAL := 0.5;
+    nominal_close_time_sec : REAL := 10.0;
+    enabled : BOOL := TRUE;
+END_STRUCT
+END_TYPE

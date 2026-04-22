@@ -1,0 +1,15 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_System_State_Summary :
+STRUCT
+    Outdoor_Temp : REAL;
+    Indoor_Temp : ARRAY[1..GVL_CONSTANTS.C_MAX_CLIMATE_ZONES] OF REAL;
+    Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_HUMIDITY_SENSORS] OF REAL;
+    CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_CO2_SENSORS] OF REAL;
+    Gas_Alarm : BOOL;
+    Flood_Alarm : BOOL;
+    Fire_Alarm : BOOL;
+    Security_Alarm : BOOL;
+    Security_Armed : BOOL;
+END_STRUCT
+END_TYPE

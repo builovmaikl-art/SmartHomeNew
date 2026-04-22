@@ -1,0 +1,13 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Heating_Config :
+STRUCT
+    Weather_Comp_Enabled : BOOL := TRUE;
+    Weather_Coef : REAL := 0.1;
+    Freeze_Threshold : REAL := 7.0;
+    Overheat_Threshold : REAL := 45.0;
+    Night_Reduction : REAL := 3.0;
+    Target_Floor_Temp : REAL := 28.0;
+    Target_Room_Temp : REAL := 22.0;
+    Hysteresis : REAL := 0.5;
+END_STRUCT
+END_TYPE
