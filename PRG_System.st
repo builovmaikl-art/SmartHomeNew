@@ -202,11 +202,11 @@ fbSystemHealth(
     VI_CO_Warning_Level := GVL_HEALTH_BRIDGE.G_CO_Warning_Level,
     VI_CO_Alarm_Level := GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
     VI_Leak_Detected := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched,
-    VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault,
+    VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault OR GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active,
     VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault OR GVL_STATE.G_Ventilation_IO_Fault OR GVL_STATE.G_Lighting_IO_Fault,
     VI_Comm_Fault := GVL_STATE.G_Access_Comm_Fault,
     VI_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault,
-    VI_Subsystem_Fault := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded OR GVL_STATE.G_Ventilation_Subsystem_Degraded
+    VI_Subsystem_Fault := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded OR GVL_STATE.G_Ventilation_Subsystem_Degraded OR GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active
 );
 
 // 3.6. State manager: агрегированная логика режима работы
@@ -234,7 +234,10 @@ GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
 // === DIAGNOSTIC FLAGS (export) ===
 GVL_STATUS.G_Diagnostics.Sensor_Fault :=
     GVL_STATE.G_Heating_Sensor_Fault OR
-    GVL_STATE.G_DHW_Sensor_Fault;
+    GVL_STATE.G_DHW_Sensor_Fault OR
+    GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR
+    GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR
+    GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active;
 
 GVL_STATUS.G_Diagnostics.IO_Offline :=
     GVL_STATE.G_Heating_IO_Fault OR
@@ -245,7 +248,10 @@ GVL_STATUS.G_Diagnostics.IO_Offline :=
 GVL_STATUS.G_Diagnostics.Subsystem_Degraded :=
     GVL_STATE.G_Heating_Subsystem_Degraded OR
     GVL_STATE.G_DHW_Subsystem_Degraded OR
-    GVL_STATE.G_Ventilation_Subsystem_Degraded;
+    GVL_STATE.G_Ventilation_Subsystem_Degraded OR
+    GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR
+    GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR
+    GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active;
 
 GVL_GATEWAY.G_Gateway_HMI_Status_Message := fbHMIInterface.VO_HMI_Status_Text;
 IF fbFaultLogger.VO_Last_Event_Text <> '' THEN
