@@ -36,6 +36,46 @@ If there is a conflict between documents:
 - Do not rely on chat memory, assumptions, or expected repository state.
 - Treat this repository as a controlled engineering system state, not as a free-form coding workspace.
 
+## Verification Modes
+
+The repository supports two verification modes depending on environment constraints.
+
+### 1. Full Verification Mode (default)
+
+This is the primary and required engineering mode.
+
+Verification is performed using:
+- terminal execution
+- actual `git diff`
+- execution logs
+
+Rules:
+- only this mode produces engineering-confirmed results
+- a change is considered real only after:
+  1. repair execution
+  2. `git diff`
+  3. verification via logs
+
+### 2. Analytical Verification Mode (assistant-driven)
+
+Used when terminal execution is not available.
+
+Allowed:
+- inspection of actual repository files
+- structural and architectural validation
+- cross-file dependency checks
+- consistency checks against docs
+
+Not allowed:
+- claiming changes as applied
+- treating analysis as execution result
+- marking tasks as completed
+
+Rules:
+- results must be explicitly marked as analytical
+- repository state is considered unmodified unless proven otherwise
+- transition to Full Verification Mode is mandatory for final confirmation
+
 ## Change application rules
 - Do not make manual in-editor fixes as the primary integration path.
 - Every non-trivial change must be materialized as a reproducible repair step in:
