@@ -22,12 +22,12 @@ END_IF;
 
 // === Ventilation Arbitration ===
 
-// default: pass-through
-L_Vent_PV3_Boost_Req := GVL_COMMAND.G_Vent_PV3_Boost;
-L_Supply_100_Req := GVL_COMMAND.G_Supply_100_Req;
-L_Exhaust_100_Req := GVL_COMMAND.G_Exhaust_100_Req;
-L_Supply_80_Req := GVL_COMMAND.G_Supply_80_Req;
-L_Vent_Stop_Req := GVL_COMMAND.G_Vent_Stop;
+// default: pass-through from shadow arbitration
+L_Vent_PV3_Boost_Req := GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
+L_Supply_100_Req := GVL_COMMAND_SHADOW.G_Supply_100_Req;
+L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
+L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
+L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
 
 // Priority 1: SMOKE
 IF GVL_STATE.G_Safety_Smoke_Latched THEN
