@@ -95,6 +95,25 @@ Rules:
 - verification must explicitly state that confirmation was performed against repository file state, not terminal execution
 - if a change affects runtime behavior, safety logic, build process, or deployment semantics, Full Verification Mode remains preferred
 
+### Direct Modification Transparency Rule
+
+For every direct repository modification:
+- the assistant must explicitly state:
+  - what was changed
+  - where the change was made
+  - why the change was made
+- the change must be fully observable in repository state
+- no hidden or implicit modifications are allowed
+
+### Mandatory Post-Change Verification Rule
+
+After any change (in any mode):
+- the assistant must verify the resulting repository state
+- verification must confirm that:
+  - the intended change is present
+  - no unintended changes were introduced
+- verification must be explicitly stated in the response
+
 ## Change application rules
 - Do not make manual in-editor fixes as the primary integration path.
 - Every non-trivial change should be materialized as a reproducible repair step in:
