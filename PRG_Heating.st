@@ -26,6 +26,11 @@ VAR
     // Energy management
     L_ActiveCount : INT;
     L_DisableMask : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_ToDisable : INT;
+    L_ThermalLoad : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    L_TotalLoad : REAL;
+    L_CircuitIdx : INT;
+    L_ManifoldId : INT;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -97,22 +102,72 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 END_FOR;
 
+L_ToDisable := 0;
 IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_ActiveCount > GVL_CONFIG.G_Max_Active_Manifolds) THEN
-    // first pass: disable priority 1
+    L_ToDisable := L_ActiveCount - GVL_CONFIG.G_Max_Active_Manifolds;
+
+    // first pass: disable only as many priority 1 as needed
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF GVL_CONFIG.G_Manifold_Priority[L_i] = 1 THEN
+        IF (L_ToDisable > 0) AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 1) AND GVL_STATE.G_Manifold_Pumps[L_i] THEN
             L_DisableMask[L_i] := TRUE;
+            L_ToDisable := L_ToDisable - 1;
         END_IF;
     END_FOR;
 
-    // second pass if still too many
+    // second pass: disable only as many priority 2 as still needed
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF (L_ActiveCount > GVL_CONFIG.G_Max_Active_Manifolds) AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 2) THEN
+        IF (L_ToDisable > 0) AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 2) AND GVL_STATE.G_Manifold_Pumps[L_i] THEN
             L_DisableMask[L_i] := TRUE;
+            L_ToDisable := L_ToDisable - 1;
         END_IF;
     END_FOR;
 END_IF;
 // ==================================
+
+// ===== THERMAL BUDGET (Wave 4.2) =====
+L_TotalLoad := 0.0;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_ThermalLoad[L_i] := 0.0;
+END_FOR;
+
+FOR L_CircuitIdx := 1 TO 8 DO
+    L_ManifoldId := GVL_CONFIG.G_HMI_FloorHeating_Configs[L_CircuitIdx].manifold_id;
+    IF (L_ManifoldId >= 1) AND (L_ManifoldId <= GVL_CONSTANTS.C_MAX_MANIFOLDS) THEN
+        IF GVL_STATE.G_Manifold_Pumps[L_ManifoldId] THEN
+            L_ThermalLoad[L_ManifoldId] := L_ThermalLoad[L_ManifoldId] +
+                (GVL_CONFIG.G_HMI_FloorHeating_Configs[L_CircuitIdx].design_temp / 35.0);
+        END_IF;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_TotalLoad := L_TotalLoad + L_ThermalLoad[L_i];
+END_FOR;
+
+IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_TotalLoad > GVL_CONFIG.G_Max_Thermal_Budget) THEN
+    // first pass: priority 1 manifolds not already disabled
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF (L_TotalLoad > GVL_CONFIG.G_Max_Thermal_Budget)
+           AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 1)
+           AND GVL_STATE.G_Manifold_Pumps[L_i]
+           AND NOT L_DisableMask[L_i] THEN
+            L_DisableMask[L_i] := TRUE;
+            L_TotalLoad := L_TotalLoad - L_ThermalLoad[L_i];
+        END_IF;
+    END_FOR;
+
+    // second pass: priority 2 manifolds if still above budget
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF (L_TotalLoad > GVL_CONFIG.G_Max_Thermal_Budget)
+           AND (GVL_CONFIG.G_Manifold_Priority[L_i] = 2)
+           AND GVL_STATE.G_Manifold_Pumps[L_i]
+           AND NOT L_DisableMask[L_i] THEN
+            L_DisableMask[L_i] := TRUE;
+            L_TotalLoad := L_TotalLoad - L_ThermalLoad[L_i];
+        END_IF;
+    END_FOR;
+END_IF;
+// ====================================
 
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := 0;
