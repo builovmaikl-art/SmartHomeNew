@@ -117,7 +117,7 @@ fbDHWManager(
     VI_Config := GVL_CONFIG.G_DHW_Config,
     VI_Current_Day_Of_Week := GVL_STATUS.G_Current_Day,
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
-    VI_Reset_Errors := GVL_COMMAND.G_Reset_Errors,
+    VI_Reset_Errors := GVL_INTENT_USER.I_Reset_Errors,
     VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VO_Heating_Pump => GVL_STATE.G_DHW_Heating_Pump,
