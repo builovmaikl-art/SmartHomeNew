@@ -123,9 +123,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
 
+    ELSIF GVL_STATE.G_Safety_Freeze_Risk OR (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION) THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+        GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
+
     ELSIF L_SoftDegrade[L_i] THEN
         IF GVL_CONFIG.G_Manifold_Priority[L_i] >= 2 THEN
             GVL_STATE.G_Manifold_Pumps[L_i] := TRUE;
+            GVL_STATE.G_Manifold_Valves[L_i] := TRUE;
         ELSE
             GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
             GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
