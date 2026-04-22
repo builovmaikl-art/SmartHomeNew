@@ -20,4 +20,6 @@ VAR_GLOBAL
     G_Lock_1_Close : BOOL := FALSE;
     G_Lock_2_Open : BOOL := FALSE;
     G_Lock_2_Close : BOOL := FALSE;
+    G_Gate_Open : BOOL := FALSE;
+    G_Wicket_Open : BOOL := FALSE;
 END_VAR
