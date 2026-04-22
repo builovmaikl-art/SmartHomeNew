@@ -31,6 +31,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Snapshot runtime files from project root
+        run: |
+          mkdir -p "snapshots/2026-04-22"
+          find . -maxdepth 1 -type f \( -iname "*.st" -o -iname "*.gvl" -o -iname "*.dut" \) -exec cp {} "snapshots/2026-04-22/" \;
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -109,5 +114,6 @@ jobs:
           if [ -f "компилятор/out/RESULT_methods_clean.xml" ]; then
             git add "компилятор/out/RESULT_methods_clean.xml"
           fi
-          git diff --cached --quiet || git commit -m "ci: update logs and final methods-clean output"
+          git add "snapshots/2026-04-22" || true
+          git diff --cached --quiet || git commit -m "ci: update logs, final methods-clean output, and runtime snapshot"
           git push
