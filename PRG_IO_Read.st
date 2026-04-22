@@ -29,6 +29,8 @@ VAR
     fbCalib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF FB_Sensor_Calibration_Processor;
 
     // === SENSOR SAFETY PROCESSING ===
+    fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
+    fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
@@ -177,8 +179,34 @@ FOR L_i := 1 TO 8 DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    GVL_STATE.G_Manifold_Pressures[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Pressures[L_i]) / 10.0;
-    GVL_STATE.G_Manifold_Currents[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Currents[L_i]) / 100.0;
+    fbAnalog_Manifold_Pressure[L_i](
+        VI_Raw_Value := TO_WORD(GVL_IO.AI_Manifold_Pressures[L_i]),
+        VI_Sensor_Type := 2,
+        VI_Min_Scale := 0.0,
+        VI_Max_Scale := 10.0,
+        VI_Offset := 0.0,
+        VI_Multiplier := 1.0,
+        VI_Filter_Time_MS := GVL_CONSTANTS.C_MS_IN_SECOND,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Fallback_Mode := 0,
+        VI_Default_Value := GVL_STATE.G_Manifold_Pressures[L_i]
+    );
+    GVL_STATE.G_Manifold_Pressures[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Value;
+
+    fbAnalog_Manifold_Current[L_i](
+        VI_Raw_Value := TO_WORD(GVL_IO.AI_Manifold_Currents[L_i]),
+        VI_Sensor_Type := 2,
+        VI_Min_Scale := 0.0,
+        VI_Max_Scale := 25.0,
+        VI_Offset := 0.0,
+        VI_Multiplier := 0.1,
+        VI_Filter_Time_MS := GVL_CONSTANTS.C_MS_IN_SECOND,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Fallback_Mode := 0,
+        VI_Default_Value := GVL_STATE.G_Manifold_Currents[L_i]
+    );
+    GVL_STATE.G_Manifold_Currents[L_i] := fbAnalog_Manifold_Current[L_i].VO_Value;
+
     IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
         GVL_STATE.G_Manifold_T_Supply[L_i] := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue;
     END_IF;
