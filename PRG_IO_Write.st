@@ -53,15 +53,15 @@ GVL_IO.DO_Water_Valve_35_Close := GVL_COMMAND_SHADOW.G_Close_Valve_35;
 GVL_IO.DO_Water_Valve_36_Close := GVL_COMMAND_SHADOW.G_Close_Valve_36;
 GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
-// Access control (partial migration)
+// Access control (shadow)
 GVL_IO.DO_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
 GVL_IO.DO_Lock_1_Close := GVL_COMMAND_SHADOW.G_Lock_1_Close;
 GVL_IO.DO_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
 GVL_IO.DO_Lock_2_Close := GVL_COMMAND_SHADOW.G_Lock_2_Close;
 
-// Gate/Wicket — still legacy (not yet in arbitration)
-GVL_IO.DO_Gate_Open := GVL_COMMAND.G_Gate_Open;
-GVL_IO.DO_Wicket_Open := GVL_COMMAND.G_Wicket_Open;
+// Gate/Wicket — now via shadow
+GVL_IO.DO_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
+GVL_IO.DO_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
 
 // 2.9. Розетки
 GVL_IO.DO_Sockets := GVL_STATE.G_Socket_States;
