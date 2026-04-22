@@ -19,6 +19,7 @@ VAR
     fbFaultDebounce : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer;
     L_FaultCounter : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     L_FaultActiveStable : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Sensor_OOS_Latch : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -90,14 +91,7 @@ fbHeatingManager(
     VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
     VO_Manifold_Valves => GVL_STATE.G_Manifold_Valves,
     VO_Manifold_Pumps => GVL_STATE.G_Manifold_Pumps,
-    VO_Zone_Valves => L_Zone_Valves_8,
-    VO_Boiler_OT_Enable => GVL_STATE.G_Boiler_OT_Enable,
-    VO_Boiler_OT_Setpoint => GVL_STATE.G_Boiler_OT_Setpoint,
-    VO_Backup_Circulation_Pump => GVL_STATE.G_Backup_Circulation_Pump,
-    VO_Electric_Heater_Enable => GVL_STATE.G_Electric_Heater_Enable,
-    VO_Freeze_Risk_Status => GVL_STATE.G_Safety_Freeze_Risk,
-    VO_Status => GVL_STATUS.G_Manifold_Status,
-    VO_Boiler_Status => GVL_STATUS.G_Boiler_Status
+    VO_Zone_Valves => L_Zone_Valves_8
 );
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
@@ -119,15 +113,35 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         END_IF;
     END_IF;
 
+    // latch out-of-service if too many faults
+    IF L_FaultCounter[L_i] >= 5 THEN
+        L_Sensor_OOS_Latch[L_i] := TRUE;
+    END_IF;
+
+    // reset latch
+    IF GVL_INTENT_USER.I_Reset_Errors THEN
+        L_Sensor_OOS_Latch[L_i] := FALSE;
+        L_FaultCounter[L_i] := 0;
+    END_IF;
+
     fbRecovery[L_i](
-        IN := NOT L_FaultActiveStable[L_i],
+        IN := NOT L_FaultActiveStable[L_i] AND NOT L_Sensor_OOS_Latch[L_i],
         PT := T#10s,
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
     );
 
-    IF NOT fbRecovery[L_i].Q THEN
+    IF NOT fbRecovery[L_i].Q OR L_Sensor_OOS_Latch[L_i] THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
+    END_IF;
+
+    // publish diagnostics
+    GVL_STATUS.G_Diagnostics.Manifold_Sensor_Fault_Count[L_i] := L_FaultCounter[L_i];
+    GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service[L_i] := L_Sensor_OOS_Latch[L_i];
+
+    IF L_Sensor_OOS_Latch[L_i] AND NOT GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := TRUE;
+        GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := L_i;
     END_IF;
 
 END_FOR;
