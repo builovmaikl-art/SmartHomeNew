@@ -16,6 +16,9 @@ VAR
     L_Heating_DHW_Demand : BOOL;
 
     fbRecovery : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer;
+    fbFaultDebounce : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer;
+    L_FaultCounter : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    L_FaultActiveStable : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -99,12 +102,25 @@ fbHeatingManager(
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 
-    fbRecovery[L_i](
-        IN := NOT (
+    fbFaultDebounce[L_i](
+        IN := (
             GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] OR
             GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] OR
             GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault[L_i]
         ),
+        PT := T#3s,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+    );
+    L_FaultActiveStable[L_i] := fbFaultDebounce[L_i].Q;
+
+    IF L_FaultActiveStable[L_i] THEN
+        IF L_FaultCounter[L_i] < 32767 THEN
+            L_FaultCounter[L_i] := L_FaultCounter[L_i] + 1;
+        END_IF;
+    END_IF;
+
+    fbRecovery[L_i](
+        IN := NOT L_FaultActiveStable[L_i],
         PT := T#10s,
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
     );
