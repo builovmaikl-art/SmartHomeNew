@@ -1,0 +1,2 @@
+Snapshot date: 2026-04-22
+Architecture: FINAL (intent-driven)
