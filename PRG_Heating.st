@@ -19,6 +19,7 @@ VAR
     fbFaultDebounce : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer;
     L_FaultCounter : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     L_FaultActiveStable : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_FaultActiveStablePrev : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Sensor_OOS_Latch : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_SoftDegrade : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
@@ -96,11 +97,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     );
     L_FaultActiveStable[L_i] := fbFaultDebounce[L_i].Q;
 
-    IF L_FaultActiveStable[L_i] THEN
+    // EDGE-BASED COUNTER
+    IF L_FaultActiveStable[L_i] AND NOT L_FaultActiveStablePrev[L_i] THEN
         IF L_FaultCounter[L_i] < 32767 THEN
             L_FaultCounter[L_i] := L_FaultCounter[L_i] + 1;
         END_IF;
     END_IF;
+    L_FaultActiveStablePrev[L_i] := L_FaultActiveStable[L_i];
 
     IF L_FaultCounter[L_i] >= 5 THEN
         L_Sensor_OOS_Latch[L_i] := TRUE;
