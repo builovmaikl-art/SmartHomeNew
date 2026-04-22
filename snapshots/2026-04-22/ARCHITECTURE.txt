@@ -1,0 +1,16 @@
+Pipeline:
+User / Gateway
+    ↓
+GVL_INTENT_USER
+    ↓
+PRG_Command_Arbitration
+    ↓
+GVL_COMMAND_SHADOW
+    ↓
+PRG_IO_Write → IO
+
+Safety:
+Sensors → PRG_Safety → GVL_INTENT_SAFETY
+
+System:
+PRG_System → GVL_INTENT_SYSTEM
