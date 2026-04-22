@@ -74,6 +74,7 @@ VAR_GLOBAL
     G_Pump_Exercise_Duration_MS : UDINT := 30000; // 30 сек
     G_Manifold_Pump_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL := [TRUE, TRUE, TRUE, TRUE, TRUE];
     G_Manifold_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT := [3, 3, 2, 2, 1]; // 3=high, 2=normal, 1=low
+    G_Max_Active_Manifolds : INT := 3; // energy-management limit for simultaneous active manifolds
     G_DHW_Heating_Pump_In_Service : BOOL := TRUE;
     G_DHW_Circ_Pump_In_Service : BOOL := TRUE;
     G_Water_Valve_Exercise_Enabled : BOOL := TRUE;
