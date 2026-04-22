@@ -118,7 +118,15 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
     IF GVL_IO.AI_Supply_Temps[L_i].wStatus = 0 THEN
-        GVL_STATE.G_Supply_Temps[L_i] := GVL_IO.AI_Supply_Temps[L_i].rValue;
+        IF GVL_CONFIG.G_Enable_Sensor_Calibration THEN
+            fbCalib_Manifold_T_Supply[L_i](
+                VI_Raw_Value := GVL_IO.AI_Supply_Temps[L_i].rValue,
+                VI_Record := GVL_CONFIG.G_Calib_Supply_Temps[L_i]
+            );
+            GVL_STATE.G_Supply_Temps[L_i] := fbCalib_Manifold_T_Supply[L_i].VO_Calibrated_Value;
+        ELSE
+            GVL_STATE.G_Supply_Temps[L_i] := GVL_IO.AI_Supply_Temps[L_i].rValue;
+        END_IF;
     END_IF;
 END_FOR;
 
