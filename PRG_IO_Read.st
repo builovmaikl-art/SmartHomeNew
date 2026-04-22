@@ -27,6 +27,9 @@ VAR
 
     fbCalib_Methane : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF FB_Sensor_Calibration_Processor;
     fbCalib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF FB_Sensor_Calibration_Processor;
+
+    // === SENSOR SAFETY PROCESSING ===
+    fbAnalog_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
 // 0. КОНТРОЛЬ СВЯЗИ С МОДУЛЯМИ ВВОДА-ВЫВОДА (Watchdog)
@@ -179,7 +182,19 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
         GVL_STATE.G_Manifold_T_Supply[L_i] := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue;
     END_IF;
-    GVL_STATE.G_Manifold_T_Return[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Temps_Return[L_i]) / 10.0;
+    fbAnalog_Manifold_T_Return[L_i](
+        VI_Raw_Value := TO_WORD(GVL_IO.AI_Manifold_Temps_Return[L_i]),
+        VI_Sensor_Type := 2,
+        VI_Min_Scale := -50.0,
+        VI_Max_Scale := 150.0,
+        VI_Offset := 0.0,
+        VI_Multiplier := 1.0,
+        VI_Filter_Time_MS := GVL_CONSTANTS.C_MS_IN_SECOND,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Fallback_Mode := 0,
+        VI_Default_Value := GVL_STATE.G_Manifold_T_Return[L_i]
+    );
+    GVL_STATE.G_Manifold_T_Return[L_i] := fbAnalog_Manifold_T_Return[L_i].VO_Value;
     GVL_STATE.G_Manifold_End_Switches[L_i] := GVL_IO.DI_Manifold_End_Switches[L_i];
 END_FOR;
 
