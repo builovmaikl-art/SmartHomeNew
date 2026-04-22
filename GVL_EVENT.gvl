@@ -1,5 +1,0 @@
-VAR_GLOBAL
-    G_Event_Log : ARRAY[0..63] OF ST_EVENT;
-    G_Event_Head : UINT;
-    G_Event_ID_Counter : UDINT;
-END_VAR
