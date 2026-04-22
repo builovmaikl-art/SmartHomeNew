@@ -512,7 +512,6 @@ GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req;
 GVL_INTENT_USER.I_PIN_Code := GVL_COMMAND.G_PIN_Code;
 GVL_INTENT_USER.I_RFID_Tag := GVL_COMMAND.G_RFID_Tag;
 GVL_INTENT_USER.I_2FA_Code_In := GVL_COMMAND.G_2FA_Code_In;  
-GVL_INTENT_USER.I_Scenario_Request := L_Scenario_Req_Gateway;
 GVL_INTENT_USER.I_Lighting_Override_32 := GVL_COMMAND.G_Lighting_Override;
 GVL_INTENT_USER.I_Blinds_Override_32 := GVL_COMMAND.G_Blinds_Override;
 GVL_INTENT_USER.I_Socket_Override_32 := GVL_COMMAND.G_Socket_Override;
@@ -525,7 +524,6 @@ GVL_INTENT_USER.I_Target_Vent_Speed := fbGateway.VO_Target_Vent_Speed;
 GVL_INTENT_USER.I_Set_Config_Req := fbGateway.VO_Set_Config_Req;
 GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req;
 GVL_INTENT_USER.I_New_Time_MS := fbGateway.VO_New_Time_MS;
-
 
 IF L_Gateway_Writes_Allowed AND
    fbGateway.VO_Set_Scenario_Req AND
@@ -557,6 +555,26 @@ IF L_Gateway_Writes_Allowed AND
    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
     GVL_STATUS.G_Time_Of_Day_MS := fbGateway.VO_New_Time_MS;
 END_IF;
+
+// === STAGE I2b: FINAL USER INTENT PUBLICATION ===
+GVL_INTENT_USER.I_Scenario_Request := L_Scenario_Req_Gateway;
+GVL_INTENT_USER.I_Gate_Open_Request := GVL_COMMAND.G_Gate_Open;
+GVL_INTENT_USER.I_Wicket_Open_Request := GVL_COMMAND.G_Wicket_Open;
+GVL_INTENT_USER.I_Lock_1_Open_Request := GVL_COMMAND.G_Lock_1_Open;
+GVL_INTENT_USER.I_Lock_1_Close_Request := GVL_COMMAND.G_Lock_1_Close;
+GVL_INTENT_USER.I_Lock_2_Open_Request := GVL_COMMAND.G_Lock_2_Open;
+GVL_INTENT_USER.I_Lock_2_Close_Request := GVL_COMMAND.G_Lock_2_Close;
+GVL_INTENT_USER.I_Dangerous_Action_Request := GVL_COMMAND.CMD_Dangerous_Action_Request;
+GVL_INTENT_USER.I_Dangerous_Action_Confirm := GVL_COMMAND.CMD_Dangerous_Action_Confirm;
+GVL_INTENT_USER.I_User_Access_Level := GVL_COMMAND.CMD_User_Access_Level;
+GVL_INTENT_USER.I_Water_Valve_Test_Open := GVL_COMMAND.CMD_Water_Valve_Test_Open;
+GVL_INTENT_USER.I_Water_Valve_Test_Close := GVL_COMMAND.CMD_Water_Valve_Test_Close;
+GVL_INTENT_USER.I_Water_Valve_Test_Confirm := GVL_COMMAND.CMD_Water_Valve_Test_Confirm;
+GVL_INTENT_USER.I_Gas_Valve_Test_Open := GVL_COMMAND.CMD_Gas_Valve_Test_Open;
+GVL_INTENT_USER.I_Gas_Valve_Test_Close := GVL_COMMAND.CMD_Gas_Valve_Test_Close;
+GVL_INTENT_USER.I_Gas_Valve_Test_Confirm := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm;
+GVL_INTENT_USER.I_Water_Selective_Recover := GVL_COMMAND.CMD_Water_Selective_Recover;
+GVL_INTENT_USER.I_Gas_Selective_Recover := GVL_COMMAND.CMD_Gas_Selective_Recover;
 
 // === SCENARIO REQUEST VALIDATION ===
 // Normalize invalid values to NONE to avoid corrupt inputs.
