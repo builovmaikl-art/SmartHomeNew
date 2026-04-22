@@ -84,6 +84,9 @@ fbHeatingManager(
     VO_Zone_Valves => L_Zone_Valves_8
 );
 
+GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := FALSE;
+GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := 0;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 
     fbFaultDebounce[L_i](
