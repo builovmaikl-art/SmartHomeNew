@@ -38,7 +38,7 @@ If there is a conflict between documents:
 
 ## Verification Modes
 
-The repository supports two verification modes depending on environment constraints.
+The repository supports three verification modes depending on environment constraints.
 
 ### 1. Full Verification Mode (default)
 
@@ -76,19 +76,39 @@ Rules:
 - repository state is considered unmodified unless proven otherwise
 - transition to Full Verification Mode is mandatory for final confirmation
 
+### 3. Direct Repository Modification Mode (assistant-operated)
+
+Used when the assistant can directly modify repository files through an available repository tool.
+
+Allowed:
+- direct repository updates performed by the assistant
+- immediate verification against resulting repository files
+- GitHub-visible commit / file-state confirmation
+
+Restrictions:
+- use only for documentation, workflow, metadata, and other low-runtime-risk repository changes unless broader use is explicitly approved
+- must not be described as terminal-executed verification
+- must not fabricate execution logs or runtime confirmation
+
+Rules:
+- the resulting repository state is real once the repository mutation succeeds
+- verification must explicitly state that confirmation was performed against repository file state, not terminal execution
+- if a change affects runtime behavior, safety logic, build process, or deployment semantics, Full Verification Mode remains preferred
+
 ## Change application rules
 - Do not make manual in-editor fixes as the primary integration path.
-- Every non-trivial change must be materialized as a reproducible repair step in:
+- Every non-trivial change should be materialized as a reproducible repair step in:
   - `steps/<date>_<context>/<nn>_<name>.py`
-- Each repair step must be:
+- Each repair step should be:
   - deterministic
   - idempotent
   - minimally invasive
   - scoped to a single responsibility
-- A change is considered real only after:
+- For runtime-affecting repository changes, a change is considered engineering-confirmed only after:
   1. repair execution
   2. `git diff`
   3. verification of the resulting repository state
+- For direct assistant-operated repository mutations explicitly allowed by the workflow, the resulting file state is real after successful repository update, but runtime confirmation is still separate if applicable.
 
 ## Consistency and failure rules
 - If a repair script fails, the repository must be treated as being in an inconsistent intermediate state until verified otherwise.
@@ -99,13 +119,13 @@ Rules:
 
 ## Pre-step checklist
 Before any next repair / change step:
-1. inspect current `git diff`
+1. inspect current repository state
 2. inspect current execution errors, if any
 3. confirm repository consistency
 4. define one concrete target problem
-5. prepare exactly one deterministic repair step for that problem
-6. execute repair
-7. inspect resulting `git diff`
+5. choose the correct application mode
+6. apply one scoped change
+7. inspect resulting repository state
 8. verify no unintended side effects
 
 ## Documentation and result preservation
@@ -117,4 +137,4 @@ Before any next repair / change step:
 ## New chat / new session bootstrap prompt
 Recommended opening instruction for any new assistant session:
 
-"Read `docs/MASTER_GUIDE.md` first, then follow the repository workflow described there and in `docs/WORKFLOW.md`. Use `docs/CHANGELOG_WORK.md`, `docs/ARCHITECTURE_NOTES.md`, `docs/EQUIPMENT_DECISIONS.md`, and `docs/IO_MAPPING_CONCEPT.md` as supporting project memory. Work only from the current repository state, apply changes through deterministic repair steps, and verify every step by `git diff` and execution logs before continuing."
+"Read `docs/MASTER_GUIDE.md` first, then follow the repository workflow described there and in `docs/WORKFLOW.md`. Use `docs/CHANGELOG_WORK.md`, `docs/ARCHITECTURE_NOTES.md`, `docs/EQUIPMENT_DECISIONS.md`, and `docs/IO_MAPPING_CONCEPT.md` as supporting project memory. Work only from the current repository state, choose the correct verification and application mode, and verify every step against actual repository evidence before continuing."
