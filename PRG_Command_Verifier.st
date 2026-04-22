@@ -53,6 +53,15 @@ IF GVL_COMMAND.G_Lock_2_Close <> GVL_COMMAND_SHADOW.G_Lock_2_Close THEN
     L_Mismatch_Count := L_Mismatch_Count + 1;
 END_IF;
 
+// NEW: gate/wicket verification
+IF GVL_COMMAND.G_Gate_Open <> GVL_COMMAND_SHADOW.G_Gate_Open THEN
+    L_Mismatch_Count := L_Mismatch_Count + 1;
+END_IF;
+
+IF GVL_COMMAND.G_Wicket_Open <> GVL_COMMAND_SHADOW.G_Wicket_Open THEN
+    L_Mismatch_Count := L_Mismatch_Count + 1;
+END_IF;
+
 GVL_COMMAND_VERIFY.Command_Mismatch_Count := L_Mismatch_Count;
 GVL_COMMAND_VERIFY.Command_Match_OK := (L_Mismatch_Count = 0);
 
