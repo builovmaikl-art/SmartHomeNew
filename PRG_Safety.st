@@ -26,23 +26,23 @@ VAR
 END_VAR
 
 // Edge detection (inputs only)
-L_CMD_Water_Selective_Recover_Edge := GVL_COMMAND.CMD_Water_Selective_Recover AND NOT L_CMD_Water_Selective_Recover_Prev;
-L_CMD_Gas_Selective_Recover_Edge := GVL_COMMAND.CMD_Gas_Selective_Recover AND NOT L_CMD_Gas_Selective_Recover_Prev;
-L_CMD_Water_Valve_Test_Open_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Open AND NOT L_CMD_Water_Valve_Test_Open_Prev;
-L_CMD_Water_Valve_Test_Close_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Close AND NOT L_CMD_Water_Valve_Test_Close_Prev;
-L_CMD_Water_Valve_Test_Confirm_Edge := GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND NOT L_CMD_Water_Valve_Test_Confirm_Prev;
-L_CMD_Gas_Valve_Test_Open_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Open AND NOT L_CMD_Gas_Valve_Test_Open_Prev;
-L_CMD_Gas_Valve_Test_Close_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Close AND NOT L_CMD_Gas_Valve_Test_Close_Prev;
-L_CMD_Gas_Valve_Test_Confirm_Edge := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND NOT L_CMD_Gas_Valve_Test_Confirm_Prev;
+L_CMD_Water_Selective_Recover_Edge := GVL_INTENT_USER.I_Water_Selective_Recover AND NOT L_CMD_Water_Selective_Recover_Prev;
+L_CMD_Gas_Selective_Recover_Edge := GVL_INTENT_USER.I_Gas_Selective_Recover AND NOT L_CMD_Gas_Selective_Recover_Prev;
+L_CMD_Water_Valve_Test_Open_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Open AND NOT L_CMD_Water_Valve_Test_Open_Prev;
+L_CMD_Water_Valve_Test_Close_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Close AND NOT L_CMD_Water_Valve_Test_Close_Prev;
+L_CMD_Water_Valve_Test_Confirm_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Confirm AND NOT L_CMD_Water_Valve_Test_Confirm_Prev;
+L_CMD_Gas_Valve_Test_Open_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Open AND NOT L_CMD_Gas_Valve_Test_Open_Prev;
+L_CMD_Gas_Valve_Test_Close_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Close AND NOT L_CMD_Gas_Valve_Test_Close_Prev;
+L_CMD_Gas_Valve_Test_Confirm_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm AND NOT L_CMD_Gas_Valve_Test_Confirm_Prev;
 
-L_CMD_Water_Selective_Recover_Prev := GVL_COMMAND.CMD_Water_Selective_Recover;
-L_CMD_Gas_Selective_Recover_Prev := GVL_COMMAND.CMD_Gas_Selective_Recover;
-L_CMD_Water_Valve_Test_Open_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Open;
-L_CMD_Water_Valve_Test_Close_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Close;
-L_CMD_Water_Valve_Test_Confirm_Prev := GVL_COMMAND.CMD_Water_Valve_Test_Confirm;
-L_CMD_Gas_Valve_Test_Open_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Open;
-L_CMD_Gas_Valve_Test_Close_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Close;
-L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_COMMAND.CMD_Gas_Valve_Test_Confirm;
+L_CMD_Water_Selective_Recover_Prev := GVL_INTENT_USER.I_Water_Selective_Recover;
+L_CMD_Gas_Selective_Recover_Prev := GVL_INTENT_USER.I_Gas_Selective_Recover;
+L_CMD_Water_Valve_Test_Open_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Open;
+L_CMD_Water_Valve_Test_Close_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Close;
+L_CMD_Water_Valve_Test_Confirm_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Confirm;
+L_CMD_Gas_Valve_Test_Open_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Open;
+L_CMD_Gas_Valve_Test_Close_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Close;
+L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm;
 
 // Intent reset
 GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
