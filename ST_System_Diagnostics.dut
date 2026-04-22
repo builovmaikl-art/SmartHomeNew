@@ -106,6 +106,18 @@ STRUCT
     IO_Offline : BOOL;
     Subsystem_Degraded : BOOL;
 
+    Manifold_Pressure_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Pressure_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Pressure_Fault_Active : BOOL;
+    Manifold_Pressure_First_Fault_Index : INT;
+    Manifold_Pressure_Fault_Text : STRING(160);
+
+    Manifold_Current_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Current_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Current_Fault_Active : BOOL;
+    Manifold_Current_First_Fault_Index : INT;
+    Manifold_Current_Fault_Text : STRING(160);
+
     Manifold_Return_Temp_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     Manifold_Return_Temp_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
     Manifold_Return_Temp_Fault_Active : BOOL;
