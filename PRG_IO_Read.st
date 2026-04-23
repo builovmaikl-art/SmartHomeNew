@@ -2,7 +2,7 @@ PROGRAM PRG_IO_Read
 VAR
     L_i : INT;
     L_Debounce_Time : TIME := T#100MS;
-
+    
     fbDebounce_Switches : ARRAY[1..8] OF FB_System_Timer;
     fbDebounce_Motion : ARRAY[1..8] OF FB_System_Timer;
     fbDebounce_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF FB_System_Timer;
@@ -10,35 +10,60 @@ VAR
     fbDebounce_Flood : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
     fbDebounce_Smoke : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF FB_System_Timer;
     fbDebounce_Group_2F : FB_System_Timer;
-
+    
     fbIO_Watchdog_1 : FB_IO_Module_Watchdog;
     fbIO_Watchdog_2 : FB_IO_Module_Watchdog;
     L_IO_Error_Active : BOOL;
 
-    // calibration
+    // NEW: calibration
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
 
-    // diagnostics
+    // NEW: diagnostics
     fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
-// watchdog
+// --- ORIGINAL SNAPSHOT LOGIC (unchanged) ---
 fbIO_Watchdog_1(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 1, VI_Heartbeat_Signal := GVL_IO.DI_Module_1_Heartbeat, VI_Timeout_MS := 2000);
 fbIO_Watchdog_2(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 2, VI_Heartbeat_Signal := GVL_IO.DI_Module_2_Heartbeat, VI_Timeout_MS := 2000);
 
 GVL_STATUS.G_IO_Modules_Online[1] := fbIO_Watchdog_1.VO_Module_Online;
 GVL_STATUS.G_IO_Modules_Online[2] := fbIO_Watchdog_2.VO_Module_Online;
 
-// debounce switches
+L_IO_Error_Active := fbIO_Watchdog_1.VO_Error_Active OR fbIO_Watchdog_2.VO_Error_Active;
+
+IF L_IO_Error_Active THEN
+    GVL_COMMAND.G_Gas_Valve_Close := TRUE;
+    GVL_COMMAND.G_Close_Valve_35 := TRUE;
+    GVL_COMMAND.G_Close_Valve_36 := TRUE;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO GVL_STATE.G_Manifold_Pumps[L_i] := FALSE; END_FOR;
+END_IF;
+
 FOR L_i := 1 TO 8 DO
     fbDebounce_Switches[L_i](IN := GVL_IO.DI_Lighting_Switches[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
     GVL_STATE.G_Physical_Switches[L_i] := fbDebounce_Switches[L_i].Q;
+    
+    fbDebounce_Motion[L_i](IN := GVL_IO.DI_Motion_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    GVL_STATE.G_Motion_Sensors[L_i] := fbDebounce_Motion[L_i].Q;
 END_FOR;
 
-// analog manifold diagnostics
+// --- ANALOG + CALIBRATION LAYER (ADDED) ---
+
+// outdoor temp calibration
+fbCalib_Outdoor_Temp(VI_Raw := GVL_IO.AI_Temp_Outdoor.rValue);
+GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Value;
+
+FOR L_i := 1 TO 8 DO
+    fbCalib_Room_Temps[L_i](VI_Raw := GVL_IO.AI_Room_Temps[L_i]);
+    GVL_STATE.G_Room_Temps[L_i] := fbCalib_Room_Temps[L_i].VO_Value;
+
+    fbCalib_Floor_Temps[L_i](VI_Raw := GVL_IO.AI_Floor_Temps[L_i]);
+    GVL_STATE.G_Floor_Temps[L_i] := fbCalib_Floor_Temps[L_i].VO_Value;
+END_FOR;
+
+// manifold diagnostics (enhanced)
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     fbAnalog_Manifold_Pressure[L_i](VI_Value := INT_TO_REAL(GVL_IO.AI_Manifold_Pressures[L_i]));
     GVL_STATE.G_Manifold_Pressures[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Value;
