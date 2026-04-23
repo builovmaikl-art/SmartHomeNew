@@ -252,3 +252,16 @@
 
 #### Выбранный следующий шаг
 - оформить `20_HEATING_POST_REGROUP_POLISH_PLAN.md` и перейти к локальной полировке уже секционированного `PRG_Heating.st` без изменения архитектурных границ.
+
+---
+
+### Heating post-regroup polish plan
+Оформлен документ `20_HEATING_POST_REGROUP_POLISH_PLAN.md`.
+
+#### Подтверждено
+- следующим шагом должна стать локальная полировка уже секционированного `PRG_Heating.st`, а не новый architectural redesign;
+- polish-этап ограничен комментариями, naming, компактностью секций и удалением остаточного migration-шuma;
+- ownership, logic, interfaces, helper-layer и call order на этом этапе трогать нельзя.
+
+#### Выбранный следующий шаг
+- оформить `21_HEATING_POST_REGROUP_POLISH_EXECUTION_PLAN.md` и перевести polish-план в конкретный исполнительный порядок.
