@@ -3,7 +3,7 @@ VAR
     L_i : INT;
 END_VAR
 
-// RESET
+// Reset shadow operational commands before each arbitration cycle
 GVL_COMMAND_SHADOW.G_Gas_Valve_Close := FALSE;
 GVL_COMMAND_SHADOW.G_Boiler_Stop := FALSE;
 GVL_COMMAND_SHADOW.G_Supply_100_Req := FALSE;
@@ -22,7 +22,7 @@ GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
 GVL_COMMAND_SHADOW.G_Gate_Open := FALSE;
 GVL_COMMAND_SHADOW.G_Wicket_Open := FALSE;
 
-// USER PASS-THROUGH
+// User intent pass-through into the shadow operational layer
 GVL_COMMAND_SHADOW.G_Gate_Open := GVL_INTENT_USER.I_Gate_Open_Request;
 GVL_COMMAND_SHADOW.G_Wicket_Open := GVL_INTENT_USER.I_Wicket_Open_Request;
 GVL_COMMAND_SHADOW.G_Lock_1_Open := GVL_INTENT_USER.I_Lock_1_Open_Request;
@@ -30,7 +30,7 @@ GVL_COMMAND_SHADOW.G_Lock_1_Close := GVL_INTENT_USER.I_Lock_1_Close_Request;
 GVL_COMMAND_SHADOW.G_Lock_2_Open := GVL_INTENT_USER.I_Lock_2_Open_Request;
 GVL_COMMAND_SHADOW.G_Lock_2_Close := GVL_INTENT_USER.I_Lock_2_Close_Request;
 
-// SAFETY
+// Safety and system arbitration into the shadow operational layer
 IF GVL_INTENT_SAFETY.I_Fire_Alarm_Active THEN
     GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
