@@ -16,6 +16,10 @@ VAR
     L_Heating_DHW_Demand : BOOL;
 END_VAR
 
+// ============================================================
+// S1. INPUTS / LOCAL ARBITRATION CONTEXT
+// ============================================================
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     L_Boiler_Modulation_REAL[L_i] := TO_REAL(GVL_IO.AI_Boiler_Modulation[L_i]);
 END_FOR;
@@ -61,6 +65,10 @@ CASE L_Last_Mode OF
     ELSE
         GVL_STATE.G_Target_Temperature := 20.0;
 END_CASE;
+
+// ============================================================
+// S2. HEATING / DHW ORCHESTRATION CALLS
+// ============================================================
 
 // 9. Управление климатом (Отопление)
 fbHeatingManager(
@@ -125,15 +133,49 @@ fbDHWManager(
     VO_Status => GVL_STATUS.G_DHW_Status
 );
 
-// Integrated freeze-hardware diagnostics and maintenance gating
+// ============================================================
+// S3. DIAGNOSTICS PROJECTION
+// ============================================================
+
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
+END_FOR;
+
+GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
+GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
+
+// ============================================================
+// S4. MAINTENANCE GATING
+// ============================================================
+
 IF NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service THEN
     GVL_STATE.G_Backup_Circulation_Pump := FALSE;
 END_IF;
+
 IF NOT GVL_CONFIG.G_Electric_Heater_In_Service THEN
     GVL_STATE.G_Electric_Heater_Enable := FALSE;
 END_IF;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+    END_IF;
+END_FOR;
+
+IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Heating_Pump := FALSE;
+END_IF;
+
+IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Circ_Pump := FALSE;
+END_IF;
+
+// ============================================================
+// S5. FREEZE HARDWARE SUPPORT LOGIC
+// ============================================================
 
 GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
 GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
@@ -144,24 +186,12 @@ IF GVL_STATE.G_Freeze_Hardware_Failed THEN
     GVL_STATE.G_Safety_Freeze_Risk := TRUE;
 END_IF;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
-    IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
-        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
-    END_IF;
-END_FOR;
-GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
-IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
-    GVL_STATE.G_DHW_Heating_Pump := FALSE;
-END_IF;
-GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
-IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
-    GVL_STATE.G_DHW_Circ_Pump := FALSE;
-END_IF;
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
 
+// ============================================================
+// S6. ADAPTER COPY-OUT
+// ============================================================
 
-// HEATING ADAPTER COPY OUT
 FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves_8[L_i];
 END_FOR;
