@@ -25,7 +25,10 @@ VAR
     L_Gas_Test_Deadline : UDINT;
 END_VAR
 
-// Edge detection (inputs only)
+// ========================================
+// SAFETY_WORKFLOW_INPUT_NORMALIZATION
+// ========================================
+// Edge detection for operator/test/recover workflow inputs.
 L_CMD_Water_Selective_Recover_Edge := GVL_INTENT_USER.I_Water_Selective_Recover AND NOT L_CMD_Water_Selective_Recover_Prev;
 L_CMD_Gas_Selective_Recover_Edge := GVL_INTENT_USER.I_Gas_Selective_Recover AND NOT L_CMD_Gas_Selective_Recover_Prev;
 L_CMD_Water_Valve_Test_Open_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Open AND NOT L_CMD_Water_Valve_Test_Open_Prev;
@@ -44,7 +47,9 @@ L_CMD_Gas_Valve_Test_Open_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Open;
 L_CMD_Gas_Valve_Test_Close_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Close;
 L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm;
 
-// Intent reset
+// ========================================
+// SAFETY_INTENT_RESET_INIT
+// ========================================
 GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
 GVL_INTENT_SAFETY.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := FALSE;
@@ -69,7 +74,9 @@ GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
 
-// FBs (detection only)
+// ========================================
+// SAFETY_DETECTORS_AND_HEALTH_PROJECTION
+// ========================================
 fbWaterLeakageManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -98,7 +105,9 @@ GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
 
-// Core safety -> intent only
+// ========================================
+// SAFETY_CORE_HAZARD_INTERLOCK_PROJECTION
+// ========================================
 IF GVL_STATE.G_Safety_Smoke_Latched THEN
     GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
     GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := TRUE;
@@ -126,7 +135,10 @@ IF GVL_STATE.G_Safety_Leak_Latched THEN
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
 END_IF;
 
-// Test/Operator flows -> intent only
+// ========================================
+// SAFETY_WORKFLOW_CLUSTER
+// ========================================
+// Operator/test/recover workflow state and timeout-driven intent effects.
 IF L_CMD_Water_Valve_Test_Open_Edge THEN
     L_Water_Test_Active := TRUE;
     L_Water_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
@@ -151,7 +163,9 @@ IF L_Gas_Test_Active THEN
     END_IF;
 END_IF;
 
-// Freeze
+// ========================================
+// SAFETY_RESIDUAL_NON_WORKFLOW_PROJECTION
+// ========================================
 IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
     GVL_INTENT_SAFETY.I_Freeze_Protection_Required := TRUE;
 END_IF;
