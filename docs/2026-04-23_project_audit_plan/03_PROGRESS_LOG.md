@@ -185,3 +185,16 @@
 
 #### Выбранный следующий шаг
 - оформить `15_HEATING_DIAGNOSTICS_GATING_BOUNDARY_DECISION.md` и решить, ограничиваемся ли перегруппировкой внутри `PRG_Heating` или уже выносим diagnostics/gating в отдельный helper-layer.
+
+---
+
+### Heating diagnostics/gating boundary decision
+Оформлен документ `15_HEATING_DIAGNOSTICS_GATING_BOUNDARY_DECISION.md`.
+
+#### Подтверждено
+- на ближайшем cleanup-этапе принято решение не вводить новый helper-layer сразу;
+- первым шагом должна стать жесткая внутренняя перегруппировка diagnostics/gating cluster внутри текущего `PRG_Heating.st`;
+- вопрос о физическом выносе в отдельный helper-layer отложен до момента, когда внутренние границы в `PRG_Heating` станут явными и устойчивыми.
+
+#### Выбранный следующий шаг
+- оформить `16_HEATING_DIAGNOSTICS_GATING_REGROUP_PLAN.md` и разложить конкретные внутренние секции будущей перегруппировки `PRG_Heating.st`.
