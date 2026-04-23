@@ -306,3 +306,16 @@
 
 #### Выбранный следующий шаг
 - оформить `24_COMMAND_LAYER_AUDIT_PLAN.md` и открыть следующий цикл аудита по command-layer migration.
+
+---
+
+### Command-layer audit plan
+Оформлен документ `24_COMMAND_LAYER_AUDIT_PLAN.md`.
+
+#### Подтверждено
+- после heating wave следующим активным циклом аудита формально открыт command-layer migration audit;
+- область следующего цикла зафиксирована вокруг `PRG_Command_Arbitration`, `PRG_Command_Verifier`, `GVL_COMMAND`, `GVL_COMMAND_SHADOW` и связанных downstream consumers;
+- command-layer выбран как следующий scope первого приоритета из-за максимальной cross-cutting важности и риска незавершенной migration semantics.
+
+#### Выбранный следующий шаг
+- оформить `25_COMMAND_LAYER_LIVE_OWNERSHIP_AUDIT.md` и начать этап C-A1: live command-chain сверху вниз.
