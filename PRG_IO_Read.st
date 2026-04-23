@@ -15,17 +15,16 @@ VAR
     fbIO_Watchdog_2 : FB_IO_Module_Watchdog;
     L_IO_Error_Active : BOOL;
 
-    // NEW: calibration
+    // added
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
 
-    // NEW: diagnostics
     fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
-// --- ORIGINAL SNAPSHOT LOGIC (unchanged) ---
+// ===== ORIGINAL SNAPSHOT (FULL) =====
 fbIO_Watchdog_1(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 1, VI_Heartbeat_Signal := GVL_IO.DI_Module_1_Heartbeat, VI_Timeout_MS := 2000);
 fbIO_Watchdog_2(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 2, VI_Heartbeat_Signal := GVL_IO.DI_Module_2_Heartbeat, VI_Timeout_MS := 2000);
 
@@ -49,9 +48,44 @@ FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Motion_Sensors[L_i] := fbDebounce_Motion[L_i].Q;
 END_FOR;
 
-// --- ANALOG + CALIBRATION LAYER (ADDED) ---
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    GVL_STATE.G_Socket_Switches[L_i] := FALSE;
+END_FOR;
 
-// outdoor temp calibration
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SECURITY_SENSORS DO
+    fbDebounce_Security_Open[L_i](IN := GVL_IO.DI_Security_Open[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    fbDebounce_Security_Glass[L_i](IN := GVL_IO.DI_Security_Glass[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+END_FOR;
+
+fbDebounce_Group_2F(IN := GVL_IO.DI_Security_2F_Group, PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+    IF GVL_CONFIG.G_Door_Map[L_i] > 0 AND GVL_CONFIG.G_Door_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+        GVL_STATE.G_Door_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Door_Map[L_i]].Q;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO 8 DO
+    IF GVL_CONFIG.G_Window_Map[L_i] > 0 THEN
+        IF GVL_CONFIG.G_Window_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Window_Map[L_i]].Q;
+        ELSE
+            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[GVL_CONFIG.G_Window_Map[L_i] - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS].Q;
+        END_IF;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    fbDebounce_Flood[L_i](IN := GVL_IO.DI_Flood_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    GVL_STATE.G_Water_Sensors[L_i] := fbDebounce_Flood[L_i].Q;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+    fbDebounce_Smoke[L_i](IN := GVL_IO.DI_Smoke_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
+    GVL_STATE.G_Smoke_Sensors[L_i] := fbDebounce_Smoke[L_i].Q;
+END_FOR;
+
+// ===== ENHANCED LAYER =====
 fbCalib_Outdoor_Temp(VI_Raw := GVL_IO.AI_Temp_Outdoor.rValue);
 GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Value;
 
@@ -63,7 +97,6 @@ FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Floor_Temps[L_i] := fbCalib_Floor_Temps[L_i].VO_Value;
 END_FOR;
 
-// manifold diagnostics (enhanced)
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     fbAnalog_Manifold_Pressure[L_i](VI_Value := INT_TO_REAL(GVL_IO.AI_Manifold_Pressures[L_i]));
     GVL_STATE.G_Manifold_Pressures[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Value;
