@@ -158,4 +158,17 @@
 - DHW пока не предлагается автоматически выносить из wrapper без отдельного contract-решения.
 
 #### Выбранный следующий шаг
-- оформить `13_HEATING_TARGET_OWNERSHIP_DECISION.md` и принять явное решение по owner для `G_Target_Temperature`. 
+- оформить `13_HEATING_TARGET_OWNERSHIP_DECISION.md` и принять явное решение по owner для `G_Target_Temperature`.
+
+---
+
+### Heating target ownership decision
+Оформлен документ `13_HEATING_TARGET_OWNERSHIP_DECISION.md`.
+
+#### Подтверждено
+- coarse heating intents остаются в ownership у `PRG_Policy` через `GVL_STATE.G_Preheat_Request` и `GVL_STATE.G_Freeze_Request`;
+- derived heating target `GVL_STATE.G_Target_Temperature` закреплен за `PRG_Heating` как за owner-слоем domain-specific arbitration/stabilization;
+- вынос owner для `G_Target_Temperature` в `PRG_Policy` на текущем этапе признан premature redesign, а не локальным cleanup.
+
+#### Выбранный следующий шаг
+- оформить `14_HEATING_DIAGNOSTICS_GATING_CLEANUP_PLAN.md` и перейти к следующему ownership-cleanup кластеру.
