@@ -65,7 +65,4 @@ END_IF;
 
 GVL_COMMAND_VERIFY.Command_Mismatch_Count := L_Mismatch_Count;
 GVL_COMMAND_VERIFY.Command_Match_OK := (L_Mismatch_Count = 0);
-
-IF L_Mismatch_Count > 0 THEN
-    GVL_COMMAND_VERIFY.Command_Mismatch_Active := TRUE;
-END_IF;
+GVL_COMMAND_VERIFY.Command_Mismatch_Active := (L_Mismatch_Count > 0);
