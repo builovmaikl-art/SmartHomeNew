@@ -3,6 +3,7 @@ VAR
     L_Mismatch_Count : INT := 0;
 END_VAR
 
+// Current-cycle mismatch count between legacy and shadow command layers
 L_Mismatch_Count := 0;
 
 IF GVL_COMMAND.G_Gas_Valve_Close <> GVL_COMMAND_SHADOW.G_Gas_Valve_Close THEN
@@ -53,7 +54,7 @@ IF GVL_COMMAND.G_Lock_2_Close <> GVL_COMMAND_SHADOW.G_Lock_2_Close THEN
     L_Mismatch_Count := L_Mismatch_Count + 1;
 END_IF;
 
-// NEW: gate/wicket verification
+// Gate and wicket comparison
 IF GVL_COMMAND.G_Gate_Open <> GVL_COMMAND_SHADOW.G_Gate_Open THEN
     L_Mismatch_Count := L_Mismatch_Count + 1;
 END_IF;
