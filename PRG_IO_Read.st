@@ -86,25 +86,71 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
 END_FOR;
 
 // ===== ENHANCED LAYER =====
-fbCalib_Outdoor_Temp(VI_Raw := GVL_IO.AI_Temp_Outdoor.rValue);
-GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Value;
+fbCalib_Outdoor_Temp(
+    VI_Raw_Value := GVL_IO.AI_Temp_Outdoor.rValue,
+    VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
+);
+GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
 
 FOR L_i := 1 TO 8 DO
-    fbCalib_Room_Temps[L_i](VI_Raw := GVL_IO.AI_Room_Temps[L_i]);
-    GVL_STATE.G_Room_Temps[L_i] := fbCalib_Room_Temps[L_i].VO_Value;
+    fbCalib_Room_Temps[L_i](
+        VI_Raw_Value := GVL_IO.AI_Room_Temps[L_i],
+        VI_Record := GVL_CONFIG.G_Calib_Room_Temps[L_i]
+    );
+    GVL_STATE.G_Room_Temps[L_i] := fbCalib_Room_Temps[L_i].VO_Calibrated_Value;
 
-    fbCalib_Floor_Temps[L_i](VI_Raw := GVL_IO.AI_Floor_Temps[L_i]);
-    GVL_STATE.G_Floor_Temps[L_i] := fbCalib_Floor_Temps[L_i].VO_Value;
+    fbCalib_Floor_Temps[L_i](
+        VI_Raw_Value := GVL_IO.AI_Floor_Temps[L_i],
+        VI_Record := GVL_CONFIG.G_Calib_Floor_Temps[L_i]
+    );
+    GVL_STATE.G_Floor_Temps[L_i] := fbCalib_Floor_Temps[L_i].VO_Calibrated_Value;
 END_FOR;
 
+GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active := FALSE;
+GVL_STATUS.G_Diagnostics.Manifold_Pressure_First_Fault_Index := 0;
+GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := FALSE;
+GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := 0;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    fbAnalog_Manifold_Pressure[L_i](VI_Value := INT_TO_REAL(GVL_IO.AI_Manifold_Pressures[L_i]));
+    fbAnalog_Manifold_Pressure[L_i](
+        VI_Raw_Value := GVL_IO.AI_Manifold_Pressures[L_i],
+        VI_Sensor_Type := 0,
+        VI_Min_Scale := 0.0,
+        VI_Max_Scale := 10.0,
+        VI_Offset := 0.0,
+        VI_Multiplier := 1.0,
+        VI_Filter_Time_MS := GVL_CONSTANTS.C_MS_IN_SECOND,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Fallback_Mode := 0,
+        VI_Default_Value := 0.0
+    );
     GVL_STATE.G_Manifold_Pressures[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Value;
     GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Error;
+    GVL_STATUS.G_Diagnostics.Manifold_Pressure_Diag_Code[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Diag_Code;
+    IF fbAnalog_Manifold_Pressure[L_i].VO_Error AND NOT GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active := TRUE;
+        GVL_STATUS.G_Diagnostics.Manifold_Pressure_First_Fault_Index := L_i;
+    END_IF;
 
-    fbAnalog_Manifold_Current[L_i](VI_Value := INT_TO_REAL(GVL_IO.AI_Manifold_Currents[L_i]));
+    fbAnalog_Manifold_Current[L_i](
+        VI_Raw_Value := GVL_IO.AI_Manifold_Currents[L_i],
+        VI_Sensor_Type := 0,
+        VI_Min_Scale := 0.0,
+        VI_Max_Scale := 16.0,
+        VI_Offset := 0.0,
+        VI_Multiplier := 1.0,
+        VI_Filter_Time_MS := GVL_CONSTANTS.C_MS_IN_SECOND,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Fallback_Mode := 0,
+        VI_Default_Value := 0.0
+    );
     GVL_STATE.G_Manifold_Currents[L_i] := fbAnalog_Manifold_Current[L_i].VO_Value;
     GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] := fbAnalog_Manifold_Current[L_i].VO_Error;
+    GVL_STATUS.G_Diagnostics.Manifold_Current_Diag_Code[L_i] := fbAnalog_Manifold_Current[L_i].VO_Diag_Code;
+    IF fbAnalog_Manifold_Current[L_i].VO_Error AND NOT GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := TRUE;
+        GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := L_i;
+    END_IF;
 END_FOR;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Read <<<
