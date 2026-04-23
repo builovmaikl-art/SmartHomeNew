@@ -115,4 +115,19 @@
 - `MAIN.st`, интерфейсы heating/DHW FB и intent-based reset path должны остаться без архитектурного отката.
 
 #### Выбранный следующий шаг
-- перейти от planning-документов к фактическому выполнению recovery-изменения в корневом `PRG_Heating.st`, а затем зафиксировать результат в `10_HEATING_RECOVERY_RESULT.md`. 
+- перейти от planning-документов к фактическому выполнению recovery-изменения в корневом `PRG_Heating.st`, а затем зафиксировать результат в `10_HEATING_RECOVERY_RESULT.md`.
+
+---
+
+### Heating recovery execution result
+Выполнено recovery-изменение корневого `PRG_Heating.st`.
+
+#### Подтверждено по состоянию репозитория
+- корневой `PRG_Heating.st` восстановлен как полный непрерывный source-файл;
+- placeholder-вставки `omitted for brevity` / `rest unchanged` удалены из live root;
+- `VI_Preheat_Request` адаптирован к current-live owner-слою через `GVL_STATE.G_Preheat_Request`;
+- intent-based `VI_Reset_Errors := GVL_INTENT_USER.I_Reset_Errors` сохранен;
+- `MAIN.st` и интерфейсы heating/DHW FB не изменялись.
+
+#### Выбранный следующий шаг
+- зафиксировать post-recovery ownership audit heating wrapper в отдельном документе `11_HEATING_POST_RECOVERY_OWNERSHIP_AUDIT.md`. 
