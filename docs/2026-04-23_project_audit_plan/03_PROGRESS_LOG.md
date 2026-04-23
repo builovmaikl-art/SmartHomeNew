@@ -172,3 +172,16 @@
 
 #### Выбранный следующий шаг
 - оформить `14_HEATING_DIAGNOSTICS_GATING_CLEANUP_PLAN.md` и перейти к следующему ownership-cleanup кластеру.
+
+---
+
+### Heating diagnostics/gating cleanup plan
+Оформлен документ `14_HEATING_DIAGNOSTICS_GATING_CLEANUP_PLAN.md`.
+
+#### Подтверждено
+- следующим ownership-cleanup кластером признано разделение diagnostics publication, maintenance gating и freeze-support logic внутри `PRG_Heating`;
+- приоритет cleanup дан out-of-service publication layer, availability-based clamps и freeze hardware degraded/failed aggregation;
+- wrapper по-прежнему должен сохранить роль orchestration-ядра и не должен быть очищен ценой разрушения его основной функции.
+
+#### Выбранный следующий шаг
+- оформить `15_HEATING_DIAGNOSTICS_GATING_BOUNDARY_DECISION.md` и решить, ограничиваемся ли перегруппировкой внутри `PRG_Heating` или уже выносим diagnostics/gating в отдельный helper-layer.
