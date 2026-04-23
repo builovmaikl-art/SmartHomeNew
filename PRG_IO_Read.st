@@ -112,6 +112,10 @@ GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Pressure_First_Fault_Index := 0;
 GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := 0;
+GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Text := '';
+GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text := '';
+GVL_STATUS.G_Diagnostics.Sensor_Fault := FALSE;
+GVL_STATUS.G_Diagnostics.Subsystem_Degraded := FALSE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF GVL_IO.AI_Manifold_Pressures[L_i] < 0 THEN
@@ -164,6 +168,20 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF fbAnalog_Manifold_Current[L_i].VO_Error AND NOT GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active THEN
         GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := TRUE;
         GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := L_i;
+    END_IF;
+
+    IF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] THEN
+        GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+        GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
+    END_IF;
+
+    IF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] AND GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Text := 'Correlated pressure/current fault detected';
+        GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text := 'Correlated pressure/current fault detected';
+    ELSIF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] AND (GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Text = '') THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Text := 'Pressure sensor fault detected';
+    ELSIF GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] AND (GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text = '') THEN
+        GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text := 'Current sensor fault detected';
     END_IF;
 END_FOR;
 
