@@ -76,6 +76,7 @@ FOR L_i := 1 TO 8 DO
         END_IF;
     END_IF;
 END_FOR;
+GVL_STATE.G_Window_Sensors[16] := fbDebounce_Group_2F.Q;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     fbDebounce_Flood[L_i](IN := GVL_IO.DI_Flood_Sensors[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
@@ -93,6 +94,17 @@ fbCalib_Outdoor_Temp(
     VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
 );
 GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
+    IF GVL_IO.AI_Supply_Temps[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Supply_Temps[L_i] := GVL_IO.AI_Supply_Temps[L_i].rValue;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO 8 DO
+    GVL_STATE.G_Room_Hum[L_i] := GVL_IO.AI_Room_Hum[L_i];
+    GVL_STATE.G_Room_CO2[L_i] := GVL_IO.AI_Room_CO2[L_i];
+END_FOR;
 
 FOR L_i := 1 TO 8 DO
     fbCalib_Room_Temps[L_i](
@@ -170,6 +182,12 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := L_i;
     END_IF;
 
+    IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Manifold_T_Supply[L_i] := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue;
+    END_IF;
+    GVL_STATE.G_Manifold_T_Return[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Temps_Return[L_i]) / 10.0;
+    GVL_STATE.G_Manifold_End_Switches[L_i] := GVL_IO.DI_Manifold_End_Switches[L_i];
+
     IF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] THEN
         GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
         GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
@@ -184,5 +202,31 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text := 'Current sensor fault detected';
     END_IF;
 END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+    IF GVL_IO.AI_Methane_LEL[L_i].wStatus = 0 THEN
+        GVL_STATE.G_Methane_Sensors[L_i] := GVL_IO.AI_Methane_LEL[L_i].rValue;
+    END_IF;
+END_FOR;
+GVL_STATE.G_CO_Sensors := GVL_IO.AI_CO_PPM;
+
+GVL_STATE.G_Boiler_Flame := GVL_IO.AI_Boiler_Flame_Status;
+GVL_STATE.G_Boiler_Error := GVL_IO.DI_Boiler_Error;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    GVL_STATE.G_Boiler_OT_Online[L_i] := FALSE;
+END_FOR;
+
+GVL_STATE.G_DHW_Temp := GVL_IO.AI_DHW_Temp;
+GVL_STATE.G_DHW_Pressure := GVL_IO.AI_DHW_Pressure;
+
+GVL_STATE.G_Water_Zone_Open_FB := GVL_IO.DI_Water_Zone_Open_FB;
+GVL_STATE.G_Water_Zone_Close_FB := GVL_IO.DI_Water_Zone_Close_FB;
+
+GVL_STATE.G_Safety_Gas_Alarm := FALSE;
+GVL_STATE.G_Safety_Leak_Alarm := FALSE;
+GVL_STATE.G_Safety_Smoke_Alarm := FALSE;
+
+GVL_STATUS.G_Diagnostics.Backup_Pump_Fault := FALSE;
+GVL_STATUS.G_Diagnostics.Electric_Heater_Fault := FALSE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Read <<<
