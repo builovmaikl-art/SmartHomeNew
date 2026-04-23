@@ -265,3 +265,16 @@
 
 #### Выбранный следующий шаг
 - оформить `21_HEATING_POST_REGROUP_POLISH_EXECUTION_PLAN.md` и перевести polish-план в конкретный исполнительный порядок.
+
+---
+
+### Heating post-regroup polish execution plan
+Оформлен документ `21_HEATING_POST_REGROUP_POLISH_EXECUTION_PLAN.md`.
+
+#### Подтверждено
+- следующий шаг уже должен быть не planning-only, а фактической локальной полировкой `PRG_Heating.st`;
+- зафиксирован исполнительный порядок PPE-01..PPE-07: нормализация секционных заголовков, чистка локальных комментариев, выравнивание стиля S3-S5, уменьшение визуального шума, единый словарь терминов, удаление migration-шuma, затем repository-state verification;
+- на этом этапе запрещено менять логику, ownership, interfaces, helper-layer и call order — допустимы только non-functional улучшения текста и структуры комментариев.
+
+#### Выбранный следующий шаг
+- перейти к фактической полировке `PRG_Heating.st`, а затем оформить `22_HEATING_POST_REGROUP_POLISH_RESULT.md`.
