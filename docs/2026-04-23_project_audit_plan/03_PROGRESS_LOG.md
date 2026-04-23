@@ -292,3 +292,17 @@
 
 #### Выбранный следующий шаг
 - оформить `23_NEXT_SCOPE_SELECTION.md` и зафиксировать, куда идти после heating cluster: в command-layer migration audit, security/access interface audit или следующую subsystem wave.
+
+---
+
+### Next scope selection
+Оформлен документ `23_NEXT_SCOPE_SELECTION.md`.
+
+#### Подтверждено
+- heating cluster на текущем этапе считается временно стабилизированным и больше не является scope первого приоритета;
+- следующим приоритетным scope выбран command-layer migration audit как самый cross-cutting и архитектурно рискованный оставшийся слой;
+- вторым приоритетом после него зафиксирован security/access interface audit;
+- только после этого рекомендуется идти в следующую subsystem wave, начиная с ventilation.
+
+#### Выбранный следующий шаг
+- оформить `24_COMMAND_LAYER_AUDIT_PLAN.md` и открыть следующий цикл аудита по command-layer migration.
