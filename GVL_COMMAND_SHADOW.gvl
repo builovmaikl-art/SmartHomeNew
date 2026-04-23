@@ -1,6 +1,7 @@
 VAR_GLOBAL
-    // Shadow command layer used by PRG_Command_Arbitration during migration.
-    // Not connected to IO_Write yet.
+    // Operational command layer produced by PRG_Command_Arbitration during migration.
+    // Used by downstream execution consumers, including PRG_IO_Write and PRG_Ventilation.
+    // Legacy GVL_COMMAND remains in use around bridge / compatibility flows while migration is still open.
 
     // Gas / boiler / ventilation
     G_Gas_Valve_Close : BOOL := FALSE;
