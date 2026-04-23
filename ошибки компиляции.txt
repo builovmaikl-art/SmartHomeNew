@@ -1,6 +1,20 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени7: PRG_System(Строка 434, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE' в тип 'ARRAY [1..32] OF BYTE'
-[ERROR]         Без имени7: PRG_System(Строка 435, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL' в тип 'ARRAY [1..32] OF BOOL'
-                Компиляция завершена -- 2 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени7: PRG_IO_Read(Строка 63, Столбец 1 (Реализ.)): C0037:  'VI_Raw'не является входом 'FB_SENSOR_CALIBRATION_PROCESSOR'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 63, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Raw' не задан
+[ERROR]         Без имени7: PRG_IO_Read(Строка 64, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'fbCalib_Outdoor_Temp.VO_Value'' в тип 'REAL'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 64, Столбец 1 (Реализ.)): C0004:  'VO_Value' не является компонентом 'FB_Sensor_Calibration_Processor'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 67, Столбец 1 (Реализ.)): C0037:  'VI_Raw'не является входом 'FB_SENSOR_CALIBRATION_PROCESSOR'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 67, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Raw' не задан
+[ERROR]         Без имени7: PRG_IO_Read(Строка 68, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'fbCalib_Room_Temps[L_i].VO_Value'' в тип 'REAL'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 68, Столбец 1 (Реализ.)): C0004:  'VO_Value' не является компонентом 'FB_Sensor_Calibration_Processor'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 70, Столбец 1 (Реализ.)): C0037:  'VI_Raw'не является входом 'FB_SENSOR_CALIBRATION_PROCESSOR'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 70, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Raw' не задан
+[ERROR]         Без имени7: PRG_IO_Read(Строка 71, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'fbCalib_Floor_Temps[L_i].VO_Value'' в тип 'REAL'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 71, Столбец 1 (Реализ.)): C0004:  'VO_Value' не является компонентом 'FB_Sensor_Calibration_Processor'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 75, Столбец 1 (Реализ.)): C0037:  'VI_Value'не является входом 'FB_SENSOR_ANALOG_PROCESSING'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 75, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Value' не задан
+[ERROR]         Без имени7: PRG_IO_Read(Строка 79, Столбец 1 (Реализ.)): C0037:  'VI_Value'не является входом 'FB_SENSOR_ANALOG_PROCESSING'
+[ERROR]         Без имени7: PRG_IO_Read(Строка 79, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Value' не задан
+                Компиляция завершена -- 16 ошибок, 0 предупреждений : загрузка невозможна
