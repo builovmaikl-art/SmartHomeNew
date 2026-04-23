@@ -1,0 +1,2 @@
+FUNCTION_BLOCK FB_CoreKernel_Live_Observer
+END_FUNCTION_BLOCK

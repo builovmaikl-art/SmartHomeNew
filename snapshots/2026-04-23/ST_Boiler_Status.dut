@@ -1,0 +1,16 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Boiler_Status :
+STRUCT
+    Active : BOOL;
+    Running : BOOL;
+    Warning : BOOL;
+    Error : BOOL;
+    Error_ID : WORD;
+    Power_Percent : REAL;
+    Current_Power : REAL;
+    Work_Seconds : UDINT;
+    Work_Hours : REAL;
+    Resource_Percent : REAL := 100.0;
+    Last_Start : DT;
+END_STRUCT
+END_TYPE
