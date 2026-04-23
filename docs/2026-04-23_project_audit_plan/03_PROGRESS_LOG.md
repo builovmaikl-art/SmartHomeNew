@@ -198,3 +198,16 @@
 
 #### Выбранный следующий шаг
 - оформить `16_HEATING_DIAGNOSTICS_GATING_REGROUP_PLAN.md` и разложить конкретные внутренние секции будущей перегруппировки `PRG_Heating.st`.
+
+---
+
+### Heating diagnostics/gating regroup plan
+Оформлен документ `16_HEATING_DIAGNOSTICS_GATING_REGROUP_PLAN.md`.
+
+#### Подтверждено
+- следующая practical-задача состоит не в выносе логики, а в внутренней секционной перегруппировке `PRG_Heating.st`;
+- зафиксирована целевая внутренняя структура S1-S6: inputs/arbitration, orchestration calls, diagnostics projection, maintenance gating, freeze support logic, adapter copy-out;
+- зафиксирована карта текущих diagnostics/gating фрагментов в будущие секции и безопасный порядок перегруппировки без изменения логики.
+
+#### Выбранный следующий шаг
+- оформить `17_HEATING_DIAGNOSTICS_GATING_REGROUP_EXECUTION_PLAN.md` и перейти к исполнительному плану изменения `PRG_Heating.st`.
