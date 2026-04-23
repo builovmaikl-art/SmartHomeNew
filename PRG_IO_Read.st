@@ -2,6 +2,8 @@ PROGRAM PRG_IO_Read
 VAR
     L_i : INT;
     L_Debounce_Time : TIME := T#100MS;
+    L_Manifold_Pressure_Raw : WORD;
+    L_Manifold_Current_Raw : WORD;
     
     fbDebounce_Switches : ARRAY[1..8] OF FB_System_Timer;
     fbDebounce_Motion : ARRAY[1..8] OF FB_System_Timer;
@@ -112,8 +114,20 @@ GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := 0;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF GVL_IO.AI_Manifold_Pressures[L_i] < 0 THEN
+        L_Manifold_Pressure_Raw := 0;
+    ELSE
+        L_Manifold_Pressure_Raw := INT_TO_WORD(GVL_IO.AI_Manifold_Pressures[L_i]);
+    END_IF;
+
+    IF GVL_IO.AI_Manifold_Currents[L_i] < 0 THEN
+        L_Manifold_Current_Raw := 0;
+    ELSE
+        L_Manifold_Current_Raw := INT_TO_WORD(GVL_IO.AI_Manifold_Currents[L_i]);
+    END_IF;
+
     fbAnalog_Manifold_Pressure[L_i](
-        VI_Raw_Value := GVL_IO.AI_Manifold_Pressures[L_i],
+        VI_Raw_Value := L_Manifold_Pressure_Raw,
         VI_Sensor_Type := 0,
         VI_Min_Scale := 0.0,
         VI_Max_Scale := 10.0,
@@ -133,7 +147,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 
     fbAnalog_Manifold_Current[L_i](
-        VI_Raw_Value := GVL_IO.AI_Manifold_Currents[L_i],
+        VI_Raw_Value := L_Manifold_Current_Raw,
         VI_Sensor_Type := 0,
         VI_Min_Scale := 0.0,
         VI_Max_Scale := 16.0,
