@@ -40,6 +40,7 @@ fbAccessControl(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Armed := GVL_ALARM.G_Security_Armed,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_Gate_Open_Req := GVL_CONFIG.G_HMI_Gate_Open_Req,
     VI_Wicket_Open_Req := GVL_CONFIG.G_HMI_Wicket_Open_Req,
     VI_Lock_1_Open_Req := GVL_CONFIG.G_HMI_Lock_1_Open_Req,
@@ -52,10 +53,9 @@ fbAccessControl(
     VI_RFID_Tags := GVL_Retain.G_RFID_Tags,
     VI_Config := GVL_CONFIG.G_Security_Config,
     VO_Gate_Open => GVL_INTENT_USER.I_Gate_Open_Request,
-VO_Wicket_Open => GVL_INTENT_USER.I_Wicket_Open_Request,
-VO_Lock_1_Open => GVL_INTENT_USER.I_Lock_1_Open_Request,
-VO_Lock_1_Close => GVL_INTENT_USER.I_Lock_1_Close_Request,
-VO_Lock_2_Open => GVL_INTENT_USER.I_Lock_2_Open_Request,
-VO_Lock_2_Close => GVL_INTENT_USER.I_Lock_2_Close_Request
+    VO_Wicket_Open => GVL_INTENT_USER.I_Wicket_Open_Request,
+    VO_Lock_1_Open => GVL_INTENT_USER.I_Lock_1_Open_Request,
+    VO_Lock_1_Close => GVL_INTENT_USER.I_Lock_1_Close_Request,
+    VO_Lock_2_Open => GVL_INTENT_USER.I_Lock_2_Open_Request,
+    VO_Lock_2_Close => GVL_INTENT_USER.I_Lock_2_Close_Request
 );
-// >>> BULK_SYNC_ANCHOR: PRG_Security <<<
