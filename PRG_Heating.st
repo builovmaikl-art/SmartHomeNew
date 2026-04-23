@@ -1,7 +1,7 @@
 PROGRAM PRG_Heating
 
 VAR
-    L_Last_Mode : INT := 0; // 0=normal,1=preheat,2=freeze
+    L_Last_Mode : INT := 0; // 0=normal, 1=preheat, 2=freeze
     L_Mode_Hold_Timer : FB_System_Timer;
 END_VAR
 
@@ -24,7 +24,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     L_Boiler_Modulation_REAL[L_i] := TO_REAL(GVL_IO.AI_Boiler_Modulation[L_i]);
 END_FOR;
 
-// === Heating Arbitration ===
+// Safety and demand arbitration context
 L_Heating_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop;
 L_Heating_Gas_Safety_Stop := GVL_STATE.G_Safety_Gas_Latched;
 L_Heating_DHW_Demand := fbDHWManager.VO_Heating_Pump;
@@ -40,7 +40,7 @@ ELSIF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
     L_Heating_DHW_Demand := FALSE;
 END_IF;
 
-// --- CONSOLIDATED HEATING REQUEST / ARBITRATION / STABILIZATION ---
+// Consolidated heating request arbitration and stabilization
 L_Mode_Hold_Timer(
     IN := TRUE,
     PT := T#30s,
@@ -70,7 +70,7 @@ END_CASE;
 // S2. HEATING / DHW ORCHESTRATION CALLS
 // ============================================================
 
-// 9. Управление климатом (Отопление)
+// Heating manager orchestration
 fbHeatingManager(
     VI_Preheat_Request := GVL_STATE.G_Preheat_Request,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -115,7 +115,7 @@ fbHeatingManager(
     VO_Boiler_Status => GVL_STATUS.G_Boiler_Status
 );
 
-// 12. Управление ГВС
+// DHW manager orchestration
 fbDHWManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
@@ -139,11 +139,9 @@ fbDHWManager(
 
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
-
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
 END_FOR;
-
 GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
 
@@ -154,21 +152,17 @@ GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Ci
 IF NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service THEN
     GVL_STATE.G_Backup_Circulation_Pump := FALSE;
 END_IF;
-
 IF NOT GVL_CONFIG.G_Electric_Heater_In_Service THEN
     GVL_STATE.G_Electric_Heater_Enable := FALSE;
 END_IF;
-
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
     END_IF;
 END_FOR;
-
 IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
     GVL_STATE.G_DHW_Heating_Pump := FALSE;
 END_IF;
-
 IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
     GVL_STATE.G_DHW_Circ_Pump := FALSE;
 END_IF;
@@ -179,7 +173,6 @@ END_IF;
 
 GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
 GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
-
 IF GVL_STATE.G_Freeze_Hardware_Failed THEN
     GVL_STATE.G_Backup_Circulation_Pump := FALSE;
     GVL_STATE.G_Electric_Heater_Enable := FALSE;
