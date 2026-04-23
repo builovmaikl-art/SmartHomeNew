@@ -334,3 +334,17 @@
 
 #### Выбранный следующий шаг
 - оформить `26_COMMAND_LAYER_LEGACY_VS_SHADOW_SEMANTIC_AUDIT.md` и перейти к этапу C-A2: semantic audit legacy vs shadow model.
+
+---
+
+### Command-layer legacy vs shadow semantic audit
+Оформлен документ `26_COMMAND_LAYER_LEGACY_VS_SHADOW_SEMANTIC_AUDIT.md`.
+
+#### Подтверждено
+- semantic center текущего command-layer уже смещен в `GVL_COMMAND_SHADOW` как в operational command layer;
+- `GVL_COMMAND` в подтвержденной live chain выглядит как legacy comparison / compatibility layer, а не как primary downstream execution layer;
+- verifier остается маркером переходной migration-фазы, а не owner execution semantics;
+- inline-comments и naming command-layer уже отстают от фактической live-model.
+
+#### Выбранный следующий шаг
+- оформить `27_COMMAND_VERIFIER_BEHAVIOR_AUDIT.md` и перейти к этапу C-A3: verifier behavior audit.
