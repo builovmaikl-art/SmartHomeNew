@@ -224,3 +224,18 @@
 
 #### Выбранный следующий шаг
 - перейти к фактической перегруппировке `PRG_Heating.st`, а затем оформить `18_HEATING_DIAGNOSTICS_GATING_REGROUP_RESULT.md`.
+
+---
+
+### Heating diagnostics/gating regroup result
+Выполнена структурная перегруппировка `PRG_Heating.st`.
+
+#### Подтверждено по состоянию репозитория
+- в `PRG_Heating.st` появились явные секции S1-S6;
+- верхний orchestration-path стал непрерывным и читается отдельно от diagnostics/gating хвоста;
+- diagnostics projection отделен от maintenance gating;
+- freeze-support logic изолирован в собственной секции;
+- ownership-решения, interfaces и call order не изменялись.
+
+#### Выбранный следующий шаг
+- оформить `19_HEATING_HELPER_LAYER_NEED_DECISION.md` и решить, нужен ли после этой перегруппировки отдельный helper-layer вообще.
