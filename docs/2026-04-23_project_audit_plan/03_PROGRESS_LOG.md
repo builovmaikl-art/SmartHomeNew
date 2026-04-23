@@ -145,3 +145,17 @@
 
 #### Выбранный следующий шаг
 - оформить `12_HEATING_OWNERSHIP_CLEANUP_PLAN.md` и разложить, что именно выносить из `PRG_Heating` на следующем cleanup-этапе.
+
+---
+
+### Heating ownership cleanup plan
+Оформлен документ `12_HEATING_OWNERSHIP_CLEANUP_PLAN.md`.
+
+#### Подтверждено
+- следующим cleanup-этапом должны стать не новые recovery-работы, а архитектурная развязка ownership внутри heating cluster;
+- первым приоритетом cleanup признан вопрос owner для `GVL_STATE.G_Target_Temperature`;
+- вторым приоритетом признано разделение orchestration и diagnostics/maintenance gating внутри `PRG_Heating`;
+- DHW пока не предлагается автоматически выносить из wrapper без отдельного contract-решения.
+
+#### Выбранный следующий шаг
+- оформить `13_HEATING_TARGET_OWNERSHIP_DECISION.md` и принять явное решение по owner для `G_Target_Temperature`. 
