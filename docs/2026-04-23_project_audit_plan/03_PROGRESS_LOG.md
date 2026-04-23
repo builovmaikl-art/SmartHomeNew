@@ -211,3 +211,16 @@
 
 #### Выбранный следующий шаг
 - оформить `17_HEATING_DIAGNOSTICS_GATING_REGROUP_EXECUTION_PLAN.md` и перейти к исполнительному плану изменения `PRG_Heating.st`.
+
+---
+
+### Heating diagnostics/gating regroup execution plan
+Оформлен документ `17_HEATING_DIAGNOSTICS_GATING_REGROUP_EXECUTION_PLAN.md`.
+
+#### Подтверждено
+- следующий шаг уже должен быть не planning-only, а фактической перегруппировкой `PRG_Heating.st` по секциям S1-S6;
+- зафиксирован исполнительный порядок EGR-01..EGR-07: секционные маркеры, сборка main-flow, diagnostics projection, maintenance gating, freeze-support logic, adapter copy-out, затем repository-state verification;
+- на этом этапе запрещено менять логику, ownership-решения, interfaces и call order — допустима только структурная перегруппировка.
+
+#### Выбранный следующий шаг
+- перейти к фактической перегруппировке `PRG_Heating.st`, а затем оформить `18_HEATING_DIAGNOSTICS_GATING_REGROUP_RESULT.md`.
