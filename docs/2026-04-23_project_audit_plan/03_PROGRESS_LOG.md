@@ -90,3 +90,16 @@
 
 #### Выбранный следующий шаг
 - оформить `08_HEATING_RECOVERY_CHANGESET_PLAN.md` и зафиксировать минимальный recovery changeset до фактического восстановления `PRG_Heating.st`.
+
+---
+
+### Heating recovery changeset plan
+Оформлен документ `08_HEATING_RECOVERY_CHANGESET_PLAN.md`.
+
+#### Подтверждено
+- минимальный recovery changeset должен быть ограничен восстановлением полного `PRG_Heating.st` и минимальными адаптациями owner-слоя heating requests;
+- `GVL_STATE` зафиксирован как текущий live-root owner-слой для `Preheat / Freeze / Target Temperature` в рамках recovery-предположения;
+- возврат к `GVL_HEATING_REQUEST` как к основному owner-слою в рамках этого этапа считается уже не recovery, а redesign.
+
+#### Выбранный следующий шаг
+- оформить `09_HEATING_RECOVERY_EXECUTION_PLAN.md` с точным порядком внесения recovery-изменений в репозиторий.
