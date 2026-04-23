@@ -278,3 +278,17 @@
 
 #### Выбранный следующий шаг
 - перейти к фактической полировке `PRG_Heating.st`, а затем оформить `22_HEATING_POST_REGROUP_POLISH_RESULT.md`.
+
+---
+
+### Heating post-regroup polish result
+Выполнена локальная non-functional полировка `PRG_Heating.st`.
+
+#### Подтверждено по состоянию репозитория
+- сохранены секции S1-S6;
+- удалены остатки numbered-step комментариев и выровнен словарь локальных подписей;
+- diagnostics/gating секции стали визуально компактнее и согласованнее;
+- логика, ownership, interfaces, helper-layer и call order не изменялись.
+
+#### Выбранный следующий шаг
+- оформить `23_NEXT_SCOPE_SELECTION.md` и зафиксировать, куда идти после heating cluster: в command-layer migration audit, security/access interface audit или следующую subsystem wave.
