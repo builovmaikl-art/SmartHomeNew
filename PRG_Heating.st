@@ -31,6 +31,11 @@ VAR
     L_TotalLoad : REAL;
     L_CircuitIdx : INT;
     L_ManifoldId : INT;
+
+    // Time slicing (Wave 4.3)
+    L_TimeSlot : INT;
+    L_TimeWindow : UDINT := 10000;
+    L_EnableBySlot : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -169,6 +174,22 @@ IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_TotalLoad > GVL_CONFIG.G_Max_Ther
 END_IF;
 // ====================================
 
+// ===== TIME SLICING (Wave 4.3) =====
+L_TimeSlot := (GVL_STATUS.G_System_Time_MS / L_TimeWindow) MOD GVL_CONSTANTS.C_MAX_MANIFOLDS;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_EnableBySlot[L_i] := FALSE;
+
+    IF L_DisableMask[L_i] THEN
+        IF ((L_i - 1) MOD GVL_CONSTANTS.C_MAX_MANIFOLDS) = L_TimeSlot THEN
+            L_EnableBySlot[L_i] := TRUE;
+        END_IF;
+    ELSE
+        L_EnableBySlot[L_i] := TRUE;
+    END_IF;
+END_FOR;
+// ====================================
+
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := 0;
 
@@ -213,7 +234,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
 
-    ELSIF L_DisableMask[L_i] THEN
+    ELSIF L_DisableMask[L_i] AND NOT L_EnableBySlot[L_i] THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := FALSE;
 
