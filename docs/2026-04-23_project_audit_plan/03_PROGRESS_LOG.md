@@ -77,3 +77,16 @@
 
 #### Выбранный следующий шаг
 - перейти к H-R3 и оформить compatibility check для основного кандидата перед любым восстановлением файла в корень.
+
+---
+
+### Heating recovery compatibility check
+Оформлен документ `07_HEATING_RECOVERY_COMPATIBILITY_CHECK.md`.
+
+#### Подтверждено
+- основной кандидат совместим с текущим live root не буквально, а как recovery candidate с ограниченным адаптационным слоем;
+- по `MAIN.st`, `FB_Heating_System_Manager.st` и `FB_DHW_Manager.st` кандидат остается близким к текущей архитектуре;
+- главный compatibility-риск сосредоточен в ownership heating request layer: кандидат использует `GVL_HEATING_REQUEST`, тогда как текущий live root уже использует heating-request публикации через `GVL_STATE`.
+
+#### Выбранный следующий шаг
+- оформить `08_HEATING_RECOVERY_CHANGESET_PLAN.md` и зафиксировать минимальный recovery changeset до фактического восстановления `PRG_Heating.st`.
