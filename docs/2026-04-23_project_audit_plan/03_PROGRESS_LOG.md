@@ -103,3 +103,16 @@
 
 #### Выбранный следующий шаг
 - оформить `09_HEATING_RECOVERY_EXECUTION_PLAN.md` с точным порядком внесения recovery-изменений в репозиторий.
+
+---
+
+### Heating recovery execution plan
+Оформлен документ `09_HEATING_RECOVERY_EXECUTION_PLAN.md`.
+
+#### Подтверждено
+- execution plan ограничен восстановлением полного `PRG_Heating.st` и не включает redesign heating cluster;
+- recovery должен выполняться на базе `snapshots/2026-04-22/PRG_Heating.st` с минимальной owner-layer adaptation;
+- `MAIN.st`, интерфейсы heating/DHW FB и intent-based reset path должны остаться без архитектурного отката.
+
+#### Выбранный следующий шаг
+- перейти от planning-документов к фактическому выполнению recovery-изменения в корневом `PRG_Heating.st`, а затем зафиксировать результат в `10_HEATING_RECOVERY_RESULT.md`. 
