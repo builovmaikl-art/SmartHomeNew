@@ -52,7 +52,9 @@ fbVentilationManager(
     VO_Supply_Fans => L_Supply_Fans_Byte,
     VO_Exhaust_Fans => L_Exhaust_Fans_Byte,
     VO_Heater_Power => GVL_STATE.G_Vent_Heater_Power,
-    VO_Status_Msg => GVL_STATUS.G_Vent_Status_Msg
+    VO_Status_Msg => GVL_STATUS.G_Vent_Status_Msg,
+    VO_Ventilation_IO_Fault => GVL_STATE.G_Ventilation_IO_Fault,
+    VO_Ventilation_Subsystem_Degraded => GVL_STATE.G_Ventilation_Subsystem_Degraded
 );
 // >>> BULK_SYNC_ANCHOR: PRG_Ventilation <<<
 
