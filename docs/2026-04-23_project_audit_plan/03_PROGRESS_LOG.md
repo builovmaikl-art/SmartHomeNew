@@ -130,4 +130,18 @@
 - `MAIN.st` и интерфейсы heating/DHW FB не изменялись.
 
 #### Выбранный следующий шаг
-- зафиксировать post-recovery ownership audit heating wrapper в отдельном документе `11_HEATING_POST_RECOVERY_OWNERSHIP_AUDIT.md`. 
+- зафиксировать post-recovery ownership audit heating wrapper в отдельном документе `11_HEATING_POST_RECOVERY_OWNERSHIP_AUDIT.md`.
+
+---
+
+### Heating post-recovery ownership audit
+Оформлен документ `11_HEATING_POST_RECOVERY_OWNERSHIP_AUDIT.md`.
+
+#### Подтверждено
+- после recovery heating wrapper снова стал прозрачным для ownership-разбора;
+- heating request layer приходит сверху через `GVL_STATE`, без rollback ownership в `GVL_HEATING_REQUEST` как current-live owner;
+- `PRG_Heating` остается крупным writer-узлом для `GVL_STATE` и `GVL_STATUS`, особенно в части target temperature, diagnostics и maintenance gating;
+- это допустимо как post-recovery состояние, но не является финально очищенным ownership-состоянием.
+
+#### Выбранный следующий шаг
+- оформить `12_HEATING_OWNERSHIP_CLEANUP_PLAN.md` и разложить, что именно выносить из `PRG_Heating` на следующем cleanup-этапе.
