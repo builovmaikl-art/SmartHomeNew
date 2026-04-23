@@ -319,3 +319,18 @@
 
 #### Выбранный следующий шаг
 - оформить `25_COMMAND_LAYER_LIVE_OWNERSHIP_AUDIT.md` и начать этап C-A1: live command-chain сверху вниз.
+
+---
+
+### Command-layer live ownership audit
+Оформлен документ `25_COMMAND_LAYER_LIVE_OWNERSHIP_AUDIT.md`.
+
+#### Подтверждено
+- в текущем live root `PRG_Command_Arbitration` является подтвержденным активным writer-слоем для `GVL_COMMAND_SHADOW`;
+- `PRG_IO_Write` и `PRG_Ventilation` уже читают `GVL_COMMAND_SHADOW` как operational downstream layer;
+- `PRG_Command_Verifier` выступает как comparison-layer между `GVL_COMMAND` и `GVL_COMMAND_SHADOW`, а не как owner operational commands;
+- комментарий в `GVL_COMMAND_SHADOW.gvl` уже устарел относительно live root;
+- migration semantics остаются переходными: operational truth уже смещен в shadow layer, но formal end-state еще не закреплен.
+
+#### Выбранный следующий шаг
+- оформить `26_COMMAND_LAYER_LEGACY_VS_SHADOW_SEMANTIC_AUDIT.md` и перейти к этапу C-A2: semantic audit legacy vs shadow model.
