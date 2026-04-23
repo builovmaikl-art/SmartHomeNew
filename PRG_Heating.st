@@ -29,13 +29,15 @@ VAR
     L_ToDisable : INT;
     L_ThermalLoad : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     L_TotalLoad : REAL;
+    L_TotalRequestedLoad : REAL;
     L_CircuitIdx : INT;
     L_ManifoldId : INT;
 
-    // Time slicing (Wave 4.3)
-    L_TimeSlot : INT;
+    // Proportional duty cycle (Wave 4.4)
     L_TimeWindow : UDINT := 10000;
+    L_TimePosition : UDINT;
     L_EnableBySlot : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_DutyPermille : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -148,6 +150,7 @@ END_FOR;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_TotalLoad := L_TotalLoad + L_ThermalLoad[L_i];
 END_FOR;
+L_TotalRequestedLoad := L_TotalLoad;
 
 IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_TotalLoad > GVL_CONFIG.G_Max_Thermal_Budget) THEN
     // first pass: priority 1 manifolds not already disabled
@@ -174,21 +177,39 @@ IF (NOT GVL_STATE.G_Safety_Freeze_Risk) AND (L_TotalLoad > GVL_CONFIG.G_Max_Ther
 END_IF;
 // ====================================
 
-// ===== TIME SLICING (Wave 4.3) =====
-L_TimeSlot := (GVL_STATUS.G_System_Time_MS / L_TimeWindow) MOD GVL_CONSTANTS.C_MAX_MANIFOLDS;
+// ===== PROPORTIONAL DUTY CYCLE (Wave 4.4) =====
+L_TimePosition := GVL_STATUS.G_System_Time_MS MOD L_TimeWindow;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_EnableBySlot[L_i] := FALSE;
+    L_DutyPermille[L_i] := 1000;
 
     IF L_DisableMask[L_i] THEN
-        IF ((L_i - 1) MOD GVL_CONSTANTS.C_MAX_MANIFOLDS) = L_TimeSlot THEN
+        IF L_TotalRequestedLoad > 0.0 THEN
+            L_DutyPermille[L_i] := REAL_TO_INT(1000.0 * GVL_CONFIG.G_Max_Thermal_Budget / L_TotalRequestedLoad);
+        ELSE
+            L_DutyPermille[L_i] := 500;
+        END_IF;
+
+        CASE GVL_CONFIG.G_Manifold_Priority[L_i] OF
+            2: L_DutyPermille[L_i] := L_DutyPermille[L_i] + 200;
+            ELSE L_DutyPermille[L_i] := L_DutyPermille[L_i] - 100;
+        END_CASE;
+
+        IF L_DutyPermille[L_i] > 900 THEN
+            L_DutyPermille[L_i] := 900;
+        ELSIF L_DutyPermille[L_i] < 100 THEN
+            L_DutyPermille[L_i] := 100;
+        END_IF;
+
+        IF L_TimePosition < ((L_TimeWindow * TO_UDINT(L_DutyPermille[L_i])) / 1000) THEN
             L_EnableBySlot[L_i] := TRUE;
         END_IF;
     ELSE
         L_EnableBySlot[L_i] := TRUE;
     END_IF;
 END_FOR;
-// ====================================
+// ==============================================
 
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_Out_Of_Service_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Sensor_First_OOS_Index := 0;
