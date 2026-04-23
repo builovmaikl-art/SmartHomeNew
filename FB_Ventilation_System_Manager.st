@@ -28,6 +28,8 @@ VAR_OUTPUT
     VO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE; // Выход: Управление вытяжными вентиляторами (0-100%)
     VO_Heater_Power : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Выход: Мощность калориферов (0-100%)
     VO_Status_Msg : STRING(200); // Строковое сообщение о статусе
+    VO_Ventilation_IO_Fault : BOOL; // Выход: диагностика потери связи с модулями ввода-вывода
+    VO_Ventilation_Subsystem_Degraded : BOOL; // Выход: признак degraded-состояния подсистемы вентиляции
 END_VAR
 VAR
     L_Policy_Normal : BOOL;
@@ -47,8 +49,8 @@ END_VAR
 // ========================================
 // Ventilation policy layer
 // ========================================
-GVL_STATE.G_Ventilation_IO_Fault := FALSE;
-GVL_STATE.G_Ventilation_Subsystem_Degraded := FALSE;
+VO_Ventilation_IO_Fault := FALSE;
+VO_Ventilation_Subsystem_Degraded := FALSE;
 L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
 L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
@@ -71,7 +73,7 @@ END_IF;
 // Проверка связи с модулями ввода-вывода
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
     IF NOT VI_IO_Modules_Online[L_i] THEN
-        GVL_STATE.G_Ventilation_IO_Fault := TRUE;
+        VO_Ventilation_IO_Fault := TRUE;
         // Переход в безопасное состояние при потере связи (отключение вентиляции)
         FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
             VO_Supply_Fans[L_j] := 0;
@@ -112,7 +114,7 @@ IF L_Policy_Degraded THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
         VO_Heater_Power[L_i] := 0.0;
     END_FOR;
-    GVL_STATE.G_Ventilation_Subsystem_Degraded := TRUE;
+    VO_Ventilation_Subsystem_Degraded := TRUE;
     VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: DEGRADED POLICY';
 END_IF;
 
