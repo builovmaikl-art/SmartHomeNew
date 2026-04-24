@@ -26,6 +26,8 @@ VAR
     fbCalib_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Calibration_Processor;
     fbCalib_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Methane : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF FB_Sensor_Calibration_Processor;
+    fbCalib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF FB_Sensor_Calibration_Processor;
 
     fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
@@ -232,10 +234,21 @@ END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
     IF GVL_IO.AI_Methane_LEL[L_i].wStatus = 0 THEN
-        GVL_STATE.G_Methane_Sensors[L_i] := GVL_IO.AI_Methane_LEL[L_i].rValue;
+        fbCalib_Methane[L_i](
+            VI_Raw_Value := GVL_IO.AI_Methane_LEL[L_i].rValue,
+            VI_Record := GVL_CONFIG.G_Calib_Methane[L_i]
+        );
+        GVL_STATE.G_Methane_Sensors[L_i] := fbCalib_Methane[L_i].VO_Calibrated_Value;
     END_IF;
 END_FOR;
-GVL_STATE.G_CO_Sensors := GVL_IO.AI_CO_PPM;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+    fbCalib_CO[L_i](
+        VI_Raw_Value := GVL_IO.AI_CO_PPM[L_i],
+        VI_Record := GVL_CONFIG.G_Calib_CO[L_i]
+    );
+    GVL_STATE.G_CO_Sensors[L_i] := fbCalib_CO[L_i].VO_Calibrated_Value;
+END_FOR;
 
 GVL_STATE.G_Boiler_Flame := GVL_IO.AI_Boiler_Flame_Status;
 GVL_STATE.G_Boiler_Error := GVL_IO.DI_Boiler_Error;
