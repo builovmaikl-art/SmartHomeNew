@@ -3,6 +3,7 @@ VAR
     fbWaterLeakageManager : FB_Water_Leakage_Manager;
     fbGasSmokeManager : FB_Gas_Smoke_Manager;
     fbSafetyWorkflow : FB_Safety_Workflow_Manager;
+    fbOwnership : FB_Ownership_Watchdog;
     L_i : INT;
 END_VAR
 
@@ -86,6 +87,20 @@ fbGasSmokeManager(
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
+
+// ========================================
+// OWNERSHIP WATCHDOG
+// ========================================
+fbOwnership(
+    VI_Gas_Level := GVL_STATE.G_Methane_Sensors[1],
+    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
+    VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
+    VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm
+);
+
+IF fbOwnership.VO_Ownership_Violation THEN
+    GVL_STATUS.G_Internal_Error := TRUE;
+END_IF;
 
 // ========================================
 // SAFETY_CORE_HAZARD_INTERLOCK_PROJECTION
