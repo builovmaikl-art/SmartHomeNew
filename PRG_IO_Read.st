@@ -24,6 +24,8 @@ VAR
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Calibration_Processor;
 
     fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
@@ -199,9 +201,18 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 
     IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
-        GVL_STATE.G_Manifold_T_Supply[L_i] := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue;
+        fbCalib_Manifold_T_Supply[L_i](
+            VI_Raw_Value := GVL_IO.AI_Manifold_Temps_Supply[L_i].rValue,
+            VI_Record := GVL_CONFIG.G_Calib_Manifold_T_Supply[L_i]
+        );
+        GVL_STATE.G_Manifold_T_Supply[L_i] := fbCalib_Manifold_T_Supply[L_i].VO_Calibrated_Value;
     END_IF;
-    GVL_STATE.G_Manifold_T_Return[L_i] := INT_TO_REAL(GVL_IO.AI_Manifold_Temps_Return[L_i]) / 10.0;
+
+    fbCalib_Manifold_T_Return[L_i](
+        VI_Raw_Value := INT_TO_REAL(GVL_IO.AI_Manifold_Temps_Return[L_i]) / 10.0,
+        VI_Record := GVL_CONFIG.G_Calib_Manifold_T_Return[L_i]
+    );
+    GVL_STATE.G_Manifold_T_Return[L_i] := fbCalib_Manifold_T_Return[L_i].VO_Calibrated_Value;
     GVL_STATE.G_Manifold_End_Switches[L_i] := GVL_IO.DI_Manifold_End_Switches[L_i];
 
     IF GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] THEN
