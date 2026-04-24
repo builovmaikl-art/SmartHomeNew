@@ -9,7 +9,9 @@ VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
     fbDiagEventManager : FB_Diagnostics_Event_Manager;
+    fbDecision : FB_Heating_Decision_Context;
     L_i : INT;
+    L_j : INT;
     L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
     L_Boiler_Modulation_REAL : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Heating_Emergency_Stop : BOOL;
@@ -61,6 +63,19 @@ CASE L_Last_Mode OF
 END_CASE;
 
 // ============================================================
+// S1.5 DECISION CONTEXT / THERMAL ALLOCATION
+// ============================================================
+
+fbDecision(
+    VI_Manifold_Pump_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service,
+    VI_Manifold_Pressure_Fault := GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault,
+    VI_Manifold_Current_Fault := GVL_STATUS.G_Diagnostics.Manifold_Current_Fault,
+    VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight,
+    VI_Manifold_Priority := GVL_CONFIG.G_Manifold_Priority,
+    VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
+);
+
+// ============================================================
 // S2. HEATING / DHW ORCHESTRATION CALLS
 // ============================================================
 
@@ -107,6 +122,21 @@ fbHeatingManager(
     VO_Status => GVL_STATUS.G_Manifold_Status,
     VO_Boiler_Status => GVL_STATUS.G_Boiler_Status
 );
+
+// Apply thermal allocation constraints after base heating orchestration.
+// Decision context owns eligibility/budget; heating manager remains the control algorithm owner.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF NOT fbDecision.VO_Manifold_Enabled[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+        GVL_STATE.G_Manifold_Valves[L_i] := 0.0;
+
+        FOR L_j := 1 TO 8 DO
+            IF GVL_CONFIG.G_HMI_FloorHeating_Configs[L_j].manifold_id = L_i THEN
+                L_Zone_Valves_8[L_j] := FALSE;
+            END_IF;
+        END_FOR;
+    END_IF;
+END_FOR;
 
 fbDHWManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -189,7 +219,6 @@ fbDiagEventManager(
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
 );
 
-// Freeze hardware failure
 fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_FREEZE_HARDWARE_FAILED,
     VI_Severity := 4,
