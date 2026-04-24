@@ -4,6 +4,7 @@ VAR
     L_Debounce_Time : TIME := T#100MS;
     L_Manifold_Pressure_Raw : WORD;
     L_Manifold_Current_Raw : WORD;
+    L_DiagIdx : INT;
     
     fbDebounce_Switches : ARRAY[1..8] OF FB_System_Timer;
     fbDebounce_Motion : ARRAY[1..8] OF FB_System_Timer;
@@ -33,6 +34,9 @@ VAR
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
+// Reset structured diagnostics
+GVL_STATUS.G_Diagnostics_Count := 0;
+
 // ===== ORIGINAL SNAPSHOT (FULL) =====
 fbIO_Watchdog_1(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 1, VI_Heartbeat_Signal := GVL_IO.DI_Module_1_Heartbeat, VI_Timeout_MS := 2000);
 fbIO_Watchdog_2(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 2, VI_Heartbeat_Signal := GVL_IO.DI_Module_2_Heartbeat, VI_Timeout_MS := 2000);
@@ -41,6 +45,31 @@ GVL_STATUS.G_IO_Modules_Online[1] := fbIO_Watchdog_1.VO_Module_Online;
 GVL_STATUS.G_IO_Modules_Online[2] := fbIO_Watchdog_2.VO_Module_Online;
 
 L_IO_Error_Active := fbIO_Watchdog_1.VO_Error_Active OR fbIO_Watchdog_2.VO_Error_Active;
+
+// IO watchdog events
+IF NOT fbIO_Watchdog_1.VO_Module_Online THEN
+    IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
+        L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := 16#E001;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 4;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Source := 1;
+        GVL_STATUS.G_Diagnostics_Count := L_DiagIdx;
+    END_IF;
+END_IF;
+
+IF NOT fbIO_Watchdog_2.VO_Module_Online THEN
+    IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
+        L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := 16#E002;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 4;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
+        GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Source := 2;
+        GVL_STATUS.G_Diagnostics_Count := L_DiagIdx;
+    END_IF;
+END_IF;
 
 IF L_IO_Error_Active THEN
     GVL_COMMAND.G_Gas_Valve_Close := TRUE;
@@ -177,9 +206,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_STATE.G_Manifold_Pressures[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Value;
     GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Error;
     GVL_STATUS.G_Diagnostics.Manifold_Pressure_Diag_Code[L_i] := fbAnalog_Manifold_Pressure[L_i].VO_Diag_Code;
-    IF fbAnalog_Manifold_Pressure[L_i].VO_Error AND NOT GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active THEN
-        GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active := TRUE;
-        GVL_STATUS.G_Diagnostics.Manifold_Pressure_First_Fault_Index := L_i;
+    IF fbAnalog_Manifold_Pressure[L_i].VO_Error THEN
+        IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
+            L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := GVL_CONFIG.ERR_PRESSURE_OUT_OF_RANGE;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 3;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Source := 100 + L_i;
+            GVL_STATUS.G_Diagnostics_Count := L_DiagIdx;
+        END_IF;
     END_IF;
 
     fbAnalog_Manifold_Current[L_i](
@@ -197,9 +233,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_STATE.G_Manifold_Currents[L_i] := fbAnalog_Manifold_Current[L_i].VO_Value;
     GVL_STATUS.G_Diagnostics.Manifold_Current_Fault[L_i] := fbAnalog_Manifold_Current[L_i].VO_Error;
     GVL_STATUS.G_Diagnostics.Manifold_Current_Diag_Code[L_i] := fbAnalog_Manifold_Current[L_i].VO_Diag_Code;
-    IF fbAnalog_Manifold_Current[L_i].VO_Error AND NOT GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active THEN
-        GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := TRUE;
-        GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := L_i;
+    IF fbAnalog_Manifold_Current[L_i].VO_Error THEN
+        IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
+            L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := GVL_CONFIG.ERR_PUMP_UNDERCURRENT;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 3;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Source := 200 + L_i;
+            GVL_STATUS.G_Diagnostics_Count := L_DiagIdx;
+        END_IF;
     END_IF;
 
     IF GVL_IO.AI_Manifold_Temps_Supply[L_i].wStatus = 0 THEN
@@ -239,6 +282,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
             VI_Record := GVL_CONFIG.G_Calib_Methane[L_i]
         );
         GVL_STATE.G_Methane_Sensors[L_i] := fbCalib_Methane[L_i].VO_Calibrated_Value;
+
+        IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
+            L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := GVL_CONFIG.ERR_SENSOR_DISCONNECTED;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 3;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Source := 300 + L_i;
+            GVL_STATUS.G_Diagnostics_Count := L_DiagIdx;
+        END_IF;
     END_IF;
 END_FOR;
 
