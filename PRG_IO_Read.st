@@ -22,6 +22,8 @@ VAR
     fbCalib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
+    fbCalib_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
 
     fbAnalog_Manifold_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
@@ -107,8 +109,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
 END_FOR;
 
 FOR L_i := 1 TO 8 DO
-    GVL_STATE.G_Room_Hum[L_i] := GVL_IO.AI_Room_Hum[L_i];
-    GVL_STATE.G_Room_CO2[L_i] := GVL_IO.AI_Room_CO2[L_i];
+    fbCalib_Room_Hum[L_i](
+        VI_Raw_Value := GVL_IO.AI_Room_Hum[L_i],
+        VI_Record := GVL_CONFIG.G_Calib_Humidity[L_i]
+    );
+    GVL_STATE.G_Room_Hum[L_i] := fbCalib_Room_Hum[L_i].VO_Calibrated_Value;
+
+    fbCalib_Room_CO2[L_i](
+        VI_Raw_Value := GVL_IO.AI_Room_CO2[L_i],
+        VI_Record := GVL_CONFIG.G_Calib_CO2[L_i]
+    );
+    GVL_STATE.G_Room_CO2[L_i] := fbCalib_Room_CO2[L_i].VO_Calibrated_Value;
 END_FOR;
 
 FOR L_i := 1 TO 8 DO
