@@ -19,6 +19,7 @@ VAR
 
     // added
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
+    fbCalib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
 
@@ -97,7 +98,11 @@ GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
     IF GVL_IO.AI_Supply_Temps[L_i].wStatus = 0 THEN
-        GVL_STATE.G_Supply_Temps[L_i] := GVL_IO.AI_Supply_Temps[L_i].rValue;
+        fbCalib_Supply_Temps[L_i](
+            VI_Raw_Value := GVL_IO.AI_Supply_Temps[L_i].rValue,
+            VI_Record := GVL_CONFIG.G_Calib_Supply_Temps[L_i]
+        );
+        GVL_STATE.G_Supply_Temps[L_i] := fbCalib_Supply_Temps[L_i].VO_Calibrated_Value;
     END_IF;
 END_FOR;
 
