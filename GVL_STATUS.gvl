@@ -29,4 +29,8 @@ VAR_GLOBAL
     G_Evac_Target_Zone_Name : STRING(80); // Предпочтительная зона выхода/направления эвакуации
     G_Evac_Hazard_Zone_Name : STRING(80); // Наиболее важная опасная зона для HMI/диагностики
     G_Diagnostics : ST_System_Diagnostics; // Интегральная диагностика и HMI-состояния
+
+    // === D1 Structured Diagnostics ===
+    G_Diagnostics_Events : ARRAY[1..50] OF ST_Diagnostic_Event;
+    G_Diagnostics_Count : INT := 0;
 END_VAR
