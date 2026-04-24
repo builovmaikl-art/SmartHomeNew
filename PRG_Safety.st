@@ -1,51 +1,10 @@
 PROGRAM PRG_Safety
 VAR
-    L_CMD_Water_Selective_Recover_Prev : BOOL;
-    L_CMD_Water_Selective_Recover_Edge : BOOL;
-    L_CMD_Gas_Selective_Recover_Prev : BOOL;
-    L_CMD_Gas_Selective_Recover_Edge : BOOL;
-    L_CMD_Water_Valve_Test_Open_Prev : BOOL;
-    L_CMD_Water_Valve_Test_Open_Edge : BOOL;
-    L_CMD_Water_Valve_Test_Close_Prev : BOOL;
-    L_CMD_Water_Valve_Test_Close_Edge : BOOL;
-    L_CMD_Water_Valve_Test_Confirm_Prev : BOOL;
-    L_CMD_Water_Valve_Test_Confirm_Edge : BOOL;
-    L_CMD_Gas_Valve_Test_Open_Prev : BOOL;
-    L_CMD_Gas_Valve_Test_Open_Edge : BOOL;
-    L_CMD_Gas_Valve_Test_Close_Prev : BOOL;
-    L_CMD_Gas_Valve_Test_Close_Edge : BOOL;
-    L_CMD_Gas_Valve_Test_Confirm_Prev : BOOL;
-    L_CMD_Gas_Valve_Test_Confirm_Edge : BOOL;
     fbWaterLeakageManager : FB_Water_Leakage_Manager;
     fbGasSmokeManager : FB_Gas_Smoke_Manager;
+    fbSafetyWorkflow : FB_Safety_Workflow_Manager;
     L_i : INT;
-    L_Water_Test_Active : BOOL;
-    L_Water_Test_Deadline : UDINT;
-    L_Gas_Test_Active : BOOL;
-    L_Gas_Test_Deadline : UDINT;
 END_VAR
-
-// ========================================
-// SAFETY_WORKFLOW_INPUT_NORMALIZATION
-// ========================================
-// Edge detection for operator/test/recover workflow inputs.
-L_CMD_Water_Selective_Recover_Edge := GVL_INTENT_USER.I_Water_Selective_Recover AND NOT L_CMD_Water_Selective_Recover_Prev;
-L_CMD_Gas_Selective_Recover_Edge := GVL_INTENT_USER.I_Gas_Selective_Recover AND NOT L_CMD_Gas_Selective_Recover_Prev;
-L_CMD_Water_Valve_Test_Open_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Open AND NOT L_CMD_Water_Valve_Test_Open_Prev;
-L_CMD_Water_Valve_Test_Close_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Close AND NOT L_CMD_Water_Valve_Test_Close_Prev;
-L_CMD_Water_Valve_Test_Confirm_Edge := GVL_INTENT_USER.I_Water_Valve_Test_Confirm AND NOT L_CMD_Water_Valve_Test_Confirm_Prev;
-L_CMD_Gas_Valve_Test_Open_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Open AND NOT L_CMD_Gas_Valve_Test_Open_Prev;
-L_CMD_Gas_Valve_Test_Close_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Close AND NOT L_CMD_Gas_Valve_Test_Close_Prev;
-L_CMD_Gas_Valve_Test_Confirm_Edge := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm AND NOT L_CMD_Gas_Valve_Test_Confirm_Prev;
-
-L_CMD_Water_Selective_Recover_Prev := GVL_INTENT_USER.I_Water_Selective_Recover;
-L_CMD_Gas_Selective_Recover_Prev := GVL_INTENT_USER.I_Gas_Selective_Recover;
-L_CMD_Water_Valve_Test_Open_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Open;
-L_CMD_Water_Valve_Test_Close_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Close;
-L_CMD_Water_Valve_Test_Confirm_Prev := GVL_INTENT_USER.I_Water_Valve_Test_Confirm;
-L_CMD_Gas_Valve_Test_Open_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Open;
-L_CMD_Gas_Valve_Test_Close_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Close;
-L_CMD_Gas_Valve_Test_Confirm_Prev := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm;
 
 // ========================================
 // SAFETY_INTENT_RESET_INIT
@@ -73,6 +32,29 @@ GVL_INTENT_SAFETY.I_Lock_1_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
+
+// ========================================
+// SAFETY_WORKFLOW_FB
+// ========================================
+fbSafetyWorkflow(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Water_Selective_Recover := GVL_INTENT_USER.I_Water_Selective_Recover,
+    VI_Gas_Selective_Recover := GVL_INTENT_USER.I_Gas_Selective_Recover,
+    VI_Water_Valve_Test_Open := GVL_INTENT_USER.I_Water_Valve_Test_Open,
+    VI_Water_Valve_Test_Close := GVL_INTENT_USER.I_Water_Valve_Test_Close,
+    VI_Water_Valve_Test_Confirm := GVL_INTENT_USER.I_Water_Valve_Test_Confirm,
+    VI_Gas_Valve_Test_Open := GVL_INTENT_USER.I_Gas_Valve_Test_Open,
+    VI_Gas_Valve_Test_Close := GVL_INTENT_USER.I_Gas_Valve_Test_Close,
+    VI_Gas_Valve_Test_Confirm := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm
+);
+
+IF fbSafetyWorkflow.VO_Water_Test_Timeout_Close_Required THEN
+    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
+END_IF;
+
+IF fbSafetyWorkflow.VO_Gas_Test_Timeout_Close_Required THEN
+    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+END_IF;
 
 // ========================================
 // SAFETY_DETECTORS_AND_HEALTH_PROJECTION
@@ -133,34 +115,6 @@ END_IF;
 
 IF GVL_STATE.G_Safety_Leak_Latched THEN
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
-END_IF;
-
-// ========================================
-// SAFETY_WORKFLOW_CLUSTER
-// ========================================
-// Operator/test/recover workflow state and timeout-driven intent effects.
-IF L_CMD_Water_Valve_Test_Open_Edge THEN
-    L_Water_Test_Active := TRUE;
-    L_Water_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
-END_IF;
-
-IF L_Water_Test_Active THEN
-    IF GVL_STATUS.G_System_Time_MS >= L_Water_Test_Deadline THEN
-        L_Water_Test_Active := FALSE;
-        GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
-    END_IF;
-END_IF;
-
-IF L_CMD_Gas_Valve_Test_Open_Edge THEN
-    L_Gas_Test_Active := TRUE;
-    L_Gas_Test_Deadline := GVL_STATUS.G_System_Time_MS + 60000;
-END_IF;
-
-IF L_Gas_Test_Active THEN
-    IF GVL_STATUS.G_System_Time_MS >= L_Gas_Test_Deadline THEN
-        L_Gas_Test_Active := FALSE;
-        GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
-    END_IF;
 END_IF;
 
 // ========================================
