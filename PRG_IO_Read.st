@@ -282,10 +282,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
             VI_Record := GVL_CONFIG.G_Calib_Methane[L_i]
         );
         GVL_STATE.G_Methane_Sensors[L_i] := fbCalib_Methane[L_i].VO_Calibrated_Value;
-
+    ELSE
         IF GVL_STATUS.G_Diagnostics_Count < 50 THEN
             L_DiagIdx := GVL_STATUS.G_Diagnostics_Count + 1;
-            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := GVL_CONFIG.ERR_SENSOR_DISCONNECTED;
+            GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Code := 16#E003;
             GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Severity := 3;
             GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Active := TRUE;
             GVL_STATUS.G_Diagnostics_Events[L_DiagIdx].Timestamp := GVL_STATUS.G_System_Time_MS;
