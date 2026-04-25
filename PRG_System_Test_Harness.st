@@ -3,7 +3,10 @@ VAR
     L_i : INT;
     L_j : INT;
     L_Used : REAL;
+    L_Failure_Logged : BOOL;
     fbDecisionTest : FB_Heating_Decision_Context;
+    fbTestResult : FB_Test_Result_Handler;
+    fbTrace : FB_Trace_Logger;
 END_VAR
 
 IF NOT GVL_TEST.G_Test_Enable THEN
@@ -13,20 +16,32 @@ END_IF;
 GVL_TEST.G_Test_Total_Checks := 0;
 GVL_TEST.G_Test_Failed_Checks := 0;
 GVL_TEST.G_Test_Passed := TRUE;
+GVL_TEST.G_Test_Last_Failure_Index := 0;
+GVL_TEST.G_Test_Last_Failure_Code := 0;
+
+// Reset transient failure flags for this scan
+GVL_TEST.G_Diagnostics_Duplicate_Event_Found := FALSE;
+GVL_TEST.G_Diagnostics_Count_Out_Of_Range := FALSE;
+GVL_TEST.G_Heating_Allocation_Budget_Exceeded := FALSE;
+GVL_TEST.G_Heating_Allocation_Enabled_Not_Allowed := FALSE;
+GVL_TEST.G_Safety_Latched_Without_Intent := FALSE;
 
 // =========================
 // TEST 1: Diagnostics count bounds
 // =========================
-GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_CheckS + 1;
+GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 IF (GVL_STATUS.G_Diagnostics_Count < 0) OR (GVL_STATUS.G_Diagnostics_Count > 50) THEN
     GVL_TEST.G_Diagnostics_Count_Out_Of_Range := TRUE;
     GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
+    GVL_TEST.G_Test_Last_Failure_Index := 1;
+    GVL_TEST.G_Test_Last_Failure_Code := 16#T001;
 END_IF;
 
 // =========================
 // TEST 2: Diagnostics duplicates (Code+Source)
 // =========================
+GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 FOR L_i := 1 TO GVL_STATUS.G_Diagnostics_Count DO
     FOR L_j := L_i + 1 TO GVL_STATUS.G_Diagnostics_Count DO
         IF (GVL_STATUS.G_Diagnostics_Events[L_i].Code = GVL_STATUS.G_Diagnostics_Events[L_j].Code) AND
@@ -34,15 +49,16 @@ FOR L_i := 1 TO GVL_STATUS.G_Diagnostics_Count DO
             GVL_TEST.G_Diagnostics_Duplicate_Event_Found := TRUE;
             GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
             GVL_TEST.G_Test_Passed := FALSE;
+            GVL_TEST.G_Test_Last_Failure_Index := 2;
+            GVL_TEST.G_Test_Last_Failure_Code := 16#T002;
         END_IF;
     END_FOR;
 END_FOR;
 
-GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
-
 // =========================
 // TEST 3: Heating decision consistency
 // =========================
+GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 fbDecisionTest(
     VI_Manifold_Pump_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service,
     VI_Manifold_Pressure_Fault := GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault,
@@ -57,8 +73,10 @@ L_Used := 0.0;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF fbDecisionTest.VO_Manifold_Enabled[L_i] AND (NOT fbDecisionTest.VO_Manifold_Allowed[L_i]) THEN
         GVL_TEST.G_Heating_Allocation_Enabled_Not_Allowed := TRUE;
-        GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_CheckS + 1;
+        GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
         GVL_TEST.G_Test_Passed := FALSE;
+        GVL_TEST.G_Test_Last_Failure_Index := 3;
+        GVL_TEST.G_Test_Last_Failure_Code := 16#T003;
     END_IF;
 
     IF fbDecisionTest.VO_Manifold_Enabled[L_i] THEN
@@ -68,28 +86,40 @@ END_FOR;
 
 IF L_Used > (GVL_CONFIG.G_Max_Thermal_Budget + 0.001) THEN
     GVL_TEST.G_Heating_Allocation_Budget_Exceeded := TRUE;
-    GVL_TEST.G_Test_Failed_CheckS := GVL_TEST.G_Test_Failed_CheckS + 1;
+    GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
+    GVL_TEST.G_Test_Last_Failure_Index := 3;
+    GVL_TEST.G_Test_Last_Failure_Code := 16#T004;
 END_IF;
-
-GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_CheckS + 1;
 
 // =========================
 // TEST 4: Safety latch consistency
 // =========================
+GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 IF GVL_STATE.G_Safety_Gas_Latched AND (NOT GVL_INTENT_SAFETY.I_Gas_Alarm_Active) THEN
     GVL_TEST.G_Safety_Latched_Without_Intent := TRUE;
-    GVL_TEST.G_Test_Failed_CheckS := GVL_TEST.G_Test_Failed_CheckS + 1;
+    GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
+    GVL_TEST.G_Test_Last_Failure_Index := 4;
+    GVL_TEST.G_Test_Last_Failure_Code := 16#T005;
 END_IF;
 
-GVL_TEST.G_Test_Total_CheckS := GVL_TEST.G_Test_Total_CheckS + 1;
-
 // =========================
-// FINAL STATUS
+// FINAL STATUS + SAFE STOP + TRACE
 // =========================
 IF GVL_TEST.G_Test_Passed THEN
     GVL_TEST.G_Test_Status_Msg := 'ALL TESTS PASSED';
 ELSE
     GVL_TEST.G_Test_Status_Msg := 'TEST FAILURES DETECTED';
+END_IF;
+
+fbTestResult(
+    VI_Test_Passed := GVL_TEST.G_Test_Passed
+);
+
+IF NOT GVL_TEST.G_Test_Passed THEN
+    fbTrace(
+        VI_Event_Code := UDINT_TO_INT(GVL_TEST.G_Test_Last_Failure_Code),
+        VI_System_Time := GVL_STATUS.G_System_Time_MS
+    );
 END_IF;
