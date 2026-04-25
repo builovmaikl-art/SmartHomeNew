@@ -1,0 +1,18 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Test_Enable : BOOL := FALSE;
+    G_Test_Total_Checks : INT := 0;
+    G_Test_Failed_Checks : INT := 0;
+    G_Test_Passed : BOOL := TRUE;
+    G_Test_Last_Failure_Index : INT := 0;
+    G_Test_Last_Failure_Code : UDINT := 0;
+    G_Test_Status_Msg : STRING(200) := 'Tests not run';
+
+    // Runtime self-checks
+    G_Ownership_Violation : BOOL := FALSE;
+    G_Diagnostics_Duplicate_Event_Found : BOOL := FALSE;
+    G_Diagnostics_Count_Out_Of_Range : BOOL := FALSE;
+    G_Heating_Allocation_Budget_Exceeded : BOOL := FALSE;
+    G_Heating_Allocation_Enabled_Not_Allowed : BOOL := FALSE;
+    G_Safety_Latched_Without_Intent : BOOL := FALSE;
+END_VAR
