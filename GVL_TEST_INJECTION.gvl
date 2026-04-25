@@ -1,0 +1,13 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Inject_Enable : BOOL := FALSE;
+
+    // Fault injection flags
+    G_Inject_Gas_Level : REAL := 0.0;
+    G_Inject_Force_Gas_Alarm_Reset : BOOL := FALSE;
+    G_Inject_Force_IO_Offline : BOOL := FALSE;
+
+    // Scenario runner
+    G_Test_Step : INT := 0;
+    G_Test_Timer_MS : UDINT := 0;
+END_VAR
