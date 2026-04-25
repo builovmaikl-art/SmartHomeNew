@@ -99,7 +99,7 @@ fbOwnership(
 );
 
 IF fbOwnership.VO_Ownership_Violation THEN
-    GVL_STATUS.G_Internal_Error := TRUE;
+    GVL_TEST.G_Ownership_Violation := TRUE;
 END_IF;
 
 // ========================================
