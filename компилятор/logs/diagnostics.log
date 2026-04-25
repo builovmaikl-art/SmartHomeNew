@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1664
+total 1668
 -rw-r--r--   1 runner runner  13067 Apr 25 12:01 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x  18 runner runner  12288 Apr 25 12:01 .
 drwxr-xr-x   3 runner runner   4096 Apr 25 12:01 ..
@@ -138,6 +138,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 25 12:01 DUT
 -rw-r--r--   1 runner runner   1231 Apr 25 12:01 GVL_Safety_Selector.gvl
 -rw-r--r--   1 runner runner    686 Apr 25 12:01 GVL_TEST.gvl
 -rw-r--r--   1 runner runner    338 Apr 25 12:01 GVL_TEST_INJECTION.gvl
+-rw-r--r--   1 runner runner    193 Apr 25 12:01 GVL_TRACE.gvl
 -rw-r--r--   1 runner runner   3018 Apr 25 12:01 HEATING_CHECKPOINT_2026-04-20.md
 -rw-r--r--   1 runner runner    294 Apr 25 12:01 IValveController.st
 -rw-r--r--   1 runner runner    388 Apr 25 12:01 MAIN.st
@@ -256,4 +257,4 @@ total 792
 drwxr-xr-x 2 runner runner   4096 Apr 25 12:01 .
 drwxr-xr-x 6 runner runner   4096 Apr 25 12:01 ..
 -rw-r--r-- 1 runner runner      0 Apr 25 12:01 .gitkeep
--rw-r--r-- 1 runner runner 801566 Apr 25 12:01 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 802783 Apr 25 12:01 RESULT_methods_clean.xml
