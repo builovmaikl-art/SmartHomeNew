@@ -3,7 +3,6 @@ VAR
     L_i : INT;
     L_j : INT;
     L_Used : REAL;
-    L_Failure_Logged : BOOL;
     fbDecisionTest : FB_Heating_Decision_Context;
     fbTestResult : FB_Test_Result_Handler;
     fbTrace : FB_Trace_Logger;
@@ -35,7 +34,7 @@ IF (GVL_STATUS.G_Diagnostics_Count < 0) OR (GVL_STATUS.G_Diagnostics_Count > 50)
     GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
     GVL_TEST.G_Test_Last_Failure_Index := 1;
-    GVL_TEST.G_Test_Last_Failure_Code := 16#T001;
+    GVL_TEST.G_Test_Last_Failure_Code := 1001;
 END_IF;
 
 // =========================
@@ -50,7 +49,7 @@ FOR L_i := 1 TO GVL_STATUS.G_Diagnostics_Count DO
             GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
             GVL_TEST.G_Test_Passed := FALSE;
             GVL_TEST.G_Test_Last_Failure_Index := 2;
-            GVL_TEST.G_Test_Last_Failure_Code := 16#T002;
+            GVL_TEST.G_Test_Last_Failure_Code := 1002;
         END_IF;
     END_FOR;
 END_FOR;
@@ -76,7 +75,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
         GVL_TEST.G_Test_Passed := FALSE;
         GVL_TEST.G_Test_Last_Failure_Index := 3;
-        GVL_TEST.G_Test_Last_Failure_Code := 16#T003;
+        GVL_TEST.G_Test_Last_Failure_Code := 1003;
     END_IF;
 
     IF fbDecisionTest.VO_Manifold_Enabled[L_i] THEN
@@ -89,7 +88,7 @@ IF L_Used > (GVL_CONFIG.G_Max_Thermal_Budget + 0.001) THEN
     GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
     GVL_TEST.G_Test_Last_Failure_Index := 3;
-    GVL_TEST.G_Test_Last_Failure_Code := 16#T004;
+    GVL_TEST.G_Test_Last_Failure_Code := 1004;
 END_IF;
 
 // =========================
@@ -101,7 +100,7 @@ IF GVL_STATE.G_Safety_Gas_Latched AND (NOT GVL_INTENT_SAFETY.I_Gas_Alarm_Active)
     GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
     GVL_TEST.G_Test_Last_Failure_Index := 4;
-    GVL_TEST.G_Test_Last_Failure_Code := 16#T005;
+    GVL_TEST.G_Test_Last_Failure_Code := 1005;
 END_IF;
 
 // =========================
