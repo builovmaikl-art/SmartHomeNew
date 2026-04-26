@@ -1,234 +1,216 @@
 # 84 — Post-audit Technical Debt Register
 
 Дата фиксации: 2026-04-24
-Режим: audit/debt register only
-Scope: runtime-код не изменялся
+Последняя синхронизация: 2026-04-24
+Режим: historical debt register + closure status
 
 ## Контекст
 
-По итогам восстановления и аудита цепочек IO / Diagnostics / Heating были выявлены места, которые не являются немедленными runtime-багами, но требуют отдельной фиксации как технический долг и зоны усиления.
+Этот документ начинался как реестр технического долга после восстановления IO / Diagnostics / Heating.
 
-Цель этого документа — зафиксировать долги до следующей волны изменений, чтобы не продолжать развитие системы поверх неформализованных рисков.
+После выполнения последующих waves он больше не является списком открытых блокеров. Он фиксирует:
+
+```text
+- какие риски были выявлены;
+- чем они были закрыты;
+- что осталось только как правило сопровождения или future architecture topic.
+```
 
 ---
 
 ## P0 — Protected core file policy для `PRG_IO_Read.st`
 
-### Наблюдение
+### Исходный риск
 
-`PRG_IO_Read.st` несколько раз был повреждён частичными update/merge-операциями:
+`PRG_IO_Read.st` несколько раз повреждался частичными update/merge-операциями:
 
+```text
 - терялись блоки чтения IO;
 - появлялись заглушки вида `...`;
-- реальные runtime-связи заменялись сокращёнными шаблонами;
+- runtime-связи заменялись сокращёнными шаблонами;
 - после восстановления возникали ошибки из-за несверенных сигнатур FB.
+```
 
-### Риск
+### Выполненное закрытие
 
-`PRG_IO_Read.st` является producer-ядром для многих downstream-подсистем:
-
-- heating;
-- safety;
-- diagnostics;
-- DHW;
-- gas/flood/smoke;
-- ventilation-related state.
-
-Любая неполная замена файла может сделать систему логически рабочей на верхнем уровне, но недостоверной по входным данным.
-
-### Решение
-
-Ввести правило:
-
-> `PRG_IO_Read.st` нельзя править сокращёнными шаблонами, частичными переписываниями или “same code omitted”.
-
-Разрешённые режимы изменения:
-
-1. full-file merge с последующим чтением файла;
-2. минимальный diff с проверкой затронутого участка;
-3. обязательная сверка producer-chain `GVL_IO -> PRG_IO_Read -> GVL_STATE`.
+```text
+- выполнено full-file восстановление `PRG_IO_Read.st`;
+- удалены partial/omitted artifacts;
+- закреплено правило: protected core не править сокращёнными шаблонами;
+- дальнейшие injection/test hooks вынесены в отдельный `PRG_Test_Injection`, без правки IO core.
+```
 
 ### Статус
 
-Зафиксировать как постоянное правило сопровождения.
+```text
+CLOSED AS POLICY
+```
+
+Правило сопровождения остаётся постоянным.
 
 ---
 
 ## P1 — `PRG_Safety.st`: cleanup Cluster 2
 
-### Наблюдение
+### Исходный риск
 
-Предыдущая segmentation safety producer ownership выделила 4 ownership-cluster в `PRG_Safety.st`:
+`PRG_Safety.st` смешивал:
 
-1. core hazard / interlock projection;
-2. operator / test / recover workflow;
-3. safety-access coupling;
-4. producer-heavier publication tail.
+```text
+- core safety producer logic;
+- operator/test/recover workflow;
+- test timeout workflow;
+- intent projection.
+```
 
-Практический вывод сегментации: первый minimal cleanup target — Cluster 2, operator/test/recover workflow.
+### Выполненное закрытие
 
-### Почему это важно
-
-Core hazard/interlock projection выглядит естественным ядром safety producer-role. А operator/test/recover workflow выглядит более подходящим кандидатом для отделения или хотя бы структурного упрощения.
-
-### Риск
-
-Если продолжать расширять `PRG_Safety.st` без сегментации, файл станет смешивать:
-
-- safety producer logic;
-- operator workflow;
-- test/recovery orchestration;
-- access coupling;
-- publication side-effects.
-
-### Решение
-
-Следующий cleanup по safety должен начинаться не с core hazard, а с Cluster 2.
+```text
+- создан `FB_Safety_Workflow_Manager`;
+- operator/test/recover workflow вынесен из core safety body;
+- `PRG_Safety.st` оставлен владельцем final safety intent projection;
+- добавлен `FB_Ownership_Watchdog` как runtime контроль ownership-нарушений.
+```
 
 ### Статус
 
-Debt зафиксирован. Runtime-код не трогать до отдельной задачи.
+```text
+CLOSED
+```
 
 ---
 
-## P1 — Energy Management Wave 4.x extraction candidate
+## P1 — Energy Management / Heating allocation extraction candidate
 
-### Наблюдение
+### Исходный риск
 
-В `PRG_Heating.st` внедрены слои:
+Развитие energy-management внутри `PRG_Heating.st` могло привести к смешению:
 
-- Wave 4.1 — count limit;
-- Wave 4.2 — thermal budget;
-- Wave 4.3 — time slicing;
-- Wave 4.4 — proportional duty cycle;
-- Wave 4.5 — load-aware balancing.
-
-Функционально логика полезна, но плотность `PRG_Heating.st` выросла.
-
-### Риск
-
-Дальнейшее развитие energy-management внутри `PRG_Heating.st` приведёт к смешению:
-
+```text
 - heating orchestration;
 - energy arbitration;
 - thermal load estimation;
-- duty-cycle scheduling;
 - degradation policy.
+```
 
-### Решение
+### Выполненное закрытие в текущем audit scope
 
-Следующий этап energy-management должен рассматриваться как кандидат на вынос в отдельный FB, например:
-
-- `FB_Heating_Energy_Manager`;
-- `FB_Manifold_Load_Balancer`;
-- `FB_Thermal_Budget_Controller`.
+```text
+- создан `FB_Heating_Decision_Context`;
+- ограничения вынесены в decision-context;
+- введены Allowed / Enabled состояния контуров;
+- добавлены thermal weights;
+- реализован priority-aware thermal allocation;
+- `PRG_Heating` применяет constraints после base heating manager.
+```
 
 ### Статус
 
-Не рефакторить немедленно. Зафиксировать как архитектурный долг перед следующими волнами.
+```text
+CLOSED FOR CURRENT AUDIT
+```
+
+Полный отдельный `FB_Heating_Energy_Manager` не требуется в текущем цикле. Возможен только как future architecture wave.
 
 ---
 
 ## P1 — Calibration mapping registry
 
-### Наблюдение
+### Исходный риск
 
-Калибровочная инфраструктура присутствует в `GVL_CONFIG`, но подключение сенсоров должно быть формализовано.
-
-Нужна явная таблица:
+Sensor pipeline был неоднороден:
 
 ```text
-sensor group -> raw source -> calibration record -> state target -> fault/diagnostic path
-```
-
-### Риск
-
-Без такой таблицы новые sensor groups могут подключаться непоследовательно:
-
 - часть через calibration;
 - часть напрямую;
 - часть через analog FB;
-- часть вообще только как declaration в `GVL_STATE`.
+- часть без формального mapping-документа.
+```
 
-### Решение
+### Выполненное закрытие
 
-Создать отдельный документ calibration map перед следующими расширениями sensor pipeline.
+```text
+- создан calibration mapping registry;
+- Supply temps переведены на calibration;
+- Room humidity / CO2 переведены на calibration;
+- Manifold supply / return temps переведены на calibration;
+- Methane / CO переведены на calibration;
+- DHW оставлен direct из-за отсутствия calibration-record path в текущем scope.
+```
 
 ### Статус
 
-Debt зафиксирован.
+```text
+CLOSED
+```
 
 ---
 
 ## P2 — Diagnostics severity/code model
 
-### Наблюдение
+### Исходный риск
 
-Pressure/current correlation добавлена, но диагностический смысл пока выражается через BOOL-флаги и текстовые поля.
+Диагностика была выражена преимущественно через BOOL-флаги и строки.
 
-### Риск
+### Выполненное закрытие
 
-Строки удобны для HMI, но неудобны для системной логики:
-
-- нет устойчивого enum-кода причины;
-- сложнее агрегировать severity;
-- сложнее строить реакцию системы без string matching.
-
-### Решение
-
-Ввести слой diagnostic classification:
-
-- code;
-- severity;
-- source subsystem;
-- first affected index;
-- human-readable text.
+```text
+- создан `ST_Diagnostic_Event`;
+- добавлен `GVL_STATUS.G_Diagnostics_Events[1..50]`;
+- добавлен `FB_Diagnostics_Event_Manager`;
+- lifecycle событий построен по `Code + Source`;
+- IO и Heating публикуют события через lifecycle manager;
+- создан test harness для проверки duplicates / bounds.
+```
 
 ### Статус
 
-Не срочно. Подготовить после стабилизации IO и Safety cleanup.
+```text
+CLOSED
+```
 
 ---
 
 ## P2 — Safety bootstrap ownership review
 
-### Наблюдение
+### Исходный риск
 
-В `PRG_IO_Read.st` присутствуют bootstrap/reset присвоения safety-related полей, например safety alarm defaults.
+`PRG_IO_Read.st` содержал bootstrap/reset присвоения safety-related полей, что нарушало producer ownership.
 
-### Риск
+### Выполненное закрытие
 
-IO producer может начать владеть safety-state, хотя safety-state должен принадлежать safety producer.
-
-### Решение
-
-Проверить ownership:
-
-- какие safety fields должны только читаться из IO;
-- какие должны публиковаться исключительно `PRG_Safety.st`;
-- какие bootstrap defaults допустимы только как временный compatibility layer.
+```text
+- удалены сбросы `G_Safety_Gas_Alarm`, `G_Safety_Leak_Alarm`, `G_Safety_Smoke_Alarm` из `PRG_IO_Read`;
+- удалены сбросы `Backup_Pump_Fault` / `Electric_Heater_Fault` из `PRG_IO_Read`;
+- ownership возвращён safety/heating producer layers;
+- runtime контроль возможного нарушения реализован через `FB_Ownership_Watchdog` и `GVL_TEST.G_Ownership_Violation`.
+```
 
 ### Статус
 
-Audit-candidate. Не менять без отдельного ownership review.
+```text
+CLOSED
+```
 
 ---
 
-## Итоговый приоритет
+## Финальный статус реестра
 
 ```text
-P0  PRG_IO_Read protected core policy
-P1  PRG_Safety Cluster 2 cleanup
-P1  Energy Management extraction candidate
-P1  Calibration mapping registry
-P2  Diagnostics severity/code model
-P2  Safety bootstrap ownership review
+NO OPEN BLOCKING DEBT IN THIS AUDIT SCOPE
 ```
 
-## Рекомендуемый следующий документ
+Оставшиеся пункты являются не долгами текущего аудита, а future architecture candidates:
 
-`85_CALIBRATION_MAPPING_REGISTRY.md`
+```text
+- central arbitration layer;
+- broader ventilation manager decomposition;
+- optional lighting override redesign;
+- hardware commissioning / compile validation.
+```
 
-или, если идти по safety:
+---
 
-`85_SAFETY_CLUSTER_2_CLEANUP_PLAN.md`
+## Правило дальнейших изменений
+
+Любые новые работы после этого документа должны оформляться как отдельные planned waves, а не как продолжение recovery/audit режима.
