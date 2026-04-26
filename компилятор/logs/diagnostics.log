@@ -159,7 +159,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 26 08:54 DUT
 -rw-r--r--   1 runner runner   4693 Apr 26 08:54 PRG_System_Test_Harness.st
 -rw-r--r--   1 runner runner   2738 Apr 26 08:54 PRG_Test.st
 -rw-r--r--   1 runner runner    752 Apr 26 08:54 PRG_Test_Injection.st
--rw-r--r--   1 runner runner    615 Apr 26 08:54 PRG_Test_Scenario_Runner.st
+-rw-r--r--   1 runner runner   2501 Apr 26 08:54 PRG_Test_Scenario_Runner.st
 -rw-r--r--   1 runner runner   2761 Apr 26 08:54 PRG_Ventilation.st
 -rw-r--r--   1 runner runner    711 Apr 26 08:54 ST_Alarm_Record.dut
 -rw-r--r--   1 runner runner    174 Apr 26 08:54 ST_Astro_Time.dut
@@ -259,4 +259,4 @@ total 800
 drwxr-xr-x 2 runner runner   4096 Apr 26 08:54 .
 drwxr-xr-x 6 runner runner   4096 Apr 26 08:54 ..
 -rw-r--r-- 1 runner runner      0 Apr 26 08:54 .gitkeep
--rw-r--r-- 1 runner runner 807768 Apr 26 08:54 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 808932 Apr 26 08:54 RESULT_methods_clean.xml
