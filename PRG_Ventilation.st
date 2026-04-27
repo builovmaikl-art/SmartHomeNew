@@ -27,6 +27,15 @@ L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
 L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
 L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
 
+// Coordinator constraint: block non-stop ventilation requests only.
+// Safety-driven stop request must remain untouched.
+IF GVL_SYSTEM_COORDINATION.G_Block_Ventilation THEN
+    L_Vent_PV3_Boost_Req := FALSE;
+    L_Supply_100_Req := FALSE;
+    L_Exhaust_100_Req := FALSE;
+    L_Supply_80_Req := FALSE;
+END_IF;
+
 // 11. Управление вентиляцией
 fbVentilationManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
