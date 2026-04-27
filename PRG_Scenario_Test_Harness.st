@@ -13,15 +13,18 @@ VAR
     fbDecisionScenario : FB_Heating_Decision_Context;
 END_VAR
 
+// === BEGIN RESULT_CONTROL_SYNC ===
 // RESULT panel is the operator control surface.
 GVL_TEST_PANEL.G_Enable := GVL_TEST_PANEL_RESULT.G_Enable;
 GVL_TEST_PANEL.G_Scenario_ID := GVL_TEST_PANEL_RESULT.G_Scenario_ID;
 GVL_TEST_PANEL.G_Scenario_Run := GVL_TEST_PANEL_RESULT.G_Scenario_Run;
+// === END RESULT_CONTROL_SYNC ===
 
 IF NOT GVL_TEST_PANEL.G_Enable THEN
     RETURN;
 END_IF;
 
+// === BEGIN SCENARIO_APPLY ===
 // ============================================================
 // HOLD-PRESET SCENARIO MODE
 // Run TRUE  = selected scenario continuously holds preset inputs
@@ -106,7 +109,9 @@ ELSE
         GVL_TEST_PANEL.G_Scenario_ID_Prev := 0;
     END_IF;
 END_IF;
+// === END SCENARIO_APPLY ===
 
+// === BEGIN COMMON_RESET ===
 // ============================================================
 // COMMON RESET
 // ============================================================
@@ -137,7 +142,9 @@ IF GVL_TEST_PANEL.G_Reset_Results_Request THEN
 
     GVL_TEST_PANEL.G_Reset_Results_Request := FALSE;
 END_IF;
+// === END COMMON_RESET ===
 
+// === BEGIN SCENARIO_EXECUTION ===
 // ============================================================
 // SCENARIOS
 // ============================================================
@@ -363,7 +370,9 @@ ELSE
     GVL_TEST_PANEL.G_Result_Status_Msg := 'Unknown scenario';
     GVL_TEST_PANEL.G_Result_Fail_Code := 9001;
 END_CASE;
+// === END SCENARIO_EXECUTION ===
 
+// === BEGIN RESULT_TEXT ===
 GVL_TEST_PANEL.G_Last_Result_Passed := GVL_TEST_PANEL.G_Result_Passed;
 GVL_TEST_PANEL.G_Last_Fail_Code := GVL_TEST_PANEL.G_Result_Fail_Code;
 GVL_TEST_PANEL.G_System_State_Line := 'Check Safety/Block/Budget/Preheat inputs and result arrays';
@@ -395,7 +404,9 @@ ELSE
         GVL_TEST_PANEL.G_Test_Result_Line := 'UNKNOWN TEST | FAIL';
     END_CASE;
 END_IF;
+// === END RESULT_TEXT ===
 
+// === BEGIN RESULT_MIRROR ===
 // RESULT panel mirror
 GVL_TEST_PANEL_RESULT.G_Enable := GVL_TEST_PANEL.G_Enable;
 GVL_TEST_PANEL_RESULT.G_Scenario_ID := GVL_TEST_PANEL.G_Scenario_ID;
@@ -414,7 +425,9 @@ GVL_TEST_PANEL_RESULT.G_Result_Used_Thermal_Budget := GVL_TEST_PANEL.G_Result_Us
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_TEST_PANEL_RESULT.G_Result_Manifold_Enabled[L_i] := GVL_TEST_PANEL.G_Result_Manifold_Enabled[L_i];
 END_FOR;
+// === END RESULT_MIRROR ===
 
+// === BEGIN DEBUG_MIRROR ===
 // DEBUG panel mirror
 GVL_TEST_PANEL_DEBUG.G_Test_Description := GVL_TEST_PANEL.G_Test_Description;
 GVL_TEST_PANEL_DEBUG.G_Test_What_To_Change := GVL_TEST_PANEL.G_Test_What_To_Change;
@@ -429,3 +442,4 @@ GVL_TEST_PANEL_DEBUG.G_Input_Guest_Preheat_Boost := GVL_TEST_PANEL.G_Input_Guest
 GVL_TEST_PANEL_DEBUG.G_Input_Max_Thermal_Budget := GVL_TEST_PANEL.G_Input_Max_Thermal_Budget;
 GVL_TEST_PANEL_DEBUG.G_Input_Block_Heating := GVL_TEST_PANEL.G_Input_Block_Heating;
 GVL_TEST_PANEL_DEBUG.G_Input_Safety_Stop := GVL_TEST_PANEL.G_Input_Safety_Stop;
+// === END DEBUG_MIRROR ===
