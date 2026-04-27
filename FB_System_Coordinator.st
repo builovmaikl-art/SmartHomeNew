@@ -7,6 +7,8 @@ VAR_INPUT
 
     VI_IO_Degraded : BOOL;
     VI_Ownership_Violation : BOOL;
+
+    VI_Behavior_Mode : E_Behavior_Mode;
 END_VAR
 
 VAR_OUTPUT
@@ -28,7 +30,7 @@ VO_Block_Sockets := FALSE;
 VO_System_Degraded := FALSE;
 VO_Code := 0;
 
-// FIRE
+// FIRE has highest priority. Safety-stop ownership remains in PRG_Safety.
 IF VI_Fire_Latched THEN
     VO_Block_Heating := TRUE;
     VO_Block_Ventilation := TRUE;
@@ -37,7 +39,7 @@ IF VI_Fire_Latched THEN
     RETURN;
 END_IF;
 
-// GAS
+// GAS has higher priority than behavior mode.
 IF VI_Gas_Latched THEN
     VO_Block_Heating := TRUE;
     VO_Block_Lighting := TRUE;
@@ -46,21 +48,48 @@ IF VI_Gas_Latched THEN
     RETURN;
 END_IF;
 
-// LEAK
+// LEAK blocks heating but does not suppress later degradation/mode overlays.
 IF VI_Leak_Latched THEN
     VO_Block_Heating := TRUE;
     VO_Code := 300;
 END_IF;
 
-// IO degraded
+// IO degraded blocks heating and marks system degraded.
 IF VI_IO_Degraded THEN
     VO_System_Degraded := TRUE;
     VO_Block_Heating := TRUE;
-    VO_Code := 400;
+    IF VO_Code = 0 THEN
+        VO_Code := 400;
+    END_IF;
 END_IF;
 
-// ownership violation
+// Ownership violation marks system degraded. Test/result handler owns any safe-stop reaction.
 IF VI_Ownership_Violation THEN
     VO_System_Degraded := TRUE;
-    VO_Code := 500;
+    IF VO_Code = 0 THEN
+        VO_Code := 500;
+    END_IF;
 END_IF;
+
+// Behavior mode overlays. These are lower priority than safety/system faults.
+CASE VI_Behavior_Mode OF
+    BEHAVIOR_AWAY:
+        VO_Block_Lighting := TRUE;
+        VO_Block_Sockets := TRUE;
+        IF VO_Code = 0 THEN
+            VO_Code := 600;
+        END_IF;
+
+    BEHAVIOR_NIGHT:
+        VO_Block_Lighting := TRUE;
+        IF VO_Code = 0 THEN
+            VO_Code := 700;
+        END_IF;
+
+    BEHAVIOR_MAINTENANCE:
+        VO_Block_Heating := TRUE;
+        VO_Block_Ventilation := TRUE;
+        IF VO_Code = 0 THEN
+            VO_Code := 800;
+        END_IF;
+END_CASE;
