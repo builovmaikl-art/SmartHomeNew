@@ -23,5 +23,5 @@ VAR_GLOBAL
     G_HP_Guest_Preheat_Config_Out_Of_Range : BOOL := FALSE;
 
     // Debug visibility
-    G_HP_Manifold_Adjusted_Priority : ARRAY[1..10] OF INT; // limited view for diagnostics
+    G_HP_Manifold_Adjusted_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 END_VAR
