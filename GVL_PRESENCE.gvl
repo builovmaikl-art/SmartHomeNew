@@ -4,4 +4,7 @@ VAR_GLOBAL
     G_Occupied : BOOL := TRUE;
     G_Auto_Away_Request : BOOL := FALSE;
     G_Last_Motion_TS : UDINT := 0;
+
+    G_Zone_Occupied : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Last_Motion_TS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
 END_VAR
