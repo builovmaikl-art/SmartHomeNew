@@ -47,7 +47,7 @@ END_IF;
 // =========================
 // TEST 2: Diagnostics duplicates
 // =========================
-GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_CheckS + 1;
+GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 FOR L_i := 1 TO GVL_STATUS.G_Diagnostics_Count DO
     FOR L_j := L_i + 1 TO GVL_STATUS.G_Diagnostics_Count DO
         IF (GVL_STATUS.G_Diagnostics_Events[L_i].Code = GVL_STATUS.G_Diagnostics_Events[L_j].Code) AND
@@ -103,7 +103,7 @@ END_IF;
 GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 IF GVL_STATE.G_Safety_Gas_Latched AND (NOT GVL_INTENT_SAFETY.I_Gas_Alarm_Active) THEN
     GVL_TEST.G_Safety_Latched_Without_Intent := TRUE;
-    GVL_TEST.G_Test_Failed_CHECKS := GVL_TEST.G_Test_Failed_Checks + 1;
+    GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
     GVL_TEST.G_Test_Passed := FALSE;
     GVL_TEST.G_Test_Last_Failure_Index := 4;
     GVL_TEST.G_Test_Last_Failure_Code := 1005;
@@ -114,7 +114,6 @@ END_IF;
 // =========================
 GVL_TEST.G_Test_Total_Checks := GVL_TEST.G_Test_Total_Checks + 1;
 
-// config sanity
 IF (GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost < 0) OR (GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost > 10) THEN
     GVL_TEST.G_HP_Guest_Preheat_Config_Out_Of_Range := TRUE;
     GVL_TEST.G_Test_Failed_Checks := GVL_TEST.G_Test_Failed_Checks + 1;
@@ -123,7 +122,6 @@ IF (GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost < 0) OR (GVL_HEATIN
     GVL_TEST.G_Test_Last_Failure_Code := 1007;
 END_IF;
 
-// calculate adjusted priorities
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_HP_Manifold_Adjusted[L_i] := GVL_CONFIG.G_Manifold_Priority[L_i];
 END_FOR;
@@ -132,7 +130,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_j := TO_INT(GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i].manifold_id);
 
     IF (L_j >= 1) AND (L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS) THEN
-
         L_HP_Manifold_Adjusted[L_j] := L_HP_Manifold_Adjusted[L_j] + TO_INT(GVL_HEATING_POLICY.G_Zone_Priority_Bias[L_i]);
 
         IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_i] THEN
@@ -146,16 +143,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             GVL_TEST.G_Test_Last_Failure_Index := 5;
             GVL_TEST.G_Test_Last_Failure_Code := 1006;
         END_IF;
-
     END_IF;
 END_FOR;
 
-// expose for debug
-FOR L_i := 1 TO 10 DO
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_TEST.G_HP_Manifold_Adjusted_Priority[L_i] := L_HP_Manifold_Adjusted[L_i];
 END_FOR;
 
-// validate decision with adjusted priorities
 fbDecisionHP(
     VI_Manifold_Pump_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service,
     VI_Manifold_Pressure_Fault := GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault,
@@ -188,9 +182,6 @@ IF L_HP_Used > (GVL_CONFIG.G_Max_Thermal_Budget + 0.001) THEN
     GVL_TEST.G_Test_Last_Failure_Code := 1009;
 END_IF;
 
-// =========================
-// FINAL STATUS
-// =========================
 IF GVL_TEST.G_Test_Passed THEN
     GVL_TEST.G_Test_Status_Msg := 'ALL TESTS PASSED';
 ELSE
