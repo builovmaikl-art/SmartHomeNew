@@ -6,6 +6,8 @@ END_VAR
 
 fbMode(
     VI_Is_Night := GVL_STATUS.G_Is_Night,
+    VI_Away_Request := GVL_MODE.G_Away_Request,
+    VI_Maintenance_Request := GVL_MODE.G_Maintenance_Request,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
