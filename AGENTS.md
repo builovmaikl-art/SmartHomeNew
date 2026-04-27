@@ -93,6 +93,85 @@ prevents partial overwrites
 ensures deterministic engineering workflow
 ```
 
+## ANCHOR-BASED SAFE EDITING RULE (MANDATORY)
+
+All non-trivial code modifications must use anchor-based editing.
+
+### Definition
+
+Anchors are explicit named markers in code:
+
+```text
+// === BEGIN BLOCK_NAME ===
+// === END BLOCK_NAME ===
+```
+
+### Purpose
+
+```text
+- ensure deterministic insertion points
+- avoid accidental overwrite of unrelated logic
+- allow safe partial modifications inside large PRG files
+- eliminate ambiguity of repeated lines (END_IF, END_CASE, etc.)
+```
+
+### Rules
+
+```text
+1. Never rely on single-line matches (e.g. END_IF, END_CASE)
+2. Always target a named anchor block when modifying code
+3. Only modify content BETWEEN BEGIN/END markers
+4. Do not modify code outside the target anchor block
+5. If no anchors exist → add anchors first, then modify
+```
+
+### Required workflow
+
+```text
+1. fetch full file
+2. locate BEGIN/END anchor
+3. modify ONLY inside anchor
+4. update full file
+5. re-fetch file
+6. verify:
+   - anchors still exist
+   - surrounding code intact
+   - change applied correctly
+```
+
+### Forbidden patterns
+
+```text
+modifying code based on first match
+partial file replacement
+"rest unchanged" assumptions
+editing without anchors in large files
+```
+
+### Example
+
+Correct:
+
+```st
+// === BEGIN RESULT_MIRROR ===
+... modified logic ...
+// === END RESULT_MIRROR ===
+```
+
+Incorrect:
+
+```text
+find "END_IF" → insert after
+```
+
+### Status in repository
+
+```text
+PRG_Scenario_Test_Harness.st is already anchor-enabled
+```
+
+All future changes must follow this model.
+
 ## Working rules
 - Treat this repository as an engineering system, not a collection of isolated features.
 - Safety has priority over comfort, but false escalation must be avoided.
