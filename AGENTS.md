@@ -63,6 +63,36 @@ reduce integration risk
 allow fast behavioral validation before hardware is available
 ```
 
+## FILE INTEGRITY RULE (MANDATORY)
+
+After ANY repository modification:
+
+```text
+1. Immediately re-read the modified file from the repository
+2. Verify:
+   - full structure is present
+   - no truncated logic blocks
+   - no missing CASE branches / functions
+   - no accidental overwrites
+3. Only AFTER this verification proceed to the next change
+```
+
+Strictly forbidden:
+
+```text
+multiple sequential modifications without intermediate verification
+assuming logic "remains unchanged"
+continuing work if file integrity is not confirmed
+```
+
+Rationale:
+
+```text
+prevents silent logic loss
+prevents partial overwrites
+ensures deterministic engineering workflow
+```
+
 ## Working rules
 - Treat this repository as an engineering system, not a collection of isolated features.
 - Safety has priority over comfort, but false escalation must be avoided.
