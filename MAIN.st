@@ -6,6 +6,7 @@ END_VAR
 PRG_IO_Read();
 PRG_Safety();
 PRG_System();
+PRG_System_Coordinator();
 PRG_Policy();
 PRG_Command_Arbitration();
 PRG_Command_Verifier();
