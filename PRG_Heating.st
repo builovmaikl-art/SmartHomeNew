@@ -123,10 +123,11 @@ fbHeatingManager(
     VO_Boiler_Status => GVL_STATUS.G_Boiler_Status
 );
 
-// Apply thermal allocation constraints after base heating orchestration.
-// Decision context owns eligibility/budget; heating manager remains the control algorithm owner.
+// Apply global and thermal allocation constraints after base heating orchestration.
+// Coordinator owns cross-subsystem blocking; decision context owns eligibility/budget.
+// Heating manager remains the control algorithm owner.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF NOT fbDecision.VO_Manifold_Enabled[L_i] THEN
+    IF GVL_SYSTEM_COORDINATION.G_Block_Heating OR (NOT fbDecision.VO_Manifold_Enabled[L_i]) THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := 0.0;
 
