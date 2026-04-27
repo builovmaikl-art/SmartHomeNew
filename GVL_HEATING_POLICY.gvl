@@ -1,0 +1,8 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Zone_Empty_Duration_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+    G_Zone_Permanent_Use : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Policy_Class : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
+    G_Zone_Target_Adjustment : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Priority_Bias : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+END_VAR
