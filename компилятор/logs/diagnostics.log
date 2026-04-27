@@ -147,7 +147,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 27 11:54 DUT
 -rw-r--r--   1 runner runner   2606 Apr 27 11:54 GVL_STATUS.gvl
 -rw-r--r--   1 runner runner    349 Apr 27 11:54 GVL_SYSTEM_COORDINATION.gvl
 -rw-r--r--   1 runner runner   1231 Apr 27 11:54 GVL_Safety_Selector.gvl
--rw-r--r--   1 runner runner    686 Apr 27 11:54 GVL_TEST.gvl
+-rw-r--r--   1 runner runner   1081 Apr 27 11:54 GVL_TEST.gvl
 -rw-r--r--   1 runner runner    751 Apr 27 11:54 GVL_TEST_INJECTION.gvl
 -rw-r--r--   1 runner runner    193 Apr 27 11:54 GVL_TRACE.gvl
 -rw-r--r--   1 runner runner   3018 Apr 27 11:54 HEATING_CHECKPOINT_2026-04-20.md
