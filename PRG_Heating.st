@@ -67,18 +67,29 @@ END_CASE;
 // S1.5 DECISION CONTEXT / THERMAL ALLOCATION
 // ============================================================
 
-// === HP-1 PRIORITY BIAS APPLICATION ===
+// === HP-1 + HP-2 PRIORITY BIAS APPLICATION ===
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Manifold_Adjusted_Priority[L_i] := GVL_CONFIG.G_Manifold_Priority[L_i];
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_j := TO_INT(GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i].manifold_id);
+
     IF (L_j >= 1) AND (L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS) THEN
+
+        // Base policy bias (HP-1)
         L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + TO_INT(GVL_HEATING_POLICY.G_Zone_Priority_Bias[L_i]);
+
+        // Guest preheat boost (HP-2, config-driven)
+        IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_i] THEN
+            L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost;
+        END_IF;
+
+        // Lower bound
         IF L_Manifold_Adjusted_Priority[L_j] < 1 THEN
             L_Manifold_Adjusted_Priority[L_j] := 1;
         END_IF;
+
     END_IF;
 END_FOR;
 
