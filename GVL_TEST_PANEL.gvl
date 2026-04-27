@@ -3,6 +3,8 @@ VAR_GLOBAL
     // === CONTROL ===
     G_Enable : BOOL := FALSE;
     G_Scenario_ID : INT := 1;
+    G_Scenario_Run : BOOL := FALSE;
+    G_Scenario_Active : BOOL := FALSE;
 
     // === UI BLOCK: CURRENT TEST ===
     G_UI_00_Header : STRING(200) := '=== TEST PANEL ===';
