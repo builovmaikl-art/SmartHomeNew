@@ -17,7 +17,7 @@ END_VAR
 
 FOR L_i := 1 TO 32 DO
     IF L_i <= 16 THEN
-        IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block THEN
+        IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override THEN
             L_Manual_Light_Override_32[L_i] := 0;
         ELSE
             L_Manual_Light_Override_32[L_i] := GVL_INTENT_USER.I_Lighting_Override_32[L_i];
