@@ -15,4 +15,13 @@ VAR_GLOBAL
     G_Heating_Allocation_Budget_Exceeded : BOOL := FALSE;
     G_Heating_Allocation_Enabled_Not_Allowed : BOOL := FALSE;
     G_Safety_Latched_Without_Intent : BOOL := FALSE;
+
+    // HP policy checks
+    G_HP_Adjusted_Priority_Lower_Bound_Violation : BOOL := FALSE;
+    G_HP_Adjusted_Allocation_Budget_Exceeded : BOOL := FALSE;
+    G_HP_Adjusted_Allocation_Enabled_Not_Allowed : BOOL := FALSE;
+    G_HP_Guest_Preheat_Config_Out_Of_Range : BOOL := FALSE;
+
+    // Debug visibility
+    G_HP_Manifold_Adjusted_Priority : ARRAY[1..10] OF INT; // limited view for diagnostics
 END_VAR
