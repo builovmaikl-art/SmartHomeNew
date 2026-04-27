@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1756
+total 1752
 -rw-r--r--   1 runner runner  13067 Apr 27 14:24 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x  18 runner runner  12288 Apr 27 14:24 .
 drwxr-xr-x   3 runner runner   4096 Apr 27 14:24 ..
@@ -173,7 +173,6 @@ drwxr-xr-x   2 runner runner   4096 Apr 27 14:24 DUT
 -rw-r--r--   1 runner runner  82426 Apr 27 14:24 PRG_System.st.bak_step240
 -rw-r--r--   1 runner runner    883 Apr 27 14:24 PRG_System_Coordinator.st
 -rw-r--r--   1 runner runner   8206 Apr 27 14:24 PRG_System_Test_Harness.st
--rw-r--r--   1 runner runner   2738 Apr 27 14:24 PRG_Test.st
 -rw-r--r--   1 runner runner    752 Apr 27 14:24 PRG_Test_Injection.st
 -rw-r--r--   1 runner runner   2501 Apr 27 14:24 PRG_Test_Scenario_Runner.st
 -rw-r--r--   1 runner runner   3072 Apr 27 14:24 PRG_Ventilation.st
