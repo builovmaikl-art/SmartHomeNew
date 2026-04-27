@@ -6,6 +6,7 @@ VAR_INPUT
     VI_System_Time_MS : UDINT;
     VI_Zone_Permanent_Use : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     VI_Zone_Guest_Preheat : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    VI_Behavior_Mode : E_Behavior_Mode;
 END_VAR
 
 VAR_OUTPUT
@@ -18,7 +19,10 @@ END_VAR
 VAR
     L_i : INT;
     L_Long_Threshold : UDINT := 86400000; // 24h
+    L_Away_Mode : BOOL;
 END_VAR
+
+L_Away_Mode := (VI_Behavior_Mode = BEHAVIOR_AWAY);
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
@@ -30,13 +34,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     END_IF;
 
     // policy classification
+    // Guest/preheat has priority even in AWAY mode.
     IF VI_Zone_Guest_Preheat[L_i] THEN
         VO_Zone_Policy_Class[L_i] := 3; // guest
 
     ELSIF VI_Zone_Occupied[L_i] THEN
         VO_Zone_Policy_Class[L_i] := 0; // comfort
 
-    ELSIF VI_Zone_Permanent_Use[L_i] THEN
+    ELSIF VI_Zone_Permanent_Use[L_i] AND (NOT L_Away_Mode) THEN
         VO_Zone_Policy_Class[L_i] := 4; // permanent mild eco
 
     ELSIF VO_Zone_Empty_Duration_MS[L_i] >= L_Long_Threshold THEN
