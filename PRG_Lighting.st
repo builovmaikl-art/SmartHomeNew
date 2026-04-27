@@ -38,7 +38,7 @@ FOR L_i := 1 TO 32 DO
         L_Manual_Blinds_Override_32[L_i] := GVL_INTENT_USER.I_Blinds_Override_32[L_i];
     END_IF;
 
-    IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block THEN
+    IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Sockets_Override THEN
         L_Manual_Socket_Override_32[L_i] := FALSE;
     ELSE
         L_Manual_Socket_Override_32[L_i] := GVL_INTENT_USER.I_Socket_Override_32[L_i];
