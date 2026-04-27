@@ -15,7 +15,7 @@ END_VAR
 VAR
     L_Last_Motion_TS : UDINT := 0;
     L_Initialized : BOOL := FALSE;
-    L_Timeout_MS : UDINT := 900000; // 15 min
+    L_Timeout_MS : UDINT := 900000; // 15 min away delay
     L_i : INT;
 END_VAR
 
@@ -27,18 +27,19 @@ FOR L_i := 1 TO 32 DO
     END_IF;
 END_FOR;
 
-// init protection
+// init protection (avoid instant AWAY at boot)
 IF NOT L_Initialized THEN
     L_Last_Motion_TS := VI_System_Time_MS;
     L_Initialized := TRUE;
 END_IF;
 
-// update timestamp
+// fast return: any motion immediately updates timestamp
 IF VO_Any_Motion THEN
     L_Last_Motion_TS := VI_System_Time_MS;
 END_IF;
 
-// occupancy logic
+// hysteresis logic:
+// stay OCCUPIED until timeout expires
 IF (VI_System_Time_MS - L_Last_Motion_TS) < L_Timeout_MS THEN
     VO_Occupied := TRUE;
 ELSE
