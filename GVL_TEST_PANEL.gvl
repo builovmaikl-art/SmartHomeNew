@@ -4,6 +4,17 @@ VAR_GLOBAL
     G_Enable : BOOL := FALSE;
     G_Scenario_ID : INT := 1;
 
+    // === UX CONTROL ===
+    G_Run_Counter : UDINT := 0;
+    G_Last_Scenario_ID : INT := 0;
+    G_Last_Result_Passed : BOOL := TRUE;
+    G_Last_Fail_Code : UDINT := 0;
+    G_Reset_Results_Request : BOOL := FALSE;
+    G_Reset_Inputs_Request : BOOL := FALSE;
+    G_Current_Test_Name : STRING(200) := '';
+    G_Expected_Summary : STRING(200) := '';
+    G_Actual_Summary : STRING(200) := '';
+
     // === SCENARIO INPUTS ===
     G_Selected_Circuit : INT := 1;
     G_Input_Policy_Bias : INT := 0;
