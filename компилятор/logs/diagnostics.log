@@ -78,7 +78,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 27 08:33 DUT
 -rw-r--r--   1 runner runner  11957 Apr 27 08:33 FB_Lighting_Blinds_Manager.st
 -rw-r--r--   1 runner runner    653 Apr 27 08:33 FB_LogEvent.st
 -rw-r--r--   1 runner runner    786 Apr 27 08:33 FB_Maintenance_Access.st
--rw-r--r--   1 runner runner    355 Apr 27 08:33 FB_Mode_Manager.st
+-rw-r--r--   1 runner runner    595 Apr 27 08:33 FB_Mode_Manager.st
 -rw-r--r--   1 runner runner   3805 Apr 27 08:33 FB_NVRAM_Manager.st
 -rw-r--r--   1 runner runner    878 Apr 27 08:33 FB_Ownership_Watchdog.st
 -rw-r--r--   1 runner runner   3569 Apr 27 08:33 FB_PID_Controller.st
@@ -266,4 +266,4 @@ total 812
 drwxr-xr-x 2 runner runner   4096 Apr 27 08:33 .
 drwxr-xr-x 6 runner runner   4096 Apr 27 08:33 ..
 -rw-r--r-- 1 runner runner      0 Apr 27 08:33 .gitkeep
--rw-r--r-- 1 runner runner 822995 Apr 27 08:33 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 823246 Apr 27 08:33 RESULT_methods_clean.xml
