@@ -140,6 +140,8 @@ fbHeatingManager(
 );
 
 // Apply global and thermal allocation constraints after base heating orchestration.
+// Coordinator owns cross-subsystem blocking; decision context owns eligibility/budget.
+// Heating manager remains the control algorithm owner.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF GVL_SYSTEM_COORDINATION.G_Block_Heating OR (NOT fbDecision.VO_Manifold_Enabled[L_i]) THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
@@ -177,4 +179,113 @@ fbDHWManager(
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
 
-// ... rest unchanged ...
+fbDiagEventManager(
+    VI_Code := GVL_CONFIG.ERR_BACKUP_PUMP_OUT_OF_SERVICE,
+    VI_Severity := 2,
+    VI_Active := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service,
+    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Source := 400,
+    VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+    VIO_Count := GVL_STATUS.G_Diagnostics_Count
+);
+
+fbDiagEventManager(
+    VI_Code := GVL_CONFIG.ERR_ELECTRIC_HEATER_OUT_OF_SERVICE,
+    VI_Severity := 2,
+    VI_Active := NOT GVL_CONFIG.G_Electric_Heater_In_Service,
+    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Source := 401,
+    VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+    VIO_Count := GVL_STATUS.G_Diagnostics_Count
+);
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
+
+    fbDiagEventManager(
+        VI_Code := GVL_CONFIG.ERR_MANIFOLD_PUMP_OUT_OF_SERVICE,
+        VI_Severity := 2,
+        VI_Active := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i],
+        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Source := 410 + L_i,
+        VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+        VIO_Count := GVL_STATUS.G_Diagnostics_Count
+    );
+END_FOR;
+
+GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
+GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
+
+fbDiagEventManager(
+    VI_Code := GVL_CONFIG.ERR_DHW_HEATING_PUMP_OUT_OF_SERVICE,
+    VI_Severity := 2,
+    VI_Active := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service,
+    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Source := 420,
+    VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+    VIO_Count := GVL_STATUS.G_Diagnostics_Count
+);
+
+fbDiagEventManager(
+    VI_Code := GVL_CONFIG.ERR_DHW_CIRC_PUMP_OUT_OF_SERVICE,
+    VI_Severity := 2,
+    VI_Active := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service,
+    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Source := 421,
+    VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+    VIO_Count := GVL_STATUS.G_Diagnostics_Count
+);
+
+fbDiagEventManager(
+    VI_Code := GVL_CONFIG.ERR_FREEZE_HARDWARE_FAILED,
+    VI_Severity := 4,
+    VI_Active := GVL_STATE.G_Freeze_Hardware_Failed,
+    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Source := 430,
+    VIO_Events := GVL_STATUS.G_Diagnostics_Events,
+    VIO_Count := GVL_STATUS.G_Diagnostics_Count
+);
+
+// ============================================================
+// S4. MAINTENANCE GATING
+// ============================================================
+
+IF NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service THEN
+    GVL_STATE.G_Backup_Circulation_Pump := FALSE;
+END_IF;
+IF NOT GVL_CONFIG.G_Electric_Heater_In_Service THEN
+    GVL_STATE.G_Electric_Heater_Enable := FALSE;
+END_IF;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+    END_IF;
+END_FOR;
+IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Heating_Pump := FALSE;
+END_IF;
+IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
+    GVL_STATE.G_DHW_Circ_Pump := FALSE;
+END_IF;
+
+// ============================================================
+// S5. FREEZE HARDWARE SUPPORT LOGIC
+// ============================================================
+
+GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
+IF GVL_STATE.G_Freeze_Hardware_Failed THEN
+    GVL_STATE.G_Backup_Circulation_Pump := FALSE;
+    GVL_STATE.G_Electric_Heater_Enable := FALSE;
+    GVL_STATE.G_Safety_Freeze_Risk := TRUE;
+END_IF;
+
+// >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
+
+// ============================================================
+// S6. ADAPTER COPY-OUT
+// ============================================================
+
+FOR L_i := 1 TO 8 DO
+    GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves_8[L_i];
+END_FOR;
