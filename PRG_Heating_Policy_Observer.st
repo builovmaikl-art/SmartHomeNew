@@ -8,7 +8,8 @@ fbPolicy(
     VI_Zone_Last_Motion_TS := GVL_PRESENCE.G_Zone_Last_Motion_TS,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Zone_Permanent_Use := GVL_HEATING_POLICY.G_Zone_Permanent_Use,
-    VI_Zone_Guest_Preheat := GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request
+    VI_Zone_Guest_Preheat := GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request,
+    VI_Behavior_Mode := GVL_MODE.G_Current_Behavior_Mode
 );
 
 GVL_HEATING_POLICY.G_Zone_Empty_Duration_MS := fbPolicy.VO_Zone_Empty_Duration_MS;
