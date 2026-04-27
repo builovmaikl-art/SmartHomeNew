@@ -7,6 +7,7 @@ PRG_IO_Read();
 PRG_Safety();
 PRG_System();
 PRG_Presence_Manager();
+PRG_Heating_Policy_Observer();
 PRG_Mode_Manager();
 PRG_System_Coordinator();
 PRG_Policy();
