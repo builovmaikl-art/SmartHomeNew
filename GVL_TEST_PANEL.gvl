@@ -4,6 +4,21 @@ VAR_GLOBAL
     G_Enable : BOOL := FALSE;
     G_Scenario_ID : INT := 1;
 
+    // === UI BLOCK: CURRENT TEST ===
+    G_UI_00_Header : STRING(200) := '=== TEST PANEL ===';
+    G_UI_01_Test : STRING(200) := 'Select G_Scenario_ID';
+    G_UI_02_Change : STRING(200) := 'CHANGE: set scenario inputs';
+    G_UI_03_Expected : STRING(200) := 'EXPECTED: see scenario instruction';
+    G_UI_04_Result : STRING(200) := 'RESULT: Idle';
+    G_UI_05_Error : STRING(200) := 'ERROR: -';
+    G_UI_06_Actual : STRING(200) := 'ACTUAL: see numeric fields below';
+    G_UI_07_Separator : STRING(200) := '----------------------------------------';
+
+    // === UI BLOCK: NUMERIC FIELDS BELOW ===
+    G_UI_10_Numeric_Block : STRING(200) := 'NUMERIC: Base / Expected / Actual / Delta';
+    G_UI_11_Array_Block : STRING(200) := 'ARRAYS: Manifold expected / actual / enabled';
+    G_UI_12_State_Block : STRING(200) := 'STATE: Safety / Block / Budget / Preheat';
+
     // === UX CONTROL ===
     G_Run_Counter : UDINT := 0;
     G_Last_Scenario_ID : INT := 0;
@@ -37,6 +52,7 @@ VAR_GLOBAL
     G_Test_What_To_Change : STRING(200) := '';
     G_Test_Expected_Text : STRING(200) := '';
 
+    // === NUMERIC RESULT FIELDS ===
     G_Result_Mapped_Manifold : INT := 0;
     G_Result_Base_Priority : INT := 0;
     G_Result_Expected_Adjusted_Priority : INT := 0;
