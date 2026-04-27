@@ -11,6 +11,7 @@ VAR_GLOBAL
     G_Input_Guest_Preheat_Enabled : BOOL := TRUE;
     G_Input_Guest_Preheat_Boost : INT := 2;
     G_Input_Max_Thermal_Budget : REAL := 2.0;
+    G_Input_Block_Heating : BOOL := FALSE;
 
     // Multi-zone / multi-circuit scenario inputs
     G_Input_Circuit_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
@@ -35,7 +36,7 @@ VAR_GLOBAL
     G_Result_Manifold_Actual_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     G_Result_Manifold_Delta : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
-    // === SCENARIO 4 BUDGET / DECISION OUTPUT ===
+    // === SCENARIO 4/5 OUTPUT ===
     G_Result_Manifold_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Result_Manifold_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Result_Used_Thermal_Budget : REAL := 0.0;
