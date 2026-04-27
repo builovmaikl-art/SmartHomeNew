@@ -149,7 +149,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 27 14:27 DUT
 -rw-r--r--   1 runner runner   1231 Apr 27 14:27 GVL_Safety_Selector.gvl
 -rw-r--r--   1 runner runner   1076 Apr 27 14:27 GVL_TEST.gvl
 -rw-r--r--   1 runner runner    751 Apr 27 14:27 GVL_TEST_INJECTION.gvl
--rw-r--r--   1 runner runner   1848 Apr 27 14:27 GVL_TEST_PANEL.gvl
+-rw-r--r--   1 runner runner   2238 Apr 27 14:27 GVL_TEST_PANEL.gvl
 -rw-r--r--   1 runner runner    193 Apr 27 14:27 GVL_TRACE.gvl
 -rw-r--r--   1 runner runner   3018 Apr 27 14:27 HEATING_CHECKPOINT_2026-04-20.md
 -rw-r--r--   1 runner runner    294 Apr 27 14:27 IValveController.st
