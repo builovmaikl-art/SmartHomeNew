@@ -14,6 +14,10 @@ VAR_GLOBAL
     G_Current_Test_Name : STRING(200) := '';
     G_Expected_Summary : STRING(200) := '';
     G_Actual_Summary : STRING(200) := '';
+    G_Test_Result_Line : STRING(200) := 'Idle';
+    G_Last_Result_Line : STRING(200) := '';
+    G_Error_Text : STRING(200) := '';
+    G_System_State_Line : STRING(200) := '';
 
     // === SCENARIO INPUTS ===
     G_Selected_Circuit : INT := 1;
