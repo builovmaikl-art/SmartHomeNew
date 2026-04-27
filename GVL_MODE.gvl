@@ -1,0 +1,6 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Current_Behavior_Mode : E_Behavior_Mode := BEHAVIOR_HOME;
+    G_Mode_Last_Change_TS : UDINT := 0;
+    G_Mode_Code : UDINT := 0;
+END_VAR
