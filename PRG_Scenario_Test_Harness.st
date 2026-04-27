@@ -305,3 +305,32 @@ END_CASE;
 
 GVL_TEST_PANEL.G_Last_Result_Passed := GVL_TEST_PANEL.G_Result_Passed;
 GVL_TEST_PANEL.G_Last_Fail_Code := GVL_TEST_PANEL.G_Result_Fail_Code;
+GVL_TEST_PANEL.G_System_State_Line := 'Check Safety/Block/Budget/Preheat inputs and result arrays';
+
+IF GVL_TEST_PANEL.G_Result_Passed THEN
+    GVL_TEST_PANEL.G_Error_Text := '';
+    CASE GVL_TEST_PANEL.G_Scenario_ID OF
+        1: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 1 | Single circuit | PASS';
+        2: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 2 | Multi-zone aggregation | PASS';
+        3: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 3 | Preheat influence | PASS';
+        4: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 4 | Budget vs priority | PASS';
+        5: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 5 | Coordinator override | PASS';
+        6: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 6 | Safety dominance | PASS';
+    ELSE
+        GVL_TEST_PANEL.G_Test_Result_Line := 'UNKNOWN TEST | PASS';
+    END_CASE;
+ELSE
+    GVL_TEST_PANEL.G_Error_Text := GVL_TEST_PANEL.G_Result_Status_Msg;
+    CASE GVL_TEST_PANEL.G_Scenario_ID OF
+        1: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 1 | Single circuit | FAIL';
+        2: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 2 | Multi-zone aggregation | FAIL';
+        3: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 3 | Preheat influence | FAIL';
+        4: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 4 | Budget vs priority | FAIL';
+        5: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 5 | Coordinator override | FAIL';
+        6: GVL_TEST_PANEL.G_Test_Result_Line := 'TEST 6 | Safety dominance | FAIL';
+    ELSE
+        GVL_TEST_PANEL.G_Test_Result_Line := 'UNKNOWN TEST | FAIL';
+    END_CASE;
+END_IF;
+
+GVL_TEST_PANEL.G_Last_Result_Line := GVL_TEST_PANEL.G_Test_Result_Line;
