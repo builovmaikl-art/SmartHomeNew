@@ -17,65 +17,69 @@ IF NOT GVL_TEST_PANEL.G_Enable THEN
     RETURN;
 END_IF;
 
+// ============================================================
+// HOLD-PRESET SCENARIO MODE
+// Run TRUE  = selected scenario continuously holds preset inputs
+// Run FALSE = scenario inputs return to neutral defaults once
+// ============================================================
+
 IF GVL_TEST_PANEL.G_Scenario_Run THEN
-    IF GVL_TEST_PANEL.G_Scenario_ID <> GVL_TEST_PANEL.G_Scenario_ID_Prev THEN
-        GVL_TEST_PANEL.G_Selected_Circuit := 1;
-        GVL_TEST_PANEL.G_Input_Policy_Bias := 0;
-        GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := FALSE;
-        GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
-        GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
-        GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 2.0;
-        GVL_TEST_PANEL.G_Input_Block_Heating := FALSE;
-        GVL_TEST_PANEL.G_Input_Safety_Stop := FALSE;
+    GVL_TEST_PANEL.G_Selected_Circuit := 1;
+    GVL_TEST_PANEL.G_Input_Policy_Bias := 0;
+    GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := FALSE;
+    GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
+    GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
+    GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 2.0;
+    GVL_TEST_PANEL.G_Input_Block_Heating := FALSE;
+    GVL_TEST_PANEL.G_Input_Safety_Stop := FALSE;
 
-        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-            GVL_TEST_PANEL.G_Input_Circuit_Enable[L_i] := FALSE;
-            GVL_TEST_PANEL.G_Input_Circuit_Bias[L_i] := 0;
-            GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[L_i] := FALSE;
-        END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        GVL_TEST_PANEL.G_Input_Circuit_Enable[L_i] := FALSE;
+        GVL_TEST_PANEL.G_Input_Circuit_Bias[L_i] := 0;
+        GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[L_i] := FALSE;
+    END_FOR;
 
-        CASE GVL_TEST_PANEL.G_Scenario_ID OF
-            1:
-                GVL_TEST_PANEL.G_Selected_Circuit := 1;
-                GVL_TEST_PANEL.G_Input_Policy_Bias := 1;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
-            2:
-                GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 1;
-                GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[1] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Enable[2] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Bias[2] := 2;
-            3:
-                GVL_TEST_PANEL.G_Selected_Circuit := 1;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
-            4:
-                GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 1.0;
-                GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 5;
-                GVL_TEST_PANEL.G_Input_Circuit_Enable[2] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Bias[2] := 1;
-            5:
-                GVL_TEST_PANEL.G_Input_Block_Heating := TRUE;
-            6:
-                GVL_TEST_PANEL.G_Input_Safety_Stop := TRUE;
-            7:
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
-                GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
-                GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 0.5;
-                GVL_TEST_PANEL.G_Input_Block_Heating := TRUE;
-                GVL_TEST_PANEL.G_Input_Safety_Stop := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
-                GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 5;
-                GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[1] := TRUE;
-        END_CASE;
+    CASE GVL_TEST_PANEL.G_Scenario_ID OF
+        1:
+            GVL_TEST_PANEL.G_Selected_Circuit := 1;
+            GVL_TEST_PANEL.G_Input_Policy_Bias := 1;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
+        2:
+            GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 1;
+            GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[1] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Enable[2] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Bias[2] := 2;
+        3:
+            GVL_TEST_PANEL.G_Selected_Circuit := 1;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Boost := 2;
+        4:
+            GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 1.0;
+            GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 5;
+            GVL_TEST_PANEL.G_Input_Circuit_Enable[2] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Bias[2] := 1;
+        5:
+            GVL_TEST_PANEL.G_Input_Block_Heating := TRUE;
+        6:
+            GVL_TEST_PANEL.G_Input_Safety_Stop := TRUE;
+        7:
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Request := TRUE;
+            GVL_TEST_PANEL.G_Input_Guest_Preheat_Enabled := TRUE;
+            GVL_TEST_PANEL.G_Input_Max_Thermal_Budget := 0.5;
+            GVL_TEST_PANEL.G_Input_Block_Heating := TRUE;
+            GVL_TEST_PANEL.G_Input_Safety_Stop := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Enable[1] := TRUE;
+            GVL_TEST_PANEL.G_Input_Circuit_Bias[1] := 5;
+            GVL_TEST_PANEL.G_Input_Circuit_Guest_Preheat[1] := TRUE;
+    END_CASE;
 
-        GVL_TEST_PANEL.G_Scenario_ID_Prev := GVL_TEST_PANEL.G_Scenario_ID;
-        GVL_TEST_PANEL.G_Scenario_Active := TRUE;
-    END_IF;
+    GVL_TEST_PANEL.G_Scenario_Active := TRUE;
+    GVL_TEST_PANEL.G_Scenario_ID_Prev := GVL_TEST_PANEL.G_Scenario_ID;
 ELSE
     IF GVL_TEST_PANEL.G_Scenario_Active THEN
         GVL_TEST_PANEL.G_Selected_Circuit := 1;
