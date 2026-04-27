@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1696
+total 1700
 -rw-r--r--   1 runner runner  13067 Apr 27 08:13 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x  18 runner runner  12288 Apr 27 08:13 .
 drwxr-xr-x   3 runner runner   4096 Apr 27 08:13 ..
@@ -133,6 +133,7 @@ drwxr-xr-x   2 runner runner   4096 Apr 27 08:13 DUT
 -rw-r--r--   1 runner runner   1351 Apr 27 08:13 GVL_INTENT_SYSTEM.gvl
 -rw-r--r--   1 runner runner   1648 Apr 27 08:13 GVL_INTENT_USER.gvl
 -rw-r--r--   1 runner runner  10859 Apr 27 08:13 GVL_IO.gvl
+-rw-r--r--   1 runner runner    182 Apr 27 08:13 GVL_MODE.gvl
 -rw-r--r--   1 runner runner    346 Apr 27 08:13 GVL_PERSISTENT.gvl
 -rw-r--r--   1 runner runner    497 Apr 27 08:13 GVL_POLICY.gvl
 -rw-r--r--   1 runner runner   1908 Apr 27 08:13 GVL_Retain.gvl
@@ -263,4 +264,4 @@ total 808
 drwxr-xr-x 2 runner runner   4096 Apr 27 08:13 .
 drwxr-xr-x 6 runner runner   4096 Apr 27 08:13 ..
 -rw-r--r-- 1 runner runner      0 Apr 27 08:13 .gitkeep
--rw-r--r-- 1 runner runner 817386 Apr 27 08:13 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 818172 Apr 27 08:13 RESULT_methods_clean.xml
