@@ -12,37 +12,32 @@ VAR_GLOBAL
     G_Input_Guest_Preheat_Boost : INT := 2;
     G_Input_Max_Thermal_Budget : REAL := 2.0;
     G_Input_Block_Heating : BOOL := FALSE;
+    G_Input_Safety_Stop : BOOL := FALSE;
 
-    // Multi-zone / multi-circuit scenario inputs
     G_Input_Circuit_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Input_Circuit_Bias : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT;
     G_Input_Circuit_Guest_Preheat : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
 
-    // === TEST CARD / DESCRIPTION ===
     G_Test_Description : STRING(200) := 'Idle';
     G_Test_What_To_Change : STRING(200) := '';
     G_Test_Expected_Text : STRING(200) := '';
 
-    // === SINGLE-CIRCUIT CALCULATED OUTPUT ===
     G_Result_Mapped_Manifold : INT := 0;
     G_Result_Base_Priority : INT := 0;
     G_Result_Expected_Adjusted_Priority : INT := 0;
     G_Result_Actual_Adjusted_Priority : INT := 0;
     G_Result_Delta : INT := 0;
 
-    // === MULTI-ZONE / DIGITAL-TWIN OUTPUT ===
     G_Result_Manifold_Base_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     G_Result_Manifold_Expected_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     G_Result_Manifold_Actual_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     G_Result_Manifold_Delta : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
-    // === SCENARIO 4/5 OUTPUT ===
     G_Result_Manifold_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Result_Manifold_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Result_Used_Thermal_Budget : REAL := 0.0;
     G_Result_Budget_Exceeded : BOOL := FALSE;
 
-    // === STATUS ===
     G_Result_Passed : BOOL := TRUE;
     G_Result_Status_Msg : STRING(200) := 'Idle';
     G_Result_Fail_Code : UDINT := 0;
