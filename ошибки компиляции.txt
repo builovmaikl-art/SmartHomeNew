@@ -1,26 +1,8 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbAnalogValidator.VO_Valid'
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0004:  'VO_Valid' не является компонентом 'FB_Analog_Validator'
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(fbAnalogValidator.VO_Validated_Value = 25)'
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbAnalogValidator.VO_Validated_Value'
-[ERROR]         Без имени3: PRG_Test(Строка 16, Столбец 1 (Реализ.)): C0004:  'VO_Validated_Value' не является компонентом 'FB_Analog_Validator'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'NOT(fbAnalogValidator.VO_Valid)'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbAnalogValidator.VO_Valid'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0004:  'VO_Valid' не является компонентом 'FB_Analog_Validator'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(fbAnalogValidator.VO_Validated_Value = 20)'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbAnalogValidator.VO_Validated_Value'
-[ERROR]         Без имени3: PRG_Test(Строка 33, Столбец 1 (Реализ.)): C0004:  'VO_Validated_Value' не является компонентом 'FB_Analog_Validator'
-[ERROR]         Без имени3: PRG_Test(Строка 43, Столбец 1 (Реализ.)): C0040:  Для функции 'Seed' требуется ровно '0' входов
-[ERROR]         Без имени3: PRG_Test(Строка 44, Столбец 1 (Реализ.)): C0040:  Для функции 'Random_Int_Range' требуется ровно '0' входов
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(fbRandomGenerator.VO_Random_Value >= 10)'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbRandomGenerator.VO_Random_Value'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0004:  'VO_Random_Value' не является компонентом 'FB_Random_Generator'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(fbRandomGenerator.VO_Random_Value <= 20)'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'fbRandomGenerator.VO_Random_Value'
-[ERROR]         Без имени3: PRG_Test(Строка 45, Столбец 1 (Реализ.)): C0004:  'VO_Random_Value' не является компонентом 'FB_Random_Generator'
-                Компиляция завершена -- 22 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени3: PRG_System(Строка 60, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL' в тип 'ARRAY [1..8] OF BOOL'
+[ERROR]         Без имени3: PRG_System(Строка 87, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..8] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL'
+[ERROR]         Без имени3: PRG_Heating(Строка 93, Столбец 1 (Реализ.)): C0201:  Тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL' не совпадает с типом 'ARRAY [1..8] OF REAL' VAR_IN_OUT 'VI_Floor_Temps'
+[ERROR]         Без имени3: PRG_Heating(Строка 96, Столбец 1 (Реализ.)): C0201:  Тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config' не совпадает с типом 'ARRAY [1..8] OF ST_FloorHeating_Circuit_Config' VAR_IN_OUT 'VI_Zone_Configs'
+                Компиляция завершена -- 4 ошибок, 0 предупреждений : загрузка невозможна
