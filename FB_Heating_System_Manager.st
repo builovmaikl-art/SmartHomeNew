@@ -122,6 +122,7 @@ VAR
     L_Adaptive_Correction : REAL;
     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
     fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
+    fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
 END_VAR
 
 
@@ -300,6 +301,16 @@ fbAdaptiveTarget(
     VO_Adaptive_Correction => L_Adaptive_Correction,
     VO_Adaptive_Effective_Delta => L_Adaptive_Effective_Delta,
     VO_Adaptive_Max_Delta => L_Adaptive_Max_Delta
+);
+
+// --- PRE-CIRCUIT CONTROL (EXTRACTED BLOCK PREP) ---
+fbCircuitControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_Current_Hour := VI_Current_Hour,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VI_Floor_Temps := VI_Floor_Temps,
+    VI_Room_Temps := VI_Room_Temps,
+    VO_Zone_Valves => VO_Zone_Valves
 );
 
 // 2. Индивидуальное управление зонами отопления (ТЗ 1.1, 2.5)

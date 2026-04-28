@@ -1,0 +1,43 @@
+=== DATE ===
+Tue Apr 28 16:00:11 UTC 2026
+
+=== BEFORE: circuit control refs ===
+
+=== PATCH: add fbCircuitControl instance ===
+
+=== PATCH: insert call before zone loop ===
+
+=== AFTER: circuit control refs ===
+125:    fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
+307:fbCircuitControl(
+
+=== DIFF ===
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index d57d903..c2b1cec 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -122,6 +122,7 @@ VAR
+     L_Adaptive_Correction : REAL;
+     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+     fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
++    fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
+ END_VAR
+ 
+ 
+@@ -302,6 +303,16 @@ fbAdaptiveTarget(
+     VO_Adaptive_Max_Delta => L_Adaptive_Max_Delta
+ );
+ 
++// --- PRE-CIRCUIT CONTROL (EXTRACTED BLOCK PREP) ---
++fbCircuitControl(
++    VI_System_Time_MS := VI_System_Time_MS,
++    VI_Current_Hour := VI_Current_Hour,
++    VI_Zone_Configs := VI_Zone_Configs,
++    VI_Floor_Temps := VI_Floor_Temps,
++    VI_Room_Temps := VI_Room_Temps,
++    VO_Zone_Valves => VO_Zone_Valves
++);
++
+ // 2. Индивидуальное управление зонами отопления (ТЗ 1.1, 2.5)
+ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+     fbFloorTempValidator[L_i](
