@@ -370,9 +370,24 @@ END_IF;
 // --- PRE-BOILER CONTROL (EXTRACTED BLOCK PREP) ---
 fbBoilerControl(
     VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
+    VI_DHW_Target_Temp := VI_DHW_Target_Temp,
+    VI_Target_Supply_Temp := L_Target_Supply_Temp,
+    VI_Freeze_Mode_Active := L_Freeze_Mode_Active,
+    VI_Policy_Degraded := L_Policy_Degraded,
+    VI_Manifold_Pumps := VO_Manifold_Pumps,
+    VI_Manifold_Valves := VO_Manifold_Valves,
+    VI_Boiler_Flame_Status := VI_Boiler_Flame_Status,
+    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
+    VI_Boiler_OT_Online := VI_Boiler_OT_Online,
     VI_Boiler_Modulation := VI_Boiler_Modulation,
     VO_Boiler_OT_Enable => VO_Boiler_OT_Enable,
-    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint
+    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint,
+    VO_Boiler_Status => VO_Boiler_Status,
+    VO_Any_Subsystem_Degraded => L_Any_Subsystem_Degraded,
+    VO_Lead_Boiler => L_Lead_Boiler,
+    VO_Demand_Power => L_Demand_Power
 );
 
 // 5. Управление каскадом котлов (ТЗ 2.8, OpenTherm-only, без legacy mirror)
