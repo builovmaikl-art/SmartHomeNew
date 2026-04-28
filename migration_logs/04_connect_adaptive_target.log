@@ -1,0 +1,198 @@
+=== DATE ===
+Tue Apr 28 15:48:36 UTC 2026
+
+=== BRANCH ===
+main
+
+=== STATUS BEFORE ===
+?? migration_logs/04_connect_adaptive_target.log
+
+=== CHECK: adaptive helper exists ===
+-rw-rw-rw- 1 codespace codespace 4321 Apr 28 15:48 FB_Heating_Adaptive_Target.st
+
+=== BEFORE: manager adaptive vars/calls ===
+120:    L_Adaptive_Max_Delta : REAL;
+121:    L_Adaptive_Delta : REAL;
+122:    L_Adaptive_Zone_i : INT;
+123:    L_Adaptive_Weighted_Sum : REAL;
+124:    L_Adaptive_Weight_Total : REAL;
+125:    L_Adaptive_Effective_Delta : REAL;
+126:    L_Adaptive_Weight : REAL;
+127:    L_Adaptive_Correction : REAL;
+285:// --- HEATING TARGET INJECTION ---
+291:// --- MULTI-ZONE ADAPTIVE CORRECTION ---
+293:L_Adaptive_Max_Delta := 0.0;
+294:L_Adaptive_Weighted_Sum := 0.0;
+295:L_Adaptive_Weight_Total := 0.0;
+296:L_Adaptive_Effective_Delta := 0.0;
+297:L_Adaptive_Correction := 0.0;
+299:FOR L_Adaptive_Zone_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+300:    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 8 THEN
+301:        CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
+303:                L_Adaptive_Delta :=
+304:                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+305:                    VI_Floor_Temps[L_Adaptive_Zone_i];
+306:                L_Adaptive_Weight := 0.6;
+308:                L_Adaptive_Delta :=
+309:                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+310:                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+311:                L_Adaptive_Weight := 1.0;
+313:                L_Adaptive_Delta :=
+314:                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+315:                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+316:                L_Adaptive_Weight := 0.8;
+319:        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 4 THEN
+320:            L_Adaptive_Weight := L_Adaptive_Weight * 1.2;
+321:        ELSIF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 9 THEN
+322:            L_Adaptive_Weight := L_Adaptive_Weight * 0.7;
+325:        IF L_Adaptive_Weight > 2.0 THEN
+326:            L_Adaptive_Weight := 2.0;
+327:        ELSIF L_Adaptive_Weight < 0.2 THEN
+328:            L_Adaptive_Weight := 0.2;
+331:        IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+332:            L_Adaptive_Max_Delta := L_Adaptive_Delta;
+335:        L_Adaptive_Weighted_Sum := L_Adaptive_Weighted_Sum + (L_Adaptive_Delta * L_Adaptive_Weight);
+336:        L_Adaptive_Weight_Total := L_Adaptive_Weight_Total + L_Adaptive_Weight;
+340:IF L_Adaptive_Weight_Total > 0.0 THEN
+341:    L_Adaptive_Effective_Delta := L_Adaptive_Weighted_Sum / L_Adaptive_Weight_Total;
+344:IF L_Adaptive_Effective_Delta > 1.5 THEN
+345:    L_Adaptive_Correction := 2.0;
+346:ELSIF L_Adaptive_Effective_Delta > 0.7 THEN
+347:    L_Adaptive_Correction := 1.0;
+348:ELSIF L_Adaptive_Effective_Delta < -1.5 THEN
+349:    L_Adaptive_Correction := -2.0;
+350:ELSIF L_Adaptive_Effective_Delta < -0.7 THEN
+351:    L_Adaptive_Correction := -1.0;
+353:    L_Adaptive_Correction := 0.0;
+356:IF L_Adaptive_Max_Delta > 2.5 AND L_Adaptive_Correction < 2.0 THEN
+357:    L_Adaptive_Correction := 2.0;
+360:L_Target_Supply_Temp := L_Target_Supply_Temp + L_Adaptive_Correction;
+
+=== APPLY PATCH: add fbAdaptiveTarget instance ===
+
+=== APPLY PATCH: replace adaptive calculation block ===
+
+=== AFTER: helper instance/call ===
+128:    fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+287:fbAdaptiveTarget(
+
+=== AFTER: old adaptive section markers ===
+
+=== DIFF ===
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index b5a7d2d..907fb09 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -125,6 +125,7 @@ VAR
+     L_Adaptive_Effective_Delta : REAL;
+     L_Adaptive_Weight : REAL;
+     L_Adaptive_Correction : REAL;
++    fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+ END_VAR
+ 
+ 
+@@ -282,88 +283,18 @@ END_IF;
+ 
+ 
+ 
+-// --- HEATING TARGET INJECTION ---
+-// Global arbitration target is applied after base policy calculation.
+-IF GVL_STATE.G_Target_Temperature > 0.0 THEN
+-    L_Target_Supply_Temp := GVL_STATE.G_Target_Temperature;
+-END_IF;
+-
+-// --- MULTI-ZONE ADAPTIVE CORRECTION ---
+-// Final adaptive refinement layer.
+-L_Adaptive_Max_Delta := 0.0;
+-L_Adaptive_Weighted_Sum := 0.0;
+-L_Adaptive_Weight_Total := 0.0;
+-L_Adaptive_Effective_Delta := 0.0;
+-L_Adaptive_Correction := 0.0;
+-
+-FOR L_Adaptive_Zone_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+-    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 8 THEN
+-        CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
+-            0:
+-                L_Adaptive_Delta :=
+-                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+-                    VI_Floor_Temps[L_Adaptive_Zone_i];
+-                L_Adaptive_Weight := 0.6;
+-            1, 2:
+-                L_Adaptive_Delta :=
+-                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+-                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+-                L_Adaptive_Weight := 1.0;
+-            ELSE
+-                L_Adaptive_Delta :=
+-                    VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
+-                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+-                L_Adaptive_Weight := 0.8;
+-        END_CASE;
+-
+-        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 4 THEN
+-            L_Adaptive_Weight := L_Adaptive_Weight * 1.2;
+-        ELSIF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 9 THEN
+-            L_Adaptive_Weight := L_Adaptive_Weight * 0.7;
+-        END_IF;
+-
+-        IF L_Adaptive_Weight > 2.0 THEN
+-            L_Adaptive_Weight := 2.0;
+-        ELSIF L_Adaptive_Weight < 0.2 THEN
+-            L_Adaptive_Weight := 0.2;
+-        END_IF;
+-
+-        IF L_Adaptive_Delta > L_Adaptive_Max_Delta THEN
+-            L_Adaptive_Max_Delta := L_Adaptive_Delta;
+-        END_IF;
+-
+-        L_Adaptive_Weighted_Sum := L_Adaptive_Weighted_Sum + (L_Adaptive_Delta * L_Adaptive_Weight);
+-        L_Adaptive_Weight_Total := L_Adaptive_Weight_Total + L_Adaptive_Weight;
+-    END_IF;
+-END_FOR;
+-
+-IF L_Adaptive_Weight_Total > 0.0 THEN
+-    L_Adaptive_Effective_Delta := L_Adaptive_Weighted_Sum / L_Adaptive_Weight_Total;
+-END_IF;
+-
+-IF L_Adaptive_Effective_Delta > 1.5 THEN
+-    L_Adaptive_Correction := 2.0;
+-ELSIF L_Adaptive_Effective_Delta > 0.7 THEN
+-    L_Adaptive_Correction := 1.0;
+-ELSIF L_Adaptive_Effective_Delta < -1.5 THEN
+-    L_Adaptive_Correction := -2.0;
+-ELSIF L_Adaptive_Effective_Delta < -0.7 THEN
+-    L_Adaptive_Correction := -1.0;
+-ELSE
+-    L_Adaptive_Correction := 0.0;
+-END_IF;
+-
+-IF L_Adaptive_Max_Delta > 2.5 AND L_Adaptive_Correction < 2.0 THEN
+-    L_Adaptive_Correction := 2.0;
+-END_IF;
+-
+-L_Target_Supply_Temp := L_Target_Supply_Temp + L_Adaptive_Correction;
+-
+-IF L_Target_Supply_Temp < 20.0 THEN
+-    L_Target_Supply_Temp := 20.0;
+-ELSIF L_Target_Supply_Temp > 45.0 THEN
+-    L_Target_Supply_Temp := 45.0;
+-END_IF;
++// --- HEATING TARGET INJECTION / ADAPTIVE TARGET ---
++fbAdaptiveTarget(
++    VI_Base_Target_Supply_Temp := L_Target_Supply_Temp,
++    VI_Global_Target_Temperature := GVL_STATE.G_Target_Temperature,
++    VI_Zone_Configs := VI_Zone_Configs,
++    VI_Floor_Temps := VI_Floor_Temps,
++    VI_Room_Temps := VI_Room_Temps,
++    VO_Target_Supply_Temp => L_Target_Supply_Temp,
++    VO_Adaptive_Correction => L_Adaptive_Correction,
++    VO_Adaptive_Effective_Delta => L_Adaptive_Effective_Delta,
++    VO_Adaptive_Max_Delta => L_Adaptive_Max_Delta
++);
+ 
+ // 2. Индивидуальное управление зонами отопления (ТЗ 1.1, 2.5)
+ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+
+=== STATUS AFTER ===
+ M FB_Heating_System_Manager.st
+?? migration_logs/04_connect_adaptive_target.log
