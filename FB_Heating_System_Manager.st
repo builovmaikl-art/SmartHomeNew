@@ -134,7 +134,7 @@ VO_Backup_Circulation_Pump := FALSE;
 VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
 
-IF VI_Gas_Safety_Stop THEN
+IF fbSafetyGate.VO_Gas_Safety_Active THEN
     L_Freeze_Mode_Active := (VI_Outdoor_Temp < -5.0);
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF VI_Floor_Temps[L_i] < 7.0 THEN
@@ -181,7 +181,7 @@ IF VI_Gas_Safety_Stop THEN
     RETURN;
 END_IF;
 
-IF VI_Emergency_Stop OR L_Policy_Safe_Stop THEN
+IF fbSafetyGate.VO_Emergency_Safe_Stop_Active THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         VO_Zone_Valves[L_i] := FALSE;
     END_FOR;
