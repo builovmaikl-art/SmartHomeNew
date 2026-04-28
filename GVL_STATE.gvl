@@ -1,6 +1,6 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
-    G_Floor_Temps : ARRAY[1..8] OF REAL; // Массив текущих температур поверхности пола
+    G_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Массив текущих температур поверхности пола по физическим контурам
     G_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
@@ -26,7 +26,7 @@ VAR_GLOBAL
     G_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF REAL; // Температура приточного воздуха после калорифера
     G_DHW_Temp : REAL;
     G_DHW_Pressure : REAL;
-    G_Zone_Valves : ARRAY[1..8] OF BOOL;
+    G_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // 0.0 - 1.0
     G_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Концевики клапанов
