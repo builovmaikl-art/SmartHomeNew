@@ -1,7 +1,3 @@
-OVERLAY_OK=FB_CRC32_Calculator METHODS=1
-OVERLAY_OK=FB_Random_Generator METHODS=2
-TARGET_POUS=2
-TOTAL_METHODS=3
 COMPILER_DIR=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор
 PROJECT_ROOT=/home/runner/work/SmartHomeNew/SmartHomeNew
 BASE_XML=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/Система умного дома.xml
@@ -10,12 +6,4 @@ OUT_004=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/004
 OUT_RESULT=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
 LOG_001=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/logs/001_universal_pou_gvl.log
 LOG_004=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/logs/004_import_dut_v11.log
-STEP_001_OK
-STEP_004_OK
-FINAL_RESULT_OK=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
-BUILD_OK
-RUN METHOD OVERLAY...
-METHOD OVERLAY DONE
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/003_RESULT.xml
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/004_RESULT.xml
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
+BUILD_ERROR: not enough values to unpack (expected 2, got 1)
