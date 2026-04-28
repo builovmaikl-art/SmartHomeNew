@@ -123,6 +123,7 @@ VAR
     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
     fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
     fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
+    fbManifoldControl : FB_Heating_Manifold_Control; // Extracted manifold control helper
 END_VAR
 
 
@@ -408,6 +409,15 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         END_IF;
     END_IF;
 END_FOR;
+
+// --- PRE-MANIFOLD CONTROL (EXTRACTED BLOCK PREP) ---
+fbManifoldControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
+    VI_Manifold_Temps_Return := VI_Manifold_Temps_Return,
+    VO_Manifold_Pumps => VO_Manifold_Pumps,
+    VO_Manifold_Valves => VO_Manifold_Valves
+);
 
 // 4. Управление смесительными узлами коллекторов (ТЗ 2.6, 12.2)
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
