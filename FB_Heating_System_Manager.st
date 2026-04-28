@@ -121,6 +121,7 @@ VAR
     L_Adaptive_Effective_Delta : REAL;
     L_Adaptive_Correction : REAL;
     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+    fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
 END_VAR
 
 
@@ -133,12 +134,22 @@ L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
 L_Policy_Freeze_Protection := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
 
+fbSafetyGate(
+    VI_System_Mode := VI_System_Mode,
+    VI_Emergency_Stop := VI_Emergency_Stop,
+    VI_Gas_Safety_Stop := VI_Gas_Safety_Stop,
+    VI_IO_Failsafe_Active := FALSE,
+    VI_Outdoor_Temp := VI_Outdoor_Temp,
+    VI_Freeze_Threshold := VI_Config.Freeze_Threshold,
+    VI_Floor_Temps := VI_Floor_Temps,
+    VO_Freeze_Mode_Active => L_Freeze_Mode_Active,
+    VO_Freeze_Target_Supply => L_Freeze_Target_Supply
+);
+
 // ========================================
 // Heating freeze policy activation
 // ========================================
-IF L_Policy_Freeze_Protection THEN
-    L_Freeze_Mode_Active := TRUE;
-END_IF;
+// Calculated by fbSafetyGate above.
 
 // 0. Агрегация деградации для system mode
 GVL_STATE.G_Heating_IO_Fault := FALSE;
