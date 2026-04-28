@@ -135,11 +135,7 @@ VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
 
 IF fbSafetyGate.VO_Gas_Safety_Active THEN
-    L_Freeze_Mode_Active := (VI_Outdoor_Temp < -5.0);
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        IF VI_Floor_Temps[L_i] < 7.0 THEN
-            L_Freeze_Mode_Active := TRUE;
-        END_IF;
         VO_Zone_Valves[L_i] := FALSE;
     END_FOR;
 
@@ -157,7 +153,6 @@ IF fbSafetyGate.VO_Gas_Safety_Active THEN
 
     IF L_Freeze_Mode_Active THEN
         VO_Backup_Circulation_Pump := TRUE;
-        L_Freeze_Target_Supply := LIMIT(20.0, VI_Config.Freeze_Threshold + 2.0, 35.0);
         L_Min_Supply_Temp := 1000.0;
         FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
             IF VI_Manifold_Temps_Supply[L_i] < L_Min_Supply_Temp THEN
@@ -215,20 +210,9 @@ END_FOR;
 IF L_IO_Failsafe_Active THEN
     // Fail-safe: закрываем зональные клапаны, чтобы не разгонять неконтролируемые контуры,
     // но при риске замерзания сохраняем минимальную циркуляцию и минимальную теплогенерацию.
-    L_Freeze_Mode_Active := (VI_Outdoor_Temp < -5.0);
-
     FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        IF VI_Floor_Temps[L_j] < 7.0 THEN
-            L_Freeze_Mode_Active := TRUE;
-        END_IF;
         VO_Zone_Valves[L_j] := FALSE;
     END_FOR;
-
-    IF L_Freeze_Mode_Active THEN
-        L_Freeze_Target_Supply := LIMIT(20.0, VI_Config.Freeze_Threshold + 2.0, 35.0);
-    ELSE
-        L_Freeze_Target_Supply := 0.0;
-    END_IF;
 
     FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         IF L_Freeze_Mode_Active THEN
