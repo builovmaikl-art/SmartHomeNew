@@ -309,91 +309,20 @@ fbAdaptiveTarget(
 fbCircuitControl(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Current_Hour := VI_Current_Hour,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_Config := VI_Config,
+    VI_Tariff := VI_Tariff,
+    VI_Scenario_Adjust := L_Scenario_Adjust,
     VI_Zone_Configs := VI_Zone_Configs,
     VI_Floor_Temps := VI_Floor_Temps,
     VI_Room_Temps := VI_Room_Temps,
-    VO_Zone_Valves => VO_Zone_Valves
+    VI_Rule_Actions := VI_Rule_Actions,
+    VO_Zone_Valves => VO_Zone_Valves,
+    VO_Heating_Sensor_Fault => L_Any_Sensor_Error
 );
 
-// 2. Индивидуальное управление зонами отопления (ТЗ 1.1, 2.5)
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    fbFloorTempValidator[L_i](
-        VI_Value := VI_Floor_Temps[L_i],
-        VI_Min_Valid := -40.0,
-        VI_Max_Valid := 120.0,
-        VI_Fallback_Mode := 0
-    );
-    
-    L_Climate_Zone_ID := VI_Zone_Configs[L_i].zone;
-    IF L_Climate_Zone_ID >= 1 AND L_Climate_Zone_ID <= 16 THEN
-        fbRoomTempValidator[L_Climate_Zone_ID](
-        VI_Value := VI_Room_Temps[L_Climate_Zone_ID],
-        VI_Min_Valid := -40.0,
-        VI_Max_Valid := 120.0,
-        VI_Fallback_Mode := 0
-        );
-    END_IF;
-
-    // Контроль перегрева стяжки (защита напольного покрытия)
-    L_Overheat_Timer[L_i](IN := fbFloorTempValidator[L_i].VO_Value > VI_Config.Overheat_Threshold, PT := T#60s, VI_System_Time_MS := VI_System_Time_MS);
-    
-    // Выбор датчика температуры с автоматическим переключением при неисправности
-    L_Current_Temp := 0.0;
-    L_Sensor_Error := FALSE;
-    
-    IF VI_Zone_Configs[L_i].control_type = 1 OR VI_Zone_Configs[L_i].control_type = 2 THEN
-        // Основной: по воздуху
-        IF NOT fbRoomTempValidator[L_Climate_Zone_ID].VO_Error THEN
-            L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
-        ELSIF NOT fbFloorTempValidator[L_i].VO_Error THEN
-            L_Current_Temp := fbFloorTempValidator[L_i].VO_Value; // Резервный: по полу
-        ELSE
-            L_Sensor_Error := TRUE;
-        END_IF;
-    ELSE
-        // Основной: по полу
-        IF NOT fbFloorTempValidator[L_i].VO_Error THEN
-            L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
-        ELSIF NOT fbRoomTempValidator[L_Climate_Zone_ID].VO_Error THEN
-            L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value; // Резервный: по воздуху
-        ELSE
-            L_Sensor_Error := TRUE;
-        END_IF;
-    END_IF;
-
-    IF L_Sensor_Error THEN
-        L_Any_Sensor_Error := TRUE;
-        VO_Zone_Valves[L_i] := FALSE; // Безопасное состояние при ошибке обоих датчиков
-    ELSE
-        // ПИД-регулирование и ШИМ для каждой зоны
-        // Применяем плавную корректировку уставки от сценария
-        L_Zone_Config := VI_Zone_Configs[L_i];
-        L_Zone_Config.design_temp := L_Zone_Config.design_temp + L_Scenario_Adjust;
-        L_Floor_Controllers[L_i](
-            VI_Current_Temp := L_Current_Temp,
-            VI_Config := L_Zone_Config,
-            VI_Tariff := VI_Tariff,
-            VI_Current_Hour := VI_Current_Hour,
-            VI_IsActivePLC := VI_IsActivePLC,
-            VI_System_Time_MS := VI_System_Time_MS,
-            VO_Valve_Bool => VO_Zone_Valves[L_i]
-        );
-    END_IF;
-    
-    // Принудительное закрытие клапана при перегреве пола (ТЗ 2.5)
-    IF L_Overheat_Timer[L_i].Q THEN
-        VO_Zone_Valves[L_i] := FALSE;
-    END_IF;
-    
-    // Обработка действий от Rule Engine (ТЗ 13.0)
-    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
-        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
-            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_FLOOR_HEATING THEN
-                VO_Zone_Valves[L_i] := (VI_Rule_Actions[L_j].Value > 0.5);
-            END_IF;
-        END_IF;
-    END_FOR;
-END_FOR;
+// 2. Индивидуальное управление зонами отопления
+// Moved to FB_Heating_Circuit_Control
 
 GVL_STATE.G_Heating_Sensor_Fault := L_Any_Sensor_Error;
 
