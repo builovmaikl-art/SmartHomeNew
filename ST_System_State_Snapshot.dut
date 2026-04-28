@@ -6,7 +6,7 @@ STRUCT
     Security_Armed : BOOL;
     Active_Alarms : INT;
     // Критические состояния для синхронизации
-    Zone_Valves : ARRAY[1..8] OF BOOL;
+    Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     Lighting_States : ARRAY[1..32] OF BYTE;
     Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
