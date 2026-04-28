@@ -124,6 +124,7 @@ VAR
     fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
     fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
     fbManifoldControl : FB_Heating_Manifold_Control; // Extracted manifold control helper
+    fbBoilerControl : FB_Heating_Boiler_Control; // Extracted boiler control helper
 END_VAR
 
 
@@ -543,6 +544,14 @@ IF fbValveTestManager.VO_Test_Active THEN
         VO_Manifold_Pumps[L_i] := FALSE; // Отключаем насос при тестировании клапана
     END_IF;
 END_IF;
+
+// --- PRE-BOILER CONTROL (EXTRACTED BLOCK PREP) ---
+fbBoilerControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_Boiler_Modulation := VI_Boiler_Modulation,
+    VO_Boiler_OT_Enable => VO_Boiler_OT_Enable,
+    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint
+);
 
 // 5. Управление каскадом котлов (ТЗ 2.8, OpenTherm-only, без legacy mirror)
 L_Demand_Power := 0.0;
