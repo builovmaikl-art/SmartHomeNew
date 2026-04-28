@@ -64,17 +64,13 @@ VAR
 
     L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
     L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
-    L_Floor_Controllers : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_FloorHeating_Controller; // Контроллеры зон теплого пола
     L_Last_Boiler_Rotation : UDINT; // Время последней ротации ведущего котла
     L_Lead_Boiler : BYTE := 1; // Номер ведущего котла (1 или 2)
     L_i : INT; // Индекс для циклов
-    L_Zone_Config : ST_FloorHeating_Circuit_Config;
     L_j : INT; // Вспомогательный индекс
     L_Target_Supply_Temp : REAL; // Рассчитанная целевая температура подачи
     L_Demand_Power : REAL; // Суммарный запрос мощности от всех коллекторов
     L_Any_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Флаги наличия запроса тепла по коллекторам
-    L_Current_Temp : REAL; // Текущая температура для ПИД
-    L_Sensor_Error : BOOL; // Ошибка обоих датчиков
     
     // Плавный переход сценария
     L_Prev_Scenario : E_SCENARIO_TYPE;
@@ -83,7 +79,6 @@ VAR
     L_Transition_Temp : FB_Scenario_Transition_Controller;
     
     // ТЗ 2.5: Защита от перегрева стяжки
-    L_Overheat_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_System_Timer; // Таймеры задержки отключения при перегреве
     
     // ТЗ 2.6: Сервисная диагностика и паузы
     L_Pump_Run_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер непрерывной работы насоса (до 72ч)
@@ -98,8 +93,6 @@ VAR
     L_Pump_Diag : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Device_Predictive_Diag; // Диагностика насосов
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor; // Предиктор ресурса котлов
     
-    fbFloorTempValidator : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_Analog_Validator;
-    fbRoomTempValidator : ARRAY[1..16] OF FB_Analog_Validator;
     fbValveTestManager : FB_Valve_Test_Manager; // Менеджер тестирования клапанов
     fbBoilerCascade : FB_Boiler_Cascade_Manager; // Выделенный менеджер каскада котлов
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface; // Основной транспорт OpenTherm
