@@ -118,12 +118,7 @@ VAR
     L_Any_Sensor_Error : BOOL;
     L_Any_Subsystem_Degraded : BOOL;
     L_Adaptive_Max_Delta : REAL;
-    L_Adaptive_Delta : REAL;
-    L_Adaptive_Zone_i : INT;
-    L_Adaptive_Weighted_Sum : REAL;
-    L_Adaptive_Weight_Total : REAL;
     L_Adaptive_Effective_Delta : REAL;
-    L_Adaptive_Weight : REAL;
     L_Adaptive_Correction : REAL;
     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
 END_VAR

@@ -1,0 +1,49 @@
+=== DATE ===
+Tue Apr 28 15:53:28 UTC 2026
+
+=== BRANCH ===
+main
+
+=== BEFORE: adaptive vars ===
+121:    L_Adaptive_Delta : REAL;
+122:    L_Adaptive_Zone_i : INT;
+123:    L_Adaptive_Weighted_Sum : REAL;
+124:    L_Adaptive_Weight_Total : REAL;
+126:    L_Adaptive_Weight : REAL;
+
+=== APPLY CLEANUP PATCH ===
+
+=== AFTER: adaptive vars ===
+
+=== KEEP REQUIRED ADAPTIVE OUTPUT VARS ===
+120:    L_Adaptive_Max_Delta : REAL;
+121:    L_Adaptive_Effective_Delta : REAL;
+122:    L_Adaptive_Correction : REAL;
+123:    fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+282:fbAdaptiveTarget(
+289:    VO_Adaptive_Correction => L_Adaptive_Correction,
+290:    VO_Adaptive_Effective_Delta => L_Adaptive_Effective_Delta,
+291:    VO_Adaptive_Max_Delta => L_Adaptive_Max_Delta
+
+=== DIFF ===
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index 907fb09..6ac5290 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -118,12 +118,7 @@ VAR
+     L_Any_Sensor_Error : BOOL;
+     L_Any_Subsystem_Degraded : BOOL;
+     L_Adaptive_Max_Delta : REAL;
+-    L_Adaptive_Delta : REAL;
+-    L_Adaptive_Zone_i : INT;
+-    L_Adaptive_Weighted_Sum : REAL;
+-    L_Adaptive_Weight_Total : REAL;
+     L_Adaptive_Effective_Delta : REAL;
+-    L_Adaptive_Weight : REAL;
+     L_Adaptive_Correction : REAL;
+     fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
+ END_VAR
+
+=== STATUS AFTER ===
+ M FB_Heating_System_Manager.st
+?? migration_logs/05_cleanup_adaptive_vars.log
