@@ -61,42 +61,24 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-
-    L_Last_Boiler_Rotation : UDINT; // Время последней ротации ведущего котла
     L_Lead_Boiler : BYTE := 1; // Номер ведущего котла (1 или 2)
     L_i : INT; // Индекс для циклов
     L_j : INT; // Вспомогательный индекс
     L_Target_Supply_Temp : REAL; // Рассчитанная целевая температура подачи
     L_Demand_Power : REAL; // Суммарный запрос мощности от всех коллекторов
     L_Any_Zone_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Флаги наличия запроса тепла по коллекторам
-    
+
     // Плавный переход сценария
     L_Prev_Scenario : E_SCENARIO_TYPE;
     L_Scenario_Adjust : REAL;
     L_Target_Scenario_Adjust : REAL;
     L_Transition_Temp : FB_Scenario_Transition_Controller;
-    
-    // ТЗ 2.5: Защита от перегрева стяжки
-    
-    // ТЗ 2.6: Сервисная диагностика и паузы
-    
-    // ТЗ 2.8: Учет ресурса оборудования
-    L_Last_Scan_Time : UDINT; // Время предыдущего цикла для расчета наработки
-    L_Scan_Time_Init : BOOL := FALSE;
-    L_Lifespan_S : REAL := 50000.0 * 3600.0; // Расчетный ресурс котла (50,000 часов в секундах)
-    L_Delta_MS : UDINT; // Разница времени
-    L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor; // Предиктор ресурса котлов
-    
+
     fbValveTestManager : FB_Valve_Test_Manager; // Менеджер тестирования клапанов
-    fbBoilerCascade : FB_Boiler_Cascade_Manager; // Выделенный менеджер каскада котлов
-    fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface; // Основной транспорт OpenTherm
     L_IO_Failsafe_Active : BOOL; // Флаг потери связи с модулями I/O
     L_Freeze_Mode_Active : BOOL; // Флаг антизамерзания по ТЗ
     L_Freeze_Target_Supply : REAL; // Уставка подачи в режиме антизамерзания
     L_Min_Supply_Temp : REAL; // Минимальная температура теплоносителя для антизамерзания
-    L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Команда ушла через OT
-    L_Boiler_Request_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Внутренний request на котлы от логики каскада
-    L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Внутренняя request-уставка котлов
     L_Policy_Normal : BOOL; // Policy: normal operation
     L_Policy_Safe_Stop : BOOL; // Policy: hard safe stop
     L_Policy_Degraded : BOOL; // Policy: limited conservative operation
@@ -258,7 +240,7 @@ IF L_IO_Failsafe_Active THEN
         END_IF;
     END_FOR;
 
-    // В аварийном I/O режиме напрямую формируем только legacy request-мirror.
+    // В аварийном I/O режиме напрямую формируем только legacy request-mirror.
     // Реальные физические команды всё равно будут интерпретированы transport-слоем выше по архитектуре.
     FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
         VO_Boiler_OT_Enable[L_j] := FALSE;
@@ -291,7 +273,7 @@ fbAdaptiveTarget(
     VO_Adaptive_Max_Delta => L_Adaptive_Max_Delta
 );
 
-// --- PRE-CIRCUIT CONTROL (EXTRACTED BLOCK PREP) ---
+// --- CIRCUIT CONTROL ---
 fbCircuitControl(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Current_Hour := VI_Current_Hour,
@@ -306,9 +288,6 @@ fbCircuitControl(
     VO_Zone_Valves => VO_Zone_Valves,
     VO_Heating_Sensor_Fault => L_Any_Sensor_Error
 );
-
-// 2. Индивидуальное управление зонами отопления
-// Moved to FB_Heating_Circuit_Control
 
 GVL_STATE.G_Heating_Sensor_Fault := L_Any_Sensor_Error;
 
@@ -326,7 +305,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     END_IF;
 END_FOR;
 
-// --- PRE-MANIFOLD CONTROL (EXTRACTED BLOCK PREP) ---
+// --- MANIFOLD CONTROL ---
 fbManifoldControl(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_IsActivePLC := VI_IsActivePLC,
@@ -343,10 +322,7 @@ fbManifoldControl(
     VO_Status => VO_Status
 );
 
-// 4. Управление смесительными узлами коллекторов
-// Moved to FB_Heating_Manifold_Control.
-// Valve test override remains below.
-
+// Valve test override remains in manager for now.
 fbValveTestManager(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_IsActivePLC := VI_IsActivePLC,
@@ -367,7 +343,7 @@ IF fbValveTestManager.VO_Test_Active THEN
     END_IF;
 END_IF;
 
-// --- PRE-BOILER CONTROL (EXTRACTED BLOCK PREP) ---
+// --- BOILER CONTROL ---
 fbBoilerControl(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_IsActivePLC := VI_IsActivePLC,
@@ -390,10 +366,7 @@ fbBoilerControl(
     VO_Demand_Power => L_Demand_Power
 );
 
-// 5. Управление каскадом котлов
-// Moved to FB_Heating_Boiler_Control.
 GVL_STATE.G_Heating_Subsystem_Degraded := L_Any_Subsystem_Degraded;
-
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_System_Manager <<<
