@@ -1,0 +1,97 @@
+=== DATE ===
+Tue Apr 28 10:40:58 UTC 2026
+
+=== BRANCH ===
+main
+
+=== STATUS BEFORE ===
+?? migration_logs/03_fb_heating_manager_final_array_patch.log
+
+=== BEFORE: ARRAY[1..8] ===
+35:    VI_Floor_Temps : ARRAY[1..8] OF REAL; // Температуры стяжки пола по зонам
+42:    VI_Zone_Configs : ARRAY[1..8] OF ST_FloorHeating_Circuit_Config; // Конфигурации контуров
+53:    VO_Zone_Valves : ARRAY[1..8] OF BOOL; // Выход: Управление клапанами контуров (Зоны 1-16)
+67:    L_Floor_Controllers : ARRAY[1..8] OF FB_FloorHeating_Controller; // Контроллеры зон теплого пола
+86:    L_Overheat_Timer : ARRAY[1..8] OF FB_System_Timer; // Таймеры задержки отключения при перегреве
+101:    fbFloorTempValidator : ARRAY[1..8] OF FB_Analog_Validator;
+
+=== BEFORE: TO 8 ===
+299:FOR L_Adaptive_Zone_i := 1 TO 8 DO
+
+=== APPLY PATCH ===
+
+=== AFTER: ARRAY[1..8] ===
+
+=== AFTER: TO 8 ===
+
+=== DIFF ===
+diff --git a/FB_Heating_System_Manager.st b/FB_Heating_System_Manager.st
+index 849fc44..b5a7d2d 100644
+--- a/FB_Heating_System_Manager.st
++++ b/FB_Heating_System_Manager.st
+@@ -32,14 +32,14 @@ VAR_INPUT
+     VI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Текущая модуляция котлов (%)
+ END_VAR
+ VAR_IN_OUT
+-    VI_Floor_Temps : ARRAY[1..8] OF REAL; // Температуры стяжки пола по зонам
++    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL; // Температуры стяжки пола по зонам
+     VI_Room_Temps : ARRAY[1..16] OF REAL; // Температуры воздуха в помещениях
+     VI_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Давление в коллекторах (бар)
+     VI_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Ток насосов коллекторов (мА)
+     VI_Manifold_Temps_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Температура подачи на коллекторах
+     VI_Manifold_Temps_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Температура обратки на коллекторах
+     VI_Boiler_Flame_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Статус наличия пламени в котлах
+-    VI_Zone_Configs : ARRAY[1..8] OF ST_FloorHeating_Circuit_Config; // Конфигурации контуров
++    VI_Zone_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config; // Конфигурации контуров
+     VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+     VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+     VI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+@@ -50,7 +50,7 @@ END_VAR
+ VAR_OUTPUT
+     VO_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL; // Выход: Положение клапанов смесителей (0-100%)
+     VO_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Выход: Управление насосами коллекторов
+-    VO_Zone_Valves : ARRAY[1..8] OF BOOL; // Выход: Управление клапанами контуров (Зоны 1-16)
++    VO_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL; // Выход: Управление клапанами контуров (Зоны 1-16)
+     VO_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Физические команды в OpenTherm
+     VO_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL; // Физические уставки в OpenTherm
+     VO_Backup_Circulation_Pump : BOOL; // Резервный циркуляционный насос в режиме антизамерзания при газовой аварии
+@@ -64,7 +64,7 @@ VAR
+ 
+     L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
+     L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
+-    L_Floor_Controllers : ARRAY[1..8] OF FB_FloorHeating_Controller; // Контроллеры зон теплого пола
++    L_Floor_Controllers : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_FloorHeating_Controller; // Контроллеры зон теплого пола
+     L_Last_Boiler_Rotation : UDINT; // Время последней ротации ведущего котла
+     L_Lead_Boiler : BYTE := 1; // Номер ведущего котла (1 или 2)
+     L_i : INT; // Индекс для циклов
+@@ -83,7 +83,7 @@ VAR
+     L_Transition_Temp : FB_Scenario_Transition_Controller;
+     
+     // ТЗ 2.5: Защита от перегрева стяжки
+-    L_Overheat_Timer : ARRAY[1..8] OF FB_System_Timer; // Таймеры задержки отключения при перегреве
++    L_Overheat_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_System_Timer; // Таймеры задержки отключения при перегреве
+     
+     // ТЗ 2.6: Сервисная диагностика и паузы
+     L_Pump_Run_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер непрерывной работы насоса (до 72ч)
+@@ -98,7 +98,7 @@ VAR
+     L_Pump_Diag : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Device_Predictive_Diag; // Диагностика насосов
+     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor; // Предиктор ресурса котлов
+     
+-    fbFloorTempValidator : ARRAY[1..8] OF FB_Analog_Validator;
++    fbFloorTempValidator : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_Analog_Validator;
+     fbRoomTempValidator : ARRAY[1..16] OF FB_Analog_Validator;
+     fbValveTestManager : FB_Valve_Test_Manager; // Менеджер тестирования клапанов
+     fbBoilerCascade : FB_Boiler_Cascade_Manager; // Выделенный менеджер каскада котлов
+@@ -296,7 +296,7 @@ L_Adaptive_Weight_Total := 0.0;
+ L_Adaptive_Effective_Delta := 0.0;
+ L_Adaptive_Correction := 0.0;
+ 
+-FOR L_Adaptive_Zone_i := 1 TO 8 DO
++FOR L_Adaptive_Zone_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+     IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 8 THEN
+         CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
+             0:
+
+=== STATUS AFTER ===
+ M FB_Heating_System_Manager.st
+?? migration_logs/03_fb_heating_manager_final_array_patch.log
