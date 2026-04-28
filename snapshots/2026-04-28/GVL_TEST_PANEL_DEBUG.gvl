@@ -1,0 +1,19 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // === DEBUG VIEW ONLY ===
+    G_Test_Description : STRING(200);
+    G_Test_What_To_Change : STRING(200);
+    G_Test_Expected_Text : STRING(200);
+    G_Expected_Summary : STRING(200);
+    G_Actual_Summary : STRING(200);
+    G_Error_Text : STRING(200);
+    G_System_State_Line : STRING(200);
+
+    // Inputs snapshot
+    G_Input_Guest_Preheat_Request : BOOL;
+    G_Input_Guest_Preheat_Enabled : BOOL;
+    G_Input_Guest_Preheat_Boost : INT;
+    G_Input_Max_Thermal_Budget : REAL;
+    G_Input_Block_Heating : BOOL;
+    G_Input_Safety_Stop : BOOL;
+END_VAR

@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Gas_Valve_Configuration :
+STRUCT
+    valve_id : BYTE := 0;
+    valve_type : E_VALVE_TYPE := E_VALVE_TYPE.VALVE_NC;
+    close_time_seconds : UDINT := 10;
+    open_time_seconds : UDINT := 10;
+    emergency_open_allowed : BOOL := FALSE;
+END_STRUCT
+END_TYPE

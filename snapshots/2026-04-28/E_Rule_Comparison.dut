@@ -1,0 +1,14 @@
+{attribute 'strict'}
+TYPE E_Rule_Comparison :
+(
+    COMP_NONE := 0,
+    COMP_EQ := 1,
+    COMP_GT := 2,
+    COMP_LT := 3,
+    COMP_GE := 4,
+    COMP_LE := 5,
+    COMP_IN_RANGE := 6,
+    COMP_TRUE := 7,
+    COMP_FALSE := 8
+) USINT;
+END_TYPE
