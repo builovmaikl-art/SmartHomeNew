@@ -12,7 +12,8 @@ VAR
     fbDecision : FB_Heating_Decision_Context;
     L_i : INT;
     L_j : INT;
-    L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
+    L_Zone_ID : INT;
+    L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     L_Boiler_Modulation_REAL : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Heating_Emergency_Stop : BOOL;
     L_Heating_Gas_Safety_Stop : BOOL;
@@ -74,14 +75,15 @@ END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_j := TO_INT(GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i].manifold_id);
+    L_Zone_ID := GVL_CONFIG.G_Heating_Circuit_To_Zone[L_i];
 
-    IF (L_j >= 1) AND (L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS) THEN
+    IF (L_j >= 1) AND (L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS) AND (L_Zone_ID >= 1) AND (L_Zone_ID <= GVL_CONSTANTS.C_MAX_ZONES) THEN
 
-        // Base policy bias (HP-1)
-        L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + TO_INT(GVL_HEATING_POLICY.G_Zone_Priority_Bias[L_i]);
+        // Base policy bias (HP-1), mapped circuit -> logical zone
+        L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + TO_INT(GVL_HEATING_POLICY.G_Zone_Priority_Bias[L_Zone_ID]);
 
-        // Guest preheat boost (HP-2, config-driven)
-        IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_i] THEN
+        // Guest preheat boost (HP-2, config-driven), mapped circuit -> logical zone
+        IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_Zone_ID] THEN
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost;
         END_IF;
 
@@ -140,7 +142,7 @@ fbHeatingManager(
     VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
     VO_Manifold_Valves => GVL_STATE.G_Manifold_Valves,
     VO_Manifold_Pumps => GVL_STATE.G_Manifold_Pumps,
-    VO_Zone_Valves => L_Zone_Valves_8,
+    VO_Zone_Valves => L_Zone_Valves,
     VO_Boiler_OT_Enable => GVL_STATE.G_Boiler_OT_Enable,
     VO_Boiler_OT_Setpoint => GVL_STATE.G_Boiler_OT_Setpoint,
     VO_Backup_Circulation_Pump => GVL_STATE.G_Backup_Circulation_Pump,
@@ -158,9 +160,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
         GVL_STATE.G_Manifold_Valves[L_i] := 0.0;
 
-        FOR L_j := 1 TO 8 DO
+        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             IF GVL_CONFIG.G_HMI_FloorHeating_Configs[L_j].manifold_id = L_i THEN
-                L_Zone_Valves_8[L_j] := FALSE;
+                L_Zone_Valves[L_j] := FALSE;
             END_IF;
         END_FOR;
     END_IF;
@@ -297,6 +299,6 @@ END_IF;
 // S6. ADAPTER COPY-OUT
 // ============================================================
 
-FOR L_i := 1 TO 8 DO
-    GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves_8[L_i];
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
 END_FOR;
