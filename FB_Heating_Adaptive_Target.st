@@ -14,7 +14,7 @@ END_VAR
 VAR_IN_OUT
     VI_Zone_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config;
     VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
-    VI_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    VI_Room_Temps : ARRAY[1..16] OF REAL; // Keep exact type compatibility with FB_Heating_System_Manager
 END_VAR
 
 VAR_OUTPUT
