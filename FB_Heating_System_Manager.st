@@ -79,10 +79,7 @@ VAR
     L_Freeze_Mode_Active : BOOL; // Флаг антизамерзания по ТЗ
     L_Freeze_Target_Supply : REAL; // Уставка подачи в режиме антизамерзания
     L_Min_Supply_Temp : REAL; // Минимальная температура теплоносителя для антизамерзания
-    L_Policy_Normal : BOOL; // Policy: normal operation
-    L_Policy_Safe_Stop : BOOL; // Policy: hard safe stop
     L_Policy_Degraded : BOOL; // Policy: limited conservative operation
-    L_Policy_Freeze_Protection : BOOL; // Policy: freeze protection mode
     L_Any_Sensor_Error : BOOL;
     L_Any_Subsystem_Degraded : BOOL;
     L_Adaptive_Max_Delta : REAL;
@@ -98,18 +95,31 @@ END_VAR
 
 
 // ========================================
-// Heating policy layer
+// Heating policy and fault pre-scan layer
 // ========================================
-L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
-L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
-L_Policy_Freeze_Protection := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+
+GVL_STATE.G_Heating_IO_Fault := FALSE;
+GVL_STATE.G_Heating_Sensor_Fault := FALSE;
+GVL_STATE.G_Heating_Subsystem_Degraded := FALSE;
+L_Any_Sensor_Error := FALSE;
+L_Any_Subsystem_Degraded := FALSE;
+
+L_IO_Failsafe_Active := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    IF NOT VI_IO_Modules_Online[L_i] THEN
+        L_IO_Failsafe_Active := TRUE;
+        GVL_STATE.G_Heating_IO_Fault := TRUE;
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+        EXIT;
+    END_IF;
+END_FOR;
 
 fbSafetyGate(
     VI_System_Mode := VI_System_Mode,
     VI_Emergency_Stop := VI_Emergency_Stop,
     VI_Gas_Safety_Stop := VI_Gas_Safety_Stop,
-    VI_IO_Failsafe_Active := FALSE,
+    VI_IO_Failsafe_Active := L_IO_Failsafe_Active,
     VI_Outdoor_Temp := VI_Outdoor_Temp,
     VI_Freeze_Threshold := VI_Config.Freeze_Threshold,
     VI_Floor_Temps := VI_Floor_Temps,
@@ -118,30 +128,25 @@ fbSafetyGate(
 );
 
 // ========================================
-// Heating freeze policy activation
+// Safe-state output projection
 // ========================================
-// Calculated by fbSafetyGate above.
-
-// 0. Агрегация деградации для system mode
-GVL_STATE.G_Heating_IO_Fault := FALSE;
-GVL_STATE.G_Heating_Sensor_Fault := FALSE;
-GVL_STATE.G_Heating_Subsystem_Degraded := FALSE;
-L_Any_Sensor_Error := FALSE;
-L_Any_Subsystem_Degraded := FALSE;
-
-// 0. Аварийный стоп от подсистемы безопасности
 VO_Backup_Circulation_Pump := FALSE;
 VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
 
-IF fbSafetyGate.VO_Gas_Safety_Active THEN
+IF fbSafetyGate.VO_Block_Normal_Heating THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         VO_Zone_Valves[L_i] := FALSE;
     END_FOR;
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        VO_Manifold_Pumps[L_i] := FALSE;
-        VO_Manifold_Valves[L_i] := 0.0;
+        IF fbSafetyGate.VO_IO_Failsafe_Active AND L_Freeze_Mode_Active THEN
+            VO_Manifold_Pumps[L_i] := TRUE;
+            VO_Manifold_Valves[L_i] := 35.0;
+        ELSE
+            VO_Manifold_Pumps[L_i] := FALSE;
+            VO_Manifold_Valves[L_i] := 0.0;
+        END_IF;
     END_FOR;
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
@@ -151,7 +156,7 @@ IF fbSafetyGate.VO_Gas_Safety_Active THEN
         VO_Boiler_Status[L_i].Error := TRUE;
     END_FOR;
 
-    IF L_Freeze_Mode_Active THEN
+    IF fbSafetyGate.VO_Gas_Safety_Active AND L_Freeze_Mode_Active THEN
         VO_Backup_Circulation_Pump := TRUE;
         L_Min_Supply_Temp := 1000.0;
         FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
@@ -173,66 +178,7 @@ IF fbSafetyGate.VO_Gas_Safety_Active THEN
         VO_Freeze_Risk_Status := TRUE;
     END_IF;
 
-    RETURN;
-END_IF;
-
-IF fbSafetyGate.VO_Emergency_Safe_Stop_Active THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        VO_Zone_Valves[L_i] := FALSE;
-    END_FOR;
-
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        VO_Manifold_Pumps[L_i] := FALSE;
-        VO_Manifold_Valves[L_i] := 0.0;
-    END_FOR;
-
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Boiler_OT_Enable[L_i] := FALSE;
-        VO_Boiler_OT_Setpoint[L_i] := 0.0;
-        VO_Boiler_Status[L_i].Warning := FALSE;
-        VO_Boiler_Status[L_i].Error := TRUE;
-    END_FOR;
-
-    RETURN;
-END_IF;
-
-// 1. Проверка связи с модулями ввода-вывода (ТЗ 2.0)
-L_IO_Failsafe_Active := FALSE;
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
-    IF NOT VI_IO_Modules_Online[L_i] THEN
-        L_IO_Failsafe_Active := TRUE;
-        GVL_STATE.G_Heating_IO_Fault := TRUE;
-GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
-        EXIT;
-    END_IF;
-END_FOR;
-
-IF L_IO_Failsafe_Active THEN
-    // Fail-safe: закрываем зональные клапаны, чтобы не разгонять неконтролируемые контуры,
-    // но при риске замерзания сохраняем минимальную циркуляцию и минимальную теплогенерацию.
-    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        VO_Zone_Valves[L_j] := FALSE;
-    END_FOR;
-
-    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF L_Freeze_Mode_Active THEN
-            VO_Manifold_Pumps[L_j] := TRUE;
-            VO_Manifold_Valves[L_j] := 35.0;
-        ELSE
-            VO_Manifold_Pumps[L_j] := FALSE;
-            VO_Manifold_Valves[L_j] := 0.0;
-        END_IF;
-    END_FOR;
-
-    // В аварийном I/O режиме напрямую формируем только legacy request-mirror.
-    // Реальные физические команды всё равно будут интерпретированы transport-слоем выше по архитектуре.
-    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Boiler_OT_Enable[L_j] := FALSE;
-        VO_Boiler_OT_Setpoint[L_j] := 0.0;
-    END_FOR;
-
-    IF L_Freeze_Mode_Active THEN
-        // В fail-safe используем только ведущий аварийный вариант: котёл №1 на минимальной уставке.
+    IF fbSafetyGate.VO_IO_Failsafe_Active AND L_Freeze_Mode_Active THEN
         IF VI_Boiler_OT_Online[1] AND NOT VI_Boiler_Error_Status[1] THEN
             VO_Boiler_OT_Enable[1] := TRUE;
             VO_Boiler_OT_Setpoint[1] := L_Freeze_Target_Supply;
