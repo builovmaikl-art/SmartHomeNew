@@ -62,8 +62,6 @@ END_VAR
 
 VAR
 
-    L_PID_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_PID_Controller; // ПИД-регуляторы для поддержания температуры подачи
-    L_PID_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймеры вызова ПИД-регуляторов
     L_Last_Boiler_Rotation : UDINT; // Время последней ротации ведущего котла
     L_Lead_Boiler : BYTE := 1; // Номер ведущего котла (1 или 2)
     L_i : INT; // Индекс для циклов
@@ -81,16 +79,12 @@ VAR
     // ТЗ 2.5: Защита от перегрева стяжки
     
     // ТЗ 2.6: Сервисная диагностика и паузы
-    L_Pump_Run_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер непрерывной работы насоса (до 72ч)
-    L_Pump_Pause_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_System_Timer; // Таймер обязательной паузы насоса (1ч)
-    L_Pump_In_Pause : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Флаг: Насос находится в режиме сервисной паузы
     
     // ТЗ 2.8: Учет ресурса оборудования
     L_Last_Scan_Time : UDINT; // Время предыдущего цикла для расчета наработки
     L_Scan_Time_Init : BOOL := FALSE;
     L_Lifespan_S : REAL := 50000.0 * 3600.0; // Расчетный ресурс котла (50,000 часов в секундах)
     L_Delta_MS : UDINT; // Разница времени
-    L_Pump_Diag : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Device_Predictive_Diag; // Диагностика насосов
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor; // Предиктор ресурса котлов
     
     fbValveTestManager : FB_Valve_Test_Manager; // Менеджер тестирования клапанов
@@ -99,7 +93,6 @@ VAR
     L_IO_Failsafe_Active : BOOL; // Флаг потери связи с модулями I/O
     L_Freeze_Mode_Active : BOOL; // Флаг антизамерзания по ТЗ
     L_Freeze_Target_Supply : REAL; // Уставка подачи в режиме антизамерзания
-    L_Delta_T : REAL; // Разница температур подача/обратка
     L_Min_Supply_Temp : REAL; // Минимальная температура теплоносителя для антизамерзания
     L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Команда ушла через OT
     L_Boiler_Request_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL; // Внутренний request на котлы от логики каскада
