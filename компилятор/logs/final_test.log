@@ -1,7 +1,16 @@
-OVERLAY_OK=FB_CRC32_Calculator METHODS=1
-OVERLAY_OK=FB_Random_Generator METHODS=2
-TARGET_POUS=2
-TOTAL_METHODS=3
+ERROR=[Errno 2] No such file or directory: '/home/runner/work/SmartHomeNew/SmartHomeNew/steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V2.py'
+Traceback (most recent call last):
+  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 191, in <module>
+    main()
+  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 116, in main
+    methods_v2 = load_module("methods_v2_builder", ROOT / "steps" / "MASTER_PIPELINE" / "001_universal_pou_builder_METHODS_V2.py")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/method_overlay_clean.py", line 24, in load_module
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1073, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1130, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/SmartHomeNew/SmartHomeNew/steps/MASTER_PIPELINE/001_universal_pou_builder_METHODS_V2.py'
 COMPILER_DIR=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор
 PROJECT_ROOT=/home/runner/work/SmartHomeNew/SmartHomeNew
 BASE_XML=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/Система умного дома.xml
@@ -15,7 +24,13 @@ STEP_004_OK
 FINAL_RESULT_OK=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
 BUILD_OK
 RUN METHOD OVERLAY...
-METHOD OVERLAY DONE
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/003_RESULT.xml
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/004_RESULT.xml
-CLEANED: /home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/out/RESULT.xml
+OVERLAY_ERROR: method_overlay_clean.py failed
+ERROR: expected final file not found: компилятор/out/RESULT_methods_clean.xml
+=== compiler out dir after compile ===
+total 2728
+drwxr-xr-x 2 runner runner   4096 Apr 29 07:20 .
+drwxr-xr-x 6 runner runner   4096 Apr 29 07:20 ..
+-rw-r--r-- 1 runner runner      0 Apr 29 07:20 .gitkeep
+-rw-r--r-- 1 runner runner 905313 Apr 29 07:20 003_RESULT.xml
+-rw-r--r-- 1 runner runner 936009 Apr 29 07:20 004_RESULT.xml
+-rw-r--r-- 1 runner runner 936009 Apr 29 07:20 RESULT.xml
