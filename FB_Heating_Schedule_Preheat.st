@@ -15,6 +15,10 @@ VAR
     L_Active : BOOL;
 
     L_Learn_Window_MS : UDINT := 300000;
+    L_Learn_Cooldown_MS : UDINT := 900000;
+    L_Cold_Confirm : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF INT;
+    L_Hot_Confirm : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF INT;
+    L_Last_Learn_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF UDINT;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -61,21 +65,45 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                     IF L_Time_To_Comfort_MS < L_Learn_Window_MS THEN
 
                         IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 1.0 THEN
-                            IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] < L_Event.Adaptive_Max_Offset_MS THEN
-                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
-                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] + L_Event.Adaptive_Step_MS;
-                            END_IF;
+                            L_Cold_Confirm[L_i, L_e] := L_Cold_Confirm[L_i, L_e] + 1;
+                            L_Hot_Confirm[L_i, L_e] := 0;
+                        ELSIF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -0.5 THEN
+                            L_Hot_Confirm[L_i, L_e] := L_Hot_Confirm[L_i, L_e] + 1;
+                            L_Cold_Confirm[L_i, L_e] := 0;
+                        ELSE
+                            L_Cold_Confirm[L_i, L_e] := 0;
+                            L_Hot_Confirm[L_i, L_e] := 0;
                         END_IF;
 
-                        IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -0.5 THEN
-                            IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Step_MS THEN
-                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
-                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] - L_Event.Adaptive_Step_MS;
-                            ELSE
-                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := 0;
-                            END_IF;
-                        END_IF;
+                        IF (VI_Time_Of_Day_MS - L_Last_Learn_MS[L_i, L_e]) >= L_Learn_Cooldown_MS THEN
 
+                            IF L_Cold_Confirm[L_i, L_e] >= 2 THEN
+                                IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] < L_Event.Adaptive_Max_Offset_MS THEN
+                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
+                                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] + L_Event.Adaptive_Step_MS;
+                                    IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Max_Offset_MS THEN
+                                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := L_Event.Adaptive_Max_Offset_MS;
+                                    END_IF;
+                                    L_Last_Learn_MS[L_i, L_e] := VI_Time_Of_Day_MS;
+                                END_IF;
+                                L_Cold_Confirm[L_i, L_e] := 0;
+                            END_IF;
+
+                            IF L_Hot_Confirm[L_i, L_e] >= 2 THEN
+                                IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Step_MS THEN
+                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
+                                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] - L_Event.Adaptive_Step_MS;
+                                ELSE
+                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := 0;
+                                END_IF;
+                                L_Last_Learn_MS[L_i, L_e] := VI_Time_Of_Day_MS;
+                                L_Hot_Confirm[L_i, L_e] := 0;
+                            END_IF;
+
+                        END_IF;
+                    ELSE
+                        L_Cold_Confirm[L_i, L_e] := 0;
+                        L_Hot_Confirm[L_i, L_e] := 0;
                     END_IF;
                 END_IF;
 
