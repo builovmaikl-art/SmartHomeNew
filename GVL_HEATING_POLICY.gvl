@@ -16,6 +16,8 @@ VAR_GLOBAL
     G_Policy_Feedback_Stable : BOOL;
     G_Policy_Feedback_Improving : BOOL;
     G_Policy_Feedback_Quality : REAL;
+    G_Policy_Predictive_Active : BOOL;
+    G_Policy_Predictive_Adjustment : REAL;
 
     // NEW: zone intelligence
     G_Zone_Quality : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
