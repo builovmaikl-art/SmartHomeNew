@@ -40,6 +40,7 @@ fbPolicyManager(
 // schedule layer (deterministic, post-policy)
 fbSchedule(
     VI_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS,
+    VI_Day_Of_Week := GVL_STATUS.G_Day_Of_Week,
     VI_Enable := TRUE
 );
 
