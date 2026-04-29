@@ -1,0 +1,44 @@
+=== DATE ===
+Wed Apr 29 07:43:51 UTC 2026
+
+=== CLEAN UNUSED VAR BLOCK ===
+Removed: ['fbSystemHealth', 'fbRedundancy', 'fbGateway', 'fbScenarioManager', 'fbNVRAMManager', 'fbAlarmManager', 'fbSafety', 'fbStateManager', 'fbWatchdog', 'fbHMIInterface', 'fbFaultLogger']
+
+=== VERIFY UNUSED REMOVED ===
+
+=== LINE COUNT ===
+572 PRG_System.st
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index 6b1b7b8..4ccf28b 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -7,25 +7,10 @@ VAR
+     L_Lighting_32   : ARRAY[1..32] OF BYTE;
+     L_Lighting_Bool_32 : ARRAY[1..32] OF BOOL;
+     L_FloorTemps_8  : ARRAY[1..8] OF REAL;
+-    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;
+-    fbSystemHealth : FB_System_Health;
+-    fbRedundancy : FB_Redundancy_Manager;
+-    fbGateway : FB_Gateway_Interface;
+-    fbScenarioManager : FB_Scenario_Manager;
+-    fbSimulationManager : FB_Simulation_Manager;
++    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;    fbSimulationManager : FB_Simulation_Manager;
+     fbRuleEngine : FB_Rule_Engine;
+-    fbNVRAMManager : FB_NVRAM_Manager;
+-
+     fbBlackBox : FB_BlackBox_Recorder;
+-    fbAstroTimer : FB_Astro_Timer;
+-    fbAlarmManager : FB_Alarm_Manager;
+-    fbHistoryManager : FB_History_Manager;
+-    fbSafety : FB_Safety_Manager;
+-    fbStateManager : FB_State_Manager;
+-    fbWatchdog : FB_Watchdog;
+-    fbHMIInterface : FB_HMI_Interface;
+-    fbFaultLogger : FB_Fault_Logger;
+-    fbLogEvent : FB_LogEvent;
++    fbAstroTimer : FB_Astro_Timer;    fbHistoryManager : FB_History_Manager;    fbLogEvent : FB_LogEvent;
+     fbSystemScenarioArb : FB_System_Scenario_Arbitration;
+     fbSystemGatewayIntent : FB_System_Gateway_Intent;
+     fbSystemPersist : FB_System_Persist_Manager;
