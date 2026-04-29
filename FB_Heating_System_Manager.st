@@ -50,12 +50,12 @@ VAR
     L_IO_Failsafe_Active : BOOL;
     L_Freeze_Active : BOOL;
     L_Freeze_Target_Supply : REAL;
-    L_Min_Supply_Temp : REAL;
     L_Policy_Degraded : BOOL;
     L_Sensor_Error : BOOL;
     L_Subsys_Degraded : BOOL;
     fbAdaptiveTarget : FB_Heating_Adaptive_Target;
     fbSafetyGate : FB_Heating_Safety_Gate;
+    fbSafeState : FB_Heating_Safe_State;
     fbCircuitControl : FB_Heating_Circuit_Control;
     fbManifoldControl : FB_Heating_Manifold_Control;
     fbBoilerControl : FB_Heating_Boiler_Control;
@@ -95,55 +95,36 @@ VO_Backup_Circulation_Pump := FALSE;
 VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
 
-IF fbSafetyGate.VO_Block_Normal_Heating THEN
+fbSafeState(
+    VI_Block_Normal_Heating := fbSafetyGate.VO_Block_Normal_Heating,
+    VI_IO_Failsafe_Active := fbSafetyGate.VO_IO_Failsafe_Active,
+    VI_Gas_Safety_Active := fbSafetyGate.VO_Gas_Safety_Active,
+    VI_Freeze_Active := L_Freeze_Active,
+    VI_Freeze_Target_Supply := L_Freeze_Target_Supply,
+    VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
+    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
+    VI_Boiler_OT_Online := VI_Boiler_OT_Online
+);
+
+IF fbSafeState.VO_Applied THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-        VO_Zone_Valves[L_i] := FALSE;
+        VO_Zone_Valves[L_i] := fbSafeState.VO_Zone_Valves[L_i];
     END_FOR;
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF fbSafetyGate.VO_IO_Failsafe_Active AND L_Freeze_Active THEN
-            VO_Manifold_Pumps[L_i] := TRUE;
-            VO_Manifold_Valves[L_i] := 35.0;
-        ELSE
-            VO_Manifold_Pumps[L_i] := FALSE;
-            VO_Manifold_Valves[L_i] := 0.0;
-        END_IF;
+        VO_Manifold_Pumps[L_i] := fbSafeState.VO_Manifold_Pumps[L_i];
+        VO_Manifold_Valves[L_i] := fbSafeState.VO_Manifold_Valves[L_i];
     END_FOR;
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Boiler_OT_Enable[L_i] := FALSE;
-        VO_Boiler_OT_Setpoint[L_i] := 0.0;
-        VO_Boiler_Status[L_i].Warning := FALSE;
-        VO_Boiler_Status[L_i].Error := TRUE;
+        VO_Boiler_OT_Enable[L_i] := fbSafeState.VO_Boiler_OT_Enable[L_i];
+        VO_Boiler_OT_Setpoint[L_i] := fbSafeState.VO_Boiler_OT_Setpoint[L_i];
+        VO_Boiler_Status[L_i] := fbSafeState.VO_Boiler_Status[L_i];
     END_FOR;
 
-    IF fbSafetyGate.VO_Gas_Safety_Active AND L_Freeze_Active THEN
-        VO_Backup_Circulation_Pump := TRUE;
-        L_Min_Supply_Temp := 1000.0;
-        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-            IF VI_Manifold_Temps_Supply[L_i] < L_Min_Supply_Temp THEN
-                L_Min_Supply_Temp := VI_Manifold_Temps_Supply[L_i];
-            END_IF;
-        END_FOR;
-        IF L_Min_Supply_Temp > 900.0 THEN
-            L_Min_Supply_Temp := 0.0;
-        END_IF;
-
-        IF L_Min_Supply_Temp < (L_Freeze_Target_Supply - 1.0) THEN
-            VO_Electric_Heater_Enable := TRUE;
-        ELSIF L_Min_Supply_Temp > (L_Freeze_Target_Supply + 1.0) THEN
-            VO_Electric_Heater_Enable := FALSE;
-        END_IF;
-        VO_Freeze_Risk_Status := TRUE;
-    END_IF;
-
-    IF fbSafetyGate.VO_IO_Failsafe_Active AND L_Freeze_Active THEN
-        IF VI_Boiler_OT_Online[1] AND NOT VI_Boiler_Error_Status[1] THEN
-            VO_Boiler_OT_Enable[1] := TRUE;
-            VO_Boiler_OT_Setpoint[1] := L_Freeze_Target_Supply;
-        END_IF;
-    END_IF;
-
+    VO_Backup_Circulation_Pump := fbSafeState.VO_Backup_Circulation_Pump;
+    VO_Electric_Heater_Enable := fbSafeState.VO_Electric_Heater_Enable;
+    VO_Freeze_Risk_Status := fbSafeState.VO_Freeze_Risk_Status;
     RETURN;
 END_IF;
 
