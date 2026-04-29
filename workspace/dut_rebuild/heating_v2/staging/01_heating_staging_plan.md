@@ -1,1 +1,0 @@
-Heating staging plan created

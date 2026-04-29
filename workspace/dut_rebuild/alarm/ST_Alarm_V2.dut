@@ -1,8 +1,0 @@
-TYPE ST_Alarm_V2 : STRUCT
-    id : INT;
-    enabled : BOOL;
-    severity : INT;
-    source_id : INT;
-    active : BOOL;
-END_STRUCT
-END_TYPE

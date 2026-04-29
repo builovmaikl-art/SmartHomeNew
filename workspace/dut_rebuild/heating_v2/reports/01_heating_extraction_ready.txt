@@ -1,3 +1,0 @@
-HEATING_EXTRACTION_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=prepare Heating staging compatibility package

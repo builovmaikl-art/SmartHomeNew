@@ -1,9 +1,0 @@
-TYPE ST_Socket_State_V2 :
-STRUCT
-    Socket_ID : INT;
-    Is_On : BOOL;
-    Manual_Override_Active : BOOL;
-    Safety_Blocked : BOOL;
-    Alarm_Active : BOOL;
-END_STRUCT
-END_TYPE

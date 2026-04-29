@@ -1,3 +1,0 @@
-LIGHTING_STAGING_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=integrate staging into Lighting runtime shadow only

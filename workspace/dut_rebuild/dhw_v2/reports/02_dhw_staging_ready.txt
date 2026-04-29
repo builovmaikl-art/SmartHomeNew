@@ -1,3 +1,0 @@
-DHW_STAGING_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=integrate staging into FB_DHW_Manager shadow only
