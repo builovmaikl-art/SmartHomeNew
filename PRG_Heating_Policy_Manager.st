@@ -3,12 +3,16 @@ PROGRAM PRG_Heating_Policy_Manager
 VAR
     fbPolicyManager : FB_Heating_Policy_Manager;
     fbSchedule : FB_Heating_Schedule_Preheat;
+    fbTime : FB_Time_Service;
     L_i : INT;
     L_Room_Avg : REAL;
     L_Floor_Avg : REAL;
 END_VAR
 
-// averages
+// --- TIME SERVICE ---
+fbTime();
+
+// --- INPUT AGGREGATION ---
 L_Room_Avg := 0.0;
 L_Floor_Avg := 0.0;
 
@@ -20,8 +24,9 @@ END_FOR;
 L_Room_Avg := L_Room_Avg / REAL(GVL_CONSTANTS.C_MAX_ZONES);
 L_Floor_Avg := L_Floor_Avg / REAL(GVL_CONSTANTS.C_MAX_ZONES);
 
+// --- POLICY ---
 fbPolicyManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_RootCause := GVL_STATE.G_Heating_RootCause,
     VI_RootConfidence := GVL_STATE.G_Heating_RootConfidence,
@@ -37,14 +42,15 @@ fbPolicyManager(
     VI_Floor_Temps := GVL_STATE.G_Floor_Temps
 );
 
-// schedule layer
+// --- SCHEDULE ---
 fbSchedule(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS,
-    VI_Day_Of_Week := GVL_STATUS.G_Day_Of_Week,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
+    VI_Time_Of_Day_MS := GVL_TIME_SERVICE.G_Time_Of_Day_MS,
+    VI_Day_Of_Week := GVL_TIME_SERVICE.G_Day_Of_Week,
     VI_Enable := TRUE
 );
 
+// --- OUTPUT ---
 GVL_HEATING_POLICY.G_Policy_Mode := fbPolicyManager.VO_Policy_Mode;
 GVL_HEATING_POLICY.G_Policy_Block_Heating_Request := fbPolicyManager.VO_Block_Heating;
 GVL_HEATING_POLICY.G_Policy_Target_Adjustment := fbPolicyManager.VO_Target_Adjustment;
