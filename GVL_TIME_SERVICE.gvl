@@ -1,0 +1,9 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Now_MS : UDINT;
+    G_Time_Of_Day_MS : UDINT;
+    G_Day_Of_Week : INT;
+    G_Last_Now_MS : UDINT;
+    G_Delta_MS : UDINT;
+    G_Wrap_Detected : BOOL;
+END_VAR
