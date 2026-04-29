@@ -1,11 +1,10 @@
 // ==============================================================================
 // Блок управления системой отопления (Heating System Manager)
 // Назначение:
-// - Управление контурами теплого пола (открытие/закрытие клапанов).
-// - Управление насосами коллекторов и смесительными узлами.
-// - Управление каскадом котлов (ротация, расчет ресурса).
-// - Защита от перегрева и замерзания.
-// - Интеграция с Rule Engine.
+// - Публичный фасад системы отопления.
+// - Оркестрация доменных FB отопления.
+// - Проекция безопасных состояний на физические выходы.
+// - Интеграция с Rule Engine, HMI status и GVL_STATE.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_System_Manager
 VAR_INPUT
@@ -85,17 +84,15 @@ VAR
     L_Adaptive_Max_Delta : REAL;
     L_Adaptive_Effective_Delta : REAL;
     L_Adaptive_Correction : REAL;
-    fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Extracted adaptive target helper
-    fbSafetyGate : FB_Heating_Safety_Gate; // Extracted safety gate helper
-    fbCircuitControl : FB_Heating_Circuit_Control; // Extracted circuit control helper
-    fbManifoldControl : FB_Heating_Manifold_Control; // Extracted manifold control helper
-    fbBoilerControl : FB_Heating_Boiler_Control; // Extracted boiler control helper
+    fbAdaptiveTarget : FB_Heating_Adaptive_Target; // Domain helper: adaptive target supply temperature
+    fbSafetyGate : FB_Heating_Safety_Gate; // Domain helper: safety/freeze decisions
+    fbCircuitControl : FB_Heating_Circuit_Control; // Domain helper: circuit valves and sensor validation
+    fbManifoldControl : FB_Heating_Manifold_Control; // Domain helper: manifold pumps/valves/status
+    fbBoilerControl : FB_Heating_Boiler_Control; // Domain helper: boiler cascade/OT/status/resource
 END_VAR
 
-
-
 // ========================================
-// Heating policy and fault pre-scan layer
+// Policy and fault pre-scan
 // ========================================
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
 
@@ -188,9 +185,7 @@ IF fbSafetyGate.VO_Block_Normal_Heating THEN
     RETURN;
 END_IF;
 
-
-
-// --- HEATING TARGET INJECTION / ADAPTIVE TARGET ---
+// --- ADAPTIVE TARGET ---
 fbAdaptiveTarget(
     VI_Base_Target_Supply_Temp := L_Target_Supply_Temp,
     VI_Global_Target_Temperature := GVL_STATE.G_Target_Temperature,
@@ -221,7 +216,7 @@ fbCircuitControl(
 
 GVL_STATE.G_Heating_Sensor_Fault := L_Any_Sensor_Error;
 
-// 3. Определение потребности в работе коллекторных насосов
+// --- MANIFOLD DEMAND MAP ---
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Any_Zone_Active[L_i] := FALSE;
 END_FOR;
@@ -252,7 +247,7 @@ fbManifoldControl(
     VO_Status => VO_Status
 );
 
-// Valve test override remains in manager for now.
+// --- VALVE TEST OVERRIDE ---
 fbValveTestManager(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_IsActivePLC := VI_IsActivePLC,
