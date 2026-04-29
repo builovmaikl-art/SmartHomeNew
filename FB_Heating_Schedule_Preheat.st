@@ -11,6 +11,7 @@ VAR
     L_Event : ST_Heating_Schedule_Event;
     L_Time_To_Comfort_MS : UDINT;
     L_Adjustment : REAL;
+    L_Max_Boost : REAL;
     L_Active : BOOL;
 END_VAR
 
@@ -23,6 +24,7 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Active := FALSE;
+    L_Max_Boost := 0.0;
 
     FOR L_e := 1 TO 3 DO
         L_Event := GVL_HEATING_POLICY_CONFIG.G_Zone_Schedule[L_i, L_e];
@@ -39,21 +41,29 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                 IF (GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] >= L_Time_To_Comfort_MS)
                    AND (GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] > 0) THEN
 
-                    L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] + L_Event.Preheat_Boost;
-
-                    IF L_Adjustment > 1.0 THEN
-                        L_Adjustment := 1.0;
-                    ELSIF L_Adjustment < -1.0 THEN
-                        L_Adjustment := -1.0;
+                    IF L_Event.Preheat_Boost > L_Max_Boost THEN
+                        L_Max_Boost := L_Event.Preheat_Boost;
                     END_IF;
 
-                    GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := L_Adjustment;
                     L_Active := TRUE;
                 END_IF;
             END_IF;
         END_IF;
     END_FOR;
 
+    IF L_Active THEN
+        L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] + L_Max_Boost;
+    ELSE
+        L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i];
+    END_IF;
+
+    IF L_Adjustment > 1.0 THEN
+        L_Adjustment := 1.0;
+    ELSIF L_Adjustment < -1.0 THEN
+        L_Adjustment := -1.0;
+    END_IF;
+
+    GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := L_Adjustment;
     GVL_HEATING_POLICY.G_Zone_Schedule_Preheat_Active[L_i] := L_Active;
 END_FOR;
 
