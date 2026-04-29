@@ -1,13 +1,13 @@
-DUT_FILES=79
+DUT_FILES=80
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=25
-STRUCT_INSERTED=54
-STRUCT_FIELDS_TOTAL=479
-STRUCT_FIELDS_WITH_INITIALIZER=137
-INITIALIZERS_INSERTED=137
+STRUCT_INSERTED=55
+STRUCT_FIELDS_TOTAL=483
+STRUCT_FIELDS_WITH_INITIALIZER=141
+INITIALIZERS_INSERTED=141
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=587
+XML_INITIALVALUE_TAGS=591
 XML_ARRAYVALUE_TAGS=25
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
@@ -55,6 +55,7 @@ ST_FloorHeating_Manifold_Config.dut: STRUCT ST_FloorHeating_Manifold_Config fiel
 ST_Gas_Valve_Configuration.dut: STRUCT ST_Gas_Valve_Configuration fields=5
 ST_Gateway_Command.dut: STRUCT ST_Gateway_Command fields=14
 ST_Heating_Config.dut: STRUCT ST_Heating_Config fields=8
+ST_Heating_Schedule_Event.dut: STRUCT ST_Heating_Schedule_Event fields=4
 ST_History_Record.dut: STRUCT ST_History_Record fields=7
 ST_Lifetime_Status.dut: STRUCT ST_Lifetime_Status fields=7
 ST_Maintenance_Access_Config.dut: STRUCT ST_Maintenance_Access_Config fields=4
@@ -110,6 +111,7 @@ STRUCT ST_FloorHeating_Manifold_Config: total=5 with_initializer=0 without_initi
 STRUCT ST_Gas_Valve_Configuration: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Gateway_Command: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Config: total=8 with_initializer=8 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Heating_Schedule_Event: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_History_Record: total=7 with_initializer=7 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Lifetime_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Maintenance_Access_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
