@@ -14,6 +14,8 @@ VAR_OUTPUT
     VO_Block_Heating : BOOL;
     VO_Target_Adjustment : REAL;
     VO_Priority_Multiplier : REAL;
+    VO_Self_Tune_Active : BOOL;
+    VO_Self_Tune_Level : INT;
 END_VAR
 
 VAR
@@ -29,6 +31,9 @@ VAR
     L_Initialized : BOOL;
     L_Effective_Hold_MS : UDINT;
     L_Force_Immediate : BOOL;
+    L_Same_Cause_Since : UDINT;
+    L_Last_Cause : E_Heating_RootCause;
+    L_Self_Level : INT;
 END_VAR
 
 L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
@@ -36,6 +41,22 @@ L_Raw_Block := FALSE;
 L_Raw_Target_Adjustment := 0.0;
 L_Raw_Priority_Multiplier := 1.0;
 L_Force_Immediate := FALSE;
+
+IF VI_RootCause = L_Last_Cause THEN
+    // keep timer
+ELSE
+    L_Same_Cause_Since := VI_System_Time_MS;
+    L_Self_Level := 0;
+END_IF;
+L_Last_Cause := VI_RootCause;
+
+IF (VI_System_Time_MS - L_Same_Cause_Since) > (VI_Min_Hold_MS * 2) AND (VI_RootConfidence > 0.8) THEN
+    L_Self_Level := 1;
+END_IF;
+
+IF (VI_System_Time_MS - L_Same_Cause_Since) > (VI_Min_Hold_MS * 4) AND (VI_RootConfidence > 0.9) THEN
+    L_Self_Level := 2;
+END_IF;
 
 L_Effective_Hold_MS := VI_Min_Hold_MS;
 IF VI_RootConfidence >= 0.9 THEN
@@ -53,37 +74,20 @@ ELSIF VI_RootCause = E_Heating_RootCause.RC_IO_OFFLINE THEN
     L_Force_Immediate := TRUE;
 
 ELSE
-    IF VI_RootConfidence < 0.6 THEN
-        IF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
-            L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
-        ELSE
-            L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
-        END_IF;
-    ELSE
+    IF VI_RootConfidence >= 0.6 THEN
         CASE VI_RootCause OF
-
-            E_Heating_RootCause.RC_PUMP_FAILURE:
-                L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
-                L_Raw_Priority_Multiplier := 0.5;
-
-            E_Heating_RootCause.RC_VALVES_CLOSED:
-                L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
-                L_Raw_Target_Adjustment := -2.0;
 
             E_Heating_RootCause.RC_NO_HEAT_TRANSFER:
                 L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
-                L_Raw_Target_Adjustment := 3.0;
+                L_Raw_Target_Adjustment := 3.0 + REAL(L_Self_Level);
 
-            E_Heating_RootCause.RC_NO_FLAME,
-            E_Heating_RootCause.RC_BOILER_ERROR:
-                L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
-                L_Raw_Priority_Multiplier := 0.7;
+            E_Heating_RootCause.RC_PUMP_FAILURE:
+                L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
+                L_Raw_Priority_Multiplier := 0.5 - (0.1 * REAL(L_Self_Level));
 
             ELSE
                 IF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
                     L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
-                ELSE
-                    L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
                 END_IF;
 
         END_CASE;
@@ -123,5 +127,7 @@ VO_Policy_Mode := L_Held_Mode;
 VO_Block_Heating := L_Held_Block;
 VO_Target_Adjustment := L_Held_Target_Adjustment;
 VO_Priority_Multiplier := L_Held_Priority_Multiplier;
+VO_Self_Tune_Active := (L_Self_Level > 0);
+VO_Self_Tune_Level := L_Self_Level;
 
 END_FUNCTION_BLOCK
