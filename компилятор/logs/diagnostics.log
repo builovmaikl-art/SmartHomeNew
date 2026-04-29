@@ -11,9 +11,9 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1884
+total 1880
 -rw-r--r--   1 runner runner  13067 Apr 29 07:13 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x  18 runner runner  12288 Apr 29 07:13 .
+drwxr-xr-x  17 runner runner  12288 Apr 29 07:13 .
 drwxr-xr-x   3 runner runner   4096 Apr 29 07:13 ..
 drwxr-xr-x   7 runner runner   4096 Apr 29 07:13 .git
 drwxr-xr-x   3 runner runner   4096 Apr 29 07:13 .github
@@ -253,7 +253,6 @@ drwxr-xr-x   2 runner runner   4096 Apr 29 07:13 DUT
 -rw-r--r--   1 runner runner   2571 Apr 29 07:13 TZ_NEW.txt
 -rw-r--r--   1 runner runner    103 Apr 29 07:13 access_check.log
 -rw-r--r--   1 runner runner     52 Apr 29 07:13 compile_manual.log
-drwxr-xr-x   7 runner runner   4096 Apr 29 07:13 diagnostics
 drwxr-xr-x  10 runner runner   4096 Apr 29 07:13 docs
 drwxr-xr-x   2 runner runner   4096 Apr 29 07:13 migration_logs
 drwxr-xr-x  11 runner runner   4096 Apr 29 07:13 node_modules
@@ -274,7 +273,7 @@ drwxr-xr-x   6 runner runner   4096 Apr 29 07:13 компилятор
 === compiler dir ===
 total 560
 drwxr-xr-x  6 runner runner   4096 Apr 29 07:13 .
-drwxr-xr-x 18 runner runner  12288 Apr 29 07:13 ..
+drwxr-xr-x 17 runner runner  12288 Apr 29 07:13 ..
 drwxr-xr-x  2 runner runner   4096 Apr 29 07:13 __pycache__
 drwxr-xr-x  3 runner runner   4096 Apr 29 07:13 diagnostics
 -rw-r--r--  1 runner runner  34293 Apr 29 07:13 import_codesys_FINAL.py
