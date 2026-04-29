@@ -11,9 +11,9 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1840
+total 1828
 -rw-r--r--  1 runner runner  13067 Apr 29 07:21 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 12 runner runner  12288 Apr 29 07:21 .
+drwxr-xr-x 11 runner runner  12288 Apr 29 07:21 .
 drwxr-xr-x  3 runner runner   4096 Apr 29 07:21 ..
 drwxr-xr-x  7 runner runner   4096 Apr 29 07:21 .git
 drwxr-xr-x  3 runner runner   4096 Apr 29 07:21 .github
@@ -260,14 +260,13 @@ drwxr-xr-x  7 runner runner   4096 Apr 29 07:21 snapshots
 drwxr-xr-x  3 runner runner   4096 Apr 29 07:21 tools
 -rw-r--r--  1 runner runner 430747 Apr 29 07:21 Система умного дома.xml
 -rw-r--r--  1 runner runner  35304 Apr 29 07:21 ТЗ обновлен.txt
-drwxr-xr-x  2 runner runner  12288 Apr 29 07:21 диагностика
 drwxr-xr-x  6 runner runner   4096 Apr 29 07:21 компилятор
 -rw-r--r--  1 runner runner   1449 Apr 29 07:21 ошибки компиляции.txt
 
 === compiler dir ===
 total 560
 drwxr-xr-x  6 runner runner   4096 Apr 29 07:21 .
-drwxr-xr-x 12 runner runner  12288 Apr 29 07:21 ..
+drwxr-xr-x 11 runner runner  12288 Apr 29 07:21 ..
 drwxr-xr-x  2 runner runner   4096 Apr 29 07:21 __pycache__
 drwxr-xr-x  3 runner runner   4096 Apr 29 07:21 diagnostics
 -rw-r--r--  1 runner runner  34293 Apr 29 07:21 import_codesys_FINAL.py
