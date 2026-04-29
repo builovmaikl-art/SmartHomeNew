@@ -2,6 +2,7 @@ PROGRAM PRG_Heating_Policy_Manager
 
 VAR
     fbPolicyManager : FB_Heating_Policy_Manager;
+    fbSchedule : FB_Heating_Schedule_Preheat;
     L_i : INT;
     L_Room_Avg : REAL;
     L_Floor_Avg : REAL;
@@ -34,6 +35,12 @@ fbPolicyManager(
     VI_Target_Temp := GVL_STATE.G_Target_Temperature,
     VI_Room_Temps := GVL_STATE.G_Room_Temps,
     VI_Floor_Temps := GVL_STATE.G_Floor_Temps
+);
+
+// schedule layer (deterministic, post-policy)
+fbSchedule(
+    VI_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS,
+    VI_Enable := TRUE
 );
 
 GVL_HEATING_POLICY.G_Policy_Mode := fbPolicyManager.VO_Policy_Mode;
