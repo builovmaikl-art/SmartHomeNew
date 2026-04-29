@@ -51,10 +51,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         END_IF;
     END_FOR;
 
-    IF L_Active THEN
-        L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] + L_Max_Boost;
-    ELSE
-        L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i];
+    L_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i];
+
+    // Smart blend: schedule does not stack on top of policy; it enforces at least the selected boost.
+    IF L_Active AND (L_Adjustment < L_Max_Boost) THEN
+        L_Adjustment := L_Max_Boost;
     END_IF;
 
     IF L_Adjustment > 1.0 THEN
