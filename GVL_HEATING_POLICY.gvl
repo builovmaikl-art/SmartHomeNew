@@ -6,4 +6,7 @@ VAR_GLOBAL
     G_Zone_Policy_Class : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
     G_Zone_Target_Adjustment : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Zone_Priority_Bias : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
+    G_Policy_Mode : E_Heating_Policy_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
+    G_Policy_Block_Heating_Request : BOOL;
 END_VAR
