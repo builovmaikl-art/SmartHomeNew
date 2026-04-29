@@ -109,9 +109,7 @@ fbDecision(
 // ============================================================
 
 fbHeatingManager(
-    VI_Preheat_Request := GVL_STATE.G_Preheat_Request,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Current_TOD := GVL_STATUS.G_Current_TOD,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
     VI_Floor_Temps := GVL_STATE.G_Floor_Temps,
@@ -129,15 +127,12 @@ fbHeatingManager(
     VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
     VI_Boiler_Modulation := L_Boiler_Modulation_REAL,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
-    VI_Boiler_Stop := FALSE,
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
     VI_DHW_Heating_Demand := L_Heating_DHW_Demand,
     VI_DHW_Target_Temp := GVL_CONFIG.G_DHW_Config.Target_Temp,
-    VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_Emergency_Stop := L_Heating_Emergency_Stop,
     VI_Gas_Safety_Stop := L_Heating_Gas_Safety_Stop,
-    VI_Scenario_Configs := GVL_CONFIG.G_HMI_Scenario_Configs,
     VI_Manifold_End_Switches := GVL_STATE.G_Manifold_End_Switches,
     VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
     VO_Manifold_Valves => GVL_STATE.G_Manifold_Valves,
