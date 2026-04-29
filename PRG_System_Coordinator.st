@@ -12,7 +12,7 @@ fbCoord(
     VI_Behavior_Mode := GVL_MODE.G_Current_Behavior_Mode
 );
 
-GVL_SYSTEM_COORDINATION.G_Block_Heating := fbCoord.VO_Block_Heating;
+GVL_SYSTEM_COORDINATION.G_Block_Heating := fbCoord.VO_Block_Heating OR GVL_HEATING_POLICY.G_Policy_Block_Heating_Request;
 GVL_SYSTEM_COORDINATION.G_Block_Ventilation := fbCoord.VO_Block_Ventilation;
 GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override := fbCoord.VO_Block_Lighting;
 GVL_SYSTEM_COORDINATION.G_Block_Sockets_Override := fbCoord.VO_Block_Sockets;
