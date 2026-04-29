@@ -5,5 +5,8 @@ STRUCT
     Comfort_Time_MS : UDINT := 28800000; // 08:00 from midnight
     Weekday_Mask : BYTE := 127; // bit0=Mon ... bit6=Sun
     Preheat_Boost : REAL := 0.5;
+    Adaptive_Enabled : BOOL := TRUE;
+    Adaptive_Step_MS : UDINT := 300000; // 5 min
+    Adaptive_Max_Offset_MS : UDINT := 3600000; // 60 min
 END_STRUCT
 END_TYPE
