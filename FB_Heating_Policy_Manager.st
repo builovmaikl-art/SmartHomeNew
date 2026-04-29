@@ -59,29 +59,28 @@ VAR
     L_Zone_Quality : REAL;
 END_VAR
 
-// --- predictive trend ---
+// ============================================================
+// Predictive trend, bounded advisory correction
+// ============================================================
 L_Trend := VI_Room_Temp_Avg - L_Last_Room_Avg;
 L_Last_Room_Avg := VI_Room_Temp_Avg;
 
 L_Predictive_Adjustment := 0.0;
-
-IF (L_Trend < -0.05) AND (VI_Room_Temp_Avg < VI_Target_Temp + 0.5) THEN
+IF (L_Trend < -0.05) AND (VI_Room_Temp_Avg < (VI_Target_Temp + 0.5)) THEN
     L_Predictive_Adjustment := 1.0;
-ELSIF (L_Trend > 0.05) THEN
+ELSIF L_Trend > 0.05 THEN
     L_Predictive_Adjustment := -0.5;
 END_IF;
 
-// clamp predictive
 IF L_Predictive_Adjustment > 1.0 THEN L_Predictive_Adjustment := 1.0; END_IF;
 IF L_Predictive_Adjustment < -1.0 THEN L_Predictive_Adjustment := -1.0; END_IF;
 
-L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
-L_Raw_Block := FALSE;
-L_Raw_Target_Adjustment := L_Predictive_Adjustment;
-L_Raw_Priority_Multiplier := 1.0;
-L_Force_Immediate := FALSE;
+GVL_HEATING_POLICY.G_Policy_Predictive_Adjustment := L_Predictive_Adjustment;
+GVL_HEATING_POLICY.G_Policy_Predictive_Active := ABS(L_Predictive_Adjustment) > 0.001;
 
-// --- feedback metrics ---
+// ============================================================
+// Feedback metrics
+// ============================================================
 L_Room_Error := VI_Target_Temp - VI_Room_Temp_Avg;
 L_Supply_Error := VI_Target_Temp - VI_Supply_Temp;
 L_DeltaT := VI_Supply_Temp - VI_Return_Temp;
@@ -94,7 +93,9 @@ IF L_DeltaT < 3.0 THEN L_Quality := L_Quality + 1.0; END_IF;
 L_Improving := L_Quality < L_Last_Quality;
 L_Stable := L_Quality = 0.0;
 
-// --- zone-level feedback ---
+// ============================================================
+// Zone-level feedback
+// ============================================================
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Zone_Error := VI_Target_Temp - VI_Room_Temps[L_i];
     L_Zone_Quality := 0.0;
@@ -129,7 +130,131 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     GVL_HEATING_POLICY.G_Zone_Quality[L_i] := L_Zone_Quality;
 END_FOR;
 
+// ============================================================
+// Self tuning, feedback-aware
+// ============================================================
+IF VI_RootCause <> L_Last_Cause THEN
+    L_Same_Cause_Since := VI_System_Time_MS;
+    L_Self_Level := 0;
+END_IF;
+L_Last_Cause := VI_RootCause;
+
+IF L_Stable THEN
+    L_Self_Level := 0;
+ELSIF L_Improving THEN
+    L_Self_Level := L_Self_Level - 1;
+ELSIF (VI_System_Time_MS - L_Same_Cause_Since) > (VI_Min_Hold_MS * 2)
+   AND (VI_RootConfidence > 0.8)
+   AND (L_Quality >= 3.0) THEN
+    L_Self_Level := L_Self_Level + 1;
+END_IF;
+
+IF L_Self_Level > 2 THEN L_Self_Level := 2; END_IF;
+IF L_Self_Level < 0 THEN L_Self_Level := 0; END_IF;
+
+// ============================================================
+// Raw policy resolution
+// ============================================================
+L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
+L_Raw_Block := FALSE;
+L_Raw_Target_Adjustment := L_Predictive_Adjustment;
+L_Raw_Priority_Multiplier := 1.0;
+L_Force_Immediate := FALSE;
+
+IF VI_Emergency_Stop OR VI_Gas_Safety THEN
+    L_Raw_Mode := E_Heating_Policy_Mode.HPM_SAFETY_BLOCK;
+    L_Raw_Block := TRUE;
+    L_Raw_Target_Adjustment := 0.0;
+    L_Raw_Priority_Multiplier := 1.0;
+    L_Force_Immediate := TRUE;
+
+ELSIF VI_RootCause = E_Heating_RootCause.RC_IO_OFFLINE THEN
+    L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
+    L_Raw_Block := TRUE;
+    L_Raw_Target_Adjustment := 0.0;
+    L_Raw_Priority_Multiplier := 1.0;
+    L_Force_Immediate := TRUE;
+
+ELSIF VI_RootConfidence >= 0.6 THEN
+    CASE VI_RootCause OF
+
+        E_Heating_RootCause.RC_NO_HEAT_TRANSFER:
+            L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
+            L_Raw_Target_Adjustment := L_Raw_Target_Adjustment + 3.0 + REAL(L_Self_Level);
+
+        E_Heating_RootCause.RC_PUMP_FAILURE:
+            L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
+            L_Raw_Priority_Multiplier := 0.5 - (0.1 * REAL(L_Self_Level));
+
+        E_Heating_RootCause.RC_VALVES_CLOSED:
+            L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
+            L_Raw_Target_Adjustment := L_Raw_Target_Adjustment - 2.0;
+
+        E_Heating_RootCause.RC_NO_FLAME,
+        E_Heating_RootCause.RC_BOILER_ERROR:
+            L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
+            L_Raw_Priority_Multiplier := 0.7;
+
+        ELSE
+            IF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
+                L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
+            END_IF;
+
+    END_CASE;
+ELSE
+    IF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
+        L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
+    END_IF;
+END_IF;
+
+IF L_Raw_Target_Adjustment > 5.0 THEN L_Raw_Target_Adjustment := 5.0; END_IF;
+IF L_Raw_Target_Adjustment < -3.0 THEN L_Raw_Target_Adjustment := -3.0; END_IF;
+IF L_Raw_Priority_Multiplier < 0.3 THEN L_Raw_Priority_Multiplier := 0.3; END_IF;
+IF L_Raw_Priority_Multiplier > 1.0 THEN L_Raw_Priority_Multiplier := 1.0; END_IF;
+
+// ============================================================
+// Stabilization / anti-oscillation
+// ============================================================
+L_Effective_Hold_MS := VI_Min_Hold_MS;
+IF VI_RootConfidence >= 0.9 THEN
+    L_Effective_Hold_MS := VI_Min_Hold_MS / 2;
+END_IF;
+
+IF NOT L_Initialized THEN
+    L_Held_Mode := L_Raw_Mode;
+    L_Held_Block := L_Raw_Block;
+    L_Held_Target_Adjustment := L_Raw_Target_Adjustment;
+    L_Held_Priority_Multiplier := L_Raw_Priority_Multiplier;
+    L_Last_Accept_MS := VI_System_Time_MS;
+    L_Initialized := TRUE;
+
+ELSIF L_Force_Immediate THEN
+    L_Held_Mode := L_Raw_Mode;
+    L_Held_Block := L_Raw_Block;
+    L_Held_Target_Adjustment := L_Raw_Target_Adjustment;
+    L_Held_Priority_Multiplier := L_Raw_Priority_Multiplier;
+    L_Last_Accept_MS := VI_System_Time_MS;
+
+ELSIF (L_Raw_Mode <> L_Held_Mode)
+   OR (ABS(L_Raw_Target_Adjustment - L_Held_Target_Adjustment) > 0.001)
+   OR (ABS(L_Raw_Priority_Multiplier - L_Held_Priority_Multiplier) > 0.001)
+   OR (L_Raw_Block <> L_Held_Block) THEN
+
+    IF (VI_System_Time_MS - L_Last_Accept_MS) >= L_Effective_Hold_MS THEN
+        L_Held_Mode := L_Raw_Mode;
+        L_Held_Block := L_Raw_Block;
+        L_Held_Target_Adjustment := L_Raw_Target_Adjustment;
+        L_Held_Priority_Multiplier := L_Raw_Priority_Multiplier;
+        L_Last_Accept_MS := VI_System_Time_MS;
+    END_IF;
+END_IF;
+
+VO_Policy_Mode := L_Held_Mode;
+VO_Block_Heating := L_Held_Block;
 VO_Target_Adjustment := L_Held_Target_Adjustment;
+VO_Priority_Multiplier := L_Held_Priority_Multiplier;
+VO_Self_Tune_Active := (L_Self_Level > 0);
+VO_Self_Tune_Level := L_Self_Level;
 VO_Feedback_Stable := L_Stable;
 VO_Feedback_Improving := L_Improving;
 VO_Feedback_Quality := L_Quality;
