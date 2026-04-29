@@ -48,7 +48,7 @@ END_IF;
 L_Mode_Hold_Timer(
     IN := TRUE,
     PT := T#30s,
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS
 );
 
 IF L_Mode_Hold_Timer.Q THEN
@@ -78,7 +78,6 @@ END_IF;
 // S1.5 DECISION CONTEXT / THERMAL ALLOCATION
 // ============================================================
 
-// === HP-1 + HP-2 PRIORITY BIAS APPLICATION ===
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Manifold_Adjusted_Priority[L_i] := GVL_CONFIG.G_Manifold_Priority[L_i];
 END_FOR;
@@ -88,33 +87,24 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_Zone_ID := GVL_CONFIG.G_Heating_Circuit_To_Zone[L_i];
 
     IF (L_j >= 1) AND (L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS) AND (L_Zone_ID >= 1) AND (L_Zone_ID <= GVL_CONSTANTS.C_MAX_ZONES) THEN
-
-        // Base policy bias (HP-1), mapped circuit -> logical zone
         L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + TO_INT(GVL_HEATING_POLICY.G_Zone_Priority_Bias[L_Zone_ID]);
 
-        // Guest preheat boost (HP-2, config-driven), mapped circuit -> logical zone
         IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_Zone_ID] THEN
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost;
         END_IF;
 
-        // Zone-level predictive bias, mapped circuit -> logical zone -> manifold
         IF GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_Zone_ID] > 0.1 THEN
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + 1;
         ELSIF GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_Zone_ID] < -0.1 THEN
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] - 1;
         END_IF;
 
-        // Zone-level self-tuning boost, mapped circuit -> logical zone -> manifold
         L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY.G_Zone_Self_Level[L_Zone_ID];
-
-        // Reactive policy multiplier
         L_Manifold_Adjusted_Priority[L_j] := TO_INT(TO_REAL(L_Manifold_Adjusted_Priority[L_j]) * GVL_HEATING_POLICY.G_Policy_Priority_Multiplier);
 
-        // Lower bound
         IF L_Manifold_Adjusted_Priority[L_j] < 1 THEN
             L_Manifold_Adjusted_Priority[L_j] := 1;
         END_IF;
-
     END_IF;
 END_FOR;
 
@@ -132,7 +122,7 @@ fbDecision(
 // ============================================================
 
 fbHeatingManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
     VI_Floor_Temps := GVL_STATE.G_Floor_Temps,
@@ -140,7 +130,7 @@ fbHeatingManager(
     VI_Config := GVL_CONFIG.G_Heating_Config,
     VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
     VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
-    VI_Current_Hour := TO_UINT(GVL_STATUS.G_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
+    VI_Current_Hour := TO_UINT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
     VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
     VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
     VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
@@ -170,9 +160,6 @@ fbHeatingManager(
     VO_Boiler_Status => GVL_STATUS.G_Boiler_Status
 );
 
-// Apply global and thermal allocation constraints after base heating orchestration.
-// Coordinator owns cross-subsystem blocking; decision context owns eligibility/budget.
-// Heating manager remains the control algorithm owner.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF GVL_SYSTEM_COORDINATION.G_Block_Heating OR (NOT fbDecision.VO_Manifold_Enabled[L_i]) THEN
         GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
@@ -187,13 +174,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 END_FOR;
 
 fbDHWManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Temp := GVL_STATE.G_DHW_Temp,
     VI_Pressure := GVL_STATE.G_DHW_Pressure,
     VI_Config := GVL_CONFIG.G_DHW_Config,
-    VI_Current_Day_Of_Week := GVL_STATUS.G_Current_Day,
+    VI_Current_Day_Of_Week := TO_UINT(GVL_TIME_SERVICE.G_Day_Of_Week),
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
     VI_Reset_Errors := GVL_INTENT_USER.I_Reset_Errors,
     VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
@@ -214,7 +201,7 @@ fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_BACKUP_PUMP_OUT_OF_SERVICE,
     VI_Severity := 2,
     VI_Active := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service,
-    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
     VI_Source := 400,
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
@@ -224,7 +211,7 @@ fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_ELECTRIC_HEATER_OUT_OF_SERVICE,
     VI_Severity := 2,
     VI_Active := NOT GVL_CONFIG.G_Electric_Heater_In_Service,
-    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
     VI_Source := 401,
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
@@ -237,7 +224,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         VI_Code := GVL_CONFIG.ERR_MANIFOLD_PUMP_OUT_OF_SERVICE,
         VI_Severity := 2,
         VI_Active := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i],
-        VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+        VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
         VI_Source := 410 + L_i,
         VIO_Events := GVL_STATUS.G_Diagnostics_Events,
         VIO_Count := GVL_STATUS.G_Diagnostics_Count
@@ -251,7 +238,7 @@ fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_DHW_HEATING_PUMP_OUT_OF_SERVICE,
     VI_Severity := 2,
     VI_Active := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service,
-    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
     VI_Source := 420,
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
@@ -261,7 +248,7 @@ fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_DHW_CIRC_PUMP_OUT_OF_SERVICE,
     VI_Severity := 2,
     VI_Active := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service,
-    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
     VI_Source := 421,
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
@@ -271,7 +258,7 @@ fbDiagEventManager(
     VI_Code := GVL_CONFIG.ERR_FREEZE_HARDWARE_FAILED,
     VI_Severity := 4,
     VI_Active := GVL_STATE.G_Freeze_Hardware_Failed,
-    VI_Timestamp := GVL_STATUS.G_System_Time_MS,
+    VI_Timestamp := GVL_TIME_SERVICE.G_Now_MS,
     VI_Source := 430,
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
