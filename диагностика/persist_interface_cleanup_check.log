@@ -1,5 +1,0 @@
-]633;E;echo "=== CHECK: removed vars ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: removed vars ===
-
-=== CHECK: pipeline FB still present ===
-105:    fbPersistPipeline : FB_Persist_Pipeline;
-805:fbPersistPipeline(

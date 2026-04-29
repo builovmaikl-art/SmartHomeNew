@@ -1,9 +1,0 @@
-]633;E;echo "=== CHECK: stabilization block ===";17fdba17-10ed-4f0f-b59a-05f6d7a4f42c]633;C=== CHECK: stabilization block ===
-164:// --- HEATING STABILIZATION ---
-
-=== CHECK: state vars ===
-4:    L_Last_Mode : INT := 0; // 0=normal,1=preheat,2=freeze
-175:        L_Last_Mode := 2;
-177:        L_Last_Mode := 1;
-179:        L_Last_Mode := 0;
-184:CASE L_Last_Mode OF

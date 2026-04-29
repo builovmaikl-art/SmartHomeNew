@@ -1,6 +1,0 @@
-]633;E;echo "=== CHECK: builder moved ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== CHECK: builder moved ===
-3:    fbPersistBuilder : FB_Persist_Builder;
-786:fbPersistBuilder(
-
-=== CHECK: builder FB created ===
-1:FUNCTION_BLOCK FB_Persist_Builder

@@ -1,7 +1,0 @@
-]633;E;echo "=== CHECK: live heating manager call ===";822ba416-8f08-405d-9da8-9a89f94c658a]633;C=== CHECK: live heating manager call ===
-34:fbHeatingManager(
-35:    VI_Command := fbRuleEngine.VO_Heating_Command,
-
-=== CHECK: manager contract ===
-12:    VI_Command : ST_Heating_Command;
-24:    VO_Heating_Command : ST_Heating_Command;

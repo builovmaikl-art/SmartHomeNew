@@ -1,9 +1,0 @@
-=== CHECK: PRG_System wiring ===
-551:    VI_Command_Received := GVL_GATEWAY.G_Gateway_Command_Received,
-
-=== CHECK: legacy writes ===
-./steps/2026-04-20_heating_orchestration_cleanup/01_heating_orchestration_cleanup.py:37:    GVL_HEATING.G_Target_Temperature := VI_Command.Target_Temperature;
-./steps/2026-04-20_heating_live_command_closure/01_heating_live_command_closure.py:31:        "// REMOVED: direct write (use Heating_Command)\n// GVL_HEATING.G_Target_Temperature :=",
-./FB_Heating_System_Manager.st:702:    GVL_HEATING.G_Target_Temperature := VI_Command.Target_Temperature;
-./компилятор/out/RESULT_methods_clean.xml:7531:    GVL_HEATING.G_Target_Temperature := VI_Command.Target_Temperature;
-./диагностика/heating_orchestration_cleanup_check.log:381:702:    GVL_HEATING.G_Target_Temperature := VI_Command.Target_Temperature;

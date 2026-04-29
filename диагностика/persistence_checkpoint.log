@@ -1,9 +1,0 @@
-]633;E;echo "=== PERSISTENCE ARCHITECTURE CHECKPOINT ===";b39e2385-4f00-43a0-8f86-c29466b4fef1]633;C=== PERSISTENCE ARCHITECTURE CHECKPOINT ===
-build_ok=1
-checkpoint=builder+pipeline compiled
-date=2026-04-20T06:56:17+00:00
-
-=== FILES ===
-FB_Persist_Builder.st
-FB_Persist_Pipeline.st
-PRG_System.st

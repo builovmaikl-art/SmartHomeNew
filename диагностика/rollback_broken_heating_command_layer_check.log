@@ -1,5 +1,0 @@
-]633;E;echo "=== CHECK: broken command type removed ===";822ba416-8f08-405d-9da8-9a89f94c658a]633;C=== CHECK: broken command type removed ===
-
-=== CHECK: broken departure reference removed ===
-
-=== CHECK: broken GVL_HEATING writes removed ===

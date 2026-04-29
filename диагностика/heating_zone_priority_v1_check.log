@@ -1,8 +1,0 @@
-]633;E;echo "=== CHECK: priority logic ===";dc383988-f3a6-42a5-9401-7e885da77467]633;C=== CHECK: priority logic ===
-323:        // --- ZONE PRIORITY WEIGHT ---
-
-=== CHECK: weight clamp ===
-338:        // --- WEIGHT CLAMP ---
-
-=== CHECK: build ===
-16:BUILD_OK

@@ -1,7 +1,0 @@
-]633;E;echo "=== CHECK: freeze logic ===";263aaeff-cdea-4f73-b7a8-3b16792200d9]633;C=== CHECK: freeze logic ===
-508:    GVL_STATE.G_Freeze_Request := TRUE;
-
-=== CHECK: no inline parentheses ===
-
-=== CHECK: manager injection ===
-277:// --- HEATING TARGET INJECTION ---

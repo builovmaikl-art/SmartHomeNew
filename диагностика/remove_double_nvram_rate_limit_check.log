@@ -1,4 +1,0 @@
-]633;E;echo "=== CHECK: old internal rate limit removed ===";77dba1e9-8a6b-4528-ae85-51178ce6af70]633;C=== CHECK: old internal rate limit removed ===
-
-=== CHECK: pipeline rate limit still present ===
-78:       ((VI_System_Time_MS - VIO_Last_Persist_Write_MS) >= 60000) THEN
