@@ -13,6 +13,8 @@ VAR
     L_Adjustment : REAL;
     L_Max_Boost : REAL;
     L_Active : BOOL;
+
+    L_Learn_Window_MS : UDINT := 300000;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -38,8 +40,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                     L_Time_To_Comfort_MS := (86400000 - VI_Time_Of_Day_MS) + L_Event.Comfort_Time_MS;
                 END_IF;
 
-                // persistent adaptive offset
                 IF L_Event.Adaptive_Enabled THEN
+                    IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Max_Offset_MS THEN
+                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := L_Event.Adaptive_Max_Offset_MS;
+                    END_IF;
                     L_Time_To_Comfort_MS := L_Time_To_Comfort_MS + GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e];
                 END_IF;
 
@@ -53,17 +57,25 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                     L_Active := TRUE;
                 END_IF;
 
-                // learning
                 IF L_Event.Adaptive_Enabled THEN
-                    IF (L_Time_To_Comfort_MS < 300000) AND (GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 1.0) THEN
-                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
-                            GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] + L_Event.Adaptive_Step_MS;
-                    END_IF;
+                    IF L_Time_To_Comfort_MS < L_Learn_Window_MS THEN
 
-                    IF (GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -0.5) AND
-                       (GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Step_MS) THEN
-                        GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
-                            GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] - L_Event.Adaptive_Step_MS;
+                        IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 1.0 THEN
+                            IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] < L_Event.Adaptive_Max_Offset_MS THEN
+                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
+                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] + L_Event.Adaptive_Step_MS;
+                            END_IF;
+                        END_IF;
+
+                        IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -0.5 THEN
+                            IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Step_MS THEN
+                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] :=
+                                    GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] - L_Event.Adaptive_Step_MS;
+                            ELSE
+                                GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := 0;
+                            END_IF;
+                        END_IF;
+
                     END_IF;
                 END_IF;
 
