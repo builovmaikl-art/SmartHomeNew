@@ -11,6 +11,9 @@ VAR_OUTPUT
     VO_First_Fault_Active : BOOL;
     VO_First_Fault_Type : INT;
     VO_First_Fault_Source : INT;
+    VO_System_Severity : E_System_Severity;
+    VO_Root_Cause : E_System_Root_Cause;
+    VO_Watchdog_Fault : BOOL;
 END_VAR
 
 VAR
@@ -143,6 +146,9 @@ END_CASE;
 VO_First_Fault_Active := fbSystemHealth.VO_First_Fault_Active;
 VO_First_Fault_Type := fbSystemHealth.VO_First_Fault_Type;
 VO_First_Fault_Source := fbSystemHealth.VO_First_Fault_Source;
+VO_System_Severity := fbSystemHealth.VO_System_Severity;
+VO_Root_Cause := fbSystemHealth.VO_Root_Cause;
+VO_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault;
 
 GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
 
