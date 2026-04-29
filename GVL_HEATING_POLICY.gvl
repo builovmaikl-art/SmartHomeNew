@@ -36,4 +36,5 @@ VAR_GLOBAL
     G_Zone_Schedule_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Comfort_Time_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
     G_Zone_Schedule_Preheat_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Schedule_Learned_Offset_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF UDINT;
 END_VAR
