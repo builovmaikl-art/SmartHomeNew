@@ -38,6 +38,11 @@ VAR_GLOBAL
     G_Zone_Predicted_Temp_30m : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Zone_Thermal_Model_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
 
+    // optimization diagnostics
+    G_Zone_Optimization_Score : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Optimization_Load_Index : REAL;
+    G_Optimization_Energy_Saving_Active : BOOL;
+
     // schedule-aware preheat. Comfort time is milliseconds from midnight.
     G_Zone_Schedule_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Comfort_Time_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
