@@ -8,6 +8,8 @@ fbPolicyManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_RootCause := GVL_STATE.G_Heating_RootCause,
+    VI_RootConfidence := GVL_STATE.G_Heating_RootConfidence,
+    VI_Min_Hold_MS := GVL_CONFIG.G_Policy_Min_Hold_MS,
     VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
     VI_Gas_Safety := GVL_STATE.G_Safety_Gas_Latched
 );
