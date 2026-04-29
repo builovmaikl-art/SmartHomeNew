@@ -11,4 +11,6 @@ VAR_GLOBAL
     G_Policy_Block_Heating_Request : BOOL;
     G_Policy_Target_Adjustment : REAL;
     G_Policy_Priority_Multiplier : REAL := 1.0;
+    G_Policy_Self_Tune_Active : BOOL;
+    G_Policy_Self_Tune_Level : INT;
 END_VAR
