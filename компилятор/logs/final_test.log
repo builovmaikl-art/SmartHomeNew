@@ -1,7 +1,7 @@
-OVERLAY_OK=FB_CRC32_Calculator METHODS=1
-OVERLAY_OK=FB_Random_Generator METHODS=2
-TARGET_POUS=2
-TOTAL_METHODS=3
+SKIP_NO_POU=FB_CRC32_Calculator
+SKIP_NO_POU=FB_Random_Generator
+TARGET_POUS=0
+TOTAL_METHODS=0
 COMPILER_DIR=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор
 PROJECT_ROOT=/home/runner/work/SmartHomeNew/SmartHomeNew
 BASE_XML=/home/runner/work/SmartHomeNew/SmartHomeNew/компилятор/Система умного дома.xml
