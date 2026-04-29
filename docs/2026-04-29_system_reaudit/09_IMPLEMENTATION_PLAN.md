@@ -23,6 +23,49 @@ Only sequential controlled fixes.
 
 ---
 
+## STEP STATUS REGISTER
+
+### Step 1.1 — Policy → Arbitration wiring
+
+Status: CLEAN
+
+Result:
+
+- `GVL_INTENT_POLICY.gvl` created
+- `PRG_Command_Arbitration` references policy intent placeholders
+- No behavior change introduced
+
+---
+
+### Step 1.2 — Remove IO → Command direct writes
+
+Status: CLEAN WITH DOCUMENTED TEMPORARY EXCEPTION
+
+Result:
+
+- Direct `GVL_COMMAND.*` writes removed from `PRG_IO_Read`
+- `EXC-01` remains: manifold pumps are still disabled via `GVL_STATE` during Phase 1
+
+---
+
+### Step 1.3 — Enforce single command path
+
+Status: PARTIAL / WITH TAILS
+
+Observed residual direct/legacy command layer usage:
+
+- `PRG_Security.st`
+- `PRG_System.st`
+- `PRG_Command_Verifier.st` (read-only comparison, allowed for now)
+
+Decision:
+
+- Do NOT mass-refactor in Step 1.3
+- Keep residuals documented
+- Address them through priority model and later decomposition steps
+
+---
+
 ## TEMPORARY EXCEPTIONS (DOCUMENTED)
 
 ### EXC-01 — Manifold pumps via GVL_STATE (temporary)
@@ -44,8 +87,38 @@ Reason:
 
 Constraint:
 
-- MUST be removed after Step 1.3
+- MUST be removed after command path is fully closed
 - MUST be replaced by Intent → Arbitration → Shadow path
+
+---
+
+### EXC-02 — PRG_System overload (deferred)
+
+Current behavior:
+
+`PRG_System` is overloaded and still contains mixed responsibilities:
+
+- orchestration
+- persistence
+- gateway intent
+- dangerous action confirmation
+- maintenance handling
+- logging/history
+- parts of command/access logic
+
+Status:
+
+✔ Deferred intentionally
+
+Reason:
+
+- PRG_System decomposition is Phase 5
+- Refactoring it during Phase 1/2 would violate strict sequencing
+
+Constraint:
+
+- Do NOT refactor `PRG_System` before Phase 5
+- During earlier phases, only touch `PRG_System` if required to close a specific planned step
 
 ---
 
@@ -91,13 +164,57 @@ Validation:
 - search for any direct GVL_COMMAND writes
 - eliminate all except arbitration layer
 
+Status:
+
+PARTIAL / WITH TAILS
+
+Tails are documented in Step Status Register.
+
 ---
 
 ## PHASE 2 — PRIORITY MODEL
 
 ### Step 2.1 — Define priority
 
-Safety > System > Policy > User
+Status: DEFINED
+
+Canonical command priority:
+
+1. Safety
+2. System
+3. Policy
+4. User
+
+Meaning:
+
+- Safety can override every other source
+- System can override Policy/User but not Safety
+- Policy can override User but not Safety/System
+- User is accepted only when not blocked by higher layers
+
+Conflict rule:
+
+Higher-priority TRUE wins for protective commands.
+For permissive/open commands, higher-priority BLOCK wins.
+
+Examples:
+
+- Safety gas close beats any user/gateway open or normal state
+- Safety vent stop beats policy ventilation request
+- System degraded mode can reduce outputs even if policy requests comfort
+- User gate/lock requests are ignored if Safety/System blocks them
+
+Allowed implementation target:
+
+`PRG_Command_Arbitration.st`
+
+Not allowed in Step 2.1:
+
+- No code behavior changes
+- No IO changes
+- No PRG_System decomposition
+
+---
 
 ### Step 2.2 — Implement in Command Arbitration
 
@@ -168,6 +285,7 @@ Add:
 - Optimization tuning
 - IO mapping cleanup
 - Diagnostics redesign
+- Full PRG_System decomposition beyond Phase 5 scope
 
 ---
 
@@ -178,7 +296,7 @@ System must:
 - have single command pipeline
 - have deterministic priority
 - have active PLC control only
-- have no IO bypass
+- have no undocumented IO bypass
 
 ---
 
