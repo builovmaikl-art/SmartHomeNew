@@ -29,4 +29,6 @@ VAR_GLOBAL
     G_Zone_Thermal_Inertia : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
     G_Zone_Thermal_Response : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Zone_Thermal_Demand : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Time_To_Heat_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+    G_Zone_Preheat_Needed : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
 END_VAR
