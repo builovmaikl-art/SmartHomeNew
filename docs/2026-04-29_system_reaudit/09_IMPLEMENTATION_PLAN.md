@@ -23,6 +23,32 @@ Only sequential controlled fixes.
 
 ---
 
+## TEMPORARY EXCEPTIONS (DOCUMENTED)
+
+### EXC-01 — Manifold pumps via GVL_STATE (temporary)
+
+Current behavior:
+
+PRG_IO_Read disables manifold pumps via:
+
+GVL_STATE.G_Manifold_Pumps := FALSE
+
+Status:
+
+✔ Allowed TEMPORARILY during Phase 1
+
+Reason:
+
+- IO → Command path removed (Step 1.2)
+- arbitration pipeline not yet fully closed
+
+Constraint:
+
+- MUST be removed after Step 1.3
+- MUST be replaced by Intent → Arbitration → Shadow path
+
+---
+
 ## PHASE 1 — CLOSE CONTROL PIPELINE (CRITICAL)
 
 ### Step 1.1 — Connect Policy → Command Arbitration
