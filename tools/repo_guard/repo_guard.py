@@ -59,6 +59,60 @@ if errors:
 
 print("OK: pattern checks passed")
 
+# 2.5. Non-blocking time-source audit.
+# Rule: application logic should consume time via GVL_TIME_SERVICE.*.
+# Allowed direct GVL_STATUS time/calendar access only in the low-level time source/service files.
+time_patterns = [
+    "GVL_STATUS.G_System_Time_MS",
+    "GVL_STATUS.G_Time_Of_Day_MS",
+    "GVL_STATUS.G_Current_TOD",
+    "GVL_STATUS.G_Current_Day",
+]
+time_allowed_files = {
+    "GVL_STATUS.gvl",
+    "FB_System_Timebase.st",
+    "FB_Time_Service.st",
+}
+time_skip_dirs = {
+    ".git",
+    ".github",
+    "snapshots",
+    "docs",
+    "migration_logs",
+    "diagnostics",
+    "компилятор/logs",
+}
+time_warnings = []
+
+for path in Path(".").rglob("*"):
+    if not path.is_file():
+        continue
+    if path.suffix.lower() not in {".st", ".gvl", ".dut"}:
+        continue
+
+    normalized = path.as_posix().lstrip("./")
+    if any(normalized == d or normalized.startswith(d + "/") for d in time_skip_dirs):
+        continue
+    if path.name in time_allowed_files:
+        continue
+
+    try:
+        content = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        content = path.read_text(encoding="utf-8", errors="ignore")
+
+    for line_no, line in enumerate(content.splitlines(), start=1):
+        for pattern in time_patterns:
+            if pattern in line:
+                time_warnings.append((normalized, line_no, pattern, line.strip()))
+
+if time_warnings:
+    print("WARNING: direct time source usage found; prefer GVL_TIME_SERVICE.*")
+    for file_name, line_no, pattern, source_line in time_warnings:
+        print(f"WARNING: {file_name}:{line_no}: {pattern} -> {source_line}")
+else:
+    print("OK: time usage guard found no direct GVL_STATUS time/calendar access")
+
 # 3. Compile smoke via canonical compiler entrypoint
 print("Running compile smoke...")
 result = subprocess.run(
