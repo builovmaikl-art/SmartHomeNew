@@ -2,19 +2,22 @@ PROGRAM PRG_System
 VAR
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+
     // --- ADAPTER LAYER ---
     L_Zone_Valves_8 : ARRAY[1..8] OF BOOL;
     L_Lighting_32   : ARRAY[1..32] OF BYTE;
-    L_Lighting_Bool_32 : ARRAY[1..32] OF BOOL;
     L_FloorTemps_8  : ARRAY[1..8] OF REAL;
-    fbCoreKernelObserver : FB_CoreKernel_Live_Observer;    fbSimulationManager : FB_Simulation_Manager;
+
+    fbSimulationManager : FB_Simulation_Manager;
     fbRuleEngine : FB_Rule_Engine;
     fbBlackBox : FB_BlackBox_Recorder;
-    fbAstroTimer : FB_Astro_Timer;    fbHistoryManager : FB_History_Manager;    fbLogEvent : FB_LogEvent;
+    fbAstroTimer : FB_Astro_Timer;
+    fbHistoryManager : FB_History_Manager;
+    fbLogEvent : FB_LogEvent;
+
     fbSystemScenarioArb : FB_System_Scenario_Arbitration;
     fbSystemGatewayIntent : FB_System_Gateway_Intent;
     fbSystemPersist : FB_System_Persist_Manager;
-
     fbSystemInit : FB_System_Init;
     fbSystemRecovery : FB_System_Recovery;
     fbTimebase : FB_System_Timebase;
@@ -24,7 +27,6 @@ VAR
     fbSystemEvacuation : FB_System_Evacuation;
     fbSystemAlarmOrchestrator : FB_System_Alarm_Orchestrator;
     
-    L_Time_Diff : UDINT;
     L_Local_State : ST_System_State_Snapshot;
     L_Remote_State : ST_System_State_Snapshot;
     L_NVRAM_Cmd : BYTE;
@@ -35,14 +37,13 @@ VAR
     L_BB_Record : ST_BlackBox_Record;
     L_BB_Freeze : BOOL;
     L_Scenario_Idx : INT;
-        L_Last_Operator_Blocked : BOOL;
+    L_Last_Operator_Blocked : BOOL;
     L_Last_DHW_Heating_In_Service : BOOL;
     L_Last_DHW_Circ_In_Service : BOOL;
     L_Dangerous_Action_Armed : BOOL;
     L_Dangerous_Action_Deadline_MS : UDINT;
     L_Maintenance_Apply_Intent : BOOL;
     L_Last_System_Mode : E_System_Operating_Mode;
-    L_Last_First_Fault_Type : INT;
     L_Last_First_Fault_Source : INT;
     L_First_Fault_Active : BOOL;
     L_First_Fault_Type : INT;
@@ -64,17 +65,12 @@ VAR
     L_Scenario_Req_Rule     : E_SCENARIO_TYPE;
     L_Scenario_Req_Final    : E_SCENARIO_TYPE; // TRACE ONLY: arbitration result before policy
     L_Scenario_Intent       : E_SCENARIO_TYPE;
-L_Scenario_Source       : E_SCENARIO_SOURCE;
-L_Scenario_Changed      : BOOL;
-L_Last_Scenario_Change_Time : UDINT;
+    L_Scenario_Source       : E_SCENARIO_SOURCE;
+    L_Scenario_Changed      : BOOL;
 
-L_IO_Fault : BOOL;
-L_IO_Fault_Prev : BOOL;
-L_Comm_Fault_Prev : BOOL;
-L_Sensor_Fault_Prev : BOOL;
-L_Subsystem_Fault_Prev : BOOL;
-L_Mode_Prev : E_System_Operating_Mode;
-L_User_Access_Denied_Prev : BOOL;
+    L_IO_Fault_Prev : BOOL;
+    L_Mode_Prev : E_System_Operating_Mode;
+    L_User_Access_Denied_Prev : BOOL;
 
     L_Persist_Buffer : ARRAY[0..4] OF BYTE;
     L_Last_Written_Persist_Buffer : ARRAY[0..4] OF BYTE;
