@@ -79,6 +79,7 @@ L_Scenario_Source       : E_SCENARIO_SOURCE;
 L_Scenario_Changed      : BOOL;
 L_Last_Scenario_Change_Time : UDINT;
 
+L_IO_Fault : BOOL;
 L_IO_Fault_Prev : BOOL;
 L_Comm_Fault_Prev : BOOL;
 L_Sensor_Fault_Prev : BOOL;
@@ -809,7 +810,7 @@ END_IF;
 // === EVENT LOGGING: FAULTS ===
 
 // IO
-IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
+IF GVL_STATUS.G_Diagnostics.IO_Offline AND NOT L_IO_Fault_Prev THEN
     fbLogEvent(
         VI_Event_Type := 2,
         VI_Timestamp := GVL_STATUS.G_System_Time_MS,
@@ -818,7 +819,7 @@ IF fbSystemHealth.VO_IO_Fault AND NOT L_IO_Fault_Prev THEN
     );
 END_IF;
 
-IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
+IF NOT GVL_STATUS.G_Diagnostics.IO_Offline AND L_IO_Fault_Prev THEN
     fbLogEvent(
         VI_Event_Type := 3,
         VI_Timestamp := GVL_STATUS.G_System_Time_MS,
@@ -827,7 +828,7 @@ IF NOT fbSystemHealth.VO_IO_Fault AND L_IO_Fault_Prev THEN
     );
 END_IF;
 
-L_IO_Fault_Prev := fbSystemHealth.VO_IO_Fault;
+L_IO_Fault_Prev := GVL_STATUS.G_Diagnostics.IO_Offline;
 
 // === EVENT LOGGING: MODE CHANGE ===
 IF GVL_STATE.G_System_Mode <> L_Mode_Prev THEN
