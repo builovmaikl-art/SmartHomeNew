@@ -1,5 +1,6 @@
 FUNCTION_BLOCK FB_Heating_Schedule_Preheat
 VAR_INPUT
+    VI_System_Time_MS : UDINT;
     VI_Time_Of_Day_MS : UDINT;
     VI_Day_Of_Week : INT; // 1=Mon ... 7=Sun
     VI_Enable : BOOL;
@@ -19,6 +20,7 @@ VAR
     L_Cold_Confirm : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF INT;
     L_Hot_Confirm : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF INT;
     L_Last_Learn_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF UDINT;
+    L_Elapsed_MS : UDINT;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -75,7 +77,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                             L_Hot_Confirm[L_i, L_e] := 0;
                         END_IF;
 
-                        IF (VI_Time_Of_Day_MS - L_Last_Learn_MS[L_i, L_e]) >= L_Learn_Cooldown_MS THEN
+                        // UDINT wrap-safe elapsed time; unsigned subtraction is valid modulo 2^32.
+                        L_Elapsed_MS := VI_System_Time_MS - L_Last_Learn_MS[L_i, L_e];
+
+                        IF L_Elapsed_MS >= L_Learn_Cooldown_MS THEN
 
                             IF L_Cold_Confirm[L_i, L_e] >= 2 THEN
                                 IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] < L_Event.Adaptive_Max_Offset_MS THEN
@@ -84,7 +89,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                                     IF GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] > L_Event.Adaptive_Max_Offset_MS THEN
                                         GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := L_Event.Adaptive_Max_Offset_MS;
                                     END_IF;
-                                    L_Last_Learn_MS[L_i, L_e] := VI_Time_Of_Day_MS;
+                                    L_Last_Learn_MS[L_i, L_e] := VI_System_Time_MS;
                                 END_IF;
                                 L_Cold_Confirm[L_i, L_e] := 0;
                             END_IF;
@@ -96,7 +101,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
                                 ELSE
                                     GVL_HEATING_POLICY.G_Zone_Schedule_Learned_Offset_MS[L_i, L_e] := 0;
                                 END_IF;
-                                L_Last_Learn_MS[L_i, L_e] := VI_Time_Of_Day_MS;
+                                L_Last_Learn_MS[L_i, L_e] := VI_System_Time_MS;
                                 L_Hot_Confirm[L_i, L_e] := 0;
                             END_IF;
 
