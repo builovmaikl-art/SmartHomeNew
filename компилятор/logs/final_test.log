@@ -28,9 +28,9 @@ OVERLAY_ERROR: method_overlay_clean.py failed
 ERROR: expected final file not found: компилятор/out/RESULT_methods_clean.xml
 === compiler out dir after compile ===
 total 2728
-drwxr-xr-x 2 runner runner   4096 Apr 29 07:20 .
-drwxr-xr-x 6 runner runner   4096 Apr 29 07:20 ..
--rw-r--r-- 1 runner runner      0 Apr 29 07:20 .gitkeep
--rw-r--r-- 1 runner runner 905313 Apr 29 07:20 003_RESULT.xml
--rw-r--r-- 1 runner runner 936009 Apr 29 07:20 004_RESULT.xml
--rw-r--r-- 1 runner runner 936009 Apr 29 07:20 RESULT.xml
+drwxr-xr-x 2 runner runner   4096 Apr 29 07:21 .
+drwxr-xr-x 6 runner runner   4096 Apr 29 07:21 ..
+-rw-r--r-- 1 runner runner      0 Apr 29 07:21 .gitkeep
+-rw-r--r-- 1 runner runner 905313 Apr 29 07:21 003_RESULT.xml
+-rw-r--r-- 1 runner runner 936009 Apr 29 07:21 004_RESULT.xml
+-rw-r--r-- 1 runner runner 936009 Apr 29 07:21 RESULT.xml
