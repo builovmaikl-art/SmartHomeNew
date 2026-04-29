@@ -1,5 +1,0 @@
-]633;E;echo "=== STEP 199D: RESCUE PRG_SYSTEM + APPLY SHADOW CO ===";cc3d4df4-ca0d-4998-b939-71089bf6657b]633;C=== STEP 199D: RESCUE PRG_SYSTEM + APPLY SHADOW CO ===
-timestamp_utc=2026-04-18T12:03:45Z
-
-=== APPLY ===
-Expected step-198 simple shadow call block not found after restore

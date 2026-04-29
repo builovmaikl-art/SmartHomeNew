@@ -1,6 +1,0 @@
-]633;E;echo "=== STEP 155: FIX TREND HISTORY INTEGRATION ===";06e11507-ba50-40ef-9a65-cbe3e8e68da5]633;C=== STEP 155: FIX TREND HISTORY INTEGRATION ===
-OK: Trend history write fixed with edge detection
-
-4:    // === TREND WRITE CONTROL ===
-8:    // === TREND → HISTORY BRIDGE ===
-12:    // === TREND SYSTEM (MVP) ===
