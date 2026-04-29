@@ -97,6 +97,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost;
         END_IF;
 
+        // Zone-level self-tuning boost, mapped circuit -> logical zone -> manifold
+        L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY.G_Zone_Self_Level[L_Zone_ID];
+
         // Reactive policy multiplier
         L_Manifold_Adjusted_Priority[L_j] := TO_INT(TO_REAL(L_Manifold_Adjusted_Priority[L_j]) * GVL_HEATING_POLICY.G_Policy_Priority_Multiplier);
 
