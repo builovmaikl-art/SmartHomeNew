@@ -26,6 +26,14 @@ VAR
     fbHMIInterface : FB_HMI_Interface;
     fbFaultLogger : FB_Fault_Logger;
     fbLogEvent : FB_LogEvent;
+    fbSystemInit : FB_System_Init;
+    fbSystemRecovery : FB_System_Recovery;
+    fbTimebase : FB_System_Timebase;
+    fbSystemRedundancy : FB_System_Redundancy_Orchestrator;
+    fbSystemHealthOrchestrator : FB_System_Health_Orchestrator;
+    fbSystemIntentPublisher : FB_System_Intent_Publisher;
+    fbSystemEvacuation : FB_System_Evacuation;
+    fbSystemAlarmOrchestrator : FB_System_Alarm_Orchestrator;
     
     L_Time_Diff : UDINT;
     L_Local_State : ST_System_State_Snapshot;
@@ -81,280 +89,42 @@ L_User_Access_Denied_Prev : BOOL;
 END_VAR
 
 // 0. Инициализация RETAIN переменных при первом запуске
-IF NOT GVL_Retain.G_Initialized THEN
-    FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY - 1 DO
-        GVL_Retain.G_Presence_History[L_i] := 0;
-    END_FOR;
-    
-    GVL_Retain.G_History_Write_Idx := 1;
-    GVL_Retain.G_History_Total_Events := 0;
-    
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        GVL_Retain.G_Boiler_Accumulated_MS[L_i] := 0;
-        GVL_Retain.G_Boiler_Work_Seconds[L_i] := 0;
-    END_FOR;
-    
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        GVL_Retain.G_Valve_Test_Results[L_i] := FALSE;
-    END_FOR;
-    
-    L_Local_State.Version := 0;
-    L_Remote_State.Version := 0;
-    
-    GVL_Retain.G_Initialized := TRUE;
-
-
-
-END_IF;
+fbSystemInit(
+    VIO_Local_State := L_Local_State,
+    VIO_Remote_State := L_Remote_State
+);
 
 // === NVRAM RECOVERY (ONCE AFTER BOOT) ===
-IF NOT L_Recovery_Done THEN
-    IF GVL_PERSISTENT.P_Valid THEN
-        GVL_STATE.G_Safety_Gas_Latched := GVL_PERSISTENT.P_Safety_Gas_Latched;
-        GVL_STATE.G_Safety_Smoke_Latched := GVL_PERSISTENT.P_Safety_Smoke_Latched;
-        GVL_STATE.G_Safety_Leak_Latched := GVL_PERSISTENT.P_Safety_Leak_Latched;
-        GVL_STATE.G_System_Mode := GVL_PERSISTENT.P_System_Mode;
-    END_IF;
-
-    L_Recovery_Done := TRUE;
-END_IF;
+fbSystemRecovery(
+    VIO_Recovery_Done := L_Recovery_Done
+);
 
 // NVRAM CONTROLLED WRITE ENABLED (step 8B)
 
 // 1. Обновление системного времени
-GVL_STATUS.G_System_Time_MS := TIME_TO_UDINT(TIME());
-L_Time_Diff := (SEL(GVL_STATUS.G_System_Time_MS >= GVL_STATUS.G_Last_System_Time_MS, GVL_STATUS.G_System_Time_MS - GVL_STATUS.G_Last_System_Time_MS, (4294967295 - GVL_STATUS.G_Last_System_Time_MS) + GVL_STATUS.G_System_Time_MS + 1));
-GVL_STATUS.G_Time_Of_Day_MS := (GVL_STATUS.G_Time_Of_Day_MS + L_Time_Diff) MOD 86400000;
+fbTimebase();
 
-IF GVL_STATUS.G_Time_Of_Day_MS < L_Time_Diff THEN
-    GVL_STATUS.G_Current_Day := (GVL_STATUS.G_Current_Day MOD 7) + 1;
-    GVL_STATUS.G_Day_Of_Year := (GVL_STATUS.G_Day_Of_Year MOD 365) + 1;
-END_IF;
+// 2-3. Redundancy / state sync
+fbSystemRedundancy(
+    VIO_Local_State := L_Local_State,
+    VIO_Remote_State := L_Remote_State
+);
 
-GVL_STATUS.G_Last_System_Time_MS := GVL_STATUS.G_System_Time_MS;
-GVL_STATUS.G_Current_TOD := UDINT_TO_TOD(GVL_STATUS.G_Time_Of_Day_MS);
+// 3.4-3.7. Safety / health / state mode
+fbSystemHealthOrchestrator(
+    VO_First_Fault_Active => L_History_Write_Event,
+    VO_First_Fault_Type => L_Last_First_Fault_Type,
+    VO_First_Fault_Source => L_Last_First_Fault_Source
+);
 
-// Формирование локального состояния для репликации
-L_Local_State.System_Time_MS := GVL_STATUS.G_System_Time_MS;
-L_Local_State.Current_Scenario := GVL_STATUS.G_Current_Scenario;
-L_Local_State.Security_Armed := GVL_ALARM.G_Security_Armed;
-L_Local_State.Active_Alarms := GVL_ALARM.G_Active_Alarm_Count;
-L_Local_State.Zone_Valves := GVL_STATE.G_Zone_Valves;
-L_Local_State.Manifold_Pumps := GVL_STATE.G_Manifold_Pumps;
-L_Local_State.Lighting_States := GVL_STATE.G_Lighting_Levels;
-L_Local_State.Blinds_Positions := GVL_STATE.G_Blinds_Positions;
-L_Local_State.Socket_States := GVL_STATE.G_Socket_States;
-L_Local_State.Gas_Valve_Closed := GVL_COMMAND.G_Gas_Valve_Close;
-L_Local_State.Water_Valves_Closed := GVL_COMMAND.G_Close_Valve_36;
-L_Local_State.Version := L_Local_State.Version + 1;
-
-// 2. Определение роли ПЛК (Active/Standby)
-fbRedundancy(
+// === STAGE G2b: SYSTEM GATE PUBLICATION ===
+fbSystemIntentPublisher(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Local_PLC_ID := GVL_STATUS.G_PLC_ID,
-    VI_Remote_Pulse := GVL_IO.DI_Partner_Pulse,
-    VI_Remote_Is_Active := GVL_IO.DI_Partner_Active,
-    VI_Gateway_Ping_OK := GVL_GATEWAY.G_Gateway_Ping_OK,
-    VI_Local_State := L_Local_State,
-    VI_Remote_State := L_Remote_State
-);
-GVL_STATUS.G_Is_Active_PLC := (fbRedundancy.VO_Local_Role = E_PLC_ROLE.ROLE_ACTIVE);
-GVL_IO.DO_Heartbeat_Pulse := fbRedundancy.VO_Local_Pulse;
-GVL_IO.DO_Active_Status := GVL_STATUS.G_Is_Active_PLC;
-
-// 3. Синхронизация состояния (применение полученного состояния)
-IF fbRedundancy.VO_State_Updated THEN
-    GVL_STATUS.G_Current_Scenario := fbRedundancy.VO_Synced_State.Current_Scenario;
-    GVL_ALARM.G_Security_Armed := fbRedundancy.VO_Synced_State.Security_Armed;
-    GVL_STATE.G_Zone_Valves := fbRedundancy.VO_Synced_State.Zone_Valves;
-    GVL_STATE.G_Manifold_Pumps := fbRedundancy.VO_Synced_State.Manifold_Pumps;
-    GVL_STATE.G_Lighting_Levels := fbRedundancy.VO_Synced_State.Lighting_States;
-    GVL_STATE.G_Blinds_Positions := fbRedundancy.VO_Synced_State.Blinds_Positions;
-    GVL_STATE.G_Socket_States := fbRedundancy.VO_Synced_State.Socket_States;
-    GVL_COMMAND.G_Gas_Valve_Close := fbRedundancy.VO_Synced_State.Gas_Valve_Closed;
-    GVL_COMMAND.G_Close_Valve_36 := fbRedundancy.VO_Synced_State.Water_Valves_Closed;
-    L_Local_State.Version := fbRedundancy.VO_Synced_State.Version;
-END_IF;
-
-fbSafety(
-    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
-    VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
-    VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm,
-    VI_Reset := GVL_COMMAND.G_Reset_Errors,
-    VO_Gas_Latched => GVL_STATE.G_Safety_Gas_Latched,
-    VO_Leak_Latched => GVL_STATE.G_Safety_Leak_Latched,
-    VO_Smoke_Latched => GVL_STATE.G_Safety_Smoke_Latched,
-    VO_Emergency_Stop => GVL_STATE.G_Safety_Emergency_Stop
+    VI_Gateway_Writes_Allowed := L_Gateway_Writes_Allowed
 );
 
-// 3.4. Агрегация состояния anti-freeze hardware
-GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
-GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
-
-// 3.6. Health manager: новая интеграция safety + diagnostics + watchdog
-fbWatchdog(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
-);
-
-fbSystemHealth(
-    VI_Smoke_Detected := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched,
-    VI_Gas_Detected := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_STATE.G_Safety_Gas_Latched,
-    VI_CO_Warning_Level := GVL_HEALTH_BRIDGE.G_CO_Warning_Level,
-    VI_CO_Alarm_Level := GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
-    VI_Leak_Detected := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched,
-    VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault OR GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active,
-    VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault OR GVL_STATE.G_Ventilation_IO_Fault OR GVL_STATE.G_Lighting_IO_Fault,
-    VI_Comm_Fault := GVL_STATE.G_Access_Comm_Fault,
-    VI_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault,
-    VI_Subsystem_Fault := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded OR GVL_STATE.G_Ventilation_Subsystem_Degraded OR GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active
-);
-
-// 3.6. State manager: агрегированная логика режима работы
-fbStateManager(
-    VI_System_Severity := fbSystemHealth.VO_System_Severity,
-    VI_Root_Cause := fbSystemHealth.VO_Root_Cause,
-    VI_Freeze_Risk := GVL_STATE.G_Safety_Freeze_Risk
-);
-
-fbHMIInterface(
-    VI_Severity := fbSystemHealth.VO_System_Severity,
-    VI_RootCause := fbSystemHealth.VO_Root_Cause,
-    VI_Status_Msg := fbStateManager.VO_Status_Msg
-);
-
-fbFaultLogger(
-    VI_Severity := fbSystemHealth.VO_System_Severity,
-    VI_RootCause := fbSystemHealth.VO_Root_Cause,
-    VI_Time_MS := GVL_STATUS.G_System_Time_MS
-);
-
-// publish integrated outputs
-GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
-
-// === DIAGNOSTIC FLAGS (export) ===
-GVL_STATUS.G_Diagnostics.Sensor_Fault :=
-    GVL_STATE.G_Heating_Sensor_Fault OR
-    GVL_STATE.G_DHW_Sensor_Fault OR
-    GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR
-    GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR
-    GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active;
-
-GVL_STATUS.G_Diagnostics.IO_Offline :=
-    GVL_STATE.G_Heating_IO_Fault OR
-    GVL_STATE.G_DHW_IO_Fault OR
-    GVL_STATE.G_Ventilation_IO_Fault OR
-    GVL_STATE.G_Lighting_IO_Fault;
-
-GVL_STATUS.G_Diagnostics.Subsystem_Degraded :=
-    GVL_STATE.G_Heating_Subsystem_Degraded OR
-    GVL_STATE.G_DHW_Subsystem_Degraded OR
-    GVL_STATE.G_Ventilation_Subsystem_Degraded OR
-    GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active OR
-    GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active OR
-    GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active;
-
-GVL_GATEWAY.G_Gateway_HMI_Status_Message := fbHMIInterface.VO_HMI_Status_Text;
-IF fbFaultLogger.VO_Last_Event_Text <> '' THEN
-    GVL_HEALTH_BRIDGE.G_Last_Fault_Event_Text := fbFaultLogger.VO_Last_Event_Text;
-END_IF;
-
-// 3.7. Применение вычисленного режима системы
-GVL_STATE.G_System_Mode := fbStateManager.VO_System_Mode;
-
-CASE GVL_STATE.G_System_Mode OF
-    E_System_Operating_Mode.MODE_SAFE_STOP:
-        GVL_STATE.G_System_Mode_Text := 'SAFE_STOP';
-
-    E_System_Operating_Mode.MODE_FREEZE_PROTECTION:
-        GVL_STATE.G_System_Mode_Text := 'FREEZE_PROTECTION';
-
-    E_System_Operating_Mode.MODE_DEGRADED:
-        GVL_STATE.G_System_Mode_Text := 'DEGRADED';
-
-    ELSE
-        GVL_STATE.G_System_Mode_Text := 'NORMAL';
-END_CASE;
-
-CASE fbSystemHealth.VO_Root_Cause OF
-    E_System_Root_Cause.ROOT_FIRE:
-        GVL_STATUS.G_System_Mode_Cause := 'Пожар/дым';
-    E_System_Root_Cause.ROOT_GAS_LEAK:
-        GVL_STATUS.G_System_Mode_Cause := 'Утечка газа';
-    E_System_Root_Cause.ROOT_CO_CRITICAL:
-        GVL_STATUS.G_System_Mode_Cause := 'Критический CO';
-    E_System_Root_Cause.ROOT_CO_WARNING:
-        GVL_STATUS.G_System_Mode_Cause := 'Повышенный CO';
-    E_System_Root_Cause.ROOT_WATER_LEAK:
-        GVL_STATUS.G_System_Mode_Cause := 'Протечка воды';
-    E_System_Root_Cause.ROOT_WATCHDOG_FAULT:
-        GVL_STATUS.G_System_Mode_Cause := 'Ошибка watchdog';
-    E_System_Root_Cause.ROOT_IO_OFFLINE:
-        GVL_STATUS.G_System_Mode_Cause := 'Недоступен модуль IO';
-    E_System_Root_Cause.ROOT_COMM_FAULT:
-        GVL_STATUS.G_System_Mode_Cause := 'Ошибка связи';
-    E_System_Root_Cause.ROOT_SENSOR_FAULT:
-        GVL_STATUS.G_System_Mode_Cause := 'Ошибка датчика';
-    E_System_Root_Cause.ROOT_SUBSYSTEM_FAULT:
-        GVL_STATUS.G_System_Mode_Cause := 'Ошибка подсистемы';
-    ELSE
-        GVL_STATUS.G_System_Mode_Cause := 'Аварийные режимы отсутствуют';
-END_CASE;
-
-// final status text comes from State_Manager
-GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
-
-// === STAGE G2b: SYSTEM GATE PARALLEL PUBLICATION ===
-GVL_INTENT_SYSTEM.I_Source_Valid := TRUE;
-GVL_INTENT_SYSTEM.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
-GVL_INTENT_SYSTEM.I_Mode_Safe_Stop_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
-GVL_INTENT_SYSTEM.I_Mode_Degraded_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
-GVL_INTENT_SYSTEM.I_Mode_Freeze_Protection_Active := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
-GVL_INTENT_SYSTEM.I_Operator_Scenario_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
-GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
-GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
-GVL_INTENT_SYSTEM.I_Socket_Overrides_Block := (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
-GVL_INTENT_SYSTEM.I_Gateway_Writes_Allowed := L_Gateway_Writes_Allowed;
-GVL_INTENT_SYSTEM.I_Scenario_Request_Allowed := (GVL_STATE.G_System_Mode <> E_System_Operating_Mode.MODE_SAFE_STOP);
-
-// 3.6a. Расчёт направленной эвакуации
-FOR L_i := 1 TO 32 DO
-    GVL_STATE.G_Evac_Guidance[L_i] := 0;
-
-    IF GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
-        GVL_STATE.G_Evac_Guidance[L_i] := -1;
-    END_IF;
-
-    IF GVL_CONFIG.G_Evac_Exit_Zones[L_i] AND NOT GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
-        GVL_STATE.G_Evac_Guidance[L_i] := 1;
-    END_IF;
-END_FOR;
-
-// 3.5a. Вычисление человекочитаемых имён зон эвакуации для HMI
-GVL_STATUS.G_Evac_Target_Zone_Name := '';
-GVL_STATUS.G_Evac_Hazard_Zone_Name := '';
-
-FOR L_i := 1 TO 32 DO
-    IF (GVL_STATUS.G_Evac_Hazard_Zone_Name = '') AND GVL_STATE.G_Evac_Hazard_Zone[L_i] THEN
-        GVL_STATUS.G_Evac_Hazard_Zone_Name := GVL_CONFIG.G_Evac_Zone_Names[L_i];
-        IF GVL_STATUS.G_Evac_Hazard_Zone_Name = '' THEN
-            GVL_STATUS.G_Evac_Hazard_Zone_Name := CONCAT('Zone ', INT_TO_STRING(L_i));
-        END_IF;
-    END_IF;
-
-    IF (GVL_STATUS.G_Evac_Target_Zone_Name = '') AND (GVL_STATE.G_Evac_Guidance[L_i] = 1) THEN
-        GVL_STATUS.G_Evac_Target_Zone_Name := GVL_CONFIG.G_Evac_Zone_Names[L_i];
-        IF GVL_STATUS.G_Evac_Target_Zone_Name = '' THEN
-            GVL_STATUS.G_Evac_Target_Zone_Name := CONCAT('Zone ', INT_TO_STRING(L_i));
-        END_IF;
-    END_IF;
-END_FOR;
-
-// 3.6. Активация световой эвакуации
-IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP AND GVL_STATE.G_Safety_Smoke_Latched THEN
-    GVL_STATE.G_Evacuation_Lighting_Active := TRUE;
-ELSE
-    GVL_STATE.G_Evacuation_Lighting_Active := FALSE;
-END_IF;
+// 3.6a. Эвакуация
+fbSystemEvacuation();
 
 // 4. Астрономический таймер
 fbAstroTimer(
@@ -430,38 +200,12 @@ END_FOR;
 
 
 
-// 8.5 Менеджер тревог (Сбор всех аварий)
-fbAlarmManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Gas_Alarm := GVL_ALARM.G_Gas_Alarm_Active,
-    VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
-    VI_Flood_Alarm := GVL_ALARM.G_Flood_Alarm_Active,
-    VI_Security_Alarm := GVL_ALARM.G_Security_Alarm,
-    VI_First_Fault_Active := fbSystemHealth.VO_First_Fault_Active,
-    VI_First_Fault_Type := fbSystemHealth.VO_First_Fault_Type,
-    VI_First_Fault_Source := fbSystemHealth.VO_First_Fault_Source,
-    VI_Boiler_Errors := GVL_STATE.G_Boiler_Error,
-    VI_Security_Msg := GVL_STATUS.G_Security_Status_Msg,
-    VI_Acknowledge_All := GVL_CONFIG.G_HMI_Ack_Alarms OR GVL_COMMAND.G_Reset_Errors,
-    VI_Mute_Siren := GVL_CONFIG.G_HMI_Mute_Alarm,
-    VIO_Next_Alarm_ID := GVL_ALARM.G_Next_Alarm_ID,
-    VO_Global_Critical => GVL_ALARM.G_Global_Critical,
-    VO_Global_Warning => GVL_ALARM.G_Global_Warning,
-    VO_Siren_Active => GVL_ALARM.G_Global_Siren,
-    VO_Active_Count => GVL_ALARM.G_Active_Alarm_Count,
-    VO_Unacked_Count => GVL_ALARM.G_Unacked_Alarm_Count,
-    VO_Event_Pulse => GVL_STATUS.G_Diagnostics.Alarm_Event_Pulse,
-    VO_Event_Code => GVL_STATUS.G_Diagnostics.Alarm_Event_Code,
-    VO_Event_Value => GVL_STATUS.G_Diagnostics.Alarm_Event_Value,
-    VO_Alarm_List => GVL_ALARM.G_Alarm_List
+// 8.5 Менеджер тревог
+fbSystemAlarmOrchestrator(
+    VI_First_Fault_Active := L_History_Write_Event,
+    VI_First_Fault_Type := L_Last_First_Fault_Type,
+    VI_First_Fault_Source := L_Last_First_Fault_Source
 );
-
-
-
-
-
-
 
 // Command arbitration: OPERATOR > GATEWAY
 L_Gateway_Writes_Allowed :=

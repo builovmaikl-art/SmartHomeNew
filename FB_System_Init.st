@@ -5,6 +5,11 @@
 // Owns first-boot initialization of RETAIN runtime state.
 // ==============================================================================
 FUNCTION_BLOCK FB_System_Init
+VAR_IN_OUT
+    VIO_Local_State : ST_System_State_Snapshot;
+    VIO_Remote_State : ST_System_State_Snapshot;
+END_VAR
+
 VAR
     L_i : INT;
 END_VAR
@@ -25,6 +30,9 @@ IF NOT GVL_Retain.G_Initialized THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_Retain.G_Valve_Test_Results[L_i] := FALSE;
     END_FOR;
+
+    VIO_Local_State.Version := 0;
+    VIO_Remote_State.Version := 0;
 
     GVL_Retain.G_Initialized := TRUE;
 END_IF;

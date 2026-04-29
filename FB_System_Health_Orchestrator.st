@@ -7,6 +7,12 @@
 // and human-readable mode/cause text projection.
 // ==============================================================================
 FUNCTION_BLOCK FB_System_Health_Orchestrator
+VAR_OUTPUT
+    VO_First_Fault_Active : BOOL;
+    VO_First_Fault_Type : INT;
+    VO_First_Fault_Source : INT;
+END_VAR
+
 VAR
     fbSafety : FB_Safety_Manager;
     fbWatchdog : FB_Watchdog;
@@ -133,6 +139,10 @@ CASE fbSystemHealth.VO_Root_Cause OF
     ELSE
         GVL_STATUS.G_System_Mode_Cause := 'Аварийные режимы отсутствуют';
 END_CASE;
+
+VO_First_Fault_Active := fbSystemHealth.VO_First_Fault_Active;
+VO_First_Fault_Type := fbSystemHealth.VO_First_Fault_Type;
+VO_First_Fault_Source := fbSystemHealth.VO_First_Fault_Source;
 
 GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
 
