@@ -106,8 +106,6 @@ fbSystemPersist(
     VIO_NVRAM_ErrID := L_NVRAM_ErrID
 );
 
-// NVRAM CONTROLLED WRITE ENABLED (step 8B)
-
 // 1. Обновление системного времени
 fbTimebase();
 
@@ -126,6 +124,12 @@ fbSystemHealthOrchestrator(
     VO_Root_Cause => L_Root_Cause,
     VO_Watchdog_Fault => L_Watchdog_Fault
 );
+
+// Command arbitration: OPERATOR > GATEWAY
+L_Gateway_Writes_Allowed :=
+    NOT GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm AND
+    NOT GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND
+    NOT GVL_STATUS.G_Diagnostics.User_Access_Denied;
 
 // === STAGE G2b: SYSTEM GATE PUBLICATION ===
 fbSystemIntentPublisher(
@@ -231,12 +235,6 @@ fbSystemAlarmOrchestrator(
     VI_First_Fault_Source := L_First_Fault_Source
 );
 
-// Command arbitration: OPERATOR > GATEWAY
-L_Gateway_Writes_Allowed :=
-    NOT GVL_STATUS.G_Diagnostics.Dangerous_Action_Pending_Confirm AND
-    NOT GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND
-    NOT GVL_STATUS.G_Diagnostics.User_Access_Denied;
-
 // === Gateway intent ===
 fbSystemGatewayIntent(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -247,10 +245,6 @@ fbSystemGatewayIntent(
     VIO_Lighting_Base_Levels := L_Lighting_32,
     VIO_Scenario_Req_Gateway := L_Scenario_Req_Gateway
 );
-
-// Gateway moved to helper
-
-// Persist/NVRAM moved to helper
 
 // 15. Черный ящик
 L_BB_Record.Timestamp := GVL_STATUS.G_System_Time_MS;
