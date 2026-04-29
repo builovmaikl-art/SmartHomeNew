@@ -18,3 +18,5 @@ GVL_HEATING_POLICY.G_Policy_Mode := fbPolicyManager.VO_Policy_Mode;
 GVL_HEATING_POLICY.G_Policy_Block_Heating_Request := fbPolicyManager.VO_Block_Heating;
 GVL_HEATING_POLICY.G_Policy_Target_Adjustment := fbPolicyManager.VO_Target_Adjustment;
 GVL_HEATING_POLICY.G_Policy_Priority_Multiplier := fbPolicyManager.VO_Priority_Multiplier;
+GVL_HEATING_POLICY.G_Policy_Self_Tune_Active := fbPolicyManager.VO_Self_Tune_Active;
+GVL_HEATING_POLICY.G_Policy_Self_Tune_Level := fbPolicyManager.VO_Self_Tune_Level;
