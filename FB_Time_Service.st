@@ -23,13 +23,10 @@ GVL_TIME_SERVICE.G_Last_Now_MS := L_Real_Now;
 IF GVL_TIME_SERVICE.G_Sim_Enabled THEN
 
     IF NOT GVL_TIME_SERVICE.G_Sim_Frozen THEN
-        // scale delta
         L_Scaled_Delta := UDINT(REAL(L_Elapsed) * GVL_TIME_SERVICE.G_Sim_Time_Scale);
 
-        // advance simulated absolute time
         GVL_TIME_SERVICE.G_Sim_Now_MS := GVL_TIME_SERVICE.G_Sim_Now_MS + L_Scaled_Delta;
 
-        // advance TOD with wrap
         GVL_TIME_SERVICE.G_Sim_Time_Of_Day_MS := GVL_TIME_SERVICE.G_Sim_Time_Of_Day_MS + L_Scaled_Delta;
 
         IF GVL_TIME_SERVICE.G_Sim_Time_Of_Day_MS >= 86400000 THEN
@@ -41,19 +38,19 @@ IF GVL_TIME_SERVICE.G_Sim_Enabled THEN
         END_IF;
     END_IF;
 
-    // publish simulated time
     GVL_TIME_SERVICE.G_Now_MS := GVL_TIME_SERVICE.G_Sim_Now_MS;
     GVL_TIME_SERVICE.G_Time_Of_Day_MS := GVL_TIME_SERVICE.G_Sim_Time_Of_Day_MS;
     GVL_TIME_SERVICE.G_Day_Of_Week := GVL_TIME_SERVICE.G_Sim_Day_Of_Week;
 
 ELSE
-    // publish real time
     GVL_TIME_SERVICE.G_Now_MS := L_Real_Now;
     GVL_TIME_SERVICE.G_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS;
     GVL_TIME_SERVICE.G_Day_Of_Week := INT(GVL_STATUS.G_Current_Day);
 END_IF;
 
-// publish delta (always based on real time)
+// TOD unified
+GVL_TIME_SERVICE.G_Current_TOD := UDINT_TO_TOD(GVL_TIME_SERVICE.G_Time_Of_Day_MS);
+
 GVL_TIME_SERVICE.G_Delta_MS := L_Elapsed;
 
 END_FUNCTION_BLOCK
