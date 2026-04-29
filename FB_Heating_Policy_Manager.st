@@ -51,17 +51,30 @@ VAR
     L_Last_Quality : REAL;
     L_Improving : BOOL;
     L_Stable : BOOL;
+    L_Predictive_Initialized : BOOL;
     L_Last_Room_Avg : REAL;
     L_Trend : REAL;
     L_Predictive_Adjustment : REAL;
     L_i : INT;
     L_Zone_Error : REAL;
     L_Zone_Quality : REAL;
+    L_Last_Zone_Temp : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    L_Zone_Trend : REAL;
+    L_Zone_Adjustment : REAL;
 END_VAR
 
 // ============================================================
 // Predictive trend, bounded advisory correction
 // ============================================================
+IF NOT L_Predictive_Initialized THEN
+    L_Last_Room_Avg := VI_Room_Temp_Avg;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+        L_Last_Zone_Temp[L_i] := VI_Room_Temps[L_i];
+        GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := 0.0;
+    END_FOR;
+    L_Predictive_Initialized := TRUE;
+END_IF;
+
 L_Trend := VI_Room_Temp_Avg - L_Last_Room_Avg;
 L_Last_Room_Avg := VI_Room_Temp_Avg;
 
@@ -94,7 +107,7 @@ L_Improving := L_Quality < L_Last_Quality;
 L_Stable := L_Quality = 0.0;
 
 // ============================================================
-// Zone-level feedback
+// Zone-level feedback + predictive
 // ============================================================
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Zone_Error := VI_Target_Temp - VI_Room_Temps[L_i];
@@ -107,6 +120,20 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     IF VI_Floor_Temps[L_i] < (VI_Target_Temp - 2.0) THEN
         L_Zone_Quality := L_Zone_Quality + 1.0;
     END_IF;
+
+    L_Zone_Trend := VI_Room_Temps[L_i] - L_Last_Zone_Temp[L_i];
+    L_Last_Zone_Temp[L_i] := VI_Room_Temps[L_i];
+
+    L_Zone_Adjustment := 0.0;
+    IF (L_Zone_Trend < -0.05) AND (VI_Room_Temps[L_i] < (VI_Target_Temp + 0.5)) THEN
+        L_Zone_Adjustment := 0.8;
+    ELSIF L_Zone_Trend > 0.05 THEN
+        L_Zone_Adjustment := -0.3;
+    END_IF;
+
+    IF L_Zone_Adjustment > 1.0 THEN L_Zone_Adjustment := 1.0; END_IF;
+    IF L_Zone_Adjustment < -1.0 THEN L_Zone_Adjustment := -1.0; END_IF;
+    GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := L_Zone_Adjustment;
 
     GVL_HEATING_POLICY.G_Zone_Improving[L_i] := (L_Zone_Quality < GVL_HEATING_POLICY.G_Zone_Quality[L_i]);
     GVL_HEATING_POLICY.G_Zone_Stable[L_i] := (L_Zone_Quality = 0.0);
