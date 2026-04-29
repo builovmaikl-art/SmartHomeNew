@@ -11,7 +11,7 @@ END_VAR
 // SAFETY_INTENT_RESET_INIT
 // ========================================
 GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
-GVL_INTENT_SAFETY.I_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
+GVL_INTENT_SAFETY.I_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := FALSE;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := FALSE;
 GVL_INTENT_SAFETY.I_Leak_Alarm_Active := FALSE;
@@ -38,7 +38,7 @@ GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
 // SAFETY_WORKFLOW_FB
 // ========================================
 fbSafetyWorkflow(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Water_Selective_Recover := GVL_INTENT_USER.I_Water_Selective_Recover,
     VI_Gas_Selective_Recover := GVL_INTENT_USER.I_Gas_Selective_Recover,
     VI_Water_Valve_Test_Open := GVL_INTENT_USER.I_Water_Valve_Test_Open,
@@ -61,7 +61,7 @@ END_IF;
 // SAFETY_DETECTORS_AND_HEALTH_PROJECTION
 // ========================================
 fbWaterLeakageManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Sensors := GVL_STATE.G_Water_Sensors,
     VI_Config := GVL_CONFIG.G_HMI_Flood_Config,
@@ -72,7 +72,7 @@ fbWaterLeakageManager(
 GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
 
 fbGasSmokeManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Methane_LEL := GVL_Safety_Selector.G_Methane_Effective_Array,
     VI_CO_PPM := GVL_Safety_Selector.G_CO_Effective_Array,
