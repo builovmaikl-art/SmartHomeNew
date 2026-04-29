@@ -1,0 +1,10 @@
+{attribute 'strict'}
+TYPE E_Zone_Access_Level :
+(
+    ZONE_ACCESS_NONE := 0,
+    ZONE_ACCESS_VIEW := 1,
+    ZONE_ACCESS_CONTROL := 2,
+    ZONE_ACCESS_CONFIG := 3,
+    ZONE_ACCESS_FULL := 4
+) USINT;
+END_TYPE

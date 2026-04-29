@@ -1,0 +1,18 @@
+TYPE ST_Persist :
+STRUCT
+    // --- Core system ---
+    System_Mode : E_System_Operating_Mode;
+
+    // --- Safety latches ---
+    Safety_Gas_Latched : BOOL;
+    Safety_Smoke_Latched : BOOL;
+    Safety_Leak_Latched : BOOL;
+
+    // --- DHW runtime state mirrored to persistence ---
+    DHW_Heating_Pump : BOOL;
+
+    // --- Validity / versioning ---
+    Valid : BOOL;
+    Version : UINT := 1;
+END_STRUCT
+END_TYPE

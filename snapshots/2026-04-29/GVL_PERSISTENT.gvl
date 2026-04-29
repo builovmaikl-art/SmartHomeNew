@@ -1,0 +1,17 @@
+VAR_GLOBAL PERSISTENT RETAIN
+
+    // === SYSTEM ===
+    P_System_Mode : E_System_Operating_Mode;
+
+    // === SAFETY LATCHES ===
+    P_Safety_Gas_Latched : BOOL;
+    P_Safety_Smoke_Latched : BOOL;
+    P_Safety_Leak_Latched : BOOL;
+
+    // === HEATING / DHW ===
+    P_DHW_Heating_Active : BOOL;
+
+    // === CONTROL ===
+    P_Valid : BOOL;
+
+END_VAR
