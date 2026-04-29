@@ -73,3 +73,23 @@ FOR L_i := 1 TO 32 DO
         ;
     END_IF;
 END_FOR;
+
+// =============================
+// POLICY INTENT (Step 1.1 wiring only)
+// =============================
+
+IF GVL_INTENT_POLICY.G_Preheat_Request THEN
+    ; // placeholder, no logic yet
+END_IF;
+
+IF GVL_INTENT_POLICY.G_Freeze_Request THEN
+    ; // placeholder
+END_IF;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    IF GVL_INTENT_POLICY.G_Zone_Heating_Request[L_i] THEN
+        ; // placeholder
+    END_IF;
+END_FOR;
+
+END_PROGRAM
