@@ -32,6 +32,12 @@ VAR_GLOBAL
     G_Zone_Time_To_Heat_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
     G_Zone_Preheat_Needed : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
 
+    // thermal model v2 diagnostics
+    G_Zone_Heat_Loss_Rate : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Heat_Gain_Rate : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Predicted_Temp_30m : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Thermal_Model_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
     // schedule-aware preheat. Comfort time is milliseconds from midnight.
     G_Zone_Schedule_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Comfort_Time_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
