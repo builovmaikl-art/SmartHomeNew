@@ -64,10 +64,8 @@ fbDiagEventManager(
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
 );
 
+// Removed direct command writes (Step 1.2). Keep only state-level mitigation.
 IF L_IO_Error_Active THEN
-    GVL_COMMAND.G_Gas_Valve_Close := TRUE;
-    GVL_COMMAND.G_Close_Valve_35 := TRUE;
-    GVL_COMMAND.G_Close_Valve_36 := TRUE;
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO GVL_STATE.G_Manifold_Pumps[L_i] := FALSE; END_FOR;
 END_IF;
 
