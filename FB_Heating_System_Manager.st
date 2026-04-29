@@ -43,7 +43,6 @@ VAR_OUTPUT
 END_VAR
 VAR
     L_i : INT;
-    L_j : INT;
     L_Target_Supply_Temp : REAL;
     L_Zone_Active_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     fbValveTestManager : FB_Valve_Test_Manager;
@@ -56,6 +55,7 @@ VAR
     fbAdaptiveTarget : FB_Heating_Adaptive_Target;
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
+    fbDemandMap : FB_Heating_Demand_Map;
     fbCircuitControl : FB_Heating_Circuit_Control;
     fbManifoldControl : FB_Heating_Manifold_Control;
     fbBoilerControl : FB_Heating_Boiler_Control;
@@ -160,18 +160,11 @@ fbCircuitControl(
 
 GVL_STATE.G_Heating_Sensor_Fault := L_Sensor_Error;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    L_Zone_Active_Map[L_i] := FALSE;
-END_FOR;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    IF VO_Zone_Valves[L_i] THEN
-        L_j := VI_Zone_Configs[L_i].manifold_id;
-        IF L_j >= 1 AND L_j <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
-            L_Zone_Active_Map[L_j] := TRUE;
-        END_IF;
-    END_IF;
-END_FOR;
+fbDemandMap(
+    VI_Zone_Valves := VO_Zone_Valves,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VO_Zone_Active_Map => L_Zone_Active_Map
+);
 
 fbManifoldControl(
     VI_System_Time_MS := VI_System_Time_MS,
