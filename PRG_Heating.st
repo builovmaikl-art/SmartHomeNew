@@ -10,6 +10,8 @@ VAR
     fbDHWManager : FB_DHW_Manager;
     fbDiagEventManager : FB_Diagnostics_Event_Manager;
     fbDecision : FB_Heating_Decision_Context;
+    fbRootCause : FB_Diagnostics_RootCause;
+    fbRootDemandMap : FB_Heating_Demand_Map;
     L_i : INT;
     L_j : INT;
     L_Zone_ID : INT;
@@ -19,6 +21,7 @@ VAR
     L_Heating_Gas_Safety_Stop : BOOL;
     L_Heating_DHW_Demand : BOOL;
     L_Manifold_Adjusted_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    L_Root_Demand_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 // ============================================================
@@ -297,3 +300,31 @@ END_IF;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
 END_FOR;
+
+// ============================================================
+// S7. ROOT CAUSE DIAGNOSTICS
+// ============================================================
+
+fbRootDemandMap(
+    VI_Zone_Valves := L_Zone_Valves,
+    VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
+    VO_Manifold_Demand_Map => L_Root_Demand_Map
+);
+
+fbRootCause(
+    VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
+    VI_Gas_Safety := GVL_STATE.G_Safety_Gas_Latched,
+    VI_IO_Failsafe := GVL_STATE.G_Heating_IO_Fault,
+    VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
+    VI_Boiler_Error := GVL_STATE.G_Boiler_Error,
+    VI_Boiler_Flame := GVL_STATE.G_Boiler_Flame,
+    VI_Manifold_Pumps := GVL_STATE.G_Manifold_Pumps,
+    VI_Manifold_Valves := GVL_STATE.G_Manifold_Valves,
+    VI_Sensor_Error := GVL_STATE.G_Heating_Sensor_Fault,
+    VI_Supply_Temps := GVL_STATE.G_Manifold_T_Supply,
+    VI_Target_Supply := GVL_CONFIG.G_Heating_Config.Target_Floor_Temp,
+    VI_Demand_Map := L_Root_Demand_Map
+);
+
+GVL_STATE.G_Heating_RootCause := fbRootCause.VO_RootCause;
+GVL_STATE.G_Heating_RootConfidence := fbRootCause.VO_Confidence;
