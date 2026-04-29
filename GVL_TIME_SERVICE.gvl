@@ -1,9 +1,18 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // Published effective time for consumers
     G_Now_MS : UDINT;
     G_Time_Of_Day_MS : UDINT;
     G_Day_Of_Week : INT;
     G_Last_Now_MS : UDINT;
     G_Delta_MS : UDINT;
     G_Wrap_Detected : BOOL;
+
+    // Simulation controls (HMI/runtime configurable)
+    G_Sim_Enabled : BOOL;
+    G_Sim_Frozen : BOOL;
+    G_Sim_Time_Scale : REAL := 1.0;
+    G_Sim_Now_MS : UDINT;
+    G_Sim_Time_Of_Day_MS : UDINT;
+    G_Sim_Day_Of_Week : INT := 1;
 END_VAR
