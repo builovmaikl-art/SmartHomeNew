@@ -3,6 +3,7 @@ PROGRAM PRG_Heating_Policy_Manager
 VAR
     fbPolicyManager : FB_Heating_Policy_Manager;
     fbSchedule : FB_Heating_Schedule_Preheat;
+    fbThermal : FB_Heating_Thermal_Model;
     fbTime : FB_Time_Service;
     L_i : INT;
     L_Room_Avg : REAL;
@@ -11,6 +12,9 @@ END_VAR
 
 // --- TIME SERVICE ---
 fbTime();
+
+// --- THERMAL MODEL ---
+fbThermal();
 
 // --- INPUT AGGREGATION ---
 L_Room_Avg := 0.0;
@@ -60,3 +64,5 @@ GVL_HEATING_POLICY.G_Policy_Self_Tune_Level := fbPolicyManager.VO_Self_Tune_Leve
 GVL_HEATING_POLICY.G_Policy_Feedback_Stable := fbPolicyManager.VO_Feedback_Stable;
 GVL_HEATING_POLICY.G_Policy_Feedback_Improving := fbPolicyManager.VO_Feedback_Improving;
 GVL_HEATING_POLICY.G_Policy_Feedback_Quality := fbPolicyManager.VO_Feedback_Quality;
+
+END_PROGRAM
