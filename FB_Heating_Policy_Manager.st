@@ -12,6 +12,8 @@ VAR_INPUT
     VI_Supply_Temp : REAL;
     VI_Return_Temp : REAL;
     VI_Target_Temp : REAL;
+    VI_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
 END_VAR
 
 VAR_OUTPUT
@@ -49,6 +51,9 @@ VAR
     L_Last_Quality : REAL;
     L_Improving : BOOL;
     L_Stable : BOOL;
+    L_i : INT;
+    L_Zone_Error : REAL;
+    L_Zone_Quality : REAL;
 END_VAR
 
 L_Raw_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
@@ -69,6 +74,41 @@ IF L_DeltaT < 3.0 THEN L_Quality := L_Quality + 1.0; END_IF;
 
 L_Improving := L_Quality < L_Last_Quality;
 L_Stable := L_Quality = 0.0;
+
+// --- zone-level feedback ---
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    L_Zone_Error := VI_Target_Temp - VI_Room_Temps[L_i];
+    L_Zone_Quality := 0.0;
+
+    IF L_Zone_Error > 1.0 THEN
+        L_Zone_Quality := L_Zone_Quality + 2.0;
+    END_IF;
+
+    IF VI_Floor_Temps[L_i] < (VI_Target_Temp - 2.0) THEN
+        L_Zone_Quality := L_Zone_Quality + 1.0;
+    END_IF;
+
+    GVL_HEATING_POLICY.G_Zone_Improving[L_i] := (L_Zone_Quality < GVL_HEATING_POLICY.G_Zone_Quality[L_i]);
+    GVL_HEATING_POLICY.G_Zone_Stable[L_i] := (L_Zone_Quality = 0.0);
+
+    IF GVL_HEATING_POLICY.G_Zone_Stable[L_i] THEN
+        GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] := 0;
+    ELSIF GVL_HEATING_POLICY.G_Zone_Improving[L_i] THEN
+        GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] := GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] - 1;
+    ELSIF L_Zone_Quality >= 3.0 THEN
+        GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] := GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] + 1;
+    END_IF;
+
+    IF GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] > 2 THEN
+        GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] := 2;
+    END_IF;
+
+    IF GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] < 0 THEN
+        GVL_HEATING_POLICY.G_Zone_Self_Level[L_i] := 0;
+    END_IF;
+
+    GVL_HEATING_POLICY.G_Zone_Quality[L_i] := L_Zone_Quality;
+END_FOR;
 
 IF VI_RootCause <> L_Last_Cause THEN
     L_Same_Cause_Since := VI_System_Time_MS;
