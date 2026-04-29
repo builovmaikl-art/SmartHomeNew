@@ -5,6 +5,7 @@ VAR
     fbSchedule : FB_Heating_Schedule_Preheat;
     fbThermal : FB_Heating_Thermal_Model;
     fbPredictive : FB_Heating_Predictive_Controller;
+    fbOptimizer : FB_Heating_Optimizer;
     fbTime : FB_Time_Service;
     L_i : INT;
     L_Room_Avg : REAL;
@@ -19,6 +20,9 @@ fbThermal();
 
 // --- PREDICTIVE ---
 fbPredictive();
+
+// --- OPTIMIZATION ---
+fbOptimizer();
 
 // --- INPUT AGGREGATION ---
 L_Room_Avg := 0.0;
