@@ -37,8 +37,9 @@ fbPolicyManager(
     VI_Floor_Temps := GVL_STATE.G_Floor_Temps
 );
 
-// schedule layer (deterministic, post-policy)
+// schedule layer
 fbSchedule(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS,
     VI_Day_Of_Week := GVL_STATUS.G_Day_Of_Week,
     VI_Enable := TRUE
