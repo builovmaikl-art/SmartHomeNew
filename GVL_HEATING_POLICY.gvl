@@ -9,4 +9,6 @@ VAR_GLOBAL
 
     G_Policy_Mode : E_Heating_Policy_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
     G_Policy_Block_Heating_Request : BOOL;
+    G_Policy_Target_Adjustment : REAL;
+    G_Policy_Priority_Multiplier : REAL := 1.0;
 END_VAR
