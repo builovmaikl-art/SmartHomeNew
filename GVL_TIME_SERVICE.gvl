@@ -3,6 +3,7 @@ VAR_GLOBAL
     // Published effective time for consumers
     G_Now_MS : UDINT;
     G_Time_Of_Day_MS : UDINT;
+    G_Current_TOD : TOD;
     G_Day_Of_Week : INT;
     G_Last_Now_MS : UDINT;
     G_Delta_MS : UDINT;
