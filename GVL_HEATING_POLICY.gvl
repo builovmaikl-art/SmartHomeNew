@@ -16,4 +16,10 @@ VAR_GLOBAL
     G_Policy_Feedback_Stable : BOOL;
     G_Policy_Feedback_Improving : BOOL;
     G_Policy_Feedback_Quality : REAL;
+
+    // NEW: zone intelligence
+    G_Zone_Quality : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Improving : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Stable : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Self_Level : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
 END_VAR
