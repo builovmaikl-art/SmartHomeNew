@@ -67,6 +67,7 @@ VAR
     L_Zone_Hold_MS : UDINT;
     L_Zone_Inertia : REAL;
     L_Zone_Thermal_Bias : REAL;
+    L_Time_To_Heat_MS_REAL : REAL;
 END_VAR
 
 L_Zone_Hold_MS := VI_Min_Hold_MS / 2;
@@ -83,6 +84,8 @@ IF NOT L_Predictive_Initialized THEN
         GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := 0.0;
         GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i] := 0.0;
         GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] := 0.0;
+        GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] := 0;
+        GVL_HEATING_POLICY.G_Zone_Preheat_Needed[L_i] := FALSE;
     END_FOR;
     L_Predictive_Initialized := TRUE;
 END_IF;
@@ -129,6 +132,21 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i] := L_Zone_Filtered_Trend[L_i] / L_Zone_Inertia;
     GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] := L_Zone_Error * L_Zone_Inertia;
 
+    IF (L_Zone_Error > 0.0) AND (GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i] > 0.001) THEN
+        L_Time_To_Heat_MS_REAL := (L_Zone_Error / GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i]) * 60000.0;
+        IF L_Time_To_Heat_MS_REAL > 7200000.0 THEN
+            GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] := 7200000;
+        ELSIF L_Time_To_Heat_MS_REAL < 0.0 THEN
+            GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] := 0;
+        ELSE
+            GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] := REAL_TO_UDINT(L_Time_To_Heat_MS_REAL);
+        END_IF;
+    ELSE
+        GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] := 0;
+    END_IF;
+
+    GVL_HEATING_POLICY.G_Zone_Preheat_Needed[L_i] := (GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i] > 1800000) AND (L_Zone_Error > 0.5);
+
     L_Zone_Thermal_Bias := 0.0;
     IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 2.0 THEN
         L_Zone_Thermal_Bias := 0.5;
@@ -136,6 +154,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         L_Zone_Thermal_Bias := 0.25;
     ELSIF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -1.0 THEN
         L_Zone_Thermal_Bias := -0.4;
+    END_IF;
+
+    IF GVL_HEATING_POLICY.G_Zone_Preheat_Needed[L_i] THEN
+        L_Zone_Thermal_Bias := L_Zone_Thermal_Bias + 0.4;
     END_IF;
 
     L_Zone_Desired_Adjustment := L_Zone_Thermal_Bias;
