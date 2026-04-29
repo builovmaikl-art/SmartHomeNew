@@ -30,16 +30,16 @@ def esc(s: str) -> str:
 
 
 def find_pou_block(xml_text: str, pou_name: str):
-    pattern = re.compile(rf'(?s)<pou\b[^>]*name="{re.escape(pou_name)}"[^>]*>.*?</pou>')
+    pattern = re.compile(rf'(?s)<pou\\b[^>]*name="{re.escape(pou_name)}"[^>]*>.*?</pou>')
     return pattern.search(xml_text)
 
 
 def extract_pou_parts(pou_xml: str):
     interface_m = re.search(r'(?s)<interface>(.*?)</interface>', pou_xml)
-    body_m = re.search(r'(?s)<body>\s*<ST>\s*<xhtml xmlns="http://www\.w3\.org/1999/xhtml">(.*?)</xhtml>\s*</ST>\s*</body>', pou_xml)
+    body_m = re.search(r'(?s)<body>\\s*<ST>\\s*<xhtml xmlns="http://www\\.w3\\.org/1999/xhtml">(.*?)</xhtml>\\s*</ST>\\s*</body>', pou_xml)
     adddata_m = re.search(r'(?s)<addData>(.*?)</addData>', pou_xml)
-    objectid_m = re.search(r'(?s)<data name="http://www\.3s-software\.com/plcopenxml/objectid" handleUnknown="discard">\s*<ObjectId>(.*?)</ObjectId>\s*</data>', pou_xml)
-    type_m = re.search(r'<pou\b[^>]*pouType="([^"]+)"', pou_xml)
+    objectid_m = re.search(r'(?s)<data name="http://www\\.3s-software\\.com/plcopenxml/objectid" handleUnknown="discard">\\s*<ObjectId>(.*?)</ObjectId>\\s*</data>', pou_xml)
+    type_m = re.search(r'<pou\\b[^>]*pouType="([^"]+)"', pou_xml)
 
     if not interface_m or not body_m or not adddata_m or not objectid_m or not type_m:
         raise RuntimeError("Failed to extract POU parts")
@@ -55,7 +55,7 @@ def extract_pou_parts(pou_xml: str):
 
 def remove_existing_method_data(adddata_inner: str) -> str:
     pattern = re.compile(
-        r'(?s)\s*<data name="http://www\.3s-software\.com/plcopenxml/method" handleUnknown="implementation">.*?</data>'
+        r'(?s)\\s*<data name="http://www\\.3s-software\\.com/plcopenxml/method" handleUnknown="implementation">.*?</data>'
     )
     return pattern.sub("", adddata_inner)
 
@@ -63,20 +63,20 @@ def remove_existing_method_data(adddata_inner: str) -> str:
 def rebuild_pou(xml_name: str, pou_type: str, interface_inner: str, cleaned_code: str, method_blocks: list[str], object_id: str) -> str:
     methods_xml = ""
     if method_blocks:
-        methods_xml = "\n" + "\n".join(method_blocks) + "\n"
+        methods_xml = "\\n" + "\\n".join(method_blocks) + "\\n"
     return (
-        f'      <pou name="{esc(xml_name)}" pouType="{pou_type}">\n'
-        f'        <interface>{interface_inner}</interface>\n'
-        f'        <body>\n'
-        f'          <ST>\n'
-        f'            <xhtml xmlns="http://www.w3.org/1999/xhtml">{cleaned_code}</xhtml>\n'
-        f'          </ST>\n'
-        f'        </body>\n'
+        f'      <pou name="{esc(xml_name)}" pouType="{pou_type}">\\n'
+        f'        <interface>{interface_inner}</interface>\\n'
+        f'        <body>\\n'
+        f'          <ST>\\n'
+        f'            <xhtml xmlns="http://www.w3.org/1999/xhtml">{cleaned_code}</xhtml>\\n'
+        f'          </ST>\\n'
+        f'        </body>\\n'
         f'        <addData>{methods_xml}'
-        f'          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">\n'
-        f'            <ObjectId>{object_id}</ObjectId>\n'
-        f'          </data>\n'
-        f'        </addData>\n'
+        f'          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">\\n'
+        f'            <ObjectId>{object_id}</ObjectId>\\n'
+        f'          </data>\\n'
+        f'        </addData>\\n'
         f'      </pou>'
     )
 
@@ -89,20 +89,20 @@ def replace_projectstructure_object(xml_text: str, xml_name: str, object_id: str
 
     body = fm.group(2)
     obj_pat = re.compile(
-        rf'(?s)\n?\s*<Object Name="{re.escape(xml_name)}" ObjectId="{re.escape(object_id)}"(?:\s*/>|>.*?</Object>)'
+        rf'(?s)\\n?\\s*<Object Name="{re.escape(xml_name)}" ObjectId="{re.escape(object_id)}"(?:\\s*/>|>.*?</Object>)'
     )
     om = obj_pat.search(body)
     if not om:
         raise RuntimeError(f"POUs object not found for {xml_name}")
 
     if methods:
-        repl = [f'\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}">']
+        repl = [f'\\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}">']
         for method in methods:
-            repl.append(f'\n            <Object Name="{esc(method["name"])}" ObjectId="{method["object_id"]}" />')
-        repl.append('\n          </Object>')
+            repl.append(f'\\n            <Object Name="{esc(method["name"])}" ObjectId="{method["object_id"]}" />')
+        repl.append('\\n          </Object>')
         replacement = "".join(repl)
     else:
-        replacement = f'\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}" />'
+        replacement = f'\\n          <Object Name="{esc(xml_name)}" ObjectId="{object_id}" />'
 
     new_body = body[:om.start()] + replacement + body[om.end():]
     return xml_text[:fm.start()] + fm.group(1) + new_body + fm.group(3) + xml_text[fm.end():]
@@ -113,7 +113,7 @@ def main():
         LOG_PATH.unlink()
 
     baseline = load_module("baseline_import_codesys_final", ROOT / "компилятор" / "import_codesys_FINAL.py")
-    methods_v2 = load_module("methods_v2_builder", ROOT / "steps" / "MASTER_PIPELINE" / "001_universal_pou_builder_METHODS_V2.py")
+    methods_v2 = load_module("methods_v2_builder", ROOT / "компилятор" / "001_universal_pou_builder_METHODS_V2.py")
 
     xml_text = INPUT_XML.read_text(encoding="utf-8", errors="ignore")
 
@@ -146,7 +146,6 @@ def main():
         old_pou = pm.group(0)
         parts = extract_pou_parts(old_pou)
 
-        # Clean code using baseline helpers so no VAR sections remain in body.
         _, code_without_vars = baseline.extract_sections(text_without_methods)
         cleaned_code = baseline.cleanup_code_text(xml_name, pou_type, code_without_vars)
 
@@ -156,7 +155,7 @@ def main():
             method_blocks.append(methods_v2.build_method_xml(
                 str(method["name"]),
                 str(method["return_type"]),
-                [],  # empty method interface except returnType
+                [],
                 str(method["code_text"]),
                 str(method["object_id"]),
             ))
