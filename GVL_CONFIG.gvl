@@ -78,6 +78,7 @@ VAR_GLOBAL
     G_Manifold_Thermal_Weight : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL := [1.0, 1.0, 0.8, 0.8, 0.5];
     G_Max_Active_Manifolds : INT := 3; // energy-management limit for simultaneous active manifolds
     G_Max_Thermal_Budget : REAL := 6.0; // simplified manifold thermal budget units
+    G_Policy_Min_Hold_MS : UDINT := 300000; // 5 min heating policy anti-oscillation hold
     G_DHW_Heating_Pump_In_Service : BOOL := TRUE;
     G_DHW_Circ_Pump_In_Service : BOOL := TRUE;
     G_Water_Valve_Exercise_Enabled : BOOL := TRUE;
