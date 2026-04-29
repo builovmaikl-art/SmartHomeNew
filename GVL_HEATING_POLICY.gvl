@@ -19,9 +19,14 @@ VAR_GLOBAL
     G_Policy_Predictive_Active : BOOL;
     G_Policy_Predictive_Adjustment : REAL;
 
-    // NEW: zone intelligence
+    // zone intelligence
     G_Zone_Quality : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Zone_Improving : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Stable : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Self_Level : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
+
+    // thermal model: 1.0 = normal inertia, >1 slower/heavier, <1 faster/lighter
+    G_Zone_Thermal_Inertia : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+    G_Zone_Thermal_Response : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Thermal_Demand : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
 END_VAR
