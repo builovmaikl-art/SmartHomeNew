@@ -65,6 +65,8 @@ VAR
     L_Zone_Last_Adjust_Accept_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
     L_Zone_Last_Level_Accept_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
     L_Zone_Hold_MS : UDINT;
+    L_Zone_Inertia : REAL;
+    L_Zone_Thermal_Bias : REAL;
 END_VAR
 
 L_Zone_Hold_MS := VI_Min_Hold_MS / 2;
@@ -79,6 +81,8 @@ IF NOT L_Predictive_Initialized THEN
         L_Zone_Last_Adjust_Accept_MS[L_i] := VI_System_Time_MS;
         L_Zone_Last_Level_Accept_MS[L_i] := VI_System_Time_MS;
         GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_i] := 0.0;
+        GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i] := 0.0;
+        GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] := 0.0;
     END_FOR;
     L_Predictive_Initialized := TRUE;
 END_IF;
@@ -118,11 +122,27 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Last_Zone_Temp[L_i] := VI_Room_Temps[L_i];
     L_Zone_Filtered_Trend[L_i] := (L_Zone_Filtered_Trend[L_i] * 0.8) + (L_Zone_Trend * 0.2);
 
-    L_Zone_Desired_Adjustment := 0.0;
+    L_Zone_Inertia := GVL_HEATING_POLICY.G_Zone_Thermal_Inertia[L_i];
+    IF L_Zone_Inertia < 0.2 THEN L_Zone_Inertia := 1.0; END_IF;
+    IF L_Zone_Inertia > 3.0 THEN L_Zone_Inertia := 3.0; END_IF;
+
+    GVL_HEATING_POLICY.G_Zone_Thermal_Response[L_i] := L_Zone_Filtered_Trend[L_i] / L_Zone_Inertia;
+    GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] := L_Zone_Error * L_Zone_Inertia;
+
+    L_Zone_Thermal_Bias := 0.0;
+    IF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 2.0 THEN
+        L_Zone_Thermal_Bias := 0.5;
+    ELSIF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] > 1.0 THEN
+        L_Zone_Thermal_Bias := 0.25;
+    ELSIF GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] < -1.0 THEN
+        L_Zone_Thermal_Bias := -0.4;
+    END_IF;
+
+    L_Zone_Desired_Adjustment := L_Zone_Thermal_Bias;
     IF (L_Zone_Filtered_Trend[L_i] < -0.03) AND (VI_Room_Temps[L_i] < (VI_Target_Temp + 0.5)) THEN
-        L_Zone_Desired_Adjustment := 0.8;
+        L_Zone_Desired_Adjustment := L_Zone_Desired_Adjustment + 0.8;
     ELSIF L_Zone_Filtered_Trend[L_i] > 0.03 THEN
-        L_Zone_Desired_Adjustment := -0.3;
+        L_Zone_Desired_Adjustment := L_Zone_Desired_Adjustment - 0.3;
     END_IF;
     IF L_Zone_Desired_Adjustment > 1.0 THEN L_Zone_Desired_Adjustment := 1.0; END_IF;
     IF L_Zone_Desired_Adjustment < -1.0 THEN L_Zone_Desired_Adjustment := -1.0; END_IF;
