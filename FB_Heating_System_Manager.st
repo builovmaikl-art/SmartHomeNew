@@ -44,7 +44,7 @@ END_VAR
 VAR
     L_i : INT;
     L_Target_Supply_Temp : REAL;
-    L_Zone_Active_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Demand_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     fbValveTestManager : FB_Valve_Test_Manager;
     L_IO_Failsafe_Active : BOOL;
     L_Freeze_Active : BOOL;
@@ -91,10 +91,6 @@ fbSafetyGate(
     VO_Freeze_Target_Supply => L_Freeze_Target_Supply
 );
 
-VO_Backup_Circulation_Pump := FALSE;
-VO_Electric_Heater_Enable := FALSE;
-VO_Freeze_Risk_Status := FALSE;
-
 fbSafeState(
     VI_Block_Normal_Heating := fbSafetyGate.VO_Block_Normal_Heating,
     VI_IO_Failsafe_Active := fbSafetyGate.VO_IO_Failsafe_Active,
@@ -127,6 +123,10 @@ IF fbSafeState.VO_Applied THEN
     VO_Freeze_Risk_Status := fbSafeState.VO_Freeze_Risk_Status;
     RETURN;
 END_IF;
+
+VO_Backup_Circulation_Pump := FALSE;
+VO_Electric_Heater_Enable := FALSE;
+VO_Freeze_Risk_Status := FALSE;
 
 IF L_Freeze_Active THEN
     L_Target_Supply_Temp := L_Freeze_Target_Supply;
@@ -163,7 +163,7 @@ GVL_STATE.G_Heating_Sensor_Fault := L_Sensor_Error;
 fbDemandMap(
     VI_Zone_Valves := VO_Zone_Valves,
     VI_Zone_Configs := VI_Zone_Configs,
-    VO_Zone_Active_Map => L_Zone_Active_Map
+    VO_Manifold_Demand_Map => L_Manifold_Demand_Map
 );
 
 fbManifoldControl(
@@ -172,7 +172,7 @@ fbManifoldControl(
     VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
     VI_Freeze_Mode_Active := L_Freeze_Active,
     VI_Target_Supply_Temp := L_Target_Supply_Temp,
-    VI_Any_Zone_Active := L_Zone_Active_Map,
+    VI_Any_Zone_Active := L_Manifold_Demand_Map,
     VI_Manifold_Pressures := VI_Manifold_Pressures,
     VI_Manifold_Currents := VI_Manifold_Currents,
     VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
