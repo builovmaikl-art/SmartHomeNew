@@ -5,6 +5,7 @@ VAR
 END_VAR
 
 fbPolicyManager(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_RootCause := GVL_STATE.G_Heating_RootCause,
     VI_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
