@@ -1,0 +1,96 @@
+=== DATE ===
+Wed Apr 29 07:22:56 UTC 2026
+
+=== PATCH PRG_System FINAL CLEANUP ===
+
+=== VERIFY HELPERS ===
+29:    fbSystemScenarioArb : FB_System_Scenario_Arbitration;
+30:    fbSystemGatewayIntent : FB_System_Gateway_Intent;
+31:    fbSystemPersist : FB_System_Persist_Manager;
+114:fbSystemPersist(
+193:fbSystemScenarioArb(
+260:fbSystemGatewayIntent(
+
+=== VERIFY OLD BLOCKS REMOVED ===
+271:fbGateway(
+
+=== LINE COUNT ===
+888 PRG_System.st
+
+=== DIFF ===
+diff --git a/PRG_System.st b/PRG_System.st
+index afc51c4..cd2f042 100644
+--- a/PRG_System.st
++++ b/PRG_System.st
+@@ -26,6 +26,10 @@ VAR
+     fbHMIInterface : FB_HMI_Interface;
+     fbFaultLogger : FB_Fault_Logger;
+     fbLogEvent : FB_LogEvent;
++    fbSystemScenarioArb : FB_System_Scenario_Arbitration;
++    fbSystemGatewayIntent : FB_System_Gateway_Intent;
++    fbSystemPersist : FB_System_Persist_Manager;
++
+     fbSystemInit : FB_System_Init;
+     fbSystemRecovery : FB_System_Recovery;
+     fbTimebase : FB_System_Timebase;
+@@ -106,6 +110,21 @@ fbSystemRecovery(
+     VIO_Recovery_Done := L_Recovery_Done
+ );
+ 
++// === Persist manager ===
++fbSystemPersist(
++    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
++    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
++    VIO_Persist_Buffer := L_Persist_Buffer,
++    VIO_Last_Written_Persist_Buffer := L_Last_Written_Persist_Buffer,
++    VIO_Persist_Buffer_Changed := L_Persist_Buffer_Changed,
++    VIO_Last_Persist_Write_MS := L_Last_Persist_Write_MS,
++    VIO_NVRAM_Cmd := L_NVRAM_Cmd,
++    VIO_NVRAM_Offset := L_NVRAM_Offset,
++    VIO_NVRAM_Done := L_NVRAM_Done,
++    VIO_NVRAM_Err := L_NVRAM_Err,
++    VIO_NVRAM_ErrID := L_NVRAM_ErrID
++);
++
+ // NVRAM CONTROLLED WRITE ENABLED (step 8B)
+ 
+ // 1. Обновление системного времени
+@@ -170,6 +189,20 @@ IF L_Scenario_Idx < 0 OR L_Scenario_Idx > 7 THEN
+     L_Scenario_Idx := 0;
+ END_IF;
+ 
++// === Scenario arbitration ===
++fbSystemScenarioArb(
++    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
++    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
++    VI_System_Mode := GVL_STATE.G_System_Mode,
++    VI_Security_Armed := GVL_ALARM.G_Security_Armed,
++    VIO_Scenario_Req_Operator := L_Scenario_Req_Operator,
++    VIO_Scenario_Req_Gateway := L_Scenario_Req_Gateway,
++    VIO_Scenario_Req_Rule := L_Scenario_Req_Rule,
++    VIO_Scenario_Req_Final := L_Scenario_Req_Final,
++    VIO_Scenario_Intent := L_Scenario_Intent,
++    VIO_Scenario_Source := L_Scenario_Source
++);
++
+ // 6. Симуляция присутствия
+ fbSimulationManager(
+     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+@@ -223,6 +256,17 @@ L_Gateway_Writes_Allowed :=
+     NOT GVL_STATUS.G_Diagnostics.Operator_Action_Blocked AND
+     NOT GVL_STATUS.G_Diagnostics.User_Access_Denied;
+ 
++// === Gateway intent ===
++fbSystemGatewayIntent(
++    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
++    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
++    VI_Gateway_Writes_Allowed := L_Gateway_Writes_Allowed,
++    VIO_FloorHeating_Temps := L_FloorTemps_8,
++    VIO_Zone_Valve_States := L_Zone_Valves_8,
++    VIO_Lighting_Base_Levels := L_Lighting_32,
++    VIO_Scenario_Req_Gateway := L_Scenario_Req_Gateway
++);
++
+ // 13. Интерфейс шлюза (Modbus TCP)
+ fbGateway(
+     
