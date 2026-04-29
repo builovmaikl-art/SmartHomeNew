@@ -1,6 +1,6 @@
-DUT_FILES=78
+DUT_FILES=79
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=24
+ENUM_INSERTED=25
 STRUCT_INSERTED=54
 STRUCT_FIELDS_TOTAL=479
 STRUCT_FIELDS_WITH_INITIALIZER=137
@@ -13,6 +13,7 @@ XML_ARRAYVALUE_TAGS=24
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
 E_Behavior_Mode.dut: ENUM E_Behavior_Mode values=4
 E_Gateway_Command_Type.dut: ENUM E_Gateway_Command_Type values=12
+E_Heating_Policy_Mode.dut: ENUM E_Heating_Policy_Mode values=6
 E_Heating_RootCause.dut: ENUM E_Heating_RootCause values=15
 E_Lifetime_Device_Type.dut: ENUM E_Lifetime_Device_Type values=2
 E_Outdoor_Mode.dut: ENUM E_Outdoor_Mode values=5
