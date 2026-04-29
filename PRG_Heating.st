@@ -67,6 +67,13 @@ CASE L_Last_Mode OF
     ELSE GVL_STATE.G_Target_Temperature := 20.0;
 END_CASE;
 
+GVL_STATE.G_Target_Temperature := GVL_STATE.G_Target_Temperature + GVL_HEATING_POLICY.G_Policy_Target_Adjustment;
+IF GVL_STATE.G_Target_Temperature < 5.0 THEN
+    GVL_STATE.G_Target_Temperature := 5.0;
+ELSIF GVL_STATE.G_Target_Temperature > 26.0 THEN
+    GVL_STATE.G_Target_Temperature := 26.0;
+END_IF;
+
 // ============================================================
 // S1.5 DECISION CONTEXT / THERMAL ALLOCATION
 // ============================================================
@@ -89,6 +96,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled AND GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request[L_Zone_ID] THEN
             L_Manifold_Adjusted_Priority[L_j] := L_Manifold_Adjusted_Priority[L_j] + GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost;
         END_IF;
+
+        // Reactive policy multiplier
+        L_Manifold_Adjusted_Priority[L_j] := TO_INT(TO_REAL(L_Manifold_Adjusted_Priority[L_j]) * GVL_HEATING_POLICY.G_Policy_Priority_Multiplier);
 
         // Lower bound
         IF L_Manifold_Adjusted_Priority[L_j] < 1 THEN
