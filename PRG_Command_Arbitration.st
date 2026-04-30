@@ -26,12 +26,9 @@ GVL_COMMAND_SHADOW.G_Wicket_Open := FALSE;
 
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 
-// Recovery gating (partial lock during recovery)
-IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
-    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
-END_IF;
-
+// ============================================================
+// SAFETY OVERRIDE (highest priority)
+// ============================================================
 CASE L_Mode OF
 
     FIRE:
@@ -65,6 +62,30 @@ CASE L_Mode OF
         GVL_COMMAND_SHADOW.G_Wicket_Open := TRUE;
 
     NORMAL:
+        // ============================================================
+        // BEHAVIOR LAYER (only if no safety)
+        // ============================================================
+
+        // Energy save (future: Away mode)
+        IF GVL_INTENT_BEHAVIOR.I_Request_Energy_Save_Mode THEN
+            GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+        END_IF;
+
+        // Ventilation boost
+        IF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
+            GVL_COMMAND_SHADOW.G_Vent_Block := FALSE;
+        END_IF;
+
+        // Access secure mode (future)
+        IF GVL_INTENT_BEHAVIOR.I_Request_Access_Secure_Mode THEN
+            GVL_COMMAND_SHADOW.G_Lock_1_Close := TRUE;
+            GVL_COMMAND_SHADOW.G_Lock_2_Close := TRUE;
+        END_IF;
+
+        // ============================================================
+        // USER INTENT (lowest priority override inside NORMAL)
+        // ============================================================
+
         GVL_COMMAND_SHADOW.G_Gate_Open := GVL_INTENT_USER.I_Gate_Open_Request;
         GVL_COMMAND_SHADOW.G_Wicket_Open := GVL_INTENT_USER.I_Wicket_Open_Request;
         GVL_COMMAND_SHADOW.G_Lock_1_Open := GVL_INTENT_USER.I_Lock_1_Open_Request;
@@ -73,5 +94,13 @@ CASE L_Mode OF
         GVL_COMMAND_SHADOW.G_Lock_2_Close := GVL_INTENT_USER.I_Lock_2_Close_Request;
 
 END_CASE;
+
+// ============================================================
+// RECOVERY GATING (after behavior)
+// ============================================================
+IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
+    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Command_Arbitration <<<
