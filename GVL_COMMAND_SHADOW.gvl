@@ -10,7 +10,7 @@ VAR_GLOBAL
     G_Vent_PV3_Boost : BOOL := FALSE;
     G_Exhaust_100_Req : BOOL := FALSE;
     G_Vent_Stop : BOOL := FALSE;
-    G_Vent_Block : BOOL := FALSE; // Final ventilation block produced by command arbitration.
+    G_Vent_Block : BOOL := FALSE;
 
     // Heating domain command gates
     G_Heating_Block : BOOL := FALSE;
@@ -18,7 +18,9 @@ VAR_GLOBAL
     G_Heating_Emergency_Stop : BOOL := FALSE;
     G_Heating_Gas_Safety_Stop : BOOL := FALSE;
 
-    // Water
+    // Water domain command gates
+    G_Water_Block : BOOL := FALSE;
+    G_Water_Emergency_Stop : BOOL := FALSE;
     G_Close_Valve_35 : BOOL := FALSE;
     G_Close_Valve_36 : BOOL := FALSE;
 
