@@ -13,11 +13,10 @@ VAR
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
 END_VAR
 
-// === LOCAL CONTEXT ===
 fbLocalContext(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
-    VI_Safety_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
-    VI_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched,
+    VI_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop,
+    VI_Heating_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop,
     VI_DHW_Block := GVL_COMMAND_SHADOW.G_Heating_DHW_Block,
     VI_Freeze_Request := GVL_STATE.G_Freeze_Request,
     VI_Preheat_Request := GVL_STATE.G_Preheat_Request,
@@ -28,7 +27,6 @@ fbLocalContext(
 
 GVL_STATE.G_Target_Temperature := fbLocalContext.VO_Target_Temperature;
 
-// === THERMAL ALLOCATION ===
 fbThermalAllocation(
     VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
     VI_Circuit_To_Zone := GVL_CONFIG.G_Heating_Circuit_To_Zone,
@@ -47,7 +45,6 @@ fbThermalAllocation(
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 );
 
-// === ORCHESTRATION ===
 fbHeatingOrchestration(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
@@ -98,7 +95,6 @@ fbHeatingOrchestration(
     VIO_DHW_Status := GVL_STATUS.G_DHW_Status
 );
 
-// === POST ===
 fbHeatingDiagnostics(VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS);
 fbHeatingMaintenanceGating();
 fbHeatingFreezeHardware();
