@@ -13,15 +13,26 @@ STRUCT
     Activations : UDINT;
     Success_Count : UDINT;
     Failure_Count : UDINT;
-
     Success_Rate : REAL;
     Avg_Result_Value : REAL;
-
     Stability_Counter : INT;
 END_STRUCT
 END_TYPE
 
+TYPE ST_Zone_Adapt_State :
+STRUCT
+    Zone_Weight : REAL;
+    Confidence : REAL;
+    Activations : UDINT;
+    Success_Count : UDINT;
+    Failure_Count : UDINT;
+    Success_Rate : REAL;
+    Avg_Result_Value : REAL;
+END_STRUCT
+END_TYPE
+
 VAR_GLOBAL
+    // Global scenario weights (fallback / whole-house behavior)
     G_Behavior_Weights : ST_Behavior_Weights := (
         W_Comfort := 1.0,
         W_Night := 1.0,
@@ -32,7 +43,14 @@ VAR_GLOBAL
 
     G_Scenario_Stats : ARRAY[E_System_Reason_Code] OF ST_Scenario_Stats;
 
+    // Zone-level adaptation currently used by humidity/ventilation behavior.
+    G_VentBoost_Zone_Adapt : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Zone_Adapt_State;
+
     G_Adapt_Enabled : BOOL := TRUE;
     G_Adapt_Learning_Rate : REAL := 0.05;
     G_Adapt_Update_Threshold : INT := 5;
+
+    // Confidence gate: low-confidence samples update stats but do not strongly move weights.
+    G_Adapt_Min_Confidence : REAL := 0.30;
+    G_Adapt_Default_Zone_Weight : REAL := 1.0;
 END_VAR
