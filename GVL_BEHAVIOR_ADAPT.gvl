@@ -1,3 +1,11 @@
+TYPE E_Adapt_Profile :
+(
+    ADAPT_PROFILE_STABLE,
+    ADAPT_PROFILE_BALANCED,
+    ADAPT_PROFILE_AGGRESSIVE
+);
+END_TYPE
+
 TYPE ST_Behavior_Weights :
 STRUCT
     W_Comfort : REAL;
@@ -42,8 +50,13 @@ VAR_GLOBAL
     );
 
     G_Scenario_Stats : ARRAY[E_System_Reason_Code] OF ST_Scenario_Stats;
-
     G_VentBoost_Zone_Adapt : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Zone_Adapt_State;
+
+    // Tuning profile selector.
+    // Stable: slow learning, long memory.
+    // Balanced: default recommended behavior.
+    // Aggressive: fast learning, shorter memory.
+    G_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
 
     G_Adapt_Enabled : BOOL := TRUE;
     G_Adapt_Learning_Rate : REAL := 0.05;
