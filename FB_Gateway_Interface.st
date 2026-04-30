@@ -21,9 +21,9 @@ VAR_INPUT
     // Конфигурация
 END_VAR
 VAR_IN_OUT
-    VI_FloorHeating_Temps       : ARRAY[1..8] OF REAL;
+    VI_FloorHeating_Temps       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     VI_Room_Temps               : ARRAY[1..16] OF REAL;
-    VI_Zone_Valve_States        : ARRAY[1..8] OF BOOL;
+    VI_Zone_Valve_States        : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     VI_Manifold_Pressures       : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     VI_Manifold_Pump_States     : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     VI_Lighting_Base_Levels     : ARRAY[1..32] OF BYTE;
@@ -131,18 +131,18 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
     VO_Modbus_Registers[0] := L_tmp_word;
 
     // 1-16: Температуры пола (x10)
-    FOR L_i := 1 TO 8 DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         VO_Modbus_Registers[L_i] := TO_WORD(TO_INT(VI_FloorHeating_Temps[L_i] * 10.0));
     END_FOR;
 
-    // 17-310102: Температуры помещений (x10)
+    // 17-32: Температуры помещений (x10)
     FOR L_i := 1 TO 16 DO
         VO_Modbus_Registers[16 + L_i] := TO_WORD(TO_INT(VI_Room_Temps[L_i] * 10.0));
     END_FOR;
 
-    // 310103: Состояние клапанов зон (битовая маска 1-16)
+    // 33: Состояние клапанов зон (битовая маска 1-16)
     L_tmp_word := 0;
-    FOR L_i := 1 TO 8 DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF VI_Zone_Valve_States[L_i] THEN
             L_tmp_word := L_tmp_word OR SHL(TO_WORD(1), L_i - 1);
         END_IF;
@@ -154,7 +154,7 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
         VO_Modbus_Registers[33 + L_i] := TO_WORD(TO_INT(VI_Manifold_Pressures[L_i] * 100.0));
     END_FOR;
 
-    // 40-55: Базовое освещение
+    // 40-71: Базовое освещение
     FOR L_i := 1 TO 32 DO
         VO_Modbus_Registers[39 + L_i] := TO_WORD(VI_Lighting_Base_Levels[L_i]);
     END_FOR;
@@ -292,8 +292,8 @@ IF L_Has_Command_To_Process THEN
             VO_PIN_Code := L_Process_Command.target_pin;
             VO_2FA_Code_In := L_Process_Command.target_2fa_code;
             VO_HMI_Status_Message := 'Gateway: Запрос охраны принят';
-        E_Gateway_Command_Type.CMD_SET_TEMP: // Управление температурой
-            IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= 32) THEN
+        E_Gateway_Command_Type.CMD_SET_TEMP: // Управление температурой теплого пола
+            IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS) THEN
                 VO_Set_Temp_Req := TRUE;
                 VO_Target_Zone := L_Process_Command.target_zone;
                 VO_Target_Temp := L_Process_Command.target_value;
