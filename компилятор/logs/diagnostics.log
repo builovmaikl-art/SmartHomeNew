@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2000
+total 2004
 -rw-r--r--  1 runner runner  13067 Apr 30 22:09 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 13 runner runner  20480 Apr 30 22:09 .
 drwxr-xr-x  3 runner runner   4096 Apr 30 22:09 ..
@@ -171,7 +171,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 22:09 .github
 -rw-r--r--  1 runner runner    139 Apr 30 22:09 GVL_COMMAND_VERIFY.gvl
 -rw-r--r--  1 runner runner  10625 Apr 30 22:09 GVL_CONFIG.gvl
 -rw-r--r--  1 runner runner   7041 Apr 30 22:09 GVL_CONSTANTS.gvl
--rw-r--r--  1 runner runner   1707 Apr 30 22:09 GVL_DEBUG_VIEW.gvl
+-rw-r--r--  1 runner runner   1764 Apr 30 22:09 GVL_DEBUG_VIEW.gvl
 -rw-r--r--  1 runner runner    120 Apr 30 22:09 GVL_EVENT.gvl
 -rw-r--r--  1 runner runner   1144 Apr 30 22:09 GVL_EXPLAINABILITY.gvl
 -rw-r--r--  1 runner runner    821 Apr 30 22:09 GVL_GATEWAY.gvl
@@ -329,7 +329,7 @@ drwxr-xr-x  5 runner runner   4096 Apr 30 22:09 компилятор
 -rw-r--r--  1 runner runner    841 Apr 30 22:09 ошибки компиляции.txt
 
 === compiler dir ===
-total 588
+total 592
 drwxr-xr-x  5 runner runner   4096 Apr 30 22:09 .
 drwxr-xr-x 13 runner runner  20480 Apr 30 22:09 ..
 -rw-r--r--  1 runner runner  21153 Apr 30 22:09 001_universal_pou_builder_METHODS_V2.py
@@ -352,4 +352,4 @@ total 1080
 drwxr-xr-x 2 runner runner    4096 Apr 30 22:09 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 22:09 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 22:09 .gitkeep
--rw-r--r-- 1 runner runner 1095436 Apr 30 22:09 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1097350 Apr 30 22:09 RESULT_methods_clean.xml
