@@ -21,6 +21,4 @@ fbStateTraceLog(
     VO_Last_Change_Time => L_Last_State_Trace_MS
 );
 
-GVL_STATUS.G_Diagnostics.Last_State_Change_MS := L_Last_State_Trace_MS;
-
 END_PROGRAM
