@@ -1,0 +1,10 @@
+VAR_GLOBAL
+    I_Request_Night_Mode : BOOL := FALSE;
+    I_Request_Away_Mode : BOOL := FALSE;
+    I_Request_Comfort_Mode : BOOL := FALSE;
+    I_Request_Energy_Save_Mode : BOOL := FALSE;
+    I_Request_Preheat : BOOL := FALSE;
+    I_Request_Ventilation_Boost : BOOL := FALSE;
+    I_Target_Comfort_Temperature : REAL := 21.0;
+    I_Last_Update_MS : UDINT := 0;
+END_VAR
