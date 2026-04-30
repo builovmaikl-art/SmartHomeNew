@@ -13,6 +13,6 @@ fbTime();
 // Legacy consumers of GVL_STATUS.G_System_Time_MS receive the same canonical time.
 GVL_STATUS.G_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS;
 GVL_STATUS.G_Current_TOD := GVL_TIME_SERVICE.G_Current_TOD;
-GVL_STATUS.G_Current_Day := GVL_TIME_SERVICE.G_Day_Of_Week;
+GVL_STATUS.G_Current_Day := TO_UINT(GVL_TIME_SERVICE.G_Day_Of_Week);
 
 END_PROGRAM
