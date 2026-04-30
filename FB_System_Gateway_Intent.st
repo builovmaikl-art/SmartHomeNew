@@ -1,7 +1,7 @@
 // ==============================================================================
 // System gateway intent helper
 //
-// Internal helper for PRG_System.
+// Internal helper for PRG_System / extracted system gateway contour.
 // Owns gateway FB call, user intent publication, gateway command gates,
 // and allowed configuration/time/scenario writes.
 // ==============================================================================
@@ -13,8 +13,8 @@ VAR_INPUT
 END_VAR
 
 VAR_IN_OUT
-    VIO_FloorHeating_Temps : ARRAY[1..8] OF REAL;
-    VIO_Zone_Valve_States : ARRAY[1..8] OF BOOL;
+    VIO_FloorHeating_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    VIO_Zone_Valve_States : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     VIO_Lighting_Base_Levels : ARRAY[1..32] OF BYTE;
     VIO_Scenario_Req_Gateway : E_SCENARIO_TYPE;
 END_VAR
