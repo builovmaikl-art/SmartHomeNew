@@ -7,11 +7,23 @@ VAR
     fbHeatingDiagnostics : FB_Heating_Diagnostics;
     fbHeatingMaintenanceGating : FB_Heating_Maintenance_Gating;
     fbHeatingFreezeHardware : FB_Heating_Freeze_Hardware;
-    fbHeatingAdapterCopyOut : FB_Heating_Adapter_CopyOut;
     fbHeatingRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
     fbOutputProjection : FB_Heating_Output_Projection;
 
+    // Local actuator buffers (no direct writes to GVL_STATE)
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    L_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    L_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    L_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+    L_Backup_Circulation_Pump : BOOL;
+    L_Electric_Heater_Enable : BOOL;
+    L_Freeze_Risk_Status : BOOL;
+    L_Manifold_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Manifold_Status;
+    L_Boiler_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_Boiler_Status;
+    L_DHW_Heating_Pump : BOOL;
+    L_DHW_Circ_Pump : BOOL;
+    L_DHW_Status : ST_DHW_Status;
 END_VAR
 
 fbLocalContext(
@@ -81,43 +93,41 @@ fbHeatingOrchestration(
     VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
     VI_Block_Heating := GVL_COMMAND_SHADOW.G_Heating_Block,
     VI_Manifold_Enabled := fbThermalAllocation.VO_Manifold_Enabled,
-    VIO_Manifold_Valves := GVL_STATE.G_Manifold_Valves,
-    VIO_Manifold_Pumps := GVL_STATE.G_Manifold_Pumps,
+    VIO_Manifold_Valves := L_Manifold_Valves,
+    VIO_Manifold_Pumps := L_Manifold_Pumps,
     VIO_Zone_Valves := L_Zone_Valves,
-    VIO_Boiler_OT_Enable := GVL_STATE.G_Boiler_OT_Enable,
-    VIO_Boiler_OT_Setpoint := GVL_STATE.G_Boiler_OT_Setpoint,
-    VIO_Backup_Circulation_Pump := GVL_STATE.G_Backup_Circulation_Pump,
-    VIO_Electric_Heater_Enable := GVL_STATE.G_Electric_Heater_Enable,
-    VIO_Freeze_Risk_Status := GVL_STATE.G_Safety_Freeze_Risk,
-    VIO_Manifold_Status := GVL_STATUS.G_Manifold_Status,
-    VIO_Boiler_Status := GVL_STATUS.G_Boiler_Status,
-    VIO_DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump,
-    VIO_DHW_Circ_Pump := GVL_STATE.G_DHW_Circ_Pump,
-    VIO_DHW_Status := GVL_STATUS.G_DHW_Status
+    VIO_Boiler_OT_Enable := L_Boiler_OT_Enable,
+    VIO_Boiler_OT_Setpoint := L_Boiler_OT_Setpoint,
+    VIO_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+    VIO_Electric_Heater_Enable := L_Electric_Heater_Enable,
+    VIO_Freeze_Risk_Status := L_Freeze_Risk_Status,
+    VIO_Manifold_Status := L_Manifold_Status,
+    VIO_Boiler_Status := L_Boiler_Status,
+    VIO_DHW_Heating_Pump := L_DHW_Heating_Pump,
+    VIO_DHW_Circ_Pump := L_DHW_Circ_Pump,
+    VIO_DHW_Status := L_DHW_Status
 );
 
 fbHeatingDiagnostics(VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS);
 fbHeatingMaintenanceGating();
 fbHeatingFreezeHardware();
 
-fbHeatingAdapterCopyOut(
-    VI_Zone_Valves := L_Zone_Valves,
-    VIO_Zone_Valves_State := GVL_STATE.G_Zone_Valves
-);
-
 fbHeatingRootCauseDiagnostics(
     VI_Zone_Valves := L_Zone_Valves
 );
 
-// === NEW: OUTPUT PROJECTION ===
+// Preserve only DHW feedback for next cycle
+GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
+
+// Output projection
 fbOutputProjection(
-    VI_Zone_Valves := GVL_STATE.G_Zone_Valves,
-    VI_Manifold_Pumps := GVL_STATE.G_Manifold_Pumps,
-    VI_Manifold_Valves := GVL_STATE.G_Manifold_Valves,
-    VI_DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump,
-    VI_DHW_Circ_Pump := GVL_STATE.G_DHW_Circ_Pump,
-    VI_Backup_Circulation_Pump := GVL_STATE.G_Backup_Circulation_Pump,
-    VI_Electric_Heater_Enable := GVL_STATE.G_Electric_Heater_Enable
+    VI_Zone_Valves := L_Zone_Valves,
+    VI_Manifold_Pumps := L_Manifold_Pumps,
+    VI_Manifold_Valves := L_Manifold_Valves,
+    VI_DHW_Heating_Pump := L_DHW_Heating_Pump,
+    VI_DHW_Circ_Pump := L_DHW_Circ_Pump,
+    VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+    VI_Electric_Heater_Enable := L_Electric_Heater_Enable
 );
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
