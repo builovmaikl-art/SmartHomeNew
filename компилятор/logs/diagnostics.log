@@ -215,7 +215,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 22:13 .github
 -rw-r--r--  1 runner runner   1032 Apr 30 22:13 PRG_Behavior_Adapt_Profile.st
 -rw-r--r--  1 runner runner   1617 Apr 30 22:13 PRG_Command_Arbitration.st
 -rw-r--r--  1 runner runner   2179 Apr 30 22:13 PRG_Command_Verifier.st
--rw-r--r--  1 runner runner   3272 Apr 30 22:13 PRG_Debug_View.st
+-rw-r--r--  1 runner runner   3551 Apr 30 22:13 PRG_Debug_View.st
 -rw-r--r--  1 runner runner   3111 Apr 30 22:13 PRG_Explainability.st
 -rw-r--r--  1 runner runner   6414 Apr 30 22:13 PRG_Heating.st
 -rw-r--r--  1 runner runner   2478 Apr 30 22:13 PRG_Heating_Policy_Manager.st
@@ -352,4 +352,4 @@ total 1080
 drwxr-xr-x 2 runner runner    4096 Apr 30 22:13 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 22:13 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 22:13 .gitkeep
--rw-r--r-- 1 runner runner 1097426 Apr 30 22:13 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1097573 Apr 30 22:13 RESULT_methods_clean.xml
