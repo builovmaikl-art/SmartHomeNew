@@ -18,7 +18,7 @@ MAIN
   04 PRG_System_Intent
   05 PRG_System_Health
   06 PRG_System_Alarm_Gateway
-  07 PRG_Test_Scenario_Runner
+  07 PRG_Test_Scenario_Runner        [TEMP TEST PRG — ignored for runtime architecture audit]
   08 PRG_System_Scenario_Rules
   09 PRG_System_Access_Maintenance
   10 PRG_System_BlackBox
@@ -43,6 +43,12 @@ MAIN
   29 PRG_IO_Write
 ```
 
+## Audit scope note
+
+`PRG_Test_Scenario_Runner` is a temporary test PRG. It is present in `MAIN.st`, but it is intentionally excluded from normal runtime architecture assessment unless the audit specifically targets test infrastructure or test-mode leakage.
+
+For system behavior documentation, the effective runtime architecture path is evaluated as if this block is outside the production behavior model.
+
 ## High-level layer interpretation
 
 ```text
@@ -58,15 +64,7 @@ Time base
 
 ## First-order observations
 
-### 1. `PRG_Test_Scenario_Runner` is in live MAIN pipeline
-
-The test runner is executed before scenario rules.
-
-This can be valid if it is explicitly gated by test flags, but it must be documented because it can write scenario-related state during the normal cycle when enabled.
-
-Audit status: HYPOTHESIS / needs deep test-layer review.
-
-### 2. Security is executed after command arbitration
+### 1. Security is executed after command arbitration
 
 `PRG_Command_Arbitration` runs before `PRG_Security`.
 
@@ -80,7 +78,7 @@ Potential consequence:
 
 Audit status: CONFIRMED_STATIC order dependency.
 
-### 3. Domain control runs after command arbitration
+### 2. Domain control runs after command arbitration
 
 Heating, ventilation, lighting run after command arbitration and before IO write.
 
@@ -90,7 +88,7 @@ However command arbitration also affects outputs later written by `PRG_IO_Write`
 
 Audit status: HYPOTHESIS.
 
-### 4. Observability blocks run before several behavior blocks
+### 3. Observability blocks run before several behavior blocks
 
 History, diagnostics, evacuation, trend, runtime base run before presence, simulation, heating policy, mode, coordinator, policy, command, security, and domains.
 
@@ -102,7 +100,7 @@ Potential consequence:
 
 Audit status: HYPOTHESIS.
 
-### 5. IO write is last
+### 4. IO write is last
 
 `PRG_IO_Write` is the final actuation projection.
 
@@ -144,6 +142,7 @@ PRG_System_Alarm_Gateway
 
 PRG_Test_Scenario_Runner
   -> no FB calls
+  -> TEMP TEST PRG, ignored for production architecture assessment
 
 PRG_System_Scenario_Rules
   -> FB_Rule_Engine
