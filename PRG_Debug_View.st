@@ -39,17 +39,22 @@ GVL_DEBUG_VIEW.D_Vent_Why_Stopped := GVL_EXPLAINABILITY.G_Vent_Why_Stopped;
 GVL_DEBUG_VIEW.D_Water_Why_Closed := GVL_EXPLAINABILITY.G_Water_Why_Closed;
 GVL_DEBUG_VIEW.D_Access_Why_Opened := GVL_EXPLAINABILITY.G_Access_Why_Opened;
 
-// current profile
 GVL_DEBUG_VIEW.D_Adapt_Profile := GVL_BEHAVIOR_ADAPT.G_Adapt_Profile;
+
+IF GVL_BEHAVIOR_ADAPT.G_Adapt_Profile = ADAPT_PROFILE_STABLE THEN
+    GVL_DEBUG_VIEW.D_Adapt_Profile_Text := 'STABLE';
+ELSIF GVL_BEHAVIOR_ADAPT.G_Adapt_Profile = ADAPT_PROFILE_BALANCED THEN
+    GVL_DEBUG_VIEW.D_Adapt_Profile_Text := 'BALANCED';
+ELSE
+    GVL_DEBUG_VIEW.D_Adapt_Profile_Text := 'AGGRESSIVE';
+END_IF;
 
 L_MaxWeight := 0.0;
 L_MinWeight := 9999.0;
 GVL_DEBUG_VIEW.D_Main_VentBoost_Zone := 0;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
-
     L_Weight := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Zone_Weight;
-
     IF L_Weight > L_MaxWeight THEN
         L_MaxWeight := L_Weight;
         GVL_DEBUG_VIEW.D_Main_VentBoost_Zone := L_i;
@@ -57,11 +62,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         GVL_DEBUG_VIEW.D_Main_VentBoost_Zone_Confidence :=
             GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Confidence;
     END_IF;
-
     IF L_Weight < L_MinWeight THEN
         L_MinWeight := L_Weight;
     END_IF;
-
 END_FOR;
 
 GVL_DEBUG_VIEW.D_Max_VentBoost_Zone_Weight := L_MaxWeight;
@@ -72,13 +75,8 @@ IF L_Index < 1 THEN
     L_Index := 200;
 END_IF;
 
-GVL_DEBUG_VIEW.D_Last_Trace_Text :=
-    GVL_TRACE.G_Trace_Buffer[L_Index].Text;
-
-GVL_DEBUG_VIEW.D_Last_Trace_Time_MS :=
-    GVL_TRACE.G_Trace_Buffer[L_Index].Timestamp_MS;
-
-GVL_DEBUG_VIEW.D_Last_Trace_Reason :=
-    GVL_TRACE.G_Trace_Buffer[L_Index].Reason_Code;
+GVL_DEBUG_VIEW.D_Last_Trace_Text := GVL_TRACE.G_Trace_Buffer[L_Index].Text;
+GVL_DEBUG_VIEW.D_Last_Trace_Time_MS := GVL_TRACE.G_Trace_Buffer[L_Index].Timestamp_MS;
+GVL_DEBUG_VIEW.D_Last_Trace_Reason := GVL_TRACE.G_Trace_Buffer[L_Index].Reason_Code;
 
 END_PROGRAM
