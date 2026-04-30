@@ -1,10 +1,19 @@
 VAR_GLOBAL
+    // Behavior / Scenario Engine intent layer.
+    // Scenario Engine writes here; Command Arbitration may consume it.
+
     I_Request_Night_Mode : BOOL := FALSE;
     I_Request_Away_Mode : BOOL := FALSE;
     I_Request_Comfort_Mode : BOOL := FALSE;
     I_Request_Energy_Save_Mode : BOOL := FALSE;
     I_Request_Preheat : BOOL := FALSE;
     I_Request_Ventilation_Boost : BOOL := FALSE;
+    I_Request_Access_Secure_Mode : BOOL := FALSE;
+
     I_Target_Comfort_Temperature : REAL := 21.0;
+    I_Behavior_Priority : INT := 0;
+
+    I_Reason_Code : E_System_Reason_Code := REASON_NONE;
+    I_Reason_Text : STRING(255) := 'No behavior scenario active';
     I_Last_Update_MS : UDINT := 0;
 END_VAR
