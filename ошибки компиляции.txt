@@ -1,8 +1,39 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-                генерировать код...
-[ERROR]         Без имени3: PRG_System(Строка 60, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL' в тип 'ARRAY [1..8] OF BOOL'
-[ERROR]         Без имени3: PRG_System(Строка 87, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..8] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL'
-[ERROR]         Без имени3: PRG_Heating(Строка 93, Столбец 1 (Реализ.)): C0201:  Тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL' не совпадает с типом 'ARRAY [1..8] OF REAL' VAR_IN_OUT 'VI_Floor_Temps'
-[ERROR]         Без имени3: PRG_Heating(Строка 96, Столбец 1 (Реализ.)): C0201:  Тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config' не совпадает с типом 'ARRAY [1..8] OF ST_FloorHeating_Circuit_Config' VAR_IN_OUT 'VI_Zone_Configs'
-                Компиляция завершена -- 4 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени4: FB_Time_Service(Строка 19, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'UDINT'
+[ERROR]         Без имени4: FB_Time_Service(Строка 19, Столбец 1 (Реализ.)): C0007:  Вместо 'UDINT' требуется выражение
+[ERROR]         Без имени4: FB_Time_Service(Строка 41, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'INT'
+[ERROR]         Без имени4: FB_Time_Service(Строка 41, Столбец 1 (Реализ.)): C0007:  Вместо 'INT' требуется выражение
+[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'METHOD'
+[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'Calculate'
+[WARNING]       Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0118:  Метка 'CALCULATE' не используется
+[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'DWORD'
+[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 3, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'Calculate'
+[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 4, Столбец 1 (Реализ.)): C0190:  Вместо конца POU требуется ';'
+[WARNING]       Без имени4: FB_CRC32_Calculator(Строка 4, Столбец 1 (Реализ.)): C0139:  Код 'END_METHOD; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'REAL'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '('
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '('
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'GVL_CONSTANTS'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[WARNING]       Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0139:  Код 'GVL_CONSTANTS.C_MAX_ZONES; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'REAL'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '('
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '('
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'GVL_CONSTANTS'
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[WARNING]       Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0139:  Код 'GVL_CONSTANTS.C_MAX_ZONES; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 168, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 168, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 171, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 171, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: FB_Heating_Thermal_Model(Строка 28, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'UDINT'
+[ERROR]         Без имени4: FB_Heating_Thermal_Model(Строка 28, Столбец 1 (Реализ.)): C0007:  Вместо 'UDINT' требуется выражение
+                Компиляция завершена -- 31 ошибок, 4 предупреждений
+                Компиляция завершена -- 31 ошибок, 4 предупреждений : загрузка невозможна
