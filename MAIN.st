@@ -36,4 +36,5 @@ PRG_Lighting();
 PRG_Water();
 PRG_Access();
 PRG_Explainability();
+PRG_Debug_View();
 PRG_IO_Write();
