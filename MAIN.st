@@ -5,6 +5,7 @@ END_VAR
 PRG_Time_Service();
 PRG_IO_Read();
 PRG_Safety();
+PRG_Safety_Shutdown();
 PRG_System_Intent();
 PRG_System_Health();
 PRG_System_Alarm_Gateway();
