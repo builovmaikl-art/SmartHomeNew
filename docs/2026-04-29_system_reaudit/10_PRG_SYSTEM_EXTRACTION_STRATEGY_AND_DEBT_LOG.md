@@ -1,147 +1,112 @@
 # PRG_System Extraction Strategy and Architecture Debt Log
 
-Date: 2026-04-30
+Date: 2026-04-30 (updated Phase 6)
 Mode: Direct Repository Modification Mode
-Scope: Phase 5 — PRG_System decomposition
+Scope: Phase 5–6 completed
 
-## Decision
+## Decision (Finalized)
 
-Do not continue by cutting PRG_System first.
+PRG_System decomposition has been executed and system switched to modular execution via MAIN.
 
-The active strategy is:
+Previous rule ("do not connect extracted blocks") is now CLOSED.
 
-1. Extract all visible PRG_System-owned blocks into separate PRG/FB units.
-2. Keep PRG_System behavior intact while extracted blocks are being prepared.
-3. Do not connect extracted blocks if PRG_System still executes the same ownership contour.
-4. After all blocks are extracted and verified, reduce PRG_System in one controlled full-file replacement.
-5. Connect the extracted blocks in MAIN in the correct execution order.
-6. Verify insertion integrity and ownership uniqueness after every full-file replacement.
+System now operates with separated PRG blocks connected in MAIN in defined order.
 
-## Hard Editing Rule
+## Hard Editing Rule (STILL VALID)
 
 PRG_System.st must never be partially edited.
 
-Allowed operation:
+Only full-file replacement is allowed.
 
-- fetch current complete file
-- prepare complete replacement file
-- update_file with full content only
-- fetch again
-- verify file is complete and not truncated
+This rule remains critical.
 
-Forbidden operation:
+## Current System State (Actual)
 
-- partial insertion
-- partial deletion
-- hand-built shortened replacement
-- replacing PRG_System with a reduced sketch
+### Connected execution pipeline (MAIN)
 
-This rule exists because PRG_System was already damaged twice by incomplete full-file replacements during Phase 5 attempts.
+Execution order is now:
 
-## Current Known State
+1. Time / IO / Safety
+2. Intent publication
+3. Health calculation
+4. Alarm + Gateway intent
+5. Scenario rules + arbitration
+6. Access / BlackBox / History
+7. Legacy PRG_System (reduced ownership)
+8. Domain managers (Heating / Lighting / etc.)
 
-### Already extracted / existing
+### Key architectural facts
 
-- PRG_System_Intent.st exists and is connected in MAIN.
-- PRG_System.st no longer calls fbSystemIntentPublisher directly.
-- PRG_System_Health.st exists.
-- GVL_SYSTEM_HEALTH.gvl exists as a prepared global health snapshot.
-- PRG_System_Health.st currently routes FB_System_Health_Orchestrator outputs into GVL_SYSTEM_HEALTH.
+- Gateway intent is published into GVL_INTENT_USER
+- Scenario rules consume GVL_INTENT_USER (not GVL_COMMAND)
+- Execution order guarantees data freshness in same cycle
+- Modbus map aligned with 16 heating circuits (per specification)
 
-### Currently not connected
+## CLOSED Debts
 
-- PRG_System_Health is intentionally not connected in MAIN at this point.
-- PRG_System still owns and executes the live health contour via fbSystemHealthOrchestrator.
+### DEBT-001 — Health extraction
 
-## Architecture Debts
+Status: CLOSED
 
-### DEBT-001 — Health extraction prepared but not switched
+- PRG_System_Health connected in MAIN
+- GVL_SYSTEM_HEALTH is single source of truth
 
-PRG_System_Health and GVL_SYSTEM_HEALTH are prepared, but PRG_System still executes fbSystemHealthOrchestrator.
+### DEBT-002 — Multi-contour ownership
 
-Reason:
+Status: PARTIALLY CLOSED
 
-- Consumers inside PRG_System still depend on local health values.
-- Switching requires coordinated consumer migration.
-- Cutting PRG_System before all extraction work is complete is no longer the selected strategy.
+- Most contours extracted and connected
+- PRG_System still exists as legacy container
 
-Status: documented / deferred.
+### DEBT-003 — Time duplication
 
-### DEBT-002 — PRG_System still owns multiple contours
+Status: OPEN (low priority)
 
-PRG_System still owns or orchestrates:
+- PRG_System may still contain legacy time calls
 
-- init / recovery
-- time legacy calls
-- persist manager
-- redundancy
-- health
-- evacuation
-- astro timer
-- scenario arbitration
-- simulation
-- rule engine
-- alarm orchestration
-- gateway intent
-- blackbox
-- history
-- dangerous action confirmation
-- maintenance access enforcement
-- NVRAM snapshot mirroring
-- event logging
+### DEBT-004 — Intent duplication
 
-Status: active Phase 5 decomposition target.
+Status: OPEN (cleanup)
 
-### DEBT-003 — Time service duplication remains inside PRG_System
+- Legacy declarations may remain in PRG_System
 
-PRG_Time_Service exists and runs from MAIN, but PRG_System still calls fbTimebase/fbTime locally.
+### DEBT-005 — Duplicate execution risk
 
-Status: extraction candidate.
+Status: CLOSED
 
-### DEBT-004 — Intent extraction complete but legacy declaration remains
+- MAIN orchestrates execution order
+- No duplicate contour execution detected
 
-PRG_System no longer calls fbSystemIntentPublisher, but the local fbSystemIntentPublisher declaration remains.
+## NEW Debts (Phase 6)
 
-Status: harmless cleanup tail.
+### DEBT-006 — Documentation drift
 
-### DEBT-005 — Extracted blocks must not be connected prematurely
+Status: RESOLVED
 
-Several blocks may exist before switching ownership. Connecting them while PRG_System still owns the same contour can cause duplicate writes to GVL_STATE/GVL_STATUS/GVL_GATEWAY.
+Documentation aligned with code.
 
-Status: active safety rule.
+### DEBT-007 — PRG_System still present
 
-## Proposed Extraction Order
+Status: ACTIVE (Phase 7)
 
-The preferred extraction order is based on risk and dependency direction:
+PRG_System still executes alongside modular blocks.
 
-1. Documentation map of all PRG_System contours.
-2. Pure or mostly isolated publication blocks.
-3. Gateway intent / scenario request adapters.
-4. History and blackbox reporting blocks.
-5. Alarm orchestration wrapper.
-6. Persistence / recovery wrappers.
-7. Health switch only after consumers are fully mapped.
-8. Final PRG_System cleanup as a single full-file replacement.
+## Final Architecture Direction
 
-## Verification Checklist For Each Extraction
+System has transitioned from monolith → orchestrated modular pipeline.
 
-For every extracted block:
+Next phase is:
 
-- Source contour identified in PRG_System.
-- Inputs listed.
-- Outputs listed.
-- GVL writes listed.
-- Duplicate execution risk assessed.
-- MAIN connection order defined.
-- PRG_System removal deferred until final cleanup unless the block has no remaining consumers.
-- Full-file replacement verified after write.
-- File end marker / END_PROGRAM present.
+- removing PRG_System ownership completely
+- leaving it as thin compatibility shell or removing entirely
 
-## Current Next Step
+## Verification Checklist (Updated)
 
-Create a detailed PRG_System decomposition map before further code changes.
+System is considered stable if:
 
-Recommended next document:
-
-- docs/2026-04-29_system_reaudit/11_PRG_SYSTEM_DECOMPOSITION_MAP.md
+- No ARRAY mismatches
+- No Modbus overlaps
+- Scenario pipeline works in one cycle
+- Gateway → Intent → Scenario chain is consistent
+- Health → Alarm → History chain is consistent
 
