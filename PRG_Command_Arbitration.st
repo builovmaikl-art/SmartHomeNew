@@ -26,6 +26,12 @@ GVL_COMMAND_SHADOW.G_Wicket_Open := FALSE;
 
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 
+// Recovery gating (partial lock during recovery)
+IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
+    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+END_IF;
+
 CASE L_Mode OF
 
     FIRE:
