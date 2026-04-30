@@ -13,6 +13,17 @@ VAR_GLOBAL
     I_Target_Comfort_Temperature : REAL := 21.0;
     I_Behavior_Priority : INT := 0;
 
+    // Candidate scenario scores for explainability / diagnostics
+    I_Score_Comfort : INT := 0;
+    I_Score_Night : INT := 0;
+    I_Score_Energy_Save : INT := 0;
+    I_Score_Preheat : INT := 0;
+    I_Score_Vent_Boost : INT := 0;
+    I_Score_Access_Secure : INT := 0;
+
+    I_Selected_Scenario_Code : E_System_Reason_Code := REASON_NONE;
+    I_Selected_Scenario_Text : STRING(255) := 'No behavior scenario selected';
+
     I_Reason_Code : E_System_Reason_Code := REASON_NONE;
     I_Reason_Text : STRING(255) := 'No behavior scenario active';
     I_Last_Update_MS : UDINT := 0;
