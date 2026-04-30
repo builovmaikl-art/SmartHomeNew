@@ -1,0 +1,32 @@
+TYPE ST_Behavior_Weights :
+STRUCT
+    W_Comfort : REAL;
+    W_Night : REAL;
+    W_Preheat : REAL;
+    W_VentBoost : REAL;
+    W_AccessSecure : REAL;
+END_STRUCT
+END_TYPE
+
+TYPE ST_Scenario_Stats :
+STRUCT
+    Activations : UDINT;
+    Success_Count : UDINT;
+    Failure_Count : UDINT;
+END_STRUCT
+END_TYPE
+
+VAR_GLOBAL
+    G_Behavior_Weights : ST_Behavior_Weights := (
+        W_Comfort := 1.0,
+        W_Night := 1.0,
+        W_Preheat := 1.0,
+        W_VentBoost := 1.0,
+        W_AccessSecure := 1.0
+    );
+
+    G_Scenario_Stats : ARRAY[E_System_Reason_Code] OF ST_Scenario_Stats;
+
+    G_Adapt_Enabled : BOOL := TRUE;
+    G_Adapt_Learning_Rate : REAL := 0.02;
+END_VAR
