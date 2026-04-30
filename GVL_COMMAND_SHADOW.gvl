@@ -15,6 +15,8 @@ VAR_GLOBAL
     // Heating domain command gates
     G_Heating_Block : BOOL := FALSE; // Final heating domain block produced by command arbitration.
     G_Heating_DHW_Block : BOOL := FALSE; // Final DHW-heating-demand block produced by command arbitration.
+    G_Heating_Emergency_Stop : BOOL := FALSE; // Final heating emergency command produced by command arbitration.
+    G_Heating_Gas_Safety_Stop : BOOL := FALSE; // Final heating gas-safety command produced by command arbitration.
 
     // Water
     G_Close_Valve_35 : BOOL := FALSE;
