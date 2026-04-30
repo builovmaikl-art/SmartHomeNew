@@ -3,11 +3,15 @@ VAR
     fbSystemDiagnostics : FB_System_Diagnostics;
     fbStateTraceLog : FB_State_Trace_Log;
     fbAdapt : FB_Behavior_Adapt;
+
     L_Pumps_4 : ARRAY[1..4] OF BOOL;
     L_i : INT;
     L_Last_State_Trace_MS : UDINT;
+
     L_Hum : REAL;
+    L_PrevHum : REAL := 70.0;
     L_DeltaHum : REAL;
+    L_Confidence : REAL;
 END_VAR
 
 FOR L_i := 1 TO 4 DO
@@ -24,24 +28,44 @@ fbStateTraceLog(
     VO_Last_Change_Time => L_Last_State_Trace_MS
 );
 
-// VentBoost feedback
-L_Hum := GVL_STATE.G_Room_Hum[1];
-L_DeltaHum := 70.0 - L_Hum;
+// =====================
+// ZONE-BASED VENT BOOST FEEDBACK
+// =====================
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
-IF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
-    fbAdapt(
-        iScenario := REASON_SCENARIO_VENT_BOOST,
-        iSuccess := (L_DeltaHum > 5.0),
-        iMeasuredValue := L_Hum
-    );
-END_IF;
+    L_Hum := GVL_STATE.G_Room_Hum[L_i];
+    L_DeltaHum := L_PrevHum - L_Hum;
 
-// Night feedback (placeholder stability)
+    IF L_Hum <= 0.0 THEN
+        L_Confidence := 0.0;
+    ELSIF ABS(L_DeltaHum) < 0.5 THEN
+        L_Confidence := 0.2;
+    ELSE
+        L_Confidence := 1.0;
+    END_IF;
+
+    IF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
+        fbAdapt(
+            iScenario := REASON_SCENARIO_VENT_BOOST,
+            iSuccess := (L_DeltaHum > 5.0),
+            iMeasuredValue := L_Hum,
+            iZone := L_i,
+            iConfidence := L_Confidence
+        );
+    END_IF;
+
+END_FOR;
+
+// =====================
+// NIGHT FEEDBACK
+// =====================
 IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
     fbAdapt(
         iScenario := REASON_SCENARIO_NIGHT,
         iSuccess := TRUE,
-        iMeasuredValue := 0.0
+        iMeasuredValue := 0.0,
+        iZone := 0,
+        iConfidence := 1.0
     );
 END_IF;
 
