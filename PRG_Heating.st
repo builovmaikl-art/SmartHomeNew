@@ -102,7 +102,7 @@ fbHeatingOrchestration(
     VI_Gas_Safety_Stop := fbLocalContext.VO_Heating_Gas_Safety_Stop,
     VI_Manifold_End_Switches := GVL_STATE.G_Manifold_End_Switches,
     VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
-    VI_Block_Heating := GVL_SYSTEM_COORDINATION.G_Block_Heating,
+    VI_Block_Heating := GVL_COMMAND_SHADOW.G_Heating_Block,
     VI_Manifold_Enabled := fbThermalAllocation.VO_Manifold_Enabled,
     VIO_Manifold_Valves := GVL_STATE.G_Manifold_Valves,
     VIO_Manifold_Pumps := GVL_STATE.G_Manifold_Pumps,
