@@ -43,7 +43,10 @@ VAR_GLOBAL
     D_Max_VentBoost_Zone_Weight : REAL := 0.0;
     D_Min_VentBoost_Zone_Weight : REAL := 0.0;
 
-    // Trace snapshot: last event only, no duplicated logging
+    // Current adaptive profile
+    D_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
+
+    // Trace snapshot
     D_Last_Trace_Text : STRING(120) := '';
     D_Last_Trace_Time_MS : UDINT := 0;
     D_Last_Trace_Reason : E_System_Reason_Code := REASON_NONE;
