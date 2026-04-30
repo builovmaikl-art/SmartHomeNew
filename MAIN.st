@@ -2,7 +2,6 @@ PROGRAM MAIN
 VAR
 END_VAR
 
-// Вызов основных программ
 PRG_Time_Service();
 PRG_IO_Read();
 PRG_Safety();
@@ -14,8 +13,8 @@ PRG_System_Access_Maintenance();
 PRG_System_BlackBox();
 PRG_System_History();
 PRG_System_Runtime_Base();
-PRG_System();
 PRG_Presence_Manager();
+PRG_Heating_Policy_Manager();
 PRG_Heating_Policy_Observer();
 PRG_Mode_Manager();
 PRG_System_Coordinator();
@@ -28,4 +27,4 @@ PRG_Ventilation();
 PRG_Lighting();
 PRG_IO_Write();
 
-// PRG_Test(); // Раскомментировать для запуска модульных тестов
+// PRG_Test();
