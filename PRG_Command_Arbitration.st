@@ -22,6 +22,11 @@ GVL_COMMAND_SHADOW.G_Heating_DHW_Block := FALSE;
 GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := FALSE;
 GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop := FALSE;
 
+GVL_COMMAND_SHADOW.G_Water_Block := FALSE;
+GVL_COMMAND_SHADOW.G_Water_Emergency_Stop := FALSE;
+GVL_COMMAND_SHADOW.G_Close_Valve_35 := FALSE;
+GVL_COMMAND_SHADOW.G_Close_Valve_36 := FALSE;
+
 // USER
 GVL_COMMAND_SHADOW.G_Gate_Open := GVL_INTENT_USER.I_Gate_Open_Request;
 
@@ -35,16 +40,25 @@ IF GVL_SYSTEM_COORDINATION.G_Block_Ventilation THEN
     GVL_COMMAND_SHADOW.G_Vent_Block := TRUE;
 END_IF;
 
-// SAFETY → HEATING COMMANDS
+// SAFETY → GLOBAL COMMANDS
 IF GVL_INTENT_SAFETY.I_Fire_Alarm_Active OR GVL_INTENT_SAFETY.I_System_Safe_Stop_Required THEN
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
     GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+    GVL_COMMAND_SHADOW.G_Water_Emergency_Stop := TRUE;
+    GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
 END_IF;
 
 IF GVL_INTENT_SAFETY.I_Gas_Close_Required THEN
     GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+END_IF;
+
+// WATER SAFETY
+IF GVL_INTENT_SAFETY.I_Water_Main_Close_Required THEN
+    GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Close_Valve_35 := TRUE;
+    GVL_COMMAND_SHADOW.G_Close_Valve_36 := TRUE;
 END_IF;
 
 END_PROGRAM
