@@ -1,0 +1,8 @@
+VAR_GLOBAL
+    // Ventilation output projection (decouples IO_Write from GVL_STATE)
+
+    AO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF UINT;
+    AO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF UINT;
+
+    DO_Vent_Enable : BOOL := FALSE;
+END_VAR
