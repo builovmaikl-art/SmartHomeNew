@@ -1,4 +1,7 @@
 PROGRAM PRG_Test_Scenario_Runner
+VAR
+    L_Expected : E_SCENARIO_TYPE;
+END_VAR
 
 IF NOT GVL_TEST.G_Test_Enable THEN
     RETURN;
@@ -8,90 +11,88 @@ IF NOT GVL_TEST_INJECTION.G_Scenario_Enable THEN
     RETURN;
 END_IF;
 
-// Reset
 IF GVL_TEST_INJECTION.G_Scenario_Reset_Request THEN
     GVL_TEST_INJECTION.G_Scenario_Step := 0;
     GVL_TEST_INJECTION.G_Scenario_Done := FALSE;
     GVL_TEST_INJECTION.G_Scenario_Failed := FALSE;
-    GVL_TEST_INJECTION.G_Scenario_Result_Passed := TRUE;
-    GVL_TEST_INJECTION.G_Scenario_Checks_Total := 0;
-    GVL_TEST_INJECTION.G_Scenario_Checks_Failed := 0;
+    GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 0;
     GVL_TEST_INJECTION.G_Scenario_Reset_Request := FALSE;
 END_IF;
 
 CASE GVL_TEST_INJECTION.G_Scenario_Current OF
 
-// =========================
-// SCENARIO 1: OPERATOR PRIORITY
-// =========================
 1:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_MORNING;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
-        GVL_INTENT.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_HOME;
-        GVL_TEST_INJECTION.G_Scenario_Expected := E_SCENARIO_TYPE.SCENARIO_HOME;
-        GVL_TEST_INJECTION.G_Scenario_Source_Expected := SRC_OPERATOR;
+        GVL_COMMAND.G_Scenario_Request_Operator := L_Expected;
+        GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_AWAY;
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 1: operator priority';
         GVL_TEST_INJECTION.G_Scenario_Step := 1;
 
     1:
-        GVL_TEST_INJECTION.G_Scenario_Checks_Total := GVL_TEST_INJECTION.G_Scenario_Checks_Total + 1;
-        GVL_TEST_INJECTION.G_Scenario_Observed := GVL_STATUS.G_Current_Scenario;
-
-        IF GVL_STATUS.G_Current_Scenario <> GVL_TEST_INJECTION.G_Scenario_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Checks_Failed := GVL_TEST_INJECTION.G_Scenario_Checks_Failed + 1;
-            GVL_TEST_INJECTION.G_Scenario_Result_Passed := FALSE;
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 101;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 1 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1001;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 1 failed';
         END_IF;
-
-        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
     END_CASE;
 
-// =========================
-// SCENARIO 2: GATEWAY FALLBACK
-// =========================
 2:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_AWAY;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
-        GVL_INTENT.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
-        GVL_INTENT.G_Scenario_Request_Gateway := E_SCENARIO_TYPE.SCENARIO_AWAY;
-        GVL_TEST_INJECTION.G_Scenario_Expected := E_SCENARIO_TYPE.SCENARIO_AWAY;
-        GVL_TEST_INJECTION.G_Scenario_Source_Expected := SRC_GATEWAY;
+        GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_INTENT_USER.I_Scenario_Request := L_Expected;
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 2: gateway fallback';
         GVL_TEST_INJECTION.G_Scenario_Step := 1;
 
     1:
-        GVL_TEST_INJECTION.G_Scenario_Checks_Total := GVL_TEST_INJECTION.G_Scenario_Checks_Total + 1;
-        IF GVL_STATUS.G_Current_Scenario <> GVL_TEST_INJECTION.G_Scenario_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Checks_Failed := GVL_TEST_INJECTION.G_Scenario_Checks_Failed + 1;
-            GVL_TEST_INJECTION.G_Scenario_Result_Passed := FALSE;
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 102;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 2 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1002;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 2 failed';
         END_IF;
-
-        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
     END_CASE;
 
-// =========================
-// SCENARIO 3: RULE FALLBACK
-// =========================
 3:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_SLEEP;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
-        GVL_INTENT.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
-        GVL_INTENT.G_Scenario_Request_Gateway := E_SCENARIO_TYPE.SCENARIO_NONE;
-        GVL_INTENT.G_Scenario_Request_Rule := E_SCENARIO_TYPE.SCENARIO_SLEEP;
-        GVL_TEST_INJECTION.G_Scenario_Expected := E_SCENARIO_TYPE.SCENARIO_SLEEP;
-        GVL_TEST_INJECTION.G_Scenario_Source_Expected := SRC_RULE;
+        GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_CONFIG.G_HMI_User_Rules[1].Enabled := TRUE;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Type := E_Rule_Condition_Type.COND_TRUE;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Op := E_Rule_Comparison.COMP_TRUE;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Target_ID := 0;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Value := REAL#1.0;
+        GVL_CONFIG.G_HMI_User_Rules[1].Action_Type := E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO;
+        GVL_CONFIG.G_HMI_User_Rules[1].Action_Value := TO_REAL(TO_INT(L_Expected));
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3: rule fallback';
         GVL_TEST_INJECTION.G_Scenario_Step := 1;
 
     1:
-        GVL_TEST_INJECTION.G_Scenario_Checks_Total := GVL_TEST_INJECTION.G_Scenario_Checks_Total + 1;
-        IF GVL_STATUS.G_Current_Scenario <> GVL_TEST_INJECTION.G_Scenario_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Checks_Failed := GVL_TEST_INJECTION.G_Scenario_Checks_Failed + 1;
-            GVL_TEST_INJECTION.G_Scenario_Result_Passed := FALSE;
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 103;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1003;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3 failed';
         END_IF;
-
-        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
     END_CASE;
 
 END_CASE;
 
-// Auto next
 IF GVL_TEST_INJECTION.G_Scenario_Done AND GVL_TEST_INJECTION.G_Scenario_Auto_Run THEN
     GVL_TEST_INJECTION.G_Scenario_Current := GVL_TEST_INJECTION.G_Scenario_Current + 1;
     GVL_TEST_INJECTION.G_Scenario_Reset_Request := TRUE;
