@@ -9,7 +9,13 @@ TYPE E_System_Reason_Code :
     REASON_RECOVERY_ACTIVE,
     REASON_USER_REQUEST,
     REASON_COMMAND_CLAMP,
-    REASON_DOMAIN_PROJECTION
+    REASON_DOMAIN_PROJECTION,
+    REASON_SCENARIO_NIGHT,
+    REASON_SCENARIO_COMFORT,
+    REASON_SCENARIO_ENERGY_SAVE,
+    REASON_SCENARIO_AWAY,
+    REASON_SCENARIO_ACCESS_SECURE,
+    REASON_SCENARIO_VENT_BOOST
 );
 END_TYPE
 
@@ -23,6 +29,7 @@ VAR_GLOBAL
     G_Last_Output_Affected : STRING(80) := '';
     G_Last_Update_MS : UDINT := 0;
 
+    G_Behavior_Why_Active : STRING(255) := '';
     G_Heating_Why_Blocked : STRING(255) := '';
     G_Vent_Why_Stopped : STRING(255) := '';
     G_Water_Why_Closed : STRING(255) := '';
