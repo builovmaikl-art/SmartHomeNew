@@ -1,39 +1,14 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-[ERROR]         Без имени4: FB_Time_Service(Строка 19, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'UDINT'
-[ERROR]         Без имени4: FB_Time_Service(Строка 19, Столбец 1 (Реализ.)): C0007:  Вместо 'UDINT' требуется выражение
-[ERROR]         Без имени4: FB_Time_Service(Строка 41, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'INT'
-[ERROR]         Без имени4: FB_Time_Service(Строка 41, Столбец 1 (Реализ.)): C0007:  Вместо 'INT' требуется выражение
-[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'METHOD'
-[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'Calculate'
-[WARNING]       Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0118:  Метка 'CALCULATE' не используется
-[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 1, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'DWORD'
-[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 3, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'Calculate'
-[ERROR]         Без имени4: FB_CRC32_Calculator(Строка 4, Столбец 1 (Реализ.)): C0190:  Вместо конца POU требуется ';'
-[WARNING]       Без имени4: FB_CRC32_Calculator(Строка 4, Столбец 1 (Реализ.)): C0139:  Код 'END_METHOD; ' не имеет действия. Это сделано намеренно?
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'REAL'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '('
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '('
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'GVL_CONSTANTS'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
-[WARNING]       Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0139:  Код 'GVL_CONSTANTS.C_MAX_ZONES; ' не имеет действия. Это сделано намеренно?
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 22, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'REAL'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '('
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '('
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'GVL_CONSTANTS'
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
-[WARNING]       Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0139:  Код 'GVL_CONSTANTS.C_MAX_ZONES; ' не имеет действия. Это сделано намеренно?
-[ERROR]         Без имени4: PRG_Heating_Policy_Manager(Строка 23, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
-[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 168, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
-[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 168, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
-[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 171, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
-[ERROR]         Без имени4: FB_Heating_Policy_Manager(Строка 171, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
-[ERROR]         Без имени4: FB_Heating_Thermal_Model(Строка 28, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'UDINT'
-[ERROR]         Без имени4: FB_Heating_Thermal_Model(Строка 28, Столбец 1 (Реализ.)): C0007:  Вместо 'UDINT' требуется выражение
-                Компиляция завершена -- 31 ошибок, 4 предупреждений
-                Компиляция завершена -- 31 ошибок, 4 предупреждений : загрузка невозможна
+                генерировать код...
+[WARNING]       Без имени4: PRG_Time_Service(Строка 10, Столбец 1 (Реализ.)): C0195:  Неявная конверсия типа со знаком 'INT' в тип без знака 'UINT': возможно изменение знака
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Floor_Temps' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Motion_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Door_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Window_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Water_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Smoke_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Methane_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_CO_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
+[WARNING]       Без имени4: FB_Heating_Thermal_Model(Строка 31, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
+                Компиляция завершена -- 8 ошибок, 2 предупреждений : загрузка невозможна
