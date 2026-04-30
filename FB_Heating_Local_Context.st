@@ -1,8 +1,8 @@
 FUNCTION_BLOCK FB_Heating_Local_Context
 VAR_INPUT
     VI_System_Time_MS : UDINT;
-    VI_Safety_Emergency_Stop : BOOL;
-    VI_Safety_Gas_Latched : BOOL;
+    VI_Heating_Emergency_Stop : BOOL;
+    VI_Heating_Gas_Safety_Stop : BOOL;
     VI_DHW_Block : BOOL;
     VI_Freeze_Request : BOOL;
     VI_Preheat_Request : BOOL;
@@ -19,21 +19,17 @@ VAR_OUTPUT
     VO_Local_Mode : INT;
 END_VAR
 VAR
-    L_Last_Mode : INT := 0; // 0=normal, 1=preheat, 2=freeze
+    L_Last_Mode : INT := 0;
     L_Mode_Hold_Timer : FB_System_Timer;
     L_i : INT;
 END_VAR
-
-// Local heating context builder.
-// DHW blocking now comes from the command layer via VI_DHW_Block.
-// Safety still gates local heating/DHW context until full safety-command migration is complete.
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     VO_Boiler_Modulation_REAL[L_i] := TO_REAL(VI_Boiler_Modulation_Raw[L_i]);
 END_FOR;
 
-VO_Heating_Emergency_Stop := VI_Safety_Emergency_Stop;
-VO_Heating_Gas_Safety_Stop := VI_Safety_Gas_Latched;
+VO_Heating_Emergency_Stop := VI_Heating_Emergency_Stop;
+VO_Heating_Gas_Safety_Stop := VI_Heating_Gas_Safety_Stop;
 VO_Heating_DHW_Demand := VI_DHW_Heating_Pump_Feedback;
 
 IF VO_Heating_Emergency_Stop THEN
@@ -45,19 +41,12 @@ ELSIF VI_DHW_Block THEN
     VO_Heating_DHW_Demand := FALSE;
 END_IF;
 
-L_Mode_Hold_Timer(
-    IN := TRUE,
-    PT := T#30s,
-    VI_System_Time_MS := VI_System_Time_MS
-);
+L_Mode_Hold_Timer(IN := TRUE, PT := T#30s, VI_System_Time_MS := VI_System_Time_MS);
 
 IF L_Mode_Hold_Timer.Q THEN
-    IF VI_Freeze_Request THEN
-        L_Last_Mode := 2;
-    ELSIF VI_Preheat_Request THEN
-        L_Last_Mode := 1;
-    ELSE
-        L_Last_Mode := 0;
+    IF VI_Freeze_Request THEN L_Last_Mode := 2;
+    ELSIF VI_Preheat_Request THEN L_Last_Mode := 1;
+    ELSE L_Last_Mode := 0;
     END_IF;
 END_IF;
 
@@ -68,10 +57,8 @@ CASE L_Last_Mode OF
 END_CASE;
 
 VO_Target_Temperature := VO_Target_Temperature + VI_Policy_Target_Adjustment;
-IF VO_Target_Temperature < 5.0 THEN
-    VO_Target_Temperature := 5.0;
-ELSIF VO_Target_Temperature > 26.0 THEN
-    VO_Target_Temperature := 26.0;
+IF VO_Target_Temperature < 5.0 THEN VO_Target_Temperature := 5.0;
+ELSIF VO_Target_Temperature > 26.0 THEN VO_Target_Temperature := 26.0;
 END_IF;
 
 VO_Local_Mode := L_Last_Mode;
