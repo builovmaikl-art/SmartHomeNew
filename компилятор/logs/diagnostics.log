@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1932
+total 1936
 -rw-r--r--  1 runner runner  13067 Apr 30 18:52 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  20480 Apr 30 18:52 .
 drwxr-xr-x  3 runner runner   4096 Apr 30 18:52 ..
@@ -209,7 +209,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 18:52 .github
 -rw-r--r--  1 runner runner   2478 Apr 30 18:52 PRG_Heating_Policy_Manager.st
 -rw-r--r--  1 runner runner    799 Apr 30 18:52 PRG_Heating_Policy_Observer.st
 -rw-r--r--  1 runner runner  13736 Apr 30 18:52 PRG_IO_Read.st
--rw-r--r--  1 runner runner   2549 Apr 30 18:52 PRG_IO_Write.st
+-rw-r--r--  1 runner runner   2914 Apr 30 18:52 PRG_IO_Write.st
 -rw-r--r--  1 runner runner   4524 Apr 30 18:52 PRG_Lighting.st
 -rw-r--r--  1 runner runner    619 Apr 30 18:52 PRG_Mode_Manager.st
 -rw-r--r--  1 runner runner    194 Apr 30 18:52 PRG_PLC_A.st
@@ -311,7 +311,7 @@ drwxr-xr-x  5 runner runner   4096 Apr 30 18:52 компилятор
 -rw-r--r--  1 runner runner    841 Apr 30 18:52 ошибки компиляции.txt
 
 === compiler dir ===
-total 588
+total 592
 drwxr-xr-x  5 runner runner   4096 Apr 30 18:52 .
 drwxr-xr-x 12 runner runner  20480 Apr 30 18:52 ..
 -rw-r--r--  1 runner runner  21153 Apr 30 18:52 001_universal_pou_builder_METHODS_V2.py
@@ -330,8 +330,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 18:52 out
 -rw-r--r--  1 runner runner    177 Apr 30 18:52 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1036
+total 1040
 drwxr-xr-x 2 runner runner    4096 Apr 30 18:52 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 18:52 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 18:52 .gitkeep
--rw-r--r-- 1 runner runner 1051567 Apr 30 18:52 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1053787 Apr 30 18:52 RESULT_methods_clean.xml
