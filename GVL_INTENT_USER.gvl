@@ -46,4 +46,10 @@ VAR_GLOBAL
     I_Set_Config_Req : BOOL := FALSE;
     I_Time_Sync_Req : BOOL := FALSE;
     I_New_Time_MS : UDINT := 0;
+
+    // Adaptive behavior profile control from HMI / service UI.
+    // Must be handled only by PRG_User_Adapt_Control.
+    I_Set_Adapt_Profile_Req : BOOL := FALSE;
+    I_Set_Adapt_Profile_Confirm : BOOL := FALSE;
+    I_Adapt_Profile_Value : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
 END_VAR
