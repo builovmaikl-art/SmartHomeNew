@@ -12,6 +12,10 @@ VAR_GLOBAL
     G_Exhaust_100_Req : BOOL := FALSE;
     G_Vent_Stop : BOOL := FALSE;
 
+    // Heating domain command gates
+    G_Heating_Block : BOOL := FALSE; // Final heating domain block produced by command arbitration.
+    G_Heating_DHW_Block : BOOL := FALSE; // Final DHW-heating-demand block produced by command arbitration.
+
     // Water
     G_Close_Valve_35 : BOOL := FALSE;
     G_Close_Valve_36 : BOOL := FALSE;
