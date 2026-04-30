@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1940
+total 1944
 -rw-r--r--  1 runner runner  13067 Apr 30 20:26 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  20480 Apr 30 20:26 .
 drwxr-xr-x  3 runner runner   4096 Apr 30 20:26 ..
@@ -219,6 +219,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 20:26 .github
 -rw-r--r--  1 runner runner   3574 Apr 30 20:26 PRG_Policy.st
 -rw-r--r--  1 runner runner    847 Apr 30 20:26 PRG_Presence_Manager.st
 -rw-r--r--  1 runner runner   6033 Apr 30 20:26 PRG_Safety.st
+-rw-r--r--  1 runner runner   1238 Apr 30 20:26 PRG_Safety_Recovery.st
 -rw-r--r--  1 runner runner    627 Apr 30 20:26 PRG_Safety_Shutdown.st
 -rw-r--r--  1 runner runner  22327 Apr 30 20:26 PRG_Scenario_Test_Harness.st
 -rw-r--r--  1 runner runner   2735 Apr 30 20:26 PRG_Security.st
@@ -337,4 +338,4 @@ total 1040
 drwxr-xr-x 2 runner runner    4096 Apr 30 20:26 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 20:26 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 20:26 .gitkeep
--rw-r--r-- 1 runner runner 1054530 Apr 30 20:26 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1055473 Apr 30 20:26 RESULT_methods_clean.xml
