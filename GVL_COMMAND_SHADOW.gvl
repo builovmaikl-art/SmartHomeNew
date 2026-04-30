@@ -1,7 +1,6 @@
 VAR_GLOBAL
     // Operational command layer produced by PRG_Command_Arbitration during migration.
-    // Used by downstream execution consumers, including PRG_IO_Write and PRG_Ventilation.
-    // Legacy GVL_COMMAND remains in use around bridge / compatibility flows while migration is still open.
+    // Used by downstream execution consumers and PRG_IO_Write.
 
     // Gas / boiler / ventilation
     G_Gas_Valve_Close : BOOL := FALSE;
@@ -11,12 +10,13 @@ VAR_GLOBAL
     G_Vent_PV3_Boost : BOOL := FALSE;
     G_Exhaust_100_Req : BOOL := FALSE;
     G_Vent_Stop : BOOL := FALSE;
+    G_Vent_Block : BOOL := FALSE; // Final ventilation block produced by command arbitration.
 
     // Heating domain command gates
-    G_Heating_Block : BOOL := FALSE; // Final heating domain block produced by command arbitration.
-    G_Heating_DHW_Block : BOOL := FALSE; // Final DHW-heating-demand block produced by command arbitration.
-    G_Heating_Emergency_Stop : BOOL := FALSE; // Final heating emergency command produced by command arbitration.
-    G_Heating_Gas_Safety_Stop : BOOL := FALSE; // Final heating gas-safety command produced by command arbitration.
+    G_Heating_Block : BOOL := FALSE;
+    G_Heating_DHW_Block : BOOL := FALSE;
+    G_Heating_Emergency_Stop : BOOL := FALSE;
+    G_Heating_Gas_Safety_Stop : BOOL := FALSE;
 
     // Water
     G_Close_Valve_35 : BOOL := FALSE;
