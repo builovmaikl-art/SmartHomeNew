@@ -13,6 +13,11 @@ STRUCT
     Activations : UDINT;
     Success_Count : UDINT;
     Failure_Count : UDINT;
+
+    Success_Rate : REAL;
+    Avg_Result_Value : REAL;
+
+    Stability_Counter : INT;
 END_STRUCT
 END_TYPE
 
@@ -28,5 +33,6 @@ VAR_GLOBAL
     G_Scenario_Stats : ARRAY[E_System_Reason_Code] OF ST_Scenario_Stats;
 
     G_Adapt_Enabled : BOOL := TRUE;
-    G_Adapt_Learning_Rate : REAL := 0.02;
+    G_Adapt_Learning_Rate : REAL := 0.05;
+    G_Adapt_Update_Threshold : INT := 5;
 END_VAR
