@@ -4,8 +4,6 @@ VAR
     fbSystemRecovery : FB_System_Recovery;
     fbSystemPersist : FB_System_Persist_Manager;
     fbSystemRedundancy : FB_System_Redundancy_Orchestrator;
-    fbTimebase : FB_System_Timebase;
-    fbTime : FB_Time_Service;
 
     L_Local_State : ST_System_State_Snapshot;
     L_Remote_State : ST_System_State_Snapshot;
@@ -30,10 +28,6 @@ fbSystemInit(
 fbSystemRecovery(
     VIO_Recovery_Done := L_Recovery_Done
 );
-
-// Legacy time bridge retained here until fully removed from runtime base.
-fbTimebase();
-fbTime();
 
 fbSystemPersist(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
