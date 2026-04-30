@@ -1,6 +1,7 @@
 PROGRAM PRG_Ventilation
 VAR
     fbVentilationManager : FB_Ventilation_System_Manager;
+    fbVentProjection : FB_Vent_Output_Projection;
     L_i : INT;
     L_Supply_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF BYTE;
     L_Exhaust_Fans_Byte : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BYTE;
@@ -27,16 +28,7 @@ L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
 L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
 L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
 
-// Coordinator constraint: block non-stop ventilation requests only.
-// Safety-driven stop request must remain untouched.
-IF GVL_SYSTEM_COORDINATION.G_Block_Ventilation THEN
-    L_Vent_PV3_Boost_Req := FALSE;
-    L_Supply_100_Req := FALSE;
-    L_Exhaust_100_Req := FALSE;
-    L_Supply_80_Req := FALSE;
-END_IF;
-
-// 11. Управление вентиляцией
+// 11. Ventilation control (execution core)
 fbVentilationManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -65,13 +57,11 @@ fbVentilationManager(
     VO_Ventilation_IO_Fault => GVL_STATE.G_Ventilation_IO_Fault,
     VO_Ventilation_Subsystem_Degraded => GVL_STATE.G_Ventilation_Subsystem_Degraded
 );
+
+// === NEW: DIRECT OUTPUT PROJECTION (NO GVL_STATE ACTUATOR WRITE) ===
+fbVentProjection(
+    VI_Supply_Fans := L_Supply_Fans_Byte,
+    VI_Exhaust_Fans := L_Exhaust_Fans_Byte
+);
+
 // >>> BULK_SYNC_ANCHOR: PRG_Ventilation <<<
-
-
-// Ventilation copy-out adapters
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-    GVL_STATE.G_Supply_Fans[L_i] := BYTE_TO_REAL(L_Supply_Fans_Byte[L_i]);
-END_FOR;
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-    GVL_STATE.G_Exhaust_Fans[L_i] := BYTE_TO_REAL(L_Exhaust_Fans_Byte[L_i]);
-END_FOR;
