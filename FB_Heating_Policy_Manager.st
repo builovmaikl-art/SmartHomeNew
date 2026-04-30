@@ -237,10 +237,10 @@ ELSIF VI_RootConfidence >= 0.6 THEN
     CASE VI_RootCause OF
         E_Heating_RootCause.RC_NO_HEAT_TRANSFER:
             L_Raw_Mode := E_Heating_Policy_Mode.HPM_DEGRADED;
-            L_Raw_Target_Adjustment := L_Raw_Target_Adjustment + 3.0 + REAL(L_Self_Level);
+            L_Raw_Target_Adjustment := L_Raw_Target_Adjustment + 3.0 + TO_REAL(L_Self_Level);
         E_Heating_RootCause.RC_PUMP_FAILURE:
             L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
-            L_Raw_Priority_Multiplier := 0.5 - (0.1 * REAL(L_Self_Level));
+            L_Raw_Priority_Multiplier := 0.5 - (0.1 * TO_REAL(L_Self_Level));
         E_Heating_RootCause.RC_VALVES_CLOSED:
             L_Raw_Mode := E_Heating_Policy_Mode.HPM_FAULT_ISOLATION;
             L_Raw_Target_Adjustment := L_Raw_Target_Adjustment - 2.0;
