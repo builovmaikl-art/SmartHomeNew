@@ -15,6 +15,7 @@ GVL_COMMAND_SHADOW.G_Supply_80_Req := FALSE;
 GVL_COMMAND_SHADOW.G_Vent_PV3_Boost := FALSE;
 GVL_COMMAND_SHADOW.G_Exhaust_100_Req := FALSE;
 GVL_COMMAND_SHADOW.G_Vent_Stop := FALSE;
+GVL_COMMAND_SHADOW.G_Vent_Block := FALSE;
 
 GVL_COMMAND_SHADOW.G_Heating_Block := FALSE;
 GVL_COMMAND_SHADOW.G_Heating_DHW_Block := FALSE;
@@ -29,10 +30,16 @@ IF GVL_INTENT_SYSTEM.I_Mode_Degraded_Active THEN
     GVL_COMMAND_SHADOW.G_Heating_DHW_Block := TRUE;
 END_IF;
 
+// Coordinator → Ventilation block
+IF GVL_SYSTEM_COORDINATION.G_Block_Ventilation THEN
+    GVL_COMMAND_SHADOW.G_Vent_Block := TRUE;
+END_IF;
+
 // SAFETY → HEATING COMMANDS
 IF GVL_INTENT_SAFETY.I_Fire_Alarm_Active OR GVL_INTENT_SAFETY.I_System_Safe_Stop_Required THEN
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
 END_IF;
 
 IF GVL_INTENT_SAFETY.I_Gas_Close_Required THEN
