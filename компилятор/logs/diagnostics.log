@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1968
+total 1972
 -rw-r--r--  1 runner runner  13067 Apr 30 21:18 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  20480 Apr 30 21:18 .
 drwxr-xr-x  3 runner runner   4096 Apr 30 21:18 ..
@@ -51,6 +51,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 21:18 .github
 -rw-r--r--  1 runner runner  14663 Apr 30 21:18 FB_Alarm_Manager.st
 -rw-r--r--  1 runner runner    780 Apr 30 21:18 FB_Analog_Validator.st
 -rw-r--r--  1 runner runner   2433 Apr 30 21:18 FB_Astro_Timer.st
+-rw-r--r--  1 runner runner   1179 Apr 30 21:18 FB_Behavior_Adapt.st
 -rw-r--r--  1 runner runner   1163 Apr 30 21:18 FB_BlackBox_Recorder.st
 -rw-r--r--  1 runner runner   4453 Apr 30 21:18 FB_Boiler_Cascade_Manager.st
 -rw-r--r--  1 runner runner    970 Apr 30 21:18 FB_Boiler_OpenTherm_Interface.st
@@ -340,8 +341,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 21:18 out
 -rw-r--r--  1 runner runner    177 Apr 30 21:18 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1056
+total 1060
 drwxr-xr-x 2 runner runner    4096 Apr 30 21:18 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 21:18 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 21:18 .gitkeep
--rw-r--r-- 1 runner runner 1071411 Apr 30 21:18 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1074474 Apr 30 21:18 RESULT_methods_clean.xml
