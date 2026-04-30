@@ -62,8 +62,31 @@ Current MAIN root calls:
 - FB_System_Health_Orchestrator: used by PRG_System_Health.
 - FB_CRC32_Calculator: used by FB_Gateway_Interface.
 
+## First pass over visually grey FBs
+
+| FB | Status | Decision |
+|---|---|---|
+| FB_Rule_Engine | LIVE | Already confirmed used |
+| FB_Gateway_Interface | LIVE_BUT_BROKEN | Must restore full logic before tests |
+| FB_Command_Deduplication | UNKNOWN | Blocked by broken gateway |
+| FB_Astro_Timer | LIKELY_DEAD | No references found |
+| FB_Simulation_Manager | LIKELY_DEAD | No references found |
+| FB_Maintenance_Access | UNKNOWN | Needs compare with PRG_System_Access_Maintenance |
+| FB_Presence_Playback | UNKNOWN | Possibly used by presence subsystem |
+| FB_Random_Generator | UNKNOWN | Possibly used by playback/simulation |
+| FB_State_Snapshot_Manager | UNKNOWN | Possibly used in runtime base |
+| FB_System_Evacuation | LIKELY_UNWIRED | Not in pipeline |
+| FB_State_Trace_Log | LIKELY_DIAGNOSTIC | Not in runtime pipeline |
+| FB_System_Diagnostics | LIKELY_DIAGNOSTIC | Not in runtime pipeline |
+
+## Critical note
+
+Gateway logic is currently degraded (CRC stub only).
+
+This distorts dependency analysis and must be fixed before final cleanup.
+
 ## Current status
 
-Full dependency classification is in progress.
+Dependency classification started.
 
-Do not delete grey/unused-looking blocks until this document marks them as candidate dead blocks and the repo search confirms no references.
+No deletion allowed yet.
