@@ -9,6 +9,7 @@ VAR
     fbHeatingFreezeHardware : FB_Heating_Freeze_Hardware;
     fbHeatingAdapterCopyOut : FB_Heating_Adapter_CopyOut;
     fbHeatingRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
+    fbOutputProjection : FB_Heating_Output_Projection;
 
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
 END_VAR
@@ -106,6 +107,17 @@ fbHeatingAdapterCopyOut(
 
 fbHeatingRootCauseDiagnostics(
     VI_Zone_Valves := L_Zone_Valves
+);
+
+// === NEW: OUTPUT PROJECTION ===
+fbOutputProjection(
+    VI_Zone_Valves := GVL_STATE.G_Zone_Valves,
+    VI_Manifold_Pumps := GVL_STATE.G_Manifold_Pumps,
+    VI_Manifold_Valves := GVL_STATE.G_Manifold_Valves,
+    VI_DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump,
+    VI_DHW_Circ_Pump := GVL_STATE.G_DHW_Circ_Pump,
+    VI_Backup_Circulation_Pump := GVL_STATE.G_Backup_Circulation_Pump,
+    VI_Electric_Heater_Enable := GVL_STATE.G_Electric_Heater_Enable
 );
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
