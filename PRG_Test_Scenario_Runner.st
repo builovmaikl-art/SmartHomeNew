@@ -25,6 +25,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
     L_Expected := E_SCENARIO_TYPE.SCENARIO_MORNING;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_NORMAL;
+        GVL_ALARM.G_Security_Armed := FALSE;
         GVL_COMMAND.G_Scenario_Request_Operator := L_Expected;
         GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_AWAY;
         GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 1: operator priority';
@@ -46,6 +48,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
     L_Expected := E_SCENARIO_TYPE.SCENARIO_AWAY;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_NORMAL;
+        GVL_ALARM.G_Security_Armed := FALSE;
         GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
         GVL_INTENT_USER.I_Scenario_Request := L_Expected;
         GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 2: gateway fallback';
@@ -67,6 +71,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
     L_Expected := E_SCENARIO_TYPE.SCENARIO_SLEEP;
     CASE GVL_TEST_INJECTION.G_Scenario_Step OF
     0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_NORMAL;
+        GVL_ALARM.G_Security_Armed := FALSE;
         GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
         GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_NONE;
         GVL_CONFIG.G_HMI_User_Rules[1].Enabled := TRUE;
@@ -88,6 +94,75 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
             GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1003;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3 failed';
+        END_IF;
+    END_CASE;
+
+4:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_NONE;
+    CASE GVL_TEST_INJECTION.G_Scenario_Step OF
+    0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_SAFE_STOP;
+        GVL_ALARM.G_Security_Armed := FALSE;
+        GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_MORNING;
+        GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_AWAY;
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 4: safe stop clamp';
+        GVL_TEST_INJECTION.G_Scenario_Step := 1;
+
+    1:
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 104;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 4 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1004;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 4 failed';
+        END_IF;
+    END_CASE;
+
+5:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_NONE;
+    CASE GVL_TEST_INJECTION.G_Scenario_Step OF
+    0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_DEGRADED;
+        GVL_ALARM.G_Security_Armed := FALSE;
+        GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_PARTY;
+        GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 5: degraded clamp';
+        GVL_TEST_INJECTION.G_Scenario_Step := 1;
+
+    1:
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 105;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 5 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1005;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 5 failed';
+        END_IF;
+    END_CASE;
+
+6:
+    L_Expected := E_SCENARIO_TYPE.SCENARIO_AWAY;
+    CASE GVL_TEST_INJECTION.G_Scenario_Step OF
+    0:
+        GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_NORMAL;
+        GVL_ALARM.G_Security_Armed := TRUE;
+        GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_NONE;
+        GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 6: security armed auto away';
+        GVL_TEST_INJECTION.G_Scenario_Step := 1;
+
+    1:
+        IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
+            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 106;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 6 passed';
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Failed := TRUE;
+            GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 1006;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 6 failed';
         END_IF;
     END_CASE;
 
