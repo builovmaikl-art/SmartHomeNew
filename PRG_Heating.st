@@ -24,6 +24,7 @@ VAR
     L_Root_Demand_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
+// === BEGIN HEATING_S1_INPUTS_LOCAL_CONTEXT ===
 // ============================================================
 // S1. INPUTS / LOCAL ARBITRATION CONTEXT
 // ============================================================
@@ -73,7 +74,9 @@ IF GVL_STATE.G_Target_Temperature < 5.0 THEN
 ELSIF GVL_STATE.G_Target_Temperature > 26.0 THEN
     GVL_STATE.G_Target_Temperature := 26.0;
 END_IF;
+// === END HEATING_S1_INPUTS_LOCAL_CONTEXT ===
 
+// === BEGIN HEATING_S15_DECISION_CONTEXT_THERMAL_ALLOCATION ===
 // ============================================================
 // S1.5 DECISION CONTEXT / THERMAL ALLOCATION
 // ============================================================
@@ -116,7 +119,9 @@ fbDecision(
     VI_Manifold_Priority := L_Manifold_Adjusted_Priority,
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 );
+// === END HEATING_S15_DECISION_CONTEXT_THERMAL_ALLOCATION ===
 
+// === BEGIN HEATING_S2_ORCHESTRATION_CALLS ===
 // ============================================================
 // S2. HEATING / DHW ORCHESTRATION CALLS
 // ============================================================
@@ -189,7 +194,9 @@ fbDHWManager(
     VO_Circ_Pump => GVL_STATE.G_DHW_Circ_Pump,
     VO_Status => GVL_STATUS.G_DHW_Status
 );
+// === END HEATING_S2_ORCHESTRATION_CALLS ===
 
+// === BEGIN HEATING_S3_DIAGNOSTICS_PROJECTION_EVENTS ===
 // ============================================================
 // S3. DIAGNOSTICS PROJECTION + EVENTS
 // ============================================================
@@ -263,7 +270,9 @@ fbDiagEventManager(
     VIO_Events := GVL_STATUS.G_Diagnostics_Events,
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
 );
+// === END HEATING_S3_DIAGNOSTICS_PROJECTION_EVENTS ===
 
+// === BEGIN HEATING_S4_MAINTENANCE_GATING ===
 // ============================================================
 // S4. MAINTENANCE GATING
 // ============================================================
@@ -285,7 +294,9 @@ END_IF;
 IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
     GVL_STATE.G_DHW_Circ_Pump := FALSE;
 END_IF;
+// === END HEATING_S4_MAINTENANCE_GATING ===
 
+// === BEGIN HEATING_S5_FREEZE_HARDWARE_SUPPORT ===
 // ============================================================
 // S5. FREEZE HARDWARE SUPPORT LOGIC
 // ============================================================
@@ -297,9 +308,11 @@ IF GVL_STATE.G_Freeze_Hardware_Failed THEN
     GVL_STATE.G_Electric_Heater_Enable := FALSE;
     GVL_STATE.G_Safety_Freeze_Risk := TRUE;
 END_IF;
+// === END HEATING_S5_FREEZE_HARDWARE_SUPPORT ===
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
 
+// === BEGIN HEATING_S6_ADAPTER_COPY_OUT ===
 // ============================================================
 // S6. ADAPTER COPY-OUT
 // ============================================================
@@ -307,7 +320,9 @@ END_IF;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
 END_FOR;
+// === END HEATING_S6_ADAPTER_COPY_OUT ===
 
+// === BEGIN HEATING_S7_ROOT_CAUSE_DIAGNOSTICS ===
 // ============================================================
 // S7. ROOT CAUSE DIAGNOSTICS
 // ============================================================
@@ -335,3 +350,4 @@ fbRootCause(
 
 GVL_STATE.G_Heating_RootCause := fbRootCause.VO_RootCause;
 GVL_STATE.G_Heating_RootConfidence := fbRootCause.VO_Confidence;
+// === END HEATING_S7_ROOT_CAUSE_DIAGNOSTICS ===
