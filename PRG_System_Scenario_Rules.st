@@ -18,8 +18,9 @@ ELSE
     L_Scenario_Req_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
 END_IF;
 
-L_Scenario_Req_Gateway := GVL_COMMAND.G_Scenario_Request_Gateway;
-L_Scenario_Req_Rule := 0;
+// Gateway scenario request is published by PRG_System_Alarm_Gateway through GVL_INTENT_USER.
+L_Scenario_Req_Gateway := GVL_INTENT_USER.I_Scenario_Request;
+L_Scenario_Req_Rule := E_SCENARIO_TYPE.SCENARIO_NONE;
 
 // Rule engine
 fbRuleEngine(
