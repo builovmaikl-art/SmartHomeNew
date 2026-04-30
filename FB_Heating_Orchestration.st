@@ -51,18 +51,15 @@ VAR_IN_OUT
     VIO_DHW_Status : ST_DHW_Status;
 END_VAR
 VAR
-    fbHeatingManager : FB_Heating_System_Manager;
-    fbDHWManager : FB_DHW_Manager;
-    L_i : INT;
-    L_j : INT;
+    fbCore : FB_Heating_Execution_Core;
+    fbOverride : FB_Heating_Override_Layer;
 END_VAR
 
-// Extracted candidate from PRG_Heating S2.
-// Not connected yet.
-// Donor logic remains in PRG_Heating until all extracted candidates are prepared.
-
-fbHeatingManager(
+// Step 1: execution core
+fbCore(
     VI_System_Time_MS := VI_System_Time_MS,
+    VI_Current_TOD := VI_Current_TOD,
+    VI_Current_Day_Of_Week := VI_Current_Day_Of_Week,
     VI_IsActivePLC := VI_IsActivePLC,
     VI_Outdoor_Temp := VI_Outdoor_Temp,
     VI_Floor_Temps := VI_Floor_Temps,
@@ -70,7 +67,7 @@ fbHeatingManager(
     VI_Config := VI_Config,
     VI_Zone_Configs := VI_Zone_Configs,
     VI_Tariff := VI_Tariff,
-    VI_Current_Hour := TO_UINT(VI_Time_Of_Day_MS / GVL_CONSTANTS.C_MS_IN_HOUR),
+    VI_Time_Of_Day_MS := VI_Time_Of_Day_MS,
     VI_Manifold_Pressures := VI_Manifold_Pressures,
     VI_Manifold_Currents := VI_Manifold_Currents,
     VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
@@ -83,51 +80,38 @@ fbHeatingManager(
     VI_IO_Modules_Online := VI_IO_Modules_Online,
     VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
     VI_DHW_Target_Temp := VI_DHW_Target_Temp,
+    VI_DHW_Temp := VI_DHW_Temp,
+    VI_DHW_Pressure := VI_DHW_Pressure,
+    VI_DHW_Config := VI_DHW_Config,
+    VI_Reset_Errors := VI_Reset_Errors,
     VI_System_Mode := VI_System_Mode,
     VI_Emergency_Stop := VI_Emergency_Stop,
     VI_Gas_Safety_Stop := VI_Gas_Safety_Stop,
     VI_Manifold_End_Switches := VI_Manifold_End_Switches,
     VI_Valve_Test_Config := VI_Valve_Test_Config,
-    VO_Manifold_Valves => VIO_Manifold_Valves,
-    VO_Manifold_Pumps => VIO_Manifold_Pumps,
-    VO_Zone_Valves => VIO_Zone_Valves,
-    VO_Boiler_OT_Enable => VIO_Boiler_OT_Enable,
-    VO_Boiler_OT_Setpoint => VIO_Boiler_OT_Setpoint,
-    VO_Backup_Circulation_Pump => VIO_Backup_Circulation_Pump,
-    VO_Electric_Heater_Enable => VIO_Electric_Heater_Enable,
-    VO_Freeze_Risk_Status => VIO_Freeze_Risk_Status,
-    VO_Status => VIO_Manifold_Status,
-    VO_Boiler_Status => VIO_Boiler_Status
+    VIO_Manifold_Valves := VIO_Manifold_Valves,
+    VIO_Manifold_Pumps := VIO_Manifold_Pumps,
+    VIO_Zone_Valves := VIO_Zone_Valves,
+    VIO_Boiler_OT_Enable := VIO_Boiler_OT_Enable,
+    VIO_Boiler_OT_Setpoint := VIO_Boiler_OT_Setpoint,
+    VIO_Backup_Circulation_Pump := VIO_Backup_Circulation_Pump,
+    VIO_Electric_Heater_Enable := VIO_Electric_Heater_Enable,
+    VIO_Freeze_Risk_Status := VIO_Freeze_Risk_Status,
+    VIO_Manifold_Status := VIO_Manifold_Status,
+    VIO_Boiler_Status := VIO_Boiler_Status,
+    VIO_DHW_Heating_Pump := VIO_DHW_Heating_Pump,
+    VIO_DHW_Circ_Pump := VIO_DHW_Circ_Pump,
+    VIO_DHW_Status := VIO_DHW_Status
 );
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF VI_Block_Heating OR (NOT VI_Manifold_Enabled[L_i]) THEN
-        VIO_Manifold_Pumps[L_i] := FALSE;
-        VIO_Manifold_Valves[L_i] := 0.0;
-
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-            IF VI_Zone_Configs[L_j].manifold_id = L_i THEN
-                VIO_Zone_Valves[L_j] := FALSE;
-            END_IF;
-        END_FOR;
-    END_IF;
-END_FOR;
-
-fbDHWManager(
-    VI_System_Time_MS := VI_System_Time_MS,
-    VI_Current_TOD := VI_Current_TOD,
-    VI_IsActivePLC := VI_IsActivePLC,
-    VI_Temp := VI_DHW_Temp,
-    VI_Pressure := VI_DHW_Pressure,
-    VI_Config := VI_DHW_Config,
-    VI_Current_Day_Of_Week := VI_Current_Day_Of_Week,
-    VI_IO_Modules_Online := VI_IO_Modules_Online,
-    VI_Reset_Errors := VI_Reset_Errors,
-    VI_Emergency_Stop := VI_Emergency_Stop,
-    VI_System_Mode := VI_System_Mode,
-    VO_Heating_Pump => VIO_DHW_Heating_Pump,
-    VO_Circ_Pump => VIO_DHW_Circ_Pump,
-    VO_Status => VIO_DHW_Status
+// Step 2: override layer
+fbOverride(
+    VI_Block_Heating := VI_Block_Heating,
+    VI_Manifold_Enabled := VI_Manifold_Enabled,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VIO_Manifold_Valves := VIO_Manifold_Valves,
+    VIO_Manifold_Pumps := VIO_Manifold_Pumps,
+    VIO_Zone_Valves := VIO_Zone_Valves
 );
 
 END_FUNCTION_BLOCK
