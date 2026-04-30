@@ -234,7 +234,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 21:30 .github
 -rw-r--r--  1 runner runner   1040 Apr 30 21:30 PRG_System_Alarm_Gateway.st
 -rw-r--r--  1 runner runner   1243 Apr 30 21:30 PRG_System_BlackBox.st
 -rw-r--r--  1 runner runner    936 Apr 30 21:30 PRG_System_Coordinator.st
--rw-r--r--  1 runner runner   1188 Apr 30 21:30 PRG_System_Diagnostics.st
+-rw-r--r--  1 runner runner   1718 Apr 30 21:30 PRG_System_Diagnostics.st
 -rw-r--r--  1 runner runner    125 Apr 30 21:30 PRG_System_Evacuation.st
 -rw-r--r--  1 runner runner    568 Apr 30 21:30 PRG_System_Health.st
 -rw-r--r--  1 runner runner   4062 Apr 30 21:30 PRG_System_History.st
@@ -341,8 +341,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 21:30 out
 -rw-r--r--  1 runner runner    177 Apr 30 21:30 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1060
+total 1064
 drwxr-xr-x 2 runner runner    4096 Apr 30 21:30 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 21:30 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 21:30 .gitkeep
--rw-r--r-- 1 runner runner 1076365 Apr 30 21:30 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1078123 Apr 30 21:30 RESULT_methods_clean.xml
