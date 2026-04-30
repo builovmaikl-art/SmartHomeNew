@@ -3,7 +3,7 @@ VAR_INPUT
     VI_System_Time_MS : UDINT;
     VI_Safety_Emergency_Stop : BOOL;
     VI_Safety_Gas_Latched : BOOL;
-    VI_System_Mode : E_System_Operating_Mode;
+    VI_DHW_Block : BOOL;
     VI_Freeze_Request : BOOL;
     VI_Preheat_Request : BOOL;
     VI_DHW_Heating_Pump_Feedback : BOOL;
@@ -24,10 +24,9 @@ VAR
     L_i : INT;
 END_VAR
 
-// Extracted candidate from PRG_Heating S1.
-// Not connected yet.
-// Donor logic remains in PRG_Heating until all extracted candidates are prepared.
-// This candidate uses explicit inputs/outputs and does not switch global ownership yet.
+// Local heating context builder.
+// DHW blocking now comes from the command layer via VI_DHW_Block.
+// Safety still gates local heating/DHW context until full safety-command migration is complete.
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     VO_Boiler_Modulation_REAL[L_i] := TO_REAL(VI_Boiler_Modulation_Raw[L_i]);
@@ -42,7 +41,7 @@ IF VO_Heating_Emergency_Stop THEN
     VO_Heating_DHW_Demand := FALSE;
 ELSIF VO_Heating_Gas_Safety_Stop THEN
     VO_Heating_DHW_Demand := FALSE;
-ELSIF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
+ELSIF VI_DHW_Block THEN
     VO_Heating_DHW_Demand := FALSE;
 END_IF;
 
