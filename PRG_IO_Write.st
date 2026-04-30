@@ -3,6 +3,7 @@ VAR
     L_i : INT;
     L_Heating_Forced_Off : BOOL;
     L_Vent_Forced_Off : BOOL;
+    L_Water_Forced_Off : BOOL;
 END_VAR
 
 IF NOT GVL_STATUS.G_Is_Active_PLC THEN
@@ -16,6 +17,10 @@ L_Heating_Forced_Off :=
 L_Vent_Forced_Off := 
     GVL_COMMAND_SHADOW.G_Vent_Stop OR 
     GVL_COMMAND_SHADOW.G_Vent_Block;
+
+L_Water_Forced_Off := 
+    GVL_COMMAND_SHADOW.G_Close_Valve_35 OR 
+    GVL_COMMAND_SHADOW.G_Close_Valve_36;
 
 // Heating
 FOR L_i := 1 TO 8 DO
@@ -64,5 +69,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         GVL_IO.AO_Exhaust_Fans[L_i] := GVL_VENT_OUTPUT.AO_Exhaust_Fans[L_i];
     END_IF;
 END_FOR;
+
+// Water
+FOR L_i := 1 TO 32 DO
+    IF L_Water_Forced_Off THEN
+        GVL_IO.DO_Water_Zone_Enable[L_i] := FALSE;
+    ELSE
+        GVL_IO.DO_Water_Zone_Enable[L_i] := GVL_WATER_OUTPUT.DO_Water_Zone_Enable[L_i];
+    END_IF;
+END_FOR;
+
+GVL_IO.DO_Water_Valve_35_Close := GVL_COMMAND_SHADOW.G_Close_Valve_35;
+GVL_IO.DO_Water_Valve_36_Close := GVL_COMMAND_SHADOW.G_Close_Valve_36;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
