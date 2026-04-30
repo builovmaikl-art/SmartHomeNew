@@ -99,7 +99,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 09:57 .github
 -rw-r--r--  1 runner runner   1023 Apr 30 09:57 FB_Persist_Builder.st
 -rw-r--r--  1 runner runner   3027 Apr 30 09:57 FB_Persist_Pipeline.st
 -rw-r--r--  1 runner runner   1111 Apr 30 09:57 FB_Presence_Manager.st
--rw-r--r--  1 runner runner   1175 Apr 30 09:57 FB_Presence_Playback.st
+-rw-r--r--  1 runner runner    901 Apr 30 09:57 FB_Presence_Playback.st
 -rw-r--r--  1 runner runner   1427 Apr 30 09:57 FB_Random_Generator.st
 -rw-r--r--  1 runner runner   2825 Apr 30 09:57 FB_Redundancy_Manager.st
 -rw-r--r--  1 runner runner   6896 Apr 30 09:57 FB_Rule_Engine.st
@@ -313,4 +313,4 @@ total 976
 drwxr-xr-x 2 runner runner   4096 Apr 30 09:57 .
 drwxr-xr-x 5 runner runner   4096 Apr 30 09:57 ..
 -rw-r--r-- 1 runner runner      0 Apr 30 09:57 .gitkeep
--rw-r--r-- 1 runner runner 987615 Apr 30 09:57 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 987195 Apr 30 09:57 RESULT_methods_clean.xml
