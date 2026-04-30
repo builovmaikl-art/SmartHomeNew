@@ -252,7 +252,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 22:13 .github
 -rw-r--r--  1 runner runner    752 Apr 30 22:13 PRG_Test_Injection.st
 -rw-r--r--  1 runner runner   9777 Apr 30 22:13 PRG_Test_Scenario_Runner.st
 -rw-r--r--  1 runner runner    548 Apr 30 22:13 PRG_Time_Service.st
--rw-r--r--  1 runner runner   1101 Apr 30 22:13 PRG_User_Adapt_Control.st
+-rw-r--r--  1 runner runner   1593 Apr 30 22:13 PRG_User_Adapt_Control.st
 -rw-r--r--  1 runner runner   2675 Apr 30 22:13 PRG_Ventilation.st
 -rw-r--r--  1 runner runner    947 Apr 30 22:13 PRG_Water.st
 -rw-r--r--  1 runner runner    711 Apr 30 22:13 ST_Alarm_Record.dut
@@ -348,8 +348,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 22:13 out
 -rw-r--r--  1 runner runner    177 Apr 30 22:13 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1080
+total 1084
 drwxr-xr-x 2 runner runner    4096 Apr 30 22:13 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 22:13 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 22:13 .gitkeep
--rw-r--r-- 1 runner runner 1097573 Apr 30 22:13 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1097852 Apr 30 22:13 RESULT_methods_clean.xml
