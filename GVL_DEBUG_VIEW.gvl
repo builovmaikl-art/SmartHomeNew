@@ -1,16 +1,11 @@
 VAR_GLOBAL
-    // Read-only engineering dashboard projection.
-    // This GVL must not be used as a control input.
-
     D_Current_Time_MS : UDINT := 0;
 
-    // Safety / recovery snapshot
     D_Safety_Mode : E_Safety_Mode := NORMAL;
     D_Safety_Active : BOOL := FALSE;
     D_Recovery_Phase : E_Recovery_Phase := IDLE;
     D_Recovery_Active : BOOL := FALSE;
 
-    // Behavior snapshot
     D_Current_Scenario : STRING(255) := '';
     D_Behavior_Reason : STRING(255) := '';
     D_Score_Night : INT := 0;
@@ -22,13 +17,11 @@ VAR_GLOBAL
     D_Intent_VentBoost : BOOL := FALSE;
     D_Intent_AccessSecure : BOOL := FALSE;
 
-    // Command snapshot
     D_Heating_Block : BOOL := FALSE;
     D_Vent_Stop : BOOL := FALSE;
     D_Water_Block : BOOL := FALSE;
     D_Access_Open_Active : BOOL := FALSE;
 
-    // Explainability snapshot
     D_Global_Reason : STRING(255) := '';
     D_Behavior_Why_Active : STRING(255) := '';
     D_Heating_Why_Blocked : STRING(255) := '';
@@ -36,17 +29,15 @@ VAR_GLOBAL
     D_Water_Why_Closed : STRING(255) := '';
     D_Access_Why_Opened : STRING(255) := '';
 
-    // Adaptation summary
     D_Main_VentBoost_Zone : INT := 0;
     D_Main_VentBoost_Zone_Weight : REAL := 0.0;
     D_Main_VentBoost_Zone_Confidence : REAL := 0.0;
     D_Max_VentBoost_Zone_Weight : REAL := 0.0;
     D_Min_VentBoost_Zone_Weight : REAL := 0.0;
 
-    // Current adaptive profile
     D_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
+    D_Adapt_Profile_Text : STRING(32) := 'BALANCED';
 
-    // Trace snapshot
     D_Last_Trace_Text : STRING(120) := '';
     D_Last_Trace_Time_MS : UDINT := 0;
     D_Last_Trace_Reason : E_System_Reason_Code := REASON_NONE;
