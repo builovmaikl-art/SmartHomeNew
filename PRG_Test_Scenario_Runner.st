@@ -70,10 +70,10 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         GVL_COMMAND.G_Scenario_Request_Operator := E_SCENARIO_TYPE.SCENARIO_NONE;
         GVL_INTENT_USER.I_Scenario_Request := E_SCENARIO_TYPE.SCENARIO_NONE;
         GVL_CONFIG.G_HMI_User_Rules[1].Enabled := TRUE;
-        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Type := E_Rule_Condition_Type.COND_TRUE;
-        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Op := E_Rule_Comparison.COMP_TRUE;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Type := E_Rule_Condition_Type.COND_TIME_OF_DAY;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Op := E_Rule_Comparison.COMP_GE;
         GVL_CONFIG.G_HMI_User_Rules[1].Condition_Target_ID := 0;
-        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Value := REAL#1.0;
+        GVL_CONFIG.G_HMI_User_Rules[1].Condition_Value := REAL#0.0;
         GVL_CONFIG.G_HMI_User_Rules[1].Action_Type := E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO;
         GVL_CONFIG.G_HMI_User_Rules[1].Action_Value := TO_REAL(TO_INT(L_Expected));
         GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3: rule fallback';
