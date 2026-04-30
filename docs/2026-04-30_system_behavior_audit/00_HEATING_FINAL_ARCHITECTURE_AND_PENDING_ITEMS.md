@@ -1,226 +1,230 @@
-# HEATING — Final Architecture & Pending Items
+# HEATING — Final Architecture & Next System Step
 
 Date: 2026-04-30
 
 ---
 
-# 1. FINAL ARCHITECTURE
+# 1. Current architecture
 
-## Execution pipeline (current)
+`PRG_Heating` is now a thin domain pipeline assembled from FBs.
 
-1. FB_Heating_Local_Context
-2. FB_Heating_Thermal_Allocation
-3. FB_Heating_Orchestration
-4. FB_Heating_Diagnostics
-5. FB_Heating_Maintenance_Gating
-6. FB_Heating_Freeze_Hardware
-7. FB_Heating_Adapter_CopyOut
-8. FB_Heating_RootCause_Diagnostics
+Current execution chain:
 
----
-
-## Responsibility split
-
-### Context layer
-- FB_Heating_Local_Context
-
-Responsibilities:
-- safety projection (local)
-- dhw demand preparation
-- mode hold
-- target temperature
+```text
+FB_Heating_Local_Context
+→ FB_Heating_Thermal_Allocation
+→ FB_Heating_Orchestration
+   → FB_Heating_Execution_Core
+   → FB_Heating_Override_Layer
+→ FB_Heating_Diagnostics
+→ FB_Heating_Maintenance_Gating
+→ FB_Heating_Freeze_Hardware
+→ FB_Heating_Adapter_CopyOut
+→ FB_Heating_RootCause_Diagnostics
+```
 
 ---
 
-### Decision layer
-- FB_Heating_Thermal_Allocation
+# 2. Responsibility split
 
-Responsibilities:
-- priority calculation
-- thermal allocation
-- manifold enable decision
+## Context
+
+`FB_Heating_Local_Context`
+
+Owns:
+
+- boiler modulation adaptation;
+- target temperature calculation;
+- mode hold memory;
+- local DHW demand preparation from previous-cycle DHW feedback.
+
+Does not own:
+
+- final safety authority;
+- global command decision;
+- IO write.
+
+## Decision / allocation
+
+`FB_Heating_Thermal_Allocation`
+
+Owns:
+
+- policy-influenced priority calculation;
+- thermal budget decision through `FB_Heating_Decision_Context`;
+- manifold enabled/allowed result.
+
+Does not own:
+
+- pumps;
+- valves;
+- physical IO;
+- safety clamp.
+
+## Execution core
+
+`FB_Heating_Execution_Core`
+
+Owns:
+
+- `FB_Heating_System_Manager` call;
+- `FB_DHW_Manager` call;
+- raw actuator proposal from heating/DHW managers.
+
+Does not own:
+
+- global block;
+- allocation override;
+- command precedence.
+
+## Override layer
+
+`FB_Heating_Override_Layer`
+
+Owns:
+
+- applying `G_Heating_Block`;
+- applying manifold enabled/disabled result;
+- forcing blocked manifold outputs to safe local proposal state.
+
+Does not own:
+
+- manager logic;
+- policy;
+- diagnostics;
+- final physical IO.
+
+## Post-processing
+
+```text
+FB_Heating_Diagnostics
+FB_Heating_Maintenance_Gating
+FB_Heating_Freeze_Hardware
+FB_Heating_Adapter_CopyOut
+FB_Heating_RootCause_Diagnostics
+```
 
 ---
 
-### Execution layer
-- FB_Heating_Orchestration
+# 3. Command architecture
 
-Responsibilities:
-- call heating manager
-- call dhw manager
-- apply allocation
-- apply block
-- write actuator proposal
+Current command flow:
 
----
+```text
+Safety/System/User Intent
+→ PRG_Command_Arbitration
+→ GVL_COMMAND_SHADOW
+→ PRG_Heating
+→ GVL_STATE actuator proposal
+→ PRG_IO_Write
+→ GVL_IO physical outputs
+```
 
-### Post-processing
-- Diagnostics
-- Maintenance
-- Freeze
-- Adapter
-- RootCause
+Heating command fields currently used:
 
----
-
-# 2. COMMAND ARCHITECTURE
-
-## Flow
-
-INTENT → PRG_Command_Arbitration → GVL_COMMAND_SHADOW → PRG_Heating
+```text
+G_Heating_Block
+G_Heating_DHW_Block
+G_Heating_Emergency_Stop
+G_Heating_Gas_Safety_Stop
+```
 
 ---
 
-## Current commands
+# 4. Preserved behavior
 
-- G_Heating_Block
-- G_Heating_DHW_Block
+## DHW previous-cycle feedback
 
----
+`FB_Heating_Local_Context` reads:
 
-## What is already correct
-
-- heating no longer reads coordinator directly
-- safety partially moved to command layer
-- execution is separated from decision
-
----
-
-# 3. CRITICAL BEHAVIOR (MUST NOT BREAK)
-
-## DHW feedback delay
-
-S1 reads:
-
+```text
 GVL_STATE.G_DHW_Heating_Pump
+```
 
-S2 writes it later in the same cycle
+before `FB_Heating_Execution_Core` updates DHW state later in the same scan.
 
-Meaning:
-
-→ previous-cycle dependency
-
-This MUST be preserved.
+This preserves the original previous-cycle feedback behavior.
 
 ---
 
-# 4. REMAINING PROBLEMS (REAL ONES)
+# 5. Completed cleanup
 
-## 4.1 DHW block duplication
+Done:
 
-Currently:
+- `PRG_Heating` decomposed into FB pipeline.
+- DHW block moved to command layer.
+- Heating safety authority moved to command layer.
+- S2 split into execution core and override layer.
+- Fragmentary decomposition documents `09`–`12` removed.
 
-- Local context blocks DHW
-- Arbitration also blocks DHW
+Remaining by design:
 
-Problem:
+- `GVL_STATE` is still the actuator proposal bus.
+- `PRG_IO_Write` still projects most Heating outputs from state.
+- Final physical safety clamp is not yet explicit for Heating outputs.
 
-→ duplicated responsibility
+---
+
+# 6. Logical next step
+
+## NEXT — IO Write command-aware final projection
+
+Reason:
+
+`PRG_Heating` now produces a cleaner actuator proposal, but `PRG_IO_Write` is still the final physical output owner.
 
 Target:
 
-→ only command layer decides
+```text
+COMMAND > STATE > IO
+```
+
+Minimum required behavior:
+
+1. `PRG_IO_Write` remains final physical output projector.
+2. Heating command gates from `GVL_COMMAND_SHADOW` override `GVL_STATE` before physical outputs.
+3. Emergency/blocked Heating state forces safe physical outputs even if upstream state is inconsistent.
+4. Gas-safety behavior must not accidentally disable anti-freeze backup hardware unless full heating block/emergency is active.
+
+Suggested first IO change:
+
+```text
+IF GVL_COMMAND_SHADOW.G_Heating_Block
+   OR GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop THEN
+
+   force manifold pumps OFF
+   force manifold valves CLOSED
+   force zone valves OFF
+   force DHW heating pump OFF
+   force DHW circ pump OFF
+   force backup circulation pump OFF
+   force electric heater OFF
+END_IF
+```
+
+Important distinction:
+
+```text
+G_Heating_Gas_Safety_Stop
+```
+
+should stop gas/boiler behavior through command/heating manager logic, but must not automatically kill backup/electric anti-freeze outputs at IO level unless full heating block/emergency is active.
 
 ---
 
-## 4.2 Safety split
+# 7. Not now
 
-Currently:
+Do not start yet:
 
-- Part in Local Context
-- Part in Arbitration
-
-Problem:
-
-→ inconsistent authority
+- test matrix;
+- full GVL removal;
+- large IO refactor beyond command-aware safety projection;
+- user-facing documentation.
 
 ---
 
-## 4.3 Orchestration is still "fat"
+# Final note
 
-FB_Heating_Orchestration:
-- execution
-- override
-- partial decision
+Heating architecture is structurally ready.
 
----
-
-## 4.4 GVL coupling still present
-
-Execution still writes directly into:
-
-GVL_STATE
-
----
-
-# 5. NEXT STEPS (STRICT ORDER)
-
-## STEP 1 — unify DHW block
-
-- remove DHW block from Local Context
-- use G_Heating_DHW_Block only
-
----
-
-## STEP 2 — finalize safety in command layer
-
-- move Emergency/Gas logic into arbitration fully
-- Local Context becomes passive
-
----
-
-## STEP 3 — slim orchestration
-
-Split FB_Heating_Orchestration into:
-
-- Execution core (manager calls)
-- Override layer
-
----
-
-## STEP 4 — prepare IO layer for commands
-
-Allow command override over state:
-
-COMMAND > STATE
-
----
-
-## STEP 5 — remove legacy GVL dependencies
-
-Gradual replacement:
-
-STATE → structured outputs
-
----
-
-# 6. WHAT WE DO NOT TOUCH YET
-
-- Test scenarios
-- IO refactor
-- full removal of GVL
-
----
-
-# 7. STATUS
-
-System is now:
-
-- decomposed
-- structured
-- command-driven (partial)
-
-Not yet:
-
-- fully deterministic
-- fully decoupled
-
----
-
-# FINAL NOTE
-
-System reached architectural transition point.
-
-Further work is NOT refactoring.
-
-It is SYSTEM DESIGN.
+The next system-level hardening point is `PRG_IO_Write`, because it is the final physical output owner.
