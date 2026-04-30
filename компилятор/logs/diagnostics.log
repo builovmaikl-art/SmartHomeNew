@@ -82,7 +82,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 16:44 .github
 -rw-r--r--  1 runner runner    910 Apr 30 16:44 FB_Heating_Maintenance_Gating.st
 -rw-r--r--  1 runner runner   5550 Apr 30 16:44 FB_Heating_Manifold_Control.st
 -rw-r--r--  1 runner runner   1326 Apr 30 16:44 FB_Heating_Optimizer.st
--rw-r--r--  1 runner runner   5742 Apr 30 16:44 FB_Heating_Orchestration.st
+-rw-r--r--  1 runner runner   5236 Apr 30 16:44 FB_Heating_Orchestration.st
 -rw-r--r--  1 runner runner   1120 Apr 30 16:44 FB_Heating_Override_Layer.st
 -rw-r--r--  1 runner runner  12781 Apr 30 16:44 FB_Heating_Policy_Manager.st
 -rw-r--r--  1 runner runner   2489 Apr 30 16:44 FB_Heating_Policy_Observer.st
@@ -324,4 +324,4 @@ total 1020
 drwxr-xr-x 2 runner runner    4096 Apr 30 16:44 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 16:44 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 16:44 .gitkeep
--rw-r--r-- 1 runner runner 1033065 Apr 30 16:44 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1035754 Apr 30 16:44 RESULT_methods_clean.xml
