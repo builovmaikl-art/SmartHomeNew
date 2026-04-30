@@ -1,8 +1,44 @@
-{attribute 'qualified_only'}
-VAR_GLOBAL
-    G_Trace_Index : INT := 0;
-    G_Trace_Max : INT := 100;
+TYPE E_Trace_Layer :
+(
+    TRACE_SENSOR,
+    TRACE_SCENARIO,
+    TRACE_INTENT,
+    TRACE_COMMAND,
+    TRACE_DOMAIN,
+    TRACE_IO,
+    TRACE_SAFETY,
+    TRACE_RECOVERY
+);
+END_TYPE
 
-    G_Trace_Time : ARRAY[1..100] OF UDINT;
-    G_Trace_Code : ARRAY[1..100] OF INT;
+TYPE E_Trace_Source :
+(
+    SRC_NONE,
+    SRC_SENSOR,
+    SRC_USER,
+    SRC_SCENARIO,
+    SRC_SAFETY,
+    SRC_RECOVERY,
+    SRC_COMMAND,
+    SRC_DOMAIN,
+    SRC_IO
+);
+END_TYPE
+
+TYPE ST_Trace_Entry :
+STRUCT
+    Timestamp_MS : UDINT;
+    Layer : E_Trace_Layer;
+    Source : E_Trace_Source;
+    Reason_Code : E_System_Reason_Code;
+    Value_Bool : BOOL;
+    Value_Real : REAL;
+    Text : STRING(120);
+END_STRUCT
+END_TYPE
+
+VAR_GLOBAL
+    G_Trace_Buffer : ARRAY[1..200] OF ST_Trace_Entry;
+    G_Trace_Write_Index : INT := 1;
+    G_Trace_Enabled : BOOL := TRUE;
 END_VAR
