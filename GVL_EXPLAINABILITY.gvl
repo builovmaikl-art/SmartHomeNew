@@ -1,0 +1,30 @@
+TYPE E_System_Reason_Code :
+(
+    REASON_NONE,
+    REASON_FIRE,
+    REASON_GAS,
+    REASON_WATER_LEAK,
+    REASON_GLOBAL_STOP,
+    REASON_EVACUATION,
+    REASON_RECOVERY_ACTIVE,
+    REASON_USER_REQUEST,
+    REASON_COMMAND_CLAMP,
+    REASON_DOMAIN_PROJECTION
+);
+END_TYPE
+
+VAR_GLOBAL
+    G_Last_Global_Reason_Code : E_System_Reason_Code := REASON_NONE;
+    G_Last_Global_Reason_Text : STRING(255) := 'No active reason';
+    G_Last_Safety_Mode : E_Safety_Mode := NORMAL;
+    G_Last_Recovery_Phase : E_Recovery_Phase := IDLE;
+    G_Last_Command_Source : STRING(80) := '';
+    G_Last_Domain_Affected : STRING(80) := '';
+    G_Last_Output_Affected : STRING(80) := '';
+    G_Last_Update_MS : UDINT := 0;
+
+    G_Heating_Why_Blocked : STRING(255) := '';
+    G_Vent_Why_Stopped : STRING(255) := '';
+    G_Water_Why_Closed : STRING(255) := '';
+    G_Access_Why_Opened : STRING(255) := '';
+END_VAR
