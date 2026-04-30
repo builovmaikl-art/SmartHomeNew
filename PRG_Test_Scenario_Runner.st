@@ -41,8 +41,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 101;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 1 passed';
         ELSE
@@ -71,8 +71,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 102;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 2 passed';
         ELSE
@@ -108,8 +108,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 103;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 3 passed';
         ELSE
@@ -138,8 +138,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 104;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 4 passed';
         ELSE
@@ -168,8 +168,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 105;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 5 passed';
         ELSE
@@ -198,8 +198,8 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
 
     2:
+        GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
         IF GVL_STATUS.G_Current_Scenario = L_Expected THEN
-            GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
             GVL_TEST_INJECTION.G_Scenario_Last_Result_Code := 106;
             GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test 6 passed';
         ELSE
@@ -209,12 +209,20 @@ CASE GVL_TEST_INJECTION.G_Scenario_Current OF
         END_IF;
     END_CASE;
 
+ELSE
+    GVL_TEST_INJECTION.G_Scenario_Done := TRUE;
+    GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario test sequence complete';
 END_CASE;
 
 IF GVL_TEST_INJECTION.G_Scenario_Done AND GVL_TEST_INJECTION.G_Scenario_Auto_Run THEN
     GVL_TEST_INJECTION.G_Test_Timer_MS := GVL_TEST_INJECTION.G_Test_Timer_MS + 1;
     IF GVL_TEST_INJECTION.G_Test_Timer_MS >= 5 THEN
-        GVL_TEST_INJECTION.G_Scenario_Current := GVL_TEST_INJECTION.G_Scenario_Current + 1;
-        GVL_TEST_INJECTION.G_Scenario_Reset_Request := TRUE;
+        IF GVL_TEST_INJECTION.G_Scenario_Current < 6 THEN
+            GVL_TEST_INJECTION.G_Scenario_Current := GVL_TEST_INJECTION.G_Scenario_Current + 1;
+            GVL_TEST_INJECTION.G_Scenario_Reset_Request := TRUE;
+        ELSE
+            GVL_TEST_INJECTION.G_Scenario_Auto_Run := FALSE;
+            GVL_TEST_INJECTION.G_Scenario_Status_Msg := 'Scenario auto-run complete';
+        END_IF;
     END_IF;
 END_IF;
