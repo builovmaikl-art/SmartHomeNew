@@ -26,6 +26,7 @@ PRG_Heating_Policy_Observer();
 PRG_Mode_Manager();
 PRG_System_Coordinator();
 PRG_Policy();
+PRG_Scenario_Engine();
 PRG_Command_Arbitration();
 PRG_Command_Verifier();
 PRG_Security();
