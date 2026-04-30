@@ -5,6 +5,7 @@ END_VAR
 PRG_Time_Service();
 PRG_IO_Read();
 PRG_Input_Processing();
+PRG_Behavior_Adapt_Profile();
 PRG_Safety();
 PRG_Safety_Shutdown();
 PRG_Safety_Recovery();
