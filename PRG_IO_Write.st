@@ -3,6 +3,60 @@ VAR
     L_i : INT;
 END_VAR
 
+// ============================================================
+// STANDBY BEHAVIOR (Step 3.2)
+// ============================================================
+// Standby PLC must not drive physical outputs.
+IF NOT GVL_STATUS.G_Is_Active_PLC THEN
+    FOR L_i := 1 TO 8 DO
+        GVL_IO.DO_Zone_Valves[L_i] := FALSE;
+        GVL_IO.AO_Lighting_Levels[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_IO.DO_Manifold_Pumps[L_i] := FALSE;
+        GVL_IO.AO_Manifold_Valves[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        GVL_IO.AO_Supply_Fans[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        GVL_IO.AO_Exhaust_Fans[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+        GVL_IO.AO_Blinds_Positions[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO 32 DO
+        GVL_IO.DO_Water_Zone_Enable[L_i] := FALSE;
+    END_FOR;
+
+    GVL_IO.DO_DHW_Heating_Pump := FALSE;
+    GVL_IO.DO_DHW_Circ_Pump := FALSE;
+    GVL_IO.DO_Backup_Circulation_Pump := FALSE;
+    GVL_IO.DO_Electric_Heater_Enable := FALSE;
+
+    GVL_IO.DO_Gas_Siren := FALSE;
+    GVL_IO.DO_Fire_Siren := FALSE;
+    GVL_IO.DO_Security_Siren := FALSE;
+
+    GVL_IO.DO_Water_Valve_35_Close := FALSE;
+    GVL_IO.DO_Water_Valve_36_Close := FALSE;
+    GVL_IO.DO_Gas_Valve_Close := FALSE;
+
+    GVL_IO.DO_Lock_1_Open := FALSE;
+    GVL_IO.DO_Lock_1_Close := FALSE;
+    GVL_IO.DO_Lock_2_Open := FALSE;
+    GVL_IO.DO_Lock_2_Close := FALSE;
+    GVL_IO.DO_Gate_Open := FALSE;
+    GVL_IO.DO_Wicket_Open := FALSE;
+
+    RETURN;
+END_IF;
+
 // 2. ЗАПИСЬ ВЫХОДОВ (GVL_STATE -> GVL_IO)
 
 // 2.1. Отопление (Термоэлектрические приводы)
@@ -27,13 +81,8 @@ END_FOR;
 // 2.5. ГВС
 GVL_IO.DO_DHW_Heating_Pump := GVL_STATE.G_DHW_Heating_Pump;
 GVL_IO.DO_DHW_Circ_Pump := GVL_STATE.G_DHW_Circ_Pump;
-IF GVL_STATUS.G_Is_Active_PLC THEN
-    GVL_IO.DO_Backup_Circulation_Pump := GVL_STATE.G_Backup_Circulation_Pump;
-    GVL_IO.DO_Electric_Heater_Enable := GVL_STATE.G_Electric_Heater_Enable;
-ELSE
-    GVL_IO.DO_Backup_Circulation_Pump := FALSE;
-    GVL_IO.DO_Electric_Heater_Enable := FALSE;
-END_IF;
+GVL_IO.DO_Backup_Circulation_Pump := GVL_STATE.G_Backup_Circulation_Pump;
+GVL_IO.DO_Electric_Heater_Enable := GVL_STATE.G_Electric_Heater_Enable;
 
 // 2.6. Освещение и шторы
 FOR L_i := 1 TO 8 DO
