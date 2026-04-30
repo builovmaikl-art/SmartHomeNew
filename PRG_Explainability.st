@@ -11,7 +11,9 @@ GVL_EXPLAINABILITY.G_Last_Safety_Mode := L_Mode;
 GVL_EXPLAINABILITY.G_Last_Recovery_Phase := L_Recovery;
 GVL_EXPLAINABILITY.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
-// Global reason
+// ============================================================
+// GLOBAL REASON (Safety / Recovery)
+// ============================================================
 CASE L_Mode OF
     FIRE:
         GVL_EXPLAINABILITY.G_Last_Global_Reason_Code := REASON_FIRE;
@@ -38,27 +40,34 @@ CASE L_Mode OF
         END_IF;
 END_CASE;
 
-// Domain explanations
+// ============================================================
+// BEHAVIOR REASON
+// ============================================================
+GVL_EXPLAINABILITY.G_Behavior_Why_Active := GVL_INTENT_BEHAVIOR.I_Reason_Text;
+
+// ============================================================
+// DOMAIN EXPLANATIONS
+// ============================================================
 IF GVL_COMMAND_SHADOW.G_Heating_Block THEN
-    GVL_EXPLAINABILITY.G_Heating_Why_Blocked := 'Heating blocked by command arbitration (safety or recovery)';
+    GVL_EXPLAINABILITY.G_Heating_Why_Blocked := 'Heating blocked (safety / recovery / behavior)';
 ELSE
     GVL_EXPLAINABILITY.G_Heating_Why_Blocked := '';
 END_IF;
 
 IF GVL_COMMAND_SHADOW.G_Vent_Stop THEN
-    GVL_EXPLAINABILITY.G_Vent_Why_Stopped := 'Ventilation stopped by command arbitration';
+    GVL_EXPLAINABILITY.G_Vent_Why_Stopped := 'Ventilation stopped (safety / recovery)';
 ELSE
     GVL_EXPLAINABILITY.G_Vent_Why_Stopped := '';
 END_IF;
 
 IF GVL_COMMAND_SHADOW.G_Close_Valve_35 OR GVL_COMMAND_SHADOW.G_Close_Valve_36 THEN
-    GVL_EXPLAINABILITY.G_Water_Why_Closed := 'Water valves closed by safety command';
+    GVL_EXPLAINABILITY.G_Water_Why_Closed := 'Water valves closed (safety command)';
 ELSE
     GVL_EXPLAINABILITY.G_Water_Why_Closed := '';
 END_IF;
 
 IF GVL_COMMAND_SHADOW.G_Lock_1_Open OR GVL_COMMAND_SHADOW.G_Lock_2_Open THEN
-    GVL_EXPLAINABILITY.G_Access_Why_Opened := 'Access opened due to evacuation or command override';
+    GVL_EXPLAINABILITY.G_Access_Why_Opened := 'Access opened (evacuation / override)';
 ELSE
     GVL_EXPLAINABILITY.G_Access_Why_Opened := '';
 END_IF;
