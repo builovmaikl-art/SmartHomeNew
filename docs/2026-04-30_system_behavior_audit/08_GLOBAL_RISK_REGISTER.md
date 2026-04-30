@@ -198,6 +198,50 @@ PRG_Time_Service
 
 This is a role discipline over existing code, not a rewrite.
 
+## Responsibility status legend
+
+| Status | Meaning |
+|---|---|
+| CLEAN | Responsibility is already reasonably focused. |
+| MIXED | Block has multiple responsibilities but may be tolerated during transition. |
+| VIOLATION | Block owns behavior that should move or be routed through another role. |
+| OBSERVE_ONLY | Block should record/observe, not decide or command. |
+| TRANSITION | Block exists to bridge old/new architecture and must be reduced later. |
+
+## PRG responsibility registry
+
+| PRG / group | Responsibility status | Current responsibility | Target responsibility | Cleanup direction |
+|---|---:|---|---|---|
+| `PRG_Time_Service` | CLEAN | produces canonical time and compatibility mirrors | single time producer | remove/avoid secondary time producers elsewhere |
+| `PRG_IO_Read` | MIXED | IO acquisition, debounce, calibration, first-stage diagnostics, some fail-safe state mitigation | input acquisition + normalization + explicitly documented first-stage diagnostics | keep, but document and prevent final actuator ownership from growing |
+| `PRG_Safety` | MIXED | safety workflow, hazard managers, safety intent, ownership watchdog | safety fact + safety intent producer | keep safety ownership here; downstream must not weaken it |
+| `PRG_System_Intent` | CLEAN | publishes system intent | validated system intent producer | keep as intent publisher only |
+| `PRG_System_Health` | CLEAN | health orchestration | health aggregation and root-cause publication | local diagnostics must flow into health, not bypass it |
+| `PRG_System_Alarm_Gateway` | MIXED | alarm orchestration + gateway intent ingress | alarm/gateway service ingress | separate conceptually: alarm observation vs gateway requests routed to arbitration |
+| `PRG_Test_Scenario_Runner` | TRANSITION | temporary runtime test PRG | excluded from production architecture | remove from production pipeline or keep hard-gated for test only |
+| `PRG_System_Scenario_Rules` | MIXED | rule engine + scenario arbitration | scenario candidate resolver | must produce candidates/intents, not physical decisions |
+| `PRG_System_Access_Maintenance` | MIXED | access confirmation, maintenance writes, logging | access/maintenance confirmation service | ensure maintenance writes are explicit and documented |
+| `PRG_System_BlackBox` | OBSERVE_ONLY | blackbox snapshot | event/snapshot observer | must not mutate behavior |
+| `PRG_System_History` | OBSERVE_ONLY | history event production | history observer | must not mutate behavior-driving state |
+| `PRG_System_Diagnostics` | MIXED | diagnostics aggregation + state trace | diagnostics observer/producer | diagnostic fault production allowed; command mutation forbidden |
+| `PRG_System_Evacuation` | MIXED | evacuation service | evacuation guidance producer | should publish evacuation state/guidance only; final output via domains/IO |
+| `PRG_System_Trend` | OBSERVE_ONLY | trend logging/adaptation | trend observer | must not mutate control decisions |
+| `PRG_System_Runtime_Base` | MIXED | init, recovery, persistence, redundancy | runtime support service | avoid mid-cycle behavior decisions |
+| `PRG_Presence_Manager` | CLEAN | presence facts | presence state producer | no direct lighting/heating decisions |
+| `PRG_System_Simulation` | MIXED | simulation and playback in runtime path | bounded simulation service | hard gate simulation influence when disabled |
+| `PRG_Heating_Policy_Manager` | MIXED | heating policy, prediction, optimization, local time use | heating policy producer | remove secondary time ownership; keep as policy output producer |
+| `PRG_Heating_Policy_Observer` | CLEAN | occupancy-based heating policy adjustments | heating policy observer | no direct actuation |
+| `PRG_Mode_Manager` | CLEAN | behavior mode production | mode producer | no actuator commands |
+| `PRG_System_Coordinator` | MIXED | global block/degraded flags | global constraint/gate producer | make constraints authoritative through arbitration/domain rules |
+| `PRG_Policy` | MIXED | scenario/system policy resolution | policy resolver | must produce policy intent, not physical output commands |
+| `PRG_Command_Arbitration` | TRANSITION | shadow command resolution from intents | single command decision owner | strengthen as sole cross-layer command precedence owner |
+| `PRG_Command_Verifier` | TRANSITION | compares shadow vs legacy commands | migration verifier | keep passive until explicitly upgraded; later remove with legacy path |
+| `PRG_Security` | MIXED | security manager + access control requests | security/access fact and request producer | route access requests through arbitration; avoid direct physical ownership |
+| `PRG_Heating` | VIOLATION | domain execution + safety interpretation + diagnostics + decision logic | heating domain executor | progressively move global decision ownership out; keep domain algorithm/execution |
+| `PRG_Ventilation` | MIXED | ventilation control with local safety interpretation | ventilation domain executor | align safety/coordinator handling with common contract |
+| `PRG_Lighting` | MIXED | lighting/socket/blinds execution + evacuation override | lighting/socket/blinds domain executor | keep execution; route global overrides through defined contract |
+| `PRG_IO_Write` | MIXED | physical output projection, standby clamp | final physical output projector + final safety clamp | add explicit safety clamp section; avoid policy decisions |
+
 ## PRG role ownership table
 
 | PRG / group | Target role | Allowed ownership | Forbidden ownership |
