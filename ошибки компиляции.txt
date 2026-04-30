@@ -1,14 +1,9 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
+                генерировать глобальные инициализации ...
+                генерировать код инициализации...
+                генерация перемещений...
 [WARNING]       Без имени4: PRG_Time_Service(Строка 10, Столбец 1 (Реализ.)): C0195:  Неявная конверсия типа со знаком 'INT' в тип без знака 'UINT': возможно изменение знака
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Floor_Temps' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Motion_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Door_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Window_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Water_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Smoke_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_Methane_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
-[ERROR]         Без имени4: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0039:  VAR_IN_OUT 'VI_CO_Sensors' должен присваиваться в вызове 'FB_Rule_Engine'
 [WARNING]       Без имени4: FB_Heating_Thermal_Model(Строка 31, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
-                Компиляция завершена -- 8 ошибок, 2 предупреждений : загрузка невозможна
+                Компиляция завершена -- 0 ошибок, 2 предупреждений: готово к загрузке
