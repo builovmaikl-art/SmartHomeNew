@@ -23,7 +23,7 @@ GVL_TIME_SERVICE.G_Last_Now_MS := L_Real_Now;
 IF GVL_TIME_SERVICE.G_Sim_Enabled THEN
 
     IF NOT GVL_TIME_SERVICE.G_Sim_Frozen THEN
-        L_Scaled_Delta := UDINT(REAL(L_Elapsed) * GVL_TIME_SERVICE.G_Sim_Time_Scale);
+        L_Scaled_Delta := REAL_TO_UDINT(TO_REAL(L_Elapsed) * GVL_TIME_SERVICE.G_Sim_Time_Scale);
 
         GVL_TIME_SERVICE.G_Sim_Now_MS := GVL_TIME_SERVICE.G_Sim_Now_MS + L_Scaled_Delta;
 
@@ -45,7 +45,7 @@ IF GVL_TIME_SERVICE.G_Sim_Enabled THEN
 ELSE
     GVL_TIME_SERVICE.G_Now_MS := L_Real_Now;
     GVL_TIME_SERVICE.G_Time_Of_Day_MS := GVL_STATUS.G_Time_Of_Day_MS;
-    GVL_TIME_SERVICE.G_Day_Of_Week := INT(GVL_STATUS.G_Current_Day);
+    GVL_TIME_SERVICE.G_Day_Of_Week := TO_INT(GVL_STATUS.G_Current_Day);
 END_IF;
 
 // TOD unified
