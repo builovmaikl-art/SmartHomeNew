@@ -13,31 +13,12 @@ VAR
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
 END_VAR
 
-// ============================================================
-// PRG_Heating — assembled domain executor
-// ============================================================
-// Execution chain:
-// 1. Local context
-// 2. Thermal allocation
-// 3. Heating/DHW orchestration
-// 4. Diagnostics projection/events
-// 5. Maintenance gating
-// 6. Freeze hardware support
-// 7. Adapter copy-out
-// 8. Root-cause diagnostics
-//
-// Important behavior preserved:
-// - DHW heating demand feedback is taken from GVL_STATE.G_DHW_Heating_Pump
-//   before fbHeatingOrchestration updates it in the current scan.
-//   This preserves the previous-cycle dependency from the original PRG.
-// ============================================================
-
-// === BEGIN HEATING_STAGE_1_LOCAL_CONTEXT ===
+// === LOCAL CONTEXT ===
 fbLocalContext(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Safety_Emergency_Stop := GVL_STATE.G_Safety_Emergency_Stop,
     VI_Safety_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched,
-    VI_System_Mode := GVL_STATE.G_System_Mode,
+    VI_DHW_Block := GVL_COMMAND_SHADOW.G_Heating_DHW_Block,
     VI_Freeze_Request := GVL_STATE.G_Freeze_Request,
     VI_Preheat_Request := GVL_STATE.G_Preheat_Request,
     VI_DHW_Heating_Pump_Feedback := GVL_STATE.G_DHW_Heating_Pump,
@@ -46,9 +27,8 @@ fbLocalContext(
 );
 
 GVL_STATE.G_Target_Temperature := fbLocalContext.VO_Target_Temperature;
-// === END HEATING_STAGE_1_LOCAL_CONTEXT ===
 
-// === BEGIN HEATING_STAGE_2_THERMAL_ALLOCATION ===
+// === THERMAL ALLOCATION ===
 fbThermalAllocation(
     VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
     VI_Circuit_To_Zone := GVL_CONFIG.G_Heating_Circuit_To_Zone,
@@ -66,9 +46,8 @@ fbThermalAllocation(
     VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight,
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 );
-// === END HEATING_STAGE_2_THERMAL_ALLOCATION ===
 
-// === BEGIN HEATING_STAGE_3_ORCHESTRATION ===
+// === ORCHESTRATION ===
 fbHeatingOrchestration(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
@@ -118,33 +97,19 @@ fbHeatingOrchestration(
     VIO_DHW_Circ_Pump := GVL_STATE.G_DHW_Circ_Pump,
     VIO_DHW_Status := GVL_STATUS.G_DHW_Status
 );
-// === END HEATING_STAGE_3_ORCHESTRATION ===
 
-// === BEGIN HEATING_STAGE_4_DIAGNOSTICS ===
-fbHeatingDiagnostics(
-    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS
-);
-// === END HEATING_STAGE_4_DIAGNOSTICS ===
-
-// === BEGIN HEATING_STAGE_5_MAINTENANCE_GATING ===
+// === POST ===
+fbHeatingDiagnostics(VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS);
 fbHeatingMaintenanceGating();
-// === END HEATING_STAGE_5_MAINTENANCE_GATING ===
-
-// === BEGIN HEATING_STAGE_6_FREEZE_HARDWARE ===
 fbHeatingFreezeHardware();
-// === END HEATING_STAGE_6_FREEZE_HARDWARE ===
 
-// === BEGIN HEATING_STAGE_7_ADAPTER_COPY_OUT ===
 fbHeatingAdapterCopyOut(
     VI_Zone_Valves := L_Zone_Valves,
     VIO_Zone_Valves_State := GVL_STATE.G_Zone_Valves
 );
-// === END HEATING_STAGE_7_ADAPTER_COPY_OUT ===
 
-// === BEGIN HEATING_STAGE_8_ROOT_CAUSE ===
 fbHeatingRootCauseDiagnostics(
     VI_Zone_Valves := L_Zone_Valves
 );
-// === END HEATING_STAGE_8_ROOT_CAUSE ===
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
