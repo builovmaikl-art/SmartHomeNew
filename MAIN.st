@@ -3,6 +3,7 @@ VAR
 END_VAR
 
 // Вызов основных программ
+PRG_Time_Service();
 PRG_IO_Read();
 PRG_Safety();
 PRG_System();
