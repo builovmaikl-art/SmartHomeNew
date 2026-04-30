@@ -1,0 +1,5 @@
+VAR_GLOBAL
+    DO_Water_Valve_35_Close : BOOL := FALSE;
+    DO_Water_Valve_36_Close : BOOL := FALSE;
+    DO_Water_Zone_Enable : ARRAY[1..32] OF BOOL;
+END_VAR
