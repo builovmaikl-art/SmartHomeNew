@@ -204,7 +204,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 20:43 .github
 -rw-r--r--  1 runner runner    157 Apr 30 20:43 GVL_WATER_OUTPUT.gvl
 -rw-r--r--  1 runner runner   3018 Apr 30 20:43 HEATING_CHECKPOINT_2026-04-20.md
 -rw-r--r--  1 runner runner    294 Apr 30 20:43 IValveController.st
--rw-r--r--  1 runner runner    731 Apr 30 20:43 MAIN.st
+-rw-r--r--  1 runner runner    776 Apr 30 20:43 MAIN.st
 -rw-r--r--  1 runner runner    473 Apr 30 20:43 PRG_Access.st
 -rw-r--r--  1 runner runner   2699 Apr 30 20:43 PRG_Command_Arbitration.st
 -rw-r--r--  1 runner runner   2179 Apr 30 20:43 PRG_Command_Verifier.st
@@ -336,8 +336,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 20:43 out
 -rw-r--r--  1 runner runner    177 Apr 30 20:43 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1044
+total 1048
 drwxr-xr-x 2 runner runner    4096 Apr 30 20:43 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 20:43 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 20:43 .gitkeep
--rw-r--r-- 1 runner runner 1059871 Apr 30 20:43 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1063334 Apr 30 20:43 RESULT_methods_clean.xml
