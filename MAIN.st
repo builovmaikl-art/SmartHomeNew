@@ -30,4 +30,5 @@ PRG_Security();
 PRG_Heating();
 PRG_Ventilation();
 PRG_Lighting();
+PRG_Water();
 PRG_IO_Write();
