@@ -5,21 +5,6 @@ VAR
 END_VAR
 
 IF NOT GVL_STATUS.G_Is_Active_PLC THEN
-    FOR L_i := 1 TO 8 DO
-        GVL_IO.DO_Zone_Valves[L_i] := FALSE;
-        GVL_IO.AO_Lighting_Levels[L_i] := 0;
-    END_FOR;
-
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        GVL_IO.DO_Manifold_Pumps[L_i] := FALSE;
-        GVL_IO.AO_Manifold_Valves[L_i] := 0;
-    END_FOR;
-
-    GVL_IO.DO_DHW_Heating_Pump := FALSE;
-    GVL_IO.DO_DHW_Circ_Pump := FALSE;
-    GVL_IO.DO_Backup_Circulation_Pump := FALSE;
-    GVL_IO.DO_Electric_Heater_Enable := FALSE;
-
     RETURN;
 END_IF;
 
@@ -27,7 +12,7 @@ L_Heating_Forced_Off :=
     GVL_COMMAND_SHADOW.G_Heating_Block OR 
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 
-// Heating — now from GVL_HEATING_OUTPUT
+// Heating
 FOR L_i := 1 TO 8 DO
     IF L_Heating_Forced_Off THEN
         GVL_IO.DO_Zone_Valves[L_i] := FALSE;
@@ -57,5 +42,14 @@ ELSE
     GVL_IO.DO_Backup_Circulation_Pump := GVL_HEATING_OUTPUT.DO_Backup_Circulation_Pump;
     GVL_IO.DO_Electric_Heater_Enable := GVL_HEATING_OUTPUT.DO_Electric_Heater_Enable;
 END_IF;
+
+// Ventilation
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    GVL_IO.AO_Supply_Fans[L_i] := GVL_VENT_OUTPUT.AO_Supply_Fans[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    GVL_IO.AO_Exhaust_Fans[L_i] := GVL_VENT_OUTPUT.AO_Exhaust_Fans[L_i];
+END_FOR;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
