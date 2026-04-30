@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 1840
+total 1844
 -rw-r--r--  1 runner runner  13067 Apr 30 09:57 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  20480 Apr 30 09:57 .
 drwxr-xr-x  3 runner runner   4096 Apr 30 09:57 ..
@@ -211,6 +211,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 09:57 .github
 -rw-r--r--  1 runner runner    609 Apr 30 09:57 PRG_System_Intent.st
 -rw-r--r--  1 runner runner   1465 Apr 30 09:57 PRG_System_Runtime_Base.st
 -rw-r--r--  1 runner runner   2679 Apr 30 09:57 PRG_System_Scenario_Rules.st
+-rw-r--r--  1 runner runner    512 Apr 30 09:57 PRG_System_Simulation.st
 -rw-r--r--  1 runner runner   8206 Apr 30 09:57 PRG_System_Test_Harness.st
 -rw-r--r--  1 runner runner    903 Apr 30 09:57 PRG_System_Trend.st
 -rw-r--r--  1 runner runner    752 Apr 30 09:57 PRG_Test_Injection.st
@@ -309,8 +310,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 09:57 out
 -rw-r--r--  1 runner runner    177 Apr 30 09:57 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 976
+total 972
 drwxr-xr-x 2 runner runner   4096 Apr 30 09:57 .
 drwxr-xr-x 5 runner runner   4096 Apr 30 09:57 ..
 -rw-r--r-- 1 runner runner      0 Apr 30 09:57 .gitkeep
--rw-r--r-- 1 runner runner 987195 Apr 30 09:57 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 987034 Apr 30 09:57 RESULT_methods_clean.xml
