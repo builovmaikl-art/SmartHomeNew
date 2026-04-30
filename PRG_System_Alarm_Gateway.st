@@ -2,6 +2,7 @@ PROGRAM PRG_System_Alarm_Gateway
 VAR
     fbSystemAlarmOrchestrator : FB_System_Alarm_Orchestrator;
     fbSystemGatewayIntent : FB_System_Gateway_Intent;
+    L_Scenario_Req_Gateway : E_SCENARIO_TYPE;
 END_VAR
 
 // Alarm orchestration based on global health snapshot
@@ -18,8 +19,10 @@ fbSystemGatewayIntent(
     VI_Gateway_Writes_Allowed := NOT GVL_STATUS.G_Diagnostics.Operator_Action_Blocked,
     VIO_FloorHeating_Temps := GVL_STATE.G_Floor_Temps,
     VIO_Zone_Valve_States := GVL_STATE.G_Zone_Valves,
-    VIO_Lighting_Base_Levels := GVL_STATE.G_Lighting,
-    VIO_Scenario_Req_Gateway := GVL_COMMAND.G_Scenario_Request_Gateway
+    VIO_Lighting_Base_Levels := GVL_STATE.G_Lighting_Levels,
+    VIO_Scenario_Req_Gateway := L_Scenario_Req_Gateway
 );
+
+GVL_INTENT_USER.I_Scenario_Request := L_Scenario_Req_Gateway;
 
 END_PROGRAM
