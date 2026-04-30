@@ -7,6 +7,7 @@ PRG_Time_Service();
 PRG_IO_Read();
 PRG_Safety();
 PRG_System_Intent();
+PRG_System_Health();
 PRG_System();
 PRG_Presence_Manager();
 PRG_Heating_Policy_Observer();
