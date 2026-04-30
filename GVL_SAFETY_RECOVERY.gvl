@@ -1,0 +1,15 @@
+TYPE E_Recovery_Phase :
+(
+    IDLE,
+    STABILIZING,
+    WAIT_MANUAL_CONFIRM,
+    RECOVERING
+);
+END_TYPE
+
+VAR_GLOBAL
+    G_Recovery_Phase : E_Recovery_Phase := IDLE;
+    G_Recovery_Active : BOOL := FALSE;
+    G_Recovery_Requested : BOOL := FALSE;
+    G_Recovery_Start_MS : UDINT := 0;
+END_VAR
