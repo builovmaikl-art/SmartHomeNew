@@ -210,7 +210,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 21:21 .github
 -rw-r--r--  1 runner runner    294 Apr 30 21:21 IValveController.st
 -rw-r--r--  1 runner runner    799 Apr 30 21:21 MAIN.st
 -rw-r--r--  1 runner runner    473 Apr 30 21:21 PRG_Access.st
--rw-r--r--  1 runner runner   3953 Apr 30 21:21 PRG_Command_Arbitration.st
+-rw-r--r--  1 runner runner   1617 Apr 30 21:21 PRG_Command_Arbitration.st
 -rw-r--r--  1 runner runner   2179 Apr 30 21:21 PRG_Command_Verifier.st
 -rw-r--r--  1 runner runner   3111 Apr 30 21:21 PRG_Explainability.st
 -rw-r--r--  1 runner runner   6414 Apr 30 21:21 PRG_Heating.st
@@ -341,8 +341,8 @@ drwxr-xr-x  2 runner runner   4096 Apr 30 21:21 out
 -rw-r--r--  1 runner runner    177 Apr 30 21:21 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1060
+total 1064
 drwxr-xr-x 2 runner runner    4096 Apr 30 21:21 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 21:21 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 21:21 .gitkeep
--rw-r--r-- 1 runner runner 1076585 Apr 30 21:21 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1077339 Apr 30 21:21 RESULT_methods_clean.xml
