@@ -51,7 +51,7 @@ drwxr-xr-x  3 runner runner   4096 Apr 30 21:36 .github
 -rw-r--r--  1 runner runner  14663 Apr 30 21:36 FB_Alarm_Manager.st
 -rw-r--r--  1 runner runner    780 Apr 30 21:36 FB_Analog_Validator.st
 -rw-r--r--  1 runner runner   2433 Apr 30 21:36 FB_Astro_Timer.st
--rw-r--r--  1 runner runner   3820 Apr 30 21:36 FB_Behavior_Adapt.st
+-rw-r--r--  1 runner runner   2428 Apr 30 21:36 FB_Behavior_Adapt.st
 -rw-r--r--  1 runner runner   1163 Apr 30 21:36 FB_BlackBox_Recorder.st
 -rw-r--r--  1 runner runner   4453 Apr 30 21:36 FB_Boiler_Cascade_Manager.st
 -rw-r--r--  1 runner runner    970 Apr 30 21:36 FB_Boiler_OpenTherm_Interface.st
@@ -345,4 +345,4 @@ total 1064
 drwxr-xr-x 2 runner runner    4096 Apr 30 21:36 .
 drwxr-xr-x 5 runner runner    4096 Apr 30 21:36 ..
 -rw-r--r-- 1 runner runner       0 Apr 30 21:36 .gitkeep
--rw-r--r-- 1 runner runner 1080326 Apr 30 21:36 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1080581 Apr 30 21:36 RESULT_methods_clean.xml
