@@ -159,12 +159,12 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
         VO_Modbus_Registers[39 + L_i] := TO_WORD(VI_Lighting_Base_Levels[L_i]);
     END_FOR;
 
-    // 60-79: Положение штор (20 шт)
+    // 72-91: Положение штор (20 шт)
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
-        VO_Modbus_Registers[59 + L_i] := TO_WORD(VI_Blinds_Positions[L_i]);
+        VO_Modbus_Registers[71 + L_i] := TO_WORD(VI_Blinds_Positions[L_i]);
     END_FOR;
 
-    // 80-82: Розетки (битовая маска, 36 розеток -> 3 WORD)
+    // 92-94: Розетки (битовая маска, 36 розеток -> 3 WORD)
     FOR L_i := 0 TO (GVL_CONSTANTS.C_MAX_SOCKETS - 1) / 16 DO
         L_tmp_word := 0;
         FOR L_j := 1 TO 16 DO
@@ -175,7 +175,7 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
                 END_IF;
             END_IF;
         END_FOR;
-        VO_Modbus_Registers[79 + L_i] := L_tmp_word;
+        VO_Modbus_Registers[92 + L_i] := L_tmp_word;
     END_FOR;
 
     // 100-102: 2FA Request and Code
