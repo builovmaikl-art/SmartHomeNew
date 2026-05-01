@@ -9,20 +9,34 @@ GVL_CONFIG_VALIDATION.G_Config_Auto_Corrected := FALSE;
 GVL_CONFIG_CONTROL.G_Apply_Done := FALSE;
 GVL_CONFIG_CONTROL.G_Rollback_Done := FALSE;
 
-// BLOCK APPLY IF SIMULATION FAILED
 IF NOT GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
     GVL_CONFIG_CONTROL.G_Apply_Request := FALSE;
 END_IF;
 
-// ================= VALIDATION =================
+// ===== SIZE VALIDATION =====
+IF GVL_SYSTEM_SIZE_CONFIG.G_Active_Heating_Circuits < 1 OR GVL_SYSTEM_SIZE_CONFIG.G_Active_Heating_Circuits > GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN
+    GVL_SYSTEM_SIZE_CONFIG.G_Active_Heating_Circuits := GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS;
+    L_Error := TRUE;
+END_IF;
+
+IF GVL_SYSTEM_SIZE_CONFIG.G_Active_Water_Zones < 1 OR GVL_SYSTEM_SIZE_CONFIG.G_Active_Water_Zones > GVL_CONSTANTS.C_MAX_WATER_ZONES THEN
+    GVL_SYSTEM_SIZE_CONFIG.G_Active_Water_Zones := GVL_CONSTANTS.C_MAX_WATER_ZONES;
+    L_Error := TRUE;
+END_IF;
+
+IF GVL_SYSTEM_SIZE_CONFIG.G_Active_Light_Zones < 1 OR GVL_SYSTEM_SIZE_CONFIG.G_Active_Light_Zones > GVL_CONSTANTS.C_MAX_LIGHT_ZONES THEN
+    GVL_SYSTEM_SIZE_CONFIG.G_Active_Light_Zones := GVL_CONSTANTS.C_MAX_LIGHT_ZONES;
+    L_Error := TRUE;
+END_IF;
+
+// ===== EXISTING VALIDATION =====
 IF GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate < 0.0 OR GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate > 1.0 THEN
     GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate := 0.05;
     L_Error := TRUE;
 END_IF;
 
-// ================= APPLY =================
+// ===== APPLY (unchanged) =====
 IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THEN
-
     GVL_CONFIG_CONTROL.BCK_Reputation_Learning_Rate := GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate;
     GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate := GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate;
 
