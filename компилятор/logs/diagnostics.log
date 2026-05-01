@@ -232,7 +232,7 @@ drwxr-xr-x  3 runner runner   4096 May  1 20:27 .github
 -rw-r--r--  1 runner runner    847 May  1 20:27 PRG_Presence_Manager.st
 -rw-r--r--  1 runner runner   4344 May  1 20:27 PRG_Safety.st
 -rw-r--r--  1 runner runner   1292 May  1 20:27 PRG_Safety_Operator.st
--rw-r--r--  1 runner runner   1317 May  1 20:27 PRG_Safety_Recovery.st
+-rw-r--r--  1 runner runner   1294 May  1 20:27 PRG_Safety_Recovery.st
 -rw-r--r--  1 runner runner    794 May  1 20:27 PRG_Safety_Shutdown.st
 -rw-r--r--  1 runner runner   5297 May  1 20:27 PRG_Scenario_Engine.st
 -rw-r--r--  1 runner runner  22327 May  1 20:27 PRG_Scenario_Test_Harness.st
@@ -352,4 +352,4 @@ total 1088
 drwxr-xr-x 2 runner runner    4096 May  1 20:27 .
 drwxr-xr-x 5 runner runner    4096 May  1 20:27 ..
 -rw-r--r-- 1 runner runner       0 May  1 20:27 .gitkeep
--rw-r--r-- 1 runner runner 1101941 May  1 20:27 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1102673 May  1 20:27 RESULT_methods_clean.xml
