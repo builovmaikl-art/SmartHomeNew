@@ -21,6 +21,16 @@ VAR_GLOBAL
     I_Score_Vent_Boost : INT := 0;
     I_Score_Access_Secure : INT := 0;
 
+    // Multi-objective weights, normalized 0.0..1.0 for HMI / downstream blending.
+    I_Weight_Comfort : REAL := 0.0;
+    I_Weight_Night : REAL := 0.0;
+    I_Weight_Energy_Save : REAL := 0.0;
+    I_Weight_Preheat : REAL := 0.0;
+    I_Weight_Vent_Boost : REAL := 0.0;
+    I_Weight_Access_Secure : REAL := 0.0;
+
+    I_Best_VentBoost_Zone : INT := 0;
+
     I_Selected_Scenario_Code : E_System_Reason_Code := REASON_NONE;
     I_Selected_Scenario_Text : STRING(255) := 'No behavior scenario selected';
 
