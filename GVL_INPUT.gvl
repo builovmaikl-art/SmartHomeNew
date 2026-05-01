@@ -22,4 +22,11 @@ VAR_GLOBAL
 
     IN_Input_Degraded : BOOL := FALSE;
     IN_Sensor_Fault : BOOL := FALSE;
+
+    // Validation / anomaly flags.
+    IN_Validation_Failed : BOOL := FALSE;
+    IN_Anomaly_Detected : BOOL := FALSE;
+    IN_Validation_Reason : STRING(120) := '';
+    IN_Anomaly_Reason : STRING(120) := '';
+    IN_Last_Invalid_Zone : INT := 0;
 END_VAR
