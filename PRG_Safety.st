@@ -59,7 +59,7 @@ GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
 
 fbOwnership(
-    VI_Gas_Level := GVL_STATE.G_Methane_Sensors[1],
+    VI_Gas_Level := GVL_STATE.G_Methane_Sensors[GVL_CONSTANTS.C_PRIMARY_METHANE_SENSOR_INDEX],
     VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
     VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
     VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm
