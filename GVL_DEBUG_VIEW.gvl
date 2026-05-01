@@ -35,7 +35,15 @@ VAR_GLOBAL
     D_Max_VentBoost_Zone_Weight : REAL := 0.0;
     D_Min_VentBoost_Zone_Weight : REAL := 0.0;
 
-    // NEW: input confidence visibility
+    // HMI / dashboard sensor quality view.
+    D_Input_Source_Valid : BOOL := FALSE;
+    D_Input_Degraded : BOOL := FALSE;
+    D_Sensor_Fault : BOOL := FALSE;
+    D_Validation_Failed : BOOL := FALSE;
+    D_Anomaly_Detected : BOOL := FALSE;
+    D_Validation_Reason : STRING(120) := '';
+    D_Anomaly_Reason : STRING(120) := '';
+    D_Last_Invalid_Zone : INT := 0;
     D_Min_Zone_Confidence : REAL := 1.0;
     D_Worst_Zone : INT := 0;
 
