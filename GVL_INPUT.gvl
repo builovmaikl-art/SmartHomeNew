@@ -1,8 +1,4 @@
 VAR_GLOBAL
-    // Normalized input read-model.
-    // PRG_IO_Read still owns raw IO acquisition and calibration.
-    // PRG_Input_Processing projects validated state into this layer.
-
     IN_Last_Update_MS : UDINT := 0;
     IN_Source_Valid : BOOL := FALSE;
 
@@ -23,22 +19,24 @@ VAR_GLOBAL
     IN_Input_Degraded : BOOL := FALSE;
     IN_Sensor_Fault : BOOL := FALSE;
 
-    // Validation / anomaly flags.
     IN_Validation_Failed : BOOL := FALSE;
     IN_Anomaly_Detected : BOOL := FALSE;
     IN_Validation_Reason : STRING(120) := '';
     IN_Anomaly_Reason : STRING(120) := '';
     IN_Last_Invalid_Zone : INT := 0;
 
-    // Temporal memory for anomaly detection.
     IN_Room_Temp_Prev : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     IN_Room_Hum_Prev : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     IN_Last_Change_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
 
-    // Sensor confidence model, 0.0..1.0.
     IN_Room_Temp_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     IN_Room_Hum_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     IN_Zone_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
+    // NEW: reputation (long-term learning)
+    IN_Room_Temp_Reputation : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Room_Hum_Reputation : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
     IN_Min_Zone_Confidence : REAL := 1.0;
     IN_Worst_Zone : INT := 0;
 END_VAR
