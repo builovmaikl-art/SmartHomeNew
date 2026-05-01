@@ -87,7 +87,7 @@ END_FOR;
 GVL_IO.DO_Water_Valve_35_Close := GVL_WATER_OUTPUT.DO_Water_Valve_35_Close OR GVL_COMMAND_SHADOW.G_Close_Valve_35;
 GVL_IO.DO_Water_Valve_36_Close := GVL_WATER_OUTPUT.DO_Water_Valve_36_Close OR GVL_COMMAND_SHADOW.G_Close_Valve_36;
 
-FOR L_i := 1 TO 32 DO
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     IF L_Water_Forced_Off THEN
         GVL_IO.DO_Water_Zone_Enable[L_i] := FALSE;
     ELSE
