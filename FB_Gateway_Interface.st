@@ -4,7 +4,6 @@ VAR_INPUT
     VI_Local_PLC_Role           : E_PLC_ROLE;
     VI_Incoming_Command         : ST_Gateway_Command;
     VI_Command_Received         : BOOL;
-    
     VI_Outdoor_Temp             : REAL;
     VI_Security_Armed           : BOOL;
     VI_Flood_Alarm_Active       : BOOL;
@@ -12,18 +11,17 @@ VAR_INPUT
     VI_Fire_Alarm_Active        : BOOL;
     VI_Methane_Concentration    : REAL;
     VI_Active_Scenario          : E_SCENARIO_TYPE;
-    
     VI_Send_2FA_Req             : BOOL;
     VI_2FA_Code                 : STRING(6);
 END_VAR
 
 VAR_IN_OUT
     VI_FloorHeating_Temps       : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
-    VI_Room_Temps               : ARRAY[1..16] OF REAL;
+    VI_Room_Temps               : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     VI_Zone_Valve_States        : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     VI_Manifold_Pressures       : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     VI_Manifold_Pump_States     : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
-    VI_Lighting_Base_Levels     : ARRAY[1..32] OF BYTE;
+    VI_Lighting_Base_Levels     : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
     VI_Socket_States            : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     VI_Blinds_Positions         : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     VI_Allowed_IPs              : ARRAY[1..GVL_CONSTANTS.C_MAX_ALLOWED_IPS] OF STRING(15);
@@ -31,7 +29,7 @@ END_VAR
 
 VAR_OUTPUT
     VO_Modbus_Registers         : ARRAY[0..GVL_CONSTANTS.C_MAX_MODBUS_REGISTERS-1] OF WORD;
-    VO_Lighting_Override        : ARRAY[1..32] OF BYTE;
+    VO_Lighting_Override        : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
     VO_Blinds_Override          : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     VO_Socket_Override          : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     VO_Arm_Req                  : BOOL;
@@ -110,7 +108,6 @@ L_Prev_Security := VI_Security_Armed;
 
 IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
     L_last_update_time := VI_System_Time_MS;
-    
     L_tmp_word := 0;
     IF VI_Local_PLC_Role = E_PLC_ROLE.ROLE_ACTIVE THEN L_tmp_word := L_tmp_word OR 1; END_IF;
     IF VI_Security_Armed THEN L_tmp_word := L_tmp_word OR 2; END_IF;
@@ -123,7 +120,7 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
         VO_Modbus_Registers[L_i] := TO_WORD(TO_INT(VI_FloorHeating_Temps[L_i] * REAL#10.0));
     END_FOR;
 
-    FOR L_i := 1 TO 16 DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         VO_Modbus_Registers[16 + L_i] := TO_WORD(TO_INT(VI_Room_Temps[L_i] * REAL#10.0));
     END_FOR;
 
@@ -139,7 +136,7 @@ IF (VI_System_Time_MS - L_last_update_time) >= GVL_CONSTANTS.C_MS_IN_SECOND THEN
         VO_Modbus_Registers[33 + L_i] := TO_WORD(TO_INT(VI_Manifold_Pressures[L_i] * REAL#100.0));
     END_FOR;
 
-    FOR L_i := 1 TO 32 DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         VO_Modbus_Registers[39 + L_i] := TO_WORD(VI_Lighting_Base_Levels[L_i]);
     END_FOR;
 
@@ -217,7 +214,7 @@ IF L_Has_Command_To_Process THEN
             END_IF;
         END_FOR;
     END_IF;
-    
+
     IF NOT L_IP_Allowed THEN
         VO_HMI_Status_Message := 'Gateway: Ошибка безопасности (Неизвестный IP)';
         RETURN;
@@ -225,15 +222,10 @@ IF L_Has_Command_To_Process THEN
 
     L_CRC_Calc();
     L_Calculated_CRC := L_CRC_Calc.VO_CRC;
-    
+
     IF L_Calculated_CRC = L_Process_Command.crc32 THEN
-        L_Deduplicator(
-            VI_Command_ID := L_Process_Command.command_id,
-            VI_Command_Type := L_Process_Command.command_type,
-            VI_Command_Value := L_Process_Command.target_value,
-            VI_System_Time_MS := VI_System_Time_MS
-        );
-        
+        L_Deduplicator(VI_Command_ID := L_Process_Command.command_id, VI_Command_Type := L_Process_Command.command_type, VI_Command_Value := L_Process_Command.target_value, VI_System_Time_MS := VI_System_Time_MS);
+
         IF L_Deduplicator.VO_Is_New_Command THEN
             CASE L_Process_Command.command_type OF
                 E_Gateway_Command_Type.CMD_SET_SCENARIO:
@@ -241,7 +233,7 @@ IF L_Has_Command_To_Process THEN
                     VO_Target_Scenario := L_Process_Command.target_scenario;
                     VO_HMI_Status_Message := 'Gateway: Сценарий изменен';
                 E_Gateway_Command_Type.CMD_SET_LIGHT:
-                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= 32) THEN
+                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_LIGHT_ZONES) THEN
                         VO_Lighting_Override[L_Process_Command.target_zone] := TO_BYTE(L_Process_Command.target_value);
                         VO_HMI_Status_Message := 'Gateway: Команда освещения принята';
                     END_IF;
@@ -256,11 +248,7 @@ IF L_Has_Command_To_Process THEN
                         VO_HMI_Status_Message := 'Gateway: Команда розетки принята';
                     END_IF;
                 E_Gateway_Command_Type.CMD_SET_SECURITY:
-                    IF L_Process_Command.target_armed THEN
-                        VO_Arm_Req := TRUE;
-                    ELSE
-                        VO_Disarm_Req := TRUE;
-                    END_IF;
+                    IF L_Process_Command.target_armed THEN VO_Arm_Req := TRUE; ELSE VO_Disarm_Req := TRUE; END_IF;
                     VO_PIN_Code := L_Process_Command.target_pin;
                     VO_2FA_Code_In := L_Process_Command.target_2fa_code;
                     VO_HMI_Status_Message := 'Gateway: Запрос охраны принят';
