@@ -9,7 +9,7 @@ VAR
     L_Last_State_Trace_MS : UDINT;
 
     L_Hum : REAL;
-    L_PrevHum : REAL := 70.0;
+    L_PrevHum : REAL;
     L_DeltaHum : REAL;
     L_Confidence : REAL;
 END_VAR
@@ -28,17 +28,19 @@ fbStateTraceLog(
     VO_Last_Change_Time => L_Last_State_Trace_MS
 );
 
-// =====================
-// ZONE-BASED VENT BOOST FEEDBACK
-// =====================
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
-    L_Hum := GVL_STATE.G_Room_Hum[L_i];
+    L_Hum := GVL_INPUT.I_Room_Humidity[L_i];
+
+    IF GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] THEN
+        L_PrevHum := GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i];
+    ELSE
+        L_PrevHum := L_Hum;
+    END_IF;
+
     L_DeltaHum := L_PrevHum - L_Hum;
 
-    IF L_Hum <= 0.0 THEN
-        L_Confidence := 0.0;
-    ELSIF ABS(L_DeltaHum) < 0.5 THEN
+    IF ABS(L_DeltaHum) < 0.5 THEN
         L_Confidence := 0.2;
     ELSE
         L_Confidence := 1.0;
@@ -54,11 +56,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         );
     END_IF;
 
+    GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i] := L_Hum;
+    GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] := TRUE;
+
 END_FOR;
 
-// =====================
-// NIGHT FEEDBACK
-// =====================
 IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
     fbAdapt(
         iScenario := REASON_SCENARIO_NIGHT,
