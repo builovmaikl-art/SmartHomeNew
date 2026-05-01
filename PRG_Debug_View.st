@@ -39,6 +39,10 @@ GVL_DEBUG_VIEW.D_Vent_Why_Stopped := GVL_EXPLAINABILITY.G_Vent_Why_Stopped;
 GVL_DEBUG_VIEW.D_Water_Why_Closed := GVL_EXPLAINABILITY.G_Water_Why_Closed;
 GVL_DEBUG_VIEW.D_Access_Why_Opened := GVL_EXPLAINABILITY.G_Access_Why_Opened;
 
+// NEW: input confidence
+GVL_DEBUG_VIEW.D_Min_Zone_Confidence := GVL_INPUT.IN_Min_Zone_Confidence;
+GVL_DEBUG_VIEW.D_Worst_Zone := GVL_INPUT.IN_Worst_Zone;
+
 GVL_DEBUG_VIEW.D_Adapt_Profile := GVL_BEHAVIOR_ADAPT.G_Adapt_Profile;
 
 IF GVL_BEHAVIOR_ADAPT.G_Adapt_Profile = ADAPT_PROFILE_STABLE THEN
