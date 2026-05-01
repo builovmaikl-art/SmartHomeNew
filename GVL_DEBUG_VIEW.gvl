@@ -35,6 +35,10 @@ VAR_GLOBAL
     D_Max_VentBoost_Zone_Weight : REAL := 0.0;
     D_Min_VentBoost_Zone_Weight : REAL := 0.0;
 
+    // NEW: input confidence visibility
+    D_Min_Zone_Confidence : REAL := 1.0;
+    D_Worst_Zone : INT := 0;
+
     D_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
     D_Adapt_Profile_Text : STRING(32) := 'BALANCED';
 
