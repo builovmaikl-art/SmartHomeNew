@@ -1,10 +1,3 @@
-// ==============================================================================
-// System gateway intent helper
-//
-// Internal helper for PRG_System / extracted system gateway contour.
-// Owns gateway FB call, user intent publication, gateway command gates,
-// and allowed configuration/time/scenario writes.
-// ==============================================================================
 FUNCTION_BLOCK FB_System_Gateway_Intent
 VAR_INPUT
     VI_System_Time_MS : UDINT;
@@ -15,7 +8,7 @@ END_VAR
 VAR_IN_OUT
     VIO_FloorHeating_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     VIO_Zone_Valve_States : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
-    VIO_Lighting_Base_Levels : ARRAY[1..32] OF BYTE;
+    VIO_Lighting_Base_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
     VIO_Scenario_Req_Gateway : E_SCENARIO_TYPE;
 END_VAR
 
@@ -49,7 +42,6 @@ fbGateway(
     VO_Telegram_Msg => GVL_GATEWAY.G_Gateway_Telegram_Msg,
     VO_Send_Telegram => GVL_GATEWAY.G_Gateway_Send_Telegram,
     VO_HMI_Status_Message => GVL_GATEWAY.G_Gateway_HMI_Status_Message,
-
     VO_Data_Ready => GVL_GATEWAY.G_Gateway_Data_Ready,
     VO_Modbus_Registers => GVL_GATEWAY.G_Gateway_Modbus_Registers,
     VO_Arm_Req => GVL_COMMAND.G_Arm_Req,
@@ -82,49 +74,5 @@ GVL_INTENT_USER.I_Target_Vent_Speed := fbGateway.VO_Target_Vent_Speed;
 GVL_INTENT_USER.I_Set_Config_Req := fbGateway.VO_Set_Config_Req;
 GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req;
 GVL_INTENT_USER.I_New_Time_MS := fbGateway.VO_New_Time_MS;
-
-IF VI_Gateway_Writes_Allowed AND
-   fbGateway.VO_Set_Scenario_Req AND
-   ((GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) OR
-    (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED)) THEN
-    VIO_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
-END_IF;
-
-IF VI_Gateway_Writes_Allowed AND
-   fbGateway.VO_Set_Temp_Req AND
-   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
-    GVL_CONFIG.G_HMI_FloorHeating_Configs[fbGateway.VO_Target_Zone].design_temp := fbGateway.VO_Target_Temp;
-END_IF;
-
-IF VI_Gateway_Writes_Allowed AND
-   fbGateway.VO_Set_Vent_Req AND
-   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
-    GVL_CONFIG.G_HMI_Vent_Global_Config.default_supply_speed := fbGateway.VO_Target_Vent_Speed;
-END_IF;
-
-IF VI_Gateway_Writes_Allowed AND
-   fbGateway.VO_Set_Config_Req AND
-   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
-    GVL_CONFIG.G_HMI_Apply_Settings := TRUE;
-END_IF;
-
-IF VI_Gateway_Writes_Allowed AND
-   fbGateway.VO_Sync_Time_Req AND
-   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
-    GVL_STATUS.G_Time_Of_Day_MS := fbGateway.VO_New_Time_MS;
-END_IF;
-
-GVL_INTENT_USER.I_Scenario_Request := VIO_Scenario_Req_Gateway;
-GVL_INTENT_USER.I_Gate_Open_Request := GVL_COMMAND.G_Gate_Open;
-GVL_INTENT_USER.I_Wicket_Open_Request := GVL_COMMAND.G_Wicket_Open;
-GVL_INTENT_USER.I_Lock_1_Open_Request := GVL_COMMAND.G_Lock_1_Open;
-GVL_INTENT_USER.I_Lock_1_Close_Request := GVL_COMMAND.G_Lock_1_Close;
-GVL_INTENT_USER.I_Lock_2_Open_Request := GVL_COMMAND.G_Lock_2_Open;
-GVL_INTENT_USER.I_Lock_2_Close_Request := GVL_COMMAND.G_Lock_2_Close;
-GVL_INTENT_USER.I_Dangerous_Action_Request := GVL_COMMAND.CMD_Dangerous_Action_Request;
-GVL_INTENT_USER.I_Dangerous_Action_Confirm := GVL_COMMAND.CMD_Dangerous_Action_Confirm;
-GVL_INTENT_USER.I_User_Access_Level := GVL_COMMAND.CMD_User_Access_Level;
-GVL_INTENT_USER.I_Water_Selective_Recover := GVL_COMMAND.CMD_Water_Selective_Recover;
-GVL_INTENT_USER.I_Gas_Selective_Recover := GVL_COMMAND.CMD_Gas_Selective_Recover;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Gateway_Intent <<<
