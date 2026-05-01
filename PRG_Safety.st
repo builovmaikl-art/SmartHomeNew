@@ -6,9 +6,6 @@ VAR
     L_i : INT;
 END_VAR
 
-// ========================================
-// SAFETY_INTENT_RESET_INIT
-// ========================================
 GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
 GVL_INTENT_SAFETY.I_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := FALSE;
@@ -33,9 +30,6 @@ GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
 
-// ========================================
-// SAFETY_DETECTORS_AND_HEALTH_PROJECTION
-// ========================================
 fbWaterLeakageManager(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -64,9 +58,6 @@ GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
 
-// ========================================
-// OWNERSHIP WATCHDOG
-// ========================================
 fbOwnership(
     VI_Gas_Level := GVL_STATE.G_Methane_Sensors[1],
     VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
@@ -75,12 +66,9 @@ fbOwnership(
 );
 
 IF fbOwnership.VO_Ownership_Violation THEN
-    GVL_TEST.G_Ownership_Violation := TRUE;
+    GVL_DEBUG_VIEW.D_Ownership_Violation := TRUE;
 END_IF;
 
-// ========================================
-// SAFETY_CORE_HAZARD_INTERLOCK_PROJECTION
-// ========================================
 IF GVL_STATE.G_Safety_Smoke_Latched THEN
     GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
     GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := TRUE;
@@ -108,9 +96,6 @@ IF GVL_STATE.G_Safety_Leak_Latched THEN
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
 END_IF;
 
-// ========================================
-// SAFETY_RESIDUAL_NON_WORKFLOW_PROJECTION
-// ========================================
 IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
     GVL_INTENT_SAFETY.I_Freeze_Protection_Required := TRUE;
 END_IF;
