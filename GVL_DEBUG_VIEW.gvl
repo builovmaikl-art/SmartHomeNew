@@ -47,6 +47,9 @@ VAR_GLOBAL
     D_Min_Zone_Confidence : REAL := 1.0;
     D_Worst_Zone : INT := 0;
 
+    // Runtime diagnostics formerly stored in legacy GVL_TEST.
+    D_Ownership_Violation : BOOL := FALSE;
+
     D_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
     D_Adapt_Profile_Text : STRING(32) := 'BALANCED';
 
