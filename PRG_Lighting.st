@@ -3,69 +3,59 @@ VAR
     L_i : INT;
     fbLightingManager : FB_Lighting_Blinds_Manager;
     fbSocketManager : FB_Socket_Manager;
-    L_Manual_Light_Override_32 : ARRAY[1..32] OF BYTE;
-    L_Manual_Blinds_Override_32 : ARRAY[1..32] OF BYTE;
-    L_Manual_Socket_Override_32 : ARRAY[1..32] OF BOOL;
-    L_Sim_Lights_32 : ARRAY[1..32] OF BOOL;
-    L_Physical_Switches_32 : ARRAY[1..32] OF BOOL;
-    L_Motion_Sensors_32 : ARRAY[1..32] OF BOOL;
+    L_Manual_Light_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
+    L_Manual_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
+    L_Manual_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    L_Sim_Lights : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    L_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    L_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
 
-    // ADAPTER ARRAYS (match FB expected sizes)
     L_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     L_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
 END_VAR
 
-FOR L_i := 1 TO 32 DO
-    IF L_i <= 16 THEN
-        IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override THEN
-            L_Manual_Light_Override_32[L_i] := 0;
-        ELSE
-            L_Manual_Light_Override_32[L_i] := GVL_INTENT_USER.I_Lighting_Override_32[L_i];
-        END_IF;
-        L_Sim_Lights_32[L_i] := GVL_STATE.G_Sim_Lights[L_i];
-        L_Physical_Switches_32[L_i] := GVL_STATE.G_Physical_Switches[L_i];
-        L_Motion_Sensors_32[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+    IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override THEN
+        L_Manual_Light_Override[L_i] := 0;
     ELSE
-        L_Manual_Light_Override_32[L_i] := 0;
-        L_Sim_Lights_32[L_i] := FALSE;
-        L_Physical_Switches_32[L_i] := FALSE;
-        L_Motion_Sensors_32[L_i] := FALSE;
+        L_Manual_Light_Override[L_i] := GVL_INTENT_USER.I_Lighting_Override_32[L_i];
     END_IF;
+
+    L_Sim_Lights[L_i] := GVL_STATE.G_Sim_Lights[L_i];
+    L_Physical_Switches[L_i] := GVL_STATE.G_Physical_Switches[L_i];
+    L_Motion_Sensors[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
 
     IF GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block THEN
-        L_Manual_Blinds_Override_32[L_i] := 0;
+        L_Manual_Blinds_Override[L_i] := 0;
     ELSE
-        L_Manual_Blinds_Override_32[L_i] := GVL_INTENT_USER.I_Blinds_Override_32[L_i];
-    END_IF;
-
-    IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Sockets_Override THEN
-        L_Manual_Socket_Override_32[L_i] := FALSE;
-    ELSE
-        L_Manual_Socket_Override_32[L_i] := GVL_INTENT_USER.I_Socket_Override_32[L_i];
+        L_Manual_Blinds_Override[L_i] := GVL_INTENT_USER.I_Blinds_Override_32[L_i];
     END_IF;
 END_FOR;
 
-// ADAPTER: copy to FB-sized arrays
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
-    L_Blinds_Override[L_i] := L_Manual_Blinds_Override_32[L_i];
+    L_Blinds_Override[L_i] := L_Manual_Blinds_Override[L_i];
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
-    L_Socket_Override[L_i] := L_Manual_Socket_Override_32[L_i];
+    IF GVL_INTENT_SYSTEM.I_Socket_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Sockets_Override THEN
+        L_Manual_Socket_Override[L_i] := FALSE;
+    ELSE
+        L_Manual_Socket_Override[L_i] := GVL_INTENT_USER.I_Socket_Override_32[L_i];
+    END_IF;
+    L_Socket_Override[L_i] := L_Manual_Socket_Override[L_i];
 END_FOR;
 
-// 10. Управление освещением и шторами
 fbLightingManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
     VI_Away_Level := 1,
     VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
-    VI_Manual_Light_Override := L_Manual_Light_Override_32,
+    VI_Manual_Light_Override := L_Manual_Light_Override,
     VI_Manual_Blinds_Override := L_Blinds_Override,
-    VI_Simulation_Lights := L_Sim_Lights_32,
-    VI_Physical_Switches := L_Physical_Switches_32,
-    VI_Motion_Sensors := L_Motion_Sensors_32,
+    VI_Simulation_Lights := L_Sim_Lights,
+    VI_Physical_Switches := L_Physical_Switches,
+    VI_Motion_Sensors := L_Motion_Sensors,
     VI_Is_Night := GVL_STATUS.G_Is_Night,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
@@ -75,7 +65,6 @@ fbLightingManager(
     VO_Blinds_Positions => GVL_STATE.G_Blinds_Positions
 );
 
-// 11.5 Управление розетками
 fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -90,20 +79,8 @@ fbSocketManager(
     VO_Socket_States => GVL_STATE.G_Socket_States
 );
 
-// Evacuation lighting override
 IF GVL_STATE.G_Evacuation_Lighting_Active THEN
-    FOR L_i := 1 TO 8 DO
-        IF (L_i MOD 2) = 0 THEN
-            GVL_STATE.G_Lighting_Levels[L_i] := 100;
-        ELSE
-            GVL_STATE.G_Lighting_Levels[L_i] := 0;
-        END_IF;
-    END_FOR;
-END_IF;
-
-// Directional evacuation override
-IF GVL_STATE.G_Evacuation_Lighting_Active THEN
-    FOR L_i := 1 TO GVL_CONFIG.C_MAX_LIGHT_ZONES DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         CASE GVL_STATE.G_Evac_Guidance[L_i] OF
             -1:
                 GVL_STATE.G_Lighting_Levels[L_i] := 0;
@@ -114,4 +91,5 @@ IF GVL_STATE.G_Evacuation_Lighting_Active THEN
         END_CASE;
     END_FOR;
 END_IF;
+
 // >>> BULK_SYNC_ANCHOR: PRG_Lighting <<<
