@@ -33,7 +33,7 @@ VAR_GLOBAL
     I_Water_Selective_Recover : BOOL := FALSE;
     I_Gas_Selective_Recover : BOOL := FALSE;
     I_Scenario_Request : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
-    I_Lighting_Override_32 : ARRAY[1..32] OF BYTE;
+    I_Lighting_Override_32 : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
     I_Blinds_Override_32 : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     I_Socket_Override_32 : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     I_Reset_Errors : BOOL := FALSE;
@@ -47,8 +47,6 @@ VAR_GLOBAL
     I_Time_Sync_Req : BOOL := FALSE;
     I_New_Time_MS : UDINT := 0;
 
-    // Adaptive behavior profile control from HMI / service UI.
-    // Must be handled only by PRG_User_Adapt_Control.
     I_Set_Adapt_Profile_Req : BOOL := FALSE;
     I_Set_Adapt_Profile_Confirm : BOOL := FALSE;
     I_Adapt_Profile_Value : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
