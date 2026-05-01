@@ -19,6 +19,7 @@ VAR_GLOBAL CONSTANT
     C_MAX_DOOR_SENSORS     : INT := 8;  
     C_MAX_CO_SENSORS       : INT := 8;  
     C_MAX_METHANE_SENSORS  : INT := 2;  
+    C_PRIMARY_METHANE_SENSOR_INDEX : INT := 1;
     C_MAX_VENT_UNITS       : INT := 8;  
     C_MAX_SUPPLY_TEMPS     : INT := 2;  
     C_MAX_SMOKE_SENSORS    : INT := 6;  
@@ -48,7 +49,7 @@ VAR_GLOBAL CONSTANT
     C_MAX_NVRAM_RECORDS    : INT := 100; 
     C_MAX_NVRAM_DATA       : INT := 128; 
 
-    C_MAX_WATER_ZONES      : INT := 32; // NEW
+    C_MAX_WATER_ZONES      : INT := 32;
 
     C_ANALOG_RAW_MAX       : WORD := 27648;
     C_ANALOG_4MA_RAW       : WORD := 5529;  
