@@ -1,0 +1,23 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Input validation / temporal anomaly configuration.
+    // Used by PRG_Input_Processing only.
+
+    G_Enable_Input_Validation : BOOL := TRUE;
+    G_Enable_Temporal_Anomaly_Detection : BOOL := TRUE;
+
+    G_Room_Temp_Min : REAL := -40.0;
+    G_Room_Temp_Max : REAL := 80.0;
+    G_Room_Hum_Min : REAL := 0.0;
+    G_Room_Hum_Max : REAL := 100.0;
+
+    G_Room_Temp_Spike_Threshold : REAL := 5.0;
+    G_Room_Hum_Spike_Threshold : REAL := 20.0;
+
+    G_Room_Temp_Stuck_Epsilon : REAL := 0.01;
+    G_Room_Hum_Stuck_Epsilon : REAL := 0.1;
+    G_Sensor_Stuck_Timeout_MS : UDINT := 600000;
+
+    G_Condensation_Hum_Threshold : REAL := 90.0;
+    G_Condensation_Temp_Threshold : REAL := 0.0;
+END_VAR
