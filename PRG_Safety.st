@@ -2,7 +2,6 @@ PROGRAM PRG_Safety
 VAR
     fbWaterLeakageManager : FB_Water_Leakage_Manager;
     fbGasSmokeManager : FB_Gas_Smoke_Manager;
-    fbSafetyWorkflow : FB_Safety_Workflow_Manager;
     fbOwnership : FB_Ownership_Watchdog;
     L_i : INT;
 END_VAR
@@ -33,29 +32,6 @@ GVL_INTENT_SAFETY.I_Lock_1_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
-
-// ========================================
-// SAFETY_WORKFLOW_FB
-// ========================================
-fbSafetyWorkflow(
-    VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
-    VI_Water_Selective_Recover := GVL_INTENT_USER.I_Water_Selective_Recover,
-    VI_Gas_Selective_Recover := GVL_INTENT_USER.I_Gas_Selective_Recover,
-    VI_Water_Valve_Test_Open := GVL_INTENT_USER.I_Water_Valve_Test_Open,
-    VI_Water_Valve_Test_Close := GVL_INTENT_USER.I_Water_Valve_Test_Close,
-    VI_Water_Valve_Test_Confirm := GVL_INTENT_USER.I_Water_Valve_Test_Confirm,
-    VI_Gas_Valve_Test_Open := GVL_INTENT_USER.I_Gas_Valve_Test_Open,
-    VI_Gas_Valve_Test_Close := GVL_INTENT_USER.I_Gas_Valve_Test_Close,
-    VI_Gas_Valve_Test_Confirm := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm
-);
-
-IF fbSafetyWorkflow.VO_Water_Test_Timeout_Close_Required THEN
-    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
-END_IF;
-
-IF fbSafetyWorkflow.VO_Gas_Test_Timeout_Close_Required THEN
-    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
-END_IF;
 
 // ========================================
 // SAFETY_DETECTORS_AND_HEALTH_PROJECTION
