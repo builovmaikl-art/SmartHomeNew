@@ -4,8 +4,6 @@ VAR
 END_VAR
 
 // Operator / test / recover workflow ownership.
-// This PRG may read user intent and publish derived safety intent requests.
-// It must not perform hazard detection and must not write physical IO.
 
 fbSafetyWorkflow(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
@@ -19,12 +17,18 @@ fbSafetyWorkflow(
     VI_Gas_Valve_Test_Confirm := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm
 );
 
+// propagate test timeout safety actions
 IF fbSafetyWorkflow.VO_Water_Test_Timeout_Close_Required THEN
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
 END_IF;
 
 IF fbSafetyWorkflow.VO_Gas_Test_Timeout_Close_Required THEN
     GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+END_IF;
+
+// move recovery manual confirm here
+IF GVL_INTENT_USER.I_Reset_Errors THEN
+    GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm := TRUE;
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Safety_Operator <<<
