@@ -8,6 +8,7 @@ PRG_Input_Processing();
 PRG_User_Adapt_Control();
 PRG_Behavior_Adapt_Profile();
 PRG_Safety();
+PRG_Safety_Operator();
 PRG_Safety_Shutdown();
 PRG_Safety_Recovery();
 PRG_System_Intent();
