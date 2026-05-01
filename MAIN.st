@@ -3,6 +3,7 @@ VAR
 END_VAR
 
 PRG_Time_Service();
+PRG_Config_Manager();
 PRG_IO_Read();
 PRG_Input_Processing();
 PRG_User_Adapt_Control();
