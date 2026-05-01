@@ -29,4 +29,16 @@ VAR_GLOBAL
     IN_Validation_Reason : STRING(120) := '';
     IN_Anomaly_Reason : STRING(120) := '';
     IN_Last_Invalid_Zone : INT := 0;
+
+    // Temporal memory for anomaly detection.
+    IN_Room_Temp_Prev : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Room_Hum_Prev : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Last_Change_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+
+    // Sensor confidence model, 0.0..1.0.
+    IN_Room_Temp_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Room_Hum_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Zone_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    IN_Min_Zone_Confidence : REAL := 1.0;
+    IN_Worst_Zone : INT := 0;
 END_VAR
