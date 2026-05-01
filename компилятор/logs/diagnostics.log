@@ -171,7 +171,7 @@ drwxr-xr-x  3 runner runner   4096 May  1 17:00 .github
 -rw-r--r--  1 runner runner    139 May  1 17:00 GVL_COMMAND_VERIFY.gvl
 -rw-r--r--  1 runner runner  10625 May  1 17:00 GVL_CONFIG.gvl
 -rw-r--r--  1 runner runner   7041 May  1 17:00 GVL_CONSTANTS.gvl
--rw-r--r--  1 runner runner   1518 May  1 17:00 GVL_DEBUG_VIEW.gvl
+-rw-r--r--  1 runner runner   1630 May  1 17:00 GVL_DEBUG_VIEW.gvl
 -rw-r--r--  1 runner runner    120 May  1 17:00 GVL_EVENT.gvl
 -rw-r--r--  1 runner runner   1581 May  1 17:00 GVL_EXPLAINABILITY.gvl
 -rw-r--r--  1 runner runner    821 May  1 17:00 GVL_GATEWAY.gvl
@@ -354,4 +354,4 @@ total 1096
 drwxr-xr-x 2 runner runner    4096 May  1 17:00 .
 drwxr-xr-x 5 runner runner    4096 May  1 17:00 ..
 -rw-r--r-- 1 runner runner       0 May  1 17:00 .gitkeep
--rw-r--r-- 1 runner runner 1112693 May  1 17:00 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1113213 May  1 17:00 RESULT_methods_clean.xml
