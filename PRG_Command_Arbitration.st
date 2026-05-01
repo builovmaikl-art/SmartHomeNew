@@ -49,6 +49,8 @@ CASE L_Mode OF
         GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
         GVL_COMMAND_SHADOW.G_Lock_1_Open := TRUE;
         GVL_COMMAND_SHADOW.G_Lock_2_Open := TRUE;
+        GVL_COMMAND_SHADOW.G_Gate_Open := TRUE;
+        GVL_COMMAND_SHADOW.G_Wicket_Open := TRUE;
         fbTrace(iLayer:=TRACE_COMMAND,iSource:=SRC_SAFETY,iReason:=REASON_FIRE,iValueBool:=TRUE,iValueReal:=0.0,iText:='Fire override');
 
     GAS:
@@ -122,12 +124,28 @@ IF GVL_INTENT_SAFETY.I_Water_Main_Close_Required THEN
     GVL_COMMAND_SHADOW.G_Close_Valve_36 := TRUE;
 END_IF;
 
+// Safety-access coupling: force-open and close-block always win over user close.
+IF GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Lock_1_Open := TRUE;
+    GVL_COMMAND_SHADOW.G_Lock_2_Open := TRUE;
+    GVL_COMMAND_SHADOW.G_Gate_Open := TRUE;
+    GVL_COMMAND_SHADOW.G_Wicket_Open := TRUE;
+END_IF;
+
 IF GVL_INTENT_SAFETY.I_Lock_1_Force_Open THEN
     GVL_COMMAND_SHADOW.G_Lock_1_Open := TRUE;
 END_IF;
 
 IF GVL_INTENT_SAFETY.I_Lock_2_Force_Open THEN
     GVL_COMMAND_SHADOW.G_Lock_2_Open := TRUE;
+END_IF;
+
+IF GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block OR GVL_INTENT_SAFETY.I_Lock_1_Force_Open OR GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
+END_IF;
+
+IF GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block OR GVL_INTENT_SAFETY.I_Lock_2_Force_Open OR GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
 END_IF;
 
 // ========================================
@@ -161,6 +179,15 @@ IF (L_Mode = NORMAL) AND NOT GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
 
 END_IF;
 
+// Re-apply safety close blocks after user pass-through.
+IF GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block OR GVL_INTENT_SAFETY.I_Lock_1_Force_Open OR GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
+END_IF;
+
+IF GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block OR GVL_INTENT_SAFETY.I_Lock_2_Force_Open OR GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
+END_IF;
+
 // ========================================
 // RECOVERY CLAMP
 // ========================================
@@ -168,6 +195,22 @@ IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
     GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
     GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
+END_IF;
+
+// ========================================
+// COMMAND SANITY
+// ========================================
+IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND GVL_COMMAND_SHADOW.G_Lock_1_Close THEN
+    GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
+END_IF;
+
+IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND GVL_COMMAND_SHADOW.G_Lock_2_Close THEN
+    GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
+END_IF;
+
+IF (L_Mode <> NORMAL) AND NOT GVL_INTENT_SAFETY.I_Evacuation_Mode_Active THEN
+    GVL_COMMAND_SHADOW.G_Gate_Open := FALSE;
+    GVL_COMMAND_SHADOW.G_Wicket_Open := FALSE;
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Command_Arbitration <<<
