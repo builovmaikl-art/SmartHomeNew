@@ -25,7 +25,7 @@ CASE L_Phase OF
         END_IF;
 
     WAIT_MANUAL_CONFIRM:
-        IF GVL_INTENT_USER.I_Reset_Errors THEN
+        IF GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm THEN
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := RECOVERING;
         END_IF;
 
@@ -34,6 +34,7 @@ CASE L_Phase OF
         GVL_SAFETY_RECOVERY.G_Recovery_Phase := IDLE;
         GVL_SAFETY_RECOVERY.G_Recovery_Active := FALSE;
         GVL_SAFETY_RECOVERY.G_Recovery_Requested := FALSE;
+        GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm := FALSE;
 
 END_CASE;
 
