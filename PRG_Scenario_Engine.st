@@ -3,6 +3,8 @@ VAR
     L_Hour : INT;
     L_Hum : REAL;
     L_ZoneWeight : REAL;
+    L_AdaptConfidence : REAL;
+    L_InputConfidence : REAL;
     L_ZoneConfidence : REAL;
     L_ZoneScore : REAL;
     L_BestVentScore : REAL;
@@ -35,7 +37,7 @@ IF GVL_INPUT.IN_Preheat_Request THEN
     GVL_INTENT_BEHAVIOR.I_Score_Preheat := REAL_TO_INT(50.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat);
 END_IF;
 
-// Vent boost (zone-aware)
+// Vent boost (zone-aware + sensor-confidence-aware)
 L_BestVentScore := 0.0;
 L_BestVentZone := 0;
 
@@ -48,10 +50,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         L_ZoneWeight := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Zone_Weight;
     END_IF;
 
-    L_ZoneConfidence := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Confidence;
-    IF L_ZoneConfidence <= 0.0 THEN
-        L_ZoneConfidence := 0.5;
+    L_AdaptConfidence := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Confidence;
+    IF L_AdaptConfidence <= 0.0 THEN
+        L_AdaptConfidence := 0.5;
     END_IF;
+
+    L_InputConfidence := GVL_INPUT.IN_Zone_Confidence[L_i];
+    IF L_InputConfidence <= 0.0 THEN
+        L_InputConfidence := 0.5;
+    END_IF;
+
+    L_ZoneConfidence := L_AdaptConfidence * L_InputConfidence;
 
     IF L_Hum > 65.0 THEN
         L_ZoneScore := 45.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost * L_ZoneWeight * L_ZoneConfidence;
