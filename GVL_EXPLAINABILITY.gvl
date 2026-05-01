@@ -36,4 +36,11 @@ VAR_GLOBAL
     G_Vent_Why_Stopped : STRING(255) := '';
     G_Water_Why_Closed : STRING(255) := '';
     G_Access_Why_Opened : STRING(255) := '';
+
+    // Decision chain for HMI / engineering debug.
+    G_Reason_Chain_Safety : STRING(80) := 'NORMAL';
+    G_Reason_Chain_Behavior : STRING(120) := 'No behavior scenario active';
+    G_Reason_Chain_Command : STRING(120) := 'Command OK';
+    G_Reason_Chain_Output : STRING(120) := 'Outputs projected';
+    G_Reason_Chain_Full : STRING(255) := 'NORMAL -> No behavior scenario active -> Command OK -> Outputs projected';
 END_VAR
