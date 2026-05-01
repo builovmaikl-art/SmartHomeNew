@@ -32,7 +32,7 @@ L_Access_Forced_Off :=
 // ========================================
 // HEATING OUTPUTS
 // ========================================
-FOR L_i := 1 TO 8 DO
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     IF L_Heating_Forced_Off THEN
         GVL_IO.DO_Zone_Valves[L_i] := FALSE;
     ELSE
