@@ -39,7 +39,15 @@ GVL_DEBUG_VIEW.D_Vent_Why_Stopped := GVL_EXPLAINABILITY.G_Vent_Why_Stopped;
 GVL_DEBUG_VIEW.D_Water_Why_Closed := GVL_EXPLAINABILITY.G_Water_Why_Closed;
 GVL_DEBUG_VIEW.D_Access_Why_Opened := GVL_EXPLAINABILITY.G_Access_Why_Opened;
 
-// NEW: input confidence
+// SENSOR QUALITY → HMI
+GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
+GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
+GVL_DEBUG_VIEW.D_Sensor_Fault := GVL_INPUT.IN_Sensor_Fault;
+GVL_DEBUG_VIEW.D_Validation_Failed := GVL_INPUT.IN_Validation_Failed;
+GVL_DEBUG_VIEW.D_Anomaly_Detected := GVL_INPUT.IN_Anomaly_Detected;
+GVL_DEBUG_VIEW.D_Validation_Reason := GVL_INPUT.IN_Validation_Reason;
+GVL_DEBUG_VIEW.D_Anomaly_Reason := GVL_INPUT.IN_Anomaly_Reason;
+GVL_DEBUG_VIEW.D_Last_Invalid_Zone := GVL_INPUT.IN_Last_Invalid_Zone;
 GVL_DEBUG_VIEW.D_Min_Zone_Confidence := GVL_INPUT.IN_Min_Zone_Confidence;
 GVL_DEBUG_VIEW.D_Worst_Zone := GVL_INPUT.IN_Worst_Zone;
 
