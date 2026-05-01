@@ -13,9 +13,9 @@ no changes added to commit (use "git add" and/or "git commit -a")
 === repo tree root ===
 total 2024
 -rw-r--r--  1 runner runner  13067 May  1 17:27 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 13 runner runner  20480 May  1 17:27 .
+drwxr-xr-x 13 runner runner  20480 May  1 17:28 .
 drwxr-xr-x  3 runner runner   4096 May  1 17:27 ..
-drwxr-xr-x  7 runner runner   4096 May  1 17:27 .git
+drwxr-xr-x  7 runner runner   4096 May  1 17:28 .git
 drwxr-xr-x  3 runner runner   4096 May  1 17:27 .github
 -rw-r--r--  1 runner runner    241 May  1 17:27 ACCESS_SUMMARY.txt
 -rw-r--r--  1 runner runner  10842 May  1 17:27 AGENTS.md
@@ -318,40 +318,40 @@ drwxr-xr-x  3 runner runner   4096 May  1 17:27 .github
 drwxr-xr-x  3 runner runner   4096 May  1 17:27 diagnostics
 drwxr-xr-x 14 runner runner   4096 May  1 17:27 docs
 drwxr-xr-x  2 runner runner   4096 May  1 17:27 migration_logs
-drwxr-xr-x 11 runner runner   4096 May  1 17:27 node_modules
--rw-r--r--  1 runner runner   8377 May  1 17:27 package-lock.json
--rw-r--r--  1 runner runner    156 May  1 17:27 package.json
-drwxr-xr-x  2 runner runner   4096 May  1 17:27 scripts
-drwxr-xr-x  8 runner runner   4096 May  1 17:27 snapshots
-drwxr-xr-x  3 runner runner   4096 May  1 17:27 tools
--rw-r--r--  1 runner runner 430747 May  1 17:27 Система умного дома.xml
--rw-r--r--  1 runner runner  35304 May  1 17:27 ТЗ обновлен.txt
-drwxr-xr-x  2 runner runner   4096 May  1 17:27 документация проекта
-drwxr-xr-x  5 runner runner   4096 May  1 17:27 компилятор
--rw-r--r--  1 runner runner    841 May  1 17:27 ошибки компиляции.txt
+drwxr-xr-x 11 runner runner   4096 May  1 17:28 node_modules
+-rw-r--r--  1 runner runner   8377 May  1 17:28 package-lock.json
+-rw-r--r--  1 runner runner    156 May  1 17:28 package.json
+drwxr-xr-x  2 runner runner   4096 May  1 17:28 scripts
+drwxr-xr-x  8 runner runner   4096 May  1 17:28 snapshots
+drwxr-xr-x  3 runner runner   4096 May  1 17:28 tools
+-rw-r--r--  1 runner runner 430747 May  1 17:28 Система умного дома.xml
+-rw-r--r--  1 runner runner  35304 May  1 17:28 ТЗ обновлен.txt
+drwxr-xr-x  2 runner runner   4096 May  1 17:28 документация проекта
+drwxr-xr-x  5 runner runner   4096 May  1 17:28 компилятор
+-rw-r--r--  1 runner runner    841 May  1 17:28 ошибки компиляции.txt
 
 === compiler dir ===
 total 588
-drwxr-xr-x  5 runner runner   4096 May  1 17:27 .
-drwxr-xr-x 13 runner runner  20480 May  1 17:27 ..
--rw-r--r--  1 runner runner  21153 May  1 17:27 001_universal_pou_builder_METHODS_V2.py
-drwxr-xr-x  2 runner runner   4096 May  1 17:27 __pycache__
--rw-r--r--  1 runner runner  34293 May  1 17:27 import_codesys_FINAL.py
--rw-r--r--  1 runner runner  33804 May  1 17:27 import_codesys_FINAL.py.bak
--rw-r--r--  1 runner runner   3227 May  1 17:27 import_codesys_FINAL_METHODS_V2.py
--rw-r--r--  1 runner runner     54 May  1 17:27 import_codesys_FINAL_METHODS_V3.py
-drwxr-xr-x  2 runner runner   4096 May  1 17:27 logs
--rw-r--r--  1 runner runner   7135 May  1 17:27 method_overlay_clean.py
--rw-r--r--  1 runner runner   7163 May  1 17:27 method_overlay_clean.py.bak
-drwxr-xr-x  2 runner runner   4096 May  1 17:27 out
--rwxr-xr-x  1 runner runner    822 May  1 17:27 run_compile_smoke.sh
--rw-r--r--  1 runner runner 428970 May  1 17:27 Система умного дома.xml
--rw-r--r--  1 runner runner    456 May  1 17:27 запуск_сборки.md
--rw-r--r--  1 runner runner    177 May  1 17:27 запуск_сборки.sh
+drwxr-xr-x  5 runner runner   4096 May  1 17:28 .
+drwxr-xr-x 13 runner runner  20480 May  1 17:28 ..
+-rw-r--r--  1 runner runner  21153 May  1 17:28 001_universal_pou_builder_METHODS_V2.py
+drwxr-xr-x  2 runner runner   4096 May  1 17:28 __pycache__
+-rw-r--r--  1 runner runner  34293 May  1 17:28 import_codesys_FINAL.py
+-rw-r--r--  1 runner runner  33804 May  1 17:28 import_codesys_FINAL.py.bak
+-rw-r--r--  1 runner runner   3227 May  1 17:28 import_codesys_FINAL_METHODS_V2.py
+-rw-r--r--  1 runner runner     54 May  1 17:28 import_codesys_FINAL_METHODS_V3.py
+drwxr-xr-x  2 runner runner   4096 May  1 17:28 logs
+-rw-r--r--  1 runner runner   7135 May  1 17:28 method_overlay_clean.py
+-rw-r--r--  1 runner runner   7163 May  1 17:28 method_overlay_clean.py.bak
+drwxr-xr-x  2 runner runner   4096 May  1 17:28 out
+-rwxr-xr-x  1 runner runner    822 May  1 17:28 run_compile_smoke.sh
+-rw-r--r--  1 runner runner 428970 May  1 17:28 Система умного дома.xml
+-rw-r--r--  1 runner runner    456 May  1 17:28 запуск_сборки.md
+-rw-r--r--  1 runner runner    177 May  1 17:28 запуск_сборки.sh
 
 === compiler out dir before compile ===
 total 1100
-drwxr-xr-x 2 runner runner    4096 May  1 17:27 .
-drwxr-xr-x 5 runner runner    4096 May  1 17:27 ..
--rw-r--r-- 1 runner runner       0 May  1 17:27 .gitkeep
--rw-r--r-- 1 runner runner 1116173 May  1 17:27 RESULT_methods_clean.xml
+drwxr-xr-x 2 runner runner    4096 May  1 17:28 .
+drwxr-xr-x 5 runner runner    4096 May  1 17:28 ..
+-rw-r--r-- 1 runner runner       0 May  1 17:28 .gitkeep
+-rw-r--r-- 1 runner runner 1116173 May  1 17:28 RESULT_methods_clean.xml
