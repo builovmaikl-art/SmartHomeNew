@@ -1,0 +1,7 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Safety Recovery configuration.
+    // Used by PRG_Safety_Recovery only.
+
+    G_Stabilization_Delay_MS : UDINT := 5000;
+END_VAR
