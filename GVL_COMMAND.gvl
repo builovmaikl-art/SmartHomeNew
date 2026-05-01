@@ -1,25 +1,24 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
-    G_Gas_Valve_Close : BOOL := FALSE; // Команда: Закрыть газовый клапан
-    G_Boiler_Stop : BOOL := FALSE; // Команда: Остановка котлов
-    G_Supply_100_Req : BOOL := FALSE; // Команда: Приток 100%
-    G_Supply_80_Req : BOOL := FALSE; // Команда: Приток 80%
-    G_Vent_PV3_Boost : BOOL := FALSE; // Команда: Форсированный режим ПВ-3
-    G_Exhaust_100_Req : BOOL := FALSE; // Команда: Вытяжка 100%
-    G_Vent_Stop : BOOL := FALSE; // Команда: Остановка вентиляции
-    G_Close_Valve_35 : BOOL := FALSE; // Команда: Закрыть вводной кран 1
-    G_Close_Valve_36 : BOOL := FALSE; // Команда: Закрыть вводной кран 2
+    G_Gas_Valve_Close : BOOL := FALSE;
+    G_Boiler_Stop : BOOL := FALSE;
+    G_Supply_100_Req : BOOL := FALSE;
+    G_Supply_80_Req : BOOL := FALSE;
+    G_Vent_PV3_Boost : BOOL := FALSE;
+    G_Exhaust_100_Req : BOOL := FALSE;
+    G_Vent_Stop : BOOL := FALSE;
+    G_Close_Valve_35 : BOOL := FALSE;
+    G_Close_Valve_36 : BOOL := FALSE;
     G_Gate_Open : BOOL;
     G_Wicket_Open : BOOL;
     G_Lock_1_Open : BOOL;
     G_Lock_1_Close : BOOL;
     G_Lock_2_Open : BOOL;
     G_Lock_2_Close : BOOL;
-    G_Reset_Errors : BOOL := FALSE; // Команда: Сброс ошибок
+    G_Reset_Errors : BOOL := FALSE;
     G_Scenario_Request : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
-    G_Scenario_Request_Operator : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE; // Запрос на активацию сценария
-    
-    // Команды от шлюза
+    G_Scenario_Request_Operator : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+
     G_Arm_Req : BOOL;
     G_Disarm_Req : BOOL;
     G_PIN_Code : STRING(4);
@@ -27,7 +26,7 @@ VAR_GLOBAL
     G_2FA_Code_In : STRING(6);
     G_Send_2FA_Req : BOOL;
     G_2FA_Code_Out : STRING(6);
-    G_Lighting_Override : ARRAY[1..32] OF BYTE;
+    G_Lighting_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
     G_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     G_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     CMD_Set_Manifold_Pump_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
