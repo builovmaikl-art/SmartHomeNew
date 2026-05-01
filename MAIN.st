@@ -14,7 +14,6 @@ PRG_Safety_Recovery();
 PRG_System_Intent();
 PRG_System_Health();
 PRG_System_Alarm_Gateway();
-PRG_Test_Scenario_Runner();
 PRG_System_Scenario_Rules();
 PRG_System_Access_Maintenance();
 PRG_System_BlackBox();
