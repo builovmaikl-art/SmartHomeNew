@@ -1,0 +1,13 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // History (ring buffer of last 5 versions)
+    G_History_Version : ARRAY[1..5] OF UDINT;
+    G_History_Time_MS : ARRAY[1..5] OF UDINT;
+    G_History_Action : ARRAY[1..5] OF STRING(64);
+
+    G_History_Index : INT := 1;
+
+    // Audit
+    G_Last_Changed_By_Level : INT := 0;
+    G_Last_Action_Text : STRING(128) := '';
+END_VAR
