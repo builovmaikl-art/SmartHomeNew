@@ -5,11 +5,11 @@ END_VAR
 
 // PLC inactive → force safe commands
 IF NOT GVL_STATUS.G_Is_Active_PLC THEN
-    GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
-    GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Gas_Valve_Close := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Close_Gas;
+    GVL_COMMAND_SHADOW.G_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Boiler;
+    GVL_COMMAND_SHADOW.G_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Heating;
+    GVL_COMMAND_SHADOW.G_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Vent;
+    GVL_COMMAND_SHADOW.G_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Water;
     RETURN;
 END_IF;
 
@@ -32,51 +32,51 @@ L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 CASE L_Mode OF
 
     FIRE:
-        GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-        GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
-        GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+        GVL_COMMAND_SHADOW.G_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Heating;
+        GVL_COMMAND_SHADOW.G_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_Fire_Stop_Boiler;
+        GVL_COMMAND_SHADOW.G_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_Fire_Stop_Vent;
 
-        GVL_COMMAND_SHADOW.G_Lock_1_Open := TRUE;
-        GVL_COMMAND_SHADOW.G_Lock_2_Open := TRUE;
-        GVL_COMMAND_SHADOW.G_Gate_Open := TRUE;
-        GVL_COMMAND_SHADOW.G_Wicket_Open := TRUE;
+        GVL_COMMAND_SHADOW.G_Lock_1_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Lock_1;
+        GVL_COMMAND_SHADOW.G_Lock_2_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Lock_2;
+        GVL_COMMAND_SHADOW.G_Gate_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Gate;
+        GVL_COMMAND_SHADOW.G_Wicket_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Wicket;
 
     GAS:
-        GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
-        GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
-        GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+        GVL_COMMAND_SHADOW.G_Gas_Valve_Close := GVL_COMMAND_POLICY_CONFIG.G_Gas_Close_Gas;
+        GVL_COMMAND_SHADOW.G_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_Gas_Stop_Boiler;
+        GVL_COMMAND_SHADOW.G_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Gas_Block_Heating;
 
-        GVL_COMMAND_SHADOW.G_Gate_Open := TRUE;
-        GVL_COMMAND_SHADOW.G_Wicket_Open := TRUE;
+        GVL_COMMAND_SHADOW.G_Gate_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Gate;
+        GVL_COMMAND_SHADOW.G_Wicket_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Wicket;
+        GVL_COMMAND_SHADOW.G_Lock_1_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Lock_1;
+        GVL_COMMAND_SHADOW.G_Lock_2_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Lock_2;
 
     WATER_LEAK:
-        GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
+        GVL_COMMAND_SHADOW.G_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_Water_Block_Water;
 
     GLOBAL_STOP:
-        GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-        GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
-        GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
-        GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
+        GVL_COMMAND_SHADOW.G_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Block_Heating;
+        GVL_COMMAND_SHADOW.G_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Stop_Boiler;
+        GVL_COMMAND_SHADOW.G_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Stop_Vent;
+        GVL_COMMAND_SHADOW.G_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Block_Water;
 
 END_CASE;
 
-// -----------------------------
-// SAFETY ACCESS CLAMP (RESTORED)
-// -----------------------------
-
-// FIRE → no close allowed
-IF L_Mode = FIRE THEN
+// SAFETY ACCESS CLAMP
+IF (L_Mode = FIRE) AND GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Lock_Close THEN
     GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
     GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
 END_IF;
 
 // conflict block
-IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND GVL_COMMAND_SHADOW.G_Lock_1_Close THEN
-    GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
-END_IF;
+IF GVL_COMMAND_POLICY_CONFIG.G_Block_Close_When_Open_Commanded THEN
+    IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND GVL_COMMAND_SHADOW.G_Lock_1_Close THEN
+        GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
+    END_IF;
 
-IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND GVL_COMMAND_SHADOW.G_Lock_2_Close THEN
-    GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
+    IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND GVL_COMMAND_SHADOW.G_Lock_2_Close THEN
+        GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
+    END_IF;
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Command_Arbitration <<<
