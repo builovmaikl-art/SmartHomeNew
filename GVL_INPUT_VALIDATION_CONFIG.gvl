@@ -5,6 +5,7 @@ VAR_GLOBAL
 
     G_Enable_Input_Validation : BOOL := TRUE;
     G_Enable_Temporal_Anomaly_Detection : BOOL := TRUE;
+    G_Enable_Reputation_Learning : BOOL := TRUE;
 
     G_Room_Temp_Min : REAL := -40.0;
     G_Room_Temp_Max : REAL := 80.0;
@@ -20,4 +21,12 @@ VAR_GLOBAL
 
     G_Condensation_Hum_Threshold : REAL := 90.0;
     G_Condensation_Temp_Threshold : REAL := 0.0;
+
+    // Confidence/reputation parameters.
+    G_Reputation_Learning_Rate : REAL := 0.05;
+    G_Reputation_Recovery_Decay : REAL := 0.01;
+    G_Min_Sensor_Confidence : REAL := 0.1;
+    G_Bad_Spike_Confidence : REAL := 0.3;
+    G_Bad_Stuck_Confidence : REAL := 0.2;
+    G_Default_Confidence : REAL := 1.0;
 END_VAR
