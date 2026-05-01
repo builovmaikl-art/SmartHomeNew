@@ -1,6 +1,6 @@
 FUNCTION_BLOCK FB_Heating_Output_Projection
 VAR_INPUT
-    VI_Zone_Valves : ARRAY[1..8] OF BOOL;
+    VI_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     VI_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     VI_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     VI_DHW_Heating_Pump : BOOL;
@@ -12,9 +12,7 @@ VAR
     L_i : INT;
 END_VAR
 
-// Converts STATE-level outputs into IO-ready projection (no commands applied here).
-
-FOR L_i := 1 TO 8 DO
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_HEATING_OUTPUT.DO_Zone_Valves[L_i] := VI_Zone_Valves[L_i];
 END_FOR;
 
