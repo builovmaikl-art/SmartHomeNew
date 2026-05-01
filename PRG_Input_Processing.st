@@ -3,8 +3,6 @@ VAR
     L_i : INT;
 END_VAR
 
-// This layer is a normalized read-model between PRG_IO_Read/GVL_STATE and higher-level logic.
-
 GVL_INPUT.IN_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 GVL_INPUT.IN_Source_Valid := GVL_STATUS.G_Is_Active_PLC;
 
@@ -29,27 +27,63 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     GVL_INPUT.IN_Room_Hum[L_i] := GVL_STATE.G_Room_Hum[L_i];
     GVL_INPUT.IN_Room_CO2[L_i] := GVL_STATE.G_Room_CO2[L_i];
 
-    // Validation: humidity range
-    IF (GVL_INPUT.IN_Room_Hum[L_i] < 0.0) OR (GVL_INPUT.IN_Room_Hum[L_i] > 100.0) THEN
-        GVL_INPUT.IN_Validation_Failed := TRUE;
-        GVL_INPUT.IN_Input_Degraded := TRUE;
-        GVL_INPUT.IN_Validation_Reason := 'Humidity out of range';
-        GVL_INPUT.IN_Last_Invalid_Zone := L_i;
+    IF GVL_INPUT_VALIDATION_CONFIG.G_Enable_Input_Validation THEN
+
+        IF (GVL_INPUT.IN_Room_Hum[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Room_Hum_Min) OR
+           (GVL_INPUT.IN_Room_Hum[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Room_Hum_Max) THEN
+            GVL_INPUT.IN_Validation_Failed := TRUE;
+            GVL_INPUT.IN_Input_Degraded := TRUE;
+            GVL_INPUT.IN_Validation_Reason := 'Humidity out of range';
+            GVL_INPUT.IN_Last_Invalid_Zone := L_i;
+        END_IF;
+
+        IF (GVL_INPUT.IN_Room_Temps[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Min) OR
+           (GVL_INPUT.IN_Room_Temps[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Max) THEN
+            GVL_INPUT.IN_Validation_Failed := TRUE;
+            GVL_INPUT.IN_Input_Degraded := TRUE;
+            GVL_INPUT.IN_Validation_Reason := 'Temperature out of range';
+            GVL_INPUT.IN_Last_Invalid_Zone := L_i;
+        END_IF;
+
     END_IF;
 
-    // Validation: temperature range (basic plausibility)
-    IF (GVL_INPUT.IN_Room_Temps[L_i] < -40.0) OR (GVL_INPUT.IN_Room_Temps[L_i] > 80.0) THEN
-        GVL_INPUT.IN_Validation_Failed := TRUE;
-        GVL_INPUT.IN_Input_Degraded := TRUE;
-        GVL_INPUT.IN_Validation_Reason := 'Temperature out of range';
-        GVL_INPUT.IN_Last_Invalid_Zone := L_i;
+    IF GVL_INPUT_VALIDATION_CONFIG.G_Enable_Temporal_Anomaly_Detection THEN
+
+        IF ABS(GVL_INPUT.IN_Room_Temps[L_i] - GVL_INPUT.IN_Room_Temp_Prev[L_i]) >
+           GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Spike_Threshold THEN
+            GVL_INPUT.IN_Anomaly_Detected := TRUE;
+            GVL_INPUT.IN_Anomaly_Reason := 'Temp spike';
+        END_IF;
+
+        IF ABS(GVL_INPUT.IN_Room_Hum[L_i] - GVL_INPUT.IN_Room_Hum_Prev[L_i]) >
+           GVL_INPUT_VALIDATION_CONFIG.G_Room_Hum_Spike_Threshold THEN
+            GVL_INPUT.IN_Anomaly_Detected := TRUE;
+            GVL_INPUT.IN_Anomaly_Reason := 'Humidity spike';
+        END_IF;
+
+        IF ABS(GVL_INPUT.IN_Room_Temps[L_i] - GVL_INPUT.IN_Room_Temp_Prev[L_i]) <
+           GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Stuck_Epsilon THEN
+
+            IF (GVL_TIME_SERVICE.G_Now_MS - GVL_INPUT.IN_Last_Change_MS[L_i]) >
+               GVL_INPUT_VALIDATION_CONFIG.G_Sensor_Stuck_Timeout_MS THEN
+                GVL_INPUT.IN_Anomaly_Detected := TRUE;
+                GVL_INPUT.IN_Anomaly_Reason := 'Temp sensor stuck';
+            END_IF;
+
+        ELSE
+            GVL_INPUT.IN_Last_Change_MS[L_i] := GVL_TIME_SERVICE.G_Now_MS;
+        END_IF;
+
+        IF (GVL_INPUT.IN_Room_Hum[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Condensation_Hum_Threshold) AND
+           (GVL_INPUT.IN_Room_Temps[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Condensation_Temp_Threshold) THEN
+            GVL_INPUT.IN_Anomaly_Detected := TRUE;
+            GVL_INPUT.IN_Anomaly_Reason := 'Condensation anomaly';
+        END_IF;
+
     END_IF;
 
-    // Anomaly: impossible combination (high humidity + very low temp)
-    IF (GVL_INPUT.IN_Room_Hum[L_i] > 90.0) AND (GVL_INPUT.IN_Room_Temps[L_i] < 0.0) THEN
-        GVL_INPUT.IN_Anomaly_Detected := TRUE;
-        GVL_INPUT.IN_Anomaly_Reason := 'Condensation anomaly';
-    END_IF;
+    GVL_INPUT.IN_Room_Temp_Prev[L_i] := GVL_INPUT.IN_Room_Temps[L_i];
+    GVL_INPUT.IN_Room_Hum_Prev[L_i] := GVL_INPUT.IN_Room_Hum[L_i];
 
 END_FOR;
 
