@@ -62,7 +62,7 @@ VAR_GLOBAL
     DI_Module_2_Heartbeat : BOOL;
     DI_Backup_Circulation_Pump_Feedback : BOOL;
     DI_Electric_Heater_Feedback : BOOL;
-    DI_Water_Zone_Open_FB : ARRAY[1..32] OF BOOL;
-    DI_Water_Zone_Close_FB : ARRAY[1..32] OF BOOL;
-    DO_Water_Zone_Enable : ARRAY[1..32] OF BOOL;
+    DI_Water_Zone_Open_FB : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    DI_Water_Zone_Close_FB : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    DO_Water_Zone_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
 END_VAR
