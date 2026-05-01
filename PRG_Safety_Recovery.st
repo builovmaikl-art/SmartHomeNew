@@ -19,8 +19,7 @@ CASE L_Phase OF
         END_IF;
 
     STABILIZING:
-        // wait fixed delay (example 5s)
-        IF (GVL_TIME_SERVICE.G_Now_MS - GVL_SAFETY_RECOVERY.G_Recovery_Start_MS) > 5000 THEN
+        IF (GVL_TIME_SERVICE.G_Now_MS - GVL_SAFETY_RECOVERY.G_Recovery_Start_MS) > GVL_SAFETY_RECOVERY_CONFIG.G_Stabilization_Delay_MS THEN
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := WAIT_MANUAL_CONFIRM;
         END_IF;
 
@@ -30,7 +29,6 @@ CASE L_Phase OF
         END_IF;
 
     RECOVERING:
-        // one cycle cleanup
         GVL_SAFETY_RECOVERY.G_Recovery_Phase := IDLE;
         GVL_SAFETY_RECOVERY.G_Recovery_Active := FALSE;
         GVL_SAFETY_RECOVERY.G_Recovery_Requested := FALSE;
