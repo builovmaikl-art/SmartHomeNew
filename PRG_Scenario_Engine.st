@@ -21,20 +21,20 @@ GVL_INTENT_BEHAVIOR.I_Request_Comfort_Mode := FALSE;
 GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost := FALSE;
 GVL_INTENT_BEHAVIOR.I_Request_Access_Secure_Mode := FALSE;
 
-GVL_INTENT_BEHAVIOR.I_Score_Comfort := REAL_TO_INT(10.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Comfort);
+GVL_INTENT_BEHAVIOR.I_Score_Comfort := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_Comfort_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Comfort);
 GVL_INTENT_BEHAVIOR.I_Score_Night := 0;
 GVL_INTENT_BEHAVIOR.I_Score_Preheat := 0;
 GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost := 0;
 GVL_INTENT_BEHAVIOR.I_Score_Access_Secure := 0;
 
 // Night
-IF (L_Hour >= 22) OR (L_Hour < 6) THEN
-    GVL_INTENT_BEHAVIOR.I_Score_Night := REAL_TO_INT(40.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Night);
+IF (L_Hour >= GVL_SCENARIO_CONFIG.G_Night_Start_Hour) OR (L_Hour < GVL_SCENARIO_CONFIG.G_Night_End_Hour) THEN
+    GVL_INTENT_BEHAVIOR.I_Score_Night := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_Night_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Night);
 END_IF;
 
 // Preheat
 IF GVL_INPUT.IN_Preheat_Request THEN
-    GVL_INTENT_BEHAVIOR.I_Score_Preheat := REAL_TO_INT(50.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat);
+    GVL_INTENT_BEHAVIOR.I_Score_Preheat := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_Preheat_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat);
 END_IF;
 
 // Vent boost (zone-aware + sensor-confidence-aware)
@@ -52,18 +52,18 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     L_AdaptConfidence := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Confidence;
     IF L_AdaptConfidence <= 0.0 THEN
-        L_AdaptConfidence := 0.5;
+        L_AdaptConfidence := GVL_SCENARIO_CONFIG.G_Fallback_Adapt_Confidence;
     END_IF;
 
     L_InputConfidence := GVL_INPUT.IN_Zone_Confidence[L_i];
     IF L_InputConfidence <= 0.0 THEN
-        L_InputConfidence := 0.5;
+        L_InputConfidence := GVL_SCENARIO_CONFIG.G_Fallback_Input_Confidence;
     END_IF;
 
     L_ZoneConfidence := L_AdaptConfidence * L_InputConfidence;
 
-    IF L_Hum > 65.0 THEN
-        L_ZoneScore := 45.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost * L_ZoneWeight * L_ZoneConfidence;
+    IF L_Hum > GVL_SCENARIO_CONFIG.G_VentBoost_Humidity_Threshold THEN
+        L_ZoneScore := GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost * L_ZoneWeight * L_ZoneConfidence;
 
         IF L_ZoneScore > L_BestVentScore THEN
             L_BestVentScore := L_ZoneScore;
@@ -76,24 +76,24 @@ GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost := REAL_TO_INT(L_BestVentScore);
 GVL_INTENT_BEHAVIOR.I_Best_VentBoost_Zone := L_BestVentZone;
 
 // Access secure
-IF (L_Hour >= 23) OR (L_Hour < 5) THEN
-    GVL_INTENT_BEHAVIOR.I_Score_Access_Secure := REAL_TO_INT(30.0 * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure);
+IF (L_Hour >= GVL_SCENARIO_CONFIG.G_Access_Secure_Start_Hour) OR (L_Hour < GVL_SCENARIO_CONFIG.G_Access_Secure_End_Hour) THEN
+    GVL_INTENT_BEHAVIOR.I_Score_Access_Secure := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_AccessSecure_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure);
 END_IF;
 
 // Activate flags
-IF GVL_INTENT_BEHAVIOR.I_Score_Night >= 30 THEN
+IF GVL_INTENT_BEHAVIOR.I_Score_Night >= GVL_SCENARIO_CONFIG.G_Night_Activation_Threshold THEN
     GVL_INTENT_BEHAVIOR.I_Request_Night_Mode := TRUE;
 END_IF;
 
-IF GVL_INTENT_BEHAVIOR.I_Score_Preheat >= 40 THEN
+IF GVL_INTENT_BEHAVIOR.I_Score_Preheat >= GVL_SCENARIO_CONFIG.G_Comfort_Activation_Threshold THEN
     GVL_INTENT_BEHAVIOR.I_Request_Comfort_Mode := TRUE;
 END_IF;
 
-IF GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost >= 40 THEN
+IF GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost >= GVL_SCENARIO_CONFIG.G_VentBoost_Activation_Threshold THEN
     GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost := TRUE;
 END_IF;
 
-IF GVL_INTENT_BEHAVIOR.I_Score_Access_Secure >= 25 THEN
+IF GVL_INTENT_BEHAVIOR.I_Score_Access_Secure >= GVL_SCENARIO_CONFIG.G_AccessSecure_Activation_Threshold THEN
     GVL_INTENT_BEHAVIOR.I_Request_Access_Secure_Mode := TRUE;
 END_IF;
 
@@ -103,7 +103,7 @@ GVL_INTENT_BEHAVIOR.I_Weight_Comfort := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Comf
 GVL_INTENT_BEHAVIOR.I_Weight_Vent_Boost := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost) / 100.0;
 GVL_INTENT_BEHAVIOR.I_Weight_Access_Secure := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Access_Secure) / 100.0;
 
-// Scenario text (NO STUB)
+// Scenario text
 IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
     GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text := 'Night mode';
 ELSIF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
@@ -120,3 +120,5 @@ GVL_INTENT_BEHAVIOR.I_Reason_Text := GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Tex
 GVL_INTENT_BEHAVIOR.I_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 fbTrace(iLayer:=TRACE_SCENARIO,iSource:=SRC_SCENARIO,iReason:=REASON_SCENARIO_VENT_BOOST,iValueBool:=GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost,iValueReal:=TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost),iText:=GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text);
+
+// >>> BULK_SYNC_ANCHOR: PRG_Scenario_Engine <<<
