@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2020
+total 2016
 -rw-r--r--  1 runner runner  13067 May  1 22:53 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 13 runner runner  20480 May  1 22:53 .
 drwxr-xr-x  3 runner runner   4096 May  1 22:53 ..
@@ -230,7 +230,7 @@ drwxr-xr-x  3 runner runner   4096 May  1 22:53 .github
 -rw-r--r--  1 runner runner   2478 May  1 22:53 PRG_Heating_Policy_Manager.st
 -rw-r--r--  1 runner runner    799 May  1 22:53 PRG_Heating_Policy_Observer.st
 -rw-r--r--  1 runner runner  13736 May  1 22:53 PRG_IO_Read.st
--rw-r--r--  1 runner runner   4377 May  1 22:53 PRG_IO_Write.st
+-rw-r--r--  1 runner runner   1696 May  1 22:53 PRG_IO_Write.st
 -rw-r--r--  1 runner runner   4675 May  1 22:53 PRG_Input_Processing.st
 -rw-r--r--  1 runner runner   3890 May  1 22:53 PRG_Lighting.st
 -rw-r--r--  1 runner runner    619 May  1 22:53 PRG_Mode_Manager.st
@@ -356,8 +356,8 @@ drwxr-xr-x  2 runner runner   4096 May  1 22:53 out
 -rw-r--r--  1 runner runner    177 May  1 22:53 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1084
+total 1088
 drwxr-xr-x 2 runner runner    4096 May  1 22:53 .
 drwxr-xr-x 5 runner runner    4096 May  1 22:53 ..
 -rw-r--r-- 1 runner runner       0 May  1 22:53 .gitkeep
--rw-r--r-- 1 runner runner 1101219 May  1 22:53 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1101982 May  1 22:53 RESULT_methods_clean.xml
