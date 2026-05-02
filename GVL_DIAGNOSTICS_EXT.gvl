@@ -14,4 +14,12 @@ VAR_GLOBAL
     G_Last_Error_Time_Heating : UDINT := 0;
     G_Last_Error_Time_Safety : UDINT := 0;
     G_Last_Error_Time_IO : UDINT := 0;
+
+    // Timing
+    G_Last_Update_Time : UDINT := 0;
+
+    // States
+    G_Heating_State : INT := 0; // 0=OK,1=DEGRADED,2=CRITICAL
+    G_Safety_State : INT := 0;
+    G_IO_State : INT := 0;
 END_VAR
