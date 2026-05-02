@@ -7,4 +7,5 @@ VAR_GLOBAL
     G_CO_Warning_Level : BOOL;
     G_CO_Alarm_Level : BOOL;
     G_Last_Fault_Event_Text : STRING(255);
+    G_Role_Conflict_Error : BOOL;
 END_VAR
