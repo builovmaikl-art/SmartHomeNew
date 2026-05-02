@@ -24,6 +24,7 @@ PRG_System_Access_Maintenance();
 PRG_System_BlackBox();
 PRG_System_History();
 PRG_System_Diagnostics();
+PRG_System_Diagnostics_Ext();
 PRG_System_Evacuation();
 PRG_System_Trend();
 PRG_System_Runtime_Base();
