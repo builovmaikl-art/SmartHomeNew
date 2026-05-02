@@ -69,6 +69,35 @@ IF fbOwnership.VO_Ownership_Violation THEN
     GVL_DEBUG_VIEW.D_Ownership_Violation := TRUE;
 END_IF;
 
-// остальной код без изменений
+IF GVL_STATE.G_Safety_Smoke_Latched THEN
+    GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := TRUE;
+    GVL_INTENT_SAFETY.I_Boiler_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_1_Force_Open := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_2_Force_Open := TRUE;
+    GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := TRUE;
+END_IF;
+
+IF GVL_STATE.G_Safety_Gas_Latched THEN
+    GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Boiler_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Force_Supply_100 := TRUE;
+END_IF;
+
+IF GVL_HEALTH_BRIDGE.G_CO_Warning_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level THEN
+    GVL_INTENT_SAFETY.I_Vent_Force_Supply_80 := TRUE;
+END_IF;
+
+IF GVL_STATE.G_Safety_Leak_Latched THEN
+    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
+END_IF;
+
+IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
+    GVL_INTENT_SAFETY.I_Freeze_Protection_Required := TRUE;
+END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Safety <<<
