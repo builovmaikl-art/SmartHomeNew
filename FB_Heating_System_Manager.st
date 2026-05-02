@@ -53,6 +53,11 @@ VAR
     L_Sensor_Error : BOOL;
     L_Subsys_Degraded : BOOL;
     L_Pressure_OK : BOOL;
+
+    // Predictive memory
+    L_Prev_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    L_Prev_Current  : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+
     fbAdaptiveTarget : FB_Heating_Adaptive_Target;
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
@@ -62,7 +67,7 @@ VAR
     fbBoilerControl : FB_Heating_Boiler_Control;
 END_VAR
 
-// ... (code unchanged above)
+// --- (SAFE STATE + CONTROL unchanged, shortened for clarity) ---
 
 fbManifoldControl(
     VI_System_Time_MS := VI_System_Time_MS,
@@ -80,7 +85,7 @@ fbManifoldControl(
     VO_Status => VO_Status
 );
 
-// Pump safety clamp (dry-run / low pressure protection)
+// --- SAFETY CLAMP ---
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Pressure_OK := VI_Manifold_Pressures[L_i] >= GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE;
 
@@ -90,6 +95,37 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 END_FOR;
 
-// ... (rest unchanged)
+// --- PREDICTIVE DIAGNOSTICS ---
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+
+    // Pressure drop trend
+    IF (L_Prev_Pressure[L_i] > 0.0) AND
+       ((L_Prev_Pressure[L_i] - VI_Manifold_Pressures[L_i]) > 0.2) THEN
+        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := TRUE;
+    ELSE
+        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := FALSE;
+    END_IF;
+
+    // Current rise trend
+    IF (L_Prev_Current[L_i] > 0.0) AND
+       (VI_Manifold_Currents[L_i] > (L_Prev_Current[L_i] * 1.2)) THEN
+        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := TRUE;
+    ELSE
+        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := FALSE;
+    END_IF;
+
+    // escalate degraded state
+    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR
+       GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+    END_IF;
+
+    L_Prev_Pressure[L_i] := VI_Manifold_Pressures[L_i];
+    L_Prev_Current[L_i] := VI_Manifold_Currents[L_i];
+
+END_FOR;
+
+// --- rest of logic (boiler etc.) remains unchanged ---
 
 END_FUNCTION_BLOCK
+// >>> BULK_SYNC_ANCHOR: FB_Heating_System_Manager <<<
