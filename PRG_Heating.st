@@ -10,6 +10,8 @@ VAR
     fbHeatingRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
     fbOutputProjection : FB_Heating_Output_Projection;
 
+    L_i : INT;
+
     // Local actuator buffers (no direct writes to GVL_STATE)
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     L_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
@@ -25,6 +27,26 @@ VAR
     L_DHW_Circ_Pump : BOOL;
     L_DHW_Status : ST_DHW_Status;
 END_VAR
+
+// Initialize buffers to safe defaults
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    L_Zone_Valves[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_Manifold_Pumps[L_i] := FALSE;
+    L_Manifold_Valves[L_i] := 0.0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    L_Boiler_OT_Enable[L_i] := FALSE;
+    L_Boiler_OT_Setpoint[L_i] := 0.0;
+END_FOR;
+
+L_Backup_Circulation_Pump := FALSE;
+L_Electric_Heater_Enable := FALSE;
+L_DHW_Heating_Pump := FALSE;
+L_DHW_Circ_Pump := FALSE;
 
 fbLocalContext(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
@@ -116,10 +138,8 @@ fbHeatingRootCauseDiagnostics(
     VI_Zone_Valves := L_Zone_Valves
 );
 
-// Preserve only DHW feedback for next cycle
 GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
 
-// Output projection
 fbOutputProjection(
     VI_Zone_Valves := L_Zone_Valves,
     VI_Manifold_Pumps := L_Manifold_Pumps,
