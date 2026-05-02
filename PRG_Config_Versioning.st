@@ -1,41 +1,45 @@
 PROGRAM PRG_Config_Versioning
 VAR
-    L_Computed_Checksum : UDINT;
+    L_i : INT;
+    L_Config_Error : BOOL;
 END_VAR
 
-// --- Simple checksum (placeholder sum) ---
-L_Computed_Checksum := UDINT_TO_UINT(GVL_CONFIG.G_Active_Zones_Count);
-L_Computed_Checksum := L_Computed_Checksum + UDINT_TO_UINT(GVL_CONFIG.Weather_Coef * 100.0);
+// Detect config error from validation layer
+L_Config_Error := GVL_STATUS.G_Diagnostics.Sensor_Fault OR GVL_STATUS.G_Diagnostics.Subsystem_Degraded;
 
-GVL_Config_Versioning.G_Config_Current_Checksum := L_Computed_Checksum;
+// --- Save snapshot when system is healthy ---
+IF NOT L_Config_Error THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        GVL_CONFIG_BACKUP.G_Backup_FloorHeating_Configs[L_i] := GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i];
+    END_FOR;
 
-// --- Detect invalid config ---
-IF GVL_DIAGNOSTICS.G_Config_Error THEN
-    GVL_Config_Versioning.G_Config_Invalid_Detected := TRUE;
+    GVL_CONFIG_BACKUP.G_Backup_Max_Active_Manifolds := GVL_CONFIG.G_Max_Active_Manifolds;
+    GVL_CONFIG_BACKUP.G_Backup_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget;
+
+    GVL_CONFIG_BACKUP.G_Backup_Valid := TRUE;
 END_IF;
 
-// --- Trigger rollback ---
-IF GVL_Config_Versioning.G_Config_Invalid_Detected THEN
-    GVL_Config_Versioning.G_Config_Rollback_Requested := TRUE;
-END_IF;
+// --- Rollback if config invalid ---
+IF L_Config_Error THEN
 
-// --- Execute rollback ---
-IF GVL_Config_Versioning.G_Config_Rollback_Requested THEN
-    GVL_Config_Versioning.G_Config_Rollback_Active := TRUE;
+    // Freeze system via command layer
+    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
 
-    // Restore last known good version (simplified placeholder)
-    GVL_Config_Versioning.G_Config_Current_Version := GVL_Config_Versioning.G_Config_Last_Good_Version;
-    GVL_Config_Versioning.G_Config_Current_Checksum := GVL_Config_Versioning.G_Config_Last_Good_Checksum;
+    // Restore snapshot only if valid
+    IF GVL_CONFIG_BACKUP.G_Backup_Valid THEN
+        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+            GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i] := GVL_CONFIG_BACKUP.G_Backup_FloorHeating_Configs[L_i];
+        END_FOR;
 
-    // Reset flags
-    GVL_Config_Versioning.G_Config_Rollback_Requested := FALSE;
-    GVL_Config_Versioning.G_Config_Invalid_Detected := FALSE;
-END_IF;
+        GVL_CONFIG.G_Max_Active_Manifolds := GVL_CONFIG_BACKUP.G_Backup_Max_Active_Manifolds;
+        GVL_CONFIG.G_Max_Thermal_Budget := GVL_CONFIG_BACKUP.G_Backup_Max_Thermal_Budget;
 
-// --- Update last good config ---
-IF NOT GVL_DIAGNOSTICS.G_Config_Error THEN
-    GVL_Config_Versioning.G_Config_Last_Good_Version := GVL_Config_Versioning.G_Config_Current_Version;
-    GVL_Config_Versioning.G_Config_Last_Good_Checksum := GVL_Config_Versioning.G_Config_Current_Checksum;
+        GVL_STATUS.G_System_Mode_Text := 'CONFIG ROLLBACK';
+    ELSE
+        GVL_STATUS.G_System_Mode_Text := 'CONFIG INVALID - NO BACKUP';
+    END_IF;
 END_IF;
 
 END_PROGRAM
+// >>> BULK_SYNC_ANCHOR: PRG_Config_Versioning <<<
