@@ -11,14 +11,20 @@ VAR
     fbOutputProjection : FB_Heating_Output_Projection;
 
     L_i : INT;
+    L_Zone_Index : INT;
+    L_Manifold_Index : INT;
+    L_Sensor_Index : INT;
+    L_Config_Mapping_Error : BOOL;
 
-    // NORMALIZED INPUTS
+    // Normalized inputs and configs
     L_Outdoor_Temp : REAL;
     L_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     L_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     L_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    L_Zone_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config;
+    L_Circuit_To_Zone : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT;
 
-    // Local actuator buffers
+    // Local actuator buffers (no direct writes to GVL_STATE)
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     L_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
@@ -34,18 +40,13 @@ VAR
     L_DHW_Status : ST_DHW_Status;
 END_VAR
 
-// ========================
-// INPUT NORMALIZATION
-// ========================
-
-// Outdoor
+// Normalize analog/environment inputs before passing them deeper into heating control.
 IF IS_REAL_VALID(GVL_STATE.G_Outdoor_Temp) THEN
     L_Outdoor_Temp := LIMIT(-50.0, GVL_STATE.G_Outdoor_Temp, 60.0);
 ELSE
     L_Outdoor_Temp := 0.0;
 END_IF;
 
-// Room
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     IF IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i]) AND
        (GVL_STATE.G_Room_Temps[L_i] > -50.0) AND
@@ -56,7 +57,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     END_IF;
 END_FOR;
 
-// Floor
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     IF IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i]) AND
        (GVL_STATE.G_Floor_Temps[L_i] > -50.0) AND
@@ -67,7 +67,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     END_IF;
 END_FOR;
 
-// Pressure
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF IS_REAL_VALID(GVL_STATE.G_Manifold_Pressures[L_i]) AND
        (GVL_STATE.G_Manifold_Pressures[L_i] > 0.1) THEN
@@ -77,10 +76,54 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 END_FOR;
 
-// ========================
-// SAFE INIT
-// ========================
+// Validate circuit -> zone/manifold mapping locally and create safe config copies.
+L_Config_Mapping_Error := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    L_Zone_Configs[L_i] := GVL_CONFIG.G_HMI_FloorHeating_Configs[L_i];
 
+    L_Zone_Index := GVL_CONFIG.G_Heating_Circuit_To_Zone[L_i];
+    L_Manifold_Index := BYTE_TO_INT(L_Zone_Configs[L_i].manifold_id);
+    L_Sensor_Index := BYTE_TO_INT(L_Zone_Configs[L_i].sensor_id);
+
+    IF (L_Zone_Index < 1) OR (L_Zone_Index > GVL_CONSTANTS.C_MAX_ZONES) THEN
+        L_Config_Mapping_Error := TRUE;
+        L_Circuit_To_Zone[L_i] := 1;
+        L_Zone_Configs[L_i].zone := 1;
+    ELSE
+        L_Circuit_To_Zone[L_i] := L_Zone_Index;
+        L_Zone_Configs[L_i].zone := INT_TO_BYTE(L_Zone_Index);
+    END_IF;
+
+    IF (L_Manifold_Index < 1) OR (L_Manifold_Index > GVL_CONSTANTS.C_MAX_MANIFOLDS) THEN
+        L_Config_Mapping_Error := TRUE;
+        L_Zone_Configs[L_i].manifold_id := 1;
+    END_IF;
+
+    IF (L_Sensor_Index < 1) OR (L_Sensor_Index > GVL_CONSTANTS.C_MAX_ZONES) THEN
+        L_Config_Mapping_Error := TRUE;
+        L_Zone_Configs[L_i].sensor_id := L_Zone_Configs[L_i].zone;
+    END_IF;
+
+    IF L_Zone_Configs[L_i].min_temp > L_Zone_Configs[L_i].max_temp THEN
+        L_Config_Mapping_Error := TRUE;
+        L_Zone_Configs[L_i].min_temp := 20.0;
+        L_Zone_Configs[L_i].max_temp := 45.0;
+    END_IF;
+
+    IF (L_Zone_Configs[L_i].design_temp < L_Zone_Configs[L_i].min_temp) OR
+       (L_Zone_Configs[L_i].design_temp > L_Zone_Configs[L_i].max_temp) THEN
+        L_Config_Mapping_Error := TRUE;
+        L_Zone_Configs[L_i].design_temp := LIMIT(L_Zone_Configs[L_i].min_temp, L_Zone_Configs[L_i].design_temp, L_Zone_Configs[L_i].max_temp);
+    END_IF;
+END_FOR;
+
+IF L_Config_Mapping_Error THEN
+    GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
+    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
+END_IF;
+
+// Initialize buffers to safe defaults.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_Zone_Valves[L_i] := FALSE;
 END_FOR;
@@ -100,10 +143,6 @@ L_Electric_Heater_Enable := FALSE;
 L_DHW_Heating_Pump := FALSE;
 L_DHW_Circ_Pump := FALSE;
 
-// ========================
-// CORE
-// ========================
-
 fbLocalContext(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop,
@@ -116,12 +155,23 @@ fbLocalContext(
     VI_Boiler_Modulation_Raw := GVL_IO.AI_Boiler_Modulation
 );
 
+GVL_STATE.G_Target_Temperature := fbLocalContext.VO_Target_Temperature;
+
 fbThermalAllocation(
-    VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
-    VI_Circuit_To_Zone := GVL_CONFIG.G_Heating_Circuit_To_Zone,
+    VI_Zone_Configs := L_Zone_Configs,
+    VI_Circuit_To_Zone := L_Circuit_To_Zone,
     VI_Manifold_Base_Priority := GVL_CONFIG.G_Manifold_Priority,
     VI_Zone_Priority_Bias := GVL_HEATING_POLICY.G_Zone_Priority_Bias,
+    VI_Guest_Preheat_Enabled := GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled,
+    VI_Zone_Guest_Preheat_Request := GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request,
+    VI_Guest_Preheat_Priority_Boost := GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost,
+    VI_Zone_Target_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment,
+    VI_Zone_Self_Level := GVL_HEATING_POLICY.G_Zone_Self_Level,
+    VI_Policy_Priority_Multiplier := GVL_HEATING_POLICY.G_Policy_Priority_Multiplier,
     VI_Manifold_Pump_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service,
+    VI_Manifold_Pressure_Fault := GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault,
+    VI_Manifold_Current_Fault := GVL_STATUS.G_Diagnostics.Manifold_Current_Fault,
+    VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight,
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 );
 
@@ -134,7 +184,7 @@ fbHeatingOrchestration(
     VI_Floor_Temps := L_Floor_Temps,
     VI_Room_Temps := L_Room_Temps,
     VI_Config := GVL_CONFIG.G_Heating_Config,
-    VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
+    VI_Zone_Configs := L_Zone_Configs,
     VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
     VI_Time_Of_Day_MS := GVL_TIME_SERVICE.G_Time_Of_Day_MS,
     VI_Manifold_Pressures := L_Manifold_Pressures,
