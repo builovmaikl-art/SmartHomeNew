@@ -30,25 +30,23 @@
 - Simulation теперь декларативная (флаги)
 - Не ломает pipeline
 
+## Добавлено: сценарии
+
+1. Gas Safety
+2. Leak + Pressure
+3. Sensor + Predictive
+4. Dual PLC
+5. Full Stress
+
+- Управление: Start/Stop/Duration
+- Авто-останов
+
 ## Текущий статус
 
-✔ Simulation больше не ломает систему
+✔ Simulation безопасен
+✔ Есть сценарии
 ✔ Нет side-effects
-✔ Нет накопления ошибок состояния
 
-## Оставшиеся задачи
+## Осталось
 
-1. Интегрировать simulation flags в:
-   - PRG_Safety (OR с реальными сигналами)
-   - PRG_Heating
-   - PRG_Command_Arbitration
-
-2. Добавить режим "test overlay"
-   - controlled injection в pipeline
-
-3. Добавить сценарии тестов (не только флаги)
-
-## Вывод
-
-Simulation был одним из самых опасных узлов.
-Теперь приведён в безопасное состояние, но требует дальнейшей интеграции.
+- Интеграция в pipeline (Safety/Heating/Arbitration)
