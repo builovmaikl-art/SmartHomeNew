@@ -250,6 +250,34 @@ END_IF;
 
 GVL_STATE.G_Heating_Confidence := L_Confidence;
 
+// --- Explainability ---
+GVL_STATE.G_Heating_Confidence_Reason_Code := 0;
+GVL_STATE.G_Heating_Confidence_Reason_Text := 'OK';
+
+IF GVL_STATE.G_Heating_IO_Fault THEN
+    GVL_STATE.G_Heating_Confidence_Reason_Code := 2;
+    GVL_STATE.G_Heating_Confidence_Reason_Text := 'IO fault detected';
+ELSIF GVL_STATE.G_Heating_Sensor_Fault THEN
+    GVL_STATE.G_Heating_Confidence_Reason_Code := 1;
+    GVL_STATE.G_Heating_Confidence_Reason_Text := 'Sensor fault detected';
+ELSE
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF VI_Manifold_Pressures[L_i] < GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE THEN
+            GVL_STATE.G_Heating_Confidence_Reason_Code := 3;
+            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Low manifold pressure';
+            EXIT;
+        END_IF;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+            GVL_STATE.G_Heating_Confidence_Reason_Code := 4;
+            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Predictive pump degradation';
+            EXIT;
+        END_IF;
+    END_FOR;
+END_IF;
+
 IF GVL_STATE.G_Heating_Confidence < 0.5 THEN
     L_Target_Supply_Temp := L_Target_Supply_Temp - 3.0;
 END_IF;
