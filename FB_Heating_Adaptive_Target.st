@@ -1,9 +1,5 @@
 // ==============================================================================
 // Adaptive target calculation for heating supply temperature
-//
-// Internal refactoring helper for FB_Heating_System_Manager.
-// The manager remains the public facade; this block only extracts the adaptive
-// target calculation section to reduce large-file edit risk.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Adaptive_Target
 VAR_INPUT
@@ -14,7 +10,7 @@ END_VAR
 VAR_IN_OUT
     VI_Zone_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config;
     VI_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
-    VI_Room_Temps : ARRAY[1..16] OF REAL; // Keep exact type compatibility with FB_Heating_System_Manager
+    VI_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
 END_VAR
 
 VAR_OUTPUT
@@ -26,6 +22,7 @@ END_VAR
 
 VAR
     L_Adaptive_Zone_i : INT;
+    L_Zone_Index : INT;
     L_Adaptive_Delta : REAL;
     L_Adaptive_Weighted_Sum : REAL;
     L_Adaptive_Weight_Total : REAL;
@@ -39,14 +36,14 @@ L_Adaptive_Weight_Total := 0.0;
 VO_Adaptive_Effective_Delta := 0.0;
 VO_Adaptive_Correction := 0.0;
 
-// Global arbitration target is applied before adaptive correction.
 IF VI_Global_Target_Temperature > 0.0 THEN
     VO_Target_Supply_Temp := VI_Global_Target_Temperature;
 END_IF;
 
-// Final adaptive refinement layer.
 FOR L_Adaptive_Zone_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 8 THEN
+    L_Zone_Index := VI_Zone_Configs[L_Adaptive_Zone_i].zone;
+
+    IF (L_Zone_Index >= 1) AND (L_Zone_Index <= GVL_CONSTANTS.C_MAX_ZONES) THEN
         CASE VI_Zone_Configs[L_Adaptive_Zone_i].control_type OF
             0:
                 L_Adaptive_Delta :=
@@ -56,18 +53,18 @@ FOR L_Adaptive_Zone_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             1, 2:
                 L_Adaptive_Delta :=
                     VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
-                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+                    VI_Room_Temps[L_Zone_Index];
                 L_Adaptive_Weight := 1.0;
             ELSE
                 L_Adaptive_Delta :=
                     VI_Zone_Configs[L_Adaptive_Zone_i].design_temp -
-                    VI_Room_Temps[VI_Zone_Configs[L_Adaptive_Zone_i].zone];
+                    VI_Room_Temps[L_Zone_Index];
                 L_Adaptive_Weight := 0.8;
         END_CASE;
 
-        IF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 1 AND VI_Zone_Configs[L_Adaptive_Zone_i].zone <= 4 THEN
+        IF L_Zone_Index <= 4 THEN
             L_Adaptive_Weight := L_Adaptive_Weight * 1.2;
-        ELSIF VI_Zone_Configs[L_Adaptive_Zone_i].zone >= 9 THEN
+        ELSIF L_Zone_Index >= 9 THEN
             L_Adaptive_Weight := L_Adaptive_Weight * 0.7;
         END_IF;
 
