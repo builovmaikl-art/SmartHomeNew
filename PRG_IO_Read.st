@@ -4,6 +4,8 @@ VAR
     L_Debounce_Time : TIME := T#100MS;
     L_Manifold_Pressure_Raw : WORD;
     L_Manifold_Current_Raw : WORD;
+    L_Filtered_Room_Temp : REAL;
+    L_Filtered_Floor_Temp : REAL;
     
     fbDebounce_Switches : ARRAY[1..8] OF FB_System_Timer;
     fbDebounce_Motion : ARRAY[1..8] OF FB_System_Timer;
@@ -18,7 +20,6 @@ VAR
     fbDiagEventManager : FB_Diagnostics_Event_Manager;
     L_IO_Error_Active : BOOL;
 
-    // added
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
     fbCalib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
@@ -34,7 +35,6 @@ VAR
     fbAnalog_Manifold_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF FB_Sensor_Analog_Processing;
 END_VAR
 
-// ===== ORIGINAL SNAPSHOT (FULL) =====
 fbIO_Watchdog_1(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 1, VI_Heartbeat_Signal := GVL_IO.DI_Module_1_Heartbeat, VI_Timeout_MS := 2000);
 fbIO_Watchdog_2(VI_System_Time_MS := GVL_STATUS.G_System_Time_MS, VI_Module_ID := 2, VI_Heartbeat_Signal := GVL_IO.DI_Module_2_Heartbeat, VI_Timeout_MS := 2000);
 
@@ -43,7 +43,6 @@ GVL_STATUS.G_IO_Modules_Online[2] := fbIO_Watchdog_2.VO_Module_Online;
 
 L_IO_Error_Active := fbIO_Watchdog_1.VO_Error_Active OR fbIO_Watchdog_2.VO_Error_Active;
 
-// IO watchdog events
 fbDiagEventManager(
     VI_Code := 16#E001,
     VI_Severity := 4,
@@ -64,9 +63,10 @@ fbDiagEventManager(
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
 );
 
-// Removed direct command writes (Step 1.2). Keep only state-level mitigation.
 IF L_IO_Error_Active THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO GVL_STATE.G_Manifold_Pumps[L_i] := FALSE; END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
+    END_FOR;
 END_IF;
 
 FOR L_i := 1 TO 8 DO
@@ -115,7 +115,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
     GVL_STATE.G_Smoke_Sensors[L_i] := fbDebounce_Smoke[L_i].Q;
 END_FOR;
 
-// ===== ENHANCED LAYER =====
 fbCalib_Outdoor_Temp(
     VI_Raw_Value := GVL_IO.AI_Temp_Outdoor.rValue,
     VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
@@ -146,18 +145,57 @@ FOR L_i := 1 TO 8 DO
     GVL_STATE.G_Room_CO2[L_i] := fbCalib_Room_CO2[L_i].VO_Calibrated_Value;
 END_FOR;
 
-FOR L_i := 1 TO 8 DO
+// Room temperature filtering and range validation
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     fbCalib_Room_Temps[L_i](
         VI_Raw_Value := GVL_IO.AI_Room_Temps[L_i],
         VI_Record := GVL_CONFIG.G_Calib_Room_Temps[L_i]
     );
-    GVL_STATE.G_Room_Temps[L_i] := fbCalib_Room_Temps[L_i].VO_Calibrated_Value;
 
-    fbCalib_Floor_Temps[L_i](
-        VI_Raw_Value := GVL_IO.AI_Floor_Temps[L_i],
-        VI_Record := GVL_CONFIG.G_Calib_Floor_Temps[L_i]
-    );
-    GVL_STATE.G_Floor_Temps[L_i] := fbCalib_Floor_Temps[L_i].VO_Calibrated_Value;
+    IF GVL_STATE.G_Last_Valid_Room_Temps[L_i] = 0.0 THEN
+        L_Filtered_Room_Temp := fbCalib_Room_Temps[L_i].VO_Calibrated_Value;
+    ELSE
+        L_Filtered_Room_Temp := (GVL_STATE.G_Last_Valid_Room_Temps[L_i] * 0.9) + (fbCalib_Room_Temps[L_i].VO_Calibrated_Value * 0.1);
+    END_IF;
+
+    IF (L_Filtered_Room_Temp < -50.0) OR (L_Filtered_Room_Temp > 100.0) THEN
+        GVL_STATE.G_Temp_Sensor_Fault[L_i] := TRUE;
+        GVL_STATE.G_Room_Temps[L_i] := GVL_STATE.G_Last_Valid_Room_Temps[L_i];
+        GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+    ELSE
+        GVL_STATE.G_Temp_Sensor_Fault[L_i] := FALSE;
+        GVL_STATE.G_Room_Temps[L_i] := L_Filtered_Room_Temp;
+        GVL_STATE.G_Last_Valid_Room_Temps[L_i] := L_Filtered_Room_Temp;
+    END_IF;
+END_FOR;
+
+// Floor temperature filtering and range validation
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF L_i <= GVL_CONSTANTS.C_MAX_ZONES THEN
+        fbCalib_Floor_Temps[L_i](
+            VI_Raw_Value := GVL_IO.AI_Floor_Temps[L_i],
+            VI_Record := GVL_CONFIG.G_Calib_Floor_Temps[L_i]
+        );
+
+        IF GVL_STATE.G_Last_Valid_Floor_Temps[L_i] = 0.0 THEN
+            L_Filtered_Floor_Temp := fbCalib_Floor_Temps[L_i].VO_Calibrated_Value;
+        ELSE
+            L_Filtered_Floor_Temp := (GVL_STATE.G_Last_Valid_Floor_Temps[L_i] * 0.9) + (fbCalib_Floor_Temps[L_i].VO_Calibrated_Value * 0.1);
+        END_IF;
+
+        IF (L_Filtered_Floor_Temp < -50.0) OR (L_Filtered_Floor_Temp > 100.0) THEN
+            GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := TRUE;
+            GVL_STATE.G_Floor_Temps[L_i] := GVL_STATE.G_Last_Valid_Floor_Temps[L_i];
+            GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+        ELSE
+            GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := FALSE;
+            GVL_STATE.G_Floor_Temps[L_i] := L_Filtered_Floor_Temp;
+            GVL_STATE.G_Last_Valid_Floor_Temps[L_i] := L_Filtered_Floor_Temp;
+        END_IF;
+    ELSE
+        GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := TRUE;
+        GVL_STATE.G_Floor_Temps[L_i] := GVL_STATE.G_Last_Valid_Floor_Temps[L_i];
+    END_IF;
 END_FOR;
 
 GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Active := FALSE;
