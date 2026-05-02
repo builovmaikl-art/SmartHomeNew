@@ -2,6 +2,15 @@
 VAR_GLOBAL
     G_Simulation_Enable : BOOL := FALSE;
 
+    // Scenario control
+    G_Test_Scenario_ID : INT := 0; // 0=manual flags, 1=safety gas, 2=leak+low pressure, 3=sensor+predictive, 4=dual PLC, 5=full stress
+    G_Test_Start : BOOL := FALSE;
+    G_Test_Stop : BOOL := FALSE;
+    G_Test_Scenario_Active : BOOL := FALSE;
+    G_Test_Started_MS : UDINT := 0;
+    G_Test_Duration_MS : UDINT := 30000;
+    G_Test_Expected_Result_Code : INT := 0; // 0=none, 1=safety, 2=heating degraded, 3=role conflict, 4=full stress
+
     // Sensor fault injection requests
     G_Inject_Heating_Sensor_Fault : BOOL := FALSE;
     G_Inject_IO_Fault : BOOL := FALSE;
