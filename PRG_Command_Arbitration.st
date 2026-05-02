@@ -3,6 +3,15 @@ VAR
     L_Mode : E_Safety_Mode;
 END_VAR
 
+// Dual-PLC role conflict protection
+IF GVL_STATUS.G_Is_Active_PLC AND GVL_STATUS.G_Other_PLC_Is_Active THEN
+    GVL_HEALTH_BRIDGE.G_Role_Conflict_Error := TRUE;
+    GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
+    GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
+    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+    RETURN;
+END_IF;
+
 // PLC inactive → force safe commands
 IF NOT GVL_STATUS.G_Is_Active_PLC THEN
     GVL_COMMAND_SHADOW.G_Gas_Valve_Close := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Close_Gas;
@@ -61,7 +70,6 @@ CASE L_Mode OF
         GVL_COMMAND_SHADOW.G_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Block_Water;
 
 ELSE
-        // Defensive fallback: unknown/corrupted safety mode → safest available stop commands.
         GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
         GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
         GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
@@ -69,13 +77,11 @@ ELSE
         GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
 END_CASE;
 
-// SAFETY ACCESS CLAMP
 IF (L_Mode = FIRE) AND GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Lock_Close THEN
     GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
     GVL_COMMAND_SHADOW.G_Lock_2_Close := FALSE;
 END_IF;
 
-// conflict block
 IF GVL_COMMAND_POLICY_CONFIG.G_Block_Close_When_Open_Commanded THEN
     IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND GVL_COMMAND_SHADOW.G_Lock_1_Close THEN
         GVL_COMMAND_SHADOW.G_Lock_1_Close := FALSE;
