@@ -55,7 +55,6 @@ VAR
     fbOverride : FB_Heating_Override_Layer;
 END_VAR
 
-// Step 1: execution core
 fbCore(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Current_TOD := VI_Current_TOD,
@@ -104,14 +103,19 @@ fbCore(
     VIO_DHW_Status := VIO_DHW_Status
 );
 
-// Step 2: override layer
 fbOverride(
     VI_Block_Heating := VI_Block_Heating,
     VI_Manifold_Enabled := VI_Manifold_Enabled,
     VI_Zone_Configs := VI_Zone_Configs,
     VIO_Manifold_Valves := VIO_Manifold_Valves,
     VIO_Manifold_Pumps := VIO_Manifold_Pumps,
-    VIO_Zone_Valves := VIO_Zone_Valves
+    VIO_Zone_Valves := VIO_Zone_Valves,
+    VIO_Boiler_OT_Enable := VIO_Boiler_OT_Enable,
+    VIO_Boiler_OT_Setpoint := VIO_Boiler_OT_Setpoint,
+    VIO_Backup_Circulation_Pump := VIO_Backup_Circulation_Pump,
+    VIO_Electric_Heater_Enable := VIO_Electric_Heater_Enable,
+    VIO_DHW_Heating_Pump := VIO_DHW_Heating_Pump,
+    VIO_DHW_Circ_Pump := VIO_DHW_Circ_Pump
 );
 
 END_FUNCTION_BLOCK
