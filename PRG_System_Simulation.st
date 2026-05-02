@@ -21,7 +21,7 @@ fbPlayback(
     VI_Light_Inputs := L_Playback_Lights
 );
 
-// Reset effective simulation outputs every cycle
+// Reset outputs
 GVL_SIMULATION.G_Sim_Heating_Sensor_Fault := FALSE;
 GVL_SIMULATION.G_Sim_IO_Fault := FALSE;
 GVL_SIMULATION.G_Sim_Low_Pressure := FALSE;
@@ -33,54 +33,61 @@ GVL_SIMULATION.G_Sim_Dual_PLC_Active := FALSE;
 
 IF NOT GVL_SIMULATION.G_Simulation_Enable THEN
     GVL_SIMULATION.G_Test_Running := FALSE;
+    GVL_SIMULATION.G_Test_Scenario_Active := FALSE;
     RETURN;
 END_IF;
 
-GVL_SIMULATION.G_Test_Running := TRUE;
-GVL_SIMULATION.G_Test_Result_OK := TRUE;
-GVL_SIMULATION.G_Test_Last_Result_Text := 'Running';
-
-// Apply simulation requests to isolated outputs only
-IF GVL_SIMULATION.G_Inject_Heating_Sensor_Fault THEN
-    GVL_SIMULATION.G_Sim_Heating_Sensor_Fault := TRUE;
+// Start scenario
+IF GVL_SIMULATION.G_Test_Start THEN
+    GVL_SIMULATION.G_Test_Scenario_Active := TRUE;
+    GVL_SIMULATION.G_Test_Started_MS := GVL_TIME_SERVICE.G_Now_MS;
 END_IF;
 
-IF GVL_SIMULATION.G_Inject_IO_Fault THEN
-    GVL_SIMULATION.G_Sim_IO_Fault := TRUE;
+// Stop scenario
+IF GVL_SIMULATION.G_Test_Stop THEN
+    GVL_SIMULATION.G_Test_Scenario_Active := FALSE;
 END_IF;
 
-IF GVL_SIMULATION.G_Inject_Low_Pressure THEN
-    GVL_SIMULATION.G_Sim_Low_Pressure := TRUE;
+GVL_SIMULATION.G_Test_Running := GVL_SIMULATION.G_Test_Scenario_Active;
+
+IF NOT GVL_SIMULATION.G_Test_Scenario_Active THEN
+    RETURN;
 END_IF;
 
-IF GVL_SIMULATION.G_Inject_Predictive_Pump_Fault THEN
-    GVL_SIMULATION.G_Sim_Predictive_Pump_Fault := TRUE;
-END_IF;
+// Scenario execution
+CASE GVL_SIMULATION.G_Test_Scenario_ID OF
 
-IF GVL_SIMULATION.G_Inject_Gas_Alarm THEN
-    GVL_SIMULATION.G_Sim_Gas_Alarm := TRUE;
-END_IF;
+    1: // Gas safety
+        GVL_SIMULATION.G_Sim_Gas_Alarm := TRUE;
+        GVL_SIMULATION.G_Test_Expected_Result_Code := 1;
 
-IF GVL_SIMULATION.G_Inject_Leak_Alarm THEN
-    GVL_SIMULATION.G_Sim_Leak_Alarm := TRUE;
-END_IF;
+    2: // Leak + pressure
+        GVL_SIMULATION.G_Sim_Leak_Alarm := TRUE;
+        GVL_SIMULATION.G_Sim_Low_Pressure := TRUE;
+        GVL_SIMULATION.G_Test_Expected_Result_Code := 2;
 
-IF GVL_SIMULATION.G_Inject_Smoke_Alarm THEN
-    GVL_SIMULATION.G_Sim_Smoke_Alarm := TRUE;
-END_IF;
+    3: // Sensor + predictive
+        GVL_SIMULATION.G_Sim_Heating_Sensor_Fault := TRUE;
+        GVL_SIMULATION.G_Sim_Predictive_Pump_Fault := TRUE;
+        GVL_SIMULATION.G_Test_Expected_Result_Code := 2;
 
-IF GVL_SIMULATION.G_Inject_Dual_PLC_Active THEN
-    GVL_SIMULATION.G_Sim_Dual_PLC_Active := TRUE;
-END_IF;
+    4: // Dual PLC
+        GVL_SIMULATION.G_Sim_Dual_PLC_Active := TRUE;
+        GVL_SIMULATION.G_Test_Expected_Result_Code := 3;
 
-// Result evaluation (logical only, no state overwrite)
-IF GVL_SIMULATION.G_Sim_Gas_Alarm OR GVL_SIMULATION.G_Sim_Leak_Alarm OR GVL_SIMULATION.G_Sim_Smoke_Alarm THEN
-    GVL_SIMULATION.G_Test_Last_Result_Text := 'Safety simulation active';
-ELSIF GVL_SIMULATION.G_Sim_IO_Fault OR GVL_SIMULATION.G_Sim_Heating_Sensor_Fault OR GVL_SIMULATION.G_Sim_Low_Pressure THEN
-    GVL_SIMULATION.G_Test_Last_Result_Text := 'Heating simulation active';
-ELSE
-    GVL_SIMULATION.G_Test_Result_OK := FALSE;
-    GVL_SIMULATION.G_Test_Last_Result_Text := 'No simulation flags active';
+    5: // Full stress
+        GVL_SIMULATION.G_Sim_Gas_Alarm := TRUE;
+        GVL_SIMULATION.G_Sim_Leak_Alarm := TRUE;
+        GVL_SIMULATION.G_Sim_Smoke_Alarm := TRUE;
+        GVL_SIMULATION.G_Sim_Low_Pressure := TRUE;
+        GVL_SIMULATION.G_Sim_Predictive_Pump_Fault := TRUE;
+        GVL_SIMULATION.G_Test_Expected_Result_Code := 4;
+
+END_CASE;
+
+// Auto stop by time
+IF (GVL_TIME_SERVICE.G_Now_MS - GVL_SIMULATION.G_Test_Started_MS) > GVL_SIMULATION.G_Test_Duration_MS THEN
+    GVL_SIMULATION.G_Test_Scenario_Active := FALSE;
 END_IF;
 
 END_PROGRAM
