@@ -2,19 +2,29 @@
 VAR_GLOBAL
     G_Simulation_Enable : BOOL := FALSE;
 
-    // Sensor fault injection
+    // Sensor fault injection requests
     G_Inject_Heating_Sensor_Fault : BOOL := FALSE;
     G_Inject_IO_Fault : BOOL := FALSE;
     G_Inject_Low_Pressure : BOOL := FALSE;
     G_Inject_Predictive_Pump_Fault : BOOL := FALSE;
 
-    // Safety fault injection
+    // Safety fault injection requests
     G_Inject_Gas_Alarm : BOOL := FALSE;
     G_Inject_Leak_Alarm : BOOL := FALSE;
     G_Inject_Smoke_Alarm : BOOL := FALSE;
 
-    // PLC / role fault injection
+    // PLC / role fault injection request
     G_Inject_Dual_PLC_Active : BOOL := FALSE;
+
+    // Isolated effective simulation outputs. Production state is not overwritten by PRG_System_Simulation.
+    G_Sim_Heating_Sensor_Fault : BOOL := FALSE;
+    G_Sim_IO_Fault : BOOL := FALSE;
+    G_Sim_Low_Pressure : BOOL := FALSE;
+    G_Sim_Predictive_Pump_Fault : BOOL := FALSE;
+    G_Sim_Gas_Alarm : BOOL := FALSE;
+    G_Sim_Leak_Alarm : BOOL := FALSE;
+    G_Sim_Smoke_Alarm : BOOL := FALSE;
+    G_Sim_Dual_PLC_Active : BOOL := FALSE;
 
     // Test status
     G_Test_Running : BOOL := FALSE;
