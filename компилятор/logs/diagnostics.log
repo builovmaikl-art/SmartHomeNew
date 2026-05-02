@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2020
+total 2012
 -rw-r--r--  1 runner runner  13067 May  2 17:16 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 13 runner runner  20480 May  2 17:16 .
 drwxr-xr-x  3 runner runner   4096 May  2 17:16 ..
@@ -94,7 +94,7 @@ drwxr-xr-x  3 runner runner   4096 May  2 17:16 .github
 -rw-r--r--  1 runner runner   2942 May  2 17:16 FB_Heating_Safe_State.st
 -rw-r--r--  1 runner runner   2063 May  2 17:16 FB_Heating_Safety_Gate.st
 -rw-r--r--  1 runner runner   5900 May  2 17:16 FB_Heating_Schedule_Preheat.st
--rw-r--r--  1 runner runner   8776 May  2 17:16 FB_Heating_System_Manager.st
+-rw-r--r--  1 runner runner   4072 May  2 17:16 FB_Heating_System_Manager.st
 -rw-r--r--  1 runner runner   3812 May  2 17:16 FB_Heating_Thermal_Allocation.st
 -rw-r--r--  1 runner runner   1518 May  2 17:16 FB_Heating_Thermal_Model.st
 -rw-r--r--  1 runner runner    826 May  2 17:16 FB_History_Manager.st
@@ -362,4 +362,4 @@ total 1088
 drwxr-xr-x 2 runner runner    4096 May  2 17:16 .
 drwxr-xr-x 5 runner runner    4096 May  2 17:16 ..
 -rw-r--r-- 1 runner runner       0 May  2 17:16 .gitkeep
--rw-r--r-- 1 runner runner 1105727 May  2 17:16 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1105864 May  2 17:16 RESULT_methods_clean.xml
