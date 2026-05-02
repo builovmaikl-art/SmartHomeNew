@@ -22,6 +22,8 @@ VAR
     L_Sensor_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
     L_Any_Leak      : BOOL;
     L_Any_Warning   : BOOL;
+
+    fbLeakLatch : RS;
 END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
@@ -45,12 +47,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     END_IF;
 END_FOR;
 
-// Health signals
-VO_Leak_Detected := L_Any_Leak;
+// Latch аварии
+fbLeakLatch(
+    S := L_Any_Leak,
+    R1 := GVL_INTENT_USER.I_Reset_Errors,
+    Q => VO_Leak_Detected
+);
+
 VO_Leak_Warning_Level := L_Any_Warning;
 
 // Status
-IF L_Any_Leak THEN
+IF VO_Leak_Detected THEN
     VO_Status_Msg := 'АВАРИЯ: ПРОТЕЧКА ВОДЫ.';
 ELSIF L_Any_Warning THEN
     VO_Status_Msg := 'ПРЕДУПРЕЖДЕНИЕ: ОБНАРУЖЕНА ВОДА.';
