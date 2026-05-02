@@ -14,7 +14,7 @@ L_Now := GVL_TIME_SERVICE.G_Now_MS;
 L_Last := GVL_DIAGNOSTICS_EXT.G_Last_Update_Time;
 
 IF L_Last = 0 THEN
-    L_Delta_Time := 0.1; // fallback
+    L_Delta_Time := 0.1;
 ELSE
     L_Delta_Time := REAL(L_Now - L_Last) / 1000.0;
 END_IF;
@@ -26,7 +26,7 @@ L_Error_Heating := GVL_STATE.G_Heating_Subsystem_Degraded;
 L_Error_Safety := GVL_STATE.G_Safety_Gas_Alarm OR GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Smoke_Alarm;
 L_Error_IO := GVL_STATE.G_Heating_IO_Fault;
 
-// --- Heating health (decay model) ---
+// --- Heating health ---
 IF L_Error_Heating THEN
     GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating := GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating + 1;
     GVL_DIAGNOSTICS_EXT.G_Last_Error_Time_Heating := L_Now;
@@ -53,7 +53,7 @@ ELSE
     GVL_DIAGNOSTICS_EXT.G_Health_IO := GVL_DIAGNOSTICS_EXT.G_Health_IO + (0.1 * L_Delta_Time);
 END_IF;
 
-// Clamp all
+// Clamp
 IF GVL_DIAGNOSTICS_EXT.G_Health_Heating < 0.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_Heating := 0.0; END_IF;
 IF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_Heating := 1.0; END_IF;
 
@@ -62,6 +62,34 @@ IF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_S
 
 IF GVL_DIAGNOSTICS_EXT.G_Health_IO < 0.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_IO := 0.0; END_IF;
 IF GVL_DIAGNOSTICS_EXT.G_Health_IO > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_IO := 1.0; END_IF;
+
+// --- State thresholds ---
+// Heating
+IF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 0.7 THEN
+    GVL_DIAGNOSTICS_EXT.G_Heating_State := 0;
+ELSIF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 0.3 THEN
+    GVL_DIAGNOSTICS_EXT.G_Heating_State := 1;
+ELSE
+    GVL_DIAGNOSTICS_EXT.G_Heating_State := 2;
+END_IF;
+
+// Safety
+IF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 0.8 THEN
+    GVL_DIAGNOSTICS_EXT.G_Safety_State := 0;
+ELSIF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 0.4 THEN
+    GVL_DIAGNOSTICS_EXT.G_Safety_State := 1;
+ELSE
+    GVL_DIAGNOSTICS_EXT.G_Safety_State := 2;
+END_IF;
+
+// IO
+IF GVL_DIAGNOSTICS_EXT.G_Health_IO > 0.7 THEN
+    GVL_DIAGNOSTICS_EXT.G_IO_State := 0;
+ELSIF GVL_DIAGNOSTICS_EXT.G_Health_IO > 0.3 THEN
+    GVL_DIAGNOSTICS_EXT.G_IO_State := 1;
+ELSE
+    GVL_DIAGNOSTICS_EXT.G_IO_State := 2;
+END_IF;
 
 END_PROGRAM
 // >>> BULK_SYNC_ANCHOR: PRG_System_Diagnostics_Ext <<<
