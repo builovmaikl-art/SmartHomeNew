@@ -55,11 +55,8 @@ VAR
     L_Pressure_OK : BOOL;
     L_Prev_Pressure : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     L_Prev_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
-
-    // confidence
     L_Error_Instant : REAL;
     L_Confidence : REAL;
-
     fbAdaptiveTarget : FB_Heating_Adaptive_Target;
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
@@ -69,7 +66,126 @@ VAR
     fbBoilerControl : FB_Heating_Boiler_Control;
 END_VAR
 
-// --- existing logic unchanged until predictive ---
+L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
+
+GVL_STATE.G_Heating_IO_Fault := FALSE;
+GVL_STATE.G_Heating_Sensor_Fault := FALSE;
+GVL_STATE.G_Heating_Subsystem_Degraded := FALSE;
+L_Sensor_Error := FALSE;
+L_Subsys_Degraded := FALSE;
+
+L_IO_Failsafe_Active := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    IF NOT VI_IO_Modules_Online[L_i] THEN
+        L_IO_Failsafe_Active := TRUE;
+        GVL_STATE.G_Heating_IO_Fault := TRUE;
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+        EXIT;
+    END_IF;
+END_FOR;
+
+fbSafetyGate(
+    VI_System_Mode := VI_System_Mode,
+    VI_Emergency_Stop := VI_Emergency_Stop,
+    VI_Gas_Safety_Stop := VI_Gas_Safety_Stop,
+    VI_IO_Failsafe_Active := L_IO_Failsafe_Active,
+    VI_Outdoor_Temp := VI_Outdoor_Temp,
+    VI_Freeze_Threshold := VI_Config.Freeze_Threshold,
+    VI_Floor_Temps := VI_Floor_Temps,
+    VO_Freeze_Mode_Active => L_Freeze_Active,
+    VO_Freeze_Target_Supply => L_Freeze_Target_Supply
+);
+
+fbSafeState(
+    VI_Block_Normal_Heating := fbSafetyGate.VO_Block_Normal_Heating,
+    VI_IO_Failsafe_Active := fbSafetyGate.VO_IO_Failsafe_Active,
+    VI_Gas_Safety_Active := fbSafetyGate.VO_Gas_Safety_Active,
+    VI_Freeze_Active := L_Freeze_Active,
+    VI_Freeze_Target_Supply := L_Freeze_Target_Supply,
+    VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
+    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
+    VI_Boiler_OT_Online := VI_Boiler_OT_Online
+);
+
+IF fbSafeState.VO_Applied THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        VO_Zone_Valves[L_i] := fbSafeState.VO_Zone_Valves[L_i];
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        VO_Manifold_Pumps[L_i] := fbSafeState.VO_Manifold_Pumps[L_i];
+        VO_Manifold_Valves[L_i] := fbSafeState.VO_Manifold_Valves[L_i];
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+        VO_Boiler_OT_Enable[L_i] := fbSafeState.VO_Boiler_OT_Enable[L_i];
+        VO_Boiler_OT_Setpoint[L_i] := fbSafeState.VO_Boiler_OT_Setpoint[L_i];
+        VO_Boiler_Status[L_i] := fbSafeState.VO_Boiler_Status[L_i];
+    END_FOR;
+
+    VO_Backup_Circulation_Pump := fbSafeState.VO_Backup_Circulation_Pump;
+    VO_Electric_Heater_Enable := fbSafeState.VO_Electric_Heater_Enable;
+    VO_Freeze_Risk_Status := fbSafeState.VO_Freeze_Risk_Status;
+    RETURN;
+END_IF;
+
+VO_Backup_Circulation_Pump := FALSE;
+VO_Electric_Heater_Enable := FALSE;
+VO_Freeze_Risk_Status := FALSE;
+
+IF L_Freeze_Active THEN
+    L_Target_Supply_Temp := L_Freeze_Target_Supply;
+ELSE
+    L_Target_Supply_Temp := VI_Config.Target_Floor_Temp;
+END_IF;
+
+fbAdaptiveTarget(
+    VI_Base_Target_Supply_Temp := L_Target_Supply_Temp,
+    VI_Global_Target_Temperature := GVL_STATE.G_Target_Temperature,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VI_Floor_Temps := VI_Floor_Temps,
+    VI_Room_Temps := VI_Room_Temps,
+    VO_Target_Supply_Temp => L_Target_Supply_Temp
+);
+
+fbCircuitControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_Current_Hour := VI_Current_Hour,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_Config := VI_Config,
+    VI_Tariff := VI_Tariff,
+    VI_Scenario_Adjust := 0.0,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VI_Floor_Temps := VI_Floor_Temps,
+    VI_Room_Temps := VI_Room_Temps,
+    VI_Rule_Actions := VI_Rule_Actions,
+    VO_Zone_Valves => VO_Zone_Valves,
+    VO_Heating_Sensor_Fault => L_Sensor_Error
+);
+
+GVL_STATE.G_Heating_Sensor_Fault := L_Sensor_Error;
+
+fbDemandMap(
+    VI_Zone_Valves := VO_Zone_Valves,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VO_Manifold_Demand_Map => L_Manifold_Demand_Map
+);
+
+fbManifoldControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
+    VI_Freeze_Mode_Active := L_Freeze_Active,
+    VI_Target_Supply_Temp := L_Target_Supply_Temp,
+    VI_Any_Zone_Active := L_Manifold_Demand_Map,
+    VI_Manifold_Pressures := VI_Manifold_Pressures,
+    VI_Manifold_Currents := VI_Manifold_Currents,
+    VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
+    VI_Manifold_Temps_Return := VI_Manifold_Temps_Return,
+    VO_Manifold_Pumps => VO_Manifold_Pumps,
+    VO_Manifold_Valves => VO_Manifold_Valves,
+    VO_Status => VO_Status
+);
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Pressure_OK := VI_Manifold_Pressures[L_i] >= GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE;
@@ -91,11 +207,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := FALSE;
     END_IF;
 
+    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+    END_IF;
+
     L_Prev_Pressure[L_i] := VI_Manifold_Pressures[L_i];
     L_Prev_Current[L_i] := VI_Manifold_Currents[L_i];
 END_FOR;
 
-// --- CONFIDENCE ENGINE ---
 L_Error_Instant := 0.0;
 
 IF GVL_STATE.G_Heating_Sensor_Fault THEN
@@ -114,15 +233,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR
-       GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
         L_Error_Instant := L_Error_Instant + 0.2;
         EXIT;
     END_IF;
 END_FOR;
 
-GVL_STATE.G_Heating_Error_Score := GVL_STATE.G_Heating_Error_Score * 0.98 + L_Error_Instant;
-
+GVL_STATE.G_Heating_Error_Score := (GVL_STATE.G_Heating_Error_Score * 0.98) + L_Error_Instant;
 L_Confidence := 1.0 - GVL_STATE.G_Heating_Error_Score;
 
 IF L_Confidence < 0.0 THEN
@@ -137,7 +254,47 @@ IF GVL_STATE.G_Heating_Confidence < 0.5 THEN
     L_Target_Supply_Temp := L_Target_Supply_Temp - 3.0;
 END_IF;
 
-// --- rest of file unchanged ---
+fbValveTestManager(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_Valve_Currents := VI_Manifold_Currents,
+    VI_Valve_End_Switches := VI_Manifold_End_Switches,
+    VI_Config := VI_Valve_Test_Config
+);
+
+IF fbValveTestManager.VO_Test_Active THEN
+    L_i := fbValveTestManager.VO_Current_Valve;
+    IF L_i >= 1 AND L_i <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+        IF fbValveTestManager.VO_Valve_Cmd[L_i] THEN
+            VO_Manifold_Valves[L_i] := 100.0;
+        ELSE
+            VO_Manifold_Valves[L_i] := 0.0;
+        END_IF;
+        VO_Manifold_Pumps[L_i] := FALSE;
+    END_IF;
+END_IF;
+
+fbBoilerControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
+    VI_DHW_Target_Temp := VI_DHW_Target_Temp,
+    VI_Target_Supply_Temp := L_Target_Supply_Temp,
+    VI_Freeze_Mode_Active := L_Freeze_Active,
+    VI_Policy_Degraded := L_Policy_Degraded,
+    VI_Manifold_Pumps := VO_Manifold_Pumps,
+    VI_Manifold_Valves := VO_Manifold_Valves,
+    VI_Boiler_Flame_Status := VI_Boiler_Flame_Status,
+    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
+    VI_Boiler_OT_Online := VI_Boiler_OT_Online,
+    VI_Boiler_Modulation := VI_Boiler_Modulation,
+    VO_Boiler_OT_Enable => VO_Boiler_OT_Enable,
+    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint,
+    VO_Boiler_Status => VO_Boiler_Status,
+    VO_Any_Subsystem_Degraded => L_Subsys_Degraded
+);
+
+GVL_STATE.G_Heating_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR L_Subsys_Degraded;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_System_Manager <<<
