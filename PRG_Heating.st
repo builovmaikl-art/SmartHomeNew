@@ -12,7 +12,13 @@ VAR
 
     L_i : INT;
 
-    // Local actuator buffers (no direct writes to GVL_STATE)
+    // NORMALIZED INPUTS
+    L_Outdoor_Temp : REAL;
+    L_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    L_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    L_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+
+    // Local actuator buffers
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     L_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
@@ -28,7 +34,53 @@ VAR
     L_DHW_Status : ST_DHW_Status;
 END_VAR
 
-// Initialize buffers to safe defaults
+// ========================
+// INPUT NORMALIZATION
+// ========================
+
+// Outdoor
+IF IS_REAL_VALID(GVL_STATE.G_Outdoor_Temp) THEN
+    L_Outdoor_Temp := LIMIT(-50.0, GVL_STATE.G_Outdoor_Temp, 60.0);
+ELSE
+    L_Outdoor_Temp := 0.0;
+END_IF;
+
+// Room
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    IF IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i]) AND
+       (GVL_STATE.G_Room_Temps[L_i] > -50.0) AND
+       (GVL_STATE.G_Room_Temps[L_i] < 100.0) THEN
+        L_Room_Temps[L_i] := GVL_STATE.G_Room_Temps[L_i];
+    ELSE
+        L_Room_Temps[L_i] := 20.0;
+    END_IF;
+END_FOR;
+
+// Floor
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i]) AND
+       (GVL_STATE.G_Floor_Temps[L_i] > -50.0) AND
+       (GVL_STATE.G_Floor_Temps[L_i] < 100.0) THEN
+        L_Floor_Temps[L_i] := GVL_STATE.G_Floor_Temps[L_i];
+    ELSE
+        L_Floor_Temps[L_i] := 20.0;
+    END_IF;
+END_FOR;
+
+// Pressure
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF IS_REAL_VALID(GVL_STATE.G_Manifold_Pressures[L_i]) AND
+       (GVL_STATE.G_Manifold_Pressures[L_i] > 0.1) THEN
+        L_Manifold_Pressures[L_i] := GVL_STATE.G_Manifold_Pressures[L_i];
+    ELSE
+        L_Manifold_Pressures[L_i] := 0.0;
+    END_IF;
+END_FOR;
+
+// ========================
+// SAFE INIT
+// ========================
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     L_Zone_Valves[L_i] := FALSE;
 END_FOR;
@@ -48,6 +100,10 @@ L_Electric_Heater_Enable := FALSE;
 L_DHW_Heating_Pump := FALSE;
 L_DHW_Circ_Pump := FALSE;
 
+// ========================
+// CORE
+// ========================
+
 fbLocalContext(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop,
@@ -60,23 +116,12 @@ fbLocalContext(
     VI_Boiler_Modulation_Raw := GVL_IO.AI_Boiler_Modulation
 );
 
-GVL_STATE.G_Target_Temperature := fbLocalContext.VO_Target_Temperature;
-
 fbThermalAllocation(
     VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
     VI_Circuit_To_Zone := GVL_CONFIG.G_Heating_Circuit_To_Zone,
     VI_Manifold_Base_Priority := GVL_CONFIG.G_Manifold_Priority,
     VI_Zone_Priority_Bias := GVL_HEATING_POLICY.G_Zone_Priority_Bias,
-    VI_Guest_Preheat_Enabled := GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Enabled,
-    VI_Zone_Guest_Preheat_Request := GVL_HEATING_POLICY.G_Zone_Guest_Preheat_Request,
-    VI_Guest_Preheat_Priority_Boost := GVL_HEATING_POLICY_CONFIG.G_Guest_Preheat_Priority_Boost,
-    VI_Zone_Target_Adjustment := GVL_HEATING_POLICY.G_Zone_Target_Adjustment,
-    VI_Zone_Self_Level := GVL_HEATING_POLICY.G_Zone_Self_Level,
-    VI_Policy_Priority_Multiplier := GVL_HEATING_POLICY.G_Policy_Priority_Multiplier,
     VI_Manifold_Pump_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service,
-    VI_Manifold_Pressure_Fault := GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault,
-    VI_Manifold_Current_Fault := GVL_STATUS.G_Diagnostics.Manifold_Current_Fault,
-    VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight,
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 );
 
@@ -85,14 +130,14 @@ fbHeatingOrchestration(
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
     VI_Current_Day_Of_Week := TO_UINT(GVL_TIME_SERVICE.G_Day_Of_Week),
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
-    VI_Floor_Temps := GVL_STATE.G_Floor_Temps,
-    VI_Room_Temps := GVL_STATE.G_Room_Temps,
+    VI_Outdoor_Temp := L_Outdoor_Temp,
+    VI_Floor_Temps := L_Floor_Temps,
+    VI_Room_Temps := L_Room_Temps,
     VI_Config := GVL_CONFIG.G_Heating_Config,
     VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
     VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
     VI_Time_Of_Day_MS := GVL_TIME_SERVICE.G_Time_Of_Day_MS,
-    VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
+    VI_Manifold_Pressures := L_Manifold_Pressures,
     VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
     VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
     VI_Manifold_Temps_Return := GVL_STATE.G_Manifold_T_Return,
