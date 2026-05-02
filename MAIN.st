@@ -7,6 +7,7 @@ PRG_System_Init();
 PRG_PLC_Arbitration();
 PRG_Config_Manager();
 PRG_Config_Validation();
+PRG_Config_Versioning();
 PRG_IO_Read();
 PRG_Input_Processing();
 PRG_User_Adapt_Control();
