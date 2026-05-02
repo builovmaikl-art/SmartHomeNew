@@ -63,6 +63,8 @@ VAR_GLOBAL
     G_Heating_RootConfidence : REAL;
     G_Heating_Confidence : REAL := 1.0;
     G_Heating_Error_Score : REAL := 0.0;
+    G_Heating_Confidence_Reason_Code : INT := 0;
+    G_Heating_Confidence_Reason_Text : STRING(128) := 'OK';
     G_DHW_IO_Fault : BOOL;
     G_DHW_Sensor_Fault : BOOL;
     G_DHW_Subsystem_Degraded : BOOL;
