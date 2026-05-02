@@ -1,0 +1,23 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Simulation_Enable : BOOL := FALSE;
+
+    // Sensor fault injection
+    G_Inject_Heating_Sensor_Fault : BOOL := FALSE;
+    G_Inject_IO_Fault : BOOL := FALSE;
+    G_Inject_Low_Pressure : BOOL := FALSE;
+    G_Inject_Predictive_Pump_Fault : BOOL := FALSE;
+
+    // Safety fault injection
+    G_Inject_Gas_Alarm : BOOL := FALSE;
+    G_Inject_Leak_Alarm : BOOL := FALSE;
+    G_Inject_Smoke_Alarm : BOOL := FALSE;
+
+    // PLC / role fault injection
+    G_Inject_Dual_PLC_Active : BOOL := FALSE;
+
+    // Test status
+    G_Test_Running : BOOL := FALSE;
+    G_Test_Result_OK : BOOL := FALSE;
+    G_Test_Last_Result_Text : STRING(128) := 'No test executed';
+END_VAR
