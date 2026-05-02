@@ -1,9 +1,5 @@
 // ==============================================================================
 // Heating safety gate helper
-//
-// Internal helper for FB_Heating_System_Manager.
-// Owns common safety/freeze decision calculation. The manager remains the public
-// facade and still projects physical safe-state outputs.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Safety_Gate
 VAR_INPUT
@@ -26,18 +22,29 @@ VAR_OUTPUT
     VO_IO_Failsafe_Active : BOOL;
     VO_Freeze_Mode_Active : BOOL;
     VO_Freeze_Target_Supply : REAL;
+    VO_Outdoor_Temp_Valid : BOOL;
 END_VAR
 
 VAR
     L_i : INT;
+    L_Outdoor_Temp_Safe : REAL;
 END_VAR
 
 VO_Gas_Safety_Active := VI_Gas_Safety_Stop;
 VO_Emergency_Safe_Stop_Active := VI_Emergency_Stop OR (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 VO_IO_Failsafe_Active := VI_IO_Failsafe_Active;
 
+// REAL validity guard: NaN fails self-equality; extreme values are rejected as sensor faults.
+VO_Outdoor_Temp_Valid := (VI_Outdoor_Temp = VI_Outdoor_Temp) AND (VI_Outdoor_Temp > -80.0) AND (VI_Outdoor_Temp < 80.0);
+IF VO_Outdoor_Temp_Valid THEN
+    L_Outdoor_Temp_Safe := VI_Outdoor_Temp;
+ELSE
+    L_Outdoor_Temp_Safe := 20.0;
+    GVL_STATE.G_Heating_Sensor_Fault := TRUE;
+END_IF;
+
 VO_Block_Normal_Heating := VO_Gas_Safety_Active OR VO_Emergency_Safe_Stop_Active OR VO_IO_Failsafe_Active;
-VO_Freeze_Mode_Active := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION) OR (VI_Outdoor_Temp < -5.0);
+VO_Freeze_Mode_Active := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION) OR (L_Outdoor_Temp_Safe < -5.0);
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     IF VI_Floor_Temps[L_i] < 7.0 THEN
