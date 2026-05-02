@@ -60,6 +60,13 @@ CASE L_Mode OF
         GVL_COMMAND_SHADOW.G_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Stop_Vent;
         GVL_COMMAND_SHADOW.G_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_GlobalStop_Block_Water;
 
+ELSE
+        // Defensive fallback: unknown/corrupted safety mode → safest available stop commands.
+        GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
+        GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
+        GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+        GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
+        GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
 END_CASE;
 
 // SAFETY ACCESS CLAMP
