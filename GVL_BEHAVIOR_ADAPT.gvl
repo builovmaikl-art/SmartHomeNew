@@ -1,45 +1,3 @@
-TYPE E_Adapt_Profile :
-(
-    ADAPT_PROFILE_STABLE,
-    ADAPT_PROFILE_BALANCED,
-    ADAPT_PROFILE_AGGRESSIVE
-);
-END_TYPE
-
-TYPE ST_Behavior_Weights :
-STRUCT
-    W_Comfort : REAL;
-    W_Night : REAL;
-    W_Preheat : REAL;
-    W_VentBoost : REAL;
-    W_AccessSecure : REAL;
-END_STRUCT
-END_TYPE
-
-TYPE ST_Scenario_Stats :
-STRUCT
-    Activations : UDINT;
-    Success_Count : UDINT;
-    Failure_Count : UDINT;
-    Success_Rate : REAL;
-    Avg_Result_Value : REAL;
-    Stability_Counter : INT;
-END_STRUCT
-END_TYPE
-
-TYPE ST_Zone_Adapt_State :
-STRUCT
-    Zone_Weight : REAL;
-    Confidence : REAL;
-    Activations : UDINT;
-    Success_Count : UDINT;
-    Failure_Count : UDINT;
-    Success_Rate : REAL;
-    Avg_Result_Value : REAL;
-    Last_Update_MS : UDINT;
-END_STRUCT
-END_TYPE
-
 VAR_GLOBAL
     G_Behavior_Weights : ST_Behavior_Weights := (
         W_Comfort := 1.0,
@@ -49,7 +7,7 @@ VAR_GLOBAL
         W_AccessSecure := 1.0
     );
 
-    G_Scenario_Stats : ARRAY[E_System_Reason_Code] OF ST_Scenario_Stats;
+    G_Scenario_Stats : ARRAY[0..10] OF ST_Scenario_Stats;
     G_VentBoost_Zone_Adapt : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Zone_Adapt_State;
 
     G_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
@@ -64,7 +22,7 @@ VAR_GLOBAL
     G_Confidence_Learning_Rate : REAL := 0.05;
     G_Decay_Factor : REAL := 0.995;
 
-    // NEW: real baseline memory
     G_Prev_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Prev_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
 END_VAR
+// >>> BULK_SYNC_ANCHOR: GVL_BEHAVIOR_ADAPT <<<
