@@ -1,62 +1,8 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени4: PRG_System_Init(Строка 9, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_System_Mode_Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: PRG_System_Init(Строка 9, Столбец 1 (Реализ.)): C0004:  'G_System_Mode_Text' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени4: PRG_System_Init(Строка 19, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_System_Mode_Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: PRG_System_Init(Строка 19, Столбец 1 (Реализ.)): C0004:  'G_System_Mode_Text' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени4: PRG_Config_Validation(Строка 43, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_System_Mode_Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: PRG_Config_Validation(Строка 43, Столбец 1 (Реализ.)): C0004:  'G_System_Mode_Text' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени4: PRG_Config_Versioning(Строка 32, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_System_Mode_Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: PRG_Config_Versioning(Строка 32, Столбец 1 (Реализ.)): C0004:  'G_System_Mode_Text' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени4: PRG_Config_Versioning(Строка 34, Столбец 1 (Реализ.)): C0018:  'GVL_STATUS.G_System_Mode_Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: PRG_Config_Versioning(Строка 34, Столбец 1 (Реализ.)): C0004:  'G_System_Mode_Text' не является компонентом 'GVL_STATUS'
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 7, Столбец 1 (Реализ.)): C0046:  Идентификатор 'TRACE_USER' не задан
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 7, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'TRACE_USER'' в тип 'E_TRACE_LAYER'
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'SRC_USER' не задан
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'SRC_USER'' в тип 'E_TRACE_SOURCE'
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 32, Столбец 1 (Реализ.)): C0046:  Идентификатор 'TRACE_USER' не задан
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 32, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'TRACE_USER'' в тип 'E_TRACE_LAYER'
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 33, Столбец 1 (Реализ.)): C0046:  Идентификатор 'SRC_USER' не задан
-[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 33, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'SRC_USER'' в тип 'E_TRACE_SOURCE'
 [ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 34, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_USER_REQUEST' не задан
 [ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 34, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_USER_REQUEST'' в тип 'E_SYSTEM_REASON_CODE'
-[ERROR]         Без имени4: FB_Trace_Write(Строка 5, Столбец 1 (Реализ.)): C0018:  'GVL_TRACE.G_Trace_Buffer[L_Index].Timestamp_MS' не является корректным объектом присваивания
-[ERROR]         Без имени4: FB_Trace_Write(Строка 5, Столбец 1 (Реализ.)): C0004:  'Timestamp_MS' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: FB_Trace_Write(Строка 8, Столбец 1 (Реализ.)): C0018:  'GVL_TRACE.G_Trace_Buffer[L_Index].Reason_Code' не является корректным объектом присваивания
-[ERROR]         Без имени4: FB_Trace_Write(Строка 8, Столбец 1 (Реализ.)): C0004:  'Reason_Code' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: FB_Trace_Write(Строка 9, Столбец 1 (Реализ.)): C0018:  'GVL_TRACE.G_Trace_Buffer[L_Index].Value_Bool' не является корректным объектом присваивания
-[ERROR]         Без имени4: FB_Trace_Write(Строка 9, Столбец 1 (Реализ.)): C0004:  'Value_Bool' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: FB_Trace_Write(Строка 10, Столбец 1 (Реализ.)): C0018:  'GVL_TRACE.G_Trace_Buffer[L_Index].Value_Real' не является корректным объектом присваивания
-[ERROR]         Без имени4: FB_Trace_Write(Строка 10, Столбец 1 (Реализ.)): C0004:  'Value_Real' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: FB_Trace_Write(Строка 11, Столбец 1 (Реализ.)): C0018:  'GVL_TRACE.G_Trace_Buffer[L_Index].Text' не является корректным объектом присваивания
-[ERROR]         Без имени4: FB_Trace_Write(Строка 11, Столбец 1 (Реализ.)): C0004:  'Text' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'STABILIZING'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'STABILIZING' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 13, Столбец 1 (Реализ.)): C0046:  Идентификатор 'STABILIZING' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 13, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 15, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ABORTED'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 15, Столбец 1 (Реализ.)): C0046:  Идентификатор 'ABORTED' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 18, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'WAIT_MANUAL_CONFIRM'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 18, Столбец 1 (Реализ.)): C0046:  Идентификатор 'WAIT_MANUAL_CONFIRM' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 22, Столбец 1 (Реализ.)): C0046:  Идентификатор 'WAIT_MANUAL_CONFIRM' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 22, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 24, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ABORTED'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 24, Столбец 1 (Реализ.)): C0046:  Идентификатор 'ABORTED' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 27, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'RECOVERING'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 27, Столбец 1 (Реализ.)): C0046:  Идентификатор 'RECOVERING' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 30, Столбец 1 (Реализ.)): C0046:  Идентификатор 'RECOVERING' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 30, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 32, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ABORTED'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 32, Столбец 1 (Реализ.)): C0046:  Идентификатор 'ABORTED' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 35, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'COOLDOWN'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 35, Столбец 1 (Реализ.)): C0046:  Идентификатор 'COOLDOWN' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 39, Столбец 1 (Реализ.)): C0046:  Идентификатор 'COOLDOWN' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 39, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 41, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ABORTED'' в тип 'E_RECOVERY_PHASE'
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 41, Столбец 1 (Реализ.)): C0046:  Идентификатор 'ABORTED' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 54, Столбец 1 (Реализ.)): C0046:  Идентификатор 'ABORTED' не задан
-[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 54, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
 [ERROR]         Без имени4: PRG_System_Diagnostics(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_INPUT.I_Room_Humidity[L_i]'' в тип 'REAL'
 [ERROR]         Без имени4: PRG_System_Diagnostics(Строка 17, Столбец 1 (Реализ.)): C0004:  'I_Room_Humidity' не является компонентом 'GVL_INPUT'
 [ERROR]         Без имени4: PRG_System_Diagnostics(Строка 50, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_SCENARIO_NIGHT' не задан
@@ -90,33 +36,10 @@
 [ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure'
 [ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
 [ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[ERROR]         Без имени4: PRG_Heating(Строка 1, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени4: PRG_Heating(Строка 1, Столбец 1 (Реализ.)): C0046:  Идентификатор 'IS_REAL_VALID' не задан
-[ERROR]         Без имени4: PRG_Heating(Строка 1, Столбец 1 (Реализ.)): C0035:  Вместо 'IS_REAL_VALID' требуется имя программы, функция или экземпляр функционального блока
-[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i]) AND (GVL_STATE.G_Room_Temps[L_i] > -50))'
-[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i])'
-[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'IS_REAL_VALID' не задан
-[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0035:  Вместо 'IS_REAL_VALID' требуется имя программы, функция или экземпляр функционального блока
-[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i]) AND (GVL_STATE.G_Floor_Temps[L_i] > -50))'
-[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i])'
-[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0046:  Идентификатор 'IS_REAL_VALID' не задан
-[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0035:  Вместо 'IS_REAL_VALID' требуется имя программы, функция или экземпляр функционального блока
-[ERROR]         Без имени4: PRG_Heating(Строка 24, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени4: PRG_Heating(Строка 24, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Manifold_Pressures[L_i])'
-[ERROR]         Без имени4: PRG_Heating(Строка 24, Столбец 1 (Реализ.)): C0046:  Идентификатор 'IS_REAL_VALID' не задан
-[ERROR]         Без имени4: PRG_Heating(Строка 24, Столбец 1 (Реализ.)): C0035:  Вместо 'IS_REAL_VALID' требуется имя программы, функция или экземпляр функционального блока
 [WARNING]       Без имени4: FB_Heating_System_Manager(Строка 218, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
 [WARNING]       Без имени4: FB_PID_Controller(Строка 14, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
 [ERROR]         Без имени4: PRG_Explainability(Строка 14, Столбец 1 (Реализ.)): C0046:  Идентификатор 'EVACUATION' не задан
 [ERROR]         Без имени4: PRG_Explainability(Строка 14, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени4: PRG_Debug_View(Строка 81, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_TRACE.G_Trace_Buffer[L_Index].Text'' в тип 'STRING(120)'
-[ERROR]         Без имени4: PRG_Debug_View(Строка 81, Столбец 1 (Реализ.)): C0004:  'Text' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: PRG_Debug_View(Строка 82, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_TRACE.G_Trace_Buffer[L_Index].Timestamp_MS'' в тип 'UDINT'
-[ERROR]         Без имени4: PRG_Debug_View(Строка 82, Столбец 1 (Реализ.)): C0004:  'Timestamp_MS' не является компонентом 'ST_Trace_Entry'
-[ERROR]         Без имени4: PRG_Debug_View(Строка 83, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_TRACE.G_Trace_Buffer[L_Index].Reason_Code'' в тип 'E_SYSTEM_REASON_CODE'
-[ERROR]         Без имени4: PRG_Debug_View(Строка 83, Столбец 1 (Реализ.)): C0004:  'Reason_Code' не является компонентом 'ST_Trace_Entry'
 [ERROR]         Без имени4: PRG_IO_Write(Строка 159, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_DOMAIN_PROJECTION' не задан
 [ERROR]         Без имени4: PRG_IO_Write(Строка 159, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_DOMAIN_PROJECTION'' в тип 'E_SYSTEM_REASON_CODE'
-                Компиляция завершена -- 115 ошибок, 3 предупреждений : загрузка невозможна
+                Компиляция завершена -- 38 ошибок, 3 предупреждений : загрузка невозможна
