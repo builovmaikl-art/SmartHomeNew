@@ -112,3 +112,4 @@ ELSIF VO_Target_Supply_Temp > 45.0 THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Adaptive_Target <<<
+END_FUNCTION_BLOCK

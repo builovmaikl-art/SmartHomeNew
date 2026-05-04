@@ -106,3 +106,4 @@ IF VI_Command = 0 THEN
     VO_Done := FALSE;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_NVRAM_Manager <<<
+END_FUNCTION_BLOCK

@@ -66,3 +66,4 @@ VO_Sunset_Time := TO_TOD(TO_UDINT(L_Sunset_Local * 3600000.0));
 VO_Is_Night := (L_Current_TOD > (VO_Sunset_Time + T#30m)) OR (L_Current_TOD < (VO_Sunrise_Time - T#30m));
 // >>> SYNC_TEST_MARKER_FORCE <<<
 // >>> BULK_SYNC_ANCHOR: FB_Astro_Timer <<<
+END_FUNCTION_BLOCK

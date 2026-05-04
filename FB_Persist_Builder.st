@@ -23,3 +23,4 @@ GVL_PERSISTENT.P_Safety_Leak_Latched := VIO_PersistStruct.Safety_Leak_Latched;
 
 GVL_PERSISTENT.P_DHW_Heating_Active := VIO_PersistStruct.DHW_Heating_Pump;
 GVL_PERSISTENT.P_Valid := VIO_PersistStruct.Valid;
+END_FUNCTION_BLOCK

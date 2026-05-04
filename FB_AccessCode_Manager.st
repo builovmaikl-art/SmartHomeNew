@@ -43,3 +43,4 @@ IF LEN(VI_RFID_To_Check) > 0 THEN
     END_FOR;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_AccessCode_Manager <<<
+END_FUNCTION_BLOCK

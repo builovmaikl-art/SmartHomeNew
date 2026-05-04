@@ -54,3 +54,4 @@ END_FOR;
 FB_SHA1_Outer(Data := OuterData, Length := 84, Hash => Hash);
 
 Done := TRUE;
+END_FUNCTION_BLOCK

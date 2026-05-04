@@ -39,3 +39,4 @@ END_IF;
 
 VO_Records_Count := GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS; // Размер кольцевого буфера
 // >>> BULK_SYNC_ANCHOR: FB_BlackBox_Recorder <<<
+END_FUNCTION_BLOCK

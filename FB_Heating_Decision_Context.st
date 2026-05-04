@@ -75,3 +75,4 @@ FOR L_CurrentPriority := L_MaxPriority TO 1 BY -1 DO
     END_FOR;
 
 END_FOR;
+END_FUNCTION_BLOCK

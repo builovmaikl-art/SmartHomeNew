@@ -29,3 +29,4 @@ IF VO_Active THEN
 ELSE
     VO_Time_Left := 0;
 END_IF;
+END_FUNCTION_BLOCK

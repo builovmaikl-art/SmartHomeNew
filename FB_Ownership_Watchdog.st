@@ -34,3 +34,4 @@ END_IF;
 L_Last_Gas_Alarm := VI_Gas_Alarm;
 L_Last_Leak_Alarm := VI_Leak_Alarm;
 L_Last_Smoke_Alarm := VI_Smoke_Alarm;
+END_FUNCTION_BLOCK

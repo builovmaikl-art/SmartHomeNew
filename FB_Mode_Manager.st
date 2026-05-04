@@ -27,3 +27,4 @@ ELSIF VI_Is_Night THEN
     VO_Mode := BEHAVIOR_NIGHT;
     VO_Mode_Code := 100;
 END_IF;
+END_FUNCTION_BLOCK

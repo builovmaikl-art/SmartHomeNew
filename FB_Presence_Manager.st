@@ -48,3 +48,4 @@ END_IF;
 
 VO_Auto_Away := NOT VO_Occupied;
 VO_Last_Motion_TS := L_Last_Motion_TS;
+END_FUNCTION_BLOCK

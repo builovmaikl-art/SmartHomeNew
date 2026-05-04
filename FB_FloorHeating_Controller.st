@@ -95,3 +95,4 @@ ELSE
     VO_Pump_Run := FALSE;
     VO_Valve_Bool := FALSE;
 END_IF;
+END_FUNCTION_BLOCK

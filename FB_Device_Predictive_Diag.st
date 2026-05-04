@@ -93,3 +93,4 @@ ELSE
 END_IF;
 
 L_Prev_Running := VI_Is_Running;
+END_FUNCTION_BLOCK

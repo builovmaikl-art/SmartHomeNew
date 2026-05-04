@@ -103,3 +103,4 @@ ELSE
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_Diagnostics_Event_Manager <<<
+END_FUNCTION_BLOCK

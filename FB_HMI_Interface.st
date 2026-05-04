@@ -21,5 +21,8 @@ CASE VI_Severity OF
         VO_HMI_State_Code := 2;
     E_System_Severity.SEV_CRITICAL:
         VO_HMI_State_Code := 3;
+ELSE
+        // No fallback required
 END_CASE;
 // >>> BULK_SYNC_ANCHOR: FB_HMI_Interface <<<
+END_FUNCTION_BLOCK
