@@ -5,20 +5,26 @@ VAR
     L_Vent_Forced_Off : BOOL;
     L_Water_Forced_Off : BOOL;
     L_Access_Forced_Off : BOOL;
-    L_Global_Safe_Stop : BOOL;
+    L_Global_Hard_Stop : BOOL;
+    L_Gas_Safety_Stop : BOOL;
+    L_Freeze_Active : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
 // ======================================================
 // GLOBAL SAFETY GUARD (ABSOLUTE LAST BARRIER)
 // ======================================================
-L_Global_Safe_Stop :=
+L_Global_Hard_Stop :=
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR
-    GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR
-    GVL_COMMAND_SHADOW.G_Boiler_Stop OR
     GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
-IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Safe_Stop THEN
+L_Gas_Safety_Stop :=
+    GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR
+    GVL_COMMAND_SHADOW.G_Boiler_Stop;
+
+L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
+
+IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     // HARD FAIL-SAFE: EVERYTHING OFF
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
@@ -62,9 +68,7 @@ END_IF;
 // ======================================================
 // DOMAIN FORCED STATES
 // ======================================================
-L_Heating_Forced_Off :=
-    GVL_COMMAND_SHADOW.G_Heating_Block OR
-    GVL_COMMAND_SHADOW.G_Boiler_Stop;
+L_Heating_Forced_Off := GVL_COMMAND_SHADOW.G_Heating_Block;
 
 L_Vent_Forced_Off :=
     GVL_COMMAND_SHADOW.G_Vent_Stop OR
@@ -88,7 +92,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF L_Heating_Forced_Off THEN
+    IF L_Heating_Forced_Off AND NOT (L_Gas_Safety_Stop AND L_Freeze_Active) THEN
         GVL_IO.DO_Manifold_Pumps[L_i] := FALSE;
         GVL_IO.AO_Manifold_Valves[L_i] := 0;
     ELSE
@@ -97,13 +101,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     END_IF;
 END_FOR;
 
-IF L_Heating_Forced_Off THEN
+IF L_Heating_Forced_Off AND NOT (L_Gas_Safety_Stop AND L_Freeze_Active) THEN
     GVL_IO.DO_DHW_Heating_Pump := FALSE;
     GVL_IO.DO_DHW_Circ_Pump := FALSE;
     GVL_IO.DO_Backup_Circulation_Pump := FALSE;
     GVL_IO.DO_Electric_Heater_Enable := FALSE;
 ELSE
-    GVL_IO.DO_DHW_Heating_Pump := GVL_HEATING_OUTPUT.DO_DHW_Heating_Pump;
+    GVL_IO.DO_DHW_Heating_Pump := FALSE; // DHW always off without gas
     GVL_IO.DO_DHW_Circ_Pump := GVL_HEATING_OUTPUT.DO_DHW_Circ_Pump;
     GVL_IO.DO_Backup_Circulation_Pump := GVL_HEATING_OUTPUT.DO_Backup_Circulation_Pump;
     GVL_IO.DO_Electric_Heater_Enable := GVL_HEATING_OUTPUT.DO_Electric_Heater_Enable;
@@ -129,7 +133,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
 END_FOR;
 
 // ======================================================
-// WATER OUTPUTS (NO DIRECT OR OVERRIDE)
+// WATER OUTPUTS
 // ======================================================
 GVL_IO.DO_Water_Valve_35_Close := GVL_COMMAND_SHADOW.G_Close_Valve_35;
 GVL_IO.DO_Water_Valve_36_Close := GVL_COMMAND_SHADOW.G_Close_Valve_36;
@@ -161,7 +165,6 @@ ELSE
     GVL_IO.DO_Lock_2_Close := GVL_ACCESS_OUTPUT.DO_Lock_2_Close;
 END_IF;
 
-// Gas valve always follows safety shadow
 GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
 fbTrace(
@@ -173,5 +176,4 @@ fbTrace(
     iText := 'IO write projection executed'
 );
 
-// >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
 END_PROGRAM
