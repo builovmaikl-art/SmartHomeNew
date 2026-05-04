@@ -14,7 +14,6 @@ VAR_GLOBAL
 
     // Heating domain command gates
     G_Heating_Block : BOOL := FALSE;
-    G_Heating_DHW_Block : BOOL := FALSE;
     G_Heating_Emergency_Stop : BOOL := FALSE;
     G_Heating_Gas_Safety_Stop : BOOL := FALSE;
 
