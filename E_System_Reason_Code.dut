@@ -1,0 +1,10 @@
+{attribute 'strict'}
+TYPE E_System_Reason_Code :
+(
+    REASON_NONE := 0,
+    REASON_USER := 1,
+    REASON_SAFETY := 2,
+    REASON_AUTOMATION := 3,
+    REASON_INTERNAL := 4
+) USINT;
+END_TYPE
