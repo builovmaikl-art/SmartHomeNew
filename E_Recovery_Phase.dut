@@ -2,10 +2,10 @@
 TYPE E_Recovery_Phase :
 (
     IDLE := 0,
-    WAIT := 1,
-    VERIFY := 2,
-    RESTORE := 3,
-    COMPLETE := 4,
-    FAILED := 5
+    STABILIZING := 1,
+    WAIT_MANUAL_CONFIRM := 2,
+    RECOVERING := 3,
+    COOLDOWN := 4,
+    ABORTED := 5
 ) USINT;
 END_TYPE
