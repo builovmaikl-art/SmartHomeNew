@@ -25,7 +25,7 @@ L_Gas_Safety_Stop :=
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
 
 IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
-    // HARD FAIL-SAFE: EVERYTHING OFF
+    // HARD FAIL-SAFE: EVERYTHING OFF / SAFE
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         GVL_IO.DO_Zone_Valves[L_i] := FALSE;
@@ -51,6 +51,18 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
         GVL_IO.DO_Water_Zone_Enable[L_i] := FALSE;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_IO.AO_Lighting_Levels[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+        GVL_IO.AO_Blinds_Positions[L_i] := 1000;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+        GVL_IO.DO_Sockets[L_i] := FALSE;
     END_FOR;
 
     GVL_IO.DO_Gate_Open := FALSE;
@@ -147,6 +159,21 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
 END_FOR;
 
 // ======================================================
+// LIGHTING / BLINDS / SOCKET OUTPUTS
+// ======================================================
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+    GVL_IO.AO_Lighting_Levels[L_i] := BYTE_TO_UINT(GVL_STATE.G_Lighting_Levels[L_i]) * 10;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+    GVL_IO.AO_Blinds_Positions[L_i] := BYTE_TO_UINT(GVL_STATE.G_Blinds_Positions[L_i]) * 10;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    GVL_IO.DO_Sockets[L_i] := GVL_STATE.G_Socket_States[L_i];
+END_FOR;
+
+// ======================================================
 // ACCESS OUTPUTS
 // ======================================================
 IF L_Access_Forced_Off THEN
@@ -176,4 +203,5 @@ fbTrace(
     iText := 'IO write projection executed'
 );
 
+// >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
 END_PROGRAM
