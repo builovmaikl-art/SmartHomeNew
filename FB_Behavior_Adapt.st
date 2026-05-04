@@ -61,7 +61,7 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
             (iConfidence - L_Zone.Confidence) * GVL_BEHAVIOR_ADAPT.G_Confidence_Learning_Rate;
     END_IF;
 
-    IF (L_Zone.Activations MOD GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold) = 0 THEN
+    IF (UDINT_TO_INT(L_Zone.Activations) MOD GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold) = 0 THEN
 
         L_Adjustment :=
             (L_Zone.Success_Rate - 0.5)
