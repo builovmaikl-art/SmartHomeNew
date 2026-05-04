@@ -24,12 +24,14 @@ END_VAR
 VAR
     L_i : INT;
     L_Min_Supply_Temp : REAL;
+    L_Freeze_Circulation_Required : BOOL;
 END_VAR
 
 VO_Applied := VI_Block_Normal_Heating;
 VO_Backup_Circulation_Pump := FALSE;
 VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
+L_Freeze_Circulation_Required := VI_Freeze_Active AND (VI_IO_Failsafe_Active OR VI_Gas_Safety_Active);
 
 IF NOT VI_Block_Normal_Heating THEN
     RETURN;
@@ -40,37 +42,37 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF VI_IO_Failsafe_Active AND VI_Freeze_Active THEN
+    IF L_Freeze_Circulation_Required THEN
         VO_Manifold_Pumps[L_i] := TRUE;
-        VO_Manifold_Valves[L_i] := 35.0;
+        VO_Manifold_Valves[L_i] := REAL#35.0;
     ELSE
         VO_Manifold_Pumps[L_i] := FALSE;
-        VO_Manifold_Valves[L_i] := 0.0;
+        VO_Manifold_Valves[L_i] := REAL#0.0;
     END_IF;
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     VO_Boiler_OT_Enable[L_i] := FALSE;
-    VO_Boiler_OT_Setpoint[L_i] := 0.0;
+    VO_Boiler_OT_Setpoint[L_i] := REAL#0.0;
     VO_Boiler_Status[L_i].Warning := FALSE;
     VO_Boiler_Status[L_i].Error := TRUE;
 END_FOR;
 
 IF VI_Gas_Safety_Active AND VI_Freeze_Active THEN
     VO_Backup_Circulation_Pump := TRUE;
-    L_Min_Supply_Temp := 1000.0;
+    L_Min_Supply_Temp := REAL#1000.0;
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         IF VI_Manifold_Temps_Supply[L_i] < L_Min_Supply_Temp THEN
             L_Min_Supply_Temp := VI_Manifold_Temps_Supply[L_i];
         END_IF;
     END_FOR;
-    IF L_Min_Supply_Temp > 900.0 THEN
-        L_Min_Supply_Temp := 0.0;
+    IF L_Min_Supply_Temp > REAL#900.0 THEN
+        L_Min_Supply_Temp := REAL#0.0;
     END_IF;
 
-    IF L_Min_Supply_Temp < (VI_Freeze_Target_Supply - 1.0) THEN
+    IF L_Min_Supply_Temp < (VI_Freeze_Target_Supply - REAL#1.0) THEN
         VO_Electric_Heater_Enable := TRUE;
-    ELSIF L_Min_Supply_Temp > (VI_Freeze_Target_Supply + 1.0) THEN
+    ELSIF L_Min_Supply_Temp > (VI_Freeze_Target_Supply + REAL#1.0) THEN
         VO_Electric_Heater_Enable := FALSE;
     END_IF;
     VO_Freeze_Risk_Status := TRUE;
