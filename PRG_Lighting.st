@@ -12,6 +12,7 @@ VAR
 
     L_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     L_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    L_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
@@ -51,19 +52,25 @@ fbLightingManager(
     VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
     VI_Away_Level := 1,
     VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
+    VI_Is_Night := GVL_STATUS.G_Is_Night,
+    VI_System_Mode := GVL_STATUS.G_System_Mode,
     VI_Manual_Light_Override := L_Manual_Light_Override,
     VI_Manual_Blinds_Override := L_Blinds_Override,
     VI_Simulation_Lights := L_Sim_Lights,
     VI_Physical_Switches := L_Physical_Switches,
     VI_Motion_Sensors := L_Motion_Sensors,
-    VI_Is_Night := GVL_STATUS.G_Is_Night,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
     VI_Wet_Zone_Map := GVL_CONFIG.G_Wet_Zone_Map,
     VI_Scenario_Configs := GVL_CONFIG.G_HMI_Scenario_Configs,
     VO_Lighting_Levels => GVL_STATE.G_Lighting_Levels,
-    VO_Blinds_Positions => GVL_STATE.G_Blinds_Positions
+    VO_Blinds_Positions => GVL_STATE.G_Blinds_Positions,
+    VO_Wet_Zone_Light_Active => L_Wet_Zone_Light_Active
 );
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+    GVL_STATUS.G_Wet_Zone_Light_Active[L_i] := L_Wet_Zone_Light_Active[L_i];
+END_FOR;
 
 fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
