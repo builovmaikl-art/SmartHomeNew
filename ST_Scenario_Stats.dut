@@ -1,0 +1,6 @@
+TYPE ST_Scenario_Stats :
+STRUCT
+    Activations : UDINT;
+    Last_Activation : UDINT;
+END_STRUCT
+END_TYPE
