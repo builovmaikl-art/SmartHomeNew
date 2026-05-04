@@ -1,6 +1,6 @@
-DUT_FILES=82
+DUT_FILES=83
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=27
+ENUM_INSERTED=28
 STRUCT_INSERTED=55
 STRUCT_FIELDS_TOTAL=486
 STRUCT_FIELDS_WITH_INITIALIZER=144
@@ -11,6 +11,7 @@ XML_INITIALVALUE_TAGS=899
 XML_ARRAYVALUE_TAGS=25
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
+E_Adapt_Profile.dut: ENUM E_Adapt_Profile values=3
 E_Behavior_Mode.dut: ENUM E_Behavior_Mode values=4
 E_Gateway_Command_Type.dut: ENUM E_Gateway_Command_Type values=12
 E_Heating_Policy_Mode.dut: ENUM E_Heating_Policy_Mode values=6
