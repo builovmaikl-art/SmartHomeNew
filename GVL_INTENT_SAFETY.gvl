@@ -33,4 +33,7 @@ VAR_GLOBAL
     I_Lock_1_Force_Close_Block : BOOL := FALSE;
     I_Lock_2_Force_Open : BOOL := FALSE;
     I_Lock_2_Force_Close_Block : BOOL := FALSE;
+    // --- operator / test constraints ---
+    I_Test_Timeout_Gas_Close : BOOL := FALSE;
+    I_Test_Timeout_Water_Close : BOOL := FALSE;
 END_VAR
