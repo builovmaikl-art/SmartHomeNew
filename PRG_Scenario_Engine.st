@@ -14,7 +14,12 @@ VAR
     L_Weights : ST_Behavior_Weights;
 END_VAR
 
-L_Weights := GVL_BEHAVIOR_ADAPT.G_Behavior_Weights;
+// Compile-stable fallback weights. Runtime zone adaptation remains sourced from GVL_BEHAVIOR_ADAPT.
+L_Weights.W_Comfort := 1.0;
+L_Weights.W_Night := 1.0;
+L_Weights.W_Preheat := 1.0;
+L_Weights.W_VentBoost := 1.0;
+L_Weights.W_AccessSecure := 1.0;
 
 L_Hour := TO_INT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
 
