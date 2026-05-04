@@ -11,17 +11,35 @@ CASE GVL_BEHAVIOR_ADAPT.G_Adapt_Profile OF
         GVL_BEHAVIOR_ADAPT.G_Decay_Factor := 0.998;
         GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold := 7;
 
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Comfort := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Night := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Preheat := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_VentBoost := 0.9;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_AccessSecure := 1.0;
+
     ADAPT_PROFILE_BALANCED:
         GVL_BEHAVIOR_ADAPT.G_Adapt_Learning_Rate := 0.05;
         GVL_BEHAVIOR_ADAPT.G_Confidence_Learning_Rate := 0.05;
         GVL_BEHAVIOR_ADAPT.G_Decay_Factor := 0.995;
         GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold := 5;
 
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Comfort := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Night := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Preheat := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_VentBoost := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_AccessSecure := 1.0;
+
     ADAPT_PROFILE_AGGRESSIVE:
         GVL_BEHAVIOR_ADAPT.G_Adapt_Learning_Rate := 0.08;
         GVL_BEHAVIOR_ADAPT.G_Confidence_Learning_Rate := 0.08;
         GVL_BEHAVIOR_ADAPT.G_Decay_Factor := 0.990;
         GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold := 3;
+
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Comfort := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Night := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Preheat := 1.0;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_VentBoost := 1.1;
+        GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_AccessSecure := 1.0;
 
 ELSE
         // No fallback required
