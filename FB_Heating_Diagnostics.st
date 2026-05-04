@@ -107,10 +107,13 @@ fbDiagEventManager(
 );
 
 // ======================================================
-// ROOT CAUSE EXPORT TO EXISTING DIAGNOSTIC FIELDS
+// ROOT CAUSE EXPORT VIA STATE (SAFE AGGREGATION PATH)
 // ======================================================
-GVL_STATUS.G_Diagnostics.Subsystem_Degraded := GVL_STATUS.G_Diagnostics.Subsystem_Degraded OR L_Any_Heating_Device_Failed;
-GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending := GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending OR L_Critical_Fault;
+GVL_STATE.G_Heating_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR L_Any_Heating_Device_Failed;
+GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATE.G_Freeze_Hardware_Degraded OR L_Any_Heating_Device_Failed;
+
+GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending :=
+    GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending OR L_Critical_Fault;
 
 IF L_Any_Heating_Device_Failed THEN
     GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Text := 'Heating device availability degraded';
