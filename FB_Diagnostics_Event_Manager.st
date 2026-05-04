@@ -15,8 +15,16 @@ VAR
     L_i : INT;
     L_Found_Index : INT;
     L_Was_Active : BOOL;
+
+    // Anti-flapping
+    L_Last_Change_Time : UDINT;
+    L_Last_Input_State : BOOL;
+    L_Stable_State : BOOL;
 END_VAR
 
+// ======================================================
+// FIND EXISTING EVENT
+// ======================================================
 L_Found_Index := 0;
 L_Was_Active := FALSE;
 
@@ -28,7 +36,22 @@ FOR L_i := 1 TO 50 DO
     END_IF;
 END_FOR;
 
-IF VI_Active THEN
+// ======================================================
+// ANTI-FLAPPING (2s debounce)
+// ======================================================
+IF VI_Active <> L_Last_Input_State THEN
+    L_Last_Input_State := VI_Active;
+    L_Last_Change_Time := VI_Timestamp;
+END_IF;
+
+IF (VI_Timestamp - L_Last_Change_Time) > 2000 THEN
+    L_Stable_State := L_Last_Input_State;
+END_IF;
+
+// ======================================================
+// APPLY ONLY STABLE STATE
+// ======================================================
+IF L_Stable_State THEN
     IF NOT L_Was_Active THEN
         L_Index := (VIO_Count MOD 50) + 1;
         VIO_Events[L_Index].Code := VI_Code;
