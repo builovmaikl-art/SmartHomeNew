@@ -1,6 +1,3 @@
-/* Restored full file with only REAL literal fixes */
-// NOTE: only constants 0.98 and 1.0 replaced with REAL# literals to remove warnings
-
 FUNCTION_BLOCK FB_Heating_System_Manager
 VAR
     L_Error_Instant : REAL;
