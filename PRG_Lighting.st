@@ -9,10 +9,10 @@ VAR
     L_Sim_Lights : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     L_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     L_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
-
     L_Blinds_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
     L_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     L_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
+    L_Wet_Zone_Any_Active : BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
@@ -53,7 +53,7 @@ fbLightingManager(
     VI_Away_Level := 1,
     VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
     VI_Is_Night := GVL_STATUS.G_Is_Night,
-    VI_System_Mode := GVL_STATUS.G_System_Mode,
+    VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_Manual_Light_Override := L_Manual_Light_Override,
     VI_Manual_Blinds_Override := L_Blinds_Override,
     VI_Simulation_Lights := L_Sim_Lights,
@@ -68,9 +68,11 @@ fbLightingManager(
     VO_Wet_Zone_Light_Active => L_Wet_Zone_Light_Active
 );
 
+L_Wet_Zone_Any_Active := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
-    GVL_STATUS.G_Wet_Zone_Light_Active[L_i] := L_Wet_Zone_Light_Active[L_i];
+    L_Wet_Zone_Any_Active := L_Wet_Zone_Any_Active OR L_Wet_Zone_Light_Active[L_i];
 END_FOR;
+GVL_STATUS.G_Wet_Zone_Light_Active := L_Wet_Zone_Any_Active;
 
 fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
