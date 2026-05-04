@@ -5,6 +5,7 @@ TYPE E_Trace_Layer :
     TRACE_SAFETY := 1,
     TRACE_HEATING := 2,
     TRACE_IO := 3,
-    TRACE_SCENARIO := 4
+    TRACE_SCENARIO := 4,
+    TRACE_USER := 5
 ) USINT;
 END_TYPE
