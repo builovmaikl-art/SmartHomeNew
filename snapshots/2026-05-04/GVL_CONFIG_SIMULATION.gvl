@@ -1,0 +1,8 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Simulation_Request : BOOL := FALSE;
+    G_Simulation_Confirm : BOOL := FALSE;
+    G_Simulation_Result_OK : BOOL := TRUE;
+    G_Simulation_Error_Text : STRING(200) := '';
+    G_Simulation_Last_Run_MS : UDINT := 0;
+END_VAR

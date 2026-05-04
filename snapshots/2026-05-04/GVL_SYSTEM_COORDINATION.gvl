@@ -1,0 +1,12 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_System_Degraded : BOOL := FALSE;
+
+    G_Block_Heating : BOOL := FALSE;
+    G_Block_Ventilation : BOOL := FALSE;
+    G_Block_Lighting_Override : BOOL := FALSE;
+    G_Block_Sockets_Override : BOOL := FALSE;
+
+    G_Coordination_Code : UDINT := 0;
+    G_Coordination_Status_Msg : STRING(200) := '';
+END_VAR

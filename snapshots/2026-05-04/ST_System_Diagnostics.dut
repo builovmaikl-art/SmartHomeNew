@@ -1,0 +1,133 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_System_Diagnostics :
+STRUCT
+    Freeze_Hardware_Event_Pending : BOOL;
+    Freeze_Hardware_Event_Text : STRING(200);
+    Backup_Pump_Fault : BOOL;
+    Electric_Heater_Fault : BOOL;
+    Backup_Pump_Recovered_After_Retry : BOOL;
+    Electric_Heater_Recovered_After_Retry : BOOL;
+    Backup_Pump_Out_Of_Service : BOOL;
+    Electric_Heater_Out_Of_Service : BOOL;
+
+    Pump_Exercise_Active : BOOL;
+    Pump_Exercise_Failed : BOOL;
+    Pump_Exercise_Last_Equipment : STRING(80);
+    Pump_Exercise_Last_Result : STRING(120);
+    Pump_Exercise_No_Feedback_Count : INT;
+    Manifold_Pump_Exercise_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UDINT;
+    DHW_Heating_Pump_Exercise_Count : UDINT;
+    DHW_Circ_Pump_Exercise_Count : UDINT;
+    Backup_Pump_Exercise_Count : UDINT;
+    Pump_Exercise_Event_Seq : UDINT;
+    Pump_Exercise_Journal_1 : STRING(200);
+    Pump_Exercise_Journal_2 : STRING(200);
+    Pump_Exercise_Journal_3 : STRING(200);
+    Pump_Exercise_Journal_Last_Seq : UDINT;
+
+    Pump_Maintenance_Required : BOOL;
+    Pump_Maintenance_Warning : BOOL;
+
+    Manifold_Pump_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    DHW_Heating_Pump_Out_Of_Service : BOOL;
+    DHW_Circ_Pump_Out_Of_Service : BOOL;
+
+    Maintenance_Last_Action : STRING(120);
+    Operator_Action_Blocked : BOOL;
+    Operator_Block_Reason : STRING(160);
+    Operator_Last_Forbidden_Action : STRING(160);
+    Operator_Journal_1 : STRING(200);
+    Operator_Journal_2 : STRING(200);
+    Operator_Journal_3 : STRING(200);
+    Operator_Journal_Event_Seq : UDINT;
+    Operator_Journal_Last_Seq : UDINT;
+
+    Dangerous_Action_Pending_Confirm : BOOL;
+    Dangerous_Action_Confirm_Text : STRING(160);
+    Dangerous_Action_Confirm_Deadline_MS : UDINT;
+    User_Access_Level_Active : INT;
+    User_Access_Denied : BOOL;
+    User_Access_Deny_Reason : STRING(160);
+
+    Valve_Test_Mode_Active : BOOL;
+    Valve_Test_Deadline_MS : UDINT;
+    Valve_Test_Remaining_MS : UDINT;
+    Valve_Test_Validation_OK : BOOL;
+    Valve_Test_Validation_Text : STRING(160);
+    Valve_Test_Forced_Close : BOOL;
+
+    Water_Valve_Test_Mode_Active : BOOL;
+    Water_Valve_Test_Deadline_MS : UDINT;
+    Water_Valve_Test_Remaining_MS : UDINT;
+    Water_Valve_Test_Validation_OK : BOOL;
+    Water_Valve_Test_Validation_Text : STRING(160);
+    Water_Valve_Test_Forced_Close : BOOL;
+    Gas_Valve_Test_Mode_Active : BOOL;
+    Gas_Valve_Test_Deadline_MS : UDINT;
+    Gas_Valve_Test_Remaining_MS : UDINT;
+    Gas_Valve_Test_Validation_OK : BOOL;
+    Gas_Valve_Test_Validation_Text : STRING(160);
+    Gas_Valve_Test_Forced_Close : BOOL;
+
+    Active_Leak_Sensor_Index : INT;
+    Active_Gas_Sensor_Index : INT;
+    Active_Leak_Zone_Name : STRING(80);
+    Active_Gas_Zone_Name : STRING(80);
+    Water_Valve_Test_Context : STRING(160);
+    Gas_Valve_Test_Context : STRING(160);
+
+    Water_Recovery_Target_Zone_Index : INT;
+    Gas_Recovery_Target_Zone_Index : INT;
+    Water_Recovery_Selective_Allowed : BOOL;
+    Gas_Recovery_Selective_Allowed : BOOL;
+    Water_Recovery_Selective_Text : STRING(160);
+    Gas_Recovery_Selective_Text : STRING(160);
+    Water_Recovery_Physical_Active : BOOL;
+    Water_Recovery_Physical_Zone_Name : STRING(80);
+
+    Water_Zone_Open_Fault : ARRAY[1..32] OF BOOL;
+    Water_Zone_Close_Fault : ARRAY[1..32] OF BOOL;
+    Water_Valve_Exercise_Last_Zone : INT;
+    Water_Valve_Exercise_Last_Result : STRING(160);
+    Water_Zone_Critical_Close_Fault : ARRAY[1..32] OF BOOL;
+    Water_Close_Fault_Active : BOOL;
+    Water_Close_Fault_Zone_Name : STRING(80);
+    Water_Close_Fault_Text : STRING(200);
+    Water_Zone_Close_Retry_Active : ARRAY[1..32] OF BOOL;
+    Water_Zone_Close_Retry_Count : ARRAY[1..32] OF INT;
+    Water_Zone_Close_Recovered_After_Retry : ARRAY[1..32] OF BOOL;
+    Water_Localization_Failed : BOOL;
+    Water_Main_Shutdown_Recommended : BOOL;
+    Water_Escalation_Text : STRING(200);
+    Alarm_Event_Pulse : BOOL;
+    Alarm_Event_Code : UDINT;
+    Alarm_Event_Value : REAL;
+    Sensor_Fault : BOOL;
+    IO_Offline : BOOL;
+    Subsystem_Degraded : BOOL;
+
+    Manifold_Pressure_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Pressure_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Pressure_Fault_Active : BOOL;
+    Manifold_Pressure_First_Fault_Index : INT;
+    Manifold_Pressure_Fault_Text : STRING(160);
+
+    Manifold_Current_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Current_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Current_Fault_Active : BOOL;
+    Manifold_Current_First_Fault_Index : INT;
+    Manifold_Current_Fault_Text : STRING(160);
+
+    Manifold_Return_Temp_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Return_Temp_Diag_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF WORD;
+    Manifold_Return_Temp_Fault_Active : BOOL;
+    Manifold_Return_Temp_First_Fault_Index : INT;
+    Manifold_Return_Temp_Fault_Text : STRING(160);
+
+    Manifold_Sensor_Fault_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    Manifold_Sensor_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    Manifold_Sensor_Out_Of_Service_Active : BOOL;
+    Manifold_Sensor_First_OOS_Index : INT;
+    Manifold_Sensor_OOS_Text : STRING(160);
+END_STRUCT
+END_TYPE

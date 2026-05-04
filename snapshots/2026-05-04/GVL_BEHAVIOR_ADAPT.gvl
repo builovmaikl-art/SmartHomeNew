@@ -1,0 +1,28 @@
+VAR_GLOBAL
+    G_Behavior_Weights : ST_Behavior_Weights := (
+        W_Comfort := 1.0,
+        W_Night := 1.0,
+        W_Preheat := 1.0,
+        W_VentBoost := 1.0,
+        W_AccessSecure := 1.0
+    );
+
+    G_Scenario_Stats : ARRAY[0..10] OF ST_Scenario_Stats;
+    G_VentBoost_Zone_Adapt : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Zone_Adapt_State;
+
+    G_Adapt_Profile : E_Adapt_Profile := ADAPT_PROFILE_BALANCED;
+
+    G_Adapt_Enabled : BOOL := TRUE;
+    G_Adapt_Learning_Rate : REAL := 0.05;
+    G_Adapt_Update_Threshold : INT := 5;
+
+    G_Adapt_Min_Confidence : REAL := 0.30;
+    G_Adapt_Default_Zone_Weight : REAL := 1.0;
+
+    G_Confidence_Learning_Rate : REAL := 0.05;
+    G_Decay_Factor : REAL := 0.995;
+
+    G_Prev_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Prev_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+END_VAR
+// >>> BULK_SYNC_ANCHOR: GVL_BEHAVIOR_ADAPT <<<

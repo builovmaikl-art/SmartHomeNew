@@ -1,0 +1,136 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Subsystem Configurations
+    G_Heating_Config : ST_Heating_Config; // Настройки системы отопления
+    G_Ventilation_Config : ST_Ventilation_Config; // Настройки системы вентиляции
+    G_DHW_Config : ST_DHW_Config; // Настройки горячего водоснабжения
+    G_Security_Config : ST_Security_Global_Config; // Настройки системы безопасности
+    G_Flood_Config : ST_Flood_Config; // Настройки системы защиты от протечек
+    
+    // HMI Configurations
+    G_HMI_FloorHeating_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config; // Конфигурации контуров теплого пола
+    G_Heating_Circuit_To_Zone : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]; // ВРЕМЕННО: circuit -> zone mapping, требует уточнения по фактической таблице помещений
+    G_Wet_Zone_Map : ARRAY[1..32] OF BOOL; // Карта мокрых зон (TRUE = мокрая зона)
+    G_HMI_Tariff_Settings : ST_Tariff_Config; // Настройки тарифов
+    G_HMI_Vent_Global_Config : ST_Ventilation_Global_Config; // Глобальные настройки вентиляции
+    G_HMI_Vent_Unit_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_VENT_UNITS] OF ST_Ventilation_Unit_Config; // Конфигурации отдельных вентустановок
+    G_HMI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config; // Конфигурации сценариев
+    G_HMI_Outdoor_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF ST_Outdoor_Zone_Config; // Конфигурации зон уличного освещения
+    G_HMI_Flood_Config : ST_Flood_Global_Config; // Глобальные настройки защиты от протечек
+    G_HMI_Gas_Config : ST_Gas_Valve_Configuration; // Конфигурация системы газового контроля
+    G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record; // Данные калибровки датчиков
+    G_HMI_User_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule; // Пользовательские правила (Rule Engine)
+
+    // Sensor calibration pipeline
+    G_Enable_Sensor_Calibration : BOOL := TRUE;
+    G_Calib_Outdoor_Temp : ST_Sensor_Calibration_Record;
+    G_Calib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
+    G_Calib_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Sensor_Calibration_Record;
+    G_Calib_Methane : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF ST_Sensor_Calibration_Record;
+    G_Calib_CO : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF ST_Sensor_Calibration_Record;
+    
+    // Конфигурация тестирования клапанов
+    G_Valve_Test_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config;
+    
+    // HMI Commands & States
+    G_HMI_Cleaning_Mode_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF BOOL; // Режим уборки активен
+    G_HMI_Cleaning_Mode_TimeLeft : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF UINT; // Оставшееся время режима уборки
+    G_HMI_Admin_2FA_Enabled : BOOL := FALSE; // Включена ли 2FA для ADMIN
+    G_HMI_Current_Operator_Factor2_Done : BOOL; // Второй фактор пройден
+    G_HMI_Current_Operator_ID : STRING(10); // ID текущего оператора
+    G_HMI_Manual_Gas_Valve_Open : BOOL; // Ручное открытие газового клапана
+    G_HMI_Manual_Gas_Valve_Time : UDINT := 5; // Время ручного открытия
+    G_HMI_Manual_Gas_Valve_TimeLeft : UDINT; // Оставшееся время ручного открытия
+    G_HMI_Apply_Settings : BOOL; // Команда: Применить настройки
+    G_HMI_Mute_Alarm : BOOL; // Команда: Временное отключение сирены
+    G_HMI_Ack_Alarms : BOOL; // Команда: Квитировать все тревоги
+    
+    // Access Control Commands
+    G_HMI_Gate_Open_Req : BOOL; // Запрос на открытие въездных ворот
+    G_HMI_Wicket_Open_Req : BOOL; // Запрос на открытие калитки
+    G_HMI_Lock_1_Open_Req : BOOL; // Разблокировка основного замка
+    G_HMI_Lock_1_Close_Req : BOOL; // Блокировка основного замка
+    G_HMI_Lock_2_Open_Req : BOOL; // Разблокировка доп. замка
+    G_HMI_Lock_2_Close_Req : BOOL; // Блокировка доп. замка
+    
+    // HMI Settings
+    G_HMI_Language : BYTE := 0; // 0=RU, 1=EN
+    G_HMI_Brightness : BYTE := 80;
+    G_HMI_Screen_Saver_Timeout : UDINT := 300; // сек
+    
+    // Сетевая безопасность
+    G_Allowed_IPs : ARRAY[1..GVL_CONSTANTS.C_MAX_ALLOWED_IPS] OF STRING(15) := ['192.168.1.100','192.168.1.101','127.0.0.1','','']; // Разрешенные IP-адреса для шлюза
+
+    G_Backup_Circulation_Pump_In_Service : BOOL := TRUE; // Резервный насос доступен для логики
+    G_Electric_Heater_In_Service : BOOL := TRUE; // Электронагреватель доступен для логики
+    G_Freeze_Hardware_Retry_Count : INT := 2; // Количество повторных попыток для anti-freeze hardware
+    G_Freeze_Hardware_Retry_Delay_MS : UDINT := 5000; // Задержка между попытками повторного пуска
+    G_Pump_Exercise_Enabled : BOOL := TRUE; // Разрешение периодической прокрутки насосов после простоя
+    G_Pump_Exercise_Interval_MS : UDINT := 604800000; // 7 суток
+    G_Pump_Exercise_Duration_MS : UDINT := 30000; // 30 сек
+    G_Manifold_Pump_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL := [TRUE, TRUE, TRUE, TRUE, TRUE];
+    G_Manifold_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT := [3, 3, 2, 2, 1]; // 3=high, 2=normal, 1=low
+    G_Manifold_Thermal_Weight : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL := [1.0, 1.0, 0.8, 0.8, 0.5];
+    G_Max_Active_Manifolds : INT := 3; // energy-management limit for simultaneous active manifolds
+    G_Max_Thermal_Budget : REAL := 6.0; // simplified manifold thermal budget units
+    G_Policy_Min_Hold_MS : UDINT := 300000; // 5 min heating policy anti-oscillation hold
+    G_DHW_Heating_Pump_In_Service : BOOL := TRUE;
+    G_DHW_Circ_Pump_In_Service : BOOL := TRUE;
+    G_Water_Valve_Exercise_Enabled : BOOL := TRUE;
+    G_Water_Valve_Exercise_Interval_MS : UDINT := 604800000;
+    G_Water_Valve_Exercise_Duration_MS : UDINT := 15000;
+    G_Water_Valve_Exercise_Window_Start : TOD := TOD#04:00;
+    G_Water_Valve_Exercise_Window_End : TOD := TOD#05:00;
+    G_Water_Valve_Close_Retry_Count : INT := 2;
+    G_Water_Valve_Close_Retry_Delay_MS : UDINT := 3000;
+    // IO Mapping
+    G_FloorTemp_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    G_RoomTemp_Map : ARRAY[1..16] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    G_Door_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8];
+    G_Window_Map : ARRAY[1..16] OF INT := [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+
+    // Evacuation config
+    C_MAX_LIGHT_ZONES : INT := 32; // fallback if not defined elsewhere
+    G_Evac_Exit_Zones : ARRAY[1..32] OF BOOL; // зоны-выходы (TRUE = выход)
+    G_Evac_Smoke_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF INT; // Привязка дымовых датчиков к зонам эвакуации
+    G_Evac_Leak_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF INT; // Привязка датчиков протечки к зонам эвакуации
+    G_Evac_Gas_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF INT; // Привязка газовых датчиков к зонам эвакуации
+    G_Evac_Zone_Names : ARRAY[1..32] OF STRING(80); // Человекочитаемые имена зон (помещения/крыло/этаж/сторона)
+
+END_VAR
+
+VAR_GLOBAL CONSTANT
+    C_MS_PER_SEC    : UDINT := GVL_CONSTANTS.C_MS_IN_SECOND; // Миллисекунд в секунду
+    C_SEC_PER_MIN   : UDINT := 60; // Секунд в минуту
+    C_MIN_PER_HOUR  : UDINT := 60; // Минут в часе
+    C_MS_PER_MIN    : UDINT := GVL_CONSTANTS.C_MS_IN_MINUTE; // Миллисекунд в минуту
+    C_MAX_RULES     : INT := 20; // Максимальное количество пользовательских правил
+    C_ZONE_COUNT    : BYTE := 18; // Общее количество зон в системе
+    
+    // Коды ошибок
+    ERR_PRESSURE_OUT_OF_RANGE : UDINT := 16#E004;
+    ERR_HIGH_DELTA_T : UDINT := 16#E005;
+    ERR_BOILER_OFFLINE : UDINT := 16#E006;
+    ERR_BOILER_GENERAL_FAULT : UDINT := 16#E007;
+    ERR_BOILER_NO_FLAME : UDINT := 16#E008;
+    ERR_PUMP_NO_CURRENT : UDINT := 16#E009;
+    ERR_PUMP_UNDERCURRENT : UDINT := 16#E00A;
+    ERR_PUMP_OVERCURRENT : UDINT := 16#E00B;
+    ERR_DELTA_T_LOW : UDINT := 16#E00C;
+    ERR_DELTA_T_HIGH : UDINT := 16#E00D;
+    ERR_DHW_IO_OFFLINE : UDINT := 16#E00E;
+    ERR_DHW_TEMP_SENSOR_FAULT : UDINT := 16#E00F;
+    ERR_DHW_PRESSURE_OUT_OF_RANGE : UDINT := 16#E010;
+    ERR_DHW_PRESSURE_SENSOR_FAULT : UDINT := 16#E011;
+    ERR_BACKUP_PUMP_OUT_OF_SERVICE : UDINT := 16#E012;
+    ERR_ELECTRIC_HEATER_OUT_OF_SERVICE : UDINT := 16#E013;
+    ERR_MANIFOLD_PUMP_OUT_OF_SERVICE : UDINT := 16#E014;
+    ERR_DHW_HEATING_PUMP_OUT_OF_SERVICE : UDINT := 16#E015;
+    ERR_DHW_CIRC_PUMP_OUT_OF_SERVICE : UDINT := 16#E016;
+    ERR_FREEZE_HARDWARE_FAILED : UDINT := 16#E017;
+END_VAR

@@ -1,0 +1,8 @@
+TYPE E_Behavior_Mode :
+(
+    BEHAVIOR_HOME := 0,
+    BEHAVIOR_AWAY := 1,
+    BEHAVIOR_NIGHT := 2,
+    BEHAVIOR_MAINTENANCE := 3
+);
+END_TYPE
