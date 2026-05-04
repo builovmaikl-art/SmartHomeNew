@@ -16,7 +16,6 @@ END_VAR
 
 IF NOT GVL_BEHAVIOR_ADAPT.G_Adapt_Enabled THEN RETURN; END_IF;
 
-// GLOBAL STATS
 L_Stats := GVL_BEHAVIOR_ADAPT.G_Scenario_Stats[iScenario];
 L_Stats.Activations := L_Stats.Activations + 1;
 
@@ -27,10 +26,9 @@ ELSE
 END_IF;
 
 IF L_Stats.Activations > 0 THEN
-    L_Stats.Success_Rate := REAL(L_Stats.Success_Count) / REAL(L_Stats.Activations);
+    L_Stats.Success_Rate := INT_TO_REAL(L_Stats.Success_Count) / INT_TO_REAL(L_Stats.Activations);
 END_IF;
 
-// ZONE ADAPT WITH DECAY
 IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_CONSTANTS.C_MAX_ZONES) THEN
 
     L_Zone := GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[iZone];
@@ -39,12 +37,10 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
         L_Zone.Zone_Weight := GVL_BEHAVIOR_ADAPT.G_Adapt_Default_Zone_Weight;
     END_IF;
 
-    // DECAY
     L_Decay := GVL_BEHAVIOR_ADAPT.G_Decay_Factor;
     L_Zone.Zone_Weight := L_Zone.Zone_Weight * L_Decay;
     L_Zone.Confidence := L_Zone.Confidence * L_Decay;
 
-    // STATS
     L_Zone.Activations := L_Zone.Activations + 1;
 
     IF iSuccess THEN
@@ -54,16 +50,14 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
     END_IF;
 
     IF L_Zone.Activations > 0 THEN
-        L_Zone.Success_Rate := REAL(L_Zone.Success_Count) / REAL(L_Zone.Activations);
+        L_Zone.Success_Rate := INT_TO_REAL(L_Zone.Success_Count) / INT_TO_REAL(L_Zone.Activations);
     END_IF;
 
-    // CONFIDENCE LEARNING
     IF iConfidence >= GVL_BEHAVIOR_ADAPT.G_Adapt_Min_Confidence THEN
         L_Zone.Confidence := L_Zone.Confidence +
             (iConfidence - L_Zone.Confidence) * GVL_BEHAVIOR_ADAPT.G_Confidence_Learning_Rate;
     END_IF;
 
-    // UPDATE
     IF (L_Zone.Activations MOD GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold) = 0 THEN
 
         L_Adjustment :=
