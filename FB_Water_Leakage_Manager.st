@@ -11,8 +11,6 @@ END_VAR
 
 VAR_OUTPUT
     VO_Status_Msg     : STRING(200);
-
-    // Health signals
     VO_Leak_Detected      : BOOL;
     VO_Leak_Warning_Level : BOOL;
 END_VAR
@@ -22,8 +20,6 @@ VAR
     L_Sensor_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF FB_System_Timer;
     L_Any_Leak      : BOOL;
     L_Any_Warning   : BOOL;
-
-    fbLeakLatch : RS;
 END_VAR
 
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
@@ -47,16 +43,15 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     END_IF;
 END_FOR;
 
-// Latch аварии
-fbLeakLatch(
-    S := L_Any_Leak,
-    R1 := GVL_INTENT_USER.I_Reset_Errors,
-    Q => VO_Leak_Detected
-);
+// Manual latch instead of RS
+IF GVL_INTENT_USER.I_Reset_Errors THEN
+    VO_Leak_Detected := FALSE;
+ELSIF L_Any_Leak THEN
+    VO_Leak_Detected := TRUE;
+END_IF;
 
 VO_Leak_Warning_Level := L_Any_Warning;
 
-// Status
 IF VO_Leak_Detected THEN
     VO_Status_Msg := 'АВАРИЯ: ПРОТЕЧКА ВОДЫ.';
 ELSIF L_Any_Warning THEN
