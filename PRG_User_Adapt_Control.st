@@ -51,3 +51,4 @@ IF GVL_INTENT_USER.I_Set_Adapt_Profile_Req THEN
     GVL_INTENT_USER.I_Set_Adapt_Profile_Confirm := FALSE;
 
 END_IF;
+END_PROGRAM

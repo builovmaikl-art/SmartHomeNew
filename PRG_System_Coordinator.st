@@ -19,3 +19,4 @@ GVL_SYSTEM_COORDINATION.G_Block_Sockets_Override := fbCoord.VO_Block_Sockets;
 
 GVL_SYSTEM_COORDINATION.G_System_Degraded := fbCoord.VO_System_Degraded;
 GVL_SYSTEM_COORDINATION.G_Coordination_Code := fbCoord.VO_Code;
+END_PROGRAM

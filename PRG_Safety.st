@@ -101,3 +101,4 @@ IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Safety <<<
+END_PROGRAM

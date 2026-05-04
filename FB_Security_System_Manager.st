@@ -167,3 +167,4 @@ ELSE
     L_Alarm_Delay_Timer(IN := FALSE, PT := T#0s, VI_System_Time_MS := VI_System_Time_MS); // Сброс таймера при снятии с охраны
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Security_System_Manager <<<
+END_FUNCTION_BLOCK

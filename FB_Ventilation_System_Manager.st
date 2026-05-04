@@ -222,3 +222,4 @@ ELSE
     VO_Status_Msg := 'Вентиляция работает в штатном режиме';
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Ventilation_System_Manager <<<
+END_FUNCTION_BLOCK

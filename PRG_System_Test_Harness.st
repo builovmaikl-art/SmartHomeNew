@@ -198,3 +198,4 @@ IF NOT GVL_TEST.G_Test_Passed THEN
         VI_System_Time := GVL_STATUS.G_System_Time_MS
     );
 END_IF;
+END_PROGRAM

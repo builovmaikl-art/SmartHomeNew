@@ -36,3 +36,4 @@ VO_Alive := NOT VO_Watchdog_Fault;
 // Store current timestamp for next cycle
 L_Last_Call_MS := VI_System_Time_MS;
 // >>> BULK_SYNC_ANCHOR: FB_Watchdog <<<
+END_FUNCTION_BLOCK

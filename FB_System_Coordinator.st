@@ -92,4 +92,7 @@ CASE VI_Behavior_Mode OF
         IF VO_Code = 0 THEN
             VO_Code := 800;
         END_IF;
+ELSE
+        // No fallback required
 END_CASE;
+END_FUNCTION_BLOCK

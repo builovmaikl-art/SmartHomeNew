@@ -140,3 +140,4 @@ IF VO_State.Is_Locked THEN
         VO_State.Is_Locked := FALSE;
     END_IF;
 END_IF;
+END_FUNCTION_BLOCK

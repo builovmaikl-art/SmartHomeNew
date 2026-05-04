@@ -65,3 +65,4 @@ fbVentProjection(
 );
 
 // >>> BULK_SYNC_ANCHOR: PRG_Ventilation <<<
+END_PROGRAM

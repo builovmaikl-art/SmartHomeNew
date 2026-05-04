@@ -21,3 +21,4 @@ ELSE
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_PLC_Arbitration <<<
+END_PROGRAM

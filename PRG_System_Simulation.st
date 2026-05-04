@@ -83,6 +83,8 @@ CASE GVL_SIMULATION.G_Test_Scenario_ID OF
         GVL_SIMULATION.G_Sim_Predictive_Pump_Fault := TRUE;
         GVL_SIMULATION.G_Test_Expected_Result_Code := 4;
 
+ELSE
+        // No fallback required
 END_CASE;
 
 // Auto stop by time

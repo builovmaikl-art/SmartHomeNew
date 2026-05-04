@@ -23,3 +23,4 @@ ELSIF NOT VI_Apply THEN
     VO_Done := FALSE;
     L_Applied := FALSE;
 END_IF;
+END_FUNCTION_BLOCK

@@ -31,6 +31,8 @@ CASE VI_System_Mode OF
     E_System_Operating_Mode.MODE_DEGRADED:
         VO_Status_Msg := 'Смена сценариев заблокирована: деградированный режим';
         RETURN;
+ELSE
+        // No fallback required
 END_CASE;
 
 IF VI_Activate_Request <> VO_Current_Scenario THEN
@@ -49,7 +51,9 @@ IF VI_Activate_Request <> VO_Current_Scenario THEN
             VO_Status_Msg := 'Активирован сценарий: Сон (Ночное освещение + Климат)';
         E_SCENARIO_TYPE.SCENARIO_PRESENCE:
             VO_Status_Msg := 'Активирован сценарий: Имитация присутствия';
-        END_CASE;
+        ELSE
+        // No fallback required
+END_CASE;
     END_IF;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Scenario_Manager <<<
@@ -59,3 +63,4 @@ END_IF;
 IF VI_Preheat_Request THEN
     // removed: direct heating write (moved to Heating Manager)
 END_IF;
+END_FUNCTION_BLOCK

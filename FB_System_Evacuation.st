@@ -48,3 +48,4 @@ ELSE
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Evacuation <<<
+END_FUNCTION_BLOCK

@@ -16,3 +16,4 @@ GVL_HEATING_POLICY.G_Zone_Empty_Duration_MS := fbPolicy.VO_Zone_Empty_Duration_M
 GVL_HEATING_POLICY.G_Zone_Policy_Class := fbPolicy.VO_Zone_Policy_Class;
 GVL_HEATING_POLICY.G_Zone_Target_Adjustment := fbPolicy.VO_Zone_Target_Adjustment;
 GVL_HEATING_POLICY.G_Zone_Priority_Bias := fbPolicy.VO_Zone_Priority_Bias;
+END_PROGRAM

@@ -32,3 +32,4 @@ GVL_STATUS.G_Last_System_Time_MS := GVL_STATUS.G_System_Time_MS;
 GVL_STATUS.G_Current_TOD := UDINT_TO_TOD(GVL_STATUS.G_Time_Of_Day_MS);
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Timebase <<<
+END_FUNCTION_BLOCK

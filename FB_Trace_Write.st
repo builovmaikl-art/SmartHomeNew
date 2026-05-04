@@ -28,3 +28,4 @@ L_Index := L_Index + 1;
 IF L_Index > 200 THEN L_Index := 1; END_IF;
 
 GVL_TRACE.G_Trace_Write_Index := L_Index;
+END_FUNCTION_BLOCK

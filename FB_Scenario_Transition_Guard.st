@@ -60,3 +60,4 @@ END_IF;
 // default: allow
 RETURN;
 // >>> BULK_SYNC_ANCHOR: FB_Scenario_Transition_Guard <<<
+END_FUNCTION_BLOCK

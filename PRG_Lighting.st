@@ -93,3 +93,4 @@ IF GVL_STATE.G_Evacuation_Lighting_Active THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Lighting <<<
+END_PROGRAM

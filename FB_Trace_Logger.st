@@ -11,3 +11,4 @@ END_IF;
 
 GVL_TRACE.G_Trace_Time[GVL_TRACE.G_Trace_Index] := VI_System_Time;
 GVL_TRACE.G_Trace_Code[GVL_TRACE.G_Trace_Index] := VI_Event_Code;
+END_FUNCTION_BLOCK

@@ -76,3 +76,4 @@ GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req;
 GVL_INTENT_USER.I_New_Time_MS := fbGateway.VO_New_Time_MS;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Gateway_Intent <<<
+END_FUNCTION_BLOCK

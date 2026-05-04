@@ -153,3 +153,4 @@ VO_Watchdog_Fault := fbWatchdog.VO_Watchdog_Fault;
 GVL_STATUS.G_System_Mode_Msg := fbStateManager.VO_Status_Msg;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Health_Orchestrator <<<
+END_FUNCTION_BLOCK

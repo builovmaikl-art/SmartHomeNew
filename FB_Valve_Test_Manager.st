@@ -96,4 +96,7 @@ CASE L_State OF
             L_Last_Test_Time[L_Current_Valve] := VI_System_Time_MS;
             L_State := 0;
         END_IF;
+ELSE
+        // No fallback required
 END_CASE;
+END_FUNCTION_BLOCK

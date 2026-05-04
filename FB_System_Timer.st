@@ -42,3 +42,4 @@ ELSE
     Q := FALSE;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_System_Timer <<<
+END_FUNCTION_BLOCK

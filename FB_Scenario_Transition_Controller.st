@@ -25,3 +25,4 @@ ELSE
     VO_Current_Value := VI_Start_Value + (VI_End_Value - VI_Start_Value) * L_Progress;
     VO_Transition_Done := FALSE;
 END_IF;
+END_FUNCTION_BLOCK

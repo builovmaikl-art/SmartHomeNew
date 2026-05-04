@@ -19,11 +19,11 @@ fbSafetyWorkflow(
 
 // propagate test timeout safety actions
 IF fbSafetyWorkflow.VO_Water_Test_Timeout_Close_Required THEN
-    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close := TRUE;
 END_IF;
 
 IF fbSafetyWorkflow.VO_Gas_Test_Timeout_Close_Required THEN
-    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Test_Timeout_Gas_Close := TRUE;
 END_IF;
 
 // move recovery manual confirm here
@@ -32,3 +32,4 @@ IF GVL_INTENT_USER.I_Reset_Errors THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Safety_Operator <<<
+END_PROGRAM

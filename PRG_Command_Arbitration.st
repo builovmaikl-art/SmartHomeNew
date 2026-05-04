@@ -82,6 +82,9 @@ L_Safety_Active := FALSE;
 
 CASE L_Mode OF
 
+    NORMAL:
+        L_Safety_Active := FALSE;
+
     FIRE:
         L_Safety_Active := TRUE;
         L_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Heating;
@@ -224,3 +227,4 @@ GVL_COMMAND_SHADOW.G_Gate_Open := L_Gate_Open;
 GVL_COMMAND_SHADOW.G_Wicket_Open := L_Wicket_Open;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Command_Arbitration <<<
+END_PROGRAM

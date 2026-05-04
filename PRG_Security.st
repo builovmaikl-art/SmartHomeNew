@@ -59,3 +59,4 @@ fbAccessControl(
     VO_Lock_2_Open => GVL_INTENT_USER.I_Lock_2_Open_Request,
     VO_Lock_2_Close => GVL_INTENT_USER.I_Lock_2_Close_Request
 );
+END_PROGRAM
