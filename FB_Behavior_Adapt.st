@@ -29,7 +29,7 @@ ELSE
 END_IF;
 
 IF L_Stats.Activations > 0 THEN
-    L_Stats.Success_Rate := INT_TO_REAL(L_Stats.Success_Count) / INT_TO_REAL(L_Stats.Activations);
+    L_Stats.Success_Rate := UDINT_TO_REAL(L_Stats.Success_Count) / UDINT_TO_REAL(L_Stats.Activations);
 END_IF;
 
 IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_CONSTANTS.C_MAX_ZONES) THEN
@@ -53,7 +53,7 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
     END_IF;
 
     IF L_Zone.Activations > 0 THEN
-        L_Zone.Success_Rate := INT_TO_REAL(L_Zone.Success_Count) / INT_TO_REAL(L_Zone.Activations);
+        L_Zone.Success_Rate := UDINT_TO_REAL(L_Zone.Success_Count) / UDINT_TO_REAL(L_Zone.Activations);
     END_IF;
 
     IF iConfidence >= GVL_BEHAVIOR_ADAPT.G_Adapt_Min_Confidence THEN
@@ -61,7 +61,8 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
             (iConfidence - L_Zone.Confidence) * GVL_BEHAVIOR_ADAPT.G_Confidence_Learning_Rate;
     END_IF;
 
-    IF (UDINT_TO_INT(L_Zone.Activations) MOD GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold) = 0 THEN
+    IF (GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold > 0) AND
+       ((L_Zone.Activations MOD INT_TO_UDINT(GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold)) = 0) THEN
 
         L_Adjustment :=
             (L_Zone.Success_Rate - 0.5)
