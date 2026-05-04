@@ -1,0 +1,9 @@
+{attribute 'strict'}
+TYPE E_Trace_Layer :
+(
+    TRACE_SYSTEM := 0,
+    TRACE_SAFETY := 1,
+    TRACE_HEATING := 2,
+    TRACE_IO := 3
+) USINT;
+END_TYPE
