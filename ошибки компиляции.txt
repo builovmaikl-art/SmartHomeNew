@@ -1,6 +1,124 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-                генерировать код...
-[ERROR]         Без имени4: PRG_Test_Scenario_Runner(Строка 68, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Rule_Condition_Type.COND_TRUE'' в тип 'E_RULE_CONDITION_TYPE'
-[ERROR]         Без имени4: PRG_Test_Scenario_Runner(Строка 68, Столбец 1 (Реализ.)): C0004:  'COND_TRUE' не является компонентом 'E_Rule_Condition_Type'
-                Компиляция завершена -- 2 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени4: FB_Trace_Write(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_Trace_Layer'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 4 (Объявл.)): C0077:  Неизвестный тип: 'E_Trace_Source'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'ST_Scenario_Stats'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 11 (Объявл.)): C0077:  Неизвестный тип: 'ST_Zone_Adapt_State'
+[ERROR]         Без имени4: GVL_INTENT_USER(Строка 42): C0077:  Неизвестный тип: 'E_Adapt_Profile'
+[ERROR]         Без имени4: GVL_INTENT_USER(Строка 42): C0046:  Идентификатор 'ADAPT_PROFILE_BALANCED' не задан
+[ERROR]         Без имени4: GVL_INTENT_USER(Строка 42): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ADAPT_PROFILE_BALANCED'' в тип 'E_Adapt_Profile'
+[ERROR]         Без имени4: GVL_SAFETY_SHUTDOWN(Строка 2): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_SAFETY_SHUTDOWN(Строка 2): C0046:  Идентификатор 'NORMAL' не задан
+[ERROR]         Без имени4: GVL_SAFETY_SHUTDOWN(Строка 2): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'NORMAL'' в тип 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_SAFETY_RECOVERY(Строка 2): C0077:  Неизвестный тип: 'E_Recovery_Phase'
+[ERROR]         Без имени4: GVL_SAFETY_RECOVERY(Строка 2): C0046:  Идентификатор 'IDLE' не задан
+[ERROR]         Без имени4: GVL_SAFETY_RECOVERY(Строка 2): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'IDLE'' в тип 'E_Recovery_Phase'
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 2): C0006:  '..' требуется вместо ']'
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 3): C0006:  '] или ,' требуется вместо ':'
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 4): C0006:  'OF' требуется вместо 'G_Adapt_Profile'
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 2): C0006:  ';, :=, REF=, ( или [' требуется вместо ':'
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 2): C0161:  Граница 'E_System_Reason_Code' массива не является постоянным значением
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 3): C0161:  Граница 'G_VentBoost_Zone_Adapt' массива не является постоянным значением
+[ERROR]         Без имени4: GVL_BEHAVIOR_ADAPT(Строка 2): C0077:  Неизвестный тип: 'G_Adapt_Enabled'
+[ERROR]         Без имени4: GVL_TRACE(Строка 2): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 3): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 5): C0077:  Неизвестный тип: 'E_Recovery_Phase'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 43): C0077:  Неизвестный тип: 'E_Adapt_Profile'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 47): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 3): C0046:  Идентификатор 'NORMAL' не задан
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 3): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'NORMAL'' в тип 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 5): C0046:  Идентификатор 'IDLE' не задан
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 5): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'IDLE'' в тип 'E_Recovery_Phase'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 43): C0046:  Идентификатор 'ADAPT_PROFILE_BALANCED' не задан
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 43): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'ADAPT_PROFILE_BALANCED'' в тип 'E_Adapt_Profile'
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 47): C0046:  Идентификатор 'REASON_NONE' не задан
+[ERROR]         Без имени4: GVL_DEBUG_VIEW(Строка 47): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_NONE'' в тип 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 24): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 26): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 24): C0046:  Идентификатор 'REASON_NONE' не задан
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 24): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_NONE'' в тип 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 26): C0046:  Идентификатор 'REASON_NONE' не задан
+[ERROR]         Без имени4: GVL_INTENT_BEHAVIOR(Строка 26): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_NONE'' в тип 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 2): C0077:  Неизвестный тип: 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 4): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 5): C0077:  Неизвестный тип: 'E_Recovery_Phase'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 2): C0046:  Идентификатор 'REASON_NONE' не задан
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 2): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_NONE'' в тип 'E_System_Reason_Code'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 4): C0046:  Идентификатор 'NORMAL' не задан
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 4): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'NORMAL'' в тип 'E_Safety_Mode'
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 5): C0046:  Идентификатор 'IDLE' не задан
+[ERROR]         Без имени4: GVL_EXPLAINABILITY(Строка 5): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'IDLE'' в тип 'E_Recovery_Phase'
+[ERROR]         Без имени4: PRG_System_Init(Строка 5, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_CONFIG.G_Active_Zones_Count'
+[ERROR]         Без имени4: PRG_System_Init(Строка 14, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_CONFIG.G_Zone_Has_Temp_Sensor[L_i]'
+[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 4, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> NORMAL)'
+[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 4, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'NORMAL'
+[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 23, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ADAPT_PROFILE_STABLE'
+[ERROR]         Без имени4: PRG_User_Adapt_Control(Строка 25, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ADAPT_PROFILE_BALANCED'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 5, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 6, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 7, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 8, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 9, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 10, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Trace_Write(Строка 11, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'S'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0007:  Вместо 'S' требуется выражение
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ 'S'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ':='
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ':='
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'L_Any_Leak'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ','
+[WARNING]       Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0139:  Код 'L_Any_Leak; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 24, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ','
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 25, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'R1'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 25, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ','
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 25, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ','
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'Q'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо '=>'
+[WARNING]       Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0139:  Код 'Q; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ '=>'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'VO_Leak_Detected'
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 27, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[WARNING]       Без имени4: FB_Water_Leakage_Manager(Строка 26, Столбец 1 (Реализ.)): C0139:  Код 'VO_Leak_Detected; ' не имеет действия. Это сделано намеренно?
+[ERROR]         Без имени4: FB_Water_Leakage_Manager(Строка 27, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+[ERROR]         Без имени4: PRG_Safety_Shutdown(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: PRG_Safety_Shutdown(Строка 3 (Объявл.)): C0046:  Идентификатор 'NORMAL' не задан
+[ERROR]         Без имени4: PRG_Safety_Shutdown(Строка 3 (Объявл.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'NORMAL'' в тип 'E_Safety_Mode'
+[ERROR]         Без имени4: PRG_Safety_Shutdown(Строка 23, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'NORMAL'
+[ERROR]         Без имени4: PRG_Safety_Recovery(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_Recovery_Phase'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 14, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 14, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 41, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: FB_Behavior_Adapt(Строка 41, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: PRG_System_Diagnostics_Ext(Строка 8, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'REAL'
+[ERROR]         Без имени4: PRG_System_Diagnostics_Ext(Строка 8, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 9, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Comfort'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 17, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Night'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 22, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 32, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt[L_i].Zone_Weight'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost) * L_ZoneWeight)'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost)'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure'
+[ERROR]         Без имени4: PRG_Command_Arbitration(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: PRG_Command_Arbitration(Строка 173, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(L_Mode = FIRE)'
+[ERROR]         Без имени4: PRG_Command_Arbitration(Строка 173, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'FIRE'
+[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i]) AND (GVL_STATE.G_Room_Temps[L_i] > -50))'
+[ERROR]         Без имени4: PRG_Heating(Строка 8, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Room_Temps[L_i])'
+[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i]) AND (GVL_STATE.G_Floor_Temps[L_i] > -50))'
+[ERROR]         Без имени4: PRG_Heating(Строка 16, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Floor_Temps[L_i])'
+[ERROR]         Без имени4: PRG_Heating(Строка 24, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'IS_REAL_VALID(GVL_STATE.G_Manifold_Pressures[L_i])'
+[ERROR]         Без имени4: PRG_Explainability(Строка 3 (Объявл.)): C0077:  Неизвестный тип: 'E_Safety_Mode'
+[ERROR]         Без имени4: PRG_Explainability(Строка 4 (Объявл.)): C0077:  Неизвестный тип: 'E_Recovery_Phase'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 4, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'NORMAL'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 47, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Adapt_Profile'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 47, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ADAPT_PROFILE_STABLE'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 49, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Adapt_Profile'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 49, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ADAPT_PROFILE_BALANCED'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 81, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 82, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+[ERROR]         Без имени4: PRG_Debug_View(Строка 83, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'ST_Trace_Entry'
+                Компиляция завершена -- 117 ошибок, 3 предупреждений
+                Компиляция завершена -- 117 ошибок, 3 предупреждений : загрузка невозможна
