@@ -1,6 +1,5 @@
 PROGRAM PRG_Policy
-VAR
-END_VAR
+
 
 // ============================================================
 // SCENARIO POLICY OWNER
@@ -84,3 +83,4 @@ END_IF;
 GVL_STATE.G_Preheat_Request := GVL_POLICY.G_Rule_Preheat_Request;
 GVL_STATE.G_Freeze_Request :=
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+END_PROGRAM

@@ -66,3 +66,4 @@ END_FOR;
 
 // rest unchanged
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
+END_PROGRAM

@@ -14,3 +14,4 @@ GVL_EVENT.G_Event_Log[GVL_EVENT.G_Event_Head].Param2 := VI_Param2;
 
 GVL_EVENT.G_Event_ID_Counter := GVL_EVENT.G_Event_ID_Counter + 1;
 GVL_EVENT.G_Event_Head := (GVL_EVENT.G_Event_Head + 1) MOD 64;
+END_FUNCTION_BLOCK

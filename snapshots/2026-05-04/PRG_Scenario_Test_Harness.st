@@ -443,3 +443,4 @@ GVL_TEST_PANEL_DEBUG.G_Input_Max_Thermal_Budget := GVL_TEST_PANEL.G_Input_Max_Th
 GVL_TEST_PANEL_DEBUG.G_Input_Block_Heating := GVL_TEST_PANEL.G_Input_Block_Heating;
 GVL_TEST_PANEL_DEBUG.G_Input_Safety_Stop := GVL_TEST_PANEL.G_Input_Safety_Stop;
 // === END DEBUG_MIRROR ===
+END_PROGRAM

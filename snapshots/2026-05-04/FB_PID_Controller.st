@@ -91,3 +91,4 @@ VO_Limiting := (L_Output_Raw > VI_Y_Max) OR (L_Output_Raw < VI_Y_Min);
 L_Prev_Error := VO_Error;
 
 // >>> BULK_SYNC_ANCHOR: FB_PID_Controller <<<
+END_FUNCTION_BLOCK

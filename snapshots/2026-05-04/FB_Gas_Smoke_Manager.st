@@ -116,3 +116,4 @@ ELSE
     VO_Status_Msg := 'ОК';
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Gas_Smoke_Manager <<<
+END_FUNCTION_BLOCK

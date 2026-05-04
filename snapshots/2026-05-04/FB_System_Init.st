@@ -38,3 +38,4 @@ IF NOT GVL_Retain.G_Initialized THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Init <<<
+END_FUNCTION_BLOCK

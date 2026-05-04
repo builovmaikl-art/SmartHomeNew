@@ -17,3 +17,4 @@ ELSE
 END_IF;
 
 VO_Maintenance_Req := (VO_Remaining_Percent < 10);
+END_FUNCTION_BLOCK

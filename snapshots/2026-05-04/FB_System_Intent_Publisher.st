@@ -23,3 +23,4 @@ GVL_INTENT_SYSTEM.I_Gateway_Writes_Allowed := VI_Gateway_Writes_Allowed;
 GVL_INTENT_SYSTEM.I_Scenario_Request_Allowed := (GVL_STATE.G_System_Mode <> E_System_Operating_Mode.MODE_SAFE_STOP);
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Intent_Publisher <<<
+END_FUNCTION_BLOCK

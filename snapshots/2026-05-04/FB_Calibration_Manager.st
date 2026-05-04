@@ -43,3 +43,4 @@ IF L_Verification_Timer.Q THEN
     
     VO_Verification_Failed := (VO_Deviation_Percent > 5.0);
 END_IF;
+END_FUNCTION_BLOCK

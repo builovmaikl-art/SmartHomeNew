@@ -21,3 +21,4 @@ IF NOT VIO_Recovery_Done THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Recovery <<<
+END_FUNCTION_BLOCK

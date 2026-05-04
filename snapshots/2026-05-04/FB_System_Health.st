@@ -234,3 +234,4 @@ ELSIF L_Subsystem_Fault_Stable THEN
     VO_First_Fault_Type := 4;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_System_Health <<<
+END_FUNCTION_BLOCK

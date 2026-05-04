@@ -59,3 +59,4 @@ ELSE
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Safety_Gate <<<
+END_FUNCTION_BLOCK

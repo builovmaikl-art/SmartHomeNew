@@ -49,3 +49,4 @@ IF VI_max > VI_min THEN
     ELSE
         Random_Int_Range := VI_min;
     END_IF;
+END_FUNCTION_BLOCK

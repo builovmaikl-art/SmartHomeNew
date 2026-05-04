@@ -7,3 +7,4 @@ VAR_OUTPUT
 END_VAR
 
 VO_Smoke_Detected := VI_Smoke_Signal;
+END_FUNCTION_BLOCK

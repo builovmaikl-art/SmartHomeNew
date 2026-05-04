@@ -12,9 +12,9 @@ ELSE
 
     IF GVL_INTENT_SAFETY.I_Fire_Alarm_Active THEN
         L_Mode := FIRE;
-    ELSIF GVL_INTENT_SAFETY.I_Gas_Close_Required THEN
+    ELSIF GVL_INTENT_SAFETY.I_Gas_Close_Required OR GVL_INTENT_SAFETY.I_Test_Timeout_Gas_Close THEN
         L_Mode := GAS;
-    ELSIF GVL_INTENT_SAFETY.I_Water_Main_Close_Required THEN
+    ELSIF GVL_INTENT_SAFETY.I_Water_Main_Close_Required OR GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close THEN
         L_Mode := WATER_LEAK;
     ELSIF GVL_INTENT_SAFETY.I_System_Safe_Stop_Required THEN
         L_Mode := GLOBAL_STOP;
@@ -28,3 +28,4 @@ GVL_SAFETY_SHUTDOWN.G_Safety_Mode := L_Mode;
 GVL_SAFETY_SHUTDOWN.G_Safety_Active := (L_Mode <> NORMAL);
 
 // >>> BULK_SYNC_ANCHOR: PRG_Safety_Shutdown <<<
+END_PROGRAM

@@ -153,3 +153,4 @@ fbScenarioManager(
 );
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Scenario_Arbitration <<<
+END_FUNCTION_BLOCK

@@ -18,3 +18,4 @@ IF L_Last_Mode <> fbMode.VO_Mode THEN
     GVL_MODE.G_Mode_Last_Change_TS := GVL_STATUS.G_System_Time_MS;
     L_Last_Mode := fbMode.VO_Mode;
 END_IF;
+END_PROGRAM

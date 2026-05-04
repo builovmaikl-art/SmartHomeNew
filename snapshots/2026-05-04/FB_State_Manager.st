@@ -82,3 +82,4 @@ CASE VI_System_Severity OF
         END_CASE;
 END_CASE;
 // >>> BULK_SYNC_ANCHOR: FB_State_Manager <<<
+END_FUNCTION_BLOCK

@@ -1,6 +1,5 @@
 PROGRAM MAIN
-VAR
-END_VAR
+
 
 PRG_Time_Service();
 PRG_System_Init();
@@ -48,3 +47,4 @@ PRG_Explainability();
 PRG_HMI_Dashboard();
 PRG_Debug_View();
 PRG_IO_Write();
+END_PROGRAM

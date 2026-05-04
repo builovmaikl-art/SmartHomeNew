@@ -6,3 +6,4 @@ END_VAR
 // Вызов основной программы
 PRG_System();
 // >>> BULK_SYNC_ANCHOR: PRG_PLC_B <<<
+END_PROGRAM

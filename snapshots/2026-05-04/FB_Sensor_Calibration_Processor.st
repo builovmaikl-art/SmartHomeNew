@@ -8,3 +8,4 @@ VAR_OUTPUT
 END_VAR
 
 VO_Calibrated_Value := (VI_Raw_Value * VI_Record.multiplier) + VI_Record.offset;
+END_FUNCTION_BLOCK

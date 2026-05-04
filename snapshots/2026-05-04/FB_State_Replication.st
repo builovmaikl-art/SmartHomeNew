@@ -54,3 +54,4 @@ ELSIF NOT (VI_Sync_Req OR L_Periodic_Sync_Req) THEN
     VO_State_Updated := FALSE;
     VO_Synced_State := VI_Local_State;
 END_IF;
+END_FUNCTION_BLOCK

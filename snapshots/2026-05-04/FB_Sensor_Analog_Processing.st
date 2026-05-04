@@ -121,3 +121,4 @@ ELSIF L_DT >= (VI_Filter_Time_MS / 10) THEN // Обновляем 10 раз за
 END_IF;
 
 VO_Value := L_Filtered;
+END_FUNCTION_BLOCK

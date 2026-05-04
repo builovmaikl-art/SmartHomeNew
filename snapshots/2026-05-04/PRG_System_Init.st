@@ -33,3 +33,4 @@ END_FOR;
 L_Init_Done := TRUE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_System_Init <<<
+END_PROGRAM

@@ -67,3 +67,4 @@ VO_State_Updated := L_State_Replicator.VO_State_Updated;
 
 L_Prev_Role := VO_Local_Role;
 // >>> BULK_SYNC_ANCHOR: FB_Redundancy_Manager <<<
+END_FUNCTION_BLOCK

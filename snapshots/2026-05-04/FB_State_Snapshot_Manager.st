@@ -26,3 +26,4 @@ IF VI_Trigger_Event THEN
 ELSE
     VO_Snapshot_Saved := FALSE;
 END_IF;
+END_FUNCTION_BLOCK

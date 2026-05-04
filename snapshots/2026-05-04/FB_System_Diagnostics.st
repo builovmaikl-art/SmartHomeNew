@@ -28,3 +28,4 @@ GVL_STATUS.G_Diagnostics.Subsystem_Degraded :=
     GVL_STATUS.G_Diagnostics.Manifold_Return_Temp_Fault_Active;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Diagnostics <<<
+END_FUNCTION_BLOCK

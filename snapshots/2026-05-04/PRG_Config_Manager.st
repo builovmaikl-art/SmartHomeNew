@@ -59,3 +59,4 @@ GVL_CONFIG_VALIDATION.G_Config_Valid := NOT L_Error;
 GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Config_Manager <<<
+END_PROGRAM

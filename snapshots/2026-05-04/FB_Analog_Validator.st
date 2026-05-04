@@ -29,3 +29,4 @@ ELSE
     END_IF;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Analog_Validator <<<
+END_FUNCTION_BLOCK

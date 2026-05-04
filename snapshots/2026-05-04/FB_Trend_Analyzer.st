@@ -35,3 +35,4 @@ IF VI_Count > 0 AND VI_Count <= GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS THEN
         VO_Trend_Down := (VI_Data[VI_Count] < VI_Data[1]);
     END_IF;
 END_IF;
+END_FUNCTION_BLOCK

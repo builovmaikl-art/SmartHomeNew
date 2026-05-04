@@ -17,3 +17,4 @@ IF L_Latched_Failure THEN
     GVL_COMMAND.G_Close_Valve_35 := TRUE;
     GVL_COMMAND.G_Close_Valve_36 := TRUE;
 END_IF;
+END_FUNCTION_BLOCK

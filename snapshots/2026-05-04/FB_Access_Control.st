@@ -119,3 +119,4 @@ IF L_Auto_Lock_Req THEN
     L_Auto_Lock_Req := FALSE;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Access_Control <<<
+END_FUNCTION_BLOCK

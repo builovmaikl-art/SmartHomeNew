@@ -174,3 +174,4 @@ fbTrace(
 );
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write <<<
+END_PROGRAM

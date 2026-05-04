@@ -22,3 +22,4 @@ L_Prev_Write_Event := VI_Write_Event;
 
 VO_Total_Events := GVL_Retain.G_History_Total_Events;
 // >>> BULK_SYNC_ANCHOR: FB_History_Manager <<<
+END_FUNCTION_BLOCK

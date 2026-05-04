@@ -56,3 +56,4 @@ IF fbRedundancy.VO_State_Updated THEN
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Redundancy_Orchestrator <<<
+END_FUNCTION_BLOCK

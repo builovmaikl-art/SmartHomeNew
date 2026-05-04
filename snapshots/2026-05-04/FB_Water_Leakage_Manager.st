@@ -60,3 +60,4 @@ ELSE
     VO_Status_Msg := 'Система контроля протечек в норме';
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_Water_Leakage_Manager <<<
+END_FUNCTION_BLOCK

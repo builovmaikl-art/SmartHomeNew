@@ -120,3 +120,4 @@ Hash[4] := TO_BYTE(SHR(H1, 24)); Hash[5] := TO_BYTE(SHR(H1, 16)); Hash[6] := TO_
 Hash[8] := TO_BYTE(SHR(H2, 24)); Hash[9] := TO_BYTE(SHR(H2, 16)); Hash[10] := TO_BYTE(SHR(H2, 8)); Hash[11] := TO_BYTE(H2);
 Hash[12] := TO_BYTE(SHR(H3, 24)); Hash[13] := TO_BYTE(SHR(H3, 16)); Hash[14] := TO_BYTE(SHR(H3, 8)); Hash[15] := TO_BYTE(H3);
 Hash[16] := TO_BYTE(SHR(H4, 24)); Hash[17] := TO_BYTE(SHR(H4, 16)); Hash[18] := TO_BYTE(SHR(H4, 8)); Hash[19] := TO_BYTE(H4);
+END_FUNCTION_BLOCK

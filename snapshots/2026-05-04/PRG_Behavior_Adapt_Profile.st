@@ -23,6 +23,9 @@ CASE GVL_BEHAVIOR_ADAPT.G_Adapt_Profile OF
         GVL_BEHAVIOR_ADAPT.G_Decay_Factor := 0.990;
         GVL_BEHAVIOR_ADAPT.G_Adapt_Update_Threshold := 3;
 
+ELSE
+        // No fallback required
 END_CASE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Behavior_Adapt_Profile <<<
+END_PROGRAM

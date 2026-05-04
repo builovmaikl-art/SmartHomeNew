@@ -47,3 +47,4 @@ fbAnalyzer(
     VO_Trend_Up => VO_Trend_Up,
     VO_Trend_Down => VO_Trend_Down
 );
+END_FUNCTION_BLOCK

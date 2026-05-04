@@ -32,3 +32,4 @@ ELSE
     VO_Error_Active := FALSE;
 END_IF;
 // >>> BULK_SYNC_ANCHOR: FB_IO_Module_Watchdog <<<
+END_FUNCTION_BLOCK

@@ -46,3 +46,4 @@ ELSE
     VO_Is_New_Command := FALSE;
     VO_Processed_ID := 0;
 END_IF;
+END_FUNCTION_BLOCK

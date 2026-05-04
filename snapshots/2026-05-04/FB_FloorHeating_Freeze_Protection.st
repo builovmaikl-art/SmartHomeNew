@@ -28,3 +28,4 @@ END_FOR;
 IF VI_Outdoor_Temp < -5.0 THEN
     VO_Pump_Force_On := TRUE;
 END_IF;
+END_FUNCTION_BLOCK

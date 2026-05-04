@@ -103,3 +103,4 @@ IF (VO_NVRAM_Cmd = 1) AND VO_NVRAM_Done AND NOT VO_NVRAM_Err THEN
     VIO_Last_Persist_Write_MS := VI_System_Time_MS;
     VIO_Apply_Settings := FALSE;
 END_IF;
+END_FUNCTION_BLOCK

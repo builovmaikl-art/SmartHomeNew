@@ -72,3 +72,4 @@ END_IF;
 L_Last_Severity := VI_Severity;
 L_Last_RootCause := VI_RootCause;
 // >>> BULK_SYNC_ANCHOR: FB_Fault_Logger <<<
+END_FUNCTION_BLOCK

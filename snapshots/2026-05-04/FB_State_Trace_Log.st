@@ -19,3 +19,4 @@ END_IF;
 
 L_Last_Gas := VI_Gas_Alarm;
 L_Last_Leak := VI_Leak_Alarm;
+END_FUNCTION_BLOCK

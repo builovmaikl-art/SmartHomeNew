@@ -86,3 +86,4 @@ END_IF;
 
 VO_Water_Test_Active := L_Water_Test_Active;
 VO_Gas_Test_Active := L_Gas_Test_Active;
+END_FUNCTION_BLOCK
