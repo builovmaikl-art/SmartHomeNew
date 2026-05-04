@@ -3,6 +3,7 @@ VAR
     L_Mode : E_Safety_Mode;
     L_Safety_Active : BOOL;
     L_User_Access_OK : BOOL;
+    L_i : INT;
 
     // Local deterministic command buffer
     L_Gas_Valve_Close : BOOL;
@@ -127,7 +128,6 @@ END_CASE;
 L_User_Access_OK := GVL_INTENT_USER.I_Source_Valid AND (GVL_INTENT_USER.I_User_Access_Level >= 1);
 
 IF (NOT L_Safety_Active) AND L_User_Access_OK THEN
-    // Access commands
     IF GVL_INTENT_USER.I_Lock_1_Open_Request THEN
         L_Lock_1_Open := TRUE;
         L_Lock_1_Close := FALSE;
@@ -161,6 +161,32 @@ IF (NOT L_Safety_Active) AND
    (GVL_INTENT_USER.I_User_Access_Level >= 2) THEN
     // Reserved for future high-risk manual actions.
     // No direct safety override is allowed here.
+END_IF;
+
+// ======================================================
+// PRIORITY 5: AUTOMATION RULES (ONLY SAFE COMMAND-LEVEL ACTIONS)
+// ======================================================
+IF NOT L_Safety_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF GVL_STATE.G_Rule_Actions[L_i].Active AND GVL_STATE.G_Rule_Actions[L_i].Triggered THEN
+            CASE GVL_STATE.G_Rule_Actions[L_i].Action_Type OF
+
+                ACTION_SET_FLOOR_HEATING:
+                    IF GVL_STATE.G_Rule_Actions[L_i].Value <= 0.0 THEN
+                        L_Heating_Block := TRUE;
+                        L_Boiler_Stop := TRUE;
+                    END_IF;
+
+                ACTION_SET_VENTILATION:
+                    IF GVL_STATE.G_Rule_Actions[L_i].Value <= 0.0 THEN
+                        L_Vent_Stop := TRUE;
+                    END_IF;
+
+            ELSE
+                // Non command-level actions are handled by their own subsystem.
+            END_CASE;
+        END_IF;
+    END_FOR;
 END_IF;
 
 // ======================================================
