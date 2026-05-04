@@ -13,7 +13,6 @@ VAR_GLOBAL
     G_Is_Active_PLC : BOOL;
     G_Other_PLC_Is_Active : BOOL;
 
-    // Heartbeat
     G_Remote_PLC_Last_Seen_MS : UDINT;
     G_Remote_PLC_Alive : BOOL;
 
@@ -37,6 +36,7 @@ VAR_GLOBAL
 
     G_System_Mode_Msg : STRING(200);
     G_System_Mode_Cause : STRING(200);
+    G_System_Mode_Text : STRING(200);
 
     G_Evac_Target_Zone_Name : STRING(80);
     G_Evac_Hazard_Zone_Name : STRING(80);
