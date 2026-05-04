@@ -12,11 +12,14 @@ VAR
     L_Zone : ST_Zone_Adapt_State;
     L_Adjustment : REAL;
     L_Decay : REAL;
+    idx : INT;
 END_VAR
 
 IF NOT GVL_BEHAVIOR_ADAPT.G_Adapt_Enabled THEN RETURN; END_IF;
 
-L_Stats := GVL_BEHAVIOR_ADAPT.G_Scenario_Stats[iScenario];
+idx := USINT_TO_INT(iScenario);
+
+L_Stats := GVL_BEHAVIOR_ADAPT.G_Scenario_Stats[idx];
 L_Stats.Activations := L_Stats.Activations + 1;
 
 IF iSuccess THEN
@@ -75,5 +78,5 @@ IF (iScenario = REASON_SCENARIO_VENT_BOOST) AND (iZone >= 1) AND (iZone <= GVL_C
 
 END_IF;
 
-GVL_BEHAVIOR_ADAPT.G_Scenario_Stats[iScenario] := L_Stats;
+GVL_BEHAVIOR_ADAPT.G_Scenario_Stats[idx] := L_Stats;
 END_FUNCTION_BLOCK
