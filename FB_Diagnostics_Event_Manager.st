@@ -15,11 +15,17 @@ VAR
     L_i : INT;
     L_Found_Index : INT;
     L_Was_Active : BOOL;
-
-    // Anti-flapping
-    L_Last_Change_Time : UDINT;
-    L_Last_Input_State : BOOL;
+    L_Debounce_Index : INT;
+    L_Free_Debounce_Index : INT;
     L_Stable_State : BOOL;
+
+    // Per-event anti-flapping state, keyed by (Code, Source)
+    L_Debounce_Used : ARRAY[1..50] OF BOOL;
+    L_Debounce_Code : ARRAY[1..50] OF UDINT;
+    L_Debounce_Source : ARRAY[1..50] OF INT;
+    L_Debounce_Last_Input_State : ARRAY[1..50] OF BOOL;
+    L_Debounce_Stable_State : ARRAY[1..50] OF BOOL;
+    L_Debounce_Last_Change_Time : ARRAY[1..50] OF UDINT;
 END_VAR
 
 // ======================================================
@@ -37,16 +43,51 @@ FOR L_i := 1 TO 50 DO
 END_FOR;
 
 // ======================================================
-// ANTI-FLAPPING (2s debounce)
+// FIND / ALLOCATE PER-EVENT DEBOUNCE SLOT
 // ======================================================
-IF VI_Active <> L_Last_Input_State THEN
-    L_Last_Input_State := VI_Active;
-    L_Last_Change_Time := VI_Timestamp;
+L_Debounce_Index := 0;
+L_Free_Debounce_Index := 0;
+
+FOR L_i := 1 TO 50 DO
+    IF L_Debounce_Used[L_i] THEN
+        IF (L_Debounce_Code[L_i] = VI_Code) AND (L_Debounce_Source[L_i] = VI_Source) THEN
+            L_Debounce_Index := L_i;
+            EXIT;
+        END_IF;
+    ELSIF L_Free_Debounce_Index = 0 THEN
+        L_Free_Debounce_Index := L_i;
+    END_IF;
+END_FOR;
+
+IF L_Debounce_Index = 0 THEN
+    IF L_Free_Debounce_Index > 0 THEN
+        L_Debounce_Index := L_Free_Debounce_Index;
+    ELSE
+        // Deterministic fallback if debounce table is full.
+        L_Debounce_Index := (VIO_Count MOD 50) + 1;
+    END_IF;
+
+    L_Debounce_Used[L_Debounce_Index] := TRUE;
+    L_Debounce_Code[L_Debounce_Index] := VI_Code;
+    L_Debounce_Source[L_Debounce_Index] := VI_Source;
+    L_Debounce_Last_Input_State[L_Debounce_Index] := VI_Active;
+    L_Debounce_Stable_State[L_Debounce_Index] := FALSE;
+    L_Debounce_Last_Change_Time[L_Debounce_Index] := VI_Timestamp;
 END_IF;
 
-IF (VI_Timestamp - L_Last_Change_Time) > 2000 THEN
-    L_Stable_State := L_Last_Input_State;
+// ======================================================
+// PER-EVENT ANTI-FLAPPING (2s debounce)
+// ======================================================
+IF VI_Active <> L_Debounce_Last_Input_State[L_Debounce_Index] THEN
+    L_Debounce_Last_Input_State[L_Debounce_Index] := VI_Active;
+    L_Debounce_Last_Change_Time[L_Debounce_Index] := VI_Timestamp;
 END_IF;
+
+IF (VI_Timestamp - L_Debounce_Last_Change_Time[L_Debounce_Index]) > 2000 THEN
+    L_Debounce_Stable_State[L_Debounce_Index] := L_Debounce_Last_Input_State[L_Debounce_Index];
+END_IF;
+
+L_Stable_State := L_Debounce_Stable_State[L_Debounce_Index];
 
 // ======================================================
 // APPLY ONLY STABLE STATE
