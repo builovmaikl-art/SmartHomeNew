@@ -1,8 +1,8 @@
-DUT_FILES=88
+DUT_FILES=89
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=31
-STRUCT_INSERTED=57
-STRUCT_FIELDS_TOTAL=497
+STRUCT_INSERTED=58
+STRUCT_FIELDS_TOTAL=502
 STRUCT_FIELDS_WITH_INITIALIZER=144
 INITIALIZERS_INSERTED=144
 ARRAY_INITIALIZERS_INSERTED=4
@@ -43,6 +43,7 @@ E_WEATHER_COMPENSATION_METHOD.dut: ENUM E_WEATHER_COMPENSATION_METHOD values=2
 E_Zone_Access_Level.dut: ENUM E_Zone_Access_Level values=5
 ST_Alarm_Record.dut: STRUCT ST_Alarm_Record fields=8
 ST_Astro_Time.dut: STRUCT ST_Astro_Time fields=3
+ST_Behavior_Weights.dut: STRUCT ST_Behavior_Weights fields=5
 ST_BlackBox_Record.dut: STRUCT ST_BlackBox_Record fields=15
 ST_Boiler_Status.dut: STRUCT ST_Boiler_Status fields=11
 ST_Calibration_Family_Summary.dut: STRUCT ST_Calibration_Family_Summary fields=7
@@ -101,6 +102,7 @@ ST_Zone_Sensors.dut: STRUCT ST_Zone_Sensors fields=6
 
 STRUCT ST_Alarm_Record: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Astro_Time: total=3 with_initializer=3 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Behavior_Weights: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_BlackBox_Record: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Boiler_Status: total=11 with_initializer=1 without_initializer=10 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Calibration_Family_Summary: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
