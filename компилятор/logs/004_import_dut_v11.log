@@ -1,6 +1,6 @@
-DUT_FILES=84
+DUT_FILES=85
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=29
+ENUM_INSERTED=30
 STRUCT_INSERTED=55
 STRUCT_FIELDS_TOTAL=486
 STRUCT_FIELDS_WITH_INITIALIZER=144
@@ -31,6 +31,7 @@ E_System_Reason_Code.dut: ENUM E_System_Reason_Code values=5
 E_System_Root_Cause.dut: ENUM E_System_Root_Cause values=11
 E_System_Severity.dut: ENUM E_System_Severity values=4
 E_Trace_Layer.dut: ENUM E_Trace_Layer values=4
+E_Trace_Source.dut: ENUM E_Trace_Source values=4
 E_Trend_Parameter_Type.dut: ENUM E_Trend_Parameter_Type values=7
 E_TwoFactor_Method.dut: ENUM E_TwoFactor_Method values=4
 E_VALVE_TYPE.dut: ENUM E_VALVE_TYPE values=2
