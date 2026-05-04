@@ -1,8 +1,8 @@
-DUT_FILES=85
+DUT_FILES=86
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=30
-STRUCT_INSERTED=55
-STRUCT_FIELDS_TOTAL=486
+STRUCT_INSERTED=56
+STRUCT_FIELDS_TOTAL=490
 STRUCT_FIELDS_WITH_INITIALIZER=144
 INITIALIZERS_INSERTED=144
 ARRAY_INITIALIZERS_INSERTED=4
@@ -81,6 +81,7 @@ ST_System_Diagnostics.dut: STRUCT ST_System_Diagnostics fields=114
 ST_System_State_Snapshot.dut: STRUCT ST_System_State_Snapshot fields=12
 ST_System_State_Summary.dut: STRUCT ST_System_State_Summary fields=10
 ST_Tariff_Config.dut: STRUCT ST_Tariff_Config fields=4
+ST_Trace_Entry.dut: STRUCT ST_Trace_Entry fields=4
 ST_Trend_Config.dut: STRUCT ST_Trend_Config fields=5
 ST_Trend_Data.dut: STRUCT ST_Trend_Data fields=7
 ST_Trend_Header.dut: STRUCT ST_Trend_Header fields=6
@@ -137,6 +138,7 @@ STRUCT ST_System_Diagnostics: total=114 with_initializer=0 without_initializer=1
 STRUCT ST_System_State_Snapshot: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_System_State_Summary: total=10 with_initializer=0 without_initializer=10 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Tariff_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Trace_Entry: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Trend_Config: total=5 with_initializer=2 without_initializer=3 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Trend_Data: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Trend_Header: total=6 with_initializer=5 without_initializer=1 array_initializer=0 unsupported_initializer=0
