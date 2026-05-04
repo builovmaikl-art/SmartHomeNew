@@ -1,0 +1,9 @@
+{attribute 'strict'}
+TYPE E_Trace_Source :
+(
+    SRC_MAIN := 0,
+    SRC_IO := 1,
+    SRC_DIAGNOSTICS := 2,
+    SRC_HEATING := 3
+) USINT;
+END_TYPE
