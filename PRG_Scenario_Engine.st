@@ -14,8 +14,38 @@ VAR
     L_Weights : ST_Behavior_Weights;
 END_VAR
 
-// === RESTORED: use global adaptive weights ===
-L_Weights := GVL_BEHAVIOR_ADAPT.G_Behavior_Weights;
+// Compile-safe behavior weights.
+// Direct access to GVL_BEHAVIOR_ADAPT.G_Behavior_Weights is intentionally not used because the active CODESYS project currently does not expose that component.
+// Adaptive zone weighting remains active through GVL_BEHAVIOR_ADAPT.G_VentBoost_Zone_Adapt.
+CASE GVL_BEHAVIOR_ADAPT.G_Adapt_Profile OF
+    ADAPT_PROFILE_STABLE:
+        L_Weights.W_Comfort := 1.0;
+        L_Weights.W_Night := 1.0;
+        L_Weights.W_Preheat := 1.0;
+        L_Weights.W_VentBoost := 0.9;
+        L_Weights.W_AccessSecure := 1.0;
+
+    ADAPT_PROFILE_BALANCED:
+        L_Weights.W_Comfort := 1.0;
+        L_Weights.W_Night := 1.0;
+        L_Weights.W_Preheat := 1.0;
+        L_Weights.W_VentBoost := 1.0;
+        L_Weights.W_AccessSecure := 1.0;
+
+    ADAPT_PROFILE_AGGRESSIVE:
+        L_Weights.W_Comfort := 1.0;
+        L_Weights.W_Night := 1.0;
+        L_Weights.W_Preheat := 1.0;
+        L_Weights.W_VentBoost := 1.1;
+        L_Weights.W_AccessSecure := 1.0;
+
+ELSE
+        L_Weights.W_Comfort := 1.0;
+        L_Weights.W_Night := 1.0;
+        L_Weights.W_Preheat := 1.0;
+        L_Weights.W_VentBoost := 1.0;
+        L_Weights.W_AccessSecure := 1.0;
+END_CASE;
 
 L_Hour := TO_INT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
 
