@@ -1,8 +1,76 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 1, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights'' в тип 'ST_Behavior_Weights'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 1, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[WARNING]       Без имени4: FB_Heating_System_Manager(Строка 218, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
-[WARNING]       Без имени4: FB_PID_Controller(Строка 14, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
-                Компиляция завершена -- 2 ошибок, 2 предупреждений : загрузка невозможна
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_System_Time_MS'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_IsActivePLC'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Outdoor_Temp'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Floor_Temps'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Room_Temps'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Config'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Zone_Configs'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Tariff'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Current_Hour'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Manifold_Pressures'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Manifold_Currents'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Manifold_Temps_Supply'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Manifold_Temps_Return'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Boiler_Flame_Status'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Boiler_Error_Status'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Boiler_OT_Online'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Boiler_Modulation'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Rule_Actions'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_IO_Modules_Online'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_DHW_Heating_Demand'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_DHW_Target_Temp'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_System_Mode'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Emergency_Stop'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Gas_Safety_Stop'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Manifold_End_Switches'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0037:  'VI_Valve_Test_Config'не является входом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Manifold_Valves' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Manifold_Pumps' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Zone_Valves' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Boiler_OT_Enable' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Boiler_OT_Setpoint' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Backup_Circulation_Pump' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Electric_Heater_Enable' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Freeze_Risk_Status' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Status' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 4, Столбец 1 (Реализ.)): C0038:  'VO_Boiler_Status' не является выходом 'FB_HEATING_SYSTEM_MANAGER'
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 5, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_System_Time_MS' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 6, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_IsActivePLC' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 7, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Outdoor_Temp' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Floor_Temps' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 9, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Room_Temps' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 10, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Config' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Zone_Configs' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 12, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Tariff' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 13, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Current_Hour' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 14, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Manifold_Pressures' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 15, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Manifold_Currents' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 16, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Manifold_Temps_Supply' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 17, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Manifold_Temps_Return' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 18, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Boiler_Flame_Status' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 19, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Boiler_Error_Status' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 20, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Boiler_OT_Online' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 21, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Boiler_Modulation' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 22, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Rule_Actions' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_IO_Modules_Online' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 24, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_DHW_Heating_Demand' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 25, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_DHW_Target_Temp' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 26, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_System_Mode' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 27, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Emergency_Stop' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 28, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Gas_Safety_Stop' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 29, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Manifold_End_Switches' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 30, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VI_Valve_Test_Config' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 31, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Manifold_Valves' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 32, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Manifold_Pumps' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 33, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Zone_Valves' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 34, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Boiler_OT_Enable' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 35, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Boiler_OT_Setpoint' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 36, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Backup_Circulation_Pump' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 37, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Electric_Heater_Enable' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 38, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Freeze_Risk_Status' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 39, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Status' не задан
+[ERROR]         Без имени4: FB_Heating_Execution_Core(Строка 40, Столбец 1 (Реализ.)): C0046:  Идентификатор 'VO_Boiler_Status' не задан
+                Компиляция завершена -- 72 ошибок, 0 предупреждений : загрузка невозможна
