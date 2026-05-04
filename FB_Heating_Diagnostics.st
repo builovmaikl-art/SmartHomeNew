@@ -5,8 +5,6 @@ END_VAR
 VAR
     fbDiagEventManager : FB_Diagnostics_Event_Manager;
     L_i : INT;
-
-    // Root cause flags
     L_Any_Heating_Device_Failed : BOOL;
     L_Critical_Fault : BOOL;
 END_VAR
@@ -17,7 +15,6 @@ END_VAR
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
 
-// Aggregate root cause
 L_Any_Heating_Device_Failed :=
     NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service OR
     NOT GVL_CONFIG.G_Electric_Heater_In_Service;
@@ -110,10 +107,18 @@ fbDiagEventManager(
 );
 
 // ======================================================
-// ROOT CAUSE EXPORT
+// ROOT CAUSE EXPORT TO EXISTING DIAGNOSTIC FIELDS
 // ======================================================
-GVL_STATUS.G_Diagnostics.Heating_Subsystem_Degraded := L_Any_Heating_Device_Failed;
-GVL_STATUS.G_Diagnostics.Heating_Critical_Fault := L_Critical_Fault;
+GVL_STATUS.G_Diagnostics.Subsystem_Degraded := GVL_STATUS.G_Diagnostics.Subsystem_Degraded OR L_Any_Heating_Device_Failed;
+GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending := GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Pending OR L_Critical_Fault;
+
+IF L_Any_Heating_Device_Failed THEN
+    GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Text := 'Heating device availability degraded';
+END_IF;
+
+IF L_Critical_Fault THEN
+    GVL_STATUS.G_Diagnostics.Freeze_Hardware_Event_Text := 'Freeze hardware critical fault';
+END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Diagnostics <<<
