@@ -18,7 +18,6 @@ CASE L_Mode OF
     GAS: GVL_EXPLAINABILITY.G_Reason_Chain_Safety := 'GAS';
     WATER_LEAK: GVL_EXPLAINABILITY.G_Reason_Chain_Safety := 'WATER';
     GLOBAL_STOP: GVL_EXPLAINABILITY.G_Reason_Chain_Safety := 'GLOBAL_STOP';
-    EVACUATION: GVL_EXPLAINABILITY.G_Reason_Chain_Safety := 'EVACUATION';
     ELSE
         IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
             GVL_EXPLAINABILITY.G_Reason_Chain_Safety := 'RECOVERY';
