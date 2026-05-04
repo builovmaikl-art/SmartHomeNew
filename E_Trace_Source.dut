@@ -5,6 +5,7 @@ TYPE E_Trace_Source :
     SRC_IO := 1,
     SRC_DIAGNOSTICS := 2,
     SRC_HEATING := 3,
-    SRC_SCENARIO := 4
+    SRC_SCENARIO := 4,
+    SRC_USER := 5
 ) USINT;
 END_TYPE
