@@ -8,7 +8,7 @@ fbCoord(
     VI_Gas_Latched := GVL_STATE.G_Safety_Gas_Latched,
     VI_Leak_Latched := GVL_STATE.G_Safety_Leak_Latched,
     VI_IO_Degraded := NOT GVL_STATUS.G_IO_Modules_Online[1],
-    VI_Ownership_Violation := GVL_TEST.G_Ownership_Violation,
+    VI_Ownership_Violation := FALSE,
     VI_Behavior_Mode := GVL_MODE.G_Current_Behavior_Mode
 );
 
