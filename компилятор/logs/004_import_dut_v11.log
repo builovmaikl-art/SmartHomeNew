@@ -1,8 +1,8 @@
-DUT_FILES=86
+DUT_FILES=87
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=30
-STRUCT_INSERTED=56
-STRUCT_FIELDS_TOTAL=490
+STRUCT_INSERTED=57
+STRUCT_FIELDS_TOTAL=492
 STRUCT_FIELDS_WITH_INITIALIZER=144
 INITIALIZERS_INSERTED=144
 ARRAY_INITIALIZERS_INSERTED=4
@@ -72,6 +72,7 @@ ST_Persist.dut: STRUCT ST_Persist fields=7
 ST_Rule.dut: STRUCT ST_Rule fields=8
 ST_Rule_Action.dut: STRUCT ST_Rule_Action fields=5
 ST_Scenario_Config.dut: STRUCT ST_Scenario_Config fields=8
+ST_Scenario_Stats.dut: STRUCT ST_Scenario_Stats fields=2
 ST_Scenario_Transition_Config.dut: STRUCT ST_Scenario_Transition_Config fields=4
 ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=17
 ST_Security_Zone_State.dut: STRUCT ST_Security_Zone_State fields=5
@@ -129,6 +130,7 @@ STRUCT ST_Persist: total=7 with_initializer=1 without_initializer=6 array_initia
 STRUCT ST_Rule: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Rule_Action: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Scenario_Stats: total=2 with_initializer=0 without_initializer=2 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Transition_Config: total=4 with_initializer=2 without_initializer=2 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Security_Global_Config: total=17 with_initializer=13 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Security_Zone_State: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
