@@ -1,39 +1,16 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени4: PRG_System_Diagnostics(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_STATE.G_Room_Humidity[L_i]'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_System_Diagnostics(Строка 17, Столбец 1 (Реализ.)): C0004:  'G_Room_Humidity' не является компонентом 'GVL_STATE'
 [ERROR]         Без имени4: FB_Behavior_Adapt(Строка 15, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'INT'
 [ERROR]         Без имени4: FB_Behavior_Adapt(Строка 15, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'INT'
 [ERROR]         Без имени4: FB_Behavior_Adapt(Строка 39, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'INT'
 [ERROR]         Без имени4: FB_Behavior_Adapt(Строка 39, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'INT'
-[WARNING]       Без имени4: FB_Behavior_Adapt(Строка 47, Столбец 1 (Реализ.)): C0196:  Неявная конверсия из типа без знака 'UDINT' в тип со знаком 'DINT': возможно изменение знака
 [ERROR]         Без имени4: PRG_System_Coordinator(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_TEST.G_Ownership_Violation'' в тип 'BOOL'
 [ERROR]         Без имени4: PRG_System_Coordinator(Строка 6, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_TEST' не задан
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 9, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_Comfort_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Comfort)'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 9, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Comfort'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 9, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 9, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_Night_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Night)'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 17, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Night'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 17, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 17, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 22, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_Preheat_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat)'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 22, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_Preheat'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 22, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 22, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(((GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost) * L_ZoneWeight) * L_ZoneConfidence)'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost) * L_ZoneWeight)'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_VentBoost_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost)'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_VentBoost'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 51, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: '(GVL_SCENARIO_CONFIG.G_AccessSecure_Base_Score * GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure)'' в тип 'REAL'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights.W_AccessSecure'
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0062:  'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights' не является структурированной переменной
-[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 65, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 1, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_BEHAVIOR_ADAPT.G_Behavior_Weights'' в тип 'ST_Behavior_Weights'
+[ERROR]         Без имени4: PRG_Scenario_Engine(Строка 1, Столбец 1 (Реализ.)): C0004:  'G_Behavior_Weights' не является компонентом 'GVL_BEHAVIOR_ADAPT'
 [WARNING]       Без имени4: FB_Heating_System_Manager(Строка 218, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
 [WARNING]       Без имени4: FB_PID_Controller(Строка 14, Столбец 1 (Реализ.)): C0197:  Неявная конверсия из 'LREAL' в 'REAL': возможна потеря информации
 [ERROR]         Без имени4: PRG_Explainability(Строка 14, Столбец 1 (Реализ.)): C0046:  Идентификатор 'EVACUATION' не задан
 [ERROR]         Без имени4: PRG_Explainability(Строка 14, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-                Компиляция завершена -- 32 ошибок, 3 предупреждений : загрузка невозможна
+                Компиляция завершена -- 10 ошибок, 2 предупреждений : загрузка невозможна
