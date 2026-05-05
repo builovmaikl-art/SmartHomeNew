@@ -57,6 +57,7 @@ VAR_GLOBAL
     G_HMI_Lock_1_Close_Req : BOOL; // Блокировка основного замка
     G_HMI_Lock_2_Open_Req : BOOL; // Разблокировка доп. замка
     G_HMI_Lock_2_Close_Req : BOOL; // Блокировка доп. замка
+    G_Access_Pulse_MS : UDINT := 500; // Длительность импульса access-выходов (мс)
     
     // HMI Settings
     G_HMI_Language : BYTE := 0; // 0=RU, 1=EN
