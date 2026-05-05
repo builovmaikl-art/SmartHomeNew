@@ -1,0 +1,61 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Config change control. HMI/service writes here, never directly to active safety config.
+
+    G_Apply_Request : BOOL := FALSE;
+    G_Apply_Confirm : BOOL := FALSE;
+    G_Rollback_Request : BOOL := FALSE;
+    G_Rollback_Confirm : BOOL := FALSE;
+    G_Reset_Default_Request : BOOL := FALSE;
+    G_Reset_Default_Confirm : BOOL := FALSE;
+
+    G_Config_Version : UDINT := 1;
+    G_Last_Good_Version : UDINT := 1;
+    G_Backup_Valid : BOOL := FALSE;
+    G_Apply_Done : BOOL := FALSE;
+    G_Rollback_Done : BOOL := FALSE;
+
+    // STAGED INPUT CONFIG
+    STG_Reputation_Learning_Rate : REAL := 0.05;
+    STG_Reputation_Recovery_Decay : REAL := 0.01;
+    STG_Min_Sensor_Confidence : REAL := 0.1;
+    STG_Bad_Spike_Confidence : REAL := 0.3;
+    STG_Default_Confidence : REAL := 1.0;
+
+    // STAGED SCENARIO CONFIG
+    STG_Night_Start_Hour : INT := 22;
+    STG_Night_End_Hour : INT := 6;
+    STG_VentBoost_Humidity_Threshold : REAL := 65.0;
+
+    // STAGED RECOVERY CONFIG
+    STG_Stabilization_Delay_MS : UDINT := 5000;
+
+    // STAGED COMMAND POLICY CRITICAL PART
+    STG_PLC_Inactive_Close_Gas : BOOL := TRUE;
+    STG_PLC_Inactive_Stop_Boiler : BOOL := TRUE;
+    STG_PLC_Inactive_Block_Heating : BOOL := TRUE;
+    STG_PLC_Inactive_Stop_Vent : BOOL := TRUE;
+    STG_PLC_Inactive_Block_Water : BOOL := TRUE;
+
+    // BACKUP INPUT CONFIG
+    BCK_Reputation_Learning_Rate : REAL := 0.05;
+    BCK_Reputation_Recovery_Decay : REAL := 0.01;
+    BCK_Min_Sensor_Confidence : REAL := 0.1;
+    BCK_Bad_Spike_Confidence : REAL := 0.3;
+    BCK_Default_Confidence : REAL := 1.0;
+
+    // BACKUP SCENARIO CONFIG
+    BCK_Night_Start_Hour : INT := 22;
+    BCK_Night_End_Hour : INT := 6;
+    BCK_VentBoost_Humidity_Threshold : REAL := 65.0;
+
+    // BACKUP RECOVERY CONFIG
+    BCK_Stabilization_Delay_MS : UDINT := 5000;
+
+    // BACKUP COMMAND POLICY CRITICAL PART
+    BCK_PLC_Inactive_Close_Gas : BOOL := TRUE;
+    BCK_PLC_Inactive_Stop_Boiler : BOOL := TRUE;
+    BCK_PLC_Inactive_Block_Heating : BOOL := TRUE;
+    BCK_PLC_Inactive_Stop_Vent : BOOL := TRUE;
+    BCK_PLC_Inactive_Block_Water : BOOL := TRUE;
+END_VAR

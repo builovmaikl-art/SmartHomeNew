@@ -1,0 +1,39 @@
+VAR_GLOBAL
+    // --- meta / traceability ---
+    I_Source_Valid : BOOL := FALSE;
+    I_Last_Update_Cycle : UDINT := 0;
+    I_Last_Update_MS : UDINT := 0;
+
+    // --- safety facts for arbitration ---
+    I_Fire_Alarm_Active : BOOL := FALSE;
+    I_Gas_Alarm_Active : BOOL := FALSE;
+    I_Leak_Alarm_Active : BOOL := FALSE;
+    I_CO_Warning_Active : BOOL := FALSE;
+    I_System_Safe_Stop_Required : BOOL := FALSE;
+    I_Freeze_Protection_Required : BOOL := FALSE;
+    I_Evacuation_Mode_Active : BOOL := FALSE;
+
+    // --- gas / boiler / ventilation constraints ---
+    I_Gas_Close_Required : BOOL := FALSE;
+    I_Boiler_Stop_Required : BOOL := FALSE;
+    I_Vent_Stop_Required : BOOL := FALSE;
+    I_Vent_Force_PV3_Boost : BOOL := FALSE;
+    I_Vent_Force_Supply_100 : BOOL := FALSE;
+    I_Vent_Force_Supply_80 : BOOL := FALSE;
+    I_Vent_Force_Exhaust_100 : BOOL := FALSE;
+
+    // --- water constraints ---
+    I_Water_Main_Close_Required : BOOL := FALSE;
+    I_Water_Zone_Close_Required : ARRAY[1..32] OF BOOL;
+    I_Water_Selective_Recovery_Allowed : BOOL := FALSE;
+    I_Water_Recovery_Target_Zone : INT := 0;
+
+    // --- lock / evacuation constraints ---
+    I_Lock_1_Force_Open : BOOL := FALSE;
+    I_Lock_1_Force_Close_Block : BOOL := FALSE;
+    I_Lock_2_Force_Open : BOOL := FALSE;
+    I_Lock_2_Force_Close_Block : BOOL := FALSE;
+    // --- operator / test constraints ---
+    I_Test_Timeout_Gas_Close : BOOL := FALSE;
+    I_Test_Timeout_Water_Close : BOOL := FALSE;
+END_VAR

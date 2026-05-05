@@ -1,0 +1,11 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime active counts. Arrays remain allocated by GVL_CONSTANTS.C_MAX_*.
+    // These values define how many channels/zones are actively processed.
+
+    G_Active_Heating_Circuits : INT := GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS;
+    G_Active_Water_Zones : INT := GVL_CONSTANTS.C_MAX_WATER_ZONES;
+    G_Active_Light_Zones : INT := GVL_CONSTANTS.C_MAX_LIGHT_ZONES;
+    G_Active_Blinds : INT := GVL_CONSTANTS.C_MAX_BLINDS;
+    G_Active_Sockets : INT := GVL_CONSTANTS.C_MAX_SOCKETS;
+END_VAR

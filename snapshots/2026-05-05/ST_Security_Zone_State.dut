@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Security_Zone_State :
+STRUCT
+    Armed : BOOL;
+    Alarm : BOOL;
+    Bypassed : BOOL;
+    Last_Trigger_Time : DT;
+    Trigger_Count : UINT;
+END_STRUCT
+END_TYPE

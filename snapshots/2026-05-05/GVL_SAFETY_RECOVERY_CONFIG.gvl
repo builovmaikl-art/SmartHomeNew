@@ -1,0 +1,6 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Stabilization_Delay_MS : UDINT := 5000;
+    G_Stable_Time_Required_MS : UDINT := 3000;
+    G_Cooldown_Time_MS : UDINT := 10000;
+END_VAR

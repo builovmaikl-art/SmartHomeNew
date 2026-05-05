@@ -1,0 +1,46 @@
+TYPE E_System_Reason_Code :
+(
+    REASON_NONE,
+    REASON_FIRE,
+    REASON_GAS,
+    REASON_WATER_LEAK,
+    REASON_GLOBAL_STOP,
+    REASON_EVACUATION,
+    REASON_RECOVERY_ACTIVE,
+    REASON_SAFETY,
+    REASON_USER_REQUEST,
+    REASON_COMMAND_CLAMP,
+    REASON_DOMAIN_PROJECTION,
+    REASON_SCENARIO_NIGHT,
+    REASON_SCENARIO_COMFORT,
+    REASON_SCENARIO_ENERGY_SAVE,
+    REASON_SCENARIO_AWAY,
+    REASON_SCENARIO_PREHEAT,
+    REASON_SCENARIO_ACCESS_SECURE,
+    REASON_SCENARIO_VENT_BOOST
+);
+END_TYPE
+
+VAR_GLOBAL
+    G_Last_Global_Reason_Code : E_System_Reason_Code := REASON_NONE;
+    G_Last_Global_Reason_Text : STRING(255) := 'No active reason';
+    G_Last_Safety_Mode : E_Safety_Mode := NORMAL;
+    G_Last_Recovery_Phase : E_Recovery_Phase := IDLE;
+    G_Last_Command_Source : STRING(80) := '';
+    G_Last_Domain_Affected : STRING(80) := '';
+    G_Last_Output_Affected : STRING(80) := '';
+    G_Last_Update_MS : UDINT := 0;
+
+    G_Behavior_Why_Active : STRING(255) := '';
+    G_Heating_Why_Blocked : STRING(255) := '';
+    G_Vent_Why_Stopped : STRING(255) := '';
+    G_Water_Why_Closed : STRING(255) := '';
+    G_Access_Why_Opened : STRING(255) := '';
+
+    // Decision chain for HMI / engineering debug.
+    G_Reason_Chain_Safety : STRING(80) := 'NORMAL';
+    G_Reason_Chain_Behavior : STRING(120) := 'No behavior scenario active';
+    G_Reason_Chain_Command : STRING(120) := 'Command OK';
+    G_Reason_Chain_Output : STRING(120) := 'Outputs projected';
+    G_Reason_Chain_Full : STRING(255) := 'NORMAL -> No behavior scenario active -> Command OK -> Outputs projected';
+END_VAR

@@ -1,0 +1,42 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Simulation_Enable : BOOL := FALSE;
+
+    // Scenario control
+    G_Test_Scenario_ID : INT := 0; // 0=manual flags, 1=safety gas, 2=leak+low pressure, 3=sensor+predictive, 4=dual PLC, 5=full stress
+    G_Test_Start : BOOL := FALSE;
+    G_Test_Stop : BOOL := FALSE;
+    G_Test_Scenario_Active : BOOL := FALSE;
+    G_Test_Started_MS : UDINT := 0;
+    G_Test_Duration_MS : UDINT := 30000;
+    G_Test_Expected_Result_Code : INT := 0; // 0=none, 1=safety, 2=heating degraded, 3=role conflict, 4=full stress
+
+    // Sensor fault injection requests
+    G_Inject_Heating_Sensor_Fault : BOOL := FALSE;
+    G_Inject_IO_Fault : BOOL := FALSE;
+    G_Inject_Low_Pressure : BOOL := FALSE;
+    G_Inject_Predictive_Pump_Fault : BOOL := FALSE;
+
+    // Safety fault injection requests
+    G_Inject_Gas_Alarm : BOOL := FALSE;
+    G_Inject_Leak_Alarm : BOOL := FALSE;
+    G_Inject_Smoke_Alarm : BOOL := FALSE;
+
+    // PLC / role fault injection request
+    G_Inject_Dual_PLC_Active : BOOL := FALSE;
+
+    // Isolated effective simulation outputs. Production state is not overwritten by PRG_System_Simulation.
+    G_Sim_Heating_Sensor_Fault : BOOL := FALSE;
+    G_Sim_IO_Fault : BOOL := FALSE;
+    G_Sim_Low_Pressure : BOOL := FALSE;
+    G_Sim_Predictive_Pump_Fault : BOOL := FALSE;
+    G_Sim_Gas_Alarm : BOOL := FALSE;
+    G_Sim_Leak_Alarm : BOOL := FALSE;
+    G_Sim_Smoke_Alarm : BOOL := FALSE;
+    G_Sim_Dual_PLC_Active : BOOL := FALSE;
+
+    // Test status
+    G_Test_Running : BOOL := FALSE;
+    G_Test_Result_OK : BOOL := FALSE;
+    G_Test_Last_Result_Text : STRING(128) := 'No test executed';
+END_VAR

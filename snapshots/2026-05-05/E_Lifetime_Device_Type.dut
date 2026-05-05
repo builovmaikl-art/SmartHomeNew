@@ -1,0 +1,7 @@
+{attribute 'strict'}
+TYPE E_Lifetime_Device_Type :
+(
+    LIFETIME_DEVICE_PUMP := 1,
+    LIFETIME_DEVICE_FAN  := 2
+) USINT;
+END_TYPE

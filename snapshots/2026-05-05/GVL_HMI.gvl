@@ -1,0 +1,13 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Heating dashboard
+    G_HMI_Heating_Confidence : REAL := 1.0;
+    G_HMI_Heating_Confidence_Percent : INT := 100;
+    G_HMI_Heating_Reason_Code : INT := 0;
+    G_HMI_Heating_Status_Text : STRING(128) := 'OK';
+    G_HMI_Heating_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ALARM
+
+    // Heating predictive dashboard
+    G_HMI_Heating_Predictive_Pressure_Drop : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_HMI_Heating_Predictive_Current_Rise : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+END_VAR

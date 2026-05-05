@@ -1,0 +1,34 @@
+VAR_GLOBAL
+    // Operational command layer produced by PRG_Command_Arbitration during migration.
+    // Used by downstream execution consumers and PRG_IO_Write.
+
+    // Gas / boiler / ventilation
+    G_Gas_Valve_Close : BOOL := FALSE;
+    G_Boiler_Stop : BOOL := FALSE;
+    G_Supply_100_Req : BOOL := FALSE;
+    G_Supply_80_Req : BOOL := FALSE;
+    G_Vent_PV3_Boost : BOOL := FALSE;
+    G_Exhaust_100_Req : BOOL := FALSE;
+    G_Vent_Stop : BOOL := FALSE;
+    G_Vent_Block : BOOL := FALSE;
+    G_Vent_Smoke_Exhaust : BOOL := FALSE;
+
+    // Heating domain command gates
+    G_Heating_Block : BOOL := FALSE;
+    G_Heating_Emergency_Stop : BOOL := FALSE;
+    G_Heating_Gas_Safety_Stop : BOOL := FALSE;
+
+    // Water domain command gates
+    G_Water_Block : BOOL := FALSE;
+    G_Water_Emergency_Stop : BOOL := FALSE;
+    G_Close_Valve_35 : BOOL := FALSE;
+    G_Close_Valve_36 : BOOL := FALSE;
+
+    // Access / evacuation locks
+    G_Lock_1_Open : BOOL := FALSE;
+    G_Lock_1_Close : BOOL := FALSE;
+    G_Lock_2_Open : BOOL := FALSE;
+    G_Lock_2_Close : BOOL := FALSE;
+    G_Gate_Open : BOOL := FALSE;
+    G_Wicket_Open : BOOL := FALSE;
+END_VAR

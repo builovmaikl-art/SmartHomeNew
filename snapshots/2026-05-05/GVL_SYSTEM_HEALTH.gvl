@@ -1,0 +1,8 @@
+VAR_GLOBAL
+    G_First_Fault_Active : BOOL;
+    G_First_Fault_Type : INT;
+    G_First_Fault_Source : INT;
+    G_System_Severity : E_System_Severity;
+    G_Root_Cause : E_System_Root_Cause;
+    G_Watchdog_Fault : BOOL;
+END_VAR

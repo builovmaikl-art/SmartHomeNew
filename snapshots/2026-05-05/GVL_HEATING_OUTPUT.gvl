@@ -1,0 +1,13 @@
+VAR_GLOBAL
+    // Heating output projection produced by PRG_Heating and consumed by PRG_IO_Write.
+    // This removes the direct PRG_IO_Write -> GVL_STATE dependency for Heating physical outputs.
+
+    DO_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    DO_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    AO_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF UINT;
+
+    DO_DHW_Heating_Pump : BOOL := FALSE;
+    DO_DHW_Circ_Pump : BOOL := FALSE;
+    DO_Backup_Circulation_Pump : BOOL := FALSE;
+    DO_Electric_Heater_Enable : BOOL := FALSE;
+END_VAR

@@ -1,0 +1,8 @@
+TYPE E_System_Severity :
+(
+    SEV_NORMAL,
+    SEV_WARNING,
+    SEV_DEGRADED,
+    SEV_CRITICAL
+);
+END_TYPE

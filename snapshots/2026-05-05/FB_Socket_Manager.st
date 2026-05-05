@@ -1,0 +1,99 @@
+FUNCTION_BLOCK FB_Socket_Manager
+// Менеджер управления розетками.
+// Обеспечивает работу по сценариям, правилам и аварийное отключение (без локальных выключателей розеток).
+VAR_INPUT
+    VI_System_Time_MS : UDINT; // Системное время в миллисекундах
+    VI_IsActivePLC : BOOL; // Флаг активности ПЛК (TRUE = ведущий)
+    VI_Scenario : E_SCENARIO_TYPE; // Текущий глобальный сценарий
+    VI_Fire_Alarm : BOOL; // Флаг пожарной тревоги
+    VI_Flood_Alarm : BOOL; // Флаг тревоги протечки
+    VI_Security_Armed : BOOL; // Состояние охраны (TRUE = включена)
+END_VAR
+VAR_IN_OUT
+    VI_Manual_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Ручное переопределение состояния (HMI)
+    VI_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Legacy-вход: не используется в текущей концепции
+    VI_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action; // Действия от Rule Engine
+    VI_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL; // Статусы модулей ввода-вывода
+END_VAR
+VAR_OUTPUT
+    VO_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Выходные состояния розеток
+    VO_Internal_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL; // Внутренние состояния для репликации
+END_VAR
+VAR
+    L_i : INT;
+    L_j : INT;
+    L_Rule_State : BOOL;
+    L_Rule_Active : BOOL;
+    L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+END_VAR
+
+IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+
+
+// Проверка связи с модулями ввода-вывода
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    IF NOT VI_IO_Modules_Online[L_i] THEN
+        // Переход в безопасное состояние при потере связи (отключение всех розеток)
+        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+            VO_Socket_States[L_j] := FALSE;
+        END_FOR;
+        RETURN;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    L_Rule_Active := FALSE;
+    L_Rule_State := FALSE;
+    
+    L_Manual_Trig[L_i](CLK := VI_Manual_Override[L_i]);
+    
+    // Ручное переключение
+    IF L_Manual_Trig[L_i].Q THEN
+        L_Internal_State[L_i] := NOT L_Internal_State[L_i];
+    END_IF;
+
+    // Проверка правил для текущей розетки
+    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_SOCKET THEN
+                L_Rule_Active := TRUE;
+                L_Rule_State := (VI_Rule_Actions[L_j].Value > 0.5);
+                L_Internal_State[L_i] := L_Rule_State; // Синхронизация внутреннего состояния
+            ELSIF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_TOGGLE_SOCKET AND VI_Rule_Actions[L_j].Triggered THEN
+                L_Internal_State[L_i] := NOT L_Internal_State[L_i]; // Toggle
+            END_IF;
+        END_IF;
+    END_FOR;
+
+    // Аварийное отключение
+    IF VI_Fire_Alarm OR VI_Flood_Alarm THEN
+        // Розетки 1-4 неотключаемые (холодильник, сервер и т.д.)
+        IF L_i > 4 THEN
+            VO_Socket_States[L_i] := FALSE;
+        ELSE
+            // Критические розетки сохраняют свое текущее внутреннее состояние, а не форсируются в TRUE
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    ELSIF VI_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY OR VI_Security_Armed THEN
+        // Master Off
+        IF L_i > 4 THEN
+            VO_Socket_States[L_i] := FALSE;
+        ELSE
+            // Неотключаемые розетки могут управляться вручную
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    ELSE
+        // Нормальный режим: состояние определяется внутренним состоянием (ручным или правилом)
+        IF L_Rule_Active THEN
+            VO_Socket_States[L_i] := L_Rule_State;
+        ELSE
+            VO_Socket_States[L_i] := L_Internal_State[L_i];
+        END_IF;
+    END_IF;
+END_FOR;
+
+VO_Internal_States := L_Internal_State;
+
+END_FUNCTION_BLOCK
+// >>> BULK_SYNC_ANCHOR: FB_Socket_Manager <<<
