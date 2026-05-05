@@ -13,7 +13,7 @@ VAR_GLOBAL
     AI_Manifold_Temps_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     AO_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF UINT;
     AO_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF UINT;
-    AO_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UINT;
+    AO_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF UINT;
     AO_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF UINT;
     AI_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Owen_Analog_Value;
     AI_Boiler_Modulation : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF INT;
@@ -34,9 +34,9 @@ VAR_GLOBAL
     DO_DHW_Circ_Pump : BOOL;
     DO_Backup_Circulation_Pump : BOOL;
     DO_Electric_Heater_Enable : BOOL;
-    DI_Lighting_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    DI_Lighting_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     DI_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
-    DI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    DI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     DO_Sockets : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     DO_Gas_Valve_Close : BOOL;
     DO_Water_Valve_35_Close : BOOL;
