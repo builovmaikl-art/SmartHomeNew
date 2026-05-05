@@ -1,8 +1,12 @@
 PROGRAM PRG_Command_Verifier
 VAR
+    L_i : INT;
     L_Mismatch_Count : INT := 0;
     L_Runtime_Error : BOOL := FALSE;
+    L_Runtime_Error_Code : UDINT := 0;
+    L_Runtime_Error_Text : STRING(160) := '';
     L_Now_MS : UDINT;
+    L_Prev_Runtime_Error : BOOL;
     fbLog : FB_LogEvent;
 END_VAR
 
@@ -36,36 +40,74 @@ GVL_COMMAND_VERIFY.Command_Mismatch_Active := (L_Mismatch_Count > 0);
 // 2. RUNTIME SANITY CHECKS
 // ===============================
 L_Runtime_Error := FALSE;
+L_Runtime_Error_Code := 0;
+L_Runtime_Error_Text := '';
 
-// Example: GAS but valve not closed
+// GAS: gas valve must be physically commanded closed.
 IF (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) AND (NOT GVL_IO.DO_Gas_Valve_Close) THEN
     L_Runtime_Error := TRUE;
-    GVL_COMMAND_VERIFY.Runtime_Last_Error_Code := 1;
-    GVL_COMMAND_VERIFY.Runtime_Last_Error_Text := 'Gas valve not closed';
+    L_Runtime_Error_Code := 1;
+    L_Runtime_Error_Text := 'Gas valve not closed';
 END_IF;
 
-// Example: FIRE but no exhaust
-IF (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) AND (GVL_IO.AO_Exhaust_Fans[1] = 0) THEN
-    L_Runtime_Error := TRUE;
-    GVL_COMMAND_VERIFY.Runtime_Last_Error_Code := 2;
-    GVL_COMMAND_VERIFY.Runtime_Last_Error_Text := 'Smoke exhaust not active';
+// GAS: ventilation must not be forced fully off by the IO layer.
+IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) THEN
+    IF (GVL_IO.AO_Supply_Fans[1] = 0) AND (GVL_IO.AO_Exhaust_Fans[1] = 0) THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 3;
+        L_Runtime_Error_Text := 'Gas ventilation inactive';
+    END_IF;
+END_IF;
+
+// FIRE: all exhaust fans should be commanded above zero in smoke exhaust mode.
+IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        IF GVL_IO.AO_Exhaust_Fans[L_i] = 0 THEN
+            L_Runtime_Error := TRUE;
+            L_Runtime_Error_Code := 2;
+            L_Runtime_Error_Text := 'Smoke exhaust not active';
+        END_IF;
+    END_FOR;
+END_IF;
+
+// FIRE: supply fans should be off in smoke exhaust mode.
+IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        IF GVL_IO.AO_Supply_Fans[L_i] <> 0 THEN
+            L_Runtime_Error := TRUE;
+            L_Runtime_Error_Code := 4;
+            L_Runtime_Error_Text := 'Supply fan active in fire';
+        END_IF;
+    END_FOR;
 END_IF;
 
 // Apply result
 IF L_Runtime_Error THEN
     GVL_COMMAND_VERIFY.Runtime_Sanity_OK := FALSE;
-    GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count := GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count + 1;
+    GVL_COMMAND_VERIFY.Runtime_Last_Error_Code := L_Runtime_Error_Code;
+    GVL_COMMAND_VERIFY.Runtime_Last_Error_Text := L_Runtime_Error_Text;
     GVL_COMMAND_VERIFY.Runtime_Last_Error_Time_MS := L_Now_MS;
+    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK := FALSE;
+    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_Error := TRUE;
+    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Code := L_Runtime_Error_Code;
+    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Text := L_Runtime_Error_Text;
+    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_MS := L_Now_MS;
 
-    // Log event (edge-like behavior via counter change)
-    fbLog(
-        VI_Event_Type := 1001,
-        VI_Timestamp := L_Now_MS,
-        VI_Param1 := GVL_COMMAND_VERIFY.Runtime_Last_Error_Code,
-        VI_Param2 := GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count
-    );
+    IF NOT L_Prev_Runtime_Error THEN
+        GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count := GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count + 1;
+        fbLog(
+            VI_Event_Type := 1001,
+            VI_Timestamp := L_Now_MS,
+            VI_Param1 := L_Runtime_Error_Code,
+            VI_Param2 := GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count
+        );
+    END_IF;
 ELSE
     GVL_COMMAND_VERIFY.Runtime_Sanity_OK := TRUE;
+    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK := TRUE;
+    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_Error := FALSE;
 END_IF;
+
+L_Prev_Runtime_Error := L_Runtime_Error;
 
 END_PROGRAM
