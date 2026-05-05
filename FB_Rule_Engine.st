@@ -34,7 +34,17 @@ VAR
     L_Elapsed_Time : UDINT;
 END_VAR
 
-IF NOT VI_IsActivePLC THEN RETURN; END_IF;
+IF NOT VI_IsActivePLC THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+        VO_Actions[L_i].Active := FALSE;
+        VO_Actions[L_i].Triggered := FALSE;
+        VO_Actions[L_i].Action_Type := E_Rule_Action_Type.ACTION_NONE;
+        VO_Actions[L_i].Target_ID := 0;
+        VO_Actions[L_i].Value := 0.0;
+    END_FOR;
+    VO_Preheat_Request := FALSE;
+    RETURN;
+END_IF;
 
 VO_Preheat_Request := FALSE;
 
@@ -49,7 +59,14 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
 
+    // Full per-cycle action reset prevents stale Triggered/Action_Type/Target_ID/Value
+    // from being observed by any downstream consumer when a rule is disabled or inactive.
     VO_Actions[L_i].Active := FALSE;
+    VO_Actions[L_i].Triggered := FALSE;
+    VO_Actions[L_i].Action_Type := E_Rule_Action_Type.ACTION_NONE;
+    VO_Actions[L_i].Target_ID := 0;
+    VO_Actions[L_i].Value := 0.0;
+
     IF VI_Rules[L_i].Enabled THEN
         L_Condition_Met := FALSE;
         L_Current_Value := 0.0;
@@ -98,8 +115,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
         IF L_Triggers[L_i].Q THEN
             L_Trigger_Count[L_i] := L_Trigger_Count[L_i] + 1;
             IF L_Trigger_Count[L_i] > 10 THEN
-                VO_Actions[L_i].Active := FALSE;
-                VO_Actions[L_i].Triggered := FALSE;
                 CONTINUE;
             END_IF;
         END_IF;
