@@ -7,18 +7,95 @@ VAR
     L_Delta_Time : REAL;
     L_Now : UDINT;
     L_Last : UDINT;
+
+    // cycle stats
+    L_Cycle_MS : UDINT;
+    L_Prev_Overrun : BOOL;
+    L_Prev_Critical : BOOL;
+    fbLog : FB_LogEvent;
 END_VAR
 
 L_Now := GVL_TIME_SERVICE.G_Now_MS;
 L_Last := GVL_DIAGNOSTICS_EXT.G_Last_Update_Time;
 
+// ===============================
+// CYCLE INTERVAL MEASUREMENT
+// ===============================
 IF L_Last = 0 THEN
-    L_Delta_Time := 0.1;
+    L_Cycle_MS := GVL_DIAGNOSTICS_EXT.G_Cycle_Expected_MS;
 ELSE
-    L_Delta_Time := UDINT_TO_REAL(L_Now - L_Last) / 1000.0;
+    IF L_Now >= L_Last THEN
+        L_Cycle_MS := L_Now - L_Last;
+    ELSE
+        L_Cycle_MS := (4294967295 - L_Last) + L_Now + 1;
+    END_IF;
 END_IF;
 
 GVL_DIAGNOSTICS_EXT.G_Last_Update_Time := L_Now;
+GVL_DIAGNOSTICS_EXT.G_Cycle_Last_MS := L_Cycle_MS;
+
+// min/max
+IF (GVL_DIAGNOSTICS_EXT.G_Cycle_Min_MS = 0) OR (L_Cycle_MS < GVL_DIAGNOSTICS_EXT.G_Cycle_Min_MS) THEN
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Min_MS := L_Cycle_MS;
+END_IF;
+
+IF L_Cycle_MS > GVL_DIAGNOSTICS_EXT.G_Cycle_Max_MS THEN
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Max_MS := L_Cycle_MS;
+END_IF;
+
+// average (incremental)
+GVL_DIAGNOSTICS_EXT.G_Cycle_Sample_Count := GVL_DIAGNOSTICS_EXT.G_Cycle_Sample_Count + 1;
+GVL_DIAGNOSTICS_EXT.G_Cycle_Avg_MS :=
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Avg_MS +
+    (UDINT_TO_REAL(L_Cycle_MS) - GVL_DIAGNOSTICS_EXT.G_Cycle_Avg_MS) /
+    UDINT_TO_REAL(GVL_DIAGNOSTICS_EXT.G_Cycle_Sample_Count);
+
+// ===============================
+// OVERRUN / CRITICAL DETECTION
+// ===============================
+GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Active := (L_Cycle_MS > GVL_DIAGNOSTICS_EXT.G_Cycle_Warning_MS);
+GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Active := (L_Cycle_MS > GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_MS);
+
+IF GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Active THEN
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Count := GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Count + 1;
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Last_Overrun_MS := L_Cycle_MS;
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Last_Overrun_Time_MS := L_Now;
+END_IF;
+
+IF GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Active THEN
+    GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Count := GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Count + 1;
+END_IF;
+
+// edge logging
+IF GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Active AND NOT L_Prev_Overrun THEN
+    fbLog(
+        VI_Event_Type := 2001,
+        VI_Timestamp := L_Now,
+        VI_Param1 := L_Cycle_MS,
+        VI_Param2 := GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Count
+    );
+END_IF;
+
+IF GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Active AND NOT L_Prev_Critical THEN
+    fbLog(
+        VI_Event_Type := 2002,
+        VI_Timestamp := L_Now,
+        VI_Param1 := L_Cycle_MS,
+        VI_Param2 := GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Count
+    );
+END_IF;
+
+L_Prev_Overrun := GVL_DIAGNOSTICS_EXT.G_Cycle_Overrun_Active;
+L_Prev_Critical := GVL_DIAGNOSTICS_EXT.G_Cycle_Critical_Active;
+
+// ===============================
+// EXISTING HEALTH LOGIC
+// ===============================
+IF L_Last = 0 THEN
+    L_Delta_Time := 0.1;
+ELSE
+    L_Delta_Time := UDINT_TO_REAL(L_Cycle_MS) / 1000.0;
+END_IF;
 
 L_Error_Heating := GVL_STATE.G_Heating_Subsystem_Degraded;
 L_Error_Safety := GVL_STATE.G_Safety_Gas_Alarm OR GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Smoke_Alarm;
@@ -48,6 +125,7 @@ ELSE
     GVL_DIAGNOSTICS_EXT.G_Health_IO := GVL_DIAGNOSTICS_EXT.G_Health_IO + (0.1 * L_Delta_Time);
 END_IF;
 
+// clamp
 IF GVL_DIAGNOSTICS_EXT.G_Health_Heating < 0.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_Heating := 0.0; END_IF;
 IF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_Heating := 1.0; END_IF;
 
@@ -56,29 +134,5 @@ IF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_S
 
 IF GVL_DIAGNOSTICS_EXT.G_Health_IO < 0.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_IO := 0.0; END_IF;
 IF GVL_DIAGNOSTICS_EXT.G_Health_IO > 1.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_IO := 1.0; END_IF;
-
-IF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 0.7 THEN
-    GVL_DIAGNOSTICS_EXT.G_Heating_State := 0;
-ELSIF GVL_DIAGNOSTICS_EXT.G_Health_Heating > 0.3 THEN
-    GVL_DIAGNOSTICS_EXT.G_Heating_State := 1;
-ELSE
-    GVL_DIAGNOSTICS_EXT.G_Heating_State := 2;
-END_IF;
-
-IF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 0.8 THEN
-    GVL_DIAGNOSTICS_EXT.G_Safety_State := 0;
-ELSIF GVL_DIAGNOSTICS_EXT.G_Health_Safety > 0.4 THEN
-    GVL_DIAGNOSTICS_EXT.G_Safety_State := 1;
-ELSE
-    GVL_DIAGNOSTICS_EXT.G_Safety_State := 2;
-END_IF;
-
-IF GVL_DIAGNOSTICS_EXT.G_Health_IO > 0.7 THEN
-    GVL_DIAGNOSTICS_EXT.G_IO_State := 0;
-ELSIF GVL_DIAGNOSTICS_EXT.G_Health_IO > 0.3 THEN
-    GVL_DIAGNOSTICS_EXT.G_IO_State := 1;
-ELSE
-    GVL_DIAGNOSTICS_EXT.G_IO_State := 2;
-END_IF;
 
 END_PROGRAM
