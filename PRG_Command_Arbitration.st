@@ -14,6 +14,7 @@ VAR
     L_Exhaust_100_Req : BOOL;
     L_Vent_Stop : BOOL;
     L_Vent_Block : BOOL;
+    L_Vent_Smoke_Exhaust : BOOL;
 
     L_Heating_Block : BOOL;
     L_Heating_Emergency_Stop : BOOL;
@@ -46,6 +47,7 @@ IF GVL_STATUS.G_Is_Active_PLC AND GVL_STATUS.G_Other_PLC_Is_Active THEN
     GVL_COMMAND_SHADOW.G_Exhaust_100_Req := FALSE;
     GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
     GVL_COMMAND_SHADOW.G_Vent_Block := TRUE;
+    GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust := FALSE;
 
     GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := TRUE;
@@ -77,6 +79,7 @@ IF NOT GVL_STATUS.G_Is_Active_PLC THEN
     GVL_COMMAND_SHADOW.G_Exhaust_100_Req := FALSE;
     GVL_COMMAND_SHADOW.G_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Vent;
     GVL_COMMAND_SHADOW.G_Vent_Block := FALSE;
+    GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust := FALSE;
 
     GVL_COMMAND_SHADOW.G_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Heating;
     GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := FALSE;
@@ -107,6 +110,7 @@ L_Vent_PV3_Boost := FALSE;
 L_Exhaust_100_Req := FALSE;
 L_Vent_Stop := FALSE;
 L_Vent_Block := FALSE;
+L_Vent_Smoke_Exhaust := FALSE;
 
 L_Heating_Block := FALSE;
 L_Heating_Emergency_Stop := FALSE;
@@ -139,7 +143,10 @@ CASE L_Mode OF
         L_Safety_Active := TRUE;
         L_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Heating;
         L_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_Fire_Stop_Boiler;
-        L_Vent_Stop := GVL_COMMAND_POLICY_CONFIG.G_Fire_Stop_Vent;
+        L_Vent_Stop := FALSE;
+        L_Vent_PV3_Boost := FALSE;
+        L_Exhaust_100_Req := FALSE;
+        L_Vent_Smoke_Exhaust := TRUE;
         L_Heating_Emergency_Stop := GVL_COMMAND_POLICY_CONFIG.G_Fire_Block_Heating;
         L_Lock_1_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Lock_1;
         L_Lock_2_Open := GVL_COMMAND_POLICY_CONFIG.G_Fire_Open_Lock_2;
@@ -153,6 +160,7 @@ CASE L_Mode OF
         L_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Gas_Block_Heating;
         L_Heating_Gas_Safety_Stop := GVL_COMMAND_POLICY_CONFIG.G_Gas_Block_Heating;
         L_Vent_PV3_Boost := TRUE;
+        L_Vent_Smoke_Exhaust := FALSE;
         L_Gate_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Gate;
         L_Wicket_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Wicket;
         L_Lock_1_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Lock_1;
@@ -285,6 +293,7 @@ GVL_COMMAND_SHADOW.G_Vent_PV3_Boost := L_Vent_PV3_Boost;
 GVL_COMMAND_SHADOW.G_Exhaust_100_Req := L_Exhaust_100_Req;
 GVL_COMMAND_SHADOW.G_Vent_Stop := L_Vent_Stop;
 GVL_COMMAND_SHADOW.G_Vent_Block := L_Vent_Block;
+GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust := L_Vent_Smoke_Exhaust;
 
 GVL_COMMAND_SHADOW.G_Heating_Block := L_Heating_Block;
 GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := L_Heating_Emergency_Stop;
