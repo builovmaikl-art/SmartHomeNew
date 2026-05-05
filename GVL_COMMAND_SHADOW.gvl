@@ -11,6 +11,7 @@ VAR_GLOBAL
     G_Exhaust_100_Req : BOOL := FALSE;
     G_Vent_Stop : BOOL := FALSE;
     G_Vent_Block : BOOL := FALSE;
+    G_Vent_Smoke_Exhaust : BOOL := FALSE;
 
     // Heating domain command gates
     G_Heating_Block : BOOL := FALSE;
