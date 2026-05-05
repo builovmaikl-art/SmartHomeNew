@@ -7,6 +7,7 @@ VAR
     L_Runtime_Error_Text : STRING(160) := '';
     L_Now_MS : UDINT;
     L_Prev_Runtime_Error : BOOL;
+    L_Any_Manifold_Pump_On : BOOL;
     fbLog : FB_LogEvent;
 END_VAR
 
@@ -42,9 +43,31 @@ GVL_COMMAND_VERIFY.Command_Mismatch_Active := (L_Mismatch_Count > 0);
 L_Runtime_Error := FALSE;
 L_Runtime_Error_Code := 0;
 L_Runtime_Error_Text := '';
+L_Any_Manifold_Pump_On := FALSE;
+
+// PLC inactive: fail-safe outputs should be off/safe except alarm/gas close outputs.
+IF (NOT L_Runtime_Error) AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+        IF GVL_IO.DO_Zone_Valves[L_i] THEN
+            L_Runtime_Error := TRUE;
+            L_Runtime_Error_Code := 10;
+            L_Runtime_Error_Text := 'PLC inactive zone valve on';
+        END_IF;
+    END_FOR;
+END_IF;
+
+IF (NOT L_Runtime_Error) AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_IO.DO_Manifold_Pumps[L_i] THEN
+            L_Runtime_Error := TRUE;
+            L_Runtime_Error_Code := 11;
+            L_Runtime_Error_Text := 'PLC inactive pump on';
+        END_IF;
+    END_FOR;
+END_IF;
 
 // GAS: gas valve must be physically commanded closed.
-IF (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) AND (NOT GVL_IO.DO_Gas_Valve_Close) THEN
+IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) AND (NOT GVL_IO.DO_Gas_Valve_Close) THEN
     L_Runtime_Error := TRUE;
     L_Runtime_Error_Code := 1;
     L_Runtime_Error_Text := 'Gas valve not closed';
@@ -79,6 +102,43 @@ IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) THEN
             L_Runtime_Error_Text := 'Supply fan active in fire';
         END_IF;
     END_FOR;
+END_IF;
+
+// WATER_LEAK: valve close commands must reach physical outputs.
+IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK) THEN
+    IF GVL_COMMAND_SHADOW.G_Close_Valve_35 AND (NOT GVL_IO.DO_Water_Valve_35_Close) THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 5;
+        L_Runtime_Error_Text := 'Water valve 35 not closed';
+    ELSIF GVL_COMMAND_SHADOW.G_Close_Valve_36 AND (NOT GVL_IO.DO_Water_Valve_36_Close) THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 6;
+        L_Runtime_Error_Text := 'Water valve 36 not closed';
+    END_IF;
+END_IF;
+
+// FREEZE: when freeze-risk is active, heating circulation should not be fully dead.
+IF (NOT L_Runtime_Error) AND GVL_STATE.G_Safety_Freeze_Risk THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_IO.DO_Manifold_Pumps[L_i] THEN
+            L_Any_Manifold_Pump_On := TRUE;
+        END_IF;
+    END_FOR;
+
+    IF (NOT L_Any_Manifold_Pump_On) AND (NOT GVL_IO.DO_Backup_Circulation_Pump) THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 7;
+        L_Runtime_Error_Text := 'Freeze circulation inactive';
+    END_IF;
+END_IF;
+
+// GAS+FREEZE: electric backup may be used for anti-freeze, but DHW heating must remain off.
+IF (NOT L_Runtime_Error) AND GVL_STATE.G_Safety_Freeze_Risk AND GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop THEN
+    IF GVL_IO.DO_DHW_Heating_Pump THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 8;
+        L_Runtime_Error_Text := 'DHW heating active during gas freeze';
+    END_IF;
 END_IF;
 
 // Apply result
