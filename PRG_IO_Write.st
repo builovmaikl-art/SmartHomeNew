@@ -5,6 +5,7 @@ VAR
     L_Vent_Forced_Off : BOOL;
     L_Water_Forced_Off : BOOL;
     L_Access_Forced_Off : BOOL;
+    L_Access_Safety_Override : BOOL;
     L_Global_Hard_Stop : BOOL;
     L_Gas_Safety_Stop : BOOL;
     L_Freeze_Active : BOOL;
@@ -96,7 +97,13 @@ L_Water_Forced_Off :=
     GVL_COMMAND_SHADOW.G_Water_Block OR
     GVL_COMMAND_SHADOW.G_Water_Emergency_Stop;
 
-L_Access_Forced_Off := GVL_SAFETY_RECOVERY.G_Recovery_Active;
+// Recovery blocks normal/manual access, but must not block emergency evacuation access.
+// GAS: unlock/enable exit from the house; FIRE: open all exits and gate according to arbitration policy.
+L_Access_Safety_Override :=
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) OR
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS);
+
+L_Access_Forced_Off := GVL_SAFETY_RECOVERY.G_Recovery_Active AND NOT L_Access_Safety_Override;
 
 // ======================================================
 // HEATING OUTPUTS
