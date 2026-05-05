@@ -1,0 +1,62 @@
+# Codebase Static Audit Report
+
+**Date:** 2026-05-05
+**Type:** Code-first static audit  
+**Scope:** `MAIN.st` and all `*PRG_*.st`, `GVL_*.gvl`, `*.dut` dependencies.
+
+## Executive Summary
+
+A full static analysis was conducted across the codebase to ensure alignment with the pipeline architecture outlined in `AGENTS.md`. Several critical flaws, omissions, and array bound mismatches were discovered that introduce significant risk to execution, compilation, and system integrity.
+
+## Critical Risks & Flaws
+
+### 1. Truncated Critical Domain Logic (FATAL)
+**Location:** `PRG_Heating.st` (Line 67)
+**Issue:** The file ends mid-logic with the comment `// rest unchanged`. The underlying function blocks for heating execution (`FB_Heating_Orchestration`, `FB_Heating_Output_Projection`, etc.) are entirely missing from the execution loop.
+**Impact:** The heating subsystem is completely broken and evaluates as a dead stub. 
+
+### 2. Lighting/Blinds/Sockets Output Projection Gap
+**Location:** `PRG_IO_Write.st`, `PRG_Lighting.st`
+**Issue:** `PRG_IO_Write.st` completely omits physical mapping for lighting, sockets, and blinds. While `GVL_IO` contains `AO_Lighting_Levels`, `AO_Blinds_Positions`, and `DO_Sockets`, nothing writes directly to them. `PRG_Lighting.st` writes purely to internal memory via `GVL_STATE.G_Lighting_Levels` and lacks an output structure.
+**Impact:** Lighting, blinds, and sockets exist entirely as internal state but are never transmitted to physical I/O.
+
+### 3. Water Output Domain Bypass
+**Location:** `PRG_IO_Write.st` (Lines 134-135)
+**Issue:** `PRG_IO_Write` directly fetches command requests bypassing the domain output struct.
+```pascal
+GVL_IO.DO_Water_Valve_35_Close := GVL_COMMAND_SHADOW.G_Close_Valve_35;
+```
+**Impact:** Violates the exact ownership model in `AGENTS.md`. `PRG_Water` projects valid outputs to `GVL_WATER_OUTPUT`, but `PRG_IO_Write` bypasses them for physical writing.
+
+### 4. Array Bounds Mismatch (Lighting)
+**Location:** `GVL_IO.gvl`, `GVL_STATE.gvl`, `GVL_CONSTANTS.gvl`, `PRG_IO_Read.st`
+**Issue:** 
+- `GVL_IO.AO_Lighting_Levels` and `GVL_IO.DI_Lighting_Switches` use `C_MAX_ZONES` (16).
+- `GVL_STATE.G_Lighting_Levels` and `GVL_STATE.G_Physical_Switches` use `C_MAX_LIGHT_ZONES` (32).
+- Inside `PRG_IO_Read.st`, switch evaluation loops explicitly hardcode `[1..8]` instead of using proper system config loops, stranding zones 9-32.
+**Impact:** Copying logic over these bounds creates out-of-bounds array faults. Hardcoding `8` disables hardware switches for the majority of the system.
+
+### 5. Dead I/O Layer for Sockets
+**Location:** `PRG_IO_Read.st` (Lines 80-82)
+**Issue:** The input processing loop totally ignores physical hardware state:
+```pascal
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+    GVL_STATE.G_Socket_Switches[L_i] := FALSE;
+END_FOR;
+```
+**Impact:** Socket hardware switch inputs (`GVL_IO.DI_Socket_Switches`) are completely inert. 
+
+### 6. Empty Data Aggregation (Dead Code Structs)
+**Location:** `GVL_INPUT.gvl`, `PRG_Input_Processing.st`
+**Issue:** `GVL_INPUT` defines `IN_Smoke_Sensors`, `IN_Water_Sensors`, `IN_Methane_Sensors` and `IN_CO_Sensors`. However, `PRG_Input_Processing.st` forgets to populate them from `GVL_STATE`.
+**Impact:** While `GVL_INPUT` is intended as the primary data source standard, it is completely ignored by Safety layers (which use `GVL_Safety_Selector` from `GVL_STATE` instead), violating the architectural roadmap goal and leaving `GVL_INPUT` bloated with empty structs.
+
+## Action Plan
+
+The following corrective actions should be prioritized:
+
+1. **Repair PRG_Heating:** Fetch and repair `PRG_Heating.st` using the full template without truncation.
+2. **Implement Lighting Projection:** Build `GVL_LIGHTING_OUTPUT.gvl` and fix `PRG_IO_Write.st` to map `GVL_LIGHTING_OUTPUT`, `GVL_STATE.G_Socket_States`, and `GVL_STATE.G_Blinds_Positions` to hardware. 
+3. **Consolidate IO Arrays:** Fix `C_MAX_ZONES` vs `C_MAX_LIGHT_ZONES` in `GVL_IO` tracking and eliminate hardcoded bounds like `8` in `PRG_IO_Read`.
+4. **Fix Water Pipeline:** Reroute Valves 35 and 36 through `GVL_WATER_OUTPUT` fully inside `PRG_IO_Write`. 
+5. **Populate GVL_INPUT:** Add safety sensor mappings to `PRG_Input_Processing` if the architectural requirement demands it, or strip them from `GVL_INPUT` cleanly.
