@@ -5,7 +5,7 @@ VAR
     L_Mode : E_Safety_Mode;
     L_Now_MS : UDINT;
     L_Elapsed_MS : UDINT;
-    L_Pulse_MS : UDINT := 500;
+    L_Pulse_MS : UDINT;
 
     L_Lock_1_Open : BOOL;
     L_Lock_1_Close : BOOL;
@@ -39,6 +39,14 @@ END_VAR
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
 
+// Load pulse duration from config with safety clamp
+L_Pulse_MS := GVL_CONFIG.G_Access_Pulse_MS;
+IF L_Pulse_MS < 100 THEN
+    L_Pulse_MS := 100;
+ELSIF L_Pulse_MS > 5000 THEN
+    L_Pulse_MS := 5000;
+END_IF;
+
 L_Lock_1_Open := FALSE;
 L_Lock_1_Close := FALSE;
 L_Lock_2_Open := FALSE;
@@ -48,7 +56,6 @@ L_Wicket_Open := FALSE;
 
 CASE L_Mode OF
     FIRE:
-        // Fire emergency: hold all commanded evacuation outputs, including gate and wicket.
         L_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
         L_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
         L_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
@@ -69,7 +76,6 @@ CASE L_Mode OF
         L_Prev_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
 
     GAS:
-        // Gas emergency: gate is held open; other commanded access outputs are pulsed.
         L_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
 
         IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND NOT L_Prev_Lock_1_Open THEN
@@ -120,7 +126,6 @@ CASE L_Mode OF
         L_Prev_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
 
 ELSE
-        // Normal/user mode: every access command is converted to a bounded pulse.
         IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND NOT L_Prev_Lock_1_Open THEN
             L_Pulse_Lock_1_Open := TRUE;
             L_Start_Lock_1_Open_MS := L_Now_MS;
