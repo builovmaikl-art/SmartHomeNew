@@ -8,6 +8,7 @@ VAR
     L_Global_Hard_Stop : BOOL;
     L_Gas_Safety_Stop : BOOL;
     L_Freeze_Active : BOOL;
+    L_Gas_Fire_Siren_Enable : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
@@ -23,6 +24,7 @@ L_Gas_Safety_Stop :=
     GVL_COMMAND_SHADOW.G_Boiler_Stop;
 
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
+L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Siren OR GVL_ALARM.G_Global_Critical;
 
 IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     // HARD FAIL-SAFE: EVERYTHING OFF / SAFE
@@ -72,9 +74,9 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     GVL_IO.DO_Lock_2_Open := FALSE;
     GVL_IO.DO_Lock_2_Close := FALSE;
 
-    GVL_IO.DO_Gas_Siren := GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Gas_Alarm_Active;
-    GVL_IO.DO_Fire_Siren := GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Fire_Alarm_Active;
-    GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren;
+    GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
+    GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+    GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
     GVL_IO.DO_Gas_Valve_Close := TRUE;
 
     RETURN;
@@ -198,9 +200,9 @@ END_IF;
 // ======================================================
 // ALARM / SIREN / GAS VALVE OUTPUTS
 // ======================================================
-GVL_IO.DO_Gas_Siren := GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Gas_Alarm_Active;
-GVL_IO.DO_Fire_Siren := GVL_ALARM.G_Gas_Fire_Siren AND GVL_ALARM.G_Fire_Alarm_Active;
-GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren;
+GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
+GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
 GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
 fbTrace(
