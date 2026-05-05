@@ -152,6 +152,7 @@ CASE L_Mode OF
         L_Boiler_Stop := GVL_COMMAND_POLICY_CONFIG.G_Gas_Stop_Boiler;
         L_Heating_Block := GVL_COMMAND_POLICY_CONFIG.G_Gas_Block_Heating;
         L_Heating_Gas_Safety_Stop := GVL_COMMAND_POLICY_CONFIG.G_Gas_Block_Heating;
+        L_Vent_PV3_Boost := TRUE;
         L_Gate_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Gate;
         L_Wicket_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Wicket;
         L_Lock_1_Open := GVL_COMMAND_POLICY_CONFIG.G_Gas_Open_Lock_1;
