@@ -15,20 +15,33 @@ GVL_INPUT.IN_Validation_Reason := '';
 GVL_INPUT.IN_Anomaly_Reason := '';
 GVL_INPUT.IN_Last_Invalid_Zone := 0;
 GVL_INPUT.IN_Input_Degraded := FALSE;
+GVL_INPUT.IN_Sensor_Fault := FALSE;
 
 GVL_INPUT.IN_Min_Zone_Confidence := 1.0;
 GVL_INPUT.IN_Worst_Zone := 0;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+// ======================================================
+// BASE ENVIRONMENT INPUT AGGREGATION
+// ======================================================
+GVL_INPUT.IN_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp;
+GVL_INPUT.IN_Preheat_Request := GVL_STATE.G_Preheat_Request;
+GVL_INPUT.IN_Freeze_Request := GVL_STATE.G_Freeze_Request;
 
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     GVL_INPUT.IN_Room_Temps[L_i] := GVL_STATE.G_Room_Temps[L_i];
     GVL_INPUT.IN_Room_Hum[L_i] := GVL_STATE.G_Room_Hum[L_i];
+    GVL_INPUT.IN_Room_CO2[L_i] := GVL_STATE.G_Room_CO2[L_i];
+
+    IF L_i <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN
+        GVL_INPUT.IN_Floor_Temps[L_i] := GVL_STATE.G_Floor_Temps[L_i];
+    END_IF;
 
     // VALIDATION
     IF (GVL_INPUT.IN_Room_Temps[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Min) OR
        (GVL_INPUT.IN_Room_Temps[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Max) THEN
         GVL_INPUT.IN_Validation_Failed := TRUE;
         GVL_INPUT.IN_Input_Degraded := TRUE;
+        GVL_INPUT.IN_Sensor_Fault := TRUE;
         GVL_INPUT.IN_Validation_Reason := 'Temp out of range';
         GVL_INPUT.IN_Last_Invalid_Zone := L_i;
     END_IF;
@@ -37,6 +50,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
        (GVL_INPUT.IN_Room_Hum[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Room_Hum_Max) THEN
         GVL_INPUT.IN_Validation_Failed := TRUE;
         GVL_INPUT.IN_Input_Degraded := TRUE;
+        GVL_INPUT.IN_Sensor_Fault := TRUE;
         GVL_INPUT.IN_Validation_Reason := 'Hum out of range';
         GVL_INPUT.IN_Last_Invalid_Zone := L_i;
     END_IF;
@@ -62,7 +76,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     // REPUTATION
     IF GVL_INPUT_VALIDATION_CONFIG.G_Enable_Reputation_Learning THEN
-
         GVL_INPUT.IN_Room_Temp_Reputation[L_i] :=
             GVL_INPUT.IN_Room_Temp_Reputation[L_i] * (1.0 - GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate) +
             GVL_INPUT.IN_Room_Temp_Confidence[L_i] * GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate;
@@ -78,7 +91,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         GVL_INPUT.IN_Room_Hum_Reputation[L_i] :=
             GVL_INPUT.IN_Room_Hum_Reputation[L_i] +
             (1.0 - GVL_INPUT.IN_Room_Hum_Reputation[L_i]) * GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Recovery_Decay;
-
     END_IF;
 
     IF GVL_INPUT.IN_Room_Temp_Reputation[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Min_Sensor_Confidence THEN
@@ -101,7 +113,25 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     GVL_INPUT.IN_Room_Temp_Prev[L_i] := GVL_INPUT.IN_Room_Temps[L_i];
     GVL_INPUT.IN_Room_Hum_Prev[L_i] := GVL_INPUT.IN_Room_Hum[L_i];
+END_FOR;
 
+// ======================================================
+// SAFETY SENSOR INPUT AGGREGATION
+// ======================================================
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    GVL_INPUT.IN_Water_Sensors[L_i] := GVL_STATE.G_Water_Sensors[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
+    GVL_INPUT.IN_Smoke_Sensors[L_i] := GVL_STATE.G_Smoke_Sensors[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
+    GVL_INPUT.IN_Methane_Sensors[L_i] := GVL_STATE.G_Methane_Sensors[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
+    GVL_INPUT.IN_CO_Sensors[L_i] := GVL_STATE.G_CO_Sensors[L_i];
 END_FOR;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Input_Processing <<<
