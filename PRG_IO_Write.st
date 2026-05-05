@@ -15,9 +15,10 @@ END_VAR
 // ======================================================
 // GLOBAL SAFETY GUARD (ABSOLUTE LAST BARRIER)
 // ======================================================
+// IMPORTANT: Gas valve close is NOT a global hard-stop condition
+// it must NOT disable ventilation or access (GAS policy requires them)
 L_Global_Hard_Stop :=
-    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR
-    GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
+    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 
 L_Gas_Safety_Stop :=
     GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR
