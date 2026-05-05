@@ -2,4 +2,10 @@ VAR_GLOBAL
     Command_Mismatch_Count : INT := 0;
     Command_Match_OK : BOOL := TRUE;
     Command_Mismatch_Active : BOOL := FALSE;
+
+    Runtime_Sanity_OK : BOOL := TRUE;
+    Runtime_Sanity_Error_Count : UDINT := 0;
+    Runtime_Last_Error_Code : UDINT := 0;
+    Runtime_Last_Error_Time_MS : UDINT := 0;
+    Runtime_Last_Error_Text : STRING(160) := '';
 END_VAR
