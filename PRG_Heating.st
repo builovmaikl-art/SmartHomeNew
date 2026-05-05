@@ -58,6 +58,13 @@ fbDHWManager(
     VO_Circ_Pump => L_DHW_Circ_Pump
 );
 
+// Gas safety disables DHW heating demand, but keeps DHW circulation policy intact.
+// The electric backup heater is reserved for freeze protection of the heating system, not for DHW.
+IF L_Heating_Gas_Safety_Stop THEN
+    L_DHW_Heating_Pump := FALSE;
+    L_DHW_Status.Heating_Pump_On := FALSE;
+END_IF;
+
 // ======================================================
 // HEATING EXECUTION CORE
 // ======================================================
@@ -124,11 +131,13 @@ END_FOR;
 GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
 IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
     L_DHW_Heating_Pump := FALSE;
+    L_DHW_Status.Heating_Pump_On := FALSE;
 END_IF;
 
 GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
 IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
     L_DHW_Circ_Pump := FALSE;
+    L_DHW_Status.Circ_Pump_On := FALSE;
 END_IF;
 
 GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
