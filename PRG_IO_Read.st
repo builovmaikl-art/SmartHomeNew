@@ -1,6 +1,8 @@
 PROGRAM PRG_IO_Read
 VAR
     L_i : INT;
+    L_Map_Index : INT;
+    L_Glass_Index : INT;
     L_Debounce_Time : TIME := T#100MS;
     L_Manifold_Pressure_Raw : WORD;
     L_Manifold_Current_Raw : WORD;
@@ -78,7 +80,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     GVL_STATE.G_Motion_Sensors[L_i] := fbDebounce_Motion[L_i].Q;
 END_FOR;
 
-// Socket hardware inputs are now propagated instead of being forced to FALSE.
+// Socket hardware inputs are propagated instead of being forced to FALSE.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
     GVL_STATE.G_Socket_Switches[L_i] := GVL_IO.DI_Socket_Switches[L_i];
 END_FOR;
@@ -96,12 +98,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
     END_IF;
 END_FOR;
 
-FOR L_i := 1 TO 8 DO
-    IF GVL_CONFIG.G_Window_Map[L_i] > 0 THEN
-        IF GVL_CONFIG.G_Window_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
-            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Window_Map[L_i]].Q;
+// Window/opening mapping is limited by C_MAX_ZONES and protected by bounds checks.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    L_Map_Index := GVL_CONFIG.G_Window_Map[L_i];
+    IF L_Map_Index > 0 THEN
+        IF L_Map_Index <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
+            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Open[L_Map_Index].Q;
         ELSE
-            GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[GVL_CONFIG.G_Window_Map[L_i] - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS].Q;
+            L_Glass_Index := L_Map_Index - GVL_CONSTANTS.C_MAX_SECURITY_SENSORS;
+            IF (L_Glass_Index >= 1) AND (L_Glass_Index <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS) THEN
+                GVL_STATE.G_Window_Sensors[L_i] := fbDebounce_Security_Glass[L_Glass_Index].Q;
+            END_IF;
         END_IF;
     END_IF;
 END_FOR;
@@ -133,7 +140,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
     END_IF;
 END_FOR;
 
-FOR L_i := 1 TO 8 DO
+// Humidity and CO2 IO/state/calibration arrays are sized by C_MAX_ZONES.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     fbCalib_Room_Hum[L_i](
         VI_Raw_Value := GVL_IO.AI_Room_Hum[L_i],
         VI_Record := GVL_CONFIG.G_Calib_Humidity[L_i]
