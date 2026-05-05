@@ -13,7 +13,18 @@ VAR
     L_Socket_Override : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     L_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
     L_Wet_Zone_Any_Active : BOOL;
+    L_Fire_Alarm_Active : BOOL;
+    L_Security_Armed : BOOL;
+    L_Security_Alarm : BOOL;
+    L_Evac_Blink_Phase : UDINT;
+    L_Evac_Blink_On : BOOL;
 END_VAR
+
+L_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active OR GVL_STATE.G_Safety_Smoke_Latched;
+L_Security_Armed := GVL_ALARM.G_Security_Armed;
+L_Security_Alarm := GVL_ALARM.G_Security_Alarm;
+L_Evac_Blink_Phase := (GVL_STATUS.G_System_Time_MS / 500) MOD 2;
+L_Evac_Blink_On := (L_Evac_Blink_Phase = 0);
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override THEN
@@ -68,12 +79,6 @@ fbLightingManager(
     VO_Wet_Zone_Light_Active => L_Wet_Zone_Light_Active
 );
 
-L_Wet_Zone_Any_Active := FALSE;
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
-    L_Wet_Zone_Any_Active := L_Wet_Zone_Any_Active OR L_Wet_Zone_Light_Active[L_i];
-END_FOR;
-GVL_STATUS.G_Wet_Zone_Light_Active := L_Wet_Zone_Any_Active;
-
 fbSocketManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -88,6 +93,8 @@ fbSocketManager(
     VO_Socket_States => GVL_STATE.G_Socket_States
 );
 
+// Priority overrides after normal manager calculation:
+// Evacuation > Fire > Security Alarm > Security Armed > Normal
 IF GVL_STATE.G_Evacuation_Lighting_Active THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         CASE GVL_STATE.G_Evac_Guidance[L_i] OF
@@ -96,10 +103,38 @@ IF GVL_STATE.G_Evacuation_Lighting_Active THEN
             1:
                 GVL_STATE.G_Lighting_Levels[L_i] := 100;
         ELSE
-            GVL_STATE.G_Lighting_Levels[L_i] := SEL((L_i MOD 2) = 0, 0, 100);
+            IF L_Evac_Blink_On THEN
+                GVL_STATE.G_Lighting_Levels[L_i] := 100;
+            ELSE
+                GVL_STATE.G_Lighting_Levels[L_i] := 0;
+            END_IF;
         END_CASE;
     END_FOR;
+ELSIF L_Fire_Alarm_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_STATE.G_Lighting_Levels[L_i] := 100;
+    END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+        GVL_STATE.G_Blinds_Positions[L_i] := 100;
+    END_FOR;
+ELSIF L_Security_Alarm THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_STATE.G_Lighting_Levels[L_i] := 100;
+    END_FOR;
+ELSIF L_Security_Armed THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_STATE.G_Lighting_Levels[L_i] := 0;
+    END_FOR;
 END_IF;
+
+// Publish wet-zone activity from the final lighting state seen by IO_Write.
+L_Wet_Zone_Any_Active := FALSE;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+    IF GVL_CONFIG.G_Wet_Zone_Map[L_i] AND (GVL_STATE.G_Lighting_Levels[L_i] > 10) THEN
+        L_Wet_Zone_Any_Active := TRUE;
+    END_IF;
+END_FOR;
+GVL_STATUS.G_Wet_Zone_Light_Active := L_Wet_Zone_Any_Active;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Lighting <<<
 END_PROGRAM
