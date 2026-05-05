@@ -13,11 +13,14 @@ END_VAR
 
 VAR
     L_Last_Scenario_Time : UDINT;
+    L_Requested_Scenario : E_SCENARIO_TYPE;
 END_VAR
 
 IF NOT VI_IsActivePLC THEN
     RETURN;
 END_IF;
+
+L_Requested_Scenario := VI_Activate_Request;
 
 CASE VI_System_Mode OF
     E_System_Operating_Mode.MODE_SAFE_STOP,
@@ -29,17 +32,25 @@ CASE VI_System_Mode OF
         RETURN;
 
     E_System_Operating_Mode.MODE_DEGRADED:
-        VO_Status_Msg := 'Смена сценариев заблокирована: деградированный режим';
-        RETURN;
+        CASE L_Requested_Scenario OF
+            E_SCENARIO_TYPE.SCENARIO_NONE,
+            E_SCENARIO_TYPE.SCENARIO_AWAY,
+            E_SCENARIO_TYPE.SCENARIO_SLEEP,
+            E_SCENARIO_TYPE.SCENARIO_PRESENCE:
+                VO_Status_Msg := 'Сценарии работают в ограниченном degraded-режиме';
+        ELSE
+                L_Requested_Scenario := E_SCENARIO_TYPE.SCENARIO_NONE;
+                VO_Status_Msg := 'Небезопасный сценарий заблокирован degraded-режимом';
+        END_CASE;
 ELSE
-        // No fallback required
+        // Normal mode: no additional clamp required.
 END_CASE;
 
-IF VI_Activate_Request <> VO_Current_Scenario THEN
+IF L_Requested_Scenario <> VO_Current_Scenario THEN
     // Проверка минимального времени работы сценария
     IF (VI_System_Time_MS - L_Last_Scenario_Time) >= 60000 OR VO_Current_Scenario = E_SCENARIO_TYPE.SCENARIO_NONE THEN
         // Логика переключения сценариев
-        VO_Current_Scenario := VI_Activate_Request;
+        VO_Current_Scenario := L_Requested_Scenario;
         L_Last_Scenario_Time := VI_System_Time_MS;
         
         CASE VO_Current_Scenario OF
@@ -52,15 +63,15 @@ IF VI_Activate_Request <> VO_Current_Scenario THEN
         E_SCENARIO_TYPE.SCENARIO_PRESENCE:
             VO_Status_Msg := 'Активирован сценарий: Имитация присутствия';
         ELSE
-        // No fallback required
-END_CASE;
+            VO_Status_Msg := 'Активирован сценарий';
+        END_CASE;
     END_IF;
 END_IF;
-// >>> BULK_SYNC_ANCHOR: FB_Scenario_Manager <<<
-
 
 // --- PREHEAT SCENARIO INSERT ---
 IF VI_Preheat_Request THEN
     // removed: direct heating write (moved to Heating Manager)
 END_IF;
+
+// >>> BULK_SYNC_ANCHOR: FB_Scenario_Manager <<<
 END_FUNCTION_BLOCK
