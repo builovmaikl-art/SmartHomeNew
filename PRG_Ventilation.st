@@ -58,7 +58,19 @@ fbVentilationManager(
     VO_Ventilation_Subsystem_Degraded => GVL_STATE.G_Ventilation_Subsystem_Degraded
 );
 
-// === NEW: DIRECT OUTPUT PROJECTION (NO GVL_STATE ACTUATOR WRITE) ===
+// ==============================
+// SMOKE EXHAUST OVERRIDE (AFTER MANAGER)
+// ==============================
+IF GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        L_Exhaust_Fans_Byte[L_i] := 100;
+    END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        L_Supply_Fans_Byte[L_i] := 0;
+    END_FOR;
+END_IF;
+
+// === OUTPUT PROJECTION ===
 fbVentProjection(
     VI_Supply_Fans := L_Supply_Fans_Byte,
     VI_Exhaust_Fans := L_Exhaust_Fans_Byte
