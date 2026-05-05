@@ -1,5 +1,18 @@
 PROGRAM PRG_Policy
 
+// ============================================================
+// CONFIGURATION SAFETY CLAMP
+// ============================================================
+// Configuration validation is diagnostic-only; policy owns the decision
+// to degrade the system when invalid configuration is detected.
+// Do not override active safety modes such as SAFE_STOP or FREEZE_PROTECTION.
+IF GVL_CONFIG_VALIDATION.G_Config_Force_Safe_Mode AND
+   (NOT GVL_CONFIG_VALIDATION.G_Config_Valid) AND
+   (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_NORMAL) THEN
+    GVL_STATE.G_System_Mode := E_System_Operating_Mode.MODE_DEGRADED;
+    GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
+    GVL_STATUS.G_System_Mode_Text := 'CONFIG DEGRADED';
+END_IF;
 
 // ============================================================
 // SCENARIO POLICY OWNER
