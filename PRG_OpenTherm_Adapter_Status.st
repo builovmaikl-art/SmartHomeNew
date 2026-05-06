@@ -25,6 +25,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     L_Heartbeat_Age :=
         L_Now_MS - GVL_OPENTHERM_ADAPTER.G_Status[L_i].Last_Heartbeat_MS;
 
+    GVL_OPENTHERM_ADAPTER.G_Status[L_i].Heartbeat_Age_MS :=
+        L_Heartbeat_Age;
+
     GVL_OPENTHERM_ADAPTER.G_Status[L_i].Heartbeat_Timeout :=
         (L_Heartbeat_Age > GVL_CONFIG.G_OpenTherm_Heartbeat_Timeout_MS);
 
@@ -35,8 +38,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
         (GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Ack_Seq =
          GVL_OPENTHERM_ADAPTER.G_Command[L_i].Sequence);
 
+    GVL_OPENTHERM_ADAPTER.G_Status[L_i].Last_Command_Ack_Seq :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Ack_Seq;
+
     L_Command_Age :=
         L_Now_MS - GVL_OPENTHERM_ADAPTER.G_Command[L_i].Last_Write_MS;
+
+    GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Age_MS :=
+        L_Command_Age;
 
     GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Timeout :=
         (NOT GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Ack) AND
