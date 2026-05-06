@@ -60,7 +60,9 @@ IF VI_Policy_Degraded THEN
 END_IF;
 
 fbBoilerCascade(
-    VI_Enable := VI_IsActivePLC AND ((VO_Demand_Power > GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR VI_Freeze_Mode_Active),
+    // DHW heating demand is an independent boiler heat request in normal operation.
+    // Gas safety disables DHW demand earlier in PRG_Heating, so this does not allow DHW heating during gas shutdown.
+    VI_Enable := VI_IsActivePLC AND ((VO_Demand_Power > GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR VI_Freeze_Mode_Active OR VI_DHW_Heating_Demand),
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Boiler_Stop := FALSE,
     VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
