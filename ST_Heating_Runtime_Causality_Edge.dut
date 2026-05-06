@@ -1,0 +1,42 @@
+TYPE ST_Heating_Runtime_Causality_Edge :
+STRUCT
+    // ======================================================
+    // Edge topology
+    // ======================================================
+    Source_Node_ID : UINT;
+    Target_Node_ID : UINT;
+
+    // ======================================================
+    // Edge lifecycle
+    // ======================================================
+    Edge_Active : BOOL;
+    Propagation_Detected : BOOL;
+
+    // ======================================================
+    // Propagation state
+    // ======================================================
+    Runtime_Propagation : BOOL;
+    Cascade_Propagation : BOOL;
+    OpenTherm_Propagation : BOOL;
+    Diagnostics_Propagation : BOOL;
+
+    // ======================================================
+    // Propagation integrity
+    // ======================================================
+    Sequencing_Propagation : BOOL;
+    Ownership_Propagation : BOOL;
+    Synchronization_Propagation : BOOL;
+
+    // ======================================================
+    // Edge severity
+    // ======================================================
+    Severity_Level : UINT;
+    Critical_Path : BOOL;
+
+    // ======================================================
+    // Edge status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
