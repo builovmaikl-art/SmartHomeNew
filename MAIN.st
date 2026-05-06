@@ -61,6 +61,10 @@ PRG_System_Coordinator();
 // 6. Command arbitration
 PRG_Command_Arbitration();
 
+// 6.5 Physical OpenTherm adapter feedback validation.
+// Must execute before PRG_Heating so boiler online/error/flame state is fresh.
+PRG_OpenTherm_Adapter_Status();
+
 // 7. Domain execution and domain output projection
 PRG_Heating();
 PRG_Ventilation();
