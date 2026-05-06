@@ -1,0 +1,12 @@
+TYPE ST_Modbus_Request :
+STRUCT
+    Enable : BOOL;
+    Slave_ID : BYTE;
+    Function_Code : E_Modbus_Function;
+    Start_Register : UINT;
+    Register_Count : UINT;
+    Write_Value : ARRAY[1..32] OF WORD;
+    Sequence : UDINT;
+    Timeout_MS : UDINT;
+END_STRUCT
+END_TYPE
