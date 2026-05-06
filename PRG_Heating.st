@@ -4,6 +4,9 @@ VAR
     fbDHWManager : FB_DHW_Manager;
     fbOutputProjection : FB_Heating_Output_Projection;
     fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
+    fbRuntimeObserver : FB_Heating_Runtime_Observer;
+
+    L_Runtime_Context : ST_Heating_Runtime_Context;
 
     L_i : INT;
     L_Current_Hour : UINT;
@@ -40,8 +43,45 @@ L_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 L_Heating_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_STATE.G_Safety_Gas_Latched;
 
 // ======================================================
+// RUNTIME CONTEXT INITIALIZATION
+// ======================================================
+L_Runtime_Context.Runtime_Enabled := TRUE;
+L_Runtime_Context.Runtime_Ready := TRUE;
+L_Runtime_Context.Runtime_Fault := FALSE;
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_IDLE;
+
+L_Runtime_Context.Allow_DHW_Phase := TRUE;
+L_Runtime_Context.Allow_Heating_Phase := TRUE;
+L_Runtime_Context.Allow_Service_Gating_Phase := TRUE;
+L_Runtime_Context.Allow_State_Publication_Phase := TRUE;
+L_Runtime_Context.Allow_Diagnostics_Phase := TRUE;
+L_Runtime_Context.Allow_Output_Projection_Phase := TRUE;
+
+L_Runtime_Context.DHW_Executed := FALSE;
+L_Runtime_Context.Heating_Executed := FALSE;
+L_Runtime_Context.Service_Gating_Executed := FALSE;
+L_Runtime_Context.State_Publication_Executed := FALSE;
+L_Runtime_Context.Diagnostics_Executed := FALSE;
+L_Runtime_Context.Output_Projection_Executed := FALSE;
+
+L_Runtime_Context.DHW_Before_Heating_Valid := TRUE;
+L_Runtime_Context.State_Publication_Before_Diagnostics_Valid := TRUE;
+L_Runtime_Context.Output_Projection_Last_Valid := TRUE;
+
+L_Runtime_Context.Diagnostics_Isolation_Valid := TRUE;
+L_Runtime_Context.Explainability_Isolation_Valid := TRUE;
+L_Runtime_Context.Safety_Isolation_Valid := TRUE;
+L_Runtime_Context.OpenTherm_Ownership_Valid := TRUE;
+L_Runtime_Context.Cascade_Ownership_Valid := TRUE;
+
+L_Runtime_Context.Runtime_Status_Code := 1;
+L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
+
+// ======================================================
 // DHW EXECUTION
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
+
 fbDHWManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_Current_TOD := GVL_STATUS.G_Current_TOD,
@@ -59,6 +99,8 @@ fbDHWManager(
     VO_Circ_Pump => L_DHW_Circ_Pump
 );
 
+L_Runtime_Context.DHW_Executed := TRUE;
+
 // Gas safety disables DHW heating demand, but keeps DHW circulation policy intact.
 // The electric backup heater is reserved for freeze protection of the heating system, not for DHW.
 IF L_Heating_Gas_Safety_Stop THEN
@@ -69,6 +111,8 @@ END_IF;
 // ======================================================
 // HEATING EXECUTION CORE
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_HEATING;
+
 fbHeatingManager(
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
@@ -108,9 +152,13 @@ fbHeatingManager(
     VO_Boiler_Status => L_Boiler_Status
 );
 
+L_Runtime_Context.Heating_Executed := TRUE;
+
 // ======================================================
 // MAINTENANCE / SERVICE GATING
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_SERVICE_GATING;
+
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
 GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
 
@@ -150,9 +198,13 @@ IF GVL_STATE.G_Freeze_Hardware_Failed THEN
     L_Freeze_Risk_Status := TRUE;
 END_IF;
 
+L_Runtime_Context.Service_Gating_Executed := TRUE;
+
 // ======================================================
 // STATE / STATUS COPY OUT
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_STATE_PUBLICATION;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
 END_FOR;
@@ -176,16 +228,35 @@ GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
 GVL_STATE.G_DHW_Circ_Pump := L_DHW_Circ_Pump;
 GVL_STATUS.G_DHW_Status := L_DHW_Status;
 
+L_Runtime_Context.State_Publication_Executed := TRUE;
+
 // ======================================================
 // READ-ONLY ROOT CAUSE DIAGNOSTICS
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
+
 fbRootCauseDiagnostics(
     VI_Enable := TRUE
 );
 
+L_Runtime_Context.Diagnostics_Executed := TRUE;
+
+// ======================================================
+// FINALIZED-STATE RUNTIME OBSERVER
+// ======================================================
+IF GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer THEN
+    fbRuntimeObserver(
+        VI_Enable := TRUE,
+        VI_Runtime_Context := L_Runtime_Context,
+        VI_Diagnostics_Valid := TRUE
+    );
+END_IF;
+
 // ======================================================
 // DOMAIN OUTPUT PROJECTION
 // ======================================================
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
+
 fbOutputProjection(
     VI_Zone_Valves := L_Zone_Valves,
     VI_Manifold_Pumps := L_Manifold_Pumps,
@@ -195,6 +266,9 @@ fbOutputProjection(
     VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
     VI_Electric_Heater_Enable := L_Electric_Heater_Enable
 );
+
+L_Runtime_Context.Output_Projection_Executed := TRUE;
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_COMPLETE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
 END_PROGRAM
