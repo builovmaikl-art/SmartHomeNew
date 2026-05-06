@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2404
+total 2400
 -rw-r--r--  1 runner runner  13067 May  6 09:34 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May  6 09:34 .
 drwxr-xr-x  3 runner runner   4096 May  6 09:34 ..
@@ -220,7 +220,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 09:34 .github
 -rw-r--r--  1 runner runner   1262 May  6 09:34 GVL_MODBUS_RTU_BRIDGE.gvl
 -rw-r--r--  1 runner runner    553 May  6 09:34 GVL_MODBUS_RTU_FRAME.gvl
 -rw-r--r--  1 runner runner    690 May  6 09:34 GVL_MODBUS_SCAN.gvl
--rw-r--r--  1 runner runner   2041 May  6 09:34 GVL_MODBUS_SYSCOM_TRANSPORT.gvl
+-rw-r--r--  1 runner runner   2067 May  6 09:34 GVL_MODBUS_SYSCOM_TRANSPORT.gvl
 -rw-r--r--  1 runner runner    301 May  6 09:34 GVL_MODE.gvl
 -rw-r--r--  1 runner runner    794 May  6 09:34 GVL_OPENTHERM_ADAPTER.gvl
 -rw-r--r--  1 runner runner    346 May  6 09:34 GVL_PERSISTENT.gvl
@@ -396,7 +396,7 @@ drwxr-xr-x  5 runner runner   4096 May  6 09:34 компилятор
 -rw-r--r--  1 runner runner  76171 May  6 09:34 ошибки компиляции.txt
 
 === compiler dir ===
-total 592
+total 588
 drwxr-xr-x  5 runner runner   4096 May  6 09:34 .
 drwxr-xr-x 14 runner runner  20480 May  6 09:34 ..
 -rw-r--r--  1 runner runner  21153 May  6 09:34 001_universal_pou_builder_METHODS_V2.py
@@ -419,4 +419,4 @@ total 1296
 drwxr-xr-x 2 runner runner    4096 May  6 09:34 .
 drwxr-xr-x 5 runner runner    4096 May  6 09:34 ..
 -rw-r--r-- 1 runner runner       0 May  6 09:34 .gitkeep
--rw-r--r-- 1 runner runner 1316016 May  6 09:34 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1316900 May  6 09:34 RESULT_methods_clean.xml
