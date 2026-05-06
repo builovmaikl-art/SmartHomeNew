@@ -64,12 +64,14 @@ PRG_Command_Arbitration();
 // 6.5 Modbus/OpenTherm transport pipeline.
 // Modbus master schedules requests.
 // RTU bridge exports request/imports confirmed response.
-// RTU driver wrapper performs concrete RS485 exchange.
+// RTU driver builds TX frame and consumes validated RX frame.
+// SysCom byte boundary transfers TX/RX bytes to/from concrete serial backend.
 // Register scanner is strictly read-only diagnostics.
 // OpenTherm transport decodes wire image before validation.
 PRG_Modbus_Master();
 PRG_Modbus_RTU_Bridge();
 PRG_Modbus_RTU_Driver();
+PRG_Modbus_RTU_SysCom_Transport();
 PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
