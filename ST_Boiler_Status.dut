@@ -20,5 +20,13 @@ STRUCT
     OT_Command_Valid : BOOL;
     OT_Transport_Degraded : BOOL;
     OT_Adapter_Error : BOOL;
+
+    // Semantic cascade/explainability state
+    Available : BOOL;
+    Selected_By_Cascade : BOOL;
+    Flame_Missing : BOOL;
+    Transport_Missing : BOOL;
+    Ignition_Timeout : BOOL;
+    Degraded : BOOL;
 END_STRUCT
 END_TYPE
