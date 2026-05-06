@@ -3,6 +3,7 @@ VAR
     L_Mode : E_Safety_Mode;
     L_Recovery : E_Recovery_Phase;
     L_Command : STRING(120);
+    L_Heating : STRING(255);
 END_VAR
 
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
@@ -41,11 +42,42 @@ ELSE
 END_IF;
 GVL_EXPLAINABILITY.G_Reason_Chain_Command := L_Command;
 
+// HEATING DOMAIN EXPLAINABILITY
+IF GVL_STATE.G_Heating_RootCause <> E_Heating_RootCause.RC_NONE THEN
+    L_Heating := GVL_STATE.G_Heating_Confidence_Reason_Text;
+ELSIF GVL_STATE.G_Heating_Cascade_Degraded THEN
+    L_Heating := 'Heating cascade degraded';
+ELSE
+    L_Heating := 'Heating OK';
+END_IF;
+GVL_EXPLAINABILITY.G_Heating_Why_Blocked := L_Heating;
+
 // OUTPUT LEVEL
 GVL_EXPLAINABILITY.G_Reason_Chain_Output := 'Outputs Applied';
 
 // FULL CHAIN
-GVL_EXPLAINABILITY.G_Reason_Chain_Full := CONCAT(CONCAT(CONCAT(GVL_EXPLAINABILITY.G_Reason_Chain_Safety, ' -> '), CONCAT(GVL_EXPLAINABILITY.G_Reason_Chain_Behavior, ' -> ')), CONCAT(GVL_EXPLAINABILITY.G_Reason_Chain_Command, ' -> Outputs Applied'));
+GVL_EXPLAINABILITY.G_Reason_Chain_Full := CONCAT(
+    CONCAT(
+        CONCAT(
+            GVL_EXPLAINABILITY.G_Reason_Chain_Safety,
+            ' -> '
+        ),
+        CONCAT(
+            GVL_EXPLAINABILITY.G_Reason_Chain_Behavior,
+            ' -> '
+        )
+    ),
+    CONCAT(
+        CONCAT(
+            GVL_EXPLAINABILITY.G_Reason_Chain_Command,
+            ' -> '
+        ),
+        CONCAT(
+            L_Heating,
+            ' -> Outputs Applied'
+        )
+    )
+);
 
 // KEEP OLD FIELDS
 GVL_EXPLAINABILITY.G_Behavior_Why_Active := GVL_INTENT_BEHAVIOR.I_Reason_Text;
