@@ -25,7 +25,6 @@ VAR
 
     L_CRC : WORD;
     L_CRC_Frame : WORD;
-    L_CRC_Byte : BYTE;
 
     L_Baudrate : UDINT;
     L_Interframe_MS : UDINT;
@@ -42,12 +41,8 @@ END_VAR
 //   - RX stream accumulation
 //   - inter-frame timeout detection
 //   - RTU CRC validation
+//   - explicit RX runtime state machine
 //   - physical transport supervision
-//
-// Non responsibilities:
-//   - Modbus frame build
-//   - register parsing
-//   - retry policy
 // ======================================================
 
 IF NOT VI_Enable THEN
@@ -60,6 +55,10 @@ IF NOT VI_Enable THEN
     L_Open_Done := FALSE;
 
     GVL_MODBUS_SYSCOM_TRANSPORT.G_Transport_Attached := FALSE;
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+        MB_RTU_RX_IDLE;
+
     GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
     GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
 
@@ -73,8 +72,6 @@ IF NOT L_Open_Done THEN
 
     L_Baudrate := GVL_CONFIG.G_Modbus_RTU_Config.Baudrate;
 
-    // RTU inter-frame timeout approximation.
-    // Conservative practical values for PLC cycle timing.
     IF L_Baudrate <= 9600 THEN
         L_Interframe_MS := 5;
     ELSIF L_Baudrate <= 19200 THEN
@@ -227,6 +224,9 @@ L_Bytes_Read := SysCom.SysComRead(
 
 IF L_Bytes_Read > 0 THEN
 
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+        MB_RTU_RX_RECEIVING;
+
     IF L_Bytes_Read > 256 THEN
         L_Read_Count := 256;
     ELSE
@@ -244,6 +244,9 @@ IF L_Bytes_Read > 0 THEN
             UINT_TO_INT(GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length);
 
         IF L_Target_Index >= 256 THEN
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                MB_RTU_RX_OVERFLOW;
 
             GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Overflow := TRUE;
 
@@ -281,9 +284,6 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
 
         IF L_Frame_Length >= 4 THEN
 
-            // ==================================================
-            // MODBUS RTU CRC16
-            // ==================================================
             L_CRC := 16#FFFF;
 
             FOR L_i := 0 TO (L_Frame_Length - 3) DO
@@ -328,6 +328,9 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
 
             IF L_CRC = L_CRC_Frame THEN
 
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                    MB_RTU_RX_FRAME_READY;
+
                 GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_OK := TRUE;
 
                 GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Length :=
@@ -343,6 +346,9 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
 
             ELSE
 
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                    MB_RTU_RX_CRC_ERROR;
+
                 GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_OK := FALSE;
 
                 GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_CRC_Error :=
@@ -351,6 +357,9 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
             END_IF;
 
         ELSE
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                MB_RTU_RX_SHORT_FRAME;
 
             GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame :=
                 GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame + 1;
@@ -361,6 +370,15 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
         GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
 
     END_IF;
+
+END_IF;
+
+IF NOT GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active AND
+   NOT GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Ready AND
+   (GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State = MB_RTU_RX_FRAME_READY) THEN
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+        MB_RTU_RX_IDLE;
 
 END_IF;
 
