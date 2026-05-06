@@ -1,0 +1,8 @@
+VAR_GLOBAL
+    // ======================================================
+    // Runtime observer governance lock
+    // Default state MUST remain disabled.
+    // Observer attachment remains optional and removable.
+    // ======================================================
+    G_Enable_Runtime_Observer : BOOL := FALSE;
+END_VAR
