@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2256
+total 2260
 -rw-r--r--  1 runner runner  13067 May  6 06:27 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May  6 06:27 .
 drwxr-xr-x  3 runner runner   4096 May  6 06:27 ..
@@ -312,6 +312,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 06:27 .github
 -rw-r--r--  1 runner runner    292 May  6 06:27 ST_Lifetime_Status.dut
 -rw-r--r--  1 runner runner    260 May  6 06:27 ST_Maintenance_Access_Config.dut
 -rw-r--r--  1 runner runner    340 May  6 06:27 ST_Manifold_Status.dut
+-rw-r--r--  1 runner runner    148 May  6 06:27 ST_OpenTherm_Command.dut
 -rw-r--r--  1 runner runner    288 May  6 06:27 ST_Operator_Zone_Rights.dut
 -rw-r--r--  1 runner runner    229 May  6 06:27 ST_Outdoor_Zone_Config.dut
 -rw-r--r--  1 runner runner    154 May  6 06:27 ST_Owen_Analog_Value.dut
@@ -389,4 +390,4 @@ total 1208
 drwxr-xr-x 2 runner runner    4096 May  6 06:27 .
 drwxr-xr-x 5 runner runner    4096 May  6 06:27 ..
 -rw-r--r-- 1 runner runner       0 May  6 06:27 .gitkeep
--rw-r--r-- 1 runner runner 1225686 May  6 06:27 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1226628 May  6 06:27 RESULT_methods_clean.xml
