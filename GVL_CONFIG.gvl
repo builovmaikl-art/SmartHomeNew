@@ -98,18 +98,17 @@ VAR_GLOBAL
     G_OpenTherm_Register_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Register_Map;
 
     // Modbus RTU transport configuration
+    // Scalar fields are used instead of nested structure for CODESYS/build-system compatibility.
     G_Modbus_RTU_Driver_Attached : BOOL := FALSE;
-    G_Modbus_RTU_Config : ST_Modbus_RTU_Config := (
-        Port_Name := 'COM1',
-        Baudrate := 9600,
-        Parity := 1,
-        Stop_Bits := 1,
-        Data_Bits := 8,
-        Slave_ID := 1,
-        Poll_Interval_MS := 100,
-        Request_Timeout_MS := 250,
-        Retry_Count := 2
-    );
+    G_Modbus_RTU_Port_Number : BYTE := 1; // 1=COM1, 2=COM2, 3=COM3, 4=COM4
+    G_Modbus_RTU_Baudrate : UDINT := 9600;
+    G_Modbus_RTU_Parity : BYTE := 1; // 0=None, 1=Even, 2=Odd
+    G_Modbus_RTU_Stop_Bits : BYTE := 1; // 1 or 2
+    G_Modbus_RTU_Data_Bits : BYTE := 8; // usually 8
+    G_Modbus_RTU_Slave_ID : BYTE := 1;
+    G_Modbus_RTU_Poll_Interval_MS : UDINT := 100;
+    G_Modbus_RTU_Request_Timeout_MS : UDINT := 250;
+    G_Modbus_RTU_Retry_Count : INT := 2;
 
     // IO Mapping
     G_FloorTemp_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
