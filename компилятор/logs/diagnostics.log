@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2368
+total 2372
 -rw-r--r--  1 runner runner  13067 May  6 08:29 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May  6 08:29 .
 drwxr-xr-x  3 runner runner   4096 May  6 08:29 ..
@@ -115,6 +115,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 08:29 .github
 -rw-r--r--  1 runner runner    806 May  6 08:29 FB_Maintenance_Access.st
 -rw-r--r--  1 runner runner   6728 May  6 08:29 FB_Modbus_RTU_Driver.st
 -rw-r--r--  1 runner runner   4217 May  6 08:29 FB_Modbus_RTU_RX_Parser.st
+-rw-r--r--  1 runner runner   3144 May  6 08:29 FB_Modbus_RTU_SysCom_Transport.st
 -rw-r--r--  1 runner runner   4001 May  6 08:29 FB_Modbus_RTU_TX_Builder.st
 -rw-r--r--  1 runner runner   2543 May  6 08:29 FB_Modbus_Response_Apply.st
 -rw-r--r--  1 runner runner    614 May  6 08:29 FB_Mode_Manager.st
@@ -409,8 +410,8 @@ drwxr-xr-x  2 runner runner   4096 May  6 08:29 out
 -rw-r--r--  1 runner runner    177 May  6 08:29 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1268
+total 1272
 drwxr-xr-x 2 runner runner    4096 May  6 08:29 .
 drwxr-xr-x 5 runner runner    4096 May  6 08:29 ..
 -rw-r--r-- 1 runner runner       0 May  6 08:29 .gitkeep
--rw-r--r-- 1 runner runner 1289975 May  6 08:29 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1292867 May  6 08:29 RESULT_methods_clean.xml
