@@ -1,0 +1,47 @@
+TYPE ST_Heating_Runtime_Meta_Supervision :
+STRUCT
+    // ======================================================
+    // Meta-supervision lifecycle
+    // ======================================================
+    Meta_Supervision_Active : BOOL;
+    Meta_Supervision_Degraded : BOOL;
+    Meta_Supervision_Critical : BOOL;
+
+    // ======================================================
+    // Supervision integrity
+    // ======================================================
+    Supervision_Integrity_Valid : BOOL;
+    Supervision_Integrity_Score : UINT;
+
+    // ======================================================
+    // Adaptive supervision drift
+    // ======================================================
+    Adaptive_Drift_Detected : BOOL;
+    Adaptive_Drift_Score : UINT;
+
+    // ======================================================
+    // Predictive confidence decay
+    // ======================================================
+    Confidence_Decay_Detected : BOOL;
+    Confidence_Decay_Score : UINT;
+
+    // ======================================================
+    // Intelligence consistency
+    // ======================================================
+    Intelligence_Consistency_Valid : BOOL;
+    Intelligence_Consistency_Score : UINT;
+
+    // ======================================================
+    // Meta integrity
+    // ======================================================
+    Sequencing_Meta_Valid : BOOL;
+    Ownership_Meta_Valid : BOOL;
+    Synchronization_Meta_Valid : BOOL;
+
+    // ======================================================
+    // Meta-supervision status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
