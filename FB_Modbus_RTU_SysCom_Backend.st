@@ -59,6 +59,9 @@ IF NOT VI_Enable THEN
     GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
         MB_RTU_RX_IDLE;
 
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
+
     RETURN;
 END_IF;
 
@@ -241,9 +244,6 @@ IF NOT L_Open_Done THEN
     RETURN;
 END_IF;
 
-// ======================================================
-// ONLINE STATE
-// ======================================================
 GVL_MODBUS_SYSCOM_TRANSPORT.G_Backend_State :=
     MB_SYSCOM_ONLINE;
 
@@ -277,9 +277,174 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Request AND
 END_IF;
 
 // ======================================================
-// RX STREAM READ + ASSEMBLER
+// RX STREAM READ
 // ======================================================
-// Existing assembler logic intentionally preserved.
-// Transport contract unchanged.
+L_Bytes_Read := SysCom.SysComRead(
+    hCom := L_Handle,
+    pbyBuffer := ADR(L_RX_Buffer),
+    ulSize := 256,
+    ulTimeout := SysCom.SYS_NOWAIT,
+    pResult := ADR(L_Result)
+);
+
+IF L_Bytes_Read > 0 THEN
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+        MB_RTU_RX_RECEIVING;
+
+    IF L_Bytes_Read > 256 THEN
+        L_Read_Count := 256;
+    ELSE
+        L_Read_Count := UDINT_TO_INT(L_Bytes_Read);
+    END_IF;
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := TRUE;
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Last_Byte_MS :=
+        VI_System_Time_MS;
+
+    FOR L_i := 0 TO (L_Read_Count - 1) DO
+
+        L_Target_Index :=
+            UINT_TO_INT(GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length);
+
+        IF L_Target_Index >= 256 THEN
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                MB_RTU_RX_OVERFLOW;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Overflow := TRUE;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Overflow :=
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Overflow + 1;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
+
+            EXIT;
+
+        END_IF;
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_Target_Index] :=
+            L_RX_Buffer[L_i];
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length :=
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length + 1;
+
+    END_FOR;
+
+END_IF;
+
+// ======================================================
+// INTER-FRAME FINALIZATION
+// ======================================================
+IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
+
+    IF (VI_System_Time_MS -
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Last_Byte_MS) >=
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_InterFrame_MS THEN
+
+        L_Frame_Length :=
+            UINT_TO_INT(GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length);
+
+        IF L_Frame_Length >= 4 THEN
+
+            L_CRC := 16#FFFF;
+
+            FOR L_i := 0 TO (L_Frame_Length - 3) DO
+
+                L_CRC := L_CRC XOR
+                    BYTE_TO_WORD(
+                        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_i]
+                    );
+
+                FOR L_j := 0 TO 7 DO
+
+                    IF (L_CRC AND 16#0001) <> 0 THEN
+                        L_CRC := SHR(L_CRC, 1);
+                        L_CRC := L_CRC XOR 16#A001;
+                    ELSE
+                        L_CRC := SHR(L_CRC, 1);
+                    END_IF;
+
+                END_FOR;
+
+            END_FOR;
+
+            L_CRC_Frame :=
+                BYTE_TO_WORD(
+                    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_Frame_Length - 2]
+                );
+
+            L_CRC_Frame :=
+                L_CRC_Frame OR
+                SHL(
+                    BYTE_TO_WORD(
+                        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_Frame_Length - 1]
+                    ),
+                    8
+                );
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_Calc :=
+                L_CRC;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_Frame :=
+                L_CRC_Frame;
+
+            IF L_CRC = L_CRC_Frame THEN
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                    MB_RTU_RX_FRAME_READY;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_OK := TRUE;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Length :=
+                    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Ready := TRUE;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX :=
+                    GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX + 1;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Last_RX_MS :=
+                    VI_System_Time_MS;
+
+            ELSE
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                    MB_RTU_RX_CRC_ERROR;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_CRC_OK := FALSE;
+
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_CRC_Error :=
+                    GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_CRC_Error + 1;
+
+            END_IF;
+
+        ELSE
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+                MB_RTU_RX_SHORT_FRAME;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame :=
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame + 1;
+
+        END_IF;
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
+
+    END_IF;
+
+END_IF;
+
+IF NOT GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active AND
+   NOT GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Ready AND
+   (GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State = MB_RTU_RX_FRAME_READY) THEN
+
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_State :=
+        MB_RTU_RX_IDLE;
+
+END_IF;
 
 END_FUNCTION_BLOCK
