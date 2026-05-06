@@ -15,17 +15,51 @@ END_VAR
 
 VAR
     L_i : INT;
+    L_Setpoint : REAL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+
     VO_OT_Enable[L_i] := FALSE;
     VO_OT_Setpoint[L_i] := 0.0;
     VO_OT_Command_Valid[L_i] := FALSE;
 
+    // ======================================================
+    // DEFAULT SAFE COMMANDS
+    // ======================================================
+    GVL_OPENTHERM_ADAPTER.G_Cmd_Enable[L_i] := FALSE;
+    GVL_OPENTHERM_ADAPTER.G_Cmd_Setpoint_x10[L_i] := 0;
+
+    // ======================================================
+    // COMMAND VALIDATION
+    // ======================================================
     IF VI_Enable[L_i] AND VI_OT_Online[L_i] AND NOT VI_OT_Error[L_i] THEN
+
+        L_Setpoint := LIMIT(20.0, VI_Setpoint[L_i], 80.0);
+
+        // Publish logical command outputs
         VO_OT_Enable[L_i] := TRUE;
-        VO_OT_Setpoint[L_i] := LIMIT(20.0, VI_Setpoint[L_i], 80.0);
-        VO_OT_Command_Valid[L_i] := TRUE;
+        VO_OT_Setpoint[L_i] := L_Setpoint;
+
+        // Publish physical adapter commands
+        GVL_OPENTHERM_ADAPTER.G_Cmd_Enable[L_i] := TRUE;
+        GVL_OPENTHERM_ADAPTER.G_Cmd_Setpoint_x10[L_i] := REAL_TO_UINT(L_Setpoint * 10.0);
+
+        // Command sequence tracking
+        GVL_OPENTHERM_ADAPTER.G_Cmd_Seq[L_i] :=
+            GVL_OPENTHERM_ADAPTER.G_Cmd_Seq[L_i] + 1;
+
+        GVL_OPENTHERM_ADAPTER.G_Cmd_Last_Write_MS[L_i] :=
+            GVL_STATUS.G_System_Time_MS;
+
+        // Command valid only if adapter confirmed delivery
+        VO_OT_Command_Valid[L_i] :=
+            GVL_OPENTHERM_ADAPTER.G_Command_Ack[L_i] AND
+            (NOT GVL_OPENTHERM_ADAPTER.G_Adapter_Error[L_i]) AND
+            GVL_OPENTHERM_ADAPTER.G_Adapter_Online[L_i];
+
     END_IF;
+
 END_FOR;
+
 END_FUNCTION_BLOCK
