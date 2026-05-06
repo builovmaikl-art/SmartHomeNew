@@ -100,7 +100,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 18:30 .github
 -rw-r--r--  1 runner runner   1292 May  6 18:30 FB_Heating_Runtime_Anomaly_Aggregator.st
 -rw-r--r--  1 runner runner   1743 May  6 18:30 FB_Heating_Runtime_Anomaly_Correlator.st
 -rw-r--r--  1 runner runner   1639 May  6 18:30 FB_Heating_Runtime_Anomaly_Severity_Classifier.st
--rw-r--r--  1 runner runner   1293 May  6 18:30 FB_Heating_Runtime_Anomaly_Weighting_Engine.st
+-rw-r--r--  1 runner runner   1471 May  6 18:30 FB_Heating_Runtime_Anomaly_Weighting_Engine.st
 -rw-r--r--  1 runner runner   1411 May  6 18:30 FB_Heating_Runtime_Cascade_Collapse_Predictor.st
 -rw-r--r--  1 runner runner   2224 May  6 18:30 FB_Heating_Runtime_Causality_Propagation_Analyzer.st
 -rw-r--r--  1 runner runner   1288 May  6 18:30 FB_Heating_Runtime_Confidence_Decay_Analyzer.st
@@ -455,8 +455,8 @@ drwxr-xr-x  2 runner runner   4096 May  6 18:30 out
 -rw-r--r--  1 runner runner    177 May  6 18:30 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1456
+total 1460
 drwxr-xr-x 2 runner runner    4096 May  6 18:30 .
 drwxr-xr-x 5 runner runner    4096 May  6 18:30 ..
 -rw-r--r-- 1 runner runner       0 May  6 18:30 .gitkeep
--rw-r--r-- 1 runner runner 1480128 May  6 18:30 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1483515 May  6 18:30 RESULT_methods_clean.xml
