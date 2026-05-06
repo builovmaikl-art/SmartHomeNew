@@ -11,9 +11,9 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2476
+total 2480
 -rw-r--r--  1 runner runner  13067 May  6 17:19 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 14 runner runner  24576 May  6 17:19 .
+drwxr-xr-x 14 runner runner  20480 May  6 17:19 .
 drwxr-xr-x  3 runner runner   4096 May  6 17:19 ..
 drwxr-xr-x  7 runner runner   4096 May  6 17:19 .git
 drwxr-xr-x  3 runner runner   4096 May  6 17:19 .github
@@ -98,6 +98,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 17:19 .github
 -rw-r--r--  1 runner runner   1292 May  6 17:19 FB_Heating_Runtime_Anomaly_Aggregator.st
 -rw-r--r--  1 runner runner   1743 May  6 17:19 FB_Heating_Runtime_Anomaly_Correlator.st
 -rw-r--r--  1 runner runner   1639 May  6 17:19 FB_Heating_Runtime_Anomaly_Severity_Classifier.st
+-rw-r--r--  1 runner runner   1411 May  6 17:19 FB_Heating_Runtime_Cascade_Collapse_Predictor.st
 -rw-r--r--  1 runner runner   2224 May  6 17:19 FB_Heating_Runtime_Causality_Propagation_Analyzer.st
 -rw-r--r--  1 runner runner   3876 May  6 17:19 FB_Heating_Runtime_Contract_Validator.st
 -rw-r--r--  1 runner runner   7050 May  6 17:19 FB_Heating_Runtime_Coordinator.st
@@ -111,6 +112,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 17:19 .github
 -rw-r--r--  1 runner runner    972 May  6 17:19 FB_Heating_Runtime_Jitter_Detector.st
 -rw-r--r--  1 runner runner   1247 May  6 17:19 FB_Heating_Runtime_Latency_Validator.st
 -rw-r--r--  1 runner runner   1185 May  6 17:19 FB_Heating_Runtime_OT_Cascade_Correlator.st
+-rw-r--r--  1 runner runner   1344 May  6 17:19 FB_Heating_Runtime_OT_Instability_Predictor.st
 -rw-r--r--  1 runner runner   1578 May  6 17:19 FB_Heating_Runtime_Observation_Aggregator.st
 -rw-r--r--  1 runner runner   1409 May  6 17:19 FB_Heating_Runtime_Observation_Validator.st
 -rw-r--r--  1 runner runner   4170 May  6 17:19 FB_Heating_Runtime_Observer.st
@@ -423,9 +425,9 @@ drwxr-xr-x  5 runner runner   4096 May  6 17:19 компилятор
 -rw-r--r--  1 runner runner   1391 May  6 17:19 ошибки компиляции.txt
 
 === compiler dir ===
-total 592
+total 588
 drwxr-xr-x  5 runner runner   4096 May  6 17:19 .
-drwxr-xr-x 14 runner runner  24576 May  6 17:19 ..
+drwxr-xr-x 14 runner runner  20480 May  6 17:19 ..
 -rw-r--r--  1 runner runner  21153 May  6 17:19 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May  6 17:19 __pycache__
 -rw-r--r--  1 runner runner  34293 May  6 17:19 import_codesys_FINAL.py
@@ -446,4 +448,4 @@ total 1420
 drwxr-xr-x 2 runner runner    4096 May  6 17:19 .
 drwxr-xr-x 5 runner runner    4096 May  6 17:19 ..
 -rw-r--r-- 1 runner runner       0 May  6 17:19 .gitkeep
--rw-r--r-- 1 runner runner 1442807 May  6 17:19 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1445602 May  6 17:19 RESULT_methods_clean.xml
