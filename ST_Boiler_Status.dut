@@ -6,11 +6,19 @@ STRUCT
     Warning : BOOL;
     Error : BOOL;
     Error_ID : WORD;
+
+    // Boiler thermal/runtime information
     Power_Percent : REAL;
     Current_Power : REAL;
     Work_Seconds : UDINT;
     Work_Hours : REAL;
     Resource_Percent : REAL := 100.0;
     Last_Start : DT;
+
+    // OpenTherm transport observability
+    OT_Online : BOOL;
+    OT_Command_Valid : BOOL;
+    OT_Transport_Degraded : BOOL;
+    OT_Adapter_Error : BOOL;
 END_STRUCT
 END_TYPE
