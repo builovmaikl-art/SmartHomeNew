@@ -16,6 +16,7 @@ END_VAR
 
 VAR
     L_i : INT;
+    L_j : INT;
     L_Pos : UINT;
     L_CRC : WORD;
     L_Byte_Count : UINT;
@@ -27,12 +28,6 @@ END_VAR
 // ======================================================
 // Builds Modbus RTU request frames only.
 // This FB does not send data and does not modify response state.
-//
-// Supported function codes:
-//   FC03 Read Holding Registers
-//   FC04 Read Input Registers
-//   FC06 Write Single Register
-//   FC16 Write Multiple Registers
 // ======================================================
 
 VO_Error := FALSE;
@@ -77,9 +72,6 @@ ELSE
     RETURN;
 END_CASE;
 
-// ======================================================
-// COMMON HEADER
-// ======================================================
 VO_Frame.Data[0] := VI_Slave_ID;
 VO_Frame.Data[1] := L_Function_Byte;
 VO_Frame.Data[2] := WORD_TO_BYTE(SHR(UINT_TO_WORD(VI_Start_Register), 8));
@@ -92,14 +84,12 @@ CASE VI_Function_Code OF
 
         VO_Frame.Data[4] := WORD_TO_BYTE(SHR(UINT_TO_WORD(VI_Register_Count), 8));
         VO_Frame.Data[5] := WORD_TO_BYTE(UINT_TO_WORD(VI_Register_Count) AND 16#00FF);
-
         VO_Frame.Length := 6;
 
     MB_FC06_WRITE_SINGLE_REGISTER:
 
         VO_Frame.Data[4] := WORD_TO_BYTE(SHR(VI_Write_Value[1], 8));
         VO_Frame.Data[5] := WORD_TO_BYTE(VI_Write_Value[1] AND 16#00FF);
-
         VO_Frame.Length := 6;
 
     MB_FC16_WRITE_MULTIPLE_REGISTERS:
@@ -133,12 +123,24 @@ ELSE
 END_CASE;
 
 // ======================================================
-// CRC APPEND
+// INLINE MODBUS RTU CRC16
 // ======================================================
-L_CRC := F_Modbus_RTU_CRC16(
-    VI_Data := VO_Frame.Data,
-    VI_Length := VO_Frame.Length
-);
+L_CRC := 16#FFFF;
+
+FOR L_i := 0 TO (UINT_TO_INT(VO_Frame.Length) - 1) DO
+
+    L_CRC := L_CRC XOR BYTE_TO_WORD(VO_Frame.Data[L_i]);
+
+    FOR L_j := 0 TO 7 DO
+        IF (L_CRC AND 16#0001) <> 0 THEN
+            L_CRC := SHR(L_CRC, 1);
+            L_CRC := L_CRC XOR 16#A001;
+        ELSE
+            L_CRC := SHR(L_CRC, 1);
+        END_IF;
+    END_FOR;
+
+END_FOR;
 
 VO_Frame.CRC := L_CRC;
 VO_Frame.Data[VO_Frame.Length] := WORD_TO_BYTE(L_CRC AND 16#00FF);
