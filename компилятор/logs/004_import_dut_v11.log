@@ -1,6 +1,6 @@
-DUT_FILES=100
+DUT_FILES=101
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=35
+ENUM_INSERTED=36
 STRUCT_INSERTED=65
 STRUCT_FIELDS_TOTAL=587
 STRUCT_FIELDS_WITH_INITIALIZER=143
@@ -16,6 +16,7 @@ E_Behavior_Mode.dut: ENUM E_Behavior_Mode values=4
 E_Gateway_Command_Type.dut: ENUM E_Gateway_Command_Type values=12
 E_Heating_Policy_Mode.dut: ENUM E_Heating_Policy_Mode values=6
 E_Heating_RootCause.dut: ENUM E_Heating_RootCause values=15
+E_Heating_Runtime_Phase.dut: ENUM E_Heating_Runtime_Phase values=10
 E_Lifetime_Device_Type.dut: ENUM E_Lifetime_Device_Type values=2
 E_Modbus_Function.dut: ENUM E_Modbus_Function values=5
 E_Modbus_RTU_RX_State.dut: ENUM E_Modbus_RTU_RX_State values=6
