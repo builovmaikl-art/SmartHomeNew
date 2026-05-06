@@ -255,6 +255,8 @@ L_Runtime_Context.Diagnostics_Executed := TRUE;
 // ======================================================
 IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
 
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Rollback_Validated := FALSE;
+
     IF NOT L_Runtime_Observer_Enable_Last THEN
         L_Runtime_Observer_Activation_Stabilized := FALSE;
 
@@ -296,8 +298,44 @@ IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
 ELSE
     L_Runtime_Observer_Activation_Stabilized := FALSE;
 
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation :=
-        fbRuntimeObserver.VO_Observation;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ready := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Fault := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Current_Phase := E_Heating_Runtime_Phase.HRP_DISABLED;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Demand_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Heating_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Circulation_Active := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Demand_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Runtime_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Output_Active := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Available := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Degraded := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Active_Boilers := 0;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Available_Boilers := 0;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Online := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Command_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Transport_Degraded := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Active := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Explainability_Active := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Before_Heating_Observed := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_After_Publication_Observed := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Output_Projection_Last_Observed := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ownership_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Ownership_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Ownership_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Ownership_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Safety_Ownership_Valid := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Code := 0;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Text :=
+        'Heating runtime observation inactive';
 
     GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
