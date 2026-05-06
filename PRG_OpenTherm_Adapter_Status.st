@@ -94,6 +94,24 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     GVL_STATE.G_Boiler_OT_Online[L_i] :=
         GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Online;
 
+    GVL_STATE.G_Boiler_OT_Command_Ack[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Ack;
+
+    GVL_STATE.G_Boiler_OT_Command_Timeout[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Timeout;
+
+    GVL_STATE.G_Boiler_OT_Heartbeat_Timeout[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Heartbeat_Timeout;
+
+    GVL_STATE.G_Boiler_OT_Adapter_Error[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Error;
+
+    GVL_STATE.G_Boiler_OT_Heartbeat_Age_MS[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Heartbeat_Age_MS;
+
+    GVL_STATE.G_Boiler_OT_Command_Age_MS[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Age_MS;
+
     GVL_STATE.G_Boiler_Error[L_i] :=
         GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Error;
 
