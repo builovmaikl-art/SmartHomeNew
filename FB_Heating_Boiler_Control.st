@@ -36,6 +36,7 @@ VAR
     L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor;
+    L_Max_Setpoint : REAL;
     fbBoilerCascade : FB_Boiler_Cascade_Manager;
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface;
 END_VAR
@@ -78,13 +79,21 @@ fbBoilerCascade(
     VO_Lead_Boiler => VO_Lead_Boiler
 );
 
-// === SAFETY CLAMP (35–55°C) ===
+// === SETPOINT SAFETY CLAMP ===
+// Normal heating keeps the existing low-temperature floor-heating range.
+// DHW loading is allowed to use a higher boiler setpoint produced by the cascade manager.
+IF VI_DHW_Heating_Demand THEN
+    L_Max_Setpoint := 80.0;
+ELSE
+    L_Max_Setpoint := GVL_CONSTANTS.C_BOILER_SETPOINT_MAX;
+END_IF;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     IF L_Boiler_Request_Enable[L_i] THEN
         L_Boiler_Request_Setpoint[L_i] := LIMIT(
             GVL_CONSTANTS.C_BOILER_SETPOINT_MIN,
             L_Boiler_Request_Setpoint[L_i],
-            GVL_CONSTANTS.C_BOILER_SETPOINT_MAX
+            L_Max_Setpoint
         );
     END_IF;
 END_FOR;
@@ -105,6 +114,14 @@ fbBoilerOpenTherm(
     VO_OT_Setpoint => VO_Boiler_OT_Setpoint,
     VO_OT_Command_Valid => L_Boiler_OT_Command_Valid
 );
+
+// OpenTherm command validity is diagnostic only here.
+// It does not override the command path, but it exposes degraded behavior to the caller.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    IF L_Boiler_Request_Enable[L_i] AND NOT L_Boiler_OT_Command_Valid[L_i] THEN
+        VO_Any_Subsystem_Degraded := TRUE;
+    END_IF;
+END_FOR;
 
 // (остальной код без изменений)
 
