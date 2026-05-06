@@ -16,8 +16,28 @@ END_VAR
 //   1. Write G_Wire_Image command fields to adapter registers.
 //   2. Read adapter status registers into G_Wire_Image status fields.
 //
-// This program keeps all protocol decoding centralized.
+// This program keeps protocol encoding/decoding centralized.
+// It does not claim transport online unless OpenTherm is enabled.
 // ======================================================
+
+IF NOT GVL_CONFIG.G_OpenTherm_Enabled THEN
+    GVL_OPENTHERM_ADAPTER.G_Transport_Online := FALSE;
+    GVL_OPENTHERM_ADAPTER.G_Transport_Error := FALSE;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+        GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Enable := 0;
+        GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Setpoint_x10 := 0;
+        GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Seq_Lo := 0;
+        GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Seq_Hi := 0;
+
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Online := FALSE;
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Error := FALSE;
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Flame := FALSE;
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Raw_Status_Word := 0;
+    END_FOR;
+
+    RETURN;
+END_IF;
 
 GVL_OPENTHERM_ADAPTER.G_Transport_Online := TRUE;
 GVL_OPENTHERM_ADAPTER.G_Transport_Error := FALSE;
