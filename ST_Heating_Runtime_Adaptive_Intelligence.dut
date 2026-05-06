@@ -1,0 +1,49 @@
+TYPE ST_Heating_Runtime_Adaptive_Intelligence :
+STRUCT
+    // ======================================================
+    // Adaptive lifecycle
+    // ======================================================
+    Intelligence_Active : BOOL;
+    Intelligence_Degraded : BOOL;
+    Intelligence_Critical : BOOL;
+
+    // ======================================================
+    // Adaptive supervision confidence
+    // ======================================================
+    Supervision_Confidence : UINT;
+    Confidence_Degraded : BOOL;
+
+    // ======================================================
+    // Adaptive runtime risk
+    // ======================================================
+    Adaptive_Runtime_Risk : UINT;
+    Adaptive_Runtime_Stability : UINT;
+
+    // ======================================================
+    // Adaptive anomaly weighting
+    // ======================================================
+    Runtime_Anomaly_Weight : UINT;
+    Cascade_Anomaly_Weight : UINT;
+    OpenTherm_Anomaly_Weight : UINT;
+    Diagnostics_Anomaly_Weight : UINT;
+
+    // ======================================================
+    // Predictive correlation weighting
+    // ======================================================
+    Predictive_Correlation_Score : UINT;
+    Predictive_Correlation_Degraded : BOOL;
+
+    // ======================================================
+    // Adaptive integrity
+    // ======================================================
+    Sequencing_Confidence : UINT;
+    Ownership_Confidence : UINT;
+    Synchronization_Confidence : UINT;
+
+    // ======================================================
+    // Adaptive status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
