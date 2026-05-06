@@ -18,13 +18,25 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-L_Index := VIO_Timeline.Write_Index + 1;
+// ======================================================
+// SAFE INDEX NORMALIZATION
+// ======================================================
+IF (VIO_Timeline.Write_Index < 1) OR
+   (VIO_Timeline.Write_Index >= 256) THEN
 
-IF L_Index > 256 THEN
     L_Index := 1;
-    VIO_Timeline.Timeline_Overflow := TRUE;
+
+    IF VIO_Timeline.Write_Index >= 256 THEN
+        VIO_Timeline.Timeline_Overflow := TRUE;
+    END_IF;
+
+ELSE
+    L_Index := VIO_Timeline.Write_Index + 1;
 END_IF;
 
+// ======================================================
+// EVENT STORAGE
+// ======================================================
 VIO_Timeline.Events[L_Index] := VI_Event;
 VIO_Timeline.Write_Index := L_Index;
 
@@ -33,6 +45,9 @@ IF VIO_Timeline.Event_Count < 256 THEN
         VIO_Timeline.Event_Count + 1;
 END_IF;
 
+// ======================================================
+// TIMELINE STATE UPDATE
+// ======================================================
 VIO_Timeline.Reconstruction_Active := TRUE;
 VIO_Timeline.Replay_Active := VI_Event.Event_Active;
 
