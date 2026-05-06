@@ -1,8 +1,8 @@
-DUT_FILES=101
+DUT_FILES=100
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=35
-STRUCT_INSERTED=66
-STRUCT_FIELDS_TOTAL=581
+STRUCT_INSERTED=65
+STRUCT_FIELDS_TOTAL=574
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -68,7 +68,6 @@ ST_Gateway_Command.dut: STRUCT ST_Gateway_Command fields=14
 ST_Heating_Config.dut: STRUCT ST_Heating_Config fields=8
 ST_Heating_Schedule_Event.dut: STRUCT ST_Heating_Schedule_Event fields=7
 ST_History_Record.dut: STRUCT ST_History_Record fields=7
-ST_Lifetime_Status.dut: STRUCT ST_Lifetime_Status fields=7
 ST_Maintenance_Access_Config.dut: STRUCT ST_Maintenance_Access_Config fields=4
 ST_Manifold_Status.dut: STRUCT ST_Manifold_Status fields=9
 ST_Modbus_RTU_Config.dut: STRUCT ST_Modbus_RTU_Config fields=9
@@ -135,7 +134,6 @@ STRUCT ST_Gateway_Command: total=14 with_initializer=0 without_initializer=14 ar
 STRUCT ST_Heating_Config: total=8 with_initializer=8 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Schedule_Event: total=7 with_initializer=7 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_History_Record: total=7 with_initializer=7 without_initializer=0 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Lifetime_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Maintenance_Access_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Manifold_Status: total=9 with_initializer=0 without_initializer=9 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Modbus_RTU_Config: total=9 with_initializer=0 without_initializer=9 array_initializer=0 unsupported_initializer=0
