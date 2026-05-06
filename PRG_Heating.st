@@ -250,6 +250,26 @@ IF GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer THEN
         VI_Runtime_Context := L_Runtime_Context,
         VI_Diagnostics_Valid := TRUE
     );
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation :=
+        fbRuntimeObserver.VO_Observation;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := TRUE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready :=
+        fbRuntimeObserver.VO_Observer_Ready;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault :=
+        fbRuntimeObserver.VO_Observer_Fault;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code :=
+        fbRuntimeObserver.VO_Status_Code;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
+        fbRuntimeObserver.VO_Status_Text;
+ELSE
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code := 0;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
+        'Heating runtime observation inactive';
 END_IF;
 
 // ======================================================
