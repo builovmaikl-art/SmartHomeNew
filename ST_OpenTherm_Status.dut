@@ -19,6 +19,11 @@ STRUCT
     Last_Heartbeat : UDINT;
     Last_Heartbeat_MS : UDINT;
 
+    // Transport freshness telemetry
+    Heartbeat_Age_MS : UDINT;
+    Command_Age_MS : UDINT;
+    Last_Command_Ack_Seq : UDINT;
+
     Adapter_State : E_OpenTherm_Adapter_State;
     Error_State : E_OpenTherm_Error;
 END_STRUCT
