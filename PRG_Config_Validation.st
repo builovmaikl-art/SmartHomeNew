@@ -158,6 +158,64 @@ IF GVL_CONFIG.G_Water_Valve_Close_Retry_Delay_MS < 1000 THEN
 END_IF;
 
 // ======================================================
+// OPENTHERM / MODBUS RTU CONFIGURATION
+// ======================================================
+IF GVL_CONFIG.G_OpenTherm_Enabled THEN
+
+    IF GVL_CONFIG.G_OpenTherm_Heartbeat_Timeout_MS < 1000 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_OpenTherm_Command_Ack_Timeout_MS < 500 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_Modbus_RTU_Config.Baudrate < 1200 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG.G_Modbus_RTU_Config.Parity > 2) THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits < 1) OR
+       (GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits > 2) THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG.G_Modbus_RTU_Config.Data_Bits < 7) OR
+       (GVL_CONFIG.G_Modbus_RTU_Config.Data_Bits > 8) THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_Modbus_RTU_Config.Slave_ID = 0 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_Modbus_RTU_Config.Poll_Interval_MS < 50 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_Modbus_RTU_Config.Request_Timeout_MS < 50 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG.G_Modbus_RTU_Config.Retry_Count < 0 THEN
+        L_Config_Error := TRUE;
+    END_IF;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+        IF GVL_CONFIG.G_OpenTherm_Register_Map[L_i].Cmd_Enable_Offset = GVL_CONFIG.G_OpenTherm_Register_Map[L_i].Status_Word_Offset THEN
+            L_Config_Error := TRUE;
+        END_IF;
+
+        IF GVL_CONFIG.G_OpenTherm_Register_Map[L_i].Cmd_Setpoint_x10_Offset = GVL_CONFIG.G_OpenTherm_Register_Map[L_i].Status_Word_Offset THEN
+            L_Config_Error := TRUE;
+        END_IF;
+    END_FOR;
+END_IF;
+
+// ======================================================
 // SENSOR COUNT SANITY
 // ======================================================
 IF GVL_CONSTANTS.C_MAX_METHANE_SENSORS < 2 THEN
