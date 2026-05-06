@@ -170,37 +170,37 @@ IF GVL_CONFIG.G_OpenTherm_Enabled THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF GVL_CONFIG.G_Modbus_RTU_Config.Baudrate < 1200 THEN
+    IF GVL_CONFIG.G_Modbus_RTU_Baudrate < 1200 THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF (GVL_CONFIG.G_Modbus_RTU_Config.Parity > 2) THEN
+    IF (GVL_CONFIG.G_Modbus_RTU_Parity > 2) THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF (GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits < 1) OR
-       (GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits > 2) THEN
+    IF (GVL_CONFIG.G_Modbus_RTU_Stop_Bits < 1) OR
+       (GVL_CONFIG.G_Modbus_RTU_Stop_Bits > 2) THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF (GVL_CONFIG.G_Modbus_RTU_Config.Data_Bits < 7) OR
-       (GVL_CONFIG.G_Modbus_RTU_Config.Data_Bits > 8) THEN
+    IF (GVL_CONFIG.G_Modbus_RTU_Data_Bits < 7) OR
+       (GVL_CONFIG.G_Modbus_RTU_Data_Bits > 8) THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF GVL_CONFIG.G_Modbus_RTU_Config.Slave_ID = 0 THEN
+    IF GVL_CONFIG.G_Modbus_RTU_Slave_ID = 0 THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF GVL_CONFIG.G_Modbus_RTU_Config.Poll_Interval_MS < 50 THEN
+    IF GVL_CONFIG.G_Modbus_RTU_Poll_Interval_MS < 50 THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF GVL_CONFIG.G_Modbus_RTU_Config.Request_Timeout_MS < 50 THEN
+    IF GVL_CONFIG.G_Modbus_RTU_Request_Timeout_MS < 50 THEN
         L_Config_Error := TRUE;
     END_IF;
 
-    IF GVL_CONFIG.G_Modbus_RTU_Config.Retry_Count < 0 THEN
+    IF GVL_CONFIG.G_Modbus_RTU_Retry_Count < 0 THEN
         L_Config_Error := TRUE;
     END_IF;
 
