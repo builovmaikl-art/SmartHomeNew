@@ -34,6 +34,17 @@ VAR_GLOBAL
     G_Boiler_OT_Error_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Error;
     G_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
     G_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+
+    // Heating cascade semantic aggregate state
+    G_Heating_Cascade_Available : BOOL;
+    G_Heating_Cascade_Degraded : BOOL;
+    G_Heating_Cascade_Partial_Capacity : BOOL;
+    G_Heating_Cascade_No_Flame : BOOL;
+    G_Heating_Cascade_Transport_Degraded : BOOL;
+    G_Heating_Cascade_Ignition_Timeout : BOOL;
+    G_Heating_Cascade_Active_Boilers : UINT;
+    G_Heating_Cascade_Available_Boilers : UINT;
+
     G_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     G_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     G_Outdoor_Temp : REAL;
