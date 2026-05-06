@@ -18,7 +18,10 @@ VAR
 
     L_Open_Done : BOOL := FALSE;
     L_i : INT;
+    L_j : INT;
     L_Read_Count : INT;
+    L_Target_Index : INT;
+    L_Frame_Length : INT;
 END_VAR
 
 // ======================================================
@@ -30,7 +33,8 @@ END_VAR
 //   - COM open/configure
 //   - TX write
 //   - RX read
-//   - RX frame byte collection
+//   - RTU frame accumulation
+//   - inter-frame timeout detection
 //   - basic online supervision
 //
 // Non responsibilities:
@@ -48,7 +52,10 @@ IF NOT VI_Enable THEN
     END_IF;
 
     L_Open_Done := FALSE;
+
     GVL_MODBUS_SYSCOM_TRANSPORT.G_Transport_Attached := FALSE;
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
 
     RETURN;
 END_IF;
@@ -58,7 +65,6 @@ END_IF;
 // ======================================================
 IF NOT L_Open_Done THEN
 
-    // COM port mapping. SysCom 3.5.17 exposes SYS_COMPORT1..4.
     CASE GVL_CONFIG.G_Modbus_RTU_Config.Port_Name OF
         'COM1':
             L_Settings.sPort := SysCom.SYS_COMPORT1;
@@ -72,7 +78,6 @@ IF NOT L_Open_Done THEN
         L_Settings.sPort := SysCom.SYS_COMPORT1;
     END_CASE;
 
-    // Baudrate mapping.
     CASE GVL_CONFIG.G_Modbus_RTU_Config.Baudrate OF
         4800:
             L_Settings.ulBaudrate := SysCom.SYS_BR_4800;
@@ -90,7 +95,6 @@ IF NOT L_Open_Done THEN
         L_Settings.ulBaudrate := SysCom.SYS_BR_9600;
     END_CASE;
 
-    // Parity mapping: config 0=None, 1=Even, 2=Odd.
     CASE GVL_CONFIG.G_Modbus_RTU_Config.Parity OF
         0:
             L_Settings.byParity := SysCom.SYS_NOPARITY;
@@ -102,7 +106,6 @@ IF NOT L_Open_Done THEN
         L_Settings.byParity := SysCom.SYS_EVENPARITY;
     END_CASE;
 
-    // Stop bits mapping: config 1 or 2.
     CASE GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits OF
         1:
             L_Settings.byStopBits := SysCom.SYS_ONESTOPBIT;
@@ -154,6 +157,7 @@ IF NOT L_Open_Done THEN
     ELSE
 
         GVL_MODBUS_SYSCOM_TRANSPORT.G_Transport_Attached := FALSE;
+
         GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_Errors :=
             GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_Errors + 1;
 
@@ -208,14 +212,69 @@ IF L_Bytes_Read > 0 THEN
         L_Read_Count := UDINT_TO_INT(L_Bytes_Read);
     END_IF;
 
-    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Length := INT_TO_UINT(L_Read_Count);
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := TRUE;
+    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Last_Byte_MS :=
+        VI_System_Time_MS;
 
     FOR L_i := 0 TO (L_Read_Count - 1) DO
-        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_i] :=
+
+        L_Target_Index :=
+            UINT_TO_INT(GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length);
+
+        IF L_Target_Index >= 256 THEN
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Overflow := TRUE;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Overflow :=
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Overflow + 1;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
+
+            EXIT;
+
+        END_IF;
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Buffer[L_Target_Index] :=
             L_RX_Buffer[L_i];
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length :=
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length + 1;
+
     END_FOR;
 
-    GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Ready := TRUE;
+END_IF;
+
+// ======================================================
+// INTER-FRAME FRAME FINALIZATION
+// ======================================================
+IF GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active THEN
+
+    IF (VI_System_Time_MS -
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Last_Byte_MS) >=
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_InterFrame_MS THEN
+
+        L_Frame_Length :=
+            UINT_TO_INT(GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length);
+
+        IF L_Frame_Length >= 4 THEN
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Length :=
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length;
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Ready := TRUE;
+
+        ELSE
+
+            GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame :=
+                GVL_MODBUS_SYSCOM_TRANSPORT.G_Total_RX_Short_Frame + 1;
+
+        END_IF;
+
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Active := FALSE;
+        GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_Length := 0;
+
+    END_IF;
 
 END_IF;
 
