@@ -1,6 +1,6 @@
-DUT_FILES=102
+DUT_FILES=103
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=35
+ENUM_INSERTED=36
 STRUCT_INSERTED=67
 STRUCT_FIELDS_TOTAL=588
 STRUCT_FIELDS_WITH_INITIALIZER=144
@@ -19,6 +19,7 @@ E_Heating_RootCause.dut: ENUM E_Heating_RootCause values=15
 E_Lifetime_Device_Type.dut: ENUM E_Lifetime_Device_Type values=2
 E_Modbus_Function.dut: ENUM E_Modbus_Function values=5
 E_Modbus_RTU_RX_State.dut: ENUM E_Modbus_RTU_RX_State values=6
+E_Modbus_SysCom_Backend_State.dut: ENUM E_Modbus_SysCom_Backend_State values=5
 E_OpenTherm_Adapter_State.dut: ENUM E_OpenTherm_Adapter_State values=5
 E_OpenTherm_Error.dut: ENUM E_OpenTherm_Error values=6
 E_Outdoor_Mode.dut: ENUM E_Outdoor_Mode values=5
