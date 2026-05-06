@@ -137,7 +137,34 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     VO_Boiler_Status[L_i].Warning := L_Transport_Degraded;
     VO_Boiler_Status[L_i].Error := VI_Boiler_Error_Status[L_i];
 
-    IF L_Transport_Degraded THEN
+    // ======================================================
+    // SEMANTIC AVAILABILITY / EXPLAINABILITY
+    // ======================================================
+    VO_Boiler_Status[L_i].Available :=
+        VI_Boiler_OT_Online[L_i] AND
+        NOT VI_Boiler_Error_Status[L_i] AND
+        NOT L_Transport_Degraded;
+
+    VO_Boiler_Status[L_i].Selected_By_Cascade :=
+        L_Boiler_Request_Enable[L_i];
+
+    VO_Boiler_Status[L_i].Transport_Missing :=
+        NOT VI_Boiler_OT_Online[L_i];
+
+    VO_Boiler_Status[L_i].Flame_Missing :=
+        L_Boiler_Request_Enable[L_i] AND
+        NOT VI_Boiler_Flame_Status[L_i] AND
+        NOT L_Transport_Degraded;
+
+    VO_Boiler_Status[L_i].Ignition_Timeout :=
+        VO_Boiler_Status[L_i].Flame_Missing AND
+        (GVL_STATE.G_Boiler_OT_Command_Age_MS[L_i] > 30000);
+
+    VO_Boiler_Status[L_i].Degraded :=
+        L_Transport_Degraded OR
+        VO_Boiler_Status[L_i].Ignition_Timeout;
+
+    IF VO_Boiler_Status[L_i].Degraded THEN
         VO_Any_Subsystem_Degraded := TRUE;
     END_IF;
 
