@@ -1,0 +1,47 @@
+TYPE ST_Heating_Runtime_Predictive_State :
+STRUCT
+    // ======================================================
+    // Predictive lifecycle
+    // ======================================================
+    Prediction_Active : BOOL;
+    Prediction_Degraded : BOOL;
+    Prediction_Critical : BOOL;
+
+    // ======================================================
+    // Runtime stability
+    // ======================================================
+    Runtime_Stable : BOOL;
+    Runtime_Stability_Score : UINT;
+
+    // ======================================================
+    // Runtime degradation prediction
+    // ======================================================
+    Runtime_Degradation_Risk : UINT;
+    Runtime_Failure_Probability : UINT;
+
+    // ======================================================
+    // Cascade prediction
+    // ======================================================
+    Cascade_Collapse_Risk : UINT;
+    Cascade_Degraded_Trend : BOOL;
+
+    // ======================================================
+    // OpenTherm prediction
+    // ======================================================
+    OpenTherm_Instability_Risk : UINT;
+    OpenTherm_Degraded_Trend : BOOL;
+
+    // ======================================================
+    // Runtime integrity prediction
+    // ======================================================
+    Sequencing_Risk : UINT;
+    Ownership_Risk : UINT;
+    Synchronization_Risk : UINT;
+
+    // ======================================================
+    // Predictive status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
