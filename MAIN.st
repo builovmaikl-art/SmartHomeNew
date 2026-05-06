@@ -62,9 +62,11 @@ PRG_System_Coordinator();
 PRG_Command_Arbitration();
 
 // 6.5 Modbus/OpenTherm transport pipeline.
-// Modbus master executes before OpenTherm transport.
+// Modbus master executes before scanner and OpenTherm transport.
+// Register scanner is strictly read-only diagnostics.
 // OpenTherm transport decodes wire image before validation.
 PRG_Modbus_Master();
+PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
 
