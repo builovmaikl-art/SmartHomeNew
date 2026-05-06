@@ -5,8 +5,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-    L_Result : RTS_IEC_RESULT;
-    L_Handle : RTS_IEC_HANDLE := RTS_INVALID_HANDLE;
+    L_Result : UDINT;
+    L_Handle : UDINT := 16#FFFFFFFF;
 
     L_Settings : SysCom.SysComSettings;
     L_SettingsEx2 : SysCom.SysComSettingsEx2;
@@ -43,9 +43,9 @@ END_VAR
 
 IF NOT VI_Enable THEN
 
-    IF L_Handle <> RTS_INVALID_HANDLE THEN
+    IF L_Handle <> 16#FFFFFFFF THEN
         SysCom.SysComClose(hCom := L_Handle);
-        L_Handle := RTS_INVALID_HANDLE;
+        L_Handle := 16#FFFFFFFF;
     END_IF;
 
     L_Open_Done := FALSE;
@@ -76,7 +76,7 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Request THEN
 
     IF (VI_System_Time_MS -
         GVL_MODBUS_SYSCOM_TRANSPORT.G_Last_TX_Request_MS) >
-        (GVL_CONFIG.G_Modbus_RTU_Config.Request_Timeout_MS * 2) THEN
+        (GVL_CONFIG.G_Modbus_RTU_Request_Timeout_MS * 2) THEN
 
         GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Watchdog_Timeout := TRUE;
 
@@ -132,7 +132,7 @@ IF NOT L_Open_Done THEN
     GVL_MODBUS_SYSCOM_TRANSPORT.G_Backend_State :=
         MB_SYSCOM_OPENING;
 
-    L_Baudrate := GVL_CONFIG.G_Modbus_RTU_Config.Baudrate;
+    L_Baudrate := GVL_CONFIG.G_Modbus_RTU_Baudrate;
 
     IF L_Baudrate <= 9600 THEN
         L_Interframe_MS := 5;
@@ -145,20 +145,20 @@ IF NOT L_Open_Done THEN
     GVL_MODBUS_SYSCOM_TRANSPORT.G_RX_Assembler_InterFrame_MS :=
         L_Interframe_MS;
 
-    CASE GVL_CONFIG.G_Modbus_RTU_Config.Port_Name OF
-        'COM1':
+    CASE GVL_CONFIG.G_Modbus_RTU_Port_Number OF
+        1:
             L_Settings.sPort := SysCom.SYS_COMPORT1;
-        'COM2':
+        2:
             L_Settings.sPort := SysCom.SYS_COMPORT2;
-        'COM3':
+        3:
             L_Settings.sPort := SysCom.SYS_COMPORT3;
-        'COM4':
+        4:
             L_Settings.sPort := SysCom.SYS_COMPORT4;
     ELSE
         L_Settings.sPort := SysCom.SYS_COMPORT1;
     END_CASE;
 
-    CASE GVL_CONFIG.G_Modbus_RTU_Config.Baudrate OF
+    CASE GVL_CONFIG.G_Modbus_RTU_Baudrate OF
         4800:
             L_Settings.ulBaudrate := SysCom.SYS_BR_4800;
         9600:
@@ -175,7 +175,7 @@ IF NOT L_Open_Done THEN
         L_Settings.ulBaudrate := SysCom.SYS_BR_9600;
     END_CASE;
 
-    CASE GVL_CONFIG.G_Modbus_RTU_Config.Parity OF
+    CASE GVL_CONFIG.G_Modbus_RTU_Parity OF
         0:
             L_Settings.byParity := SysCom.SYS_NOPARITY;
         1:
@@ -186,7 +186,7 @@ IF NOT L_Open_Done THEN
         L_Settings.byParity := SysCom.SYS_EVENPARITY;
     END_CASE;
 
-    CASE GVL_CONFIG.G_Modbus_RTU_Config.Stop_Bits OF
+    CASE GVL_CONFIG.G_Modbus_RTU_Stop_Bits OF
         1:
             L_Settings.byStopBits := SysCom.SYS_ONESTOPBIT;
         2:
@@ -195,11 +195,30 @@ IF NOT L_Open_Done THEN
         L_Settings.byStopBits := SysCom.SYS_ONESTOPBIT;
     END_CASE;
 
-    L_Settings.ulTimeout := GVL_CONFIG.G_Modbus_RTU_Config.Request_Timeout_MS;
+    L_Settings.ulTimeout := GVL_CONFIG.G_Modbus_RTU_Request_Timeout_MS;
     L_Settings.ulBufferSize := 512;
 
-    L_SettingsEx2.byByteSize := 8;
+    IF GVL_CONFIG.G_Modbus_RTU_Data_Bits < 7 THEN
+        L_SettingsEx2.byByteSize := 8;
+    ELSIF GVL_CONFIG.G_Modbus_RTU_Data_Bits > 8 THEN
+        L_SettingsEx2.byByteSize := 8;
+    ELSE
+        L_SettingsEx2.byByteSize := GVL_CONFIG.G_Modbus_RTU_Data_Bits;
+    END_IF;
+
     L_SettingsEx2.bBinary := TRUE;
+    L_SettingsEx2.bOutxCtsFlow := FALSE;
+    L_SettingsEx2.bOutxDsrFlow := FALSE;
+    L_SettingsEx2.byDtrControl := 0;
+    L_SettingsEx2.bDsrSensitivity := FALSE;
+    L_SettingsEx2.byRtsControl := 0;
+    L_SettingsEx2.bTXContinueOnXoff := FALSE;
+    L_SettingsEx2.bOutX := FALSE;
+    L_SettingsEx2.bInX := FALSE;
+    L_SettingsEx2.byXonChar := 0;
+    L_SettingsEx2.byXoffChar := 0;
+    L_SettingsEx2.wXonLim := 0;
+    L_SettingsEx2.wXoffLim := 0;
 
     L_Handle := SysCom.SysComOpen3(
         pSettings := ADR(L_Settings),
@@ -207,7 +226,7 @@ IF NOT L_Open_Done THEN
         pResult := ADR(L_Result)
     );
 
-    IF L_Handle <> RTS_INVALID_HANDLE THEN
+    IF L_Handle <> 16#FFFFFFFF THEN
 
         SysCom.SysComPurge(hCom := L_Handle);
 
@@ -257,7 +276,7 @@ IF GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Request AND
         hCom := L_Handle,
         pbyBuffer := ADR(GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Buffer),
         ulSize := GVL_MODBUS_SYSCOM_TRANSPORT.G_TX_Length,
-        ulTimeout := GVL_CONFIG.G_Modbus_RTU_Config.Request_Timeout_MS,
+        ulTimeout := GVL_CONFIG.G_Modbus_RTU_Request_Timeout_MS,
         pResult := ADR(L_Result)
     );
 
