@@ -18,13 +18,25 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-L_Index := VIO_Timeline.Write_Index + 1;
+// ======================================================
+// SAFE INDEX NORMALIZATION
+// ======================================================
+IF (VIO_Timeline.Write_Index < 1) OR
+   (VIO_Timeline.Write_Index >= 64) THEN
 
-IF L_Index > 64 THEN
     L_Index := 1;
-    VIO_Timeline.Timeline_Overflow := TRUE;
+
+    IF VIO_Timeline.Write_Index >= 64 THEN
+        VIO_Timeline.Timeline_Overflow := TRUE;
+    END_IF;
+
+ELSE
+    L_Index := VIO_Timeline.Write_Index + 1;
 END_IF;
 
+// ======================================================
+// FRAME STORAGE
+// ======================================================
 VIO_Timeline.Frames[L_Index] := VI_Frame;
 VIO_Timeline.Write_Index := L_Index;
 
@@ -33,6 +45,9 @@ IF VIO_Timeline.Frame_Count < 64 THEN
         VIO_Timeline.Frame_Count + 1;
 END_IF;
 
+// ======================================================
+// TELEMETRY UPDATE
+// ======================================================
 VIO_Timeline.Sequencing_Valid :=
     VI_Frame.Sequencing_Valid;
 
