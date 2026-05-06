@@ -1,8 +1,8 @@
-DUT_FILES=109
+DUT_FILES=110
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=36
-STRUCT_INSERTED=73
-STRUCT_FIELDS_TOTAL=739
+STRUCT_INSERTED=74
+STRUCT_FIELDS_TOTAL=758
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -67,6 +67,7 @@ ST_FloorHeating_Manifold_Config.dut: STRUCT ST_FloorHeating_Manifold_Config fiel
 ST_Gas_Valve_Configuration.dut: STRUCT ST_Gas_Valve_Configuration fields=5
 ST_Gateway_Command.dut: STRUCT ST_Gateway_Command fields=14
 ST_Heating_Config.dut: STRUCT ST_Heating_Config fields=8
+ST_Heating_Runtime_Anomaly.dut: STRUCT ST_Heating_Runtime_Anomaly fields=19
 ST_Heating_Runtime_Context.dut: STRUCT ST_Heating_Runtime_Context fields=26
 ST_Heating_Runtime_Event_Buffer.dut: STRUCT ST_Heating_Runtime_Event_Buffer fields=15
 ST_Heating_Runtime_Execution_Frame.dut: STRUCT ST_Heating_Runtime_Execution_Frame fields=15
@@ -141,6 +142,7 @@ STRUCT ST_FloorHeating_Manifold_Config: total=5 with_initializer=0 without_initi
 STRUCT ST_Gas_Valve_Configuration: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Gateway_Command: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Config: total=8 with_initializer=8 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Heating_Runtime_Anomaly: total=19 with_initializer=0 without_initializer=19 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Context: total=26 with_initializer=0 without_initializer=26 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Event_Buffer: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Execution_Frame: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
