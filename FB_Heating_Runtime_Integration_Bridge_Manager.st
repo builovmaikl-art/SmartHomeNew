@@ -47,11 +47,12 @@ VO_Bridge.Output_Projection_Last_Valid := TRUE;
 
 // ======================================================
 // GOVERNANCE LOCK
-// Migration is NEVER auto-enabled by supervision.
+// Observation-only bridge.
+// No migration authority exists here.
 // ======================================================
-VO_Bridge.Runtime_Migration_Allowed := FALSE;
-VO_Bridge.Runtime_Migration_Active := FALSE;
-VO_Bridge.Runtime_Migration_Failed := FALSE;
+VO_Bridge.Governance_Locked := TRUE;
+VO_Bridge.Runtime_Attachment_Allowed := FALSE;
+VO_Bridge.Runtime_Attachment_Active := FALSE;
 
 VO_Bridge.Integration_Status_Code := 0;
 VO_Bridge.Integration_Status_Text := 'Heating runtime bridge disabled';
@@ -129,12 +130,12 @@ VO_Bridge.Allow_Output_Projection_Integration :=
 
 // ======================================================
 // GOVERNANCE POLICY
-// Runtime migration is NOT automatically allowed.
-// Future migration requires explicit external governance.
+// Runtime attachment remains externally governed.
+// Supervision cannot authorize runtime migration.
 // ======================================================
-VO_Bridge.Runtime_Migration_Allowed := FALSE;
-VO_Bridge.Runtime_Migration_Active := FALSE;
-VO_Bridge.Runtime_Migration_Failed := FALSE;
+VO_Bridge.Governance_Locked := TRUE;
+VO_Bridge.Runtime_Attachment_Allowed := FALSE;
+VO_Bridge.Runtime_Attachment_Active := FALSE;
 
 // ======================================================
 // PHASE SYNCHRONIZATION
