@@ -78,6 +78,9 @@ L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
 // ======================================================
 // GOVERNED OBSERVER AUTHORIZATION EVALUATION
 // ======================================================
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+    E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_PENDING;
+
 fbRuntimeObserverAuthorization(
     VI_Enable_Request := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request,
     VI_Bootstrap_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Bootstrap_Mode,
@@ -102,6 +105,14 @@ GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Code :=
 
 GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Text :=
     fbRuntimeObserverAuthorization.VO_Status_Text;
+
+IF NOT GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request THEN
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+ELSIF NOT GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+        E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
+END_IF;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 
@@ -260,6 +271,15 @@ IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
     IF NOT L_Runtime_Observer_Enable_Last THEN
         L_Runtime_Observer_Activation_Stabilized := FALSE;
 
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_STABILIZATION;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_STABILIZATION;
+
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := FALSE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := FALSE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := FALSE;
+
         GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
         GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
         GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
@@ -278,6 +298,15 @@ IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
         fbRuntimeObserver.VO_Observation;
 
     IF L_Runtime_Observer_Activation_Stabilized THEN
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_OPERATIONAL;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_OPERATIONAL;
+
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := TRUE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := TRUE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := TRUE;
+
         GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := TRUE;
         GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready :=
             fbRuntimeObserver.VO_Observer_Ready;
@@ -297,6 +326,23 @@ IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
 
 ELSE
     L_Runtime_Observer_Activation_Stabilized := FALSE;
+
+    IF L_Runtime_Observer_Enable_Last THEN
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_ROLLBACK;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_ROLLBACK;
+    ELSIF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request THEN
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
+    ELSE
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
+            E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+    END_IF;
 
     GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Active := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ready := FALSE;
@@ -336,6 +382,10 @@ ELSE
     GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Code := 0;
     GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Text :=
         'Heating runtime observation inactive';
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := FALSE;
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := FALSE;
 
     GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
