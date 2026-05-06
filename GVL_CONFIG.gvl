@@ -89,6 +89,15 @@ VAR_GLOBAL
     G_Water_Valve_Exercise_Window_End : TOD := TOD#05:00;
     G_Water_Valve_Close_Retry_Count : INT := 2;
     G_Water_Valve_Close_Retry_Delay_MS : UDINT := 3000;
+
+    // OpenTherm / Modbus adapter configuration
+    // Register addresses are intentionally stored in configuration, not runtime state.
+    G_OpenTherm_Enabled : BOOL := FALSE;
+    G_OpenTherm_Adapter_Model : STRING(64) := 'ectoControl ES-BROT-01';
+    G_OpenTherm_Heartbeat_Timeout_MS : UDINT := 5000;
+    G_OpenTherm_Command_Ack_Timeout_MS : UDINT := 3000;
+    G_OpenTherm_Register_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Register_Map;
+
     // IO Mapping
     G_FloorTemp_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
     G_RoomTemp_Map : ARRAY[1..16] OF INT := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
