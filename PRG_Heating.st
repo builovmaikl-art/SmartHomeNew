@@ -8,6 +8,9 @@ VAR
 
     L_Runtime_Context : ST_Heating_Runtime_Context;
 
+    L_Runtime_Observer_Enable_Last : BOOL := FALSE;
+    L_Runtime_Observer_Activation_Stabilized : BOOL := FALSE;
+
     L_i : INT;
     L_Current_Hour : UINT;
     L_Boiler_Modulation_REAL : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
@@ -30,9 +33,6 @@ VAR
     L_DHW_Status : ST_DHW_Status;
 END_VAR
 
-// ======================================================
-// INPUT ADAPTERS
-// ======================================================
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     L_Boiler_Modulation_REAL[L_i] := TO_REAL(GVL_IO.AI_Boiler_Modulation[L_i]);
 END_FOR;
@@ -42,9 +42,6 @@ L_Current_Hour := TO_UINT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
 L_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 L_Heating_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_STATE.G_Safety_Gas_Latched;
 
-// ======================================================
-// RUNTIME CONTEXT INITIALIZATION
-// ======================================================
 L_Runtime_Context.Runtime_Enabled := TRUE;
 L_Runtime_Context.Runtime_Ready := TRUE;
 L_Runtime_Context.Runtime_Fault := FALSE;
@@ -77,9 +74,6 @@ L_Runtime_Context.Cascade_Ownership_Valid := TRUE;
 L_Runtime_Context.Runtime_Status_Code := 1;
 L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
 
-// ======================================================
-// DHW EXECUTION
-// ======================================================
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 
 fbDHWManager(
@@ -101,16 +95,11 @@ fbDHWManager(
 
 L_Runtime_Context.DHW_Executed := TRUE;
 
-// Gas safety disables DHW heating demand, but keeps DHW circulation policy intact.
-// The electric backup heater is reserved for freeze protection of the heating system, not for DHW.
 IF L_Heating_Gas_Safety_Stop THEN
     L_DHW_Heating_Pump := FALSE;
     L_DHW_Status.Heating_Pump_On := FALSE;
 END_IF;
 
-// ======================================================
-// HEATING EXECUTION CORE
-// ======================================================
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_HEATING;
 
 fbHeatingManager(
@@ -154,9 +143,6 @@ fbHeatingManager(
 
 L_Runtime_Context.Heating_Executed := TRUE;
 
-// ======================================================
-// MAINTENANCE / SERVICE GATING
-// ======================================================
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_SERVICE_GATING;
 
 GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
@@ -200,9 +186,6 @@ END_IF;
 
 L_Runtime_Context.Service_Gating_Executed := TRUE;
 
-// ======================================================
-// STATE / STATUS COPY OUT
-// ======================================================
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_STATE_PUBLICATION;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
@@ -230,9 +213,6 @@ GVL_STATUS.G_DHW_Status := L_DHW_Status;
 
 L_Runtime_Context.State_Publication_Executed := TRUE;
 
-// ======================================================
-// READ-ONLY ROOT CAUSE DIAGNOSTICS
-// ======================================================
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 
 fbRootCauseDiagnostics(
@@ -241,10 +221,19 @@ fbRootCauseDiagnostics(
 
 L_Runtime_Context.Diagnostics_Executed := TRUE;
 
-// ======================================================
-// FINALIZED-STATE RUNTIME OBSERVER
-// ======================================================
 IF GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer THEN
+
+    IF NOT L_Runtime_Observer_Enable_Last THEN
+        L_Runtime_Observer_Activation_Stabilized := FALSE;
+
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code := 100;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
+            'Heating runtime observer stabilization cycle active';
+    END_IF;
+
     fbRuntimeObserver(
         VI_Enable := TRUE,
         VI_Runtime_Context := L_Runtime_Context,
@@ -254,27 +243,46 @@ IF GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer THEN
     GVL_Heating_Runtime_Observation.G_Runtime_Observation :=
         fbRuntimeObserver.VO_Observation;
 
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := TRUE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready :=
-        fbRuntimeObserver.VO_Observer_Ready;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault :=
-        fbRuntimeObserver.VO_Observer_Fault;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code :=
-        fbRuntimeObserver.VO_Status_Code;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
-        fbRuntimeObserver.VO_Status_Text;
+    IF L_Runtime_Observer_Activation_Stabilized THEN
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := TRUE;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready :=
+            fbRuntimeObserver.VO_Observer_Ready;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault :=
+            fbRuntimeObserver.VO_Observer_Fault;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code :=
+            fbRuntimeObserver.VO_Status_Code;
+        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
+            fbRuntimeObserver.VO_Status_Text;
+
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Activation_Validated := TRUE;
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Sequencing_Validated := TRUE;
+        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Publication_Validated := TRUE;
+    ELSE
+        L_Runtime_Observer_Activation_Stabilized := TRUE;
+    END_IF;
+
 ELSE
+    L_Runtime_Observer_Activation_Stabilized := FALSE;
+
+    GVL_Heating_Runtime_Observation.G_Runtime_Observation :=
+        fbRuntimeObserver.VO_Observation;
+
     GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
     GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code := 0;
     GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
         'Heating runtime observation inactive';
+
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Activation_Validated := FALSE;
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Sequencing_Validated := FALSE;
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Publication_Validated := FALSE;
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Rollback_Validated := TRUE;
 END_IF;
 
-// ======================================================
-// DOMAIN OUTPUT PROJECTION
-// ======================================================
+L_Runtime_Observer_Enable_Last :=
+    GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer;
+
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
 fbOutputProjection(
