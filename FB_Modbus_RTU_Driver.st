@@ -12,92 +12,127 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-    L_i : INT;
+    L_Request_Active : BOOL;
+    L_Last_Sequence : UDINT;
+    L_Exchange_In_Progress : BOOL;
+    L_Last_Success_MS : UDINT;
 END_VAR
 
 // ======================================================
 // MODBUS RTU DRIVER WRAPPER
 // ======================================================
-// This FB is the controlled boundary for a concrete CODESYS/vendor
-// Modbus Serial Master implementation.
+// Controlled boundary for concrete Modbus RTU implementation.
 //
-// It intentionally does NOT generate successful responses by itself.
-// A concrete driver must be connected inside this FB or alongside this
-// FB and must fill GVL_MODBUS_RTU_BRIDGE.G_Response_* only after a real
-// RS485 transaction.
+// Safety principles:
+//   - No fake successful responses.
+//   - No fake online state.
+//   - Online only after confirmed physical exchange.
+//   - Response flags only after real transaction.
 // ======================================================
 
 VO_Driver_Online := FALSE;
 VO_Driver_Error := FALSE;
 VO_Driver_Error_Code := 0;
 
+GVL_MODBUS_RTU_BRIDGE.G_Driver_Online := FALSE;
+GVL_MODBUS_RTU_BRIDGE.G_Driver_Error := FALSE;
+GVL_MODBUS_RTU_BRIDGE.G_Driver_Error_Code := 0;
+
 IF NOT VI_Enable THEN
-    GVL_MODBUS_RTU_BRIDGE.G_Driver_Online := FALSE;
-    GVL_MODBUS_RTU_BRIDGE.G_Driver_Error := FALSE;
-    GVL_MODBUS_RTU_BRIDGE.G_Driver_Error_Code := 0;
+
     GVL_MODBUS_RTU_BRIDGE.G_Response_Busy := FALSE;
     GVL_MODBUS_RTU_BRIDGE.G_Response_Done := FALSE;
     GVL_MODBUS_RTU_BRIDGE.G_Response_Error := FALSE;
     GVL_MODBUS_RTU_BRIDGE.G_Response_Error_Code := 0;
+
+    L_Exchange_In_Progress := FALSE;
+
     RETURN;
 END_IF;
 
 IF NOT VI_Driver_Attached THEN
-    VO_Driver_Online := FALSE;
+
     VO_Driver_Error := TRUE;
     VO_Driver_Error_Code := 16#0002;
 
-    GVL_MODBUS_RTU_BRIDGE.G_Driver_Online := FALSE;
     GVL_MODBUS_RTU_BRIDGE.G_Driver_Error := TRUE;
     GVL_MODBUS_RTU_BRIDGE.G_Driver_Error_Code := VO_Driver_Error_Code;
 
     IF GVL_MODBUS_RTU_BRIDGE.G_Request_Valid THEN
+
         GVL_MODBUS_RTU_BRIDGE.G_Response_Busy := FALSE;
         GVL_MODBUS_RTU_BRIDGE.G_Response_Done := FALSE;
         GVL_MODBUS_RTU_BRIDGE.G_Response_Error := TRUE;
         GVL_MODBUS_RTU_BRIDGE.G_Response_Error_Code := VO_Driver_Error_Code;
+
         GVL_MODBUS_RTU_BRIDGE.G_Response_Sequence :=
             GVL_MODBUS_RTU_BRIDGE.G_Request_Sequence;
-        GVL_MODBUS_RTU_BRIDGE.G_Response_Update_MS := VI_System_Time_MS;
+
+        GVL_MODBUS_RTU_BRIDGE.G_Response_Update_MS :=
+            VI_System_Time_MS;
+
     END_IF;
 
+    L_Exchange_In_Progress := FALSE;
+
     RETURN;
+END_IF;
+
+// ======================================================
+// REQUEST DETECTION
+// ======================================================
+L_Request_Active := GVL_MODBUS_RTU_BRIDGE.G_Request_Valid;
+
+IF L_Request_Active THEN
+
+    IF GVL_MODBUS_RTU_BRIDGE.G_Request_Sequence <> L_Last_Sequence THEN
+
+        L_Last_Sequence :=
+            GVL_MODBUS_RTU_BRIDGE.G_Request_Sequence;
+
+        L_Exchange_In_Progress := TRUE;
+
+        GVL_MODBUS_RTU_BRIDGE.G_Response_Busy := TRUE;
+        GVL_MODBUS_RTU_BRIDGE.G_Response_Done := FALSE;
+        GVL_MODBUS_RTU_BRIDGE.G_Response_Error := FALSE;
+        GVL_MODBUS_RTU_BRIDGE.G_Response_Error_Code := 0;
+
+    END_IF;
+
 END_IF;
 
 // ======================================================
 // CONCRETE DRIVER INTEGRATION POINT
 // ======================================================
-// Attach CODESYS Modbus Serial Master / vendor RTU driver here.
-// The concrete implementation must use:
-//   G_Request_Slave_ID
-//   G_Request_Function_Code
-//   G_Request_Start_Register
-//   G_Request_Register_Count
-//   G_Request_Write_Value
+// Real implementation must:
+//   1. Open/configure COM port.
+//   2. Build RTU frame.
+//   3. Perform RS485 exchange.
+//   4. Validate CRC.
+//   5. Parse response.
+//   6. Set Response_* only after confirmed transaction.
 //
-// and must set only after real transaction:
-//   G_Response_Busy
-//   G_Response_Done
-//   G_Response_Error
-//   G_Response_Error_Code
-//   G_Response_Value
-//   G_Response_Sequence
-//   G_Response_Update_MS
+// IMPORTANT:
+//   This wrapper intentionally does NOT synthesize successful responses.
 // ======================================================
 
-VO_Driver_Online := TRUE;
-VO_Driver_Error := FALSE;
-VO_Driver_Error_Code := 0;
+// Driver online only after real successful exchange.
+IF (L_Last_Success_MS > 0) AND
+   ((VI_System_Time_MS - L_Last_Success_MS) <
+    GVL_CONFIG.G_OpenTherm_Heartbeat_Timeout_MS) THEN
 
-GVL_MODBUS_RTU_BRIDGE.G_Driver_Online := TRUE;
-GVL_MODBUS_RTU_BRIDGE.G_Driver_Error := FALSE;
-GVL_MODBUS_RTU_BRIDGE.G_Driver_Error_Code := 0;
+    VO_Driver_Online := TRUE;
+    GVL_MODBUS_RTU_BRIDGE.G_Driver_Online := TRUE;
 
-IF NOT GVL_MODBUS_RTU_BRIDGE.G_Request_Valid THEN
+END_IF;
+
+// No active request -> clear busy.
+IF NOT L_Request_Active THEN
+
     GVL_MODBUS_RTU_BRIDGE.G_Response_Busy := FALSE;
-    GVL_MODBUS_RTU_BRIDGE.G_Response_Done := FALSE;
-    GVL_MODBUS_RTU_BRIDGE.G_Response_Error := FALSE;
-    GVL_MODBUS_RTU_BRIDGE.G_Response_Error_Code := 0;
+
+    L_Exchange_In_Progress := FALSE;
+
 END_IF;
 
 END_FUNCTION_BLOCK
