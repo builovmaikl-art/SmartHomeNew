@@ -19,6 +19,7 @@ VAR
     L_Pos : UINT;
     L_CRC : WORD;
     L_Byte_Count : UINT;
+    L_Function_Byte : BYTE;
 END_VAR
 
 // ======================================================
@@ -39,6 +40,7 @@ VO_Error_Code := 0;
 VO_Frame.Valid := FALSE;
 VO_Frame.Length := 0;
 VO_Frame.CRC := 0;
+L_Function_Byte := 0;
 
 FOR L_i := 0 TO 255 DO
     VO_Frame.Data[L_i] := 0;
@@ -60,11 +62,26 @@ IF (VI_Register_Count = 0) OR (VI_Register_Count > 32) THEN
     RETURN;
 END_IF;
 
+CASE VI_Function_Code OF
+    MB_FC03_READ_HOLDING_REGISTERS:
+        L_Function_Byte := 3;
+    MB_FC04_READ_INPUT_REGISTERS:
+        L_Function_Byte := 4;
+    MB_FC06_WRITE_SINGLE_REGISTER:
+        L_Function_Byte := 6;
+    MB_FC16_WRITE_MULTIPLE_REGISTERS:
+        L_Function_Byte := 16;
+ELSE
+    VO_Error := TRUE;
+    VO_Error_Code := 16#0104;
+    RETURN;
+END_CASE;
+
 // ======================================================
 // COMMON HEADER
 // ======================================================
 VO_Frame.Data[0] := VI_Slave_ID;
-VO_Frame.Data[1] := E_Modbus_Function_TO_BYTE(VI_Function_Code);
+VO_Frame.Data[1] := L_Function_Byte;
 VO_Frame.Data[2] := WORD_TO_BYTE(SHR(UINT_TO_WORD(VI_Start_Register), 8));
 VO_Frame.Data[3] := WORD_TO_BYTE(UINT_TO_WORD(VI_Start_Register) AND 16#00FF);
 
