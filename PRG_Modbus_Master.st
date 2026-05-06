@@ -8,17 +8,6 @@ END_VAR
 // MODBUS MASTER RUNTIME SCHEDULER
 // ======================================================
 // Library-independent Modbus master scheduler.
-//
-// Responsibilities:
-//   1. Select active request.
-//   2. Maintain single active transaction.
-//   3. Track timeout/retry state.
-//   4. Publish diagnostics/statistics.
-//
-// Safety:
-//   - No fake successful response.
-//   - No parallel write collisions.
-//   - Timeout must terminate transaction.
 // ======================================================
 
 IF NOT GVL_CONFIG.G_OpenTherm_Enabled THEN
@@ -91,9 +80,6 @@ IF GVL_MODBUS_MASTER.G_Active THEN
         GVL_STATUS.G_System_Time_MS -
         GVL_MODBUS_MASTER.G_Active_Start_MS;
 
-    // ==================================================
-    // CONFIRMED RESPONSE
-    // ==================================================
     IF GVL_MODBUS_MASTER.G_Response[L_i].Done OR
        GVL_MODBUS_MASTER.G_Response[L_i].Error THEN
 
@@ -111,16 +97,13 @@ IF GVL_MODBUS_MASTER.G_Active THEN
                 GVL_MODBUS_MASTER.G_Total_Errors + 1;
         END_IF;
 
-    // ==================================================
-    // TIMEOUT SUPERVISION
-    // ==================================================
     ELSIF L_Elapsed_MS > GVL_MODBUS_MASTER.G_Request[L_i].Timeout_MS THEN
 
         GVL_MODBUS_MASTER.G_Active_Retry_Count :=
             GVL_MODBUS_MASTER.G_Active_Retry_Count + 1;
 
         IF GVL_MODBUS_MASTER.G_Active_Retry_Count >
-           GVL_CONFIG.G_Modbus_RTU_Config.Retry_Count THEN
+           GVL_CONFIG.G_Modbus_RTU_Retry_Count THEN
 
             GVL_MODBUS_MASTER.G_Response[L_i].Busy := FALSE;
             GVL_MODBUS_MASTER.G_Response[L_i].Done := FALSE;
@@ -143,7 +126,6 @@ IF GVL_MODBUS_MASTER.G_Active THEN
 
         ELSE
 
-            // restart timeout window for retry
             GVL_MODBUS_MASTER.G_Active_Start_MS :=
                 GVL_STATUS.G_System_Time_MS;
 
