@@ -13,6 +13,23 @@ END_VAR
 
 VO_Node.Node_Active := FALSE;
 VO_Node.Root_Cause_Candidate := FALSE;
+VO_Node.Runtime_Degraded := FALSE;
+VO_Node.Runtime_Fault := FALSE;
+
+VO_Node.Cascade_Degraded := FALSE;
+VO_Node.Cascade_Boiler_Loss := FALSE;
+
+VO_Node.OpenTherm_Degraded := FALSE;
+VO_Node.OpenTherm_Command_Invalid := FALSE;
+
+VO_Node.Diagnostics_Degraded := FALSE;
+VO_Node.Explainability_Degraded := FALSE;
+
+VO_Node.Sequencing_Invalid := FALSE;
+VO_Node.Ownership_Invalid := FALSE;
+VO_Node.Synchronization_Invalid := FALSE;
+
+VO_Node.Severity_Level := 0;
 
 VO_Node.Status_Code := 0;
 VO_Node.Status_Text := 'Heating runtime root-cause correlator disabled';
@@ -24,8 +41,14 @@ END_IF;
 VO_Node.Node_Active := VI_Anomaly.Anomaly_Active;
 
 VO_Node.Runtime_Degraded := VI_Anomaly.Runtime_Degraded;
-VO_Node.Cascade_Degraded := VI_Anomaly.Cascade_Degraded;
-VO_Node.Cascade_Boiler_Loss := VI_Anomaly.Cascade_Boiler_Loss_Detected;
+VO_Node.Runtime_Fault :=
+    VI_Anomaly.Critical_Anomaly;
+
+VO_Node.Cascade_Degraded :=
+    VI_Anomaly.Cascade_Degraded;
+
+VO_Node.Cascade_Boiler_Loss :=
+    VI_Anomaly.Cascade_Boiler_Loss_Detected;
 
 VO_Node.OpenTherm_Degraded :=
     VI_Anomaly.OpenTherm_Transport_Degraded;
