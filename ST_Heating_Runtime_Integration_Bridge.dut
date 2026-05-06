@@ -8,7 +8,7 @@ STRUCT
     Shell_Contract_Valid : BOOL;
 
     // ======================================================
-    // Runtime integration permissions
+    // Observation-only integration readiness
     // ======================================================
     Allow_DHW_Integration : BOOL;
     Allow_Heating_Integration : BOOL;
@@ -33,11 +33,13 @@ STRUCT
     Output_Projection_Last_Valid : BOOL;
 
     // ======================================================
-    // Runtime migration safety
+    // Governance lock state
+    // Observation only.
+    // No migration authority exists in supervision.
     // ======================================================
-    Runtime_Migration_Allowed : BOOL;
-    Runtime_Migration_Active : BOOL;
-    Runtime_Migration_Failed : BOOL;
+    Governance_Locked : BOOL;
+    Runtime_Attachment_Allowed : BOOL;
+    Runtime_Attachment_Active : BOOL;
 
     // ======================================================
     // Runtime integration status
