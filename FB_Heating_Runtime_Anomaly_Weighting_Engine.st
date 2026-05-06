@@ -32,10 +32,29 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-VO_Runtime_Weight := SEL(VI_Runtime_Degraded, 10, 80);
-VO_Cascade_Weight := SEL(VI_Cascade_Degraded, 10, 70);
-VO_OT_Weight := SEL(VI_OT_Degraded, 10, 75);
-VO_Diagnostics_Weight := SEL(VI_Diagnostics_Degraded, 5, 40);
+IF VI_Runtime_Degraded THEN
+    VO_Runtime_Weight := 80;
+ELSE
+    VO_Runtime_Weight := 10;
+END_IF;
+
+IF VI_Cascade_Degraded THEN
+    VO_Cascade_Weight := 70;
+ELSE
+    VO_Cascade_Weight := 10;
+END_IF;
+
+IF VI_OT_Degraded THEN
+    VO_OT_Weight := 75;
+ELSE
+    VO_OT_Weight := 10;
+END_IF;
+
+IF VI_Diagnostics_Degraded THEN
+    VO_Diagnostics_Weight := 40;
+ELSE
+    VO_Diagnostics_Weight := 5;
+END_IF;
 
 VO_Status_Code := 1;
 VO_Status_Text := 'Heating anomaly weighting updated';
