@@ -65,12 +65,14 @@ PRG_Command_Arbitration();
 // Modbus master schedules requests.
 // RTU bridge exports request/imports confirmed response.
 // RTU driver builds TX frame and consumes validated RX frame.
-// SysCom byte boundary transfers TX/RX bytes to/from concrete serial backend.
+// SysCom backend performs physical serial IO.
+// SysCom transport boundary transfers bytes between backend and RTU runtime.
 // Register scanner is strictly read-only diagnostics.
 // OpenTherm transport decodes wire image before validation.
 PRG_Modbus_Master();
 PRG_Modbus_RTU_Bridge();
 PRG_Modbus_RTU_Driver();
+PRG_Modbus_RTU_SysCom_Backend();
 PRG_Modbus_RTU_SysCom_Transport();
 PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
