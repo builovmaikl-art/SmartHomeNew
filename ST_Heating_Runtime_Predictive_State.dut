@@ -1,45 +1,47 @@
 TYPE ST_Heating_Runtime_Predictive_State :
 STRUCT
     // ======================================================
-    // Predictive lifecycle
+    // Predictive analytics visibility
+    // Passive analytics only.
+    // No predictive authority exists.
     // ======================================================
-    Prediction_Active : BOOL;
-    Prediction_Degraded : BOOL;
-    Prediction_Critical : BOOL;
+    Predictive_Analytics_Visible : BOOL;
+    Predictive_Analytics_Degraded : BOOL;
+    Predictive_Analytics_Attention : BOOL;
 
     // ======================================================
-    // Runtime stability
+    // Runtime stability observation
     // ======================================================
     Runtime_Stable : BOOL;
     Runtime_Stability_Score : UINT;
 
     // ======================================================
-    // Runtime degradation prediction
+    // Runtime degradation observation
     // ======================================================
-    Runtime_Degradation_Risk : UINT;
-    Runtime_Failure_Probability : UINT;
+    Runtime_Degradation_Observation : UINT;
+    Runtime_Failure_Observation : UINT;
 
     // ======================================================
-    // Cascade prediction
+    // Cascade observational analytics
     // ======================================================
-    Cascade_Collapse_Risk : UINT;
-    Cascade_Degraded_Trend : BOOL;
+    Cascade_Degradation_Observation : UINT;
+    Cascade_Degraded_Trend_Visible : BOOL;
 
     // ======================================================
-    // OpenTherm prediction
+    // OpenTherm observational analytics
     // ======================================================
-    OpenTherm_Instability_Risk : UINT;
-    OpenTherm_Degraded_Trend : BOOL;
+    OpenTherm_Instability_Observation : UINT;
+    OpenTherm_Degraded_Trend_Visible : BOOL;
 
     // ======================================================
-    // Runtime integrity prediction
+    // Runtime integrity observation
     // ======================================================
-    Sequencing_Risk : UINT;
-    Ownership_Risk : UINT;
-    Synchronization_Risk : UINT;
+    Sequencing_Observation : UINT;
+    Ownership_Observation : UINT;
+    Synchronization_Observation : UINT;
 
     // ======================================================
-    // Predictive status
+    // Predictive analytics status
     // ======================================================
     Status_Code : UINT;
     Status_Text : STRING(128);
