@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2328
+total 2324
 -rw-r--r--  1 runner runner  13067 May  6 10:36 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May  6 10:36 .
 drwxr-xr-x  3 runner runner   4096 May  6 10:36 ..
@@ -116,7 +116,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 10:36 .github
 -rw-r--r--  1 runner runner    672 May  6 10:36 FB_LogEvent.st
 -rw-r--r--  1 runner runner    806 May  6 10:36 FB_Maintenance_Access.st
 -rw-r--r--  1 runner runner   6728 May  6 10:36 FB_Modbus_RTU_Driver.st
--rw-r--r--  1 runner runner   4217 May  6 10:36 FB_Modbus_RTU_RX_Parser.st
+-rw-r--r--  1 runner runner   3756 May  6 10:36 FB_Modbus_RTU_RX_Parser.st
 -rw-r--r--  1 runner runner  13338 May  6 10:36 FB_Modbus_RTU_SysCom_Backend.st
 -rw-r--r--  1 runner runner   3676 May  6 10:36 FB_Modbus_RTU_SysCom_Transport.st
 -rw-r--r--  1 runner runner   3998 May  6 10:36 FB_Modbus_RTU_TX_Builder.st
@@ -419,4 +419,4 @@ total 1300
 drwxr-xr-x 2 runner runner    4096 May  6 10:36 .
 drwxr-xr-x 5 runner runner    4096 May  6 10:36 ..
 -rw-r--r-- 1 runner runner       0 May  6 10:36 .gitkeep
--rw-r--r-- 1 runner runner 1322680 May  6 10:36 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1322793 May  6 10:36 RESULT_methods_clean.xml
