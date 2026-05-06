@@ -17,6 +17,9 @@ VAR_OUTPUT
     VO_Status_Text : STRING(128);
 END_VAR
 
+// ======================================================
+// DETERMINISTIC DEFAULTS
+// ======================================================
 VO_Consistency_Valid := FALSE;
 VO_Consistency_Score := 0;
 
@@ -27,6 +30,9 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+// ======================================================
+// CONSISTENCY ANALYSIS
+// ======================================================
 VO_Consistency_Valid :=
     VI_Integrity_Valid AND
     NOT VI_Drift_Detected AND
