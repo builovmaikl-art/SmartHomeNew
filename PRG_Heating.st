@@ -5,6 +5,7 @@ VAR
     fbOutputProjection : FB_Heating_Output_Projection;
     fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
     fbRuntimeObserver : FB_Heating_Runtime_Observer;
+    fbRuntimeObserverAuthorization : FB_Heating_Runtime_Observer_Authorization;
 
     L_Runtime_Context : ST_Heating_Runtime_Context;
 
@@ -73,6 +74,34 @@ L_Runtime_Context.Cascade_Ownership_Valid := TRUE;
 
 L_Runtime_Context.Runtime_Status_Code := 1;
 L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
+
+// ======================================================
+// GOVERNED OBSERVER AUTHORIZATION EVALUATION
+// ======================================================
+fbRuntimeObserverAuthorization(
+    VI_Enable_Request := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request,
+    VI_Bootstrap_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Bootstrap_Mode,
+    VI_Passive_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Passive_Mode,
+    VI_ReadOnly_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_ReadOnly_Mode,
+    VI_Governance_Locked := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Governance_Locked,
+    VI_Runtime_Authority_Disabled := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Runtime_Authority_Disabled,
+    VI_Writable_Exports_Disabled := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Writable_Exports_Disabled
+);
+
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Authorized :=
+    fbRuntimeObserverAuthorization.VO_Enable_Authorized;
+
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective :=
+    fbRuntimeObserverAuthorization.VO_Enable_Effective;
+
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Valid :=
+    fbRuntimeObserverAuthorization.VO_Authorization_Valid;
+
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Code :=
+    fbRuntimeObserverAuthorization.VO_Status_Code;
+
+GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Text :=
+    fbRuntimeObserverAuthorization.VO_Status_Text;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 
@@ -221,7 +250,10 @@ fbRootCauseDiagnostics(
 
 L_Runtime_Context.Diagnostics_Executed := TRUE;
 
-IF GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer THEN
+// ======================================================
+// GOVERNED FINALIZED-STATE RUNTIME OBSERVER
+// ======================================================
+IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
 
     IF NOT L_Runtime_Observer_Enable_Last THEN
         L_Runtime_Observer_Activation_Stabilized := FALSE;
@@ -281,7 +313,7 @@ ELSE
 END_IF;
 
 L_Runtime_Observer_Enable_Last :=
-    GVL_Heating_Runtime_Observer.G_Enable_Runtime_Observer;
+    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
