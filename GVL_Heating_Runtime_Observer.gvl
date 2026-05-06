@@ -2,14 +2,24 @@ VAR_GLOBAL
     // ======================================================
     // Runtime observer governance lock
     // Bootstrap passive observation activation only.
-    // Default state MUST remain disabled until controlled enablement.
     // Observer attachment remains optional and removable.
+    // Governed activation authorization required.
     // ======================================================
 
     // ------------------------------------------------------
-    // Primary observer enable gate
+    // Activation request layer
     // ------------------------------------------------------
-    G_Enable_Runtime_Observer : BOOL := FALSE;
+    G_Runtime_Observer_Enable_Request : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Activation authorization layer
+    // ------------------------------------------------------
+    G_Runtime_Observer_Enable_Authorized : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Effective runtime enablement
+    // ------------------------------------------------------
+    G_Runtime_Observer_Enable_Effective : BOOL := FALSE;
 
     // ------------------------------------------------------
     // Bootstrap activation governance
@@ -32,4 +42,12 @@ VAR_GLOBAL
     G_Runtime_Observer_Governance_Locked : BOOL := TRUE;
     G_Runtime_Observer_Runtime_Authority_Disabled : BOOL := TRUE;
     G_Runtime_Observer_Writable_Exports_Disabled : BOOL := TRUE;
+
+    // ------------------------------------------------------
+    // Authorization diagnostics
+    // ------------------------------------------------------
+    G_Runtime_Observer_Authorization_Valid : BOOL := FALSE;
+    G_Runtime_Observer_Authorization_Status_Code : UINT := 0;
+    G_Runtime_Observer_Authorization_Status_Text : STRING(128) :=
+        'Heating runtime observer authorization inactive';
 END_VAR
