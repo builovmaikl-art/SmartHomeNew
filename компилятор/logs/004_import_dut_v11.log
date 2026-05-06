@@ -2,7 +2,7 @@ DUT_FILES=100
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=35
 STRUCT_INSERTED=65
-STRUCT_FIELDS_TOTAL=578
+STRUCT_FIELDS_TOTAL=581
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -76,7 +76,7 @@ ST_Modbus_Request.dut: STRUCT ST_Modbus_Request fields=8
 ST_Modbus_Response.dut: STRUCT ST_Modbus_Response fields=7
 ST_OpenTherm_Command.dut: STRUCT ST_OpenTherm_Command fields=4
 ST_OpenTherm_Register_Map.dut: STRUCT ST_OpenTherm_Register_Map fields=13
-ST_OpenTherm_Status.dut: STRUCT ST_OpenTherm_Status fields=18
+ST_OpenTherm_Status.dut: STRUCT ST_OpenTherm_Status fields=21
 ST_OpenTherm_Wire_Image.dut: STRUCT ST_OpenTherm_Wire_Image fields=12
 ST_Operator_Zone_Rights.dut: STRUCT ST_Operator_Zone_Rights fields=4
 ST_Outdoor_Zone_Config.dut: STRUCT ST_Outdoor_Zone_Config fields=4
@@ -142,7 +142,7 @@ STRUCT ST_Modbus_Request: total=8 with_initializer=0 without_initializer=8 array
 STRUCT ST_Modbus_Response: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_OpenTherm_Command: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_OpenTherm_Register_Map: total=13 with_initializer=0 without_initializer=13 array_initializer=0 unsupported_initializer=0
-STRUCT ST_OpenTherm_Status: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
+STRUCT ST_OpenTherm_Status: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
 STRUCT ST_OpenTherm_Wire_Image: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Operator_Zone_Rights: total=4 with_initializer=1 without_initializer=3 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Outdoor_Zone_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
