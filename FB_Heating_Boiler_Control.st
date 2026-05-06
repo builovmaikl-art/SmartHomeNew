@@ -35,6 +35,7 @@ VAR
     L_Boiler_Request_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
     L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    L_Transport_Degraded : BOOL;
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor;
     fbBoilerCascade : FB_Boiler_Cascade_Manager;
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface;
@@ -109,12 +110,37 @@ fbBoilerOpenTherm(
     VO_OT_Command_Valid => L_Boiler_OT_Command_Valid
 );
 
-// OpenTherm command validity is diagnostic only here.
-// It does not override the command path, but it exposes degraded behavior to the caller.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-    IF L_Boiler_Request_Enable[L_i] AND NOT L_Boiler_OT_Command_Valid[L_i] THEN
+
+    L_Transport_Degraded :=
+        L_Boiler_Request_Enable[L_i] AND
+        (
+            NOT L_Boiler_OT_Command_Valid[L_i] OR
+            NOT VI_Boiler_OT_Online[L_i] OR
+            VI_Boiler_Error_Status[L_i]
+        );
+
+    // ======================================================
+    // TRANSPORT / ADAPTER OBSERVABILITY
+    // ======================================================
+    VO_Boiler_Status[L_i].OT_Online := VI_Boiler_OT_Online[L_i];
+    VO_Boiler_Status[L_i].OT_Command_Valid := L_Boiler_OT_Command_Valid[L_i];
+    VO_Boiler_Status[L_i].OT_Transport_Degraded := L_Transport_Degraded;
+    VO_Boiler_Status[L_i].OT_Adapter_Error :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Error;
+
+    // ======================================================
+    // BOILER STATE FLAGS
+    // ======================================================
+    VO_Boiler_Status[L_i].Active := L_Boiler_Request_Enable[L_i];
+    VO_Boiler_Status[L_i].Running := VI_Boiler_Flame_Status[L_i];
+    VO_Boiler_Status[L_i].Warning := L_Transport_Degraded;
+    VO_Boiler_Status[L_i].Error := VI_Boiler_Error_Status[L_i];
+
+    IF L_Transport_Degraded THEN
         VO_Any_Subsystem_Degraded := TRUE;
     END_IF;
+
 END_FOR;
 
 // (остальной код без изменений)
