@@ -14,9 +14,11 @@ STRUCT
 
     // ======================================================
     // Runtime forensic state
+    // Passive forensic visibility only.
+    // No replay activation authority exists.
     // ======================================================
-    Reconstruction_Active : BOOL;
-    Replay_Active : BOOL;
+    Reconstruction_Visible : BOOL;
+    Forensic_Timeline_Visible : BOOL;
     Root_Cause_Reconstructed : BOOL;
 
     // ======================================================
