@@ -1,0 +1,35 @@
+TYPE ST_Heating_Runtime_Blackbox_Timeline :
+STRUCT
+    // ======================================================
+    // Blackbox events
+    // ======================================================
+    Events : ARRAY[1..256] OF ST_Heating_Runtime_Blackbox_Event;
+
+    // ======================================================
+    // Timeline state
+    // ======================================================
+    Write_Index : UINT;
+    Event_Count : UINT;
+    Timeline_Overflow : BOOL;
+
+    // ======================================================
+    // Runtime forensic state
+    // ======================================================
+    Reconstruction_Active : BOOL;
+    Replay_Active : BOOL;
+    Root_Cause_Reconstructed : BOOL;
+
+    // ======================================================
+    // Timeline integrity
+    // ======================================================
+    Sequencing_Valid : BOOL;
+    Ownership_Valid : BOOL;
+    Synchronization_Valid : BOOL;
+
+    // ======================================================
+    // Timeline status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
