@@ -11,6 +11,10 @@ VAR_INPUT
     VI_Enable : BOOL;
 END_VAR
 VAR_OUTPUT
+    // Current runtime phase
+    VO_Current_Phase : E_Heating_Runtime_Phase;
+
+    // Phase execution flags
     VO_Run_DHW_Phase : BOOL;
     VO_Run_Heating_Phase : BOOL;
     VO_Run_Service_Gating_Phase : BOOL;
@@ -18,14 +22,20 @@ VAR_OUTPUT
     VO_Run_Diagnostics_Phase : BOOL;
     VO_Run_Output_Projection_Phase : BOOL;
 
+    // Runtime state
     VO_Runtime_Ready : BOOL;
     VO_Runtime_Fault : BOOL;
     VO_Runtime_Status_Text : STRING(128);
+END_VAR
+VAR
+    L_Runtime_Valid : BOOL;
 END_VAR
 
 // ======================================================
 // DEFAULTS
 // ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_DISABLED;
+
 VO_Run_DHW_Phase := FALSE;
 VO_Run_Heating_Phase := FALSE;
 VO_Run_Service_Gating_Phase := FALSE;
@@ -37,40 +47,68 @@ VO_Runtime_Ready := FALSE;
 VO_Runtime_Fault := FALSE;
 VO_Runtime_Status_Text := 'Heating runtime coordinator disabled';
 
+L_Runtime_Valid := FALSE;
+
 IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
 // ======================================================
-// LIVE RUNTIME CONTRACT
+// RUNTIME CONTRACT VALIDATION
 // ======================================================
-// Phase 1
-// DHW MUST execute first.
+// Current coordinator shell validates the sequencing model.
+// Runtime ownership remains external.
+L_Runtime_Valid := TRUE;
+
+IF NOT L_Runtime_Valid THEN
+    VO_Current_Phase := E_Heating_Runtime_Phase.HRP_FAULT;
+    VO_Runtime_Ready := FALSE;
+    VO_Runtime_Fault := TRUE;
+    VO_Runtime_Status_Text := 'Heating runtime sequencing invalid';
+    RETURN;
+END_IF;
+
+// ======================================================
+// PHASE 1 — DHW
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 VO_Run_DHW_Phase := TRUE;
 
-// Phase 2
-// Heating runtime executes after DHW demand generation.
+// ======================================================
+// PHASE 2 — HEATING
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_HEATING;
 VO_Run_Heating_Phase := TRUE;
 
-// Phase 3
-// Service/failsafe gating executes after runtime decisions.
+// ======================================================
+// PHASE 3 — SERVICE / FAILSAFE GATING
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_SERVICE_GATING;
 VO_Run_Service_Gating_Phase := TRUE;
 
-// Phase 4
-// Runtime state publication executes before diagnostics.
+// ======================================================
+// PHASE 4 — STATE PUBLICATION
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_STATE_PUBLICATION;
 VO_Run_State_Publication_Phase := TRUE;
 
-// Phase 5
-// Diagnostics/explainability executes after state publication.
+// ======================================================
+// PHASE 5 — DIAGNOSTICS
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 VO_Run_Diagnostics_Phase := TRUE;
 
-// Phase 6
-// Output projection executes last.
+// ======================================================
+// PHASE 6 — OUTPUT PROJECTION
+// ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 VO_Run_Output_Projection_Phase := TRUE;
 
 // ======================================================
-// STATUS
+// COMPLETE
 // ======================================================
+VO_Current_Phase := E_Heating_Runtime_Phase.HRP_COMPLETE;
+
 VO_Runtime_Ready := TRUE;
 VO_Runtime_Fault := FALSE;
 VO_Runtime_Status_Text := 'Heating runtime coordinator active';
