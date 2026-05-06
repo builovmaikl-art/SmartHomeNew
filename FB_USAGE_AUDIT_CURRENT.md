@@ -9,6 +9,9 @@ This document reflects the CURRENT runtime state after live verification against
 - IO pipeline
 - diagnostics pipeline
 - persistence pipeline
+- OpenTherm adapter pipeline
+- heating explainability pipeline
+- HMI projection pipeline
 
 The audit intentionally ignores:
 - snapshots/
@@ -16,6 +19,20 @@ The audit intentionally ignores:
 - export sandboxes
 - historical XML exports
 - disconnected test harnesses
+
+---
+
+# REPOSITORY EDITING RULE
+
+NO PARTIAL FILE PATCHING.
+
+All future file modifications must:
+- fully rewrite the file
+- from first line to last line
+- with complete regenerated content
+
+Reason:
+partial edits corrupt repository structure and break internal consistency.
 
 ---
 
@@ -112,24 +129,183 @@ Status:
 
 ---
 
-# REMAINING BLOCKS
+# CURRENT HEATING / OPENTHERM ARCHITECTURE STATUS
 
-## GROUP A — HEATING SPLIT ARCHITECTURE
+## Live Runtime Path
 
-This group is NOT dead garbage.
-
-It is a partially disconnected alternative orchestration architecture extracted from PRG_Heating.
-
-Current live runtime path:
+Current active heating path:
 - PRG_Heating
-- FB_Heating_System_Manager
 - FB_DHW_Manager
+- FB_Heating_System_Manager
+- FB_Heating_Boiler_Control
+- FB_Boiler_Cascade_Manager
+- FB_Boiler_OpenTherm_Interface
 - FB_Heating_Output_Projection
 
-The following remaining blocks are architectural candidates and MUST NOT be blindly deleted.
+Status:
+- VERIFIED LIVE
+- heating control behavior preserved
+- diagnostics/explainability added as read-only projection
 
-### ORCHESTRATION LAYER
+---
 
+## OpenTherm Transport Observability
+
+Implemented and live:
+- stable command sequence semantics in FB_Boiler_OpenTherm_Interface
+- command sequence increments only on actual command image change
+- adapter ACK validation is now stable across PLC cycles
+- heartbeat age telemetry
+- command age telemetry
+- last ACK sequence telemetry
+- semantic adapter state
+- semantic adapter error state
+
+Public state now available through GVL_STATE:
+- G_Boiler_OT_Online
+- G_Boiler_OT_Command_Ack
+- G_Boiler_OT_Command_Timeout
+- G_Boiler_OT_Heartbeat_Timeout
+- G_Boiler_OT_Adapter_Error
+- G_Boiler_OT_Heartbeat_Age_MS
+- G_Boiler_OT_Command_Age_MS
+- G_Boiler_OT_Adapter_State
+- G_Boiler_OT_Error_State
+
+Status:
+- VERIFIED LIVE
+- read-only observability boundary created
+- no change to control authority
+
+---
+
+## Boiler Setpoint Semantics
+
+Boiler setpoint is now treated as primary-circuit heat-carrier target.
+
+Important physical interpretation:
+- boilers heat the primary circuit
+- consumer-side limiting is owned downstream
+- floor heating regulation belongs to manifolds / mixing layer
+- DHW regulation belongs to the DHW heat exchanger / DHW subsystem
+
+Status:
+- primary-circuit setpoint semantics corrected
+- old universal 55C clamp no longer treated as consumer protection
+- process control intent preserved
+
+---
+
+## Boiler Semantic Status
+
+ST_Boiler_Status now includes diagnostic semantics:
+- OT_Online
+- OT_Command_Valid
+- OT_Transport_Degraded
+- OT_Adapter_Error
+- Available
+- Selected_By_Cascade
+- Flame_Missing
+- Transport_Missing
+- Ignition_Timeout
+- Degraded
+
+Status:
+- VERIFIED LIVE through FB_Heating_Boiler_Control
+- no change to cascade selection behavior
+- diagnostic-only semantics
+
+---
+
+## Cascade Semantic Aggregate State
+
+Implemented and live in GVL_STATE:
+- G_Heating_Cascade_Available
+- G_Heating_Cascade_Degraded
+- G_Heating_Cascade_Partial_Capacity
+- G_Heating_Cascade_No_Flame
+- G_Heating_Cascade_Transport_Degraded
+- G_Heating_Cascade_Ignition_Timeout
+- G_Heating_Cascade_Active_Boilers
+- G_Heating_Cascade_Available_Boilers
+
+Status:
+- VERIFIED LIVE through FB_Heating_Boiler_Control
+- aggregate diagnostics only
+- no change to cascade runtime decisions
+
+---
+
+## Heating Root-Cause Diagnostics
+
+FB_Heating_RootCause_Diagnostics has been rewritten from an extracted prototype into a read-only diagnostics observer.
+
+Current role:
+- pure diagnostics / explainability layer
+- no control authority
+- no output ownership
+- reads safety, cascade and transport semantic state
+- writes heating root-cause / confidence fields
+
+Produces:
+- G_Heating_RootCause
+- G_Heating_RootConfidence
+- G_Heating_Confidence
+- G_Heating_Error_Score
+- G_Heating_Confidence_Reason_Code
+- G_Heating_Confidence_Reason_Text
+
+Connected from:
+- PRG_Heating
+
+Integration point:
+- after heating state/status publication
+- before domain output projection
+
+Status:
+- VERIFIED LIVE
+- diagnostics producer now exists
+- not a disconnected orphan anymore
+
+---
+
+## Explainability Integration
+
+PRG_Explainability now consumes heating root-cause outputs.
+
+Current public explainability fields:
+- GVL_EXPLAINABILITY.G_Heating_Why_Blocked
+- GVL_EXPLAINABILITY.G_Reason_Chain_Full
+
+Status:
+- VERIFIED LIVE
+- heating diagnostics are visible in explainability chain
+- no runtime behavior change
+
+---
+
+## HMI Projection
+
+GVL_HMI and PRG_HMI_Dashboard now expose:
+- heating confidence
+- heating root-cause reason text/code
+- cascade semantic diagnostics
+- OpenTherm semantic diagnostics
+- heartbeat/command age telemetry
+- adapter/error enum states
+
+Status:
+- VERIFIED LIVE
+- operator-facing diagnostics available
+- read-only projection only
+
+---
+
+# REMAINING ARCHITECTURAL BLOCKS
+
+## GROUP A — ORCHESTRATION LAYER
+
+Blocks:
 - FB_Heating_Orchestration
 - FB_Heating_Execution_Core
 - FB_Heating_Override_Layer
@@ -137,18 +313,23 @@ The following remaining blocks are architectural candidates and MUST NOT be blin
 Interpretation:
 - alternative orchestration shell
 - wrapper around current heating runtime
-- disconnected from MAIN
 - candidate future replacement for oversized PRG_Heating
 
 Current status:
 - NOT runtime active
 - partially valid architecture
+- do NOT delete blindly
+- do NOT integrate as-is
 - requires redesign before integration
+
+Decision:
+- keep for future orchestration refactor review
 
 ---
 
-### THERMAL POLICY / ALLOCATION LAYER
+## GROUP B — THERMAL POLICY / ALLOCATION LAYER
 
+Blocks:
 - FB_Heating_Decision_Context
 - FB_Heating_Thermal_Allocation
 
@@ -164,64 +345,52 @@ Current status:
 - logic quality acceptable
 - possible future extraction candidate
 
+Decision:
+- keep for future policy-layer review
+
 ---
 
-### HEATING DIAGNOSTICS EXTRACTION
+## GROUP C — LEGACY ROOT-CAUSE CORE
 
-- FB_Heating_Diagnostics
-- FB_Heating_RootCause_Diagnostics
+Blocks:
 - FB_Diagnostics_RootCause
 - E_Heating_RootCause
 
 Interpretation:
-- unfinished heating explainability subsystem
-- heating-specific root cause analysis
-- freeze hardware diagnostics
-- manifold demand explanation
-- boiler/offline/no-transfer inference
+- older low-level root-cause inference block and enum
+- enum is still live because FB_Heating_RootCause_Diagnostics uses E_Heating_RootCause
+- FB_Diagnostics_RootCause is currently NOT required by live observer
 
 Current status:
-- disconnected from MAIN
-- NOT production ready
-- NOT synchronized with current OpenTherm/DHW architecture
-- architecturally valuable
+- E_Heating_RootCause is LIVE
+- FB_Diagnostics_RootCause remains unresolved legacy diagnostic core
 
-Important:
-FB_Heating_RootCause_Diagnostics already integrates:
-- FB_Diagnostics_RootCause
-- FB_Heating_Demand_Map
-- G_Heating_RootCause
-- G_Heating_RootConfidence
-
-This is NOT a random orphan FB.
-
-Required future decision:
-- either evolve into full heating explainability subsystem
-OR
-- remove entire diagnostics branch together
+Decision:
+- do NOT delete E_Heating_RootCause
+- review FB_Diagnostics_RootCause separately after stabilization
 
 ---
 
-### REMOVED WEAK EXTRACTION FRAGMENTS
+## GROUP D — HEATING DIAGNOSTICS EXTRACTION
 
-The following blocks were reviewed and intentionally removed because they were weak extracted fragments rather than viable architecture:
+Block:
+- FB_Heating_Diagnostics
 
-- FB_Heating_Adapter_CopyOut
-- FB_Heating_Maintenance_Gating
-- FB_Heating_Freeze_Hardware
-- FB_Heating_Local_Context
+Interpretation:
+- extracted heating diagnostics candidate
+- event/text diagnostics around service/freeze/subsystem degradation
 
-Reasons:
-- duplicated runtime logic
-- direct GVL mutation
-- weak abstraction boundaries
-- incomplete extraction
-- unsafe integration semantics
-- inferior to current PRG_Heating implementation
+Current status:
+- NOT runtime active
+- may overlap with newly live root-cause/explainability pipeline
+- requires separate comparison before integration or deletion
+
+Decision:
+- keep for next audit pass
 
 ---
 
-## GROUP B — SNAPSHOT / BLACKBOX PROTOTYPE
+## GROUP E — SNAPSHOT / BLACKBOX PROTOTYPE
 
 Block:
 - FB_State_Snapshot_Manager
@@ -249,7 +418,7 @@ The block intentionally remains visible to force future architectural review.
 
 ---
 
-# CURRENT CLEANUP RESULT
+# CURRENT CLEANUP / ARCHITECTURE RESULT
 
 The repository has already been cleaned from:
 - disconnected utility FBs
@@ -262,18 +431,38 @@ The repository has already been cleaned from:
 - disconnected observer placeholders
 - disconnected legacy detectors
 
-The remaining unresolved items are now mostly architectural, not cosmetic.
+The heating architecture now has a live read-only explainability pipeline:
+- OpenTherm transport observability
+- boiler semantic status
+- cascade semantic aggregate state
+- heating root-cause diagnostics
+- explainability chain integration
+- HMI projection
+
+The remaining unresolved items are architectural, not cosmetic.
 
 ---
 
-# IMPORTANT REPOSITORY RULE
+# NEXT REVIEW TARGETS
 
-NO PARTIAL FILE PATCHING.
+Recommended next audit order:
 
-All future file modifications must:
-- fully rewrite the file
-- from first line to last line
-- with complete regenerated content
+1. FB_Diagnostics_RootCause
+   - compare with live FB_Heating_RootCause_Diagnostics
+   - decide whether to merge, rewrite, or delete
 
-Reason:
-partial edits corrupt repository structure and break internal consistency.
+2. FB_Heating_Diagnostics
+   - compare with current explainability/HMI pipeline
+   - decide whether it adds event logging value or duplicates live diagnostics
+
+3. Orchestration layer
+   - FB_Heating_Orchestration
+   - FB_Heating_Execution_Core
+   - FB_Heating_Override_Layer
+
+4. Thermal policy layer
+   - FB_Heating_Decision_Context
+   - FB_Heating_Thermal_Allocation
+
+5. FB_State_Snapshot_Manager
+   - decide future blackbox/snapshot architecture
