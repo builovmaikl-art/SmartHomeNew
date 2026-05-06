@@ -7,9 +7,22 @@ VAR_GLOBAL
     // ======================================================
 
     // ------------------------------------------------------
+    // Primary lifecycle publication
+    // ------------------------------------------------------
+    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State :=
+        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+
+    // ------------------------------------------------------
     // Runtime observer publication
     // ------------------------------------------------------
     G_Runtime_Observation : ST_Heating_Runtime_Observation;
+
+    // ------------------------------------------------------
+    // Observation lifecycle semantics
+    // ------------------------------------------------------
+    G_Runtime_Observation_Publication_Valid : BOOL := FALSE;
+    G_Runtime_Observation_Stabilization_Complete : BOOL := FALSE;
+    G_Runtime_Observation_Operational : BOOL := FALSE;
 
     // ------------------------------------------------------
     // Observer publication state
@@ -22,7 +35,8 @@ VAR_GLOBAL
     // Publication metadata
     // ------------------------------------------------------
     G_Runtime_Observation_Status_Code : UINT := 0;
-    G_Runtime_Observation_Status_Text : STRING(128) := 'Heating runtime observation inactive';
+    G_Runtime_Observation_Status_Text : STRING(128) :=
+        'Heating runtime observation inactive';
 
     // ------------------------------------------------------
     // Governance lock markers
