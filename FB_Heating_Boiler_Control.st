@@ -36,6 +36,11 @@ VAR
     L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
     L_Transport_Degraded : BOOL;
+    L_Available_Count : UINT;
+    L_Active_Count : UINT;
+    L_Any_Transport_Degraded : BOOL;
+    L_Any_Ignition_Timeout : BOOL;
+    L_Any_Flame : BOOL;
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor;
     fbBoilerCascade : FB_Boiler_Cascade_Manager;
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface;
@@ -43,6 +48,12 @@ END_VAR
 
 VO_Any_Subsystem_Degraded := FALSE;
 VO_Demand_Power := 0.0;
+
+L_Available_Count := 0;
+L_Active_Count := 0;
+L_Any_Transport_Degraded := FALSE;
+L_Any_Ignition_Timeout := FALSE;
+L_Any_Flame := FALSE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF VI_Manifold_Pumps[L_i] THEN
@@ -61,9 +72,6 @@ IF VI_Policy_Degraded THEN
 END_IF;
 
 fbBoilerCascade(
-    // Boiler demand is a primary-circuit heat request.
-    // Consumer-side temperature limitation is handled downstream by manifolds or the DHW heat exchanger.
-    // Gas safety disables DHW demand earlier in PRG_Heating, so this does not allow DHW heating during gas shutdown.
     VI_Enable := VI_IsActivePLC AND ((VO_Demand_Power > GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR VI_Freeze_Mode_Active OR VI_DHW_Heating_Demand),
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Boiler_Stop := FALSE,
@@ -80,9 +88,6 @@ fbBoilerCascade(
     VO_Lead_Boiler => VO_Lead_Boiler
 );
 
-// === PRIMARY CIRCUIT SETPOINT CLAMP ===
-// The boiler heats the primary heat carrier to the requested temperature margin.
-// It must not enforce floor or DHW consumer limits here: manifolds and the DHW heat exchanger own final consumer-side regulation.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     IF L_Boiler_Request_Enable[L_i] THEN
         L_Boiler_Request_Setpoint[L_i] := LIMIT(
@@ -120,26 +125,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
             VI_Boiler_Error_Status[L_i]
         );
 
-    // ======================================================
-    // TRANSPORT / ADAPTER OBSERVABILITY
-    // ======================================================
     VO_Boiler_Status[L_i].OT_Online := VI_Boiler_OT_Online[L_i];
     VO_Boiler_Status[L_i].OT_Command_Valid := L_Boiler_OT_Command_Valid[L_i];
     VO_Boiler_Status[L_i].OT_Transport_Degraded := L_Transport_Degraded;
     VO_Boiler_Status[L_i].OT_Adapter_Error :=
         GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Error;
 
-    // ======================================================
-    // BOILER STATE FLAGS
-    // ======================================================
     VO_Boiler_Status[L_i].Active := L_Boiler_Request_Enable[L_i];
     VO_Boiler_Status[L_i].Running := VI_Boiler_Flame_Status[L_i];
     VO_Boiler_Status[L_i].Warning := L_Transport_Degraded;
     VO_Boiler_Status[L_i].Error := VI_Boiler_Error_Status[L_i];
 
-    // ======================================================
-    // SEMANTIC AVAILABILITY / EXPLAINABILITY
-    // ======================================================
     VO_Boiler_Status[L_i].Available :=
         VI_Boiler_OT_Online[L_i] AND
         NOT VI_Boiler_Error_Status[L_i] AND
@@ -164,12 +160,61 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
         L_Transport_Degraded OR
         VO_Boiler_Status[L_i].Ignition_Timeout;
 
+    // ======================================================
+    // CASCADE AGGREGATION
+    // ======================================================
+    IF VO_Boiler_Status[L_i].Available THEN
+        L_Available_Count := L_Available_Count + 1;
+    END_IF;
+
+    IF VO_Boiler_Status[L_i].Selected_By_Cascade THEN
+        L_Active_Count := L_Active_Count + 1;
+    END_IF;
+
+    IF VI_Boiler_Flame_Status[L_i] THEN
+        L_Any_Flame := TRUE;
+    END_IF;
+
+    IF L_Transport_Degraded THEN
+        L_Any_Transport_Degraded := TRUE;
+    END_IF;
+
+    IF VO_Boiler_Status[L_i].Ignition_Timeout THEN
+        L_Any_Ignition_Timeout := TRUE;
+    END_IF;
+
     IF VO_Boiler_Status[L_i].Degraded THEN
         VO_Any_Subsystem_Degraded := TRUE;
     END_IF;
 
 END_FOR;
 
-// (остальной код без изменений)
+// ======================================================
+// GLOBAL CASCADE SEMANTIC STATE
+// ======================================================
+GVL_STATE.G_Heating_Cascade_Active_Boilers := L_Active_Count;
+GVL_STATE.G_Heating_Cascade_Available_Boilers := L_Available_Count;
+
+GVL_STATE.G_Heating_Cascade_Available :=
+    (L_Available_Count > 0);
+
+GVL_STATE.G_Heating_Cascade_Partial_Capacity :=
+    (L_Available_Count > 0) AND
+    (L_Available_Count < GVL_CONSTANTS.C_MAX_BOILERS);
+
+GVL_STATE.G_Heating_Cascade_Transport_Degraded :=
+    L_Any_Transport_Degraded;
+
+GVL_STATE.G_Heating_Cascade_Ignition_Timeout :=
+    L_Any_Ignition_Timeout;
+
+GVL_STATE.G_Heating_Cascade_No_Flame :=
+    (L_Active_Count > 0) AND
+    NOT L_Any_Flame;
+
+GVL_STATE.G_Heating_Cascade_Degraded :=
+    GVL_STATE.G_Heating_Cascade_Transport_Degraded OR
+    GVL_STATE.G_Heating_Cascade_Ignition_Timeout OR
+    GVL_STATE.G_Heating_Cascade_Partial_Capacity;
 
 END_FUNCTION_BLOCK
