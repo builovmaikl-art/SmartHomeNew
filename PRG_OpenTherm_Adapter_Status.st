@@ -112,6 +112,12 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     GVL_STATE.G_Boiler_OT_Command_Age_MS[L_i] :=
         GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Age_MS;
 
+    GVL_STATE.G_Boiler_OT_Adapter_State[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_State;
+
+    GVL_STATE.G_Boiler_OT_Error_State[L_i] :=
+        GVL_OPENTHERM_ADAPTER.G_Status[L_i].Error_State;
+
     GVL_STATE.G_Boiler_Error[L_i] :=
         GVL_OPENTHERM_ADAPTER.G_Status[L_i].Adapter_Error;
 
