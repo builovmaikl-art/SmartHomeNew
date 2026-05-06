@@ -1,0 +1,35 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // MODBUS RTU BRIDGE CONTRACT
+    // ======================================================
+    // This GVL is the boundary between project logic and a concrete
+    // CODESYS/vendor Modbus Serial Master implementation.
+    //
+    // Project side writes Request_*.
+    // Concrete RTU driver writes Response_*.
+    // No fake Done is produced here.
+
+    G_Bridge_Enabled : BOOL := FALSE;
+    G_Driver_Online : BOOL := FALSE;
+    G_Driver_Error : BOOL := FALSE;
+    G_Driver_Error_Code : WORD := 0;
+
+    G_Request_Valid : BOOL := FALSE;
+    G_Request_Index : INT := 0;
+    G_Request_Slave_ID : BYTE := 0;
+    G_Request_Function_Code : E_Modbus_Function := MB_NONE;
+    G_Request_Start_Register : UINT := 0;
+    G_Request_Register_Count : UINT := 0;
+    G_Request_Write_Value : ARRAY[1..32] OF WORD;
+    G_Request_Sequence : UDINT := 0;
+    G_Request_Timeout_MS : UDINT := 0;
+
+    G_Response_Busy : BOOL := FALSE;
+    G_Response_Done : BOOL := FALSE;
+    G_Response_Error : BOOL := FALSE;
+    G_Response_Error_Code : WORD := 0;
+    G_Response_Value : ARRAY[1..32] OF WORD;
+    G_Response_Sequence : UDINT := 0;
+    G_Response_Update_MS : UDINT := 0;
+END_VAR
