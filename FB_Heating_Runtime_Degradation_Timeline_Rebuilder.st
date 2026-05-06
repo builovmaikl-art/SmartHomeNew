@@ -46,14 +46,18 @@ IF VIO_Timeline.Event_Count < 256 THEN
 END_IF;
 
 // ======================================================
-// TIMELINE STATE UPDATE
+// PASSIVE FORENSIC VISIBILITY
 // ======================================================
-VIO_Timeline.Reconstruction_Active := TRUE;
-VIO_Timeline.Replay_Active := VI_Event.Event_Active;
+VIO_Timeline.Reconstruction_Visible := TRUE;
+VIO_Timeline.Forensic_Timeline_Visible :=
+    VI_Event.Event_Active;
 
 VIO_Timeline.Root_Cause_Reconstructed :=
     VI_Event.Root_Cause_Candidate;
 
+// ======================================================
+// TIMELINE INTEGRITY
+// ======================================================
 VIO_Timeline.Sequencing_Valid :=
     NOT VI_Event.Sequencing_Invalid;
 
@@ -63,6 +67,9 @@ VIO_Timeline.Ownership_Valid :=
 VIO_Timeline.Synchronization_Valid :=
     NOT VI_Event.Synchronization_Invalid;
 
+// ======================================================
+// STATUS
+// ======================================================
 IF VI_Event.Root_Cause_Candidate THEN
     VIO_Timeline.Status_Code := 900;
     VIO_Timeline.Status_Text := 'Heating runtime degradation reconstructed';
