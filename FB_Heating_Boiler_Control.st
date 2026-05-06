@@ -36,7 +36,6 @@ VAR
     L_Boiler_Request_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
     L_Boiler_OT_Command_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor;
-    L_Max_Setpoint : REAL;
     fbBoilerCascade : FB_Boiler_Cascade_Manager;
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface;
 END_VAR
@@ -61,7 +60,8 @@ IF VI_Policy_Degraded THEN
 END_IF;
 
 fbBoilerCascade(
-    // DHW heating demand is an independent boiler heat request in normal operation.
+    // Boiler demand is a primary-circuit heat request.
+    // Consumer-side temperature limitation is handled downstream by manifolds or the DHW heat exchanger.
     // Gas safety disables DHW demand earlier in PRG_Heating, so this does not allow DHW heating during gas shutdown.
     VI_Enable := VI_IsActivePLC AND ((VO_Demand_Power > GVL_CONSTANTS.C_BOILER_CASCADE_MIN_DEMAND) OR VI_Freeze_Mode_Active OR VI_DHW_Heating_Demand),
     VI_System_Time_MS := VI_System_Time_MS,
@@ -79,21 +79,15 @@ fbBoilerCascade(
     VO_Lead_Boiler => VO_Lead_Boiler
 );
 
-// === SETPOINT SAFETY CLAMP ===
-// Normal heating keeps the existing low-temperature floor-heating range.
-// DHW loading is allowed to use a higher boiler setpoint produced by the cascade manager.
-IF VI_DHW_Heating_Demand THEN
-    L_Max_Setpoint := 80.0;
-ELSE
-    L_Max_Setpoint := GVL_CONSTANTS.C_BOILER_SETPOINT_MAX;
-END_IF;
-
+// === PRIMARY CIRCUIT SETPOINT CLAMP ===
+// The boiler heats the primary heat carrier to the requested temperature margin.
+// It must not enforce floor or DHW consumer limits here: manifolds and the DHW heat exchanger own final consumer-side regulation.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     IF L_Boiler_Request_Enable[L_i] THEN
         L_Boiler_Request_Setpoint[L_i] := LIMIT(
             GVL_CONSTANTS.C_BOILER_SETPOINT_MIN,
             L_Boiler_Request_Setpoint[L_i],
-            L_Max_Setpoint
+            80.0
         );
     END_IF;
 END_FOR;
