@@ -118,6 +118,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 17:18 .github
 -rw-r--r--  1 runner runner   1568 May  6 17:18 FB_Heating_Runtime_Phase_Telemetry_Aggregator.st
 -rw-r--r--  1 runner runner   1891 May  6 17:18 FB_Heating_Runtime_Phase_Transition_Observer.st
 -rw-r--r--  1 runner runner   2003 May  6 17:18 FB_Heating_Runtime_RootCause_Correlator.st
+-rw-r--r--  1 runner runner   1320 May  6 17:18 FB_Heating_Runtime_Stability_Model.st
 -rw-r--r--  1 runner runner   4094 May  6 17:18 FB_Heating_Runtime_Synchronization_Monitor.st
 -rw-r--r--  1 runner runner   1495 May  6 17:18 FB_Heating_Runtime_Timeline_Observer.st
 -rw-r--r--  1 runner runner   3661 May  6 17:18 FB_Heating_Safe_State.st
@@ -421,7 +422,7 @@ drwxr-xr-x  5 runner runner   4096 May  6 17:18 компилятор
 -rw-r--r--  1 runner runner   1391 May  6 17:18 ошибки компиляции.txt
 
 === compiler dir ===
-total 596
+total 592
 drwxr-xr-x  5 runner runner   4096 May  6 17:18 .
 drwxr-xr-x 14 runner runner  24576 May  6 17:18 ..
 -rw-r--r--  1 runner runner  21153 May  6 17:18 001_universal_pou_builder_METHODS_V2.py
@@ -440,8 +441,8 @@ drwxr-xr-x  2 runner runner   4096 May  6 17:18 out
 -rw-r--r--  1 runner runner    177 May  6 17:18 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1412
+total 1416
 drwxr-xr-x 2 runner runner    4096 May  6 17:18 .
 drwxr-xr-x 5 runner runner    4096 May  6 17:18 ..
 -rw-r--r-- 1 runner runner       0 May  6 17:18 .gitkeep
--rw-r--r-- 1 runner runner 1437321 May  6 17:18 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1440108 May  6 17:18 RESULT_methods_clean.xml
