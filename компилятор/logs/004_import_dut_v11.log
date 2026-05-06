@@ -1,8 +1,8 @@
-DUT_FILES=95
+DUT_FILES=96
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=33
-STRUCT_INSERTED=62
-STRUCT_FIELDS_TOTAL=548
+STRUCT_INSERTED=63
+STRUCT_FIELDS_TOTAL=560
 STRUCT_FIELDS_WITH_INITIALIZER=144
 INITIALIZERS_INSERTED=144
 ARRAY_INITIALIZERS_INSERTED=4
@@ -72,6 +72,7 @@ ST_Manifold_Status.dut: STRUCT ST_Manifold_Status fields=9
 ST_OpenTherm_Command.dut: STRUCT ST_OpenTherm_Command fields=4
 ST_OpenTherm_Register_Map.dut: STRUCT ST_OpenTherm_Register_Map fields=13
 ST_OpenTherm_Status.dut: STRUCT ST_OpenTherm_Status fields=18
+ST_OpenTherm_Wire_Image.dut: STRUCT ST_OpenTherm_Wire_Image fields=12
 ST_Operator_Zone_Rights.dut: STRUCT ST_Operator_Zone_Rights fields=4
 ST_Outdoor_Zone_Config.dut: STRUCT ST_Outdoor_Zone_Config fields=4
 ST_Owen_Analog_Value.dut: STRUCT ST_Owen_Analog_Value fields=3
@@ -135,6 +136,7 @@ STRUCT ST_Manifold_Status: total=9 with_initializer=0 without_initializer=9 arra
 STRUCT ST_OpenTherm_Command: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_OpenTherm_Register_Map: total=13 with_initializer=0 without_initializer=13 array_initializer=0 unsupported_initializer=0
 STRUCT ST_OpenTherm_Status: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
+STRUCT ST_OpenTherm_Wire_Image: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Operator_Zone_Rights: total=4 with_initializer=1 without_initializer=3 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Outdoor_Zone_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Owen_Analog_Value: total=3 with_initializer=0 without_initializer=3 array_initializer=0 unsupported_initializer=0
