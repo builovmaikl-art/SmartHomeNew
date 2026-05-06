@@ -35,6 +35,13 @@ The following blocks were verified as orphaned / disconnected / replaced and wer
 - FB_Persist_Pipeline
 - FB_Scenario_Transition_Guard
 - FB_Sensor_Calibration
+- FB_CoreKernel_Live_Observer
+- FB_Smoke_Detector
+- FB_Lifetime_Manager
+- FB_Heating_Adapter_CopyOut
+- FB_Heating_Maintenance_Gating
+- FB_Heating_Freeze_Hardware
+- FB_Heating_Local_Context
 
 ## Removed PRG
 
@@ -44,6 +51,7 @@ The following blocks were verified as orphaned / disconnected / replaced and wer
 
 - ST_Persist
 - E_SCENARIO_TYPE
+- ST_Lifetime_Status
 
 ---
 
@@ -91,63 +99,129 @@ Status:
 
 ---
 
+## Smoke / Gas Handling
+
+Legacy smoke detector removed.
+
+Current live implementation:
+- FB_Gas_Smoke_Manager
+
+Status:
+- VERIFIED LIVE
+- replacement confirmed
+
+---
+
 # REMAINING BLOCKS
 
-## GROUP A — HEATING SPLIT ARCHITECTURE (DO NOT DELETE)
+## GROUP A — HEATING SPLIT ARCHITECTURE
 
-These blocks are NOT simple garbage.
+This group is NOT dead garbage.
 
-They represent a partially disconnected alternative orchestration architecture.
+It is a partially disconnected alternative orchestration architecture extracted from PRG_Heating.
 
-Current live heating path:
+Current live runtime path:
 - PRG_Heating
 - FB_Heating_System_Manager
+- FB_DHW_Manager
+- FB_Heating_Output_Projection
 
-Alternative disconnected chain:
+The following remaining blocks are architectural candidates and MUST NOT be blindly deleted.
+
+### ORCHESTRATION LAYER
+
 - FB_Heating_Orchestration
 - FB_Heating_Execution_Core
 - FB_Heating_Override_Layer
+
+Interpretation:
+- alternative orchestration shell
+- wrapper around current heating runtime
+- disconnected from MAIN
+- candidate future replacement for oversized PRG_Heating
+
+Current status:
+- NOT runtime active
+- partially valid architecture
+- requires redesign before integration
+
+---
+
+### THERMAL POLICY / ALLOCATION LAYER
+
 - FB_Heating_Decision_Context
-- FB_Heating_Local_Context
 - FB_Heating_Thermal_Allocation
-- FB_Heating_Maintenance_Gating
-- FB_Heating_Adapter_CopyOut
+
+Interpretation:
+- thermal allocation policy prototype
+- manifold prioritization logic
+- thermal budget distribution
+- guest preheat policy seed
+- degraded heating allocation model
+
+Current status:
+- NOT runtime active
+- logic quality acceptable
+- possible future extraction candidate
+
+---
+
+### HEATING DIAGNOSTICS EXTRACTION
+
 - FB_Heating_Diagnostics
 - FB_Heating_RootCause_Diagnostics
-- FB_Heating_Freeze_Hardware
+- FB_Diagnostics_RootCause
+- E_Heating_RootCause
 
-Status:
-- NOT runtime active
-- NOT safe to delete blindly
-- requires architectural decision
+Interpretation:
+- unfinished heating explainability subsystem
+- heating-specific root cause analysis
+- freeze hardware diagnostics
+- manifold demand explanation
+- boiler/offline/no-transfer inference
+
+Current status:
+- disconnected from MAIN
+- NOT production ready
+- NOT synchronized with current OpenTherm/DHW architecture
+- architecturally valuable
+
+Important:
+FB_Heating_RootCause_Diagnostics already integrates:
+- FB_Diagnostics_RootCause
+- FB_Heating_Demand_Map
+- G_Heating_RootCause
+- G_Heating_RootConfidence
+
+This is NOT a random orphan FB.
 
 Required future decision:
-- migrate to orchestration architecture
+- either evolve into full heating explainability subsystem
 OR
-- fully remove split-chain
+- remove entire diagnostics branch together
 
 ---
 
-## GROUP B — DIAGNOSTICS / HEALTH / OBSERVER
+### REMOVED WEAK EXTRACTION FRAGMENTS
 
-Requires deeper audit.
+The following blocks were reviewed and intentionally removed because they were weak extracted fragments rather than viable architecture:
 
-Blocks:
-- FB_CoreKernel_Live_Observer
-- FB_Diagnostics_RootCause
-- FB_Lifetime_Manager
-- FB_Smoke_Detector
+- FB_Heating_Adapter_CopyOut
+- FB_Heating_Maintenance_Gating
+- FB_Heating_Freeze_Hardware
+- FB_Heating_Local_Context
 
-Status:
-- unresolved
-- possible dormant diagnostics architecture
-- possible legacy detectors
-
-Deletion currently NOT approved.
+Reasons:
+- duplicated runtime logic
+- direct GVL mutation
+- weak abstraction boundaries
+- incomplete extraction
+- unsafe integration semantics
+- inferior to current PRG_Heating implementation
 
 ---
 
-## GROUP C — SNAPSHOT / BLACKBOX PROTOTYPE
+## GROUP B — SNAPSHOT / BLACKBOX PROTOTYPE
 
 Block:
 - FB_State_Snapshot_Manager
@@ -184,6 +258,9 @@ The repository has already been cleaned from:
 - abandoned transition guards
 - duplicated calibration paths
 - orphan DUT/ENUM structures
+- weak heating extraction fragments
+- disconnected observer placeholders
+- disconnected legacy detectors
 
 The remaining unresolved items are now mostly architectural, not cosmetic.
 
