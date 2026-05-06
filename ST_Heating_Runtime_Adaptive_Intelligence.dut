@@ -1,47 +1,49 @@
 TYPE ST_Heating_Runtime_Adaptive_Intelligence :
 STRUCT
     // ======================================================
-    // Adaptive lifecycle
+    // Adaptive analytics visibility
+    // Passive analytics only.
+    // No adaptive authority exists.
     // ======================================================
-    Intelligence_Active : BOOL;
-    Intelligence_Degraded : BOOL;
-    Intelligence_Critical : BOOL;
+    Adaptive_Analytics_Visible : BOOL;
+    Adaptive_Analytics_Degraded : BOOL;
+    Adaptive_Analytics_Attention : BOOL;
 
     // ======================================================
-    // Adaptive supervision confidence
+    // Adaptive supervision observation
     // ======================================================
-    Supervision_Confidence : UINT;
-    Confidence_Degraded : BOOL;
+    Supervision_Confidence_Observation : UINT;
+    Confidence_Degradation_Visible : BOOL;
 
     // ======================================================
-    // Adaptive runtime risk
+    // Adaptive runtime observation
     // ======================================================
-    Adaptive_Runtime_Risk : UINT;
-    Adaptive_Runtime_Stability : UINT;
+    Adaptive_Runtime_Observation : UINT;
+    Adaptive_Runtime_Stability_Observation : UINT;
 
     // ======================================================
-    // Adaptive anomaly weighting
+    // Adaptive anomaly observation weighting
     // ======================================================
-    Runtime_Anomaly_Weight : UINT;
-    Cascade_Anomaly_Weight : UINT;
-    OpenTherm_Anomaly_Weight : UINT;
-    Diagnostics_Anomaly_Weight : UINT;
+    Runtime_Anomaly_Observation_Weight : UINT;
+    Cascade_Anomaly_Observation_Weight : UINT;
+    OpenTherm_Anomaly_Observation_Weight : UINT;
+    Diagnostics_Anomaly_Observation_Weight : UINT;
 
     // ======================================================
-    // Predictive correlation weighting
+    // Predictive correlation observation
     // ======================================================
-    Predictive_Correlation_Score : UINT;
-    Predictive_Correlation_Degraded : BOOL;
+    Predictive_Correlation_Observation : UINT;
+    Predictive_Correlation_Visible : BOOL;
 
     // ======================================================
-    // Adaptive integrity
+    // Adaptive integrity observation
     // ======================================================
-    Sequencing_Confidence : UINT;
-    Ownership_Confidence : UINT;
-    Synchronization_Confidence : UINT;
+    Sequencing_Confidence_Observation : UINT;
+    Ownership_Confidence_Observation : UINT;
+    Synchronization_Confidence_Observation : UINT;
 
     // ======================================================
-    // Adaptive status
+    // Adaptive analytics status
     // ======================================================
     Status_Code : UINT;
     Status_Text : STRING(128);
