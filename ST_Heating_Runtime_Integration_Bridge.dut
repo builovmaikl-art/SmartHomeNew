@@ -1,0 +1,60 @@
+TYPE ST_Heating_Runtime_Integration_Bridge :
+STRUCT
+    // ======================================================
+    // Runtime orchestration shell state
+    // ======================================================
+    Shell_Ready : BOOL;
+    Shell_Fault : BOOL;
+    Shell_Contract_Valid : BOOL;
+
+    // ======================================================
+    // Runtime integration permissions
+    // ======================================================
+    Allow_DHW_Integration : BOOL;
+    Allow_Heating_Integration : BOOL;
+    Allow_Diagnostics_Integration : BOOL;
+    Allow_Output_Projection_Integration : BOOL;
+
+    // ======================================================
+    // Runtime ownership integrity
+    // ======================================================
+    Runtime_Ownership_Valid : BOOL;
+    Diagnostics_Ownership_Valid : BOOL;
+    Explainability_Ownership_Valid : BOOL;
+    OpenTherm_Ownership_Valid : BOOL;
+    Cascade_Ownership_Valid : BOOL;
+    Safety_Ownership_Valid : BOOL;
+
+    // ======================================================
+    // Runtime sequencing integrity
+    // ======================================================
+    DHW_Before_Heating_Valid : BOOL;
+    Diagnostics_After_Publication_Valid : BOOL;
+    Output_Projection_Last_Valid : BOOL;
+
+    // ======================================================
+    // Runtime migration safety
+    // ======================================================
+    Runtime_Migration_Allowed : BOOL;
+    Runtime_Migration_Active : BOOL;
+    Runtime_Migration_Failed : BOOL;
+
+    // ======================================================
+    // Runtime integration status
+    // ======================================================
+    Integration_Status_Code : UINT;
+    Integration_Status_Text : STRING(128);
+
+    // ======================================================
+    // Runtime integration visibility
+    // ======================================================
+    Diagnostics_Visible : BOOL;
+    Explainability_Visible : BOOL;
+
+    // ======================================================
+    // Runtime phase synchronization
+    // ======================================================
+    Current_Phase : E_Heating_Runtime_Phase;
+    Runtime_Synchronized : BOOL;
+END_STRUCT
+END_TYPE
