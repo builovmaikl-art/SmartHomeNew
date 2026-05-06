@@ -45,6 +45,10 @@ VO_Bridge.DHW_Before_Heating_Valid := TRUE;
 VO_Bridge.Diagnostics_After_Publication_Valid := TRUE;
 VO_Bridge.Output_Projection_Last_Valid := TRUE;
 
+// ======================================================
+// GOVERNANCE LOCK
+// Migration is NEVER auto-enabled by supervision.
+// ======================================================
 VO_Bridge.Runtime_Migration_Allowed := FALSE;
 VO_Bridge.Runtime_Migration_Active := FALSE;
 VO_Bridge.Runtime_Migration_Failed := FALSE;
@@ -78,6 +82,7 @@ VO_Bridge.Shell_Contract_Valid := VI_Contract_Valid;
 // OWNERSHIP INTEGRITY
 // ======================================================
 VO_Bridge.Runtime_Ownership_Valid := TRUE;
+
 VO_Bridge.Diagnostics_Ownership_Valid :=
     VI_Runtime_Context.Diagnostics_Isolation_Valid;
 
@@ -106,7 +111,7 @@ VO_Bridge.Output_Projection_Last_Valid :=
     VI_Runtime_Context.Output_Projection_Last_Valid;
 
 // ======================================================
-// INTEGRATION SAFETY
+// OBSERVATION-ONLY INTEGRATION READINESS
 // ======================================================
 VO_Bridge.Allow_DHW_Integration :=
     VO_Bridge.DHW_Before_Heating_Valid;
@@ -123,21 +128,11 @@ VO_Bridge.Allow_Output_Projection_Integration :=
     VO_Bridge.Output_Projection_Last_Valid;
 
 // ======================================================
-// MIGRATION SAFETY
+// GOVERNANCE POLICY
+// Runtime migration is NOT automatically allowed.
+// Future migration requires explicit external governance.
 // ======================================================
-VO_Bridge.Runtime_Migration_Allowed :=
-    VI_Contract_Valid AND
-    NOT VI_Runtime_Context.Runtime_Fault AND
-    VO_Bridge.Runtime_Ownership_Valid AND
-    VO_Bridge.Diagnostics_Ownership_Valid AND
-    VO_Bridge.Explainability_Ownership_Valid AND
-    VO_Bridge.OpenTherm_Ownership_Valid AND
-    VO_Bridge.Cascade_Ownership_Valid AND
-    VO_Bridge.Safety_Ownership_Valid AND
-    VO_Bridge.DHW_Before_Heating_Valid AND
-    VO_Bridge.Diagnostics_After_Publication_Valid AND
-    VO_Bridge.Output_Projection_Last_Valid;
-
+VO_Bridge.Runtime_Migration_Allowed := FALSE;
 VO_Bridge.Runtime_Migration_Active := FALSE;
 VO_Bridge.Runtime_Migration_Failed := FALSE;
 
@@ -158,22 +153,30 @@ ELSIF VI_Runtime_Context.Runtime_Fault THEN
     VO_Bridge.Integration_Status_Code := 200;
     VO_Bridge.Integration_Status_Text := 'Heating runtime fault active';
 
-ELSIF NOT VO_Bridge.Runtime_Migration_Allowed THEN
+ELSIF NOT VO_Bridge.Allow_Heating_Integration THEN
     VO_Bridge.Integration_Status_Code := 300;
-    VO_Bridge.Integration_Status_Text := 'Heating runtime migration blocked';
+    VO_Bridge.Integration_Status_Text := 'Heating observation integration blocked';
 
 ELSE
     VO_Bridge.Integration_Status_Code := 1;
-    VO_Bridge.Integration_Status_Text := 'Heating runtime bridge ready';
+    VO_Bridge.Integration_Status_Text := 'Heating observation bridge ready';
 END_IF;
 
-VO_Bridge_Ready := VO_Bridge.Runtime_Migration_Allowed;
+// ======================================================
+// OUTPUT STATUS
+// ======================================================
+VO_Bridge_Ready :=
+    VO_Bridge.Allow_Heating_Integration;
+
 VO_Bridge_Fault :=
     NOT VI_Contract_Valid OR
     VI_Runtime_Context.Runtime_Fault;
 
-VO_Bridge_Status_Code := VO_Bridge.Integration_Status_Code;
-VO_Bridge_Status_Text := VO_Bridge.Integration_Status_Text;
+VO_Bridge_Status_Code :=
+    VO_Bridge.Integration_Status_Code;
+
+VO_Bridge_Status_Text :=
+    VO_Bridge.Integration_Status_Text;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Runtime_Integration_Bridge_Manager <<<
