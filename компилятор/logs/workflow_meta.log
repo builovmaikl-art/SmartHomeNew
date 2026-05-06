@@ -1,6 +1,6 @@
-event=workflow_dispatch
+event=push
 ref=refs/heads/main
-sha=801ac597a83df60dafdec27f439035a5932a9dc5
+sha=e448be720c95882f0eadd1e540862909505a683e
 task=compile
 note=
 snapshot_date=
