@@ -1,6 +1,6 @@
-DUT_FILES=91
+DUT_FILES=92
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=32
+ENUM_INSERTED=33
 STRUCT_INSERTED=59
 STRUCT_FIELDS_TOTAL=513
 STRUCT_FIELDS_WITH_INITIALIZER=144
@@ -18,6 +18,7 @@ E_Heating_Policy_Mode.dut: ENUM E_Heating_Policy_Mode values=6
 E_Heating_RootCause.dut: ENUM E_Heating_RootCause values=15
 E_Lifetime_Device_Type.dut: ENUM E_Lifetime_Device_Type values=2
 E_OpenTherm_Adapter_State.dut: ENUM E_OpenTherm_Adapter_State values=5
+E_OpenTherm_Error.dut: ENUM E_OpenTherm_Error values=6
 E_Outdoor_Mode.dut: ENUM E_Outdoor_Mode values=5
 E_PLC_ROLE.dut: ENUM E_PLC_ROLE values=4
 E_Recovery_Phase.dut: ENUM E_Recovery_Phase values=6
