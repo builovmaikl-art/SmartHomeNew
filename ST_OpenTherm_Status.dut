@@ -1,0 +1,25 @@
+TYPE ST_OpenTherm_Status :
+STRUCT
+    Raw_Heartbeat : UDINT;
+    Raw_Ack_Seq : UDINT;
+    Raw_Online : BOOL;
+    Raw_Error : BOOL;
+    Raw_Flame : BOOL;
+    Raw_Modulation_x10 : UINT;
+    Raw_Boiler_Temp_x10 : INT;
+    Raw_Status_Word : WORD;
+    Raw_Error_Code : WORD;
+
+    Adapter_Online : BOOL;
+    Adapter_Error : BOOL;
+    Command_Ack : BOOL;
+    Command_Timeout : BOOL;
+    Heartbeat_Timeout : BOOL;
+
+    Last_Heartbeat : UDINT;
+    Last_Heartbeat_MS : UDINT;
+
+    Adapter_State : E_OpenTherm_Adapter_State;
+    Error_State : E_OpenTherm_Error;
+END_STRUCT
+END_TYPE
