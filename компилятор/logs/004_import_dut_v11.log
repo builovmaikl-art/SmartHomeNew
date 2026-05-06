@@ -1,8 +1,8 @@
-DUT_FILES=117
+DUT_FILES=118
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=36
-STRUCT_INSERTED=81
-STRUCT_FIELDS_TOTAL=867
+STRUCT_INSERTED=82
+STRUCT_FIELDS_TOTAL=883
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -79,6 +79,7 @@ ST_Heating_Runtime_Event_Buffer.dut: STRUCT ST_Heating_Runtime_Event_Buffer fiel
 ST_Heating_Runtime_Execution_Frame.dut: STRUCT ST_Heating_Runtime_Execution_Frame fields=15
 ST_Heating_Runtime_Execution_Timeline.dut: STRUCT ST_Heating_Runtime_Execution_Timeline fields=12
 ST_Heating_Runtime_Integration_Bridge.dut: STRUCT ST_Heating_Runtime_Integration_Bridge fields=25
+ST_Heating_Runtime_Meta_Supervision.dut: STRUCT ST_Heating_Runtime_Meta_Supervision fields=16
 ST_Heating_Runtime_Observation.dut: STRUCT ST_Heating_Runtime_Observation fields=29
 ST_Heating_Runtime_Phase_Event.dut: STRUCT ST_Heating_Runtime_Phase_Event fields=16
 ST_Heating_Runtime_Phase_Transition.dut: STRUCT ST_Heating_Runtime_Phase_Transition fields=14
@@ -161,6 +162,7 @@ STRUCT ST_Heating_Runtime_Event_Buffer: total=15 with_initializer=0 without_init
 STRUCT ST_Heating_Runtime_Execution_Frame: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Execution_Timeline: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Integration_Bridge: total=25 with_initializer=0 without_initializer=25 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Heating_Runtime_Meta_Supervision: total=16 with_initializer=0 without_initializer=16 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Observation: total=29 with_initializer=0 without_initializer=29 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Phase_Event: total=16 with_initializer=0 without_initializer=16 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Heating_Runtime_Phase_Transition: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
