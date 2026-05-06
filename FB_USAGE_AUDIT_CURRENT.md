@@ -147,6 +147,14 @@ Status:
 - heating control behavior preserved
 - diagnostics/explainability added as read-only projection
 
+Critical runtime ordering:
+1. DHW manager executes FIRST
+2. heating manager executes SECOND
+3. diagnostics/explainability executes AFTER state publication
+4. output projection executes LAST
+
+This ordering is now considered part of the live runtime contract.
+
 ---
 
 ## OpenTherm Transport Observability
@@ -236,68 +244,88 @@ Status:
 
 ---
 
-## Heating Root-Cause Diagnostics
+## Heating Diagnostics Layering
 
-FB_Heating_RootCause_Diagnostics has been rewritten from an extracted prototype into a read-only diagnostics observer.
+Current diagnostics architecture is now layered.
 
-Current role:
-- pure diagnostics / explainability layer
-- no control authority
-- no output ownership
-- reads safety, cascade and transport semantic state
-- writes heating root-cause / confidence fields
+### Layer 1 — Semantic Runtime State
 
-Produces:
-- G_Heating_RootCause
-- G_Heating_RootConfidence
-- G_Heating_Confidence
-- G_Heating_Error_Score
-- G_Heating_Confidence_Reason_Code
-- G_Heating_Confidence_Reason_Text
+Produced by:
+- FB_Boiler_OpenTherm_Interface
+- FB_Heating_Boiler_Control
 
-Connected from:
-- PRG_Heating
+Purpose:
+- transport semantics
+- boiler semantics
+- cascade semantics
 
-Integration point:
-- after heating state/status publication
-- before domain output projection
-
-Status:
-- VERIFIED LIVE
-- diagnostics producer now exists
-- not a disconnected orphan anymore
+Ownership:
+- runtime state only
 
 ---
 
-## Explainability Integration
+### Layer 2 — Inference Engine
 
-PRG_Explainability now consumes heating root-cause outputs.
+Block:
+- FB_Diagnostics_RootCause
 
-Current public explainability fields:
-- GVL_EXPLAINABILITY.G_Heating_Why_Blocked
-- GVL_EXPLAINABILITY.G_Reason_Chain_Full
+Purpose:
+- hydraulic reasoning
+- thermal transfer reasoning
+- OpenTherm transport reasoning
+- cascade inference
 
-Status:
-- VERIFIED LIVE
-- heating diagnostics are visible in explainability chain
-- no runtime behavior change
+Ownership:
+- inference only
+- NO explainability publication
+- NO runtime authority
 
 ---
 
-## HMI Projection
+### Layer 3 — Explainability Observer
 
-GVL_HMI and PRG_HMI_Dashboard now expose:
-- heating confidence
-- heating root-cause reason text/code
-- cascade semantic diagnostics
-- OpenTherm semantic diagnostics
-- heartbeat/command age telemetry
-- adapter/error enum states
+Block:
+- FB_Heating_RootCause_Diagnostics
 
-Status:
-- VERIFIED LIVE
-- operator-facing diagnostics available
-- read-only projection only
+Purpose:
+- state collection
+- demand map generation
+- explainability publication
+- confidence publication
+
+Ownership:
+- public diagnostics projection only
+
+---
+
+### Layer 4 — Event Projection
+
+Block:
+- FB_Heating_Diagnostics
+
+Purpose:
+- service events
+- out-of-service events
+- freeze hardware event projection
+
+Ownership:
+- diagnostics event stream only
+
+---
+
+### Layer 5 — Explainability / HMI
+
+Blocks:
+- PRG_Explainability
+- PRG_HMI_Dashboard
+
+Purpose:
+- operator projection
+- reason chain publication
+- HMI diagnostics projection
+
+Ownership:
+- presentation only
 
 ---
 
@@ -311,19 +339,150 @@ Blocks:
 - FB_Heating_Override_Layer
 
 Interpretation:
-- alternative orchestration shell
-- wrapper around current heating runtime
-- candidate future replacement for oversized PRG_Heating
+- obsolete orchestration prototype
+- older attempt to split oversized PRG_Heating
+- not synchronized with current live runtime semantics
 
 Current status:
 - NOT runtime active
-- partially valid architecture
-- do NOT delete blindly
-- do NOT integrate as-is
-- requires redesign before integration
+- NOT equivalent to live runtime
+- requires full redesign before ANY integration
+- unsafe to connect directly
 
-Decision:
-- keep for future orchestration refactor review
+---
+
+### VERIFIED DESIGN MISMATCHES
+
+#### Execution ordering mismatch
+
+Current live runtime contract:
+1. DHW first
+2. Heating second
+3. Diagnostics after state publication
+4. Output projection last
+
+FB_Heating_Execution_Core violates this contract:
+- heating manager executes BEFORE DHW manager
+- diagnostics layer absent
+- explainability layer absent
+- HMI projection absent
+
+Result:
+- non-equivalent cascade demand semantics
+- DHW demand timing mismatch
+- possible incorrect boiler arbitration
+
+Status:
+- redesign required
+
+---
+
+#### Override ownership conflict
+
+FB_Heating_Override_Layer currently overrides:
+- zone valves
+- manifold pumps
+- manifold valves
+- boiler enable/setpoints
+- backup circulation pump
+- electric heater
+- DHW heating pump
+- DHW circulation pump
+
+Risks:
+- conflicts with freeze ownership
+- conflicts with gas safety semantics
+- conflicts with service-mode semantics
+- conflicts with DHW circulation policy
+- conflicts with diagnostics assumptions
+
+Current block has:
+- no semantic awareness
+- no diagnostics awareness
+- no explainability awareness
+- no safety-priority arbitration
+
+Status:
+- HIGH RISK
+- redesign mandatory before reuse
+
+---
+
+### ORCHESTRATION REDESIGN DEPENDENCY MAP
+
+Future orchestration redesign MUST preserve ownership boundaries.
+
+#### Runtime ownership
+
+Owned by:
+- PRG_Heating
+- FB_DHW_Manager
+- FB_Heating_System_Manager
+- FB_Heating_Boiler_Control
+
+Must remain runtime-authoritative.
+
+---
+
+#### Diagnostics ownership
+
+Owned by:
+- FB_Diagnostics_RootCause
+- FB_Heating_RootCause_Diagnostics
+- FB_Heating_Diagnostics
+
+Must remain read-only.
+
+---
+
+#### Explainability ownership
+
+Owned by:
+- PRG_Explainability
+- PRG_HMI_Dashboard
+
+Must remain downstream-only.
+
+---
+
+#### Safety ownership
+
+Owned by:
+- gas safety chain
+- freeze protection chain
+- emergency stop chain
+
+Must NEVER be bypassed by orchestration wrappers.
+
+---
+
+### REQUIRED FUTURE ORCHESTRATION MODEL
+
+Future orchestration redesign must become:
+- coordinator only
+- sequencing layer only
+- ownership router only
+
+It must NOT:
+- infer diagnostics
+- directly override safety
+- publish explainability
+- duplicate runtime logic
+- duplicate cascade logic
+
+---
+
+### CURRENT DECISION
+
+Do NOT:
+- integrate orchestration layer
+- connect override layer
+- migrate runtime into orchestration wrappers
+- split PRG_Heating blindly
+
+Allowed next step:
+- future controlled extraction only
+- after explicit redesign plan
 
 ---
 
@@ -347,46 +506,6 @@ Current status:
 
 Decision:
 - keep for future policy-layer review
-
----
-
-## GROUP C — LEGACY ROOT-CAUSE CORE
-
-Blocks:
-- FB_Diagnostics_RootCause
-- E_Heating_RootCause
-
-Interpretation:
-- older low-level root-cause inference block and enum
-- enum is still live because FB_Heating_RootCause_Diagnostics uses E_Heating_RootCause
-- FB_Diagnostics_RootCause is currently NOT required by live observer
-
-Current status:
-- E_Heating_RootCause is LIVE
-- FB_Diagnostics_RootCause remains unresolved legacy diagnostic core
-
-Decision:
-- do NOT delete E_Heating_RootCause
-- review FB_Diagnostics_RootCause separately after stabilization
-
----
-
-## GROUP D — HEATING DIAGNOSTICS EXTRACTION
-
-Block:
-- FB_Heating_Diagnostics
-
-Interpretation:
-- extracted heating diagnostics candidate
-- event/text diagnostics around service/freeze/subsystem degradation
-
-Current status:
-- NOT runtime active
-- may overlap with newly live root-cause/explainability pipeline
-- requires separate comparison before integration or deletion
-
-Decision:
-- keep for next audit pass
 
 ---
 
@@ -431,11 +550,13 @@ The repository has already been cleaned from:
 - disconnected observer placeholders
 - disconnected legacy detectors
 
-The heating architecture now has a live read-only explainability pipeline:
+The heating architecture now has a live layered diagnostics/explainability stack:
 - OpenTherm transport observability
 - boiler semantic status
 - cascade semantic aggregate state
-- heating root-cause diagnostics
+- inference engine
+- explainability observer
+- diagnostics event projection
 - explainability chain integration
 - HMI projection
 
@@ -447,22 +568,14 @@ The remaining unresolved items are architectural, not cosmetic.
 
 Recommended next audit order:
 
-1. FB_Diagnostics_RootCause
-   - compare with live FB_Heating_RootCause_Diagnostics
-   - decide whether to merge, rewrite, or delete
-
-2. FB_Heating_Diagnostics
-   - compare with current explainability/HMI pipeline
-   - decide whether it adds event logging value or duplicates live diagnostics
-
-3. Orchestration layer
-   - FB_Heating_Orchestration
-   - FB_Heating_Execution_Core
-   - FB_Heating_Override_Layer
-
-4. Thermal policy layer
+1. Thermal policy layer
    - FB_Heating_Decision_Context
    - FB_Heating_Thermal_Allocation
 
-5. FB_State_Snapshot_Manager
+2. Future orchestration redesign planning
+   - controlled extraction boundaries
+   - ownership routing
+   - sequencing model
+
+3. FB_State_Snapshot_Manager
    - decide future blackbox/snapshot architecture
