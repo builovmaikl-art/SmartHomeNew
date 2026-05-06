@@ -1,0 +1,40 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // PHYSICAL OPENTHERM ADAPTER CONTRACT
+    // ======================================================
+    // Command variables are written by FB_Boiler_OpenTherm_Interface.
+    // Raw status variables must be mapped to the real OpenTherm adapter / Modbus IO layer.
+    // PRG_OpenTherm_Adapter_Status validates raw status and updates GVL_STATE boiler feedback.
+
+    // Commands to adapter
+    G_Cmd_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Cmd_Setpoint_x10 : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UINT;
+    G_Cmd_Seq : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Cmd_Last_Write_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+
+    // Raw feedback from adapter
+    G_Raw_Heartbeat : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Raw_Ack_Seq : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Raw_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Raw_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Raw_Flame : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Raw_Modulation_x10 : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UINT;
+    G_Raw_Boiler_Temp_x10 : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF INT;
+    G_Raw_Status_Word : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF WORD;
+    G_Raw_Error_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF WORD;
+
+    // Validated adapter state
+    G_Adapter_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Adapter_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Command_Ack : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Command_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Heartbeat_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Last_Heartbeat : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Last_Heartbeat_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Last_Error_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF WORD;
+
+    // Timing configuration
+    G_Heartbeat_Timeout_MS : UDINT := 5000;
+    G_Command_Ack_Timeout_MS : UDINT := 3000;
+END_VAR
