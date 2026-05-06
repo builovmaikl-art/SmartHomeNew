@@ -1,13 +1,13 @@
-DUT_FILES=103
+DUT_FILES=102
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=36
-STRUCT_INSERTED=67
-STRUCT_FIELDS_TOTAL=588
-STRUCT_FIELDS_WITH_INITIALIZER=144
-INITIALIZERS_INSERTED=144
+STRUCT_INSERTED=66
+STRUCT_FIELDS_TOTAL=581
+STRUCT_FIELDS_WITH_INITIALIZER=143
+INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=1047
+XML_INITIALVALUE_TAGS=1046
 XML_ARRAYVALUE_TAGS=25
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
@@ -83,7 +83,6 @@ ST_OpenTherm_Wire_Image.dut: STRUCT ST_OpenTherm_Wire_Image fields=12
 ST_Operator_Zone_Rights.dut: STRUCT ST_Operator_Zone_Rights fields=4
 ST_Outdoor_Zone_Config.dut: STRUCT ST_Outdoor_Zone_Config fields=4
 ST_Owen_Analog_Value.dut: STRUCT ST_Owen_Analog_Value fields=3
-ST_Persist.dut: STRUCT ST_Persist fields=7
 ST_Rule.dut: STRUCT ST_Rule fields=8
 ST_Rule_Action.dut: STRUCT ST_Rule_Action fields=5
 ST_Scenario_Config.dut: STRUCT ST_Scenario_Config fields=8
@@ -151,7 +150,6 @@ STRUCT ST_OpenTherm_Wire_Image: total=12 with_initializer=0 without_initializer=
 STRUCT ST_Operator_Zone_Rights: total=4 with_initializer=1 without_initializer=3 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Outdoor_Zone_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Owen_Analog_Value: total=3 with_initializer=0 without_initializer=3 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Persist: total=7 with_initializer=1 without_initializer=6 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Rule: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Rule_Action: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=0 unsupported_initializer=0
