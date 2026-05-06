@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2252
+total 2248
 -rw-r--r--  1 runner runner  13067 May  6 06:17 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May  6 06:17 .
 drwxr-xr-x  3 runner runner   4096 May  6 06:17 ..
@@ -60,7 +60,7 @@ drwxr-xr-x  3 runner runner   4096 May  6 06:17 .github
 -rw-r--r--  1 runner runner   2470 May  6 06:17 FB_Behavior_Adapt.st
 -rw-r--r--  1 runner runner   1182 May  6 06:17 FB_BlackBox_Recorder.st
 -rw-r--r--  1 runner runner   4472 May  6 06:17 FB_Boiler_Cascade_Manager.st
--rw-r--r--  1 runner runner    989 May  6 06:17 FB_Boiler_OpenTherm_Interface.st
+-rw-r--r--  1 runner runner   2176 May  6 06:17 FB_Boiler_OpenTherm_Interface.st
 -rw-r--r--  1 runner runner    434 May  6 06:17 FB_CRC32_Calculator.st
 -rw-r--r--  1 runner runner   1549 May  6 06:17 FB_Calibration_Manager.st
 -rw-r--r--  1 runner runner   1675 May  6 06:17 FB_Command_Deduplication.st
@@ -364,7 +364,7 @@ drwxr-xr-x  5 runner runner   4096 May  6 06:17 компилятор
 -rw-r--r--  1 runner runner  76171 May  6 06:17 ошибки компиляции.txt
 
 === compiler dir ===
-total 592
+total 588
 drwxr-xr-x  5 runner runner   4096 May  6 06:17 .
 drwxr-xr-x 14 runner runner  20480 May  6 06:17 ..
 -rw-r--r--  1 runner runner  21153 May  6 06:17 001_universal_pou_builder_METHODS_V2.py
@@ -383,8 +383,8 @@ drwxr-xr-x  2 runner runner   4096 May  6 06:17 out
 -rw-r--r--  1 runner runner    177 May  6 06:17 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1200
+total 1204
 drwxr-xr-x 2 runner runner    4096 May  6 06:17 .
 drwxr-xr-x 5 runner runner    4096 May  6 06:17 ..
 -rw-r--r-- 1 runner runner       0 May  6 06:17 .gitkeep
--rw-r--r-- 1 runner runner 1219743 May  6 06:17 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1223335 May  6 06:17 RESULT_methods_clean.xml
