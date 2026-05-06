@@ -1,16 +1,13 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
     // ======================================================
-    // PHYSICAL OPENTHERM ADAPTER CONTRACT
+    // PHYSICAL OPENTHERM ADAPTER RUNTIME STATE
     // ======================================================
-    // Commands are written by FB_Boiler_OpenTherm_Interface.
-    // Raw status fields are updated by PRG_OpenTherm_Transport.
+    // Static transport configuration lives in GVL_CONFIG.
+    // This GVL contains runtime command/status/wire image only.
 
     G_Command : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Command;
     G_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Status;
-
-    // Transport layer register mapping
-    G_Register_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Register_Map;
 
     // Raw wire image exchanged with transport layer
     G_Wire_Image : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Wire_Image;
@@ -19,8 +16,4 @@ VAR_GLOBAL
     G_Transport_Online : BOOL := FALSE;
     G_Transport_Error : BOOL := FALSE;
     G_Last_Transport_Update_MS : UDINT := 0;
-
-    // Timing configuration
-    G_Heartbeat_Timeout_MS : UDINT := 5000;
-    G_Command_Ack_Timeout_MS : UDINT := 3000;
 END_VAR
