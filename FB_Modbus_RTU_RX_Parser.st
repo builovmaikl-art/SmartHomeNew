@@ -21,21 +21,12 @@ VAR
     L_Expected_Function : BYTE;
     L_Byte_Count : UINT;
     L_i : UINT;
+    L_j : INT;
     L_Data_Index : UINT;
 END_VAR
 
 // ======================================================
 // MODBUS RTU RX FRAME PARSER
-// ======================================================
-// Validates and parses Modbus RTU response frames.
-//
-// Responsibilities:
-//   - CRC validation
-//   - slave/function verification
-//   - exception response detection
-//   - register payload extraction
-//
-// This FB does not modify runtime response structures.
 // ======================================================
 
 VO_Valid := FALSE;
@@ -82,10 +73,22 @@ L_CRC_Frame :=
     BYTE_TO_WORD(VI_Frame.Data[VI_Frame.Length - 2]) OR
     SHL(BYTE_TO_WORD(VI_Frame.Data[VI_Frame.Length - 1]), 8);
 
-L_CRC_Calc := F_Modbus_RTU_CRC16(
-    VI_Data := VI_Frame.Data,
-    VI_Length := VI_Frame.Length - 2
-);
+L_CRC_Calc := 16#FFFF;
+
+FOR L_i := 0 TO (VI_Frame.Length - UINT#3) DO
+
+    L_CRC_Calc := L_CRC_Calc XOR BYTE_TO_WORD(VI_Frame.Data[L_i]);
+
+    FOR L_j := 0 TO 7 DO
+        IF (L_CRC_Calc AND 16#0001) <> 0 THEN
+            L_CRC_Calc := SHR(L_CRC_Calc, 1);
+            L_CRC_Calc := L_CRC_Calc XOR 16#A001;
+        ELSE
+            L_CRC_Calc := SHR(L_CRC_Calc, 1);
+        END_IF;
+    END_FOR;
+
+END_FOR;
 
 IF L_CRC_Calc <> L_CRC_Frame THEN
     VO_Error := TRUE;
@@ -93,9 +96,6 @@ IF L_CRC_Calc <> L_CRC_Frame THEN
     RETURN;
 END_IF;
 
-// ======================================================
-// SLAVE VALIDATION
-// ======================================================
 IF VI_Frame.Data[0] <> VI_Expected_Slave_ID THEN
     VO_Error := TRUE;
     VO_Error_Code := 16#0205;
@@ -104,9 +104,6 @@ END_IF;
 
 L_Function_Byte := VI_Frame.Data[1];
 
-// ======================================================
-// EXCEPTION RESPONSE
-// ======================================================
 IF L_Function_Byte = (L_Expected_Function OR 16#80) THEN
     VO_Exception_Response := TRUE;
     VO_Error := TRUE;
@@ -120,9 +117,6 @@ IF L_Function_Byte <> L_Expected_Function THEN
     RETURN;
 END_IF;
 
-// ======================================================
-// FUNCTION-SPECIFIC PARSING
-// ======================================================
 CASE VI_Expected_Function OF
 
     MB_FC03_READ_HOLDING_REGISTERS,
@@ -159,7 +153,6 @@ CASE VI_Expected_Function OF
     MB_FC06_WRITE_SINGLE_REGISTER,
     MB_FC16_WRITE_MULTIPLE_REGISTERS:
 
-        // Echo/ack frame accepted.
         VO_Register_Count := 0;
 
 ELSE
