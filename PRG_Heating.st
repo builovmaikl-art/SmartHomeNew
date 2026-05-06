@@ -3,6 +3,7 @@ VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
     fbOutputProjection : FB_Heating_Output_Projection;
+    fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
 
     L_i : INT;
     L_Current_Hour : UINT;
@@ -174,6 +175,13 @@ GVL_STATE.G_Safety_Freeze_Risk := L_Freeze_Risk_Status;
 GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
 GVL_STATE.G_DHW_Circ_Pump := L_DHW_Circ_Pump;
 GVL_STATUS.G_DHW_Status := L_DHW_Status;
+
+// ======================================================
+// READ-ONLY ROOT CAUSE DIAGNOSTICS
+// ======================================================
+fbRootCauseDiagnostics(
+    VI_Enable := TRUE
+);
 
 // ======================================================
 // DOMAIN OUTPUT PROJECTION
