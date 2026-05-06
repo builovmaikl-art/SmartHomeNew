@@ -1,0 +1,32 @@
+VAR_GLOBAL
+    // ======================================================
+    // Finalized-state runtime observation publication.
+    // Read-only observation boundary.
+    // Downstream-only.
+    // Governance-locked.
+    // ======================================================
+
+    // ------------------------------------------------------
+    // Runtime observer publication
+    // ------------------------------------------------------
+    G_Runtime_Observation : ST_Heating_Runtime_Observation;
+
+    // ------------------------------------------------------
+    // Observer publication state
+    // ------------------------------------------------------
+    G_Runtime_Observation_Valid : BOOL := FALSE;
+    G_Runtime_Observer_Ready : BOOL := FALSE;
+    G_Runtime_Observer_Fault : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Publication metadata
+    // ------------------------------------------------------
+    G_Runtime_Observation_Status_Code : UINT := 0;
+    G_Runtime_Observation_Status_Text : STRING(128) := 'Heating runtime observation inactive';
+
+    // ------------------------------------------------------
+    // Governance lock markers
+    // ------------------------------------------------------
+    G_Runtime_Observation_ReadOnly : BOOL := TRUE;
+    G_Runtime_Observation_Governance_Locked : BOOL := TRUE;
+END_VAR
