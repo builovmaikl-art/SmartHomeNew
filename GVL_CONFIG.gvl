@@ -98,6 +98,7 @@ VAR_GLOBAL
     G_OpenTherm_Register_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Register_Map;
 
     // Modbus RTU transport configuration
+    G_Modbus_RTU_Driver_Attached : BOOL := FALSE;
     G_Modbus_RTU_Config : ST_Modbus_RTU_Config := (
         Port_Name := 'COM1',
         Baudrate := 9600,
