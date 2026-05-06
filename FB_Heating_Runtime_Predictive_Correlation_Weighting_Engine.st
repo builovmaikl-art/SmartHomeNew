@@ -17,7 +17,7 @@ VAR_OUTPUT
     VO_Status_Text : STRING(128);
 END_VAR
 VAR
-    L_Total : UINT;
+    L_Total : UDINT;
 END_VAR
 
 VO_Correlation_Score := 0;
@@ -30,9 +30,20 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-L_Total := VI_Runtime_Risk + VI_Cascade_Risk + VI_OT_Risk;
-VO_Correlation_Score := L_Total / 3;
+// ======================================================
+// SAFE ARITHMETIC
+// ======================================================
+L_Total :=
+    TO_UDINT(VI_Runtime_Risk) +
+    TO_UDINT(VI_Cascade_Risk) +
+    TO_UDINT(VI_OT_Risk);
 
+VO_Correlation_Score :=
+    TO_UINT(L_Total / 3);
+
+// ======================================================
+// CORRELATION ANALYSIS
+// ======================================================
 IF VO_Correlation_Score > 70 THEN
     VO_Correlation_Degraded := TRUE;
 
