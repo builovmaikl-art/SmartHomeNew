@@ -1,8 +1,35 @@
 VAR_GLOBAL
     // ======================================================
     // Runtime observer governance lock
-    // Default state MUST remain disabled.
+    // Bootstrap passive observation activation only.
+    // Default state MUST remain disabled until controlled enablement.
     // Observer attachment remains optional and removable.
     // ======================================================
+
+    // ------------------------------------------------------
+    // Primary observer enable gate
+    // ------------------------------------------------------
     G_Enable_Runtime_Observer : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Bootstrap activation governance
+    // ------------------------------------------------------
+    G_Runtime_Observer_Bootstrap_Mode : BOOL := TRUE;
+    G_Runtime_Observer_Passive_Mode : BOOL := TRUE;
+    G_Runtime_Observer_ReadOnly_Mode : BOOL := TRUE;
+
+    // ------------------------------------------------------
+    // Activation validation markers
+    // ------------------------------------------------------
+    G_Runtime_Observer_Activation_Validated : BOOL := FALSE;
+    G_Runtime_Observer_Sequencing_Validated : BOOL := FALSE;
+    G_Runtime_Observer_Publication_Validated : BOOL := FALSE;
+    G_Runtime_Observer_Rollback_Validated : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Governance lock markers
+    // ------------------------------------------------------
+    G_Runtime_Observer_Governance_Locked : BOOL := TRUE;
+    G_Runtime_Observer_Runtime_Authority_Disabled : BOOL := TRUE;
+    G_Runtime_Observer_Writable_Exports_Disabled : BOOL := TRUE;
 END_VAR
