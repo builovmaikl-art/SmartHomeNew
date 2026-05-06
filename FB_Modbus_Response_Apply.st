@@ -16,7 +16,8 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-    L_i : UINT;
+    L_i : INT;
+    L_Count : INT;
 END_VAR
 
 // ======================================================
@@ -66,7 +67,13 @@ IF VI_Parser_Valid THEN
         GVL_MODBUS_RTU_BRIDGE.G_Response_Value[L_i] := 0;
     END_FOR;
 
-    FOR L_i := 1 TO VI_Register_Count DO
+    L_Count := UINT_TO_INT(VI_Register_Count);
+
+    IF L_Count > 32 THEN
+        L_Count := 32;
+    END_IF;
+
+    FOR L_i := 1 TO L_Count DO
         GVL_MODBUS_RTU_BRIDGE.G_Response_Value[L_i] :=
             VI_Register_Value[L_i];
     END_FOR;
