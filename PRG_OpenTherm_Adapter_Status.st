@@ -26,7 +26,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
         L_Now_MS - GVL_OPENTHERM_ADAPTER.G_Status[L_i].Last_Heartbeat_MS;
 
     GVL_OPENTHERM_ADAPTER.G_Status[L_i].Heartbeat_Timeout :=
-        (L_Heartbeat_Age > GVL_OPENTHERM_ADAPTER.G_Heartbeat_Timeout_MS);
+        (L_Heartbeat_Age > GVL_CONFIG.G_OpenTherm_Heartbeat_Timeout_MS);
 
     // ======================================================
     // COMMAND ACK VALIDATION
@@ -40,7 +40,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
 
     GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Timeout :=
         (NOT GVL_OPENTHERM_ADAPTER.G_Status[L_i].Command_Ack) AND
-        (L_Command_Age > GVL_OPENTHERM_ADAPTER.G_Command_Ack_Timeout_MS);
+        (L_Command_Age > GVL_CONFIG.G_OpenTherm_Command_Ack_Timeout_MS);
 
     // ======================================================
     // FINAL ADAPTER STATE
