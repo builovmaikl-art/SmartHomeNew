@@ -34,7 +34,9 @@ VAR_GLOBAL
     G_RX_Error : BOOL := FALSE;
     G_RX_Error_Code : WORD := 0;
 
-    // RX assembler state inside SysCom backend
+    // RX assembler/runtime state
+    G_RX_State : E_Modbus_RTU_RX_State := MB_RTU_RX_IDLE;
+
     G_RX_Assembler_Active : BOOL := FALSE;
     G_RX_Assembler_Length : UINT := 0;
     G_RX_Assembler_Last_Byte_MS : UDINT := 0;
