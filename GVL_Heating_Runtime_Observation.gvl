@@ -1,60 +1,19 @@
 VAR_GLOBAL
-    // ======================================================
-    // Finalized-state runtime observation publication.
-    // Read-only observation boundary.
-    // Downstream-only.
-    // Governance-locked.
-    // ======================================================
-
-    // ------------------------------------------------------
-    // Primary lifecycle publication
-    // ------------------------------------------------------
-    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State := E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
     G_Runtime_Observer_Lifecycle_Code : UINT := 0;
-    G_Runtime_Observer_Lifecycle_Text : STRING(128) :=
-        'Heating runtime observer inactive';
-
-    // ------------------------------------------------------
-    // Commissioning visibility
-    // ------------------------------------------------------
+    G_Runtime_Observer_Lifecycle_Text : STRING(128) := 'Heating runtime observer inactive';
     G_Runtime_Observer_Commissioning_Required : BOOL := TRUE;
     G_Runtime_Observer_Commissioning_Active : BOOL := FALSE;
     G_Runtime_Observer_Commissioning_Complete : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Runtime observer publication
-    // ------------------------------------------------------
     G_Runtime_Observation : ST_Heating_Runtime_Observation;
-
-    // ------------------------------------------------------
-    // Observation lifecycle semantics
-    // ------------------------------------------------------
     G_Runtime_Observation_Publication_Valid : BOOL := FALSE;
     G_Runtime_Observation_Stabilization_Complete : BOOL := FALSE;
     G_Runtime_Observation_Operational : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Observer publication state
-    // ------------------------------------------------------
     G_Runtime_Observation_Valid : BOOL := FALSE;
     G_Runtime_Observer_Ready : BOOL := FALSE;
     G_Runtime_Observer_Fault : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Publication metadata
-    // Status code ranges:
-    // 0-99 inactive, 100-199 stabilization,
-    // 200-299 authorization, 300-399 operational,
-    // 900+ faulted.
-    // ------------------------------------------------------
     G_Runtime_Observation_Status_Code : UINT := 0;
-    G_Runtime_Observation_Status_Text : STRING(128) :=
-        'Heating runtime observation inactive';
-
-    // ------------------------------------------------------
-    // Governance lock markers
-    // ------------------------------------------------------
+    G_Runtime_Observation_Status_Text : STRING(128) := 'Heating runtime observation inactive';
     G_Runtime_Observation_ReadOnly : BOOL := TRUE;
     G_Runtime_Observation_Governance_Locked : BOOL := TRUE;
 END_VAR
