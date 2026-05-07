@@ -177,28 +177,103 @@ Observed examples:
 ```text
 FB_FloorHeating_Freeze_Protection
 FB_FloorHeating_Overheat_Protection
+FB_FloorHeating_Controller
 ```
 
-Possible interpretations:
+Completed overlap audit:
 
 ```text
-1. legacy standalone protection layer;
-2. partially absorbed into Safety_Gate/System_Manager logic;
-3. unfinished decomposition attempt;
-4. still-needed behavior currently absent from active runtime.
+FB_FloorHeating_Controller is NOT obsolete.
 ```
 
-Current status:
+Reason:
 
 ```text
-unknown ownership
-requires safety-path verification before any reconnect
+current active FB_Heating_Circuit_Control directly instantiates
+FB_FloorHeating_Controller as active per-circuit PID/PWM runtime controller.
 ```
 
-Special rule:
+Therefore:
 
 ```text
-No automatic reconnect of safety-related FBs.
+FB_FloorHeating_Controller = ACTIVE INDIRECT RUNTIME DEPENDENCY
+```
+
+Completed safety overlap result:
+
+```text
+FB_FloorHeating_Freeze_Protection logic is absorbed.
+FB_FloorHeating_Overheat_Protection logic is absorbed.
+```
+
+Freeze protection overlap:
+
+```text
+old logic:
+- floor freeze detection
+- outdoor freeze detection
+- force circulation/pump behavior
+```
+
+Current owners:
+
+```text
+FB_Heating_Safety_Gate
+FB_Heating_Safe_State
+```
+
+Current runtime now additionally includes:
+
+```text
+- freeze target supply logic;
+- IO failsafe handling;
+- gas safety interaction;
+- backup circulation;
+- electric heater integration;
+- manifold-level freeze circulation.
+```
+
+Overheat overlap:
+
+```text
+old logic:
+- threshold detect
+- lock overheated circuits
+```
+
+Current owner:
+
+```text
+FB_Heating_Circuit_Control
+```
+
+Current runtime now additionally includes:
+
+```text
+- validated sensor inputs;
+- 60s debounce timer;
+- room/floor fallback selection;
+- rule-action arbitration.
+```
+
+Current classification:
+
+```text
+FB_FloorHeating_Controller
+    → KEEP_ACTIVE
+
+FB_FloorHeating_Freeze_Protection
+    → OBSOLETE DUPLICATE CANDIDATE
+
+FB_FloorHeating_Overheat_Protection
+    → OBSOLETE DUPLICATE CANDIDATE
+```
+
+Current deletion status:
+
+```text
+not deleted yet
+awaiting full-system audit completion
 ```
 
 ---
@@ -325,6 +400,7 @@ FB_Heating_Safety_Gate
 FB_Heating_Circuit_Control
 FB_Heating_Manifold_Control
 FB_Heating_Boiler_Control
+FB_FloorHeating_Controller
 ```
 
 Action:
