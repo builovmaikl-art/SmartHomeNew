@@ -107,18 +107,6 @@ GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective :=
 GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Valid :=
     fbRuntimeObserverAuthorization.VO_Authorization_Valid;
 
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Deny_Reason :=
-    fbRuntimeObserverAuthorization.VO_Deny_Reason;
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Deny_Text :=
-    fbRuntimeObserverAuthorization.VO_Deny_Text;
-
-IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request
-   AND NOT GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Deny_Counter :=
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Deny_Counter + 1;
-END_IF;
-
 GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Code :=
     fbRuntimeObserverAuthorization.VO_Status_Code;
 
