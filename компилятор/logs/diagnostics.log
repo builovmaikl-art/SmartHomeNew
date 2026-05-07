@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2532
+total 2528
 -rw-r--r--  1 runner runner  13067 May  7 06:08 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  24576 May  7 06:08 .
 drwxr-xr-x  3 runner runner   4096 May  7 06:08 ..
@@ -418,7 +418,6 @@ drwxr-xr-x  3 runner runner   4096 May  7 06:08 .github
 -rw-r--r--  1 runner runner    262 May  7 06:08 ST_Zone_Adapt_State.dut
 -rw-r--r--  1 runner runner    256 May  7 06:08 ST_Zone_Sensors.dut
 -rw-r--r--  1 runner runner   2571 May  7 06:08 TZ_NEW.txt
--rw-r--r--  1 runner runner    103 May  7 06:08 access_check.log
 -rw-r--r--  1 runner runner     52 May  7 06:08 compile_manual.log
 drwxr-xr-x  3 runner runner   4096 May  7 06:08 diagnostics
 drwxr-xr-x 20 runner runner   4096 May  7 06:08 docs
