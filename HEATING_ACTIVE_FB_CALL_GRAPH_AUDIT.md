@@ -161,11 +161,69 @@ that lost integration path visibility later,
 or their behavior may now be represented in another grey/active block.
 ```
 
+Completed diagnostics sub-audit:
+
+```text
+FB_Heating_Diagnostics is NOT missing heating-control behavior.
+```
+
+Role:
+
+```text
+read-only diagnostics / event projection layer
+```
+
+Implemented logic:
+
+```text
+- service / out-of-service diagnostics aggregation;
+- backup pump OOS event;
+- electric heater OOS event;
+- manifold pump OOS events;
+- DHW pump OOS events;
+- freeze hardware critical event projection;
+- diagnostics text/status aggregation.
+```
+
+Writes:
+
+```text
+GVL_STATUS.G_Diagnostics*
+GVL_STATUS.G_Diagnostics_Events
+GVL_STATUS.G_Diagnostics_Count
+```
+
+Does NOT own:
+
+```text
+- heating control;
+- boiler control;
+- manifold control;
+- valve control;
+- DHW control;
+- runtime sequencing;
+- output projection.
+```
+
+Current classification:
+
+```text
+FB_Heating_Diagnostics
+    → KEEP_GREY_RESERVED / DIAGNOSTICS PROJECTION CANDIDATE
+```
+
+Current reconnect policy:
+
+```text
+Do not reconnect as control logic.
+Only consider later as diagnostics/event projection if active diagnostics pipeline needs this exact behavior.
+```
+
 Current status:
 
 ```text
 DO NOT CONNECT YET
-complete full grey POU logic audit first
+complete remaining Group 1 audit first
 ```
 
 ---
