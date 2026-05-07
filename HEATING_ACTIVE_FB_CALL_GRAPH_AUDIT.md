@@ -2,286 +2,524 @@
 
 # Purpose
 
-This document audits heating-related FB/POU activity by runtime participation, not by compile success.
+This document no longer focuses primarily on heating runtime supervision activation.
 
-Clean compilation means only that a POU is syntactically/type valid and accepted by the project. It does not prove that the POU:
-- has an instance;
-- is called from an active PRG;
-- receives live inputs;
-- publishes consumed outputs;
-- participates in physical IO projection.
+The current purpose is:
 
-The goal of this audit is to separate:
-- active runtime code;
-- indirectly active code;
-- observer-only active code;
-- compile-only code;
-- future-reserved prototypes;
-- delete candidates.
+```text
+Classify grey/inactive POU objects visible in the CODESYS project tree
+without breaking the current 0-error compile baseline.
+```
+
+The project currently compiles successfully in the real CODESYS environment.
+
+That compile-clean state is now considered the authoritative engineering baseline.
 
 ---
 
-# Audit status
+# Important baseline rule
 
-Status: initial classification audit.
+Current confirmed state:
 
-This file intentionally does not claim that all listed FBs are fully verified. It records the current architectural concern and establishes the review categories.
+```text
+0 compile errors
+0 warnings affecting build validity
+project operational baseline restored
+```
 
----
+This baseline must not be destabilized.
 
-# Important conclusion
+From this point:
 
-A large part of the previously created heating runtime / supervision FB family appears to be compile-visible but not necessarily runtime-active.
-
-This is not the same as a compile failure.
-
-It means the project may contain many valid POUs that are not connected to the active execution graph.
-
----
-
-# Why this happened
-
-Some FBs were created as staged architecture scaffolding during large supervision/orchestration planning:
-- runtime observer preparation;
-- blackbox/event reconstruction planning;
-- predictive supervision planning;
-- adaptive supervision planning;
-- meta-supervision planning;
-- orchestration planning.
-
-That approach is acceptable only if those FBs are explicitly marked as future-reserved and excluded from the active runtime expectation.
-
-It becomes a problem if they are assumed to be live functionality.
+- grey POU objects are NOT automatically considered broken;
+- blue POU objects are NOT automatically considered correct architecture;
+- compile participation and runtime participation are different things;
+- project-tree visibility and runtime execution are different things.
 
 ---
 
-# Current active-call categories
+# What "grey POU" means in this audit
 
-## Category A — Active runtime FB
+Grey POU in the CODESYS tree currently means:
+
+```text
+present in repository/project
+but not participating in current compile/runtime graph
+```
+
+This does NOT automatically mean:
+
+```text
+- obsolete;
+- removable;
+- dead code;
+- invalid architecture;
+- safe to reconnect.
+```
+
+The previous mistake was assuming that compile-visible infrastructure could be safely connected without a complete dependency and project-registration audit.
+
+This audit exists specifically to avoid repeating that mistake.
+
+---
+
+# Scope of this audit
+
+Included:
+
+```text
+FB_Heating_*
+FB_FloorHeating_*
+FB_State_*
+selected PRG_* test/simulation layers
+selected runtime supervision FBs
+```
+
+Explicitly excluded:
+
+```text
+PRG_PLC_A
+PRG_PLC_B
+PRG_PLC_*
+```
+
+Those PRGs are outside the current grey-POU investigation scope.
+
+---
+
+# Current observed grey groups
+
+## Group 1 — Legacy heating orchestration family
+
+Observed examples:
+
+```text
+FB_Heating_Decision_Context
+FB_Heating_Diagnostics
+FB_Heating_Execution_Core
+FB_Heating_Orchestration
+FB_Heating_Override_Layer
+FB_Heating_Thermal_Allocation
+```
+
+Current interpretation:
+
+```text
+likely earlier orchestration/runtime decomposition attempt
+superseded by current PRG_Heating + FB_Heating_System_Manager chain
+```
+
+Risk:
+
+```text
+unsafe reconnect could duplicate ownership and execution paths
+```
+
+Current status:
+
+```text
+DO NOT CONNECT
+until dependency and ownership audit completed
+```
+
+---
+
+## Group 2 — Floor heating protection family
+
+Observed examples:
+
+```text
+FB_FloorHeating_Freeze_Protection
+FB_FloorHeating_Overheat_Protection
+```
+
+Possible interpretations:
+
+```text
+1. legacy standalone protection layer;
+2. partially absorbed into Safety_Gate/System_Manager logic;
+3. unfinished decomposition attempt.
+```
+
+Current status:
+
+```text
+unknown ownership
+requires safety-path verification before any reconnect
+```
+
+Special rule:
+
+```text
+No automatic reconnect of safety-related FBs.
+```
+
+---
+
+## Group 3 — Runtime supervision scaffold family
+
+Observed examples:
+
+```text
+FB_Heating_Runtime_Coordinator
+FB_Heating_Runtime_Event_Manager
+FB_Heating_Runtime_Observation_Aggregator
+FB_Heating_Runtime_Observation_Validator
+FB_Heating_Runtime_Orchestration_Shell
+FB_Heating_Runtime_Stability_Model
+FB_Heating_Runtime_Timeline_Observer
+FB_Heating_Runtime_Jitter_Detector
+FB_Heating_Runtime_Latency_Validator
+FB_Heating_Runtime_Adaptive_*
+FB_Heating_Runtime_Anomaly_*
+FB_Heating_Runtime_Predictive_*
+```
+
+Currently active exceptions:
+
+```text
+FB_Heating_Runtime_Observer
+FB_Heating_Runtime_Observer_Authorization
+```
+
+Current interpretation:
+
+```text
+large supervision/planning scaffold
+mostly compile-visible prototypes
+not proven runtime-active
+```
+
+Important rule:
+
+```text
+Do NOT convert this family into active orchestration runtime.
+```
+
+Allowed future usage:
+
+```text
+bounded read-only supervision only
+```
+
+---
+
+## Group 4 — Snapshot/test/simulation family
+
+Observed examples:
+
+```text
+FB_State_Snapshot_Manager
+PRG_Config_Simulation
+PRG_Scenario_Test_Harness
+```
+
+Interpretation:
+
+```text
+test/support infrastructure
+not production runtime path
+```
+
+Current recommendation:
+
+```text
+keep isolated from production runtime execution graph
+```
+
+---
+
+# New classification model
+
+The previous classification model was too runtime-centric.
+
+The new model focuses on safe engineering decisions.
+
+---
+
+## Category A — Active production runtime
 
 Definition:
-- has an instance in an active PRG/FB;
-- is called every relevant scan;
-- receives live runtime inputs;
-- its outputs are consumed by active runtime logic or final state publication.
 
-Known examples to verify/keep:
-- `FB_Heating_System_Manager`
-- `FB_DHW_Manager`
-- `FB_Heating_Output_Projection`
-- `FB_Heating_RootCause_Diagnostics`
+```text
+actively participates in current production execution graph
+```
+
+Examples:
+
+```text
+FB_Heating_System_Manager
+FB_DHW_Manager
+FB_Heating_Output_Projection
+FB_Heating_RootCause_Diagnostics
+```
+
+Action:
+
+```text
+protect
+verify carefully before modification
+```
 
 ---
 
-## Category B — Indirect active runtime FB
+## Category B — Indirect active runtime
 
 Definition:
-- not called directly from top-level PRG;
-- instantiated/called inside an active runtime FB;
-- participates in runtime behavior through that parent FB.
 
-Likely examples through `FB_Heating_System_Manager`:
-- `FB_Heating_Safety_Gate`
-- `FB_Heating_Adaptive_Target`
-- `FB_Heating_Circuit_Control`
-- `FB_Heating_Demand_Map`
-- `FB_Heating_Manifold_Control`
-- `FB_Heating_Boiler_Control`
+```text
+called from active runtime FBs
+```
 
-Required check:
-- confirm each instance exists in `FB_Heating_System_Manager`;
-- confirm each call is active in implementation body;
-- confirm outputs are consumed.
+Examples:
+
+```text
+FB_Heating_Safety_Gate
+FB_Heating_Circuit_Control
+FB_Heating_Manifold_Control
+FB_Heating_Boiler_Control
+```
+
+Action:
+
+```text
+trace ownership before touching
+```
 
 ---
 
-## Category C — Observer-only active FB
+## Category C — Passive observer runtime
 
 Definition:
-- active only as passive observer/supervision attachment;
-- does not control runtime;
-- may publish observation/diagnostic state.
 
-Known examples:
-- `FB_Heating_Runtime_Observer`
-- `FB_Heating_Runtime_Observer_Authorization`
+```text
+active but read-only/passive
+```
 
-Required check:
-- confirm call in `PRG_Heating`;
-- confirm gated activation path;
-- confirm read-only publication path.
+Examples:
+
+```text
+FB_Heating_Runtime_Observer
+FB_Heating_Runtime_Observer_Authorization
+```
+
+Action:
+
+```text
+bounded extension only
+```
 
 ---
 
-## Category D — Compile-only / not proven active
+## Category D — Grey inactive project objects
 
 Definition:
-- file exists;
-- compiles;
-- no confirmed active instance/call path yet.
 
-Likely examples:
-- `FB_Heating_Runtime_Contract_Validator`
-- `FB_Heating_Runtime_Event_Manager`
-- `FB_Heating_Runtime_Synchronization_Monitor`
-- `FB_Heating_Runtime_Health_Observer`
-- `FB_Heating_Runtime_Coordinator`
-- `FB_Heating_Runtime_Orchestration_Shell`
-- `FB_Heating_Runtime_Integration_Bridge_Manager`
-- `FB_Heating_Runtime_Observation_Validator`
-- `FB_Heating_Runtime_Observation_Aggregator`
+```text
+present in project tree
+not participating in current compile/runtime graph
+```
 
-Required decision:
-- either connect intentionally;
-- or mark future-reserved;
-- or remove from active root once safely archived/documented.
+This is now the MAIN investigation category.
+
+Possible meanings:
+
+```text
+- legacy decomposition;
+- future-reserved architecture;
+- disabled experiments;
+- detached scaffolding;
+- archived runtime concepts;
+- test infrastructure.
+```
+
+Action:
+
+```text
+classify before reconnecting or deleting
+```
 
 ---
 
-## Category E — Future-reserved supervision prototypes
+## Category E — Future-reserved architecture
 
 Definition:
-- intentionally not active today;
-- represents planned analytics/supervision capabilities;
-- must not be mistaken for deployed behavior.
 
-Likely examples:
-- `FB_Heating_Runtime_Anomaly_Aggregator`
-- `FB_Heating_Runtime_Anomaly_Correlator`
-- `FB_Heating_Runtime_Anomaly_Severity_Classifier`
-- `FB_Heating_Runtime_Anomaly_Weighting_Engine`
-- `FB_Heating_Runtime_Causality_Propagation_Analyzer`
-- `FB_Heating_Runtime_Degradation_Timeline_Rebuilder`
-- `FB_Heating_Runtime_Degradation_Trend_Analyzer`
-- `FB_Heating_Runtime_Event_Reconstruction_Engine`
-- `FB_Heating_Runtime_Confidence_Decay_Analyzer`
-- `FB_Heating_Runtime_Supervision_Confidence_Analyzer`
-- `FB_Heating_Runtime_Supervision_Integrity_Validator`
-- `FB_Heating_Runtime_Predictive_Correlation_Weighting_Engine`
-- `FB_Heating_Runtime_OT_Instability_Predictor`
-- `FB_Heating_Runtime_Cascade_Collapse_Predictor`
-- `FB_Heating_Runtime_Intelligence_Consistency_Analyzer`
-- `FB_Heating_Runtime_Stability_Model`
-- `FB_Heating_Runtime_Latency_Validator`
-- `FB_Heating_Runtime_Jitter_Detector`
-- `FB_Heating_Runtime_Timeline_Observer`
-- `FB_Heating_Runtime_Phase_Transition_Observer`
-- `FB_Heating_Runtime_Phase_Sequencing_Validator`
-- `FB_Heating_Runtime_OT_Cascade_Correlator`
-- `FB_Heating_Runtime_Adaptive_Drift_Detector`
+```text
+intentionally inactive
+but architecturally valuable
+```
 
-Policy:
-- do not delete automatically;
-- do not claim active runtime behavior;
-- either move to documented future-reserved area or connect through a bounded passive extension plan.
+Action:
+
+```text
+keep documented
+keep isolated
+do not claim active behavior
+```
 
 ---
 
-## Category F — Modbus helper functions / protocol builders
+## Category F — Obsolete duplicate candidates
 
 Definition:
-- functions/FBs may be valid protocol helpers;
-- they are active only if called by an active Modbus backend or device manager.
 
-Relevant examples:
-- `F_Modbus_RTU_CRC16`
-- `FB_Modbus_RTU_TX_Builder`
-- `FB_Modbus_RTU_RX_Parser`
+```text
+older implementation replaced by current active architecture
+```
 
-Required check:
-- confirm whether active Modbus backend calls TX builder/RX parser;
-- confirm whether CRC function is still called or only legacy compatibility;
-- remove or mark legacy if unused.
+Requirements before deletion:
 
-Current known note:
-- TX/RX currently use inline CRC in active file versions;
-- `F_Modbus_RTU_CRC16` may be legacy compatibility only.
+```text
+1. ownership verified;
+2. no active references;
+3. no hidden project dependencies;
+4. no retained safety behavior;
+5. no retained HMI/config dependency.
+```
 
----
+Important:
 
-## Category G — State snapshot family
-
-Definition:
-- snapshot structures/managers are only active if called by a live snapshot PRG/manager and if produced snapshots are consumed.
-
-Relevant examples:
-- `ST_System_State_Snapshot`
-- `FB_State_Snapshot_*`
-
-Required check:
-- confirm active snapshot manager instance;
-- confirm snapshot capture call;
-- confirm snapshot consumers;
-- classify as active telemetry, compile-only, or future-reserved.
+```text
+compile absence alone is NOT sufficient deletion proof
+```
 
 ---
 
-# Why not simply delete all compile-only FBs?
+# Main engineering rule
 
-Deleting everything compile-only is not automatically correct.
+From this point onward:
 
-There are three different cases:
+```text
+NO reconnect first
+NO delete first
+classification first
+```
 
-1. Prototype that should be removed because it is misleading.
-2. Future-reserved building block that should be moved/documented, not deleted.
-3. Required helper that appears unused only because the call graph audit is incomplete.
+The previous failure happened because connection work started before:
 
-Therefore deletion must follow classification.
+```text
+- dependency audit;
+- project registration audit;
+- ownership audit;
+- compile graph audit;
+- rollback chain verification.
+```
+
+This document changes the workflow.
 
 ---
 
-# Required next steps
+# Required investigation workflow
 
-## Step 1 — Build real call graph
+## Step 1 — Determine project participation
 
-For every `FB_Heating*`, `FB_FloorHeating*`, `FB_State_Snapshot*`, and `F_Modbus*`:
-- find declaration;
-- find instance declarations;
-- find call sites;
-- find output consumers.
+For every grey POU:
 
-## Step 2 — Fill classification table
+```text
+- exists in repository?
+- exists in project tree?
+- excluded from build?
+- instantiated anywhere?
+- referenced by active runtime?
+- referenced by HMI/config/safety?
+```
 
-Columns:
-- POU name;
-- file exists;
-- instance exists;
-- call site exists;
-- active inputs;
-- active outputs;
-- classification;
-- action.
+---
 
-## Step 3 — Decide action
+## Step 2 — Determine architectural role
+
+Possible outcomes:
+
+```text
+- active dependency hidden by tree state;
+- future-reserved scaffold;
+- obsolete duplicate;
+- safety-isolated helper;
+- simulation/test only;
+- historical artifact.
+```
+
+---
+
+## Step 3 — Decide safe action
 
 Allowed actions:
-- keep active;
-- connect intentionally;
-- move to future-reserved docs/snapshots;
-- delete if obsolete;
-- leave as protocol helper with explicit legacy marker.
+
+```text
+KEEP_ACTIVE
+KEEP_GREY_RESERVED
+MOVE_TO_ARCHIVE
+MOVE_TO_TEST_SCOPE
+RECONNECT_LATER
+DELETE_ONLY_AFTER_FULL_AUDIT
+```
 
 ---
 
-# Initial risk statement
+# Current risk statement
 
-The main risk is not current compilation.
+The current risk is no longer compile failure.
 
-The main risk is false confidence:
-- a large FB family exists;
-- names suggest advanced runtime capability;
-- but the active runtime may only call a small subset.
+The real risk is:
 
-This must be made explicit before further expansion.
+```text
+incorrect reconnect of detached architecture fragments
+```
+
+Especially dangerous:
+
+```text
+- safety FB reconnect;
+- orchestration reconnect;
+- duplicate ownership paths;
+- predictive runtime authority;
+- reconnecting supervision scaffold as live runtime.
+```
 
 ---
 
-# Current recommendation
+# Current engineering recommendation
 
-Do not add more heating supervision FBs until this call graph audit is completed.
+Current recommendation is intentionally conservative:
 
-The next engineering action should be:
-- verify active call graph;
-- mark inactive scaffolding;
-- remove or archive misleading prototypes;
-- keep only active or explicitly future-reserved code in the root active project.
+```text
+1. keep current 0-error baseline stable;
+2. classify all grey POU first;
+3. reconnect nothing automatically;
+4. delete nothing automatically;
+5. identify true obsolete duplicates;
+6. identify true future-reserved architecture;
+7. reconnect only after dependency proof.
+```
+
+---
+
+# Current audit focus
+
+Immediate focus:
+
+```text
+Grey POU Classification Table
+```
+
+Columns:
+
+```text
+POU Name
+POU Type
+Grey/Blue State
+Repository File Exists
+Project Present
+Compile Participant
+Runtime Participant
+Safety Related
+Test/Simulation Only
+Likely Role
+Replacement Exists
+Reconnect Risk
+Recommended Action
+Notes
+```
+
+This classification table is now the primary engineering task.
