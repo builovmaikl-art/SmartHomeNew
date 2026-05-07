@@ -38,6 +38,36 @@ From this point:
 
 ---
 
+# Current strategic correction
+
+The audit must proceed logic-first, not reconnect-first.
+
+Working hypothesis:
+
+```text
+Some behavior currently considered "lost" may already exist inside other grey POU
+that have not yet been classified.
+```
+
+Therefore the correct order is now:
+
+```text
+1. full grey POU logic audit;
+2. responsibility / behavior map;
+3. duplicate and overlap detection;
+4. lost-behavior identification;
+5. cleanup / deletion of proven invalid root blocks;
+6. only then intentional reconnect or code changes.
+```
+
+Do NOT restore historical links blindly.
+
+Do NOT assume the 2026-05-04 pipeline should be reconnected as-is.
+
+Do NOT assume the current runtime is complete until all grey logic is classified.
+
+---
+
 # What "grey POU" means in this audit
 
 Grey POU in the CODESYS tree currently means:
@@ -89,7 +119,7 @@ Those PRGs are outside the current grey-POU investigation scope.
 
 # Current observed grey groups
 
-## Group 1 — Legacy heating orchestration family
+## Group 1 — Heating orchestration / allocation family
 
 Observed examples:
 
@@ -127,39 +157,15 @@ This means:
 
 ```text
 these FBs may represent intended target behavior
-that lost integration path visibility later.
-```
-
-Important engineering implication:
-
-```text
-grey-state alone is NOT sufficient proof
-that the logic is obsolete or incorrect.
-```
-
-Current risk:
-
-```text
-unsafe reconnect could duplicate ownership and execution paths
-inside active heating runtime.
+that lost integration path visibility later,
+or their behavior may now be represented in another grey/active block.
 ```
 
 Current status:
 
 ```text
 DO NOT CONNECT YET
-reconstruct historical integration first
-```
-
-Required next investigation:
-
-```text
-1. compare historical snapshot PRG_Heating versions;
-2. determine original integration points;
-3. determine why the path became grey;
-4. determine which behavior corrections were intended;
-5. determine which active runtime sections replaced the logic;
-6. identify safe reconnect boundaries.
+complete full grey POU logic audit first
 ```
 
 ---
@@ -178,7 +184,8 @@ Possible interpretations:
 ```text
 1. legacy standalone protection layer;
 2. partially absorbed into Safety_Gate/System_Manager logic;
-3. unfinished decomposition attempt.
+3. unfinished decomposition attempt;
+4. still-needed behavior currently absent from active runtime.
 ```
 
 Current status:
@@ -370,13 +377,14 @@ Possible meanings:
 - disabled experiments;
 - detached scaffolding;
 - archived runtime concepts;
-- test infrastructure.
+- test infrastructure;
+- missing target behavior waiting for safe integration.
 ```
 
 Action:
 
 ```text
-classify before reconnecting or deleting
+classify by logic and ownership before reconnecting or deleting
 ```
 
 ---
@@ -415,13 +423,21 @@ Requirements before deletion:
 2. no active references;
 3. no hidden project dependencies;
 4. no retained safety behavior;
-5. no retained HMI/config dependency.
+5. no retained HMI/config dependency;
+6. snapshot or audit trail exists.
 ```
 
 Important:
 
 ```text
 compile absence alone is NOT sufficient deletion proof
+```
+
+If a root block is proven invalid in the current architecture:
+
+```text
+delete without preserving root clutter
+but only after audit evidence is recorded
 ```
 
 ---
@@ -432,8 +448,9 @@ From this point onward:
 
 ```text
 NO reconnect first
-NO delete first
+NO delete first unless proven invalid
 classification first
+logic-first audit before lost-behavior claims
 ```
 
 The previous failure happened because connection work started before:
@@ -467,7 +484,23 @@ For every grey POU:
 
 ---
 
-## Step 2 — Determine architectural role
+## Step 2 — Determine logic responsibility
+
+For every grey POU:
+
+```text
+- what behavior does it implement?
+- is that behavior present in current active runtime?
+- is that behavior present in another grey POU?
+- does it own control authority?
+- does it only compute diagnostics/observation?
+- does it write GVL_STATE / GVL_STATUS / GVL_OUTPUT?
+- does it touch safety, boiler, manifold, DHW, or IO authority?
+```
+
+---
+
+## Step 3 — Determine architectural role
 
 Possible outcomes:
 
@@ -477,12 +510,14 @@ Possible outcomes:
 - obsolete duplicate;
 - safety-isolated helper;
 - simulation/test only;
-- historical artifact.
+- historical artifact;
+- target behavior waiting for safe integration;
+- duplicate authority that must be deleted or redesigned.
 ```
 
 ---
 
-## Step 3 — Decide safe action
+## Step 4 — Decide safe action
 
 Allowed actions:
 
@@ -492,7 +527,8 @@ KEEP_GREY_RESERVED
 MOVE_TO_ARCHIVE
 MOVE_TO_TEST_SCOPE
 RECONNECT_LATER
-DELETE_ONLY_AFTER_FULL_AUDIT
+DELETE_AFTER_FULL_AUDIT
+MERGE_LOGIC_INTO_ACTIVE_OWNER
 ```
 
 ---
@@ -505,6 +541,7 @@ The real risk is:
 
 ```text
 incorrect reconnect of detached architecture fragments
+or premature deletion of behavior that exists only in grey POU
 ```
 
 Especially dangerous:
@@ -514,7 +551,8 @@ Especially dangerous:
 - orchestration reconnect;
 - duplicate ownership paths;
 - predictive runtime authority;
-- reconnecting supervision scaffold as live runtime.
+- reconnecting supervision scaffold as live runtime;
+- deleting allocation/policy logic before confirming replacement.
 ```
 
 ---
@@ -525,12 +563,13 @@ Current recommendation is intentionally conservative:
 
 ```text
 1. keep current 0-error baseline stable;
-2. classify all grey POU first;
+2. complete full grey POU logic audit;
 3. reconnect nothing automatically;
-4. delete nothing automatically;
+4. delete only blocks proven invalid in current architecture;
 5. identify true obsolete duplicates;
 6. identify true future-reserved architecture;
-7. reconnect only after dependency proof.
+7. identify behavior implemented only in grey POU;
+8. reconnect or merge only after dependency proof.
 ```
 
 ---
@@ -540,7 +579,7 @@ Current recommendation is intentionally conservative:
 Immediate focus:
 
 ```text
-Grey POU Classification Table
+Grey POU Logic Classification Table
 ```
 
 Columns:
@@ -554,9 +593,11 @@ Project Present
 Compile Participant
 Runtime Participant
 Safety Related
+Writes State/Outputs
 Test/Simulation Only
-Likely Role
+Implemented Logic
 Replacement Exists
+Overlap With Active Runtime
 Reconnect Risk
 Recommended Action
 Notes
