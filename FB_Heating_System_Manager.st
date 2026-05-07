@@ -45,6 +45,9 @@ VAR
     L_i : INT;
     L_Target_Supply_Temp : REAL;
     L_Manifold_Demand_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Demand_Filtered : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Available : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Allocation_Degraded : BOOL;
     fbValveTestManager : FB_Valve_Test_Manager;
     L_IO_Failsafe_Active : BOOL;
     L_Freeze_Active : BOOL;
@@ -61,6 +64,7 @@ VAR
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
     fbDemandMap : FB_Heating_Demand_Map;
+    fbAllocationFilter : FB_Heating_Allocation_Filter;
     fbCircuitControl : FB_Heating_Circuit_Control;
     fbManifoldControl : FB_Heating_Manifold_Control;
     fbBoilerControl : FB_Heating_Boiler_Control;
@@ -73,6 +77,7 @@ GVL_STATE.G_Heating_Sensor_Fault := FALSE;
 GVL_STATE.G_Heating_Subsystem_Degraded := FALSE;
 L_Sensor_Error := FALSE;
 L_Subsys_Degraded := FALSE;
+L_Allocation_Degraded := FALSE;
 
 L_IO_Failsafe_Active := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
@@ -171,13 +176,29 @@ fbDemandMap(
     VO_Manifold_Demand_Map => L_Manifold_Demand_Map
 );
 
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_Manifold_Available[L_i] := TRUE;
+END_FOR;
+
+fbAllocationFilter(
+    VI_Enable := FALSE,
+    VI_Manifold_Demand_Map := L_Manifold_Demand_Map,
+    VI_Manifold_Available := L_Manifold_Available,
+    VO_Manifold_Demand_Filtered => L_Manifold_Demand_Filtered,
+    VO_Allocation_Degraded => L_Allocation_Degraded
+);
+
+IF L_Allocation_Degraded THEN
+    GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+END_IF;
+
 fbManifoldControl(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_IsActivePLC := VI_IsActivePLC,
     VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
     VI_Freeze_Mode_Active := L_Freeze_Active,
     VI_Target_Supply_Temp := L_Target_Supply_Temp,
-    VI_Any_Zone_Active := L_Manifold_Demand_Map,
+    VI_Any_Zone_Active := L_Manifold_Demand_Filtered,
     VI_Manifold_Pressures := VI_Manifold_Pressures,
     VI_Manifold_Currents := VI_Manifold_Currents,
     VI_Manifold_Temps_Supply := VI_Manifold_Temps_Supply,
