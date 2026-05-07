@@ -105,21 +105,61 @@ FB_Heating_Thermal_Allocation
 Current interpretation:
 
 ```text
-likely earlier orchestration/runtime decomposition attempt
-superseded by current PRG_Heating + FB_Heating_System_Manager chain
+alternative heating orchestration/runtime decomposition path
+partially overlaps current PRG_Heating execution ownership
 ```
 
-Risk:
+Important correction:
+
+```text
+Decision_Context + Thermal_Allocation must NOT currently be treated
+as automatically obsolete.
+```
+
+Reason:
+
+```text
+existing system behavior was reportedly corrected/improved
+relative to earlier runtime behavior using these logic paths.
+```
+
+This means:
+
+```text
+these FBs may represent intended target behavior
+that lost integration path visibility later.
+```
+
+Important engineering implication:
+
+```text
+grey-state alone is NOT sufficient proof
+that the logic is obsolete or incorrect.
+```
+
+Current risk:
 
 ```text
 unsafe reconnect could duplicate ownership and execution paths
+inside active heating runtime.
 ```
 
 Current status:
 
 ```text
-DO NOT CONNECT
-until dependency and ownership audit completed
+DO NOT CONNECT YET
+reconstruct historical integration first
+```
+
+Required next investigation:
+
+```text
+1. compare historical snapshot PRG_Heating versions;
+2. determine original integration points;
+3. determine why the path became grey;
+4. determine which behavior corrections were intended;
+5. determine which active runtime sections replaced the logic;
+6. identify safe reconnect boundaries.
 ```
 
 ---
