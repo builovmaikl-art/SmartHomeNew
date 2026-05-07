@@ -1,0 +1,12 @@
+TYPE ST_Zone_Adapt_State :
+STRUCT
+    Zone_Weight : REAL;
+    Confidence : REAL;
+    Activations : UDINT;
+    Success_Count : UDINT;
+    Failure_Count : UDINT;
+    Success_Rate : REAL;
+    Avg_Result_Value : REAL;
+    Last_Update_MS : UDINT;
+END_STRUCT
+END_TYPE

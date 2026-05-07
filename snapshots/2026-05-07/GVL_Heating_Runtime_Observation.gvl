@@ -1,0 +1,19 @@
+VAR_GLOBAL
+    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State := E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
+    G_Runtime_Observer_Lifecycle_Code : UINT := 0;
+    G_Runtime_Observer_Lifecycle_Text : STRING(128) := 'Heating runtime observer inactive';
+    G_Runtime_Observer_Commissioning_Required : BOOL := TRUE;
+    G_Runtime_Observer_Commissioning_Active : BOOL := FALSE;
+    G_Runtime_Observer_Commissioning_Complete : BOOL := FALSE;
+    G_Runtime_Observation : ST_Heating_Runtime_Observation;
+    G_Runtime_Observation_Publication_Valid : BOOL := FALSE;
+    G_Runtime_Observation_Stabilization_Complete : BOOL := FALSE;
+    G_Runtime_Observation_Operational : BOOL := FALSE;
+    G_Runtime_Observation_Valid : BOOL := FALSE;
+    G_Runtime_Observer_Ready : BOOL := FALSE;
+    G_Runtime_Observer_Fault : BOOL := FALSE;
+    G_Runtime_Observation_Status_Code : UINT := 0;
+    G_Runtime_Observation_Status_Text : STRING(128) := 'Heating runtime observation inactive';
+    G_Runtime_Observation_ReadOnly : BOOL := TRUE;
+    G_Runtime_Observation_Governance_Locked : BOOL := TRUE;
+END_VAR

@@ -1,0 +1,32 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Boiler_Status :
+STRUCT
+    Active : BOOL;
+    Running : BOOL;
+    Warning : BOOL;
+    Error : BOOL;
+    Error_ID : WORD;
+
+    // Boiler thermal/runtime information
+    Power_Percent : REAL;
+    Current_Power : REAL;
+    Work_Seconds : UDINT;
+    Work_Hours : REAL;
+    Resource_Percent : REAL := 100.0;
+    Last_Start : DT;
+
+    // OpenTherm transport observability
+    OT_Online : BOOL;
+    OT_Command_Valid : BOOL;
+    OT_Transport_Degraded : BOOL;
+    OT_Adapter_Error : BOOL;
+
+    // Semantic cascade/explainability state
+    Available : BOOL;
+    Selected_By_Cascade : BOOL;
+    Flame_Missing : BOOL;
+    Transport_Missing : BOOL;
+    Ignition_Timeout : BOOL;
+    Degraded : BOOL;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // MODBUS RTU FRAME RUNTIME
+    // ======================================================
+    // TX_Frame is built from a confirmed bridge request.
+    // RX_Frame is filled only by a concrete serial/RTU driver after physical receive.
+
+    G_TX_Frame : ST_Modbus_RTU_Frame;
+    G_RX_Frame : ST_Modbus_RTU_Frame;
+
+    G_TX_Ready : BOOL := FALSE;
+    G_RX_Ready : BOOL := FALSE;
+    G_Last_TX_MS : UDINT := 0;
+    G_Last_RX_MS : UDINT := 0;
+END_VAR

@@ -1,0 +1,35 @@
+TYPE ST_Heating_Runtime_Execution_Timeline :
+STRUCT
+    // ======================================================
+    // Execution frames
+    // ======================================================
+    Frames : ARRAY[1..64] OF ST_Heating_Runtime_Execution_Frame;
+
+    // ======================================================
+    // Timeline state
+    // ======================================================
+    Write_Index : UINT;
+    Frame_Count : UINT;
+    Timeline_Overflow : BOOL;
+
+    // ======================================================
+    // Timeline integrity
+    // ======================================================
+    Sequencing_Valid : BOOL;
+    Ownership_Valid : BOOL;
+    Synchronization_Valid : BOOL;
+
+    // ======================================================
+    // Timeline telemetry
+    // ======================================================
+    Runtime_Jitter_Detected : BOOL;
+    Runtime_Latency_Detected : BOOL;
+    Runtime_Degraded : BOOL;
+
+    // ======================================================
+    // Timeline status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

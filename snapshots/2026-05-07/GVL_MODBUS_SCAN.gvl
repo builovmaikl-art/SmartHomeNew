@@ -1,0 +1,24 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // SAFE READ-ONLY MODBUS REGISTER SCAN
+    // ======================================================
+    // This scanner NEVER writes registers.
+    // Only FC03/FC04 are allowed.
+
+    G_Scan_Enable : BOOL := FALSE;
+    G_Scan_Active : BOOL := FALSE;
+    G_Scan_Done : BOOL := FALSE;
+    G_Scan_Error : BOOL := FALSE;
+
+    G_Slave_ID : BYTE := 1;
+
+    G_Start_Register : UINT := 0;
+    G_End_Register : UINT := 255;
+    G_Current_Register : UINT := 0;
+
+    G_Found_Register : ARRAY[0..255] OF BOOL;
+    G_Found_Value : ARRAY[0..255] OF WORD;
+
+    G_Last_Scan_MS : UDINT := 0;
+END_VAR

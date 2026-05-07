@@ -1,0 +1,9 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Ventilation_Config :
+STRUCT
+    CO2_Threshold : REAL := 800.0;
+    Humidity_Threshold : REAL := 65.0;
+    Night_Mode_Start : TOD := TOD#23:00;
+    Night_Mode_End : TOD := TOD#07:00;
+END_STRUCT
+END_TYPE

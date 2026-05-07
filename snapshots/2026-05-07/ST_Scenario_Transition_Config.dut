@@ -1,0 +1,9 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Scenario_Transition_Config :
+STRUCT
+    current_scenario : E_SCENARIO_TYPE;
+    target_scenario : E_SCENARIO_TYPE;
+    min_duration_minutes : UDINT := 5;
+    transition_allowed : BOOL := FALSE;
+END_STRUCT
+END_TYPE

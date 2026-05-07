@@ -1,0 +1,10 @@
+{attribute 'strict'}
+TYPE E_Outdoor_Mode :
+(
+    OUTDOOR_MODE_AUTO := 0,
+    OUTDOOR_MODE_PARTY := 1,
+    OUTDOOR_MODE_SECURITY := 2,
+    OUTDOOR_MODE_ECONOMY := 3,
+    OUTDOOR_MODE_MANUAL := 4
+) USINT;
+END_TYPE

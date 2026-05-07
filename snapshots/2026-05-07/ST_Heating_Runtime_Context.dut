@@ -1,0 +1,69 @@
+TYPE ST_Heating_Runtime_Context :
+STRUCT
+    // ======================================================
+    // Runtime lifecycle
+    // ======================================================
+    Runtime_Enabled : BOOL;
+    Runtime_Ready : BOOL;
+    Runtime_Fault : BOOL;
+
+    // ======================================================
+    // Runtime phase model
+    // ======================================================
+    Current_Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // Phase execution permissions
+    // ======================================================
+    Allow_DHW_Phase : BOOL;
+    Allow_Heating_Phase : BOOL;
+    Allow_Service_Gating_Phase : BOOL;
+    Allow_State_Publication_Phase : BOOL;
+    Allow_Diagnostics_Phase : BOOL;
+    Allow_Output_Projection_Phase : BOOL;
+
+    // ======================================================
+    // Runtime sequencing validation
+    // ======================================================
+    DHW_Executed : BOOL;
+    Heating_Executed : BOOL;
+    Service_Gating_Executed : BOOL;
+    State_Publication_Executed : BOOL;
+    Diagnostics_Executed : BOOL;
+    Output_Projection_Executed : BOOL;
+
+    // ======================================================
+    // Runtime ordering integrity
+    // ======================================================
+    DHW_Before_Heating_Valid : BOOL;
+    State_Publication_Before_Diagnostics_Valid : BOOL;
+    Output_Projection_Last_Valid : BOOL;
+
+    // ======================================================
+    // Runtime status
+    // ======================================================
+    Runtime_Status_Code : UINT;
+    Runtime_Status_Text : STRING(128);
+
+    // ======================================================
+    // Diagnostics / explainability isolation
+    // ======================================================
+    Diagnostics_Isolation_Valid : BOOL;
+    Explainability_Isolation_Valid : BOOL;
+
+    // ======================================================
+    // Safety isolation
+    // ======================================================
+    Safety_Isolation_Valid : BOOL;
+
+    // ======================================================
+    // OpenTherm ownership isolation
+    // ======================================================
+    OpenTherm_Ownership_Valid : BOOL;
+
+    // ======================================================
+    // Cascade ownership isolation
+    // ======================================================
+    Cascade_Ownership_Valid : BOOL;
+END_STRUCT
+END_TYPE

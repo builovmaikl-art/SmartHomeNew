@@ -1,0 +1,51 @@
+TYPE ST_Heating_Runtime_Phase_Event :
+STRUCT
+    // ======================================================
+    // Runtime phase
+    // ======================================================
+    Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // Event lifecycle
+    // ======================================================
+    Event_Active : BOOL;
+    Event_Completed : BOOL;
+    Event_Failed : BOOL;
+
+    // ======================================================
+    // Runtime timing
+    // ======================================================
+    Start_Time_MS : UDINT;
+    End_Time_MS : UDINT;
+    Duration_MS : UDINT;
+
+    // ======================================================
+    // Runtime integrity
+    // ======================================================
+    Ordering_Valid : BOOL;
+    Isolation_Valid : BOOL;
+
+    // ======================================================
+    // Runtime status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+
+    // ======================================================
+    // Diagnostics visibility
+    // ======================================================
+    Diagnostics_Visible : BOOL;
+    Explainability_Visible : BOOL;
+
+    // ======================================================
+    // Safety integrity
+    // ======================================================
+    Safety_Integrity_Valid : BOOL;
+
+    // ======================================================
+    // Ownership integrity
+    // ======================================================
+    OpenTherm_Ownership_Valid : BOOL;
+    Cascade_Ownership_Valid : BOOL;
+END_STRUCT
+END_TYPE

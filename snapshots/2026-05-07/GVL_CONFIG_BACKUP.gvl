@@ -1,0 +1,11 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Full snapshot of configuration
+    G_Backup_FloorHeating_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config;
+
+    G_Backup_Max_Active_Manifolds : INT := 0;
+    G_Backup_Max_Thermal_Budget : REAL := 0.0;
+
+    // Integrity flag
+    G_Backup_Valid : BOOL := FALSE;
+END_VAR
