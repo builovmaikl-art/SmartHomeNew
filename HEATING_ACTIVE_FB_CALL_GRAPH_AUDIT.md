@@ -304,24 +304,128 @@ FB_Heating_Runtime_Observer
 FB_Heating_Runtime_Observer_Authorization
 ```
 
-Current interpretation:
+Deep audit result:
 
 ```text
-large supervision/planning scaffold
-mostly compile-visible prototypes
-not proven runtime-active
+this family does NOT contain missing heating-control runtime logic.
 ```
 
-Important rule:
+Main architectural role:
 
 ```text
-Do NOT convert this family into active orchestration runtime.
+read-only runtime supervision / telemetry / validation scaffold
 ```
 
-Allowed future usage:
+Confirmed properties:
 
 ```text
-bounded read-only supervision only
+- governance-gated;
+- observation-oriented;
+- ownership validation oriented;
+- sequencing validation oriented;
+- anomaly/risk aggregation oriented;
+- runtime-health projection oriented;
+- intentionally isolated from control authority.
+```
+
+Verified active path:
+
+```text
+PRG_Heating
+→ FB_Heating_Runtime_Observer_Authorization
+→ FB_Heating_Runtime_Observer
+→ GVL_Heating_Runtime_Observation
+```
+
+Confirmed status:
+
+```text
+bounded passive observer path only
+```
+
+Important confirmed conclusion:
+
+```text
+Coordinator / Orchestration_Shell are NOT missing production runtime.
+```
+
+They are:
+
+```text
+future-reserved orchestration/supervision shell layers
+```
+
+NOT:
+
+```text
+lost heating runtime authority.
+```
+
+Confirmed reconnect risk:
+
+```text
+wholesale reconnect would create parallel orchestration/runtime authority illusion
+without restoring actual heating behavior.
+```
+
+Confirmed current role examples:
+
+```text
+FB_Heating_Runtime_Contract_Validator
+    → sequencing/isolation validator
+
+FB_Heating_Runtime_Event_Manager
+    → bounded telemetry/event buffer
+
+FB_Heating_Runtime_Observation_Validator
+    → passive observation integrity validator
+
+FB_Heating_Runtime_Observation_Aggregator
+    → runtime health aggregation
+
+FB_Heating_Runtime_Adaptive_*
+FB_Heating_Runtime_Anomaly_*
+FB_Heating_Runtime_Predictive_*
+    → supervision/risk/anomaly analytics scaffold
+```
+
+Current classification:
+
+```text
+FB_Heating_Runtime_Observer
+    → KEEP_ACTIVE
+
+FB_Heating_Runtime_Observer_Authorization
+    → KEEP_ACTIVE
+
+remaining FB_Heating_Runtime_*
+    → KEEP_GREY_RESERVED
+```
+
+Current deletion policy:
+
+```text
+DO NOT DELETE YET
+```
+
+Reason:
+
+```text
+they are architecturally coherent supervision scaffolding,
+not random garbage or broken duplicates.
+```
+
+Current connection policy:
+
+```text
+DO NOT CONNECT WHOLE FAMILY
+```
+
+Allowed future direction:
+
+```text
+bounded read-only extensions only
+through existing observer authorization path.
 ```
 
 ---
