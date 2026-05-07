@@ -1,66 +1,22 @@
 VAR_GLOBAL
-    // ======================================================
-    // Runtime observer governance lock
-    // Bootstrap passive observation activation only.
-    // Observer attachment remains optional and removable.
-    // Governed activation authorization required.
-    // ======================================================
-
-    // ------------------------------------------------------
-    // Primary lifecycle state
-    // ------------------------------------------------------
-    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
-
-    // ------------------------------------------------------
-    // Activation request layer
-    // ------------------------------------------------------
+    G_Runtime_Observer_Lifecycle_State : E_Runtime_Observer_Lifecycle_State := E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
     G_Runtime_Observer_Enable_Request : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Activation authorization layer
-    // ------------------------------------------------------
     G_Runtime_Observer_Enable_Authorized : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Effective runtime enablement
-    // ------------------------------------------------------
     G_Runtime_Observer_Enable_Effective : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Bootstrap activation governance
-    // ------------------------------------------------------
     G_Runtime_Observer_Bootstrap_Mode : BOOL := TRUE;
     G_Runtime_Observer_Passive_Mode : BOOL := TRUE;
     G_Runtime_Observer_ReadOnly_Mode : BOOL := TRUE;
-
-    // ------------------------------------------------------
-    // Activation validation markers
-    // ------------------------------------------------------
     G_Runtime_Observer_Activation_Validated : BOOL := FALSE;
     G_Runtime_Observer_Sequencing_Validated : BOOL := FALSE;
     G_Runtime_Observer_Publication_Validated : BOOL := FALSE;
     G_Runtime_Observer_Rollback_Validated : BOOL := FALSE;
-
-    // ------------------------------------------------------
-    // Governance lock markers
-    // ------------------------------------------------------
     G_Runtime_Observer_Governance_Locked : BOOL := TRUE;
     G_Runtime_Observer_Runtime_Authority_Disabled : BOOL := TRUE;
     G_Runtime_Observer_Writable_Exports_Disabled : BOOL := TRUE;
-
-    // ------------------------------------------------------
-    // Explicit bootstrap limitations visibility
-    // ------------------------------------------------------
     G_Runtime_Observer_Predictive_Disabled : BOOL := TRUE;
     G_Runtime_Observer_Adaptive_Disabled : BOOL := TRUE;
     G_Runtime_Observer_Replay_Disabled : BOOL := TRUE;
-
-    // ------------------------------------------------------
-    // Authorization diagnostics
-    // ------------------------------------------------------
     G_Runtime_Observer_Authorization_Valid : BOOL := FALSE;
     G_Runtime_Observer_Authorization_Status_Code : UINT := 0;
-    G_Runtime_Observer_Authorization_Status_Text : STRING(128) :=
-        'Heating runtime observer authorization inactive';
+    G_Runtime_Observer_Authorization_Status_Text : STRING(128) := 'Heating runtime observer authorization inactive';
 END_VAR
