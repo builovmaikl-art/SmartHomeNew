@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2580
+total 2572
 -rw-r--r--  1 runner runner  13067 May  7 05:05 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  24576 May  7 05:05 .
 drwxr-xr-x  3 runner runner   4096 May  7 05:05 ..
@@ -271,7 +271,6 @@ drwxr-xr-x  3 runner runner   4096 May  7 05:05 .github
 -rw-r--r--  1 runner runner    276 May  7 05:05 GVL_VENT_OUTPUT.gvl
 -rw-r--r--  1 runner runner    186 May  7 05:05 GVL_WATER_OUTPUT.gvl
 -rw-r--r--  1 runner runner   3018 May  7 05:05 HEATING_CHECKPOINT_2026-04-20.md
--rw-r--r--  1 runner runner   6340 May  7 05:05 HEATING_COMPILE_SAFE_OBSERVER_ATTACHMENT_SEQUENCING.md
 -rw-r--r--  1 runner runner   6576 May  7 05:05 HEATING_FIRST_OBSERVER_ACTIVATION_PREPARATION.md
 -rw-r--r--  1 runner runner   6590 May  7 05:05 HEATING_FIRST_OBSERVER_ATTACHMENT_IMPLEMENTATION_DESIGN.md
 -rw-r--r--  1 runner runner   6516 May  7 05:05 HEATING_ORCHESTRATION_CODE_DEPENDENCY_RULES.md
