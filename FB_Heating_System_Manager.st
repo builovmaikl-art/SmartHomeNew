@@ -47,6 +47,10 @@ VAR
     L_Manifold_Demand_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Demand_Filtered : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Available : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Subsystem_Degraded : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Base_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    L_Manifold_Thermal_Weight : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     L_Allocation_Degraded : BOOL;
     fbValveTestManager : FB_Valve_Test_Manager;
     L_IO_Failsafe_Active : BOOL;
@@ -177,13 +181,27 @@ fbDemandMap(
 );
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    L_Manifold_Available[L_i] := TRUE;
+    L_Manifold_Available[L_i] := VI_Manifold_Pressures[L_i] >= GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE;
+    L_Manifold_In_Service[L_i] := GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
+    L_Manifold_Subsystem_Degraded[L_i] :=
+        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i]
+        OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i];
+    L_Manifold_Base_Priority[L_i] := 0;
+    L_Manifold_Thermal_Weight[L_i] := REAL#1.0;
 END_FOR;
 
 fbAllocationFilter(
-    VI_Enable := FALSE,
+    VI_Enable := TRUE,
+    VI_Enable_Policy_Allocation := FALSE,
+    VI_Freeze_Mode_Active := L_Freeze_Active,
+    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
     VI_Manifold_Demand_Map := L_Manifold_Demand_Map,
     VI_Manifold_Available := L_Manifold_Available,
+    VI_Manifold_In_Service := L_Manifold_In_Service,
+    VI_Manifold_Subsystem_Degraded := L_Manifold_Subsystem_Degraded,
+    VI_Manifold_Base_Priority := L_Manifold_Base_Priority,
+    VI_Manifold_Thermal_Weight := L_Manifold_Thermal_Weight,
+    VI_Max_Thermal_Budget := REAL#0.0,
     VO_Manifold_Demand_Filtered => L_Manifold_Demand_Filtered,
     VO_Allocation_Degraded => L_Allocation_Degraded
 );
