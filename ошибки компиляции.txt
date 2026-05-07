@@ -1,376 +1,76 @@
                 ------ Компиляция : Приложение: Device.Application -------
                 типизировать код...
-[ERROR]         Без имени5: ST_System_State_Snapshot(Строка 4): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 15 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 9 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 11 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 12 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 13 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 6 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 34 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 47 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Socket_Manager(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: ST_Scenario_Config(Строка 3): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: ST_Gateway_Command(Строка 10): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Gateway_Interface(Строка 13 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Gateway_Interface(Строка 32 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Gateway_Intent(Строка 11 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Simulation_Manager(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_STATUS(Строка 9): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_STATUS(Строка 10): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_STATUS(Строка 9): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_STATUS(Строка 9): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_STATUS(Строка 10): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_STATUS(Строка 10): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_COMMAND(Строка 19): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_COMMAND(Строка 20): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_COMMAND(Строка 19): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_COMMAND(Строка 19): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_COMMAND(Строка 20): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_COMMAND(Строка 20): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_INTENT_USER(Строка 27): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_INTENT_USER(Строка 27): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_INTENT_USER(Строка 27): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_POLICY(Строка 3): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 4): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 5): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 6): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 3): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 3): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_POLICY(Строка 4): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 4): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_POLICY(Строка 5): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 5): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: GVL_POLICY(Строка 6): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: GVL_POLICY(Строка 6): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 6 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 7 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 8 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 9 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 10 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 9, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 9, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 13, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 38, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'BYTE' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 47, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Req_Operator'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 48, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Req_Gateway'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 49, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Req_Rule'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 50, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Req_Final'
-[ERROR]         Без имени5: PRG_System_Scenario_Rules(Строка 51, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Intent'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 14, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'REFERENCE TO E_SCENARIO_TYPE' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 15, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 15, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 18, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'REFERENCE TO E_SCENARIO_TYPE' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 19, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 19, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 22, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'REFERENCE TO E_SCENARIO_TYPE' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 23, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 31, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'BIT'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 34, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'BIT'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 37, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'BIT'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 41, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 50, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 50, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 53, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 53, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 56, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'REFERENCE TO E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 57, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 57, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 58, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 58, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 59, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 59, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 60, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 60, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 63, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 63, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 74, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 73, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(((VI_Security_Armed AND (VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (VIO_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 72, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((VI_Security_Armed AND (VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 71, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VI_Security_Armed AND (VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 72, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 72, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 72, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 73, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 73, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 73, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 74, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 74, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 74, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 75, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 75, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 75, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 77, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 77, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 77, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 78, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 78, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 85, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 85, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 96, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 95, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND (VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 95, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 95, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 95, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 96, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 96, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 96, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 97, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VIO_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 97, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 97, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 100, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 100, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 100, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 101, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 101, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 108, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 108, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 112, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 112, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_PRESENCE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 112, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 113, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 113, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_SLEEP'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 113, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 114, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_SLEEP'' в тип 'REFERENCE TO E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 114, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 121, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_SLEEP'' в тип 'ANY'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 121, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 130, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'REFERENCE TO E_SCENARIO_TYPE' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_System_Scenario_Arbitration(Строка 133, Столбец 1 (Реализ.)): C0387:  Тип 'E_SCENARIO_TYPE' не идентичен типу 'E_SCENARIO_TYPE' из VAR_OUTPUT 'VO_Current_Scenario'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 10, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 10, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 10, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 11, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 18, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 18, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 19, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 19, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 20, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 20, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 21, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 21, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 24, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 24, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 31, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 33, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VO_Current_Scenario = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 33, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 33, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 38, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 39, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 39, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 41, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 41, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 43, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 43, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 45, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Scenario_Manager(Строка 45, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 21, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 21, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 24, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 24, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 24, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 28, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 28, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 28, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 32, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 32, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 32, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 44, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 44, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 48, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 48, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 52, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: PRG_Policy(Строка 53, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: PRG_Policy(Строка 53, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 54, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: PRG_Policy(Строка 54, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 55, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: PRG_Policy(Строка 55, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 56, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: PRG_Policy(Строка 56, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 59, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 59, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 69, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 68, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(((GVL_ALARM.G_Security_Armed AND (GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (GVL_POLICY.G_Scenario_Request_Rule = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: PRG_Policy(Строка 67, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((GVL_ALARM.G_Security_Armed AND (GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)) AND (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: PRG_Policy(Строка 66, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_ALARM.G_Security_Armed AND (GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: PRG_Policy(Строка 67, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 67, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 67, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 68, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 68, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 68, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 69, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Rule = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 69, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 69, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 70, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: PRG_Policy(Строка 70, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: PRG_Policy(Строка 70, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 71, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 71, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 79, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 78, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '((GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND (GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE))'
-[ERROR]         Без имени5: PRG_Policy(Строка 78, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Operator = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 78, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 78, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 79, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 79, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 79, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 80, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(GVL_POLICY.G_Scenario_Request_Rule = E_SCENARIO_TYPE.SCENARIO_NONE)'
-[ERROR]         Без имени5: PRG_Policy(Строка 80, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'
-[ERROR]         Без имени5: PRG_Policy(Строка 80, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 83, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 83, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 86, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: PRG_Policy(Строка 86, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_PRESENCE'
-[ERROR]         Без имени5: PRG_Policy(Строка 86, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_Policy(Строка 87, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_SLEEP'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_Policy(Строка 87, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
+                генерировать код...
 [ERROR]         Без имени5: PRG_Heating(Строка 45, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 45, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 46, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 47, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 47, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 48, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 50, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 50, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 77, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 77, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Authorization_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 81, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 81, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 82, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 83, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 83, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 84, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 86, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 86, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 90, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 90, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 91, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 92, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 92, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 93, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 95, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 95, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 256, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 256, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 257, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 258, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 258, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 259, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 261, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 261, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 276, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 276, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 290, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 290, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 291, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 292, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 292, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 293, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 295, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 295, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 313, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 313, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 327, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 327, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 328, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 329, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 329, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 330, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 332, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 332, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 335, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 335, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 336, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 337, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 337, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 338, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 340, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 340, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 343, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 343, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observer: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 344, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 345, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 345, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 346, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Runtime_Observer_Lifecycle_State' не задан
 [ERROR]         Без имени5: PRG_Heating(Строка 348, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 348, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
 [ERROR]         Без имени5: PRG_Heating(Строка 403, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
 [ERROR]         Без имени5: PRG_Heating(Строка 403, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[INFORMATION]   Без имени5: GVL_Heating_Runtime_Observation: C0181:  Относительная позиция
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 90, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 91, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 91, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 94, Столбец 1 (Реализ.)): C0218:  Для метки сase требуется литерал или символьная целочисленная константа
-[ERROR]         Без имени5: FB_Ventilation_System_Manager(Строка 94, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 22, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_NONE'' в тип 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 22, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 47, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'BIT'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 47, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'INT'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 48, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 49, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY_INT'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VI_Is_Night AND (L_Effective_Scenario <> E_SCENARIO_TYPE.SCENARIO_AWAY))'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(L_Effective_Scenario <> E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(L_Effective_Scenario <> E_SCENARIO_TYPE.SCENARIO_SLEEP)'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_SLEEP'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 55, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 59, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 109, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 109, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(L_Effective_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 109, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_Lighting_Blinds_Manager(Строка 109, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: FB_Socket_Manager(Строка 52, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Socket_Manager(Строка 52, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VI_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: FB_Socket_Manager(Строка 52, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_Socket_Manager(Строка 52, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-[ERROR]         Без имени5: PRG_System_Alarm_Gateway(Строка 5 (Объявл.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_Alarm_Gateway(Строка 16, Столбец 1 (Реализ.)): C0201:  Тип 'E_SCENARIO_TYPE' не совпадает с типом 'E_SCENARIO_TYPE' VAR_IN_OUT 'VIO_Scenario_Req_Gateway'
-[ERROR]         Без имени5: PRG_System_History(Строка 37, Столбец 1 (Реализ.)): C0066:  Невозможно сравнить тип 'E_SCENARIO_TYPE' с типом 'E_SCENARIO_TYPE'
-[ERROR]         Без имени5: PRG_System_History(Строка 40, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY'
-[ERROR]         Без имени5: PRG_System_Simulation(Строка 1, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'E_SCENARIO_TYPE' в тип 'ANY'
-[ERROR]         Без имени5: FB_Simulation_Manager(Строка 15, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Simulation_Manager(Строка 15, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: '(VI_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY)'
-[ERROR]         Без имени5: FB_Simulation_Manager(Строка 15, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_SCENARIO_TYPE.SCENARIO_AWAY'
-[ERROR]         Без имени5: FB_Simulation_Manager(Строка 15, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_SCENARIO_TYPE' не задан
-                Компиляция завершена -- 344 ошибок, 0 предупреждений
-                Компиляция завершена -- 344 ошибок, 0 предупреждений : загрузка невозможна
+                Компиляция завершена -- 72 ошибок, 0 предупреждений : загрузка невозможна
