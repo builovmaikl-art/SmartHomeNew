@@ -1,6 +1,6 @@
-DUT_FILES=119
+DUT_FILES=120
 REMOVED_OLD_DUT_DATATYPES=66
-ENUM_INSERTED=37
+ENUM_INSERTED=38
 STRUCT_INSERTED=82
 STRUCT_FIELDS_TOTAL=883
 STRUCT_FIELDS_WITH_INITIALIZER=143
@@ -29,6 +29,7 @@ E_Recovery_Phase.dut: ENUM E_Recovery_Phase values=6
 E_Rule_Action_Type.dut: ENUM E_Rule_Action_Type values=10
 E_Rule_Comparison.dut: ENUM E_Rule_Comparison values=9
 E_Rule_Condition_Type.dut: ENUM E_Rule_Condition_Type values=13
+E_Runtime_Observer_Lifecycle_State.dut: ENUM E_Runtime_Observer_Lifecycle_State values=7
 E_SCENARIO_SOURCE.dut: ENUM E_SCENARIO_SOURCE values=6
 E_SCENARIO_TYPE.dut: ENUM E_SCENARIO_TYPE values=8
 E_SENSOR_TYPE.dut: ENUM E_SENSOR_TYPE values=10
