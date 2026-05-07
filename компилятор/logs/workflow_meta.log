@@ -1,6 +1,6 @@
 event=push
 ref=refs/heads/main
-sha=c4fdca345492f6c4a20db251577abd26ffbf4733
+sha=692e10fdc196c0606acf4e1522700c6260a20a60
 task=compile
 note=
 snapshot_date=
