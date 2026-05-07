@@ -219,11 +219,150 @@ Do not reconnect as control logic.
 Only consider later as diagnostics/event projection if active diagnostics pipeline needs this exact behavior.
 ```
 
-Current status:
+Completed orchestration/allocation sub-audit:
 
 ```text
-DO NOT CONNECT YET
-complete remaining Group 1 audit first
+FB_Heating_Execution_Core is NOT missing target behavior.
+FB_Heating_Orchestration is NOT missing target behavior by itself.
+FB_Heating_Override_Layer is dangerous direct authority.
+FB_Heating_Thermal_Allocation + FB_Heating_Decision_Context are the confirmed lost-behavior candidates.
+```
+
+Execution core result:
+
+```text
+FB_Heating_Execution_Core
+    → duplicate wrapper over active FB_Heating_System_Manager + FB_DHW_Manager
+```
+
+It adds no independent heating policy, arbitration, or safety behavior beyond calling the active managers.
+
+Current classification:
+
+```text
+FB_Heating_Execution_Core
+    → OBSOLETE DUPLICATE WRAPPER CANDIDATE
+```
+
+Orchestration result:
+
+```text
+FB_Heating_Orchestration
+    → wrapper over FB_Heating_Execution_Core + FB_Heating_Override_Layer
+```
+
+It should not be reconnected as a new top-level runtime path because that would create a second upper orchestration layer parallel to current PRG_Heating.
+
+Current classification:
+
+```text
+FB_Heating_Orchestration
+    → OBSOLETE / DANGEROUS DUPLICATE ORCHESTRATION CANDIDATE
+```
+
+Override layer result:
+
+```text
+FB_Heating_Override_Layer
+    → hard authority layer
+```
+
+It can force-disable:
+
+```text
+- manifold pumps;
+- manifold valves;
+- zone valves;
+- boiler OT enable;
+- boiler OT setpoints;
+- backup circulation pump;
+- electric heater;
+- DHW heating pump;
+- DHW circulation pump.
+```
+
+Current classification:
+
+```text
+FB_Heating_Override_Layer
+    → DO NOT CONNECT DIRECTLY
+    → AUTHORITY LOGIC ONLY FOR POSSIBLE FUTURE MERGE/DESIGN REVIEW
+```
+
+Thermal allocation result:
+
+```text
+FB_Heating_Thermal_Allocation
+    → confirmed policy/allocation lost-behavior candidate
+```
+
+Implemented logic:
+
+```text
+- manifold base priority;
+- zone priority bias;
+- guest preheat priority boost;
+- zone target adjustment priority effect;
+- zone self level priority effect;
+- policy priority multiplier;
+- manifold thermal weight;
+- max thermal budget input;
+- adjusted manifold priority output.
+```
+
+Decision context result:
+
+```text
+FB_Heating_Decision_Context
+    → confirmed manifold enable decision helper
+```
+
+Implemented logic:
+
+```text
+- manifold allowed state from service/fault conditions;
+- pressure fault exclusion;
+- current fault exclusion;
+- pump in-service exclusion;
+- degraded flag when a manifold is disallowed;
+- priority ordered selection;
+- max thermal budget limiting;
+- manifold enabled output.
+```
+
+Confirmed search result:
+
+```text
+thermal-budget / allocation vocabulary is not broadly present in active runtime.
+It is concentrated in FB_Heating_Thermal_Allocation and historical/test harness snapshots.
+```
+
+Current classification:
+
+```text
+FB_Heating_Thermal_Allocation
+    → RECONNECT_LATER / MERGE_LOGIC_INTO_ACTIVE_OWNER CANDIDATE
+
+FB_Heating_Decision_Context
+    → RECONNECT_LATER / MERGE_LOGIC_INTO_ACTIVE_OWNER CANDIDATE
+```
+
+Current reconnect policy:
+
+```text
+Do NOT reconnect old Orchestration pipeline wholesale.
+Do NOT reconnect Override_Layer directly.
+Do NOT reconnect Thermal_Allocation without input contract audit.
+```
+
+Required next design step for this cluster:
+
+```text
+1. identify current active owner for manifold availability / priority / budget decisions;
+2. determine whether policy inputs still exist in GVL_CONFIG / HMI / scenarios;
+3. define safe integration point before FB_Heating_System_Manager output authority;
+4. merge only allocation decision outputs, not historical orchestration shell;
+5. preserve current 0-error baseline until design is complete.
 ```
 
 ---
