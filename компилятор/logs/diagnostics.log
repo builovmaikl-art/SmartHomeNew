@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2604
+total 2596
 -rw-r--r--  1 runner runner  13067 May  7 05:01 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  24576 May  7 05:01 .
 drwxr-xr-x  3 runner runner   4096 May  7 05:01 ..
@@ -278,7 +278,6 @@ drwxr-xr-x  3 runner runner   4096 May  7 05:01 .github
 -rw-r--r--  1 runner runner   6516 May  7 05:01 HEATING_ORCHESTRATION_CODE_DEPENDENCY_RULES.md
 -rw-r--r--  1 runner runner   9639 May  7 05:01 HEATING_ORCHESTRATION_CONSOLIDATION_PLAN.md
 -rw-r--r--  1 runner runner   6309 May  7 05:01 HEATING_ORCHESTRATION_DEPENDENCY_HIERARCHY.md
--rw-r--r--  1 runner runner   5941 May  7 05:01 HEATING_PASSIVE_BOOTSTRAP_OBSERVATION_VALIDATION.md
 -rw-r--r--  1 runner runner   6145 May  7 05:01 HEATING_REAL_OBSERVER_CALL_INSERTION_PREPARATION.md
 -rw-r--r--  1 runner runner   5968 May  7 05:01 HEATING_RUNTIME_AUTHORIZATION_EXECUTION_CONTRACT.md
 -rw-r--r--  1 runner runner    164 May  7 05:01 IS_REAL_VALID.fun
