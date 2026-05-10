@@ -193,7 +193,7 @@ END_FOR;
 
 fbAllocationFilter(
     VI_Enable := TRUE,
-    VI_Enable_Policy_Allocation := FALSE,
+    VI_Enable_Policy_Allocation := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0),
     VI_Freeze_Mode_Active := L_Freeze_Active,
     VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
     VI_Manifold_Demand_Map := L_Manifold_Demand_Map,
