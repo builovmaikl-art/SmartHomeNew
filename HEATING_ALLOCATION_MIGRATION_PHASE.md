@@ -13,7 +13,9 @@ The project has completed:
 - active runtime behavior review;
 - allocation filter integration;
 - first useful allocation gate activation;
-- obsolete heating wrapper cleanup.
+- obsolete heating wrapper cleanup;
+- bounded policy engine implementation;
+- bounded policy activation by configured budget.
 ```
 
 The project is now in:
@@ -27,6 +29,7 @@ Current sub-stage:
 ```text
 ACTIVE AVAILABILITY / SERVICE GATE ENABLED
 OBSOLETE WRAPPER CLEANUP COMPLETED
+BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
 ```
 
 ---
@@ -89,14 +92,13 @@ No legacy orchestration pipeline was reconnected.
 
 ## 3. Active first-stage logic enabled
 
-`FB_Heating_Allocation_Filter` is now enabled as a bounded authorization gate:
+`FB_Heating_Allocation_Filter` is enabled as a bounded authorization gate:
 
 ```text
 VI_Enable := TRUE
-VI_Enable_Policy_Allocation := FALSE
 ```
 
-Currently active logic:
+Active base-gate logic:
 
 ```text
 - manifold pressure availability gate;
@@ -131,6 +133,53 @@ FB_Heating_Manifold_Control.VI_Any_Zone_Active
 
 ---
 
+## 4. Bounded policy layer implemented and enabled by configuration
+
+`FB_Heating_Allocation_Filter` now contains a bounded policy layer:
+
+```text
+- priority-based manifold selection;
+- thermal budget limiting;
+- budget accounting;
+- policy block diagnostics.
+```
+
+Activation in `FB_Heating_System_Manager`:
+
+```text
+VI_Enable_Policy_Allocation := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0)
+```
+
+Policy inputs are connected from active configuration:
+
+```text
+VI_Manifold_Base_Priority := GVL_CONFIG.G_Manifold_Priority
+VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight
+VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
+```
+
+Default configuration:
+
+```text
+G_Manifold_Priority := [3, 3, 2, 2, 1]
+G_Manifold_Thermal_Weight := [1.0, 1.0, 0.8, 0.8, 0.5]
+G_Max_Thermal_Budget := 6.0
+```
+
+Default policy impact:
+
+```text
+sum(default weights) = 4.1
+configured budget = 6.0
+```
+
+Therefore default policy activation should not shed normal all-manifold demand.
+
+The layer can only reduce already authorized demand.
+It cannot create new demand and cannot write physical outputs.
+
+---
+
 # Preserved behavior
 
 The following behavior remains owned by existing active runtime blocks:
@@ -150,31 +199,6 @@ boiler cascade and OpenTherm authority
 
 output projection
     → FB_Heating_Output_Projection
-```
-
----
-
-# Policy / thermal budget state
-
-Policy allocation remains intentionally disabled:
-
-```text
-VI_Enable_Policy_Allocation := FALSE
-```
-
-Not active yet:
-
-```text
-- thermal budget limiting;
-- comfort priority weighting;
-- guest preheat priority;
-- dynamic thermal shedding.
-```
-
-Reason:
-
-```text
-runtime must first stabilize around explicit availability/service authorization semantics.
 ```
 
 ---
@@ -250,17 +274,12 @@ FB_Heating_Decision_Context.st
 Reason:
 
 ```text
-these are still historical source/reference blocks for future policy-layer work.
+these are still historical source/reference blocks until final policy verification is complete.
 ```
 
 Do not reconnect them directly.
 
-Do not delete them until thermal-budget / priority policy is either:
-
-```text
-- fully migrated into FB_Heating_Allocation_Filter;
-- or explicitly rejected as not required.
-```
+Delete only after confirming the new bounded policy layer covers required behavior or the old behavior is explicitly rejected.
 
 ---
 
@@ -269,12 +288,13 @@ Do not delete them until thermal-budget / priority policy is either:
 Required next checks:
 
 ```text
-1. CODESYS compile check;
-2. verify FB_Heating_Allocation_Filter is visible as a project POU;
-3. verify no missing interface arguments in FB_Heating_System_Manager;
-4. verify service/pressure gate does not conflict with freeze behavior;
-5. verify predictive degradation one-cycle delay is acceptable;
-6. only then continue policy-layer design.
+1. CODESYS compile check after policy activation;
+2. verify default budget does not shed all-manifold demand;
+3. verify freeze mode bypasses policy throttling;
+4. verify DHW ownership remains with existing active owners;
+5. verify service/pressure gate still works under policy layer;
+6. verify policy degraded publication is acceptable;
+7. then decide whether Thermal_Allocation / Decision_Context can be removed.
 ```
 
 ---
