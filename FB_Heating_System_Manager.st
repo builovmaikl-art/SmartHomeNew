@@ -186,8 +186,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Manifold_Subsystem_Degraded[L_i] :=
         GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i]
         OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i];
-    L_Manifold_Base_Priority[L_i] := 0;
-    L_Manifold_Thermal_Weight[L_i] := REAL#1.0;
+
+    L_Manifold_Base_Priority[L_i] := GVL_CONFIG.G_Manifold_Priority[L_i];
+    L_Manifold_Thermal_Weight[L_i] := GVL_CONFIG.G_Manifold_Thermal_Weight[L_i];
 END_FOR;
 
 fbAllocationFilter(
@@ -201,7 +202,7 @@ fbAllocationFilter(
     VI_Manifold_Subsystem_Degraded := L_Manifold_Subsystem_Degraded,
     VI_Manifold_Base_Priority := L_Manifold_Base_Priority,
     VI_Manifold_Thermal_Weight := L_Manifold_Thermal_Weight,
-    VI_Max_Thermal_Budget := REAL#0.0,
+    VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget,
     VO_Manifold_Demand_Filtered => L_Manifold_Demand_Filtered,
     VO_Allocation_Degraded => L_Allocation_Degraded
 );
