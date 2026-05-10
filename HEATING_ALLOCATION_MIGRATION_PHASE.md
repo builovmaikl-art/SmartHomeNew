@@ -10,13 +10,21 @@ The project has completed:
 - duplicate wrapper audit;
 - scaffold/runtime separation;
 - obsolete floor protection cleanup;
-- allocation policy extraction start.
+- active runtime behavior review;
+- allocation filter integration;
+- first useful allocation gate activation.
 ```
 
-The project is now officially in:
+The project is now in:
 
 ```text
 CONTROLLED ALLOCATION MIGRATION PHASE
+```
+
+Current sub-stage:
+
+```text
+ACTIVE AVAILABILITY / SERVICE GATE ENABLED
 ```
 
 ---
@@ -34,7 +42,7 @@ FB_Heating_Allocation_Filter
 Purpose:
 
 ```text
-bounded allocation/policy filter
+bounded runtime decision gate
 between Demand_Map and Manifold_Control
 ```
 
@@ -47,6 +55,14 @@ Explicitly NOT:
 - pump owner;
 - safety owner;
 - output authority.
+```
+
+Actual ownership remains:
+
+```text
+PRG_Heating
+→ FB_Heating_System_Manager
+→ active subsystem owners
 ```
 
 ---
@@ -69,64 +85,101 @@ No legacy orchestration pipeline was reconnected.
 
 ---
 
-## 3. Extracted useful logic
+## 3. Active first-stage logic enabled
 
-Useful bounded logic extracted from:
+`FB_Heating_Allocation_Filter` is now enabled as a bounded authorization gate:
 
 ```text
-FB_Heating_Thermal_Allocation
-FB_Heating_Decision_Context
+VI_Enable := TRUE
+VI_Enable_Policy_Allocation := FALSE
 ```
 
-Already migrated:
+Currently active logic:
 
 ```text
-- availability filtering;
-- degraded detection;
-- priority allocation scaffold;
-- thermal budget scaffold;
-- manifold weighting scaffold.
+- manifold pressure availability gate;
+- manifold pump service-state gate;
+- previous-cycle predictive degradation gate;
+- freeze-mode exception;
+- DHW ownership preservation;
+- allocation degraded publication upward.
+```
+
+Current active inputs:
+
+```text
+VI_Freeze_Mode_Active := L_Freeze_Active
+VI_DHW_Heating_Demand := VI_DHW_Heating_Demand
+VI_Manifold_Available := manifold pressure >= C_MIN_HEATING_MANIFOLD_PRESSURE
+VI_Manifold_In_Service := GVL_CONFIG.G_Manifold_Pump_In_Service
+VI_Manifold_Subsystem_Degraded := predictive pressure/current degradation flags
+```
+
+Current active output:
+
+```text
+L_Manifold_Demand_Filtered
+```
+
+This output is passed into:
+
+```text
+FB_Heating_Manifold_Control.VI_Any_Zone_Active
 ```
 
 ---
 
-# Important current runtime state
+# Preserved behavior
 
-Current behavior remains intentionally unchanged.
-
-Current state:
+The following behavior remains owned by existing active runtime blocks:
 
 ```text
-VI_Enable := FALSE
+freeze protection
+    → FB_Heating_Safety_Gate / FB_Heating_Safe_State / FB_Heating_Manifold_Control
+
+DHW priority
+    → FB_DHW_Manager / FB_Heating_Manifold_Control / FB_Heating_Boiler_Control
+
+pump and valve authority
+    → FB_Heating_Manifold_Control
+
+boiler cascade and OpenTherm authority
+    → FB_Heating_Boiler_Control
+
+output projection
+    → FB_Heating_Output_Projection
+```
+
+---
+
+# Policy / thermal budget state
+
+Policy allocation remains intentionally disabled:
+
+```text
 VI_Enable_Policy_Allocation := FALSE
 ```
 
-Therefore:
+Not active yet:
 
 ```text
-Allocation_Filter currently works in transparent passthrough mode.
+- thermal budget limiting;
+- comfort priority weighting;
+- guest preheat priority;
+- dynamic thermal shedding.
 ```
 
-Meaning:
+Reason:
 
 ```text
-input demand == output demand
-```
-
-This preserves:
-
-```text
-- current heating behavior;
-- current ownership model;
-- compile-clean baseline;
-- existing safety architecture.
+runtime must first stabilize around explicit availability/service authorization semantics.
 ```
 
 ---
 
 # Explicitly rejected architecture
 
-The following architecture is now considered invalid for reconnect:
+The following architecture is invalid for reconnect:
 
 ```text
 Thermal_Allocation
@@ -162,9 +215,9 @@ logic fully absorbed by active runtime owners.
 
 ---
 
-# Remaining migration candidates
+# Remaining cleanup candidates
 
-Still under controlled migration review:
+Still under controlled cleanup review:
 
 ```text
 FB_Heating_Execution_Core
@@ -185,41 +238,34 @@ Override_Layer
     → dangerous hard-authority layer
 ```
 
+Cleanup rule:
+
+```text
+remove only after reference check and after confirming useful behavior has been extracted or intentionally rejected.
+```
+
 ---
 
-# Next activation phase
+# Next technical checks
 
-Before enabling allocation policy:
-
-```text
-1. define real manifold priorities;
-2. define thermal budget source;
-3. define configuration ownership;
-4. validate runtime behavior impact;
-5. validate starvation risks;
-6. validate degraded-mode interactions.
-```
-
-Only after that:
+Before deleting remaining wrappers:
 
 ```text
-VI_Enable := TRUE
-```
-
-and later:
-
-```text
-VI_Enable_Policy_Allocation := TRUE
+1. reference-check Execution_Core / Orchestration / Override_Layer;
+2. confirm no active production path depends on them;
+3. confirm no useful behavior remains only inside them;
+4. keep Thermal_Allocation / Decision_Context as historical source until policy layer is finalized;
+5. perform compile check in CODESYS.
 ```
 
 ---
 
 # Final architectural direction
 
-The project direction is now officially:
+The project direction remains:
 
 ```text
-extract useful policy logic
+extract useful bounded policy logic
 from legacy detached architecture
 and integrate it into the active runtime
 without creating a second orchestration layer.
