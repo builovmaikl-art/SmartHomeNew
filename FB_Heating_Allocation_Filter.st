@@ -17,9 +17,9 @@
 // - freeze-mode exceptions;
 // - bounded demand authorization.
 //
-// Future optional responsibility:
-// - thermal budget allocation;
-// - priority weighting.
+// Optional responsibility when explicitly enabled:
+// - priority-based allocation;
+// - thermal budget limiting.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Allocation_Filter
 VAR_INPUT
@@ -27,7 +27,8 @@ VAR_INPUT
     // FALSE = strict passthrough.
     VI_Enable : BOOL;
 
-    // Optional future policy layer.
+    // Optional policy layer.
+    // FALSE = only availability/service/degraded gate is active.
     VI_Enable_Policy_Allocation : BOOL := FALSE;
 
     // System-level context.
@@ -42,7 +43,7 @@ VAR_INPUT
     VI_Manifold_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     VI_Manifold_Subsystem_Degraded : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 
-    // Future policy placeholders.
+    // Policy inputs from active configuration.
     VI_Manifold_Base_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     VI_Manifold_Thermal_Weight : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     VI_Max_Thermal_Budget : REAL := REAL#0.0;
@@ -58,12 +59,17 @@ VAR_OUTPUT
     VO_Manifold_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     VO_Manifold_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
-    // Future policy outputs.
+    // Policy diagnostics.
     VO_Manifold_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     VO_Thermal_Budget_Used : REAL;
 END_VAR
 VAR
     L_i : INT;
+    L_CurrentPriority : INT;
+    L_MaxPriority : INT;
+    L_Used : REAL;
+    L_Weight : REAL;
+    L_AnyPolicyBlock : BOOL;
 END_VAR
 
 // ======================================================
@@ -71,6 +77,7 @@ END_VAR
 // ======================================================
 VO_Allocation_Degraded := FALSE;
 VO_Thermal_Budget_Used := REAL#0.0;
+L_AnyPolicyBlock := FALSE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     VO_Manifold_Demand_Filtered[L_i] := VI_Manifold_Demand_Map[L_i];
@@ -90,7 +97,7 @@ END_IF;
 // FREEZE EXCEPTION MODE
 //
 // Freeze protection has higher authority than
-// service gating and degraded filtering.
+// service gating and policy throttling.
 // ======================================================
 IF VI_Freeze_Mode_Active THEN
     RETURN;
@@ -99,9 +106,9 @@ END_IF;
 // ======================================================
 // DHW PRIORITY GATE
 //
-// Heating demand is irrelevant during DHW hold.
-// We intentionally keep the filter transparent here
-// because Manifold_Control already owns DHW shutdown.
+// Manifold_Control already owns DHW shutdown.
+// Keep this filter transparent during DHW hold to avoid
+// creating duplicate DHW authority here.
 // ======================================================
 IF VI_DHW_Heating_Demand THEN
     RETURN;
@@ -112,33 +119,21 @@ END_IF;
 // ======================================================
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 
-    // --------------------------------------------------
-    // Runtime availability.
-    // --------------------------------------------------
     IF NOT VI_Manifold_Available[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
         VO_Manifold_Block_Reason[L_i] := 1;
     END_IF;
 
-    // --------------------------------------------------
-    // Service state.
-    // --------------------------------------------------
     IF NOT VI_Manifold_In_Service[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
         VO_Manifold_Block_Reason[L_i] := 2;
     END_IF;
 
-    // --------------------------------------------------
-    // Existing runtime degraded state.
-    // --------------------------------------------------
     IF VI_Manifold_Subsystem_Degraded[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
         VO_Manifold_Block_Reason[L_i] := 3;
     END_IF;
 
-    // --------------------------------------------------
-    // Final authorization.
-    // --------------------------------------------------
     IF VI_Manifold_Demand_Map[L_i] AND NOT VO_Manifold_Allowed[L_i] THEN
         VO_Manifold_Demand_Filtered[L_i] := FALSE;
         VO_Allocation_Degraded := TRUE;
@@ -147,14 +142,66 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 END_FOR;
 
 // ======================================================
-// FUTURE POLICY LAYER
+// OPTIONAL POLICY LAYER
+//
+// This layer can only reduce demand that is already
+// authorized by availability/service/degraded checks.
+// It never creates new demand and never writes outputs.
 // ======================================================
 IF NOT VI_Enable_Policy_Allocation THEN
     RETURN;
 END_IF;
 
-// Future thermal budget / priority allocation intentionally disabled.
-// Runtime behavior must first stabilize around explicit authorization semantics.
+// Invalid or unset budget means no policy throttling.
+IF VI_Max_Thermal_Budget <= REAL#0.0 THEN
+    RETURN;
+END_IF;
+
+// Rebuild output demand from allowed candidates only.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    VO_Manifold_Demand_Filtered[L_i] := FALSE;
+END_FOR;
+
+L_MaxPriority := 0;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF VI_Manifold_Demand_Map[L_i] AND VO_Manifold_Allowed[L_i] THEN
+        IF VO_Manifold_Priority_Effective[L_i] > L_MaxPriority THEN
+            L_MaxPriority := VO_Manifold_Priority_Effective[L_i];
+        END_IF;
+    END_IF;
+END_FOR;
+
+L_Used := REAL#0.0;
+
+FOR L_CurrentPriority := L_MaxPriority TO 0 BY -1 DO
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF VI_Manifold_Demand_Map[L_i]
+           AND VO_Manifold_Allowed[L_i]
+           AND (VO_Manifold_Priority_Effective[L_i] = L_CurrentPriority) THEN
+
+            L_Weight := VI_Manifold_Thermal_Weight[L_i];
+            IF L_Weight <= REAL#0.0 THEN
+                L_Weight := REAL#1.0;
+            END_IF;
+
+            IF (L_Used + L_Weight) <= VI_Max_Thermal_Budget THEN
+                VO_Manifold_Demand_Filtered[L_i] := TRUE;
+                L_Used := L_Used + L_Weight;
+            ELSE
+                L_AnyPolicyBlock := TRUE;
+                IF VO_Manifold_Block_Reason[L_i] = 0 THEN
+                    VO_Manifold_Block_Reason[L_i] := 4;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_FOR;
+END_FOR;
+
+VO_Thermal_Budget_Used := L_Used;
+
+IF L_AnyPolicyBlock THEN
+    VO_Allocation_Degraded := TRUE;
+END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Allocation_Filter <<<
