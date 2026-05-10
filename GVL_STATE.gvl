@@ -78,6 +78,19 @@ VAR_GLOBAL
     G_Heating_IO_Fault : BOOL;
     G_Heating_Sensor_Fault : BOOL;
     G_Heating_Subsystem_Degraded : BOOL;
+
+    // Allocation / policy observability
+    G_Allocation_Policy_Active : BOOL;
+    G_Allocation_Freeze_Bypass_Active : BOOL;
+    G_Allocation_DHW_Bypass_Active : BOOL;
+    G_Allocation_Budget_Max : REAL;
+    G_Allocation_Budget_Used : REAL;
+    G_Allocation_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Filtered : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    G_Allocation_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+
     G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
     G_Heating_RootConfidence : REAL;
     G_Heating_Confidence : REAL := 1.0;
