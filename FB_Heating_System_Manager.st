@@ -69,6 +69,7 @@ VAR
     fbSafeState : FB_Heating_Safe_State;
     fbDemandMap : FB_Heating_Demand_Map;
     fbAllocationFilter : FB_Heating_Allocation_Filter;
+    fbRuntimeObservability : FB_Heating_Runtime_Observability;
     fbCircuitControl : FB_Heating_Circuit_Control;
     fbManifoldControl : FB_Heating_Manifold_Control;
     fbBoilerControl : FB_Heating_Boiler_Control;
@@ -205,6 +206,19 @@ fbAllocationFilter(
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget,
     VO_Manifold_Demand_Filtered => L_Manifold_Demand_Filtered,
     VO_Allocation_Degraded => L_Allocation_Degraded
+);
+
+fbRuntimeObservability(
+    VI_Policy_Active := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0),
+    VI_Freeze_Bypass_Active := L_Freeze_Active,
+    VI_DHW_Bypass_Active := VI_DHW_Heating_Demand,
+    VI_Budget_Max := GVL_CONFIG.G_Max_Thermal_Budget,
+    VI_Budget_Used := fbAllocationFilter.VO_Thermal_Budget_Used,
+    VI_Requested := L_Manifold_Demand_Map,
+    VI_Allowed := fbAllocationFilter.VO_Manifold_Allowed,
+    VI_Filtered := L_Manifold_Demand_Filtered,
+    VI_Block_Reason := fbAllocationFilter.VO_Manifold_Block_Reason,
+    VI_Effective_Priority := fbAllocationFilter.VO_Manifold_Priority_Effective
 );
 
 IF L_Allocation_Degraded THEN
