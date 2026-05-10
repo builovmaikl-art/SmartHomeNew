@@ -12,7 +12,8 @@ The project has completed:
 - obsolete floor protection cleanup;
 - active runtime behavior review;
 - allocation filter integration;
-- first useful allocation gate activation.
+- first useful allocation gate activation;
+- obsolete heating wrapper cleanup.
 ```
 
 The project is now in:
@@ -25,6 +26,7 @@ Current sub-stage:
 
 ```text
 ACTIVE AVAILABILITY / SERVICE GATE ENABLED
+OBSOLETE WRAPPER CLEANUP COMPLETED
 ```
 
 ---
@@ -198,64 +200,81 @@ and parallel orchestration ownership.
 
 ---
 
-# Current cleanup status
+# Completed cleanup
 
-Already removed:
+Removed from repository root:
+
+```text
+FB_FloorHeating_Freeze_Protection.st
+FB_FloorHeating_Overheat_Protection.st
+FB_Heating_Execution_Core.st
+FB_Heating_Orchestration.st
+FB_Heating_Override_Layer.st
+```
+
+Reasons:
 
 ```text
 FB_FloorHeating_Freeze_Protection
 FB_FloorHeating_Overheat_Protection
+    → logic fully absorbed by active runtime owners
+
+FB_Heating_Execution_Core
+    → obsolete duplicate wrapper over active managers
+
+FB_Heating_Orchestration
+    → obsolete shell around Execution_Core + Override_Layer
+
+FB_Heating_Override_Layer
+    → dangerous hard-authority output override layer
+```
+
+Reference check result:
+
+```text
+No active production reference remains in root runtime path.
+Historical copies remain in snapshots/docs/logs.
+```
+
+---
+
+# Remaining source/reference blocks
+
+Kept for now:
+
+```text
+FB_Heating_Thermal_Allocation.st
+FB_Heating_Decision_Context.st
 ```
 
 Reason:
 
 ```text
-logic fully absorbed by active runtime owners.
+these are still historical source/reference blocks for future policy-layer work.
 ```
 
----
+Do not reconnect them directly.
 
-# Remaining cleanup candidates
-
-Still under controlled cleanup review:
+Do not delete them until thermal-budget / priority policy is either:
 
 ```text
-FB_Heating_Execution_Core
-FB_Heating_Orchestration
-FB_Heating_Override_Layer
-```
-
-Current interpretation:
-
-```text
-Execution_Core
-    → obsolete wrapper candidate
-
-Orchestration
-    → obsolete orchestration shell candidate
-
-Override_Layer
-    → dangerous hard-authority layer
-```
-
-Cleanup rule:
-
-```text
-remove only after reference check and after confirming useful behavior has been extracted or intentionally rejected.
+- fully migrated into FB_Heating_Allocation_Filter;
+- or explicitly rejected as not required.
 ```
 
 ---
 
 # Next technical checks
 
-Before deleting remaining wrappers:
+Required next checks:
 
 ```text
-1. reference-check Execution_Core / Orchestration / Override_Layer;
-2. confirm no active production path depends on them;
-3. confirm no useful behavior remains only inside them;
-4. keep Thermal_Allocation / Decision_Context as historical source until policy layer is finalized;
-5. perform compile check in CODESYS.
+1. CODESYS compile check;
+2. verify FB_Heating_Allocation_Filter is visible as a project POU;
+3. verify no missing interface arguments in FB_Heating_System_Manager;
+4. verify service/pressure gate does not conflict with freeze behavior;
+5. verify predictive degradation one-cycle delay is acceptable;
+6. only then continue policy-layer design.
 ```
 
 ---
