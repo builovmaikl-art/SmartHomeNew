@@ -1,0 +1,11 @@
+TYPE E_Heating_Allocation_Block_Reason :
+(
+    NONE := 0,
+    PRESSURE_UNAVAILABLE := 1,
+    SERVICE_DISABLED := 2,
+    PREDICTIVE_DEGRADED := 3,
+    POLICY_BUDGET_SHED := 4,
+    FREEZE_BYPASS := 5,
+    DHW_BYPASS := 6
+);
+END_TYPE
