@@ -18,7 +18,8 @@ The project has completed:
 - bounded policy activation by configured budget;
 - allocation / policy observability state publication;
 - typed allocation diagnostic semantics migration;
-- heating policy / intelligence ownership normalization.
+- heating policy / intelligence ownership normalization;
+- first bounded policy bridge integration.
 ```
 
 The project is now in:
@@ -34,7 +35,8 @@ ACTIVE AVAILABILITY / SERVICE GATE ENABLED
 BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
 OBSERVABILITY PROJECTION CONNECTED
 TYPED ALLOCATION DIAGNOSTICS VERIFIED
-POLICY / INTELLIGENCE LAYER NORMALIZED BUT NOT YET CONNECTED TO RUNTIME
+POLICY / INTELLIGENCE LAYER NORMALIZED
+FIRST BOUNDED POLICY BRIDGE CONNECTED
 ```
 
 ---
@@ -227,6 +229,9 @@ G_Allocation_Allowed
 G_Allocation_Filtered
 G_Allocation_Block_Reason
 G_Allocation_Effective_Priority
+G_Policy_Target_Adjustment_Active
+G_Policy_Target_Adjustment_Applied
+G_Policy_Priority_Multiplier_Applied
 ```
 
 ---
@@ -277,7 +282,7 @@ CODESYS compile result after correction:
 ## 7. Heating policy / intelligence ownership normalized
 
 `GVL_HEATING_POLICY` remains an advisory / intelligence layer.
-It is not yet directly connected to active heating runtime decisions.
+It now has one bounded soft bridge into runtime.
 
 Normalized ownership:
 
@@ -336,32 +341,37 @@ FB_Heating_Optimizer no longer writes:
     - G_Zone_Thermal_Demand
 ```
 
-Current architectural status:
+---
+
+## 8. First bounded policy bridge connected
+
+Connected:
 
 ```text
-ACTIVE RUNTIME
-    FB_Heating_System_Manager / Allocation_Filter / Manifold_Control / Boiler_Control
-
-POLICY INTELLIGENCE
-    GVL_HEATING_POLICY and related FBs
-
-Bridge status:
-    intentionally minimal;
-    no direct hard-authority connection yet.
+GVL_HEATING_POLICY.G_Policy_Target_Adjustment
+→ FB_Heating_System_Manager.L_Target_Supply_Temp
 ```
 
-Fields that look mature for future bounded connection:
+Connection type:
 
 ```text
-G_Zone_Target_Adjustment
-G_Zone_Priority_Bias
-G_Zone_Preheat_Needed
-G_Zone_Schedule_Preheat_Active
-G_Policy_Target_Adjustment
-G_Policy_Priority_Multiplier
+bounded additive soft influence
 ```
 
-Fields that must not be connected as hard authority without explicit design:
+Clamp:
+
+```text
+-3.0°C .. +5.0°C
+```
+
+Connection point:
+
+```text
+after FB_Heating_Adaptive_Target
+before FB_Heating_Manifold_Control / FB_Heating_Boiler_Control
+```
+
+Explicitly NOT connected:
 
 ```text
 G_Policy_Block_Heating_Request
@@ -370,7 +380,22 @@ G_Policy_Block_Heating_Request
 Reason:
 
 ```text
-It has safety-like blocking semantics and currently does not directly govern PRG_Heating runtime.
+It has safety-like blocking semantics and must not become hard runtime authority without explicit design.
+```
+
+Explicitly deferred:
+
+```text
+G_Policy_Priority_Multiplier
+G_Zone_Priority_Bias
+```
+
+Reason:
+
+```text
+FB_Heating_Demand_Map currently aggregates circuit demand to manifold demand by manifold_id only.
+There is no stable zone→manifold bias path in active runtime yet.
+A global multiplier would not change priority ordering and would therefore be mostly cosmetic.
 ```
 
 ---
@@ -461,7 +486,9 @@ Static checks completed:
 - typed allocation block reason DUT is visible to compiler;
 - runtime ownership path is unchanged;
 - GVL_HEATING_POLICY writer ownership normalized;
-- conflicting thermal-demand writers removed.
+- conflicting thermal-demand writers removed;
+- policy target bridge clamp is consistent between runtime and observability;
+- priority multiplier / zone priority bias deferred because active runtime lacks stable zone→manifold priority path.
 ```
 
 Compile checks completed:
@@ -481,7 +508,7 @@ Runtime checks still required:
 3. DHW ownership remains with existing active owners;
 4. service/pressure gate works under policy layer;
 5. G_Allocation_* fields match expected runtime state;
-6. policy/intelligence values remain advisory until explicit bridge is added.
+6. G_Policy_Target_Adjustment_Applied matches actual bounded target influence.
 ```
 
 ---
