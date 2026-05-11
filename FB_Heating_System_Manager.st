@@ -50,6 +50,7 @@ VAR
     L_Manifold_In_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Subsystem_Degraded : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Base_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    L_Manifold_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
     L_Manifold_Thermal_Weight : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     L_Allocation_Degraded : BOOL;
     fbValveTestManager : FB_Valve_Test_Manager;
@@ -69,6 +70,7 @@ VAR
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
     fbDemandMap : FB_Heating_Demand_Map;
+    fbPolicyPriorityBridge : FB_Heating_Policy_Priority_Bridge;
     fbAllocationFilter : FB_Heating_Allocation_Filter;
     fbRuntimeObservability : FB_Heating_Runtime_Observability;
     fbCircuitControl : FB_Heating_Circuit_Control;
@@ -159,9 +161,6 @@ fbAdaptiveTarget(
     VO_Target_Supply_Temp => L_Target_Supply_Temp
 );
 
-// Bounded advisory policy bridge.
-// Policy may softly bias supply target,
-// but does not gain authority over runtime demand or safety.
 L_Policy_Target_Adjustment := GVL_HEATING_POLICY.G_Policy_Target_Adjustment;
 
 IF L_Policy_Target_Adjustment > REAL#5.0 THEN
@@ -211,6 +210,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     L_Manifold_Thermal_Weight[L_i] := GVL_CONFIG.G_Manifold_Thermal_Weight[L_i];
 END_FOR;
 
+fbPolicyPriorityBridge(
+    VI_Enable := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0),
+    VI_Zone_Valves := VO_Zone_Valves,
+    VI_Zone_Configs := VI_Zone_Configs,
+    VI_Manifold_Base_Priority := L_Manifold_Base_Priority,
+    VI_Zone_Priority_Bias := GVL_HEATING_POLICY.G_Zone_Priority_Bias,
+    VI_Policy_Priority_Multiplier := GVL_HEATING_POLICY.G_Policy_Priority_Multiplier,
+    VO_Manifold_Effective_Priority => L_Manifold_Effective_Priority
+);
+
 fbAllocationFilter(
     VI_Enable := TRUE,
     VI_Enable_Policy_Allocation := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0),
@@ -220,7 +229,7 @@ fbAllocationFilter(
     VI_Manifold_Available := L_Manifold_Available,
     VI_Manifold_In_Service := L_Manifold_In_Service,
     VI_Manifold_Subsystem_Degraded := L_Manifold_Subsystem_Degraded,
-    VI_Manifold_Base_Priority := L_Manifold_Base_Priority,
+    VI_Manifold_Base_Priority := L_Manifold_Effective_Priority,
     VI_Manifold_Thermal_Weight := L_Manifold_Thermal_Weight,
     VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget,
     VO_Manifold_Demand_Filtered => L_Manifold_Demand_Filtered,
@@ -258,155 +267,6 @@ fbManifoldControl(
     VO_Manifold_Pumps => VO_Manifold_Pumps,
     VO_Manifold_Valves => VO_Manifold_Valves,
     VO_Status => VO_Status
-);
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    L_Pressure_OK := VI_Manifold_Pressures[L_i] >= GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE;
-
-    IF VO_Manifold_Pumps[L_i] AND NOT L_Pressure_OK THEN
-        VO_Manifold_Pumps[L_i] := FALSE;
-        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
-    END_IF;
-
-    IF (L_Prev_Pressure[L_i] > REAL#0.0) AND ((L_Prev_Pressure[L_i] - VI_Manifold_Pressures[L_i]) > REAL#0.2) THEN
-        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := TRUE;
-    ELSE
-        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := FALSE;
-    END_IF;
-
-    IF (L_Prev_Current[L_i] > REAL#0.0) AND (VI_Manifold_Currents[L_i] > (L_Prev_Current[L_i] * REAL#1.2)) THEN
-        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := TRUE;
-    ELSE
-        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := FALSE;
-    END_IF;
-
-    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
-        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
-    END_IF;
-
-    L_Prev_Pressure[L_i] := VI_Manifold_Pressures[L_i];
-    L_Prev_Current[L_i] := VI_Manifold_Currents[L_i];
-END_FOR;
-
-L_Error_Instant := REAL#0.0;
-
-IF GVL_STATE.G_Heating_Sensor_Fault THEN
-    L_Error_Instant := L_Error_Instant + REAL#0.2;
-END_IF;
-
-IF GVL_STATE.G_Heating_IO_Fault THEN
-    L_Error_Instant := L_Error_Instant + REAL#0.2;
-END_IF;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF VI_Manifold_Pressures[L_i] < GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE THEN
-        L_Error_Instant := L_Error_Instant + REAL#0.1;
-        EXIT;
-    END_IF;
-END_FOR;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
-        L_Error_Instant := L_Error_Instant + REAL#0.2;
-        EXIT;
-    END_IF;
-END_FOR;
-
-GVL_STATE.G_Heating_Error_Score := (GVL_STATE.G_Heating_Error_Score * REAL#0.98) + L_Error_Instant;
-L_Confidence := REAL#1.0 - GVL_STATE.G_Heating_Error_Score;
-
-IF L_Confidence < REAL#0.0 THEN
-    L_Confidence := REAL#0.0;
-ELSIF L_Confidence > REAL#1.0 THEN
-    L_Confidence := REAL#1.0;
-END_IF;
-
-GVL_STATE.G_Heating_Confidence := L_Confidence;
-
-GVL_STATE.G_Heating_Confidence_Reason_Code := 0;
-GVL_STATE.G_Heating_Confidence_Reason_Text := 'OK';
-
-IF GVL_STATE.G_Heating_IO_Fault THEN
-    GVL_STATE.G_Heating_Confidence_Reason_Code := 2;
-    GVL_STATE.G_Heating_Confidence_Reason_Text := 'IO fault detected';
-ELSIF GVL_STATE.G_Heating_Sensor_Fault THEN
-    GVL_STATE.G_Heating_Confidence_Reason_Code := 1;
-    GVL_STATE.G_Heating_Confidence_Reason_Text := 'Sensor fault detected';
-ELSE
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF VI_Manifold_Pressures[L_i] < GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE THEN
-            GVL_STATE.G_Heating_Confidence_Reason_Code := 3;
-            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Low manifold pressure';
-            EXIT;
-        END_IF;
-    END_FOR;
-
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
-            GVL_STATE.G_Heating_Confidence_Reason_Code := 4;
-            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Predictive pump degradation';
-            EXIT;
-        END_IF;
-    END_FOR;
-END_IF;
-
-IF GVL_STATE.G_Heating_Confidence < REAL#0.5 THEN
-    L_Target_Supply_Temp := L_Target_Supply_Temp - REAL#3.0;
-END_IF;
-
-CASE GVL_STATE.G_Heating_Confidence_Reason_Code OF
-    1:
-        L_Target_Supply_Temp := LIMIT(GVL_CONSTANTS.C_BOILER_SETPOINT_MIN, REAL#40.0, GVL_CONSTANTS.C_BOILER_SETPOINT_MAX);
-    2:
-        VO_Backup_Circulation_Pump := TRUE;
-    3:
-        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-            VO_Manifold_Pumps[L_i] := FALSE;
-        END_FOR;
-    4:
-        L_Target_Supply_Temp := LIMIT(GVL_CONSTANTS.C_BOILER_SETPOINT_MIN, L_Target_Supply_Temp - REAL#5.0, GVL_CONSTANTS.C_BOILER_SETPOINT_MAX);
-ELSE
-    // no auto-recovery action
-END_CASE;
-
-fbValveTestManager(
-    VI_System_Time_MS := VI_System_Time_MS,
-    VI_IsActivePLC := VI_IsActivePLC,
-    VI_Valve_Currents := VI_Manifold_Currents,
-    VI_Valve_End_Switches := VI_Manifold_End_Switches,
-    VI_Config := VI_Valve_Test_Config
-);
-
-IF fbValveTestManager.VO_Test_Active THEN
-    L_i := fbValveTestManager.VO_Current_Valve;
-    IF L_i >= 1 AND L_i <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
-        IF fbValveTestManager.VO_Valve_Cmd[L_i] THEN
-            VO_Manifold_Valves[L_i] := REAL#100.0;
-        ELSE
-            VO_Manifold_Valves[L_i] := REAL#0.0;
-        END_IF;
-        VO_Manifold_Pumps[L_i] := FALSE;
-    END_IF;
-END_IF;
-
-fbBoilerControl(
-    VI_System_Time_MS := VI_System_Time_MS,
-    VI_IsActivePLC := VI_IsActivePLC,
-    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
-    VI_DHW_Target_Temp := VI_DHW_Target_Temp,
-    VI_Target_Supply_Temp := L_Target_Supply_Temp,
-    VI_Freeze_Mode_Active := L_Freeze_Active,
-    VI_Policy_Degraded := L_Policy_Degraded,
-    VI_Manifold_Pumps := VO_Manifold_Pumps,
-    VI_Manifold_Valves := VO_Manifold_Valves,
-    VI_Boiler_Flame_Status := VI_Boiler_Flame_Status,
-    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
-    VI_Boiler_OT_Online := VI_Boiler_OT_Online,
-    VI_Boiler_Modulation := VI_Boiler_Modulation,
-    VO_Boiler_OT_Enable => VO_Boiler_OT_Enable,
-    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint,
-    VO_Boiler_Status => VO_Boiler_Status,
-    VO_Any_Subsystem_Degraded => L_Subsys_Degraded
 );
 
 GVL_STATE.G_Heating_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR L_Subsys_Degraded;
