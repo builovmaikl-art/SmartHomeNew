@@ -31,6 +31,10 @@ VAR_INPUT
 
     VI_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF E_Heating_Allocation_Block_Reason;
     VI_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+
+    VI_Priority_Bridge_Active : BOOL;
+    VI_Priority_Bias_Applied : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    VI_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 END_VAR
 VAR
     L_i : INT;
@@ -52,9 +56,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 
     GVL_STATE.G_Allocation_Block_Reason[L_i] := VI_Block_Reason[L_i];
     GVL_STATE.G_Allocation_Effective_Priority[L_i] := VI_Effective_Priority[L_i];
+
+    GVL_STATE.G_Policy_Priority_Bias_Applied[L_i] := VI_Priority_Bias_Applied[L_i];
+    GVL_STATE.G_Policy_Priority_Effective[L_i] := VI_Priority_Effective[L_i];
 END_FOR;
 
-// Bounded policy bridge visibility.
+GVL_STATE.G_Policy_Priority_Bridge_Active := VI_Priority_Bridge_Active;
+
+// Bounded policy target bridge visibility.
 // Mirrors the same clamp used by FB_Heating_System_Manager.
 L_Policy_Target_Adjustment := GVL_HEATING_POLICY.G_Policy_Target_Adjustment;
 IF L_Policy_Target_Adjustment > REAL#5.0 THEN
