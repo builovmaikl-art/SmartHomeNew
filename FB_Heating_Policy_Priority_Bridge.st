@@ -57,7 +57,9 @@ IF NOT VI_Enable THEN
 END_IF;
 
 L_Multiplier := VI_Policy_Priority_Multiplier;
-IF L_Multiplier < REAL#0.3 THEN
+IF L_Multiplier <= REAL#0.0 THEN
+    L_Multiplier := REAL#1.0;
+ELSIF L_Multiplier < REAL#0.3 THEN
     L_Multiplier := REAL#0.3;
 ELSIF L_Multiplier > REAL#1.0 THEN
     L_Multiplier := REAL#1.0;
@@ -78,7 +80,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
            AND (L_Zone_ID <= GVL_CONSTANTS.C_MAX_ZONES) THEN
 
             L_Bias := VI_Zone_Priority_Bias[L_Zone_ID];
-            IF L_Bias < REAL#0.3 THEN
+            IF L_Bias <= REAL#0.0 THEN
+                // Uninitialized advisory bias is treated as neutral.
+                L_Bias := REAL#1.0;
+            ELSIF L_Bias < REAL#0.3 THEN
                 L_Bias := REAL#0.3;
             ELSIF L_Bias > REAL#1.5 THEN
                 L_Bias := REAL#1.5;
