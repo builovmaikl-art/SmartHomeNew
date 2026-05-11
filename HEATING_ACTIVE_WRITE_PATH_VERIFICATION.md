@@ -56,12 +56,15 @@ Verified active authority chain:
 ```text
 PRG_Heating
 → FB_Heating_System_Manager
+    → Safety_Gate
+    → Safe_State
     → Circuit_Control
     → Demand_Map
     → Policy_Priority_Bridge
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
+    → System_Manager post-manifold safety/test overrides
     → Boiler_Control
 ```
 
@@ -141,7 +144,25 @@ Verification targets:
 Verification status:
 
 ```text
-IN PROGRESS
+VERIFIED WITH FINDINGS
+```
+
+Current findings:
+
+```text
+- System_Manager is the active heating execution owner;
+- System_Manager calls safety, circuit, demand, policy, allocation, observability, manifold, and boiler blocks;
+- System_Manager also performs post-manifold pressure/confidence/valve-test overrides;
+- this is inside active runtime chain, not detached Runtime_* governance path.
+```
+
+Architectural note:
+
+```text
+System_Manager remains the top-level runtime owner.
+Manifold_Control is the primary manifold actuator helper,
+but final manifold outputs may still be modified by System_Manager
+for pressure safety, confidence fallback, and valve-test override.
 ```
 
 ---
@@ -165,15 +186,15 @@ Verification targets:
 Verification status:
 
 ```text
-PARTIALLY VERIFIED
+VERIFIED
 ```
 
 Current findings:
 
 ```text
 - overheat timer logic detected;
-- forced valve-close semantics detected;
-- no Runtime_* authority overlap detected yet.
+- forced zone valve close semantics detected;
+- no Runtime_* authority overlap detected.
 ```
 
 ---
@@ -198,15 +219,16 @@ Verification targets:
 Verification status:
 
 ```text
-PARTIALLY VERIFIED
+VERIFIED
 ```
 
 Current findings:
 
 ```text
-- freeze detection semantics detected;
-- freeze-safe projection detected;
-- no Runtime_* authority overlap detected yet.
+- freeze detection semantics detected in Safety_Gate;
+- freeze-safe projection detected in Safe_State;
+- safe-state branch returns before normal runtime execution;
+- no Runtime_* authority overlap detected.
 ```
 
 ---
@@ -231,7 +253,7 @@ Verification targets:
 Verification status:
 
 ```text
-PARTIALLY VERIFIED
+VERIFIED
 ```
 
 Current findings:
@@ -239,6 +261,7 @@ Current findings:
 ```text
 - bounded allocation semantics detected;
 - degraded manifold filtering detected;
+- freeze and DHW bypass semantics detected;
 - no detached allocation runtime detected.
 ```
 
@@ -263,7 +286,7 @@ Verification targets:
 Verification status:
 
 ```text
-PARTIALLY VERIFIED
+VERIFIED
 ```
 
 Current findings:
@@ -278,24 +301,60 @@ Current findings:
 
 ## Manifold runtime execution
 
-Expected authoritative writer:
+Expected primary writer:
 
 ```text
 FB_Heating_Manifold_Control
+```
+
+Actual write model:
+
+```text
+primary actuator helper
++
+System_Manager post-manifold finalization
 ```
 
 Verification targets:
 
 ```text
 - manifold valve writes;
-- manifold enable writes;
-- runtime realization writes.
+- manifold pump writes;
+- runtime realization writes;
+- post-manifold override writes.
 ```
 
 Verification status:
 
 ```text
-NOT VERIFIED YET
+VERIFIED WITH FINDINGS
+```
+
+Current findings:
+
+```text
+- Manifold_Control writes VO_Manifold_Pumps and VO_Manifold_Valves;
+- Manifold_Control owns PID valve realization;
+- Manifold_Control owns DHW suppression at manifold level;
+- Manifold_Control owns freeze pump/valve minimum behavior;
+- System_Manager may overwrite pumps after Manifold_Control for low-pressure safety;
+- System_Manager may overwrite all manifold pumps for low-pressure confidence reason code 3;
+- System_Manager may overwrite a selected valve/pump during Valve_Test_Manager active test.
+```
+
+Important ownership finding:
+
+```text
+Manifold_Control is not the only final manifold writer.
+System_Manager currently performs final post-manifold safety/test output finalization.
+```
+
+Refinement candidate:
+
+```text
+future refactor could move post-manifold finalization
+into a dedicated bounded finalization helper,
+but no runtime change is made by this audit.
 ```
 
 ---
@@ -320,7 +379,17 @@ Verification targets:
 Verification status:
 
 ```text
-NOT VERIFIED YET
+VERIFIED
+```
+
+Current findings:
+
+```text
+- Boiler_Control is the actual OT/boiler writer;
+- OT authority flows through Boiler_Cascade_Manager and Boiler_OpenTherm_Interface;
+- no Runtime_* OT authority detected;
+- no detached Override_Layer path detected;
+- Boiler_Control writes cascade semantic GVL_STATE fields, but these are status/diagnostics oriented rather than direct actuation authority.
 ```
 
 Critical historical risk:
@@ -329,11 +398,10 @@ Critical historical risk:
 FB_Heating_Override_Layer
 ```
 
-Mandatory verification:
+Verification result:
 
 ```text
-ensure detached override semantics
-are not resurrected indirectly.
+detached override semantics not detected in production root actuation path.
 ```
 
 ---
@@ -405,7 +473,7 @@ cannot perform runtime actuation.
 Verification status:
 
 ```text
-PARTIALLY VERIFIED
+VERIFIED FOR HIGH-RISK SCAFFOLD
 ```
 
 Current findings:
@@ -414,7 +482,7 @@ Current findings:
 - Governance_Locked detected;
 - Runtime_Attachment_Allowed := FALSE detected;
 - observation-only semantics detected;
-- no direct runtime actuation detected yet.
+- no direct runtime actuation detected in audited governance scaffold.
 ```
 
 ---
@@ -426,6 +494,7 @@ The following domains require continuous verification:
 ```text
 - OpenTherm write ownership;
 - manifold valve ownership;
+- System_Manager post-manifold output finalization;
 - hidden helper side effects;
 - indirect GVL mutation;
 - detached override semantics;
@@ -440,8 +509,8 @@ The following findings would be considered architectural violations:
 
 ```text
 - Runtime_* direct actuation;
-- hidden valve writers;
-- hidden boiler writers;
+- hidden valve writers outside active System_Manager chain;
+- hidden boiler writers outside Boiler_Control;
 - governance-driven runtime execution;
 - telemetry-driven actuation;
 - detached override ownership;
@@ -455,8 +524,8 @@ The following findings would be considered architectural violations:
 Current evidence indicates:
 
 ```text
-runtime authority appears aligned with
-formal ownership/governance contracts.
+runtime authority is mostly aligned with formal ownership/governance contracts,
+but manifold output ownership is more nuanced than originally documented.
 ```
 
 Current verified findings:
@@ -465,7 +534,28 @@ Current verified findings:
 - dangerous historical orchestration path removed;
 - dangerous override path removed from production root;
 - Runtime_* family appears governance/observability-oriented;
-- no confirmed hidden Runtime_* actuation detected yet.
+- no confirmed hidden Runtime_* actuation detected;
+- Boiler_Control is the actual OT/boiler writer;
+- Manifold_Control is the primary manifold actuator helper;
+- System_Manager currently performs final post-manifold pressure/confidence/valve-test overrides.
+```
+
+---
+
+# Documentation synchronization required
+
+The following documents should be synchronized with this finding:
+
+```text
+HEATING_RUNTIME_OWNERSHIP_MATRIX.md
+HEATING_GVL_WRITE_AUDIT.md
+```
+
+Required change:
+
+```text
+Manifold_Control should be described as primary manifold actuator helper,
+while System_Manager remains final post-manifold safety/test finalizer.
 ```
 
 ---
@@ -481,7 +571,21 @@ formal ownership contracts
 +
 formal write-boundary contracts
 +
-runtime evidence verification.
+runtime evidence verification
 ```
 
 Future runtime modifications must preserve all four layers simultaneously.
+
+Immediate next refinement target:
+
+```text
+System_Manager post-manifold output finalization boundary
+```
+
+Potential future refactor:
+
+```text
+extract pressure/confidence/valve-test finalization
+into a bounded helper
+without changing runtime behavior.
+```
