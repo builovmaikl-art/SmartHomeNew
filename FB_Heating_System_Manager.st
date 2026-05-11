@@ -246,7 +246,10 @@ fbRuntimeObservability(
     VI_Allowed := fbAllocationFilter.VO_Manifold_Allowed,
     VI_Filtered := L_Manifold_Demand_Filtered,
     VI_Block_Reason := fbAllocationFilter.VO_Manifold_Block_Reason,
-    VI_Effective_Priority := fbAllocationFilter.VO_Manifold_Priority_Effective
+    VI_Effective_Priority := fbAllocationFilter.VO_Manifold_Priority_Effective,
+    VI_Priority_Bridge_Active := fbPolicyPriorityBridge.VO_Bridge_Active,
+    VI_Priority_Bias_Applied := fbPolicyPriorityBridge.VO_Manifold_Priority_Bias_Applied,
+    VI_Priority_Effective := L_Manifold_Effective_Priority
 );
 
 IF L_Allocation_Degraded THEN
