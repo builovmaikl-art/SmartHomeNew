@@ -19,7 +19,10 @@ The project has completed:
 - allocation / policy observability state publication;
 - typed allocation diagnostic semantics migration;
 - heating policy / intelligence ownership normalization;
-- first bounded policy bridge integration.
+- bounded policy target bridge integration;
+- bounded policy priority bridge integration;
+- priority bridge observability integration;
+- priority semantics normalization documented.
 ```
 
 The project is now in:
@@ -36,7 +39,8 @@ BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
 OBSERVABILITY PROJECTION CONNECTED
 TYPED ALLOCATION DIAGNOSTICS VERIFIED
 POLICY / INTELLIGENCE LAYER NORMALIZED
-FIRST BOUNDED POLICY BRIDGE CONNECTED
+BOUNDED POLICY BRIDGES CONNECTED
+PRIORITY SEMANTICS DOCUMENTED
 ```
 
 ---
@@ -86,9 +90,12 @@ Integrated chain:
 ```text
 Circuit_Control
 → Demand_Map
+→ Policy_Priority_Bridge
 → Allocation_Filter
 → Runtime_Observability
 → Manifold_Control
+→ diagnostics/confidence
+→ Valve_Test_Manager
 → Boiler_Control
 ```
 
@@ -160,10 +167,10 @@ Activation in `FB_Heating_System_Manager`:
 VI_Enable_Policy_Allocation := (GVL_CONFIG.G_Max_Thermal_Budget > REAL#0.0)
 ```
 
-Policy inputs are connected from active configuration:
+Policy inputs are connected from active runtime state/configuration:
 
 ```text
-VI_Manifold_Base_Priority := GVL_CONFIG.G_Manifold_Priority
+VI_Manifold_Base_Priority := L_Manifold_Effective_Priority
 VI_Manifold_Thermal_Weight := GVL_CONFIG.G_Manifold_Thermal_Weight
 VI_Max_Thermal_Budget := GVL_CONFIG.G_Max_Thermal_Budget
 ```
@@ -232,6 +239,9 @@ G_Allocation_Effective_Priority
 G_Policy_Target_Adjustment_Active
 G_Policy_Target_Adjustment_Applied
 G_Policy_Priority_Multiplier_Applied
+G_Policy_Priority_Bridge_Active
+G_Policy_Priority_Bias_Applied
+G_Policy_Priority_Effective
 ```
 
 ---
@@ -282,7 +292,7 @@ CODESYS compile result after correction:
 ## 7. Heating policy / intelligence ownership normalized
 
 `GVL_HEATING_POLICY` remains an advisory / intelligence layer.
-It now has one bounded soft bridge into runtime.
+It now has bounded soft bridges into runtime.
 
 Normalized ownership:
 
@@ -343,7 +353,7 @@ FB_Heating_Optimizer no longer writes:
 
 ---
 
-## 8. First bounded policy bridge connected
+## 8. Bounded policy target bridge connected
 
 Connected:
 
@@ -383,20 +393,172 @@ Reason:
 It has safety-like blocking semantics and must not become hard runtime authority without explicit design.
 ```
 
-Explicitly deferred:
+---
+
+## 9. Bounded policy priority bridge connected
+
+Created and connected:
 
 ```text
-G_Policy_Priority_Multiplier
-G_Zone_Priority_Bias
+FB_Heating_Policy_Priority_Bridge
 ```
 
-Reason:
+Connection point:
 
 ```text
-FB_Heating_Demand_Map currently aggregates circuit demand to manifold demand by manifold_id only.
-There is no stable zone→manifold bias path in active runtime yet.
-A global multiplier would not change priority ordering and would therefore be mostly cosmetic.
+Demand_Map
+→ Policy_Priority_Bridge
+→ Allocation_Filter
 ```
+
+Inputs:
+
+```text
+VI_Zone_Valves := VO_Zone_Valves
+VI_Zone_Configs := VI_Zone_Configs
+VI_Manifold_Base_Priority := L_Manifold_Base_Priority
+VI_Zone_Priority_Bias := GVL_HEATING_POLICY.G_Zone_Priority_Bias
+VI_Policy_Priority_Multiplier := GVL_HEATING_POLICY.G_Policy_Priority_Multiplier
+```
+
+Outputs:
+
+```text
+VO_Manifold_Effective_Priority
+VO_Manifold_Priority_Bias_Applied
+VO_Bridge_Active
+```
+
+The bridge uses the real runtime mapping:
+
+```text
+zone
+→ circuit
+→ manifold
+```
+
+because `ST_FloorHeating_Circuit_Config` contains both:
+
+```text
+zone
+manifold_id
+```
+
+The bridge does not create demand and does not control outputs.
+It only changes manifold priority ordering for the bounded allocation layer.
+
+---
+
+## 10. Priority semantics map
+
+The priority chain has three explicit meanings.
+
+### Base priority
+
+Source:
+
+```text
+GVL_CONFIG.G_Manifold_Priority
+```
+
+Runtime local:
+
+```text
+L_Manifold_Base_Priority
+```
+
+Meaning:
+
+```text
+static configured manifold priority before policy influence
+```
+
+---
+
+### Policy-bridged priority
+
+Source block:
+
+```text
+FB_Heating_Policy_Priority_Bridge
+```
+
+Runtime local:
+
+```text
+L_Manifold_Effective_Priority
+```
+
+Published state:
+
+```text
+GVL_STATE.G_Policy_Priority_Effective
+```
+
+Meaning:
+
+```text
+priority after advisory policy bridge:
+base manifold priority
+× bounded global policy multiplier
+× bounded zone priority bias mapped through active circuits
+```
+
+Bounds:
+
+```text
+G_Policy_Priority_Multiplier: 0.3 .. 1.0
+G_Zone_Priority_Bias:        0.3 .. 1.5
+effective priority buckets:  0 .. 4
+```
+
+Important behavior:
+
+```text
+inactive manifolds keep base priority;
+active manifolds are recalculated from active circuit zone bias;
+policy can reduce priority through multiplier;
+policy can raise relative priority through zone bias;
+policy still cannot create demand.
+```
+
+---
+
+### Allocation-effective priority
+
+Source block:
+
+```text
+FB_Heating_Allocation_Filter
+```
+
+Published state:
+
+```text
+GVL_STATE.G_Allocation_Effective_Priority
+```
+
+Meaning:
+
+```text
+priority actually used by allocation filter during budget-based demand authorization
+```
+
+Current implementation detail:
+
+```text
+Allocation_Filter currently copies input priority to output priority.
+Therefore G_Policy_Priority_Effective and G_Allocation_Effective_Priority should match under current code.
+```
+
+Reason to keep both fields:
+
+```text
+G_Policy_Priority_Effective shows bridge output before allocation;
+G_Allocation_Effective_Priority shows priority actually used by allocation.
+```
+
+This prevents observability drift if Allocation_Filter later adds its own final priority normalization.
 
 ---
 
@@ -488,7 +650,10 @@ Static checks completed:
 - GVL_HEATING_POLICY writer ownership normalized;
 - conflicting thermal-demand writers removed;
 - policy target bridge clamp is consistent between runtime and observability;
-- priority multiplier / zone priority bias deferred because active runtime lacks stable zone→manifold priority path.
+- priority bridge uses real zone→circuit→manifold path;
+- priority bridge output is passed into Allocation_Filter;
+- priority bridge state is published through Runtime_Observability;
+- priority semantics are explicitly separated into base / policy-bridged / allocation-effective.
 ```
 
 Compile checks completed:
@@ -500,6 +665,15 @@ Compile checks completed:
 - heating policy ownership cleanup: OK
 ```
 
+Compile checks now required:
+
+```text
+- FB_Heating_Policy_Priority_Bridge compile check;
+- FB_Heating_System_Manager interface check after priority bridge integration;
+- FB_Heating_Runtime_Observability interface check after priority bridge observability expansion;
+- GVL_STATE policy priority fields visibility check.
+```
+
 Runtime checks still required:
 
 ```text
@@ -508,7 +682,9 @@ Runtime checks still required:
 3. DHW ownership remains with existing active owners;
 4. service/pressure gate works under policy layer;
 5. G_Allocation_* fields match expected runtime state;
-6. G_Policy_Target_Adjustment_Applied matches actual bounded target influence.
+6. G_Policy_Target_Adjustment_Applied matches actual bounded target influence;
+7. G_Policy_Priority_Effective matches bridge output;
+8. G_Allocation_Effective_Priority matches priority used by allocation.
 ```
 
 ---
