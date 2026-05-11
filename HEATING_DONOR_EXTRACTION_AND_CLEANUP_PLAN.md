@@ -263,33 +263,22 @@ CATEGORY A
 Current status:
 
 ```text
-duplicate wrapper
+verified removed from production root
 ```
 
-Historical role:
+Verification result:
 
 ```text
-wrapper around active managers
-```
-
-Current active replacement path:
-
-```text
-PRG_Heating
-→ FB_Heating_System_Manager
-→ FB_DHW_Manager
-```
-
-Current direction:
-
-```text
-delete after reference verification
+- no active runtime references found;
+- no production-root file remains;
+- only snapshots/history references remain.
 ```
 
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 1 VERIFIED COMPLETE
 ```
 
 ---
@@ -299,26 +288,22 @@ CATEGORY A
 Current status:
 
 ```text
-obsolete orchestration shell
+verified removed from production root
 ```
 
-Critical risk:
+Verification result:
 
 ```text
-reconnect would create second runtime authority path
-```
-
-Current direction:
-
-```text
-do not reconnect
-remove after reference verification
+- no active runtime references found;
+- no production-root file remains;
+- only snapshots/history references remain.
 ```
 
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 1 VERIFIED COMPLETE
 ```
 
 ---
@@ -473,12 +458,18 @@ FB_Heating_Execution_Core
 FB_Heating_Orchestration
 ```
 
-Condition before deletion:
+Status:
 
 ```text
-- no active references;
-- no project registration dependency;
-- no HMI/config dependency.
+VERIFIED COMPLETE
+```
+
+Verification result:
+
+```text
+- no active runtime references found;
+- no production-root files remain;
+- snapshots/history copies preserved.
 ```
 
 ---
@@ -498,6 +489,12 @@ Condition before deletion:
 - active bridge/filter path verified;
 - no remaining unique logic;
 - compile-safe replacement confirmed.
+```
+
+Current next focus:
+
+```text
+ACTIVE
 ```
 
 ---
