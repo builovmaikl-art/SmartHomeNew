@@ -39,6 +39,7 @@ VAR
     L_Bias : REAL;
     L_Score : REAL;
     L_MaxScore : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    L_HasActiveCircuit : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 // Default passthrough state.
@@ -47,7 +48,8 @@ VO_Bridge_Active := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     VO_Manifold_Effective_Priority[L_i] := VI_Manifold_Base_Priority[L_i];
     VO_Manifold_Priority_Bias_Applied[L_i] := REAL#1.0;
-    L_MaxScore[L_i] := TO_REAL(VI_Manifold_Base_Priority[L_i]);
+    L_MaxScore[L_i] := REAL#0.0;
+    L_HasActiveCircuit[L_i] := FALSE;
 END_FOR;
 
 IF NOT VI_Enable THEN
@@ -95,21 +97,28 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             IF L_Score > L_MaxScore[L_Manifold_ID] THEN
                 L_MaxScore[L_Manifold_ID] := L_Score;
             END_IF;
+
+            L_HasActiveCircuit[L_Manifold_ID] := TRUE;
         END_IF;
     END_IF;
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    IF L_MaxScore[L_i] >= REAL#3.5 THEN
-        VO_Manifold_Effective_Priority[L_i] := 4;
-    ELSIF L_MaxScore[L_i] >= REAL#2.5 THEN
-        VO_Manifold_Effective_Priority[L_i] := 3;
-    ELSIF L_MaxScore[L_i] >= REAL#1.5 THEN
-        VO_Manifold_Effective_Priority[L_i] := 2;
-    ELSIF L_MaxScore[L_i] >= REAL#0.5 THEN
-        VO_Manifold_Effective_Priority[L_i] := 1;
+    IF L_HasActiveCircuit[L_i] THEN
+        IF L_MaxScore[L_i] >= REAL#3.5 THEN
+            VO_Manifold_Effective_Priority[L_i] := 4;
+        ELSIF L_MaxScore[L_i] >= REAL#2.5 THEN
+            VO_Manifold_Effective_Priority[L_i] := 3;
+        ELSIF L_MaxScore[L_i] >= REAL#1.5 THEN
+            VO_Manifold_Effective_Priority[L_i] := 2;
+        ELSIF L_MaxScore[L_i] >= REAL#0.5 THEN
+            VO_Manifold_Effective_Priority[L_i] := 1;
+        ELSE
+            VO_Manifold_Effective_Priority[L_i] := 0;
+        END_IF;
     ELSE
-        VO_Manifold_Effective_Priority[L_i] := 0;
+        VO_Manifold_Effective_Priority[L_i] := VI_Manifold_Base_Priority[L_i];
+        VO_Manifold_Priority_Bias_Applied[L_i] := REAL#1.0;
     END_IF;
 END_FOR;
 
