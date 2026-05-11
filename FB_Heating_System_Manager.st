@@ -269,6 +269,155 @@ fbManifoldControl(
     VO_Status => VO_Status
 );
 
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_Pressure_OK := VI_Manifold_Pressures[L_i] >= GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE;
+
+    IF VO_Manifold_Pumps[L_i] AND NOT L_Pressure_OK THEN
+        VO_Manifold_Pumps[L_i] := FALSE;
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+    END_IF;
+
+    IF (L_Prev_Pressure[L_i] > REAL#0.0) AND ((L_Prev_Pressure[L_i] - VI_Manifold_Pressures[L_i]) > REAL#0.2) THEN
+        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := TRUE;
+    ELSE
+        GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] := FALSE;
+    END_IF;
+
+    IF (L_Prev_Current[L_i] > REAL#0.0) AND (VI_Manifold_Currents[L_i] > (L_Prev_Current[L_i] * REAL#1.2)) THEN
+        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := TRUE;
+    ELSE
+        GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] := FALSE;
+    END_IF;
+
+    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+        GVL_STATE.G_Heating_Subsystem_Degraded := TRUE;
+    END_IF;
+
+    L_Prev_Pressure[L_i] := VI_Manifold_Pressures[L_i];
+    L_Prev_Current[L_i] := VI_Manifold_Currents[L_i];
+END_FOR;
+
+L_Error_Instant := REAL#0.0;
+
+IF GVL_STATE.G_Heating_Sensor_Fault THEN
+    L_Error_Instant := L_Error_Instant + REAL#0.2;
+END_IF;
+
+IF GVL_STATE.G_Heating_IO_Fault THEN
+    L_Error_Instant := L_Error_Instant + REAL#0.2;
+END_IF;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF VI_Manifold_Pressures[L_i] < GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE THEN
+        L_Error_Instant := L_Error_Instant + REAL#0.1;
+        EXIT;
+    END_IF;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+        L_Error_Instant := L_Error_Instant + REAL#0.2;
+        EXIT;
+    END_IF;
+END_FOR;
+
+GVL_STATE.G_Heating_Error_Score := (GVL_STATE.G_Heating_Error_Score * REAL#0.98) + L_Error_Instant;
+L_Confidence := REAL#1.0 - GVL_STATE.G_Heating_Error_Score;
+
+IF L_Confidence < REAL#0.0 THEN
+    L_Confidence := REAL#0.0;
+ELSIF L_Confidence > REAL#1.0 THEN
+    L_Confidence := REAL#1.0;
+END_IF;
+
+GVL_STATE.G_Heating_Confidence := L_Confidence;
+
+GVL_STATE.G_Heating_Confidence_Reason_Code := 0;
+GVL_STATE.G_Heating_Confidence_Reason_Text := 'OK';
+
+IF GVL_STATE.G_Heating_IO_Fault THEN
+    GVL_STATE.G_Heating_Confidence_Reason_Code := 2;
+    GVL_STATE.G_Heating_Confidence_Reason_Text := 'IO fault detected';
+ELSIF GVL_STATE.G_Heating_Sensor_Fault THEN
+    GVL_STATE.G_Heating_Confidence_Reason_Code := 1;
+    GVL_STATE.G_Heating_Confidence_Reason_Text := 'Sensor fault detected';
+ELSE
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF VI_Manifold_Pressures[L_i] < GVL_CONSTANTS.C_MIN_HEATING_MANIFOLD_PRESSURE THEN
+            GVL_STATE.G_Heating_Confidence_Reason_Code := 3;
+            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Low manifold pressure';
+            EXIT;
+        END_IF;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF GVL_STATE.G_Predictive_Pump_Pressure_Drop[L_i] OR GVL_STATE.G_Predictive_Pump_Current_Rise[L_i] THEN
+            GVL_STATE.G_Heating_Confidence_Reason_Code := 4;
+            GVL_STATE.G_Heating_Confidence_Reason_Text := 'Predictive pump degradation';
+            EXIT;
+        END_IF;
+    END_FOR;
+END_IF;
+
+IF GVL_STATE.G_Heating_Confidence < REAL#0.5 THEN
+    L_Target_Supply_Temp := L_Target_Supply_Temp - REAL#3.0;
+END_IF;
+
+CASE GVL_STATE.G_Heating_Confidence_Reason_Code OF
+    1:
+        L_Target_Supply_Temp := LIMIT(GVL_CONSTANTS.C_BOILER_SETPOINT_MIN, REAL#40.0, GVL_CONSTANTS.C_BOILER_SETPOINT_MAX);
+    2:
+        VO_Backup_Circulation_Pump := TRUE;
+    3:
+        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+            VO_Manifold_Pumps[L_i] := FALSE;
+        END_FOR;
+    4:
+        L_Target_Supply_Temp := LIMIT(GVL_CONSTANTS.C_BOILER_SETPOINT_MIN, L_Target_Supply_Temp - REAL#5.0, GVL_CONSTANTS.C_BOILER_SETPOINT_MAX);
+ELSE
+    // no auto-recovery action
+END_CASE;
+
+fbValveTestManager(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_Valve_Currents := VI_Manifold_Currents,
+    VI_Valve_End_Switches := VI_Manifold_End_Switches,
+    VI_Config := VI_Valve_Test_Config
+);
+
+IF fbValveTestManager.VO_Test_Active THEN
+    L_i := fbValveTestManager.VO_Current_Valve;
+    IF L_i >= 1 AND L_i <= GVL_CONSTANTS.C_MAX_MANIFOLDS THEN
+        IF fbValveTestManager.VO_Valve_Cmd[L_i] THEN
+            VO_Manifold_Valves[L_i] := REAL#100.0;
+        ELSE
+            VO_Manifold_Valves[L_i] := REAL#0.0;
+        END_IF;
+        VO_Manifold_Pumps[L_i] := FALSE;
+    END_IF;
+END_IF;
+
+fbBoilerControl(
+    VI_System_Time_MS := VI_System_Time_MS,
+    VI_IsActivePLC := VI_IsActivePLC,
+    VI_DHW_Heating_Demand := VI_DHW_Heating_Demand,
+    VI_DHW_Target_Temp := VI_DHW_Target_Temp,
+    VI_Target_Supply_Temp := L_Target_Supply_Temp,
+    VI_Freeze_Mode_Active := L_Freeze_Active,
+    VI_Policy_Degraded := L_Policy_Degraded,
+    VI_Manifold_Pumps := VO_Manifold_Pumps,
+    VI_Manifold_Valves := VO_Manifold_Valves,
+    VI_Boiler_Flame_Status := VI_Boiler_Flame_Status,
+    VI_Boiler_Error_Status := VI_Boiler_Error_Status,
+    VI_Boiler_OT_Online := VI_Boiler_OT_Online,
+    VI_Boiler_Modulation := VI_Boiler_Modulation,
+    VO_Boiler_OT_Enable => VO_Boiler_OT_Enable,
+    VO_Boiler_OT_Setpoint => VO_Boiler_OT_Setpoint,
+    VO_Boiler_Status => VO_Boiler_Status,
+    VO_Any_Subsystem_Degraded => L_Subsys_Degraded
+);
+
 GVL_STATE.G_Heating_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR L_Subsys_Degraded;
 
 END_FUNCTION_BLOCK
