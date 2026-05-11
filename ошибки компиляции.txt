@@ -1,60 +1,24 @@
-                ------ Компиляция : Приложение: Device.Application -------
+                ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-                генерировать код...
-[ERROR]         Без имени5: PRG_Heating(Строка 45, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 45, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 47, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 47, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 50, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 50, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 77, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 77, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Authorization_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 81, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 81, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 83, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 83, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 86, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 86, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 90, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 90, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 92, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 92, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 95, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 95, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 256, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 256, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 258, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 258, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 261, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 261, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 276, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 276, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 290, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 290, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 292, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 292, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 295, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 295, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 313, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 313, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 327, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 327, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 329, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 329, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 332, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 332, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 335, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 335, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 337, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 337, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 340, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 340, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 343, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 343, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observer'
-[ERROR]         Без имени5: PRG_Heating(Строка 345, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 345, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_State' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 348, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 348, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observer_Lifecycle_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-[ERROR]         Без имени5: PRG_Heating(Строка 403, Столбец 1 (Реализ.)): C0018:  'GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Heating(Строка 403, Столбец 1 (Реализ.)): C0004:  'G_Runtime_Observation_Status_Text' не является компонентом 'GVL_Heating_Runtime_Observation'
-                Компиляция завершена -- 56 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 19 (Объявл.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Runtime_Observability(Строка 11 (Объявл.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: GVL_STATE(Строка 86): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 37, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.NONE'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 37, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 57, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.FREEZE_BYPASS'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 57, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 73, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.DHW_BYPASS'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 73, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 86, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.PRESSURE_UNAVAILABLE'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 86, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 91, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.SERVICE_DISABLED'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 91, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 96, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.PREDICTIVE_DEGRADED'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 96, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason.NONE'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 155, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.POLICY_BUDGET_SHED'' в тип 'E_Heating_Allocation_Block_Reason'
+[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 155, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
+                Компиляция завершена -- 20 ошибок, 0 предупреждений
+                Компиляция завершена -- 20 ошибок, 0 предупреждений : загрузка невозможна
