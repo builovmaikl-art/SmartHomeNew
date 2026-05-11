@@ -91,6 +91,11 @@ VAR_GLOBAL
     G_Allocation_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF E_Heating_Allocation_Block_Reason;
     G_Allocation_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
+    // Policy bridge observability
+    G_Policy_Target_Adjustment_Active : BOOL;
+    G_Policy_Target_Adjustment_Applied : REAL;
+    G_Policy_Priority_Multiplier_Applied : REAL;
+
     G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
     G_Heating_RootConfidence : REAL;
     G_Heating_Confidence : REAL := 1.0;
