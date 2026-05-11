@@ -22,7 +22,8 @@ The project has completed:
 - bounded policy target bridge integration;
 - bounded policy priority bridge integration;
 - priority bridge observability integration;
-- priority semantics normalization documented.
+- priority semantics normalization documented;
+- neutral handling for uninitialized priority policy.
 ```
 
 The project is now in:
@@ -41,6 +42,7 @@ TYPED ALLOCATION DIAGNOSTICS VERIFIED
 POLICY / INTELLIGENCE LAYER NORMALIZED
 BOUNDED POLICY BRIDGES CONNECTED
 PRIORITY SEMANTICS DOCUMENTED
+UNSET PRIORITY POLICY HANDLED AS NEUTRAL
 ```
 
 ---
@@ -512,6 +514,25 @@ G_Zone_Priority_Bias:        0.3 .. 1.5
 effective priority buckets:  0 .. 4
 ```
 
+Neutral/unset handling:
+
+```text
+G_Policy_Priority_Multiplier = 0.0
+    → treated as unset
+    → neutral multiplier 1.0
+
+G_Zone_Priority_Bias = 0.0
+    → treated as unset
+    → neutral bias 1.0
+```
+
+Reason:
+
+```text
+GVL default state must not silently alter runtime allocation semantics.
+Policy influence must start only after policy layer publishes a real non-neutral value.
+```
+
 Important behavior:
 
 ```text
@@ -519,6 +540,7 @@ inactive manifolds keep base priority;
 active manifolds are recalculated from active circuit zone bias;
 policy can reduce priority through multiplier;
 policy can raise relative priority through zone bias;
+uninitialized policy state is neutral;
 policy still cannot create demand.
 ```
 
@@ -653,7 +675,8 @@ Static checks completed:
 - priority bridge uses real zone→circuit→manifold path;
 - priority bridge output is passed into Allocation_Filter;
 - priority bridge state is published through Runtime_Observability;
-- priority semantics are explicitly separated into base / policy-bridged / allocation-effective.
+- priority semantics are explicitly separated into base / policy-bridged / allocation-effective;
+- uninitialized priority policy values are treated as neutral.
 ```
 
 Compile checks completed:
@@ -684,7 +707,8 @@ Runtime checks still required:
 5. G_Allocation_* fields match expected runtime state;
 6. G_Policy_Target_Adjustment_Applied matches actual bounded target influence;
 7. G_Policy_Priority_Effective matches bridge output;
-8. G_Allocation_Effective_Priority matches priority used by allocation.
+8. G_Allocation_Effective_Priority matches priority used by allocation;
+9. unset priority policy state remains neutral.
 ```
 
 ---
