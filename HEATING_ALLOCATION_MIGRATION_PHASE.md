@@ -16,22 +16,23 @@ The project has completed:
 - obsolete heating wrapper cleanup;
 - bounded policy engine implementation;
 - bounded policy activation by configured budget;
-- allocation / policy observability state publication.
+- allocation / policy observability state publication;
+- typed allocation diagnostic semantics migration.
 ```
 
 The project is now in:
 
 ```text
-CONTROLLED ALLOCATION MIGRATION PHASE
+RUNTIME REFINEMENT PHASE
 ```
 
 Current sub-stage:
 
 ```text
 ACTIVE AVAILABILITY / SERVICE GATE ENABLED
-OBSOLETE WRAPPER CLEANUP COMPLETED
 BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
 OBSERVABILITY PROJECTION CONNECTED
+TYPED ALLOCATION DIAGNOSTICS VERIFIED
 ```
 
 ---
@@ -226,14 +227,47 @@ G_Allocation_Block_Reason
 G_Allocation_Effective_Priority
 ```
 
-Block reason semantics:
+---
+
+## 6. Typed allocation diagnostics completed
+
+Created:
 
 ```text
-0 = no block
-1 = availability / pressure block
-2 = service-state block
-3 = predictive degradation block
-4 = policy budget shed
+E_Heating_Allocation_Block_Reason.dut
+```
+
+Typed semantics:
+
+```text
+NONE
+PRESSURE_UNAVAILABLE
+SERVICE_DISABLED
+PREDICTIVE_DEGRADED
+POLICY_BUDGET_SHED
+FREEZE_BYPASS
+DHW_BYPASS
+```
+
+Converted to typed diagnostics:
+
+```text
+GVL_STATE.G_Allocation_Block_Reason
+FB_Heating_Allocation_Filter.VO_Manifold_Block_Reason
+FB_Heating_Runtime_Observability.VI_Block_Reason
+```
+
+Important correction:
+
+```text
+Initial .typ file was invalid for this project import style.
+The final active type is the .dut object.
+```
+
+CODESYS compile result after correction:
+
+```text
+0 errors
 ```
 
 ---
@@ -261,27 +295,6 @@ output projection
 
 ---
 
-# Explicitly rejected architecture
-
-The following architecture is invalid for reconnect:
-
-```text
-Thermal_Allocation
-→ Orchestration
-→ Execution_Core
-→ Override_Layer
-→ Runtime
-```
-
-Reason:
-
-```text
-would create duplicate runtime authority
-and parallel orchestration ownership.
-```
-
----
-
 # Completed cleanup
 
 Removed from repository root:
@@ -294,6 +307,7 @@ FB_Heating_Orchestration.st
 FB_Heating_Override_Layer.st
 FB_Heating_Decision_Context.st
 FB_Heating_Thermal_Allocation.st
+E_Heating_Allocation_Block_Reason.typ
 ```
 
 Reasons:
@@ -317,6 +331,9 @@ FB_Heating_Decision_Context
 
 FB_Heating_Thermal_Allocation
     → detached legacy allocation scaffold; dynamic inputs had no active sources
+
+E_Heating_Allocation_Block_Reason.typ
+    → invalid extension for project DUT import style; replaced by .dut
 ```
 
 Reference check result:
@@ -338,16 +355,19 @@ Static checks completed:
 - FB_Heating_System_Manager contains projection-only instance;
 - projection call is placed after Allocation_Filter;
 - projection call is placed before Manifold_Control;
+- typed allocation block reason DUT is visible to compiler;
 - runtime ownership path is unchanged.
 ```
 
-Required next check:
+Compile checks completed:
 
 ```text
-CODESYS compile check after observability integration.
+- allocation policy activation: OK
+- runtime observability integration: OK
+- typed allocation diagnostics: OK
 ```
 
-Runtime checks after compile:
+Runtime checks still required:
 
 ```text
 1. default budget does not shed all-manifold demand;
