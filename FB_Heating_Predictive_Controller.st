@@ -6,6 +6,14 @@ VAR
     L_Now_TOD : UDINT;
 END_VAR
 
+// ==============================================================================
+// Ownership note
+// ------------------------------------------------------------------------------
+// This block owns predictive preheat decision only.
+// It does NOT modify thermal demand. Thermal demand is owned by
+// FB_Heating_Thermal_Model and may be interpreted by downstream advisory layers.
+// ==============================================================================
+
 L_Now_TOD := GVL_TIME_SERVICE.G_Time_Of_Day_MS;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
@@ -13,7 +21,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Time_To_Heat := GVL_HEATING_POLICY.G_Zone_Time_To_Heat_MS[L_i];
     L_Time_To_Comfort := GVL_HEATING_POLICY.G_Zone_Comfort_Time_MS[L_i];
 
-    // predictive preheat decision
+    // Predictive preheat decision.
     IF GVL_HEATING_POLICY.G_Zone_Schedule_Enabled[L_i] THEN
 
         IF L_Time_To_Comfort > L_Now_TOD THEN
@@ -26,13 +34,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     END_IF;
 
-    // overshoot prevention
-    IF GVL_HEATING_POLICY.G_Zone_Predicted_Temp_30m[L_i] > GVL_STATE.G_Target_Temperature THEN
-        GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] := 
-            GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] * 0.5;
-    END_IF;
-
-    // confidence gating
+    // Confidence gating.
     IF GVL_HEATING_POLICY.G_Zone_Thermal_Model_Confidence[L_i] < 0.1 THEN
         GVL_HEATING_POLICY.G_Zone_Preheat_Needed[L_i] := FALSE;
     END_IF;
