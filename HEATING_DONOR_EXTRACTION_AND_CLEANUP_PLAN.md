@@ -348,6 +348,7 @@ Current classification:
 
 ```text
 CATEGORY C
+BATCH 4 TARGET
 ```
 
 ---
@@ -357,27 +358,38 @@ CATEGORY C
 Current status:
 
 ```text
-logic absorbed
+verified removed from production root
 ```
 
-Current active owners:
+Verification result:
+
+```text
+- no production-root file remains;
+- no active runtime reference remains;
+- only docs/snapshots/history references remain;
+- active replacement path is FB_Heating_Safety_Gate + FB_Heating_Safe_State.
+```
+
+Historical behavior:
+
+```text
+- floor freeze detection;
+- outdoor freeze detection;
+- forced circulation / pump behavior.
+```
+
+Current active replacement path:
 
 ```text
 FB_Heating_Safety_Gate
 FB_Heating_Safe_State
 ```
 
-Current direction:
-
-```text
-verify production-root status and active replacement path
-```
-
 Current classification:
 
 ```text
 CATEGORY A
-BATCH 3 TARGET
+BATCH 3 VERIFIED COMPLETE
 ```
 
 ---
@@ -387,26 +399,36 @@ BATCH 3 TARGET
 Current status:
 
 ```text
-logic absorbed
+verified removed from production root
 ```
 
-Current active owner:
+Verification result:
+
+```text
+- no production-root file remains;
+- no active runtime reference remains;
+- only docs/snapshots/history references remain;
+- active replacement path is FB_Heating_Circuit_Control.
+```
+
+Historical behavior:
+
+```text
+- floor overheat threshold detection;
+- circuit valve shutdown.
+```
+
+Current active replacement path:
 
 ```text
 FB_Heating_Circuit_Control
-```
-
-Current direction:
-
-```text
-verify production-root status and active replacement path
 ```
 
 Current classification:
 
 ```text
 CATEGORY A
-BATCH 3 TARGET
+BATCH 3 VERIFIED COMPLETE
 ```
 
 ---
@@ -514,16 +536,17 @@ FB_FloorHeating_Overheat_Protection
 Status:
 
 ```text
-NEXT ACTIVE TARGET
+VERIFIED COMPLETE
 ```
 
-Condition before final completion:
+Verification result:
 
 ```text
-- freeze behavior verified in active safety path;
-- overheat behavior verified in circuit control path;
-- production-root file status verified;
-- active reference status verified.
+- no production-root files remain;
+- no active runtime references remain;
+- freeze behavior replacement verified in Safety_Gate + Safe_State;
+- overheat behavior replacement verified in Circuit_Control;
+- snapshots/history copies preserved.
 ```
 
 ---
@@ -534,6 +557,12 @@ Candidate:
 
 ```text
 FB_Heating_Override_Layer
+```
+
+Status:
+
+```text
+NEXT ACTIVE TARGET
 ```
 
 Special rule:
