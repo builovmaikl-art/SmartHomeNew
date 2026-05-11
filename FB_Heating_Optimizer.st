@@ -5,16 +5,27 @@ VAR
     L_Total_Demand : REAL;
 END_VAR
 
+// ==============================================================================
+// Ownership note
+// ------------------------------------------------------------------------------
+// This block calculates optimization diagnostics only.
+// It does NOT modify thermal demand.
+//
+// Thermal demand ownership remains in:
+// FB_Heating_Thermal_Model.
+// ==============================================================================
+
 L_Total_Demand := 0.0;
 
-// calculate total demand
+// Aggregate thermal load estimate.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     L_Total_Demand := L_Total_Demand + ABS(GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i]);
 END_FOR;
 
 GVL_HEATING_POLICY.G_Optimization_Load_Index := L_Total_Demand;
+GVL_HEATING_POLICY.G_Optimization_Energy_Saving_Active := FALSE;
 
-// normalize and optimize
+// Zone optimization diagnostics.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     IF L_Total_Demand > 0.01 THEN
@@ -23,21 +34,12 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         L_Load := 0.0;
     END_IF;
 
-    // priority score
     GVL_HEATING_POLICY.G_Zone_Optimization_Score[L_i] :=
         L_Load +
-        (1.0 - GVL_HEATING_POLICY.G_Zone_Thermal_Model_Confidence[L_i]) * 0.2;
+        ((1.0 - GVL_HEATING_POLICY.G_Zone_Thermal_Model_Confidence[L_i]) * 0.2);
 
-    // load balancing: reduce low priority zones
-    IF GVL_HEATING_POLICY.G_Zone_Optimization_Score[L_i] < 0.2 THEN
-        GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] :=
-            GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] * 0.5;
-    END_IF;
-
-    // peak shaving
+    // Advisory energy-saving indication only.
     IF L_Total_Demand > 5.0 THEN
-        GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] :=
-            GVL_HEATING_POLICY.G_Zone_Thermal_Demand[L_i] * 0.7;
         GVL_HEATING_POLICY.G_Optimization_Energy_Saving_Active := TRUE;
     END_IF;
 
