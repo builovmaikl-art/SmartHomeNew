@@ -57,7 +57,7 @@ VAR_OUTPUT
 
     // Explainability/diagnostics.
     VO_Manifold_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
-    VO_Manifold_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    VO_Manifold_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF E_Heating_Allocation_Block_Reason;
 
     // Policy diagnostics.
     VO_Manifold_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
@@ -82,7 +82,7 @@ L_AnyPolicyBlock := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     VO_Manifold_Demand_Filtered[L_i] := VI_Manifold_Demand_Map[L_i];
     VO_Manifold_Allowed[L_i] := TRUE;
-    VO_Manifold_Block_Reason[L_i] := 0;
+    VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.NONE;
     VO_Manifold_Priority_Effective[L_i] := VI_Manifold_Base_Priority[L_i];
 END_FOR;
 
@@ -100,6 +100,11 @@ END_IF;
 // service gating and policy throttling.
 // ======================================================
 IF VI_Freeze_Mode_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF VI_Manifold_Demand_Map[L_i] THEN
+            VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.FREEZE_BYPASS;
+        END_IF;
+    END_FOR;
     RETURN;
 END_IF;
 
@@ -111,6 +116,11 @@ END_IF;
 // creating duplicate DHW authority here.
 // ======================================================
 IF VI_DHW_Heating_Demand THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+        IF VI_Manifold_Demand_Map[L_i] THEN
+            VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.DHW_BYPASS;
+        END_IF;
+    END_FOR;
     RETURN;
 END_IF;
 
@@ -121,17 +131,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 
     IF NOT VI_Manifold_Available[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
-        VO_Manifold_Block_Reason[L_i] := 1;
+        VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.PRESSURE_UNAVAILABLE;
     END_IF;
 
     IF NOT VI_Manifold_In_Service[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
-        VO_Manifold_Block_Reason[L_i] := 2;
+        VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.SERVICE_DISABLED;
     END_IF;
 
     IF VI_Manifold_Subsystem_Degraded[L_i] THEN
         VO_Manifold_Allowed[L_i] := FALSE;
-        VO_Manifold_Block_Reason[L_i] := 3;
+        VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.PREDICTIVE_DEGRADED;
     END_IF;
 
     IF VI_Manifold_Demand_Map[L_i] AND NOT VO_Manifold_Allowed[L_i] THEN
@@ -189,8 +199,8 @@ FOR L_CurrentPriority := L_MaxPriority TO 0 BY -1 DO
                 L_Used := L_Used + L_Weight;
             ELSE
                 L_AnyPolicyBlock := TRUE;
-                IF VO_Manifold_Block_Reason[L_i] = 0 THEN
-                    VO_Manifold_Block_Reason[L_i] := 4;
+                IF VO_Manifold_Block_Reason[L_i] = E_Heating_Allocation_Block_Reason.NONE THEN
+                    VO_Manifold_Block_Reason[L_i] := E_Heating_Allocation_Block_Reason.POLICY_BUDGET_SHED;
                 END_IF;
             END_IF;
         END_IF;
