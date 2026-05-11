@@ -64,6 +64,7 @@ VAR
     L_Prev_Current : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     L_Error_Instant : REAL;
     L_Confidence : REAL;
+    L_Policy_Target_Adjustment : REAL;
     fbAdaptiveTarget : FB_Heating_Adaptive_Target;
     fbSafetyGate : FB_Heating_Safety_Gate;
     fbSafeState : FB_Heating_Safe_State;
@@ -157,6 +158,24 @@ fbAdaptiveTarget(
     VI_Room_Temps := VI_Room_Temps,
     VO_Target_Supply_Temp => L_Target_Supply_Temp
 );
+
+// Bounded advisory policy bridge.
+// Policy may softly bias supply target,
+// but does not gain authority over runtime demand or safety.
+L_Policy_Target_Adjustment := GVL_HEATING_POLICY.G_Policy_Target_Adjustment;
+
+IF L_Policy_Target_Adjustment > REAL#5.0 THEN
+    L_Policy_Target_Adjustment := REAL#5.0;
+ELSIF L_Policy_Target_Adjustment < REAL#-3.0 THEN
+    L_Policy_Target_Adjustment := REAL#-3.0;
+END_IF;
+
+L_Target_Supply_Temp :=
+    LIMIT(
+        GVL_CONSTANTS.C_BOILER_SETPOINT_MIN,
+        L_Target_Supply_Temp + L_Policy_Target_Adjustment,
+        GVL_CONSTANTS.C_BOILER_SETPOINT_MAX
+    );
 
 fbCircuitControl(
     VI_System_Time_MS := VI_System_Time_MS,
