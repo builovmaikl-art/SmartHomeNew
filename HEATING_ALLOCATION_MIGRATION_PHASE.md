@@ -15,7 +15,8 @@ The project has completed:
 - first useful allocation gate activation;
 - obsolete heating wrapper cleanup;
 - bounded policy engine implementation;
-- bounded policy activation by configured budget.
+- bounded policy activation by configured budget;
+- allocation / policy observability state publication.
 ```
 
 The project is now in:
@@ -30,6 +31,7 @@ Current sub-stage:
 ACTIVE AVAILABILITY / SERVICE GATE ENABLED
 OBSOLETE WRAPPER CLEANUP COMPLETED
 BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
+OBSERVABILITY PROJECTION CONNECTED
 ```
 
 ---
@@ -80,9 +82,12 @@ Integrated chain:
 Circuit_Control
 → Demand_Map
 → Allocation_Filter
+→ Runtime_Observability
 → Manifold_Control
 → Boiler_Control
 ```
+
+Runtime observability is projection-only and does not participate in control authority.
 
 Current runtime ownership preserved.
 
@@ -135,7 +140,7 @@ FB_Heating_Manifold_Control.VI_Any_Zone_Active
 
 ## 4. Bounded policy layer implemented and enabled by configuration
 
-`FB_Heating_Allocation_Filter` now contains a bounded policy layer:
+`FB_Heating_Allocation_Filter` contains a bounded policy layer:
 
 ```text
 - priority-based manifold selection;
@@ -177,6 +182,59 @@ Therefore default policy activation should not shed normal all-manifold demand.
 
 The layer can only reduce already authorized demand.
 It cannot create new demand and cannot write physical outputs.
+
+---
+
+## 5. Runtime observability projection connected
+
+Created:
+
+```text
+FB_Heating_Runtime_Observability
+```
+
+Purpose:
+
+```text
+projection / publication layer only
+```
+
+Explicitly NOT:
+
+```text
+- runtime owner;
+- output authority;
+- demand modifier;
+- arbitration layer;
+- safety owner.
+```
+
+Connected in `FB_Heating_System_Manager` after `FB_Heating_Allocation_Filter`.
+
+Publishes to `GVL_STATE`:
+
+```text
+G_Allocation_Policy_Active
+G_Allocation_Freeze_Bypass_Active
+G_Allocation_DHW_Bypass_Active
+G_Allocation_Budget_Max
+G_Allocation_Budget_Used
+G_Allocation_Requested
+G_Allocation_Allowed
+G_Allocation_Filtered
+G_Allocation_Block_Reason
+G_Allocation_Effective_Priority
+```
+
+Block reason semantics:
+
+```text
+0 = no block
+1 = availability / pressure block
+2 = service-state block
+3 = predictive degradation block
+4 = policy budget shed
+```
 
 ---
 
@@ -234,6 +292,8 @@ FB_FloorHeating_Overheat_Protection.st
 FB_Heating_Execution_Core.st
 FB_Heating_Orchestration.st
 FB_Heating_Override_Layer.st
+FB_Heating_Decision_Context.st
+FB_Heating_Thermal_Allocation.st
 ```
 
 Reasons:
@@ -251,6 +311,12 @@ FB_Heating_Orchestration
 
 FB_Heating_Override_Layer
     → dangerous hard-authority output override layer
+
+FB_Heating_Decision_Context
+    → bounded useful behavior absorbed into Allocation_Filter
+
+FB_Heating_Thermal_Allocation
+    → detached legacy allocation scaffold; dynamic inputs had no active sources
 ```
 
 Reference check result:
@@ -262,39 +328,33 @@ Historical copies remain in snapshots/docs/logs.
 
 ---
 
-# Remaining source/reference blocks
+# Current technical verification status
 
-Kept for now:
+Static checks completed:
 
 ```text
-FB_Heating_Thermal_Allocation.st
-FB_Heating_Decision_Context.st
+- GVL_STATE allocation observability fields exist;
+- FB_Heating_Runtime_Observability writes only those fields;
+- FB_Heating_System_Manager contains projection-only instance;
+- projection call is placed after Allocation_Filter;
+- projection call is placed before Manifold_Control;
+- runtime ownership path is unchanged.
 ```
 
-Reason:
+Required next check:
 
 ```text
-these are still historical source/reference blocks until final policy verification is complete.
+CODESYS compile check after observability integration.
 ```
 
-Do not reconnect them directly.
-
-Delete only after confirming the new bounded policy layer covers required behavior or the old behavior is explicitly rejected.
-
----
-
-# Next technical checks
-
-Required next checks:
+Runtime checks after compile:
 
 ```text
-1. CODESYS compile check after policy activation;
-2. verify default budget does not shed all-manifold demand;
-3. verify freeze mode bypasses policy throttling;
-4. verify DHW ownership remains with existing active owners;
-5. verify service/pressure gate still works under policy layer;
-6. verify policy degraded publication is acceptable;
-7. then decide whether Thermal_Allocation / Decision_Context can be removed.
+1. default budget does not shed all-manifold demand;
+2. freeze mode bypasses policy throttling;
+3. DHW ownership remains with existing active owners;
+4. service/pressure gate works under policy layer;
+5. G_Allocation_* fields match expected runtime state.
 ```
 
 ---
