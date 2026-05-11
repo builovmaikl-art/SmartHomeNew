@@ -13,7 +13,8 @@
 // - allocation snapshot publication;
 // - policy diagnostics projection;
 // - freeze/DHW bypass visibility;
-// - runtime explainability.
+// - runtime explainability;
+// - bounded policy bridge visibility.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Runtime_Observability
 VAR_INPUT
@@ -33,6 +34,8 @@ VAR_INPUT
 END_VAR
 VAR
     L_i : INT;
+    L_Policy_Target_Adjustment : REAL;
+    L_Policy_Priority_Multiplier : REAL;
 END_VAR
 
 GVL_STATE.G_Allocation_Policy_Active := VI_Policy_Active;
@@ -50,6 +53,26 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_STATE.G_Allocation_Block_Reason[L_i] := VI_Block_Reason[L_i];
     GVL_STATE.G_Allocation_Effective_Priority[L_i] := VI_Effective_Priority[L_i];
 END_FOR;
+
+// Bounded policy bridge visibility.
+// Mirrors the same clamp used by FB_Heating_System_Manager.
+L_Policy_Target_Adjustment := GVL_HEATING_POLICY.G_Policy_Target_Adjustment;
+IF L_Policy_Target_Adjustment > REAL#5.0 THEN
+    L_Policy_Target_Adjustment := REAL#5.0;
+ELSIF L_Policy_Target_Adjustment < REAL#-3.0 THEN
+    L_Policy_Target_Adjustment := REAL#-3.0;
+END_IF;
+
+L_Policy_Priority_Multiplier := GVL_HEATING_POLICY.G_Policy_Priority_Multiplier;
+IF L_Policy_Priority_Multiplier < REAL#0.3 THEN
+    L_Policy_Priority_Multiplier := REAL#0.3;
+ELSIF L_Policy_Priority_Multiplier > REAL#1.0 THEN
+    L_Policy_Priority_Multiplier := REAL#1.0;
+END_IF;
+
+GVL_STATE.G_Policy_Target_Adjustment_Applied := L_Policy_Target_Adjustment;
+GVL_STATE.G_Policy_Target_Adjustment_Active := ABS(L_Policy_Target_Adjustment) > REAL#0.001;
+GVL_STATE.G_Policy_Priority_Multiplier_Applied := L_Policy_Priority_Multiplier;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Runtime_Observability <<<
