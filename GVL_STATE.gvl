@@ -88,7 +88,7 @@ VAR_GLOBAL
     G_Allocation_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Allocation_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_Allocation_Filtered : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
-    G_Allocation_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+    G_Allocation_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF E_Heating_Allocation_Block_Reason;
     G_Allocation_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
     G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
