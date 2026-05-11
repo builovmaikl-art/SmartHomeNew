@@ -35,8 +35,6 @@ HEATING_ALLOCATION_MIGRATION_PHASE.md
 
 # Core engineering rule
 
-The project now follows:
-
 ```text
 DONOR EXTRACTION FIRST
 RECONNECT NEVER BY DEFAULT
@@ -182,7 +180,16 @@ no blind deletion
 Current status:
 
 ```text
-already substantially extracted
+verified removed from production root
+```
+
+Verification result:
+
+```text
+- no production-root file remains;
+- no active runtime reference remains;
+- only docs/test-harness/snapshots/history references remain;
+- active replacement path is FB_Heating_Allocation_Filter.
 ```
 
 Useful behavior historically provided:
@@ -202,17 +209,11 @@ Current active replacement path:
 FB_Heating_Allocation_Filter
 ```
 
-Current direction:
-
-```text
-verify no remaining unique behavior
-→ then delete donor
-```
-
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 2 VERIFIED COMPLETE
 ```
 
 ---
@@ -222,7 +223,16 @@ CATEGORY A
 Current status:
 
 ```text
-already substantially extracted
+verified removed from production root
+```
+
+Verification result:
+
+```text
+- no production-root file remains;
+- no active runtime reference remains;
+- only docs/snapshots/history references remain;
+- active replacement path is FB_Heating_Policy_Priority_Bridge + FB_Heating_Allocation_Filter.
 ```
 
 Useful behavior historically provided:
@@ -243,17 +253,11 @@ FB_Heating_Policy_Priority_Bridge
 FB_Heating_Allocation_Filter
 ```
 
-Current direction:
-
-```text
-verify no remaining unique behavior
-→ then delete donor
-```
-
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 2 VERIFIED COMPLETE
 ```
 
 ---
@@ -366,13 +370,14 @@ FB_Heating_Safe_State
 Current direction:
 
 ```text
-delete after final verification
+verify production-root status and active replacement path
 ```
 
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 3 TARGET
 ```
 
 ---
@@ -394,13 +399,14 @@ FB_Heating_Circuit_Control
 Current direction:
 
 ```text
-delete after final verification
+verify production-root status and active replacement path
 ```
 
 Current classification:
 
 ```text
 CATEGORY A
+BATCH 3 TARGET
 ```
 
 ---
@@ -445,10 +451,6 @@ CATEGORY D
 
 # Cleanup strategy
 
-The cleanup strategy must proceed in batches.
-
----
-
 ## Batch 1 — Proven obsolete wrappers
 
 Candidates:
@@ -483,18 +485,19 @@ FB_Heating_Decision_Context
 FB_Heating_Thermal_Allocation
 ```
 
-Condition before deletion:
+Status:
 
 ```text
-- active bridge/filter path verified;
-- no remaining unique logic;
-- compile-safe replacement confirmed.
+VERIFIED COMPLETE
 ```
 
-Current next focus:
+Verification result:
 
 ```text
-ACTIVE
+- no production-root files remain;
+- no active runtime references remain;
+- active replacement path verified through Allocation_Filter and Policy_Priority_Bridge;
+- snapshots/history copies preserved.
 ```
 
 ---
@@ -508,11 +511,19 @@ FB_FloorHeating_Freeze_Protection
 FB_FloorHeating_Overheat_Protection
 ```
 
-Condition before deletion:
+Status:
+
+```text
+NEXT ACTIVE TARGET
+```
+
+Condition before final completion:
 
 ```text
 - freeze behavior verified in active safety path;
-- overheat behavior verified in circuit control path.
+- overheat behavior verified in circuit control path;
+- production-root file status verified;
+- active reference status verified.
 ```
 
 ---
@@ -542,7 +553,7 @@ that may still be useful architecturally.
 
 # Required verification workflow
 
-Before any donor deletion:
+Before any donor deletion or verified-complete marking:
 
 ```text
 1. repository reference search;
