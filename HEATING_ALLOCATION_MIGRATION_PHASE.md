@@ -17,7 +17,8 @@ The project has completed:
 - bounded policy engine implementation;
 - bounded policy activation by configured budget;
 - allocation / policy observability state publication;
-- typed allocation diagnostic semantics migration.
+- typed allocation diagnostic semantics migration;
+- heating policy / intelligence ownership normalization.
 ```
 
 The project is now in:
@@ -33,6 +34,7 @@ ACTIVE AVAILABILITY / SERVICE GATE ENABLED
 BOUNDED POLICY LAYER ENABLED BY CONFIGURED BUDGET
 OBSERVABILITY PROJECTION CONNECTED
 TYPED ALLOCATION DIAGNOSTICS VERIFIED
+POLICY / INTELLIGENCE LAYER NORMALIZED BUT NOT YET CONNECTED TO RUNTIME
 ```
 
 ---
@@ -272,6 +274,107 @@ CODESYS compile result after correction:
 
 ---
 
+## 7. Heating policy / intelligence ownership normalized
+
+`GVL_HEATING_POLICY` remains an advisory / intelligence layer.
+It is not yet directly connected to active heating runtime decisions.
+
+Normalized ownership:
+
+```text
+FB_Heating_Thermal_Model
+    → G_Zone_Thermal_Response
+    → G_Zone_Thermal_Demand
+    → G_Zone_Time_To_Heat_MS
+    → G_Zone_Thermal_Model_Confidence
+    → heat loss/gain and predicted temperature diagnostics
+
+FB_Heating_Predictive_Controller
+    → G_Zone_Preheat_Needed
+
+FB_Heating_Optimizer
+    → G_Zone_Optimization_Score
+    → G_Optimization_Load_Index
+    → G_Optimization_Energy_Saving_Active
+
+FB_Heating_Policy_Observer
+    → G_Zone_Empty_Duration_MS
+    → G_Zone_Policy_Class
+    → G_Zone_Target_Adjustment
+    → G_Zone_Priority_Bias
+
+FB_Heating_Schedule_Preheat
+    → G_Zone_Schedule_Preheat_Active
+    → bounded schedule/preheat boost on G_Zone_Target_Adjustment
+    → learned schedule offset diagnostics
+
+FB_Heating_Policy_Manager
+    → G_Policy_Mode
+    → G_Policy_Block_Heating_Request
+    → G_Policy_Target_Adjustment
+    → G_Policy_Priority_Multiplier
+    → G_Policy_Predictive_Adjustment
+    → G_Policy_Predictive_Active
+    → G_Policy_* feedback and self-tune diagnostics
+    → G_Zone_Quality / G_Zone_Improving / G_Zone_Stable / G_Zone_Self_Level
+```
+
+Removed conflicting writes:
+
+```text
+FB_Heating_Policy_Manager no longer writes:
+    - G_Zone_Thermal_Response
+    - G_Zone_Thermal_Demand
+    - G_Zone_Time_To_Heat_MS
+    - G_Zone_Preheat_Needed
+    - G_Zone_Target_Adjustment
+
+FB_Heating_Predictive_Controller no longer writes:
+    - G_Zone_Thermal_Demand
+
+FB_Heating_Optimizer no longer writes:
+    - G_Zone_Thermal_Demand
+```
+
+Current architectural status:
+
+```text
+ACTIVE RUNTIME
+    FB_Heating_System_Manager / Allocation_Filter / Manifold_Control / Boiler_Control
+
+POLICY INTELLIGENCE
+    GVL_HEATING_POLICY and related FBs
+
+Bridge status:
+    intentionally minimal;
+    no direct hard-authority connection yet.
+```
+
+Fields that look mature for future bounded connection:
+
+```text
+G_Zone_Target_Adjustment
+G_Zone_Priority_Bias
+G_Zone_Preheat_Needed
+G_Zone_Schedule_Preheat_Active
+G_Policy_Target_Adjustment
+G_Policy_Priority_Multiplier
+```
+
+Fields that must not be connected as hard authority without explicit design:
+
+```text
+G_Policy_Block_Heating_Request
+```
+
+Reason:
+
+```text
+It has safety-like blocking semantics and currently does not directly govern PRG_Heating runtime.
+```
+
+---
+
 # Preserved behavior
 
 The following behavior remains owned by existing active runtime blocks:
@@ -356,7 +459,9 @@ Static checks completed:
 - projection call is placed after Allocation_Filter;
 - projection call is placed before Manifold_Control;
 - typed allocation block reason DUT is visible to compiler;
-- runtime ownership path is unchanged.
+- runtime ownership path is unchanged;
+- GVL_HEATING_POLICY writer ownership normalized;
+- conflicting thermal-demand writers removed.
 ```
 
 Compile checks completed:
@@ -365,6 +470,7 @@ Compile checks completed:
 - allocation policy activation: OK
 - runtime observability integration: OK
 - typed allocation diagnostics: OK
+- heating policy ownership cleanup: OK
 ```
 
 Runtime checks still required:
@@ -374,7 +480,8 @@ Runtime checks still required:
 2. freeze mode bypasses policy throttling;
 3. DHW ownership remains with existing active owners;
 4. service/pressure gate works under policy layer;
-5. G_Allocation_* fields match expected runtime state.
+5. G_Allocation_* fields match expected runtime state;
+6. policy/intelligence values remain advisory until explicit bridge is added.
 ```
 
 ---
