@@ -95,6 +95,9 @@ VAR_GLOBAL
     G_Policy_Target_Adjustment_Active : BOOL;
     G_Policy_Target_Adjustment_Applied : REAL;
     G_Policy_Priority_Multiplier_Applied : REAL;
+    G_Policy_Priority_Bridge_Active : BOOL;
+    G_Policy_Priority_Bias_Applied : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Policy_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
     G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
     G_Heating_RootConfidence : REAL;
