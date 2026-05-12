@@ -1,0 +1,46 @@
+VAR_GLOBAL
+    // ======================================================
+    // DISTRIBUTED IMMUTABLE SNAPSHOT STATE
+    // ======================================================
+    // Peer immutable publication snapshot reconciliation.
+    // Publication-authoritative only: does not invalidate
+    // runtime barrier, PLC fencing or local snapshot freeze.
+    // ======================================================
+
+    Distributed_Snapshot_Epoch : ULINT := 0;
+    Distributed_Snapshot_Reconciliation_Epoch : ULINT := 0;
+
+    Local_Distributed_Snapshot_Epoch : ULINT := 0;
+    Peer_Distributed_Snapshot_Epoch : ULINT := 0;
+
+    Local_Runtime_Snapshot_Epoch : ULINT := 0;
+    Peer_Runtime_Snapshot_Epoch : ULINT := 0;
+
+    Local_Publication_Epoch : ULINT := 0;
+    Peer_Publication_Epoch : ULINT := 0;
+
+    Distributed_Snapshot_Frozen : BOOL := FALSE;
+    Peer_Snapshot_Immutable : BOOL := FALSE;
+
+    Distributed_Publication_Reconciled : BOOL := FALSE;
+    Distributed_Publication_Freeze_Valid : BOOL := FALSE;
+    Distributed_Snapshot_Consistent : BOOL := FALSE;
+
+    Peer_Publication_Stale : BOOL := FALSE;
+    Peer_Snapshot_Not_Immutable : BOOL := FALSE;
+    Peer_Publication_Divergence : BOOL := FALSE;
+    Peer_Publication_Reconciliation_Lost : BOOL := FALSE;
+
+    Distributed_Snapshot_Quarantine_Active : BOOL := FALSE;
+    Distributed_Snapshot_Forced_Safe_Mode : BOOL := FALSE;
+
+    Peer_Snapshot_Last_Refresh_MS : UDINT := 0;
+    Peer_Snapshot_Lease_Active : BOOL := FALSE;
+    Peer_Snapshot_Lease_Expired : BOOL := FALSE;
+    Peer_Snapshot_Lease_Timeout_MS : UDINT := 5000;
+
+    Distributed_Snapshot_Last_Error_Code : UDINT := 0;
+    Distributed_Snapshot_Last_Error_Text : STRING(160) := '';
+
+    Distributed_Snapshot_Invalidation_Count : UDINT := 0;
+END_VAR
