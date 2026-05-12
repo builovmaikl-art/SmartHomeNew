@@ -17,9 +17,6 @@ VAR_GLOBAL
     Local_Prepare_Epoch : ULINT := 0;
     Peer_Prepare_Epoch : ULINT := 0;
 
-    Local_Commit_Token : ULINT := 0;
-    Peer_Commit_Token : ULINT := 0;
-
     Publication_Prepare_Active : BOOL := FALSE;
     Publication_Prepare_Valid : BOOL := FALSE;
     Publication_Commit_Requested : BOOL := FALSE;
