@@ -214,8 +214,6 @@ GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Active := FALSE;
 GVL_STATUS.G_Diagnostics.Manifold_Current_First_Fault_Index := 0;
 GVL_STATUS.G_Diagnostics.Manifold_Pressure_Fault_Text := '';
 GVL_STATUS.G_Diagnostics.Manifold_Current_Fault_Text := '';
-GVL_STATUS.G_Diagnostics.Sensor_Fault := FALSE;
-GVL_STATUS.G_Diagnostics.Subsystem_Degraded := FALSE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF GVL_IO.AI_Manifold_Pressures[L_i] < 0 THEN
