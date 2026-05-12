@@ -39,6 +39,7 @@
 ✔ Runtime ownership consistency
 ✔ Intent/Policy/Command arbitration chain
 ✔ IO write / physical projection ownership
+✔ Transport / Modbus / OpenTherm ownership
 ```
 
 ---
@@ -544,6 +545,145 @@ MEDIUM
 
 ---
 
+# RISK-007
+
+## Stale transport state acceptance
+
+## Суть
+
+Transport layer:
+
+```text
+слишком доверяет external wire state
+без explicit freshness governance.
+```
+
+Например:
+
+```text
+PRG_OpenTherm_Transport:
+- декодирует wire image;
+- публикует Raw_Status;
+- считает transport online.
+```
+
+Но при этом отсутствует полноценное:
+
+```text
+- stale frame detection;
+- heartbeat aging governance;
+- stale ACK validation;
+- frozen transport supervision.
+```
+
+---
+
+## Что показала проверка
+
+Критических ownership conflicts:
+
+```text
+не найдено.
+```
+
+Также подтверждено:
+
+```text
+✔ transport layer остаётся bounded
+✔ protocol ownership coherent
+✔ hidden boiler authority не найден
+✔ direct output bypass не найден
+✔ Modbus scheduler isolation корректен
+✔ OpenTherm transport isolation корректен
+```
+
+---
+
+## Проблема
+
+Сейчас:
+
+```text
+старые valid transport данные
+могут продолжать выглядеть валидными.
+```
+
+Особенно опасно если:
+
+```text
+- serial transport завис;
+- adapter подвис;
+- wire image перестал обновляться;
+- heartbeat frozen;
+- stale ACK остаётся valid.
+```
+
+---
+
+## Возможные последствия в будущем
+
+```text
+- stale boiler state;
+- false online state;
+- delayed fault detection;
+- dangerous trust in frozen transport;
+- recovery instability.
+```
+
+---
+
+## Что важно
+
+Пока:
+
+```text
+runtime deterministic.
+```
+
+И:
+
+```text
+transport layer
+не владеет runtime policy.
+```
+
+Но:
+
+```text
+freshness governance gap
+присутствует.
+```
+
+---
+
+## Рекомендуемое направление
+
+В будущем желательно:
+
+```text
+formalize:
+- freshness ownership;
+- stale-state invalidation;
+- transport aging policy;
+- ACK expiration governance.
+```
+
+---
+
+## Статус
+
+```text
+АКТИВНЫЙ РИСК
+```
+
+Severity:
+
+```text
+MEDIUM
+```
+
+---
+
 # Что дополнительно подтверждено
 
 # Heating runtime
@@ -620,6 +760,20 @@ MEDIUM
 ✔ physical IO ownership централизован
 ✔ hidden hardware bypass пока не найден
 ✔ domain layers используют dedicated OUTPUT GVL
+```
+
+---
+
+# Transport ownership
+
+Подтверждено:
+
+```text
+✔ transport layer не владеет runtime policy
+✔ hidden boiler authority не найден
+✔ transport isolation coherent
+✔ protocol ownership централизован
+✔ direct IO bypass не найден
 ```
 
 ---
@@ -722,15 +876,15 @@ MEDIUM
 Следующий этап проверки:
 
 ```text
-Transport / Modbus / OpenTherm ownership
+Diagnostics / History / Explainability / Health
 ```
 
 Там наиболее вероятны:
 
 ```text
-- transport/runtime coupling;
-- hidden boiler authority;
-- duplicated transport ownership;
-- stale communication recovery;
-- transport-layer command bypass.
+- recursive degradation loops;
+- stale diagnostics;
+- hidden runtime mutation из observability layers;
+- health escalation feedback;
+- explainability/runtime coupling.
 ```
