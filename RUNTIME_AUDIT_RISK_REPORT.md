@@ -47,6 +47,7 @@
 ✔ Diagnostics / observability audit
 ✔ Runtime ownership / authority audit
 ✔ Runtime synchronization / temporal consistency audit
+✔ Safety dominance / invariant enforcement audit
 ```
 
 ---
@@ -307,72 +308,91 @@ HIGH
 
 ## Absence of authoritative runtime snapshot/publication model
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-026
+
+## Absence of formal runtime invariant enforcement layer
+
 ## Суть
 
 В системе фактически отсутствует:
 
 ```text
-centralized runtime publication/snapshot layer.
+formal invariant enforcement layer.
 ```
 
 Проверка показала:
 
 ```text
-- unified runtime publication layer не найден;
-- staged publication semantics отсутствуют;
-- runtime snapshot model отсутствует;
-- centralized cached-runtime visibility отсутствует.
+- centralized impossible-state validator не найден;
+- runtime consistency reconciliation layer отсутствует;
+- formal invariant enforcement semantics отсутствуют;
+- cross-domain invariant validation отсутствует.
 ```
 
 ---
 
 ## Проблема
 
+Safety semantics сейчас:
+
+```text
+distributed and assumption-based.
+```
+
 Subsystem:
 
 ```text
-читают runtime state
-не из единого snapshot,
-а напрямую
-из mutable live globals.
+предполагают,
+что:
+- dangerous combinations не появятся;
+- safety suppression сохранится;
+- orchestration phases не создадут invalid state.
 ```
 
-Во время одного PLC cycle:
+Но:
 
 ```text
-часть subsystem
-может видеть:
-- старое state;
-- partially updated state;
-- уже overridden state;
-- state следующей orchestration phase.
+нет authoritative layer,
+который это гарантирует.
+```
+
+---
+
+## Почему это опасно
+
+Runtime theoretically может:
+
+```text
+создать impossible/intermediate state,
+который:
+- не запрещён centrally;
+- не validated globally;
+- не reconciled before execution.
+```
+
+Особенно при:
+
+```text
+- arbitration override;
+- degraded recovery;
+- startup transient;
+- cross-domain escalation;
+- partially updated runtime state.
 ```
 
 Возникает:
 
 ```text
-temporal semantic inconsistency.
-```
-
----
-
-## Особенно опасно
-
-Когда:
-
-```text
-- arbitration;
-- safety suppression;
-- recovery escalation;
-- diagnostics publication;
-- transport update;
-- persistence replay.
-```
-
-происходят:
-
-```text
-в разных execution phases.
+implicit safety assumptions
+without authoritative invariant enforcement.
 ```
 
 ---
@@ -380,12 +400,11 @@ temporal semantic inconsistency.
 ## Возможные последствия
 
 ```text
-- timing-dependent behavior;
-- cross-cycle inconsistency windows;
-- stale runtime visibility;
-- partially updated orchestration decisions;
-- difficult deterministic replay/debugging;
-- hidden temporal races.
+- theoretically impossible runtime states;
+- latent unsafe orchestration combinations;
+- safety drift between subsystems;
+- hidden invariant violations;
+- timing-dependent unsafe intermediate states.
 ```
 
 ---
@@ -395,26 +414,26 @@ temporal semantic inconsistency.
 Нужно formalize:
 
 ```text
-authoritative runtime snapshot/publication model.
+runtime invariant enforcement model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- cycle-wide runtime snapshot;
-- staged publication phases;
-- immutable runtime-read model;
-- centralized runtime visibility layer;
-- publication barrier semantics.
+- centralized invariant validator;
+- impossible-state reconciliation;
+- safety dominance layer;
+- cross-domain invariant checks;
+- authoritative invariant enforcement phase.
 ```
 
 Также желательно:
 
 ```text
-- deterministic runtime replay model;
-- snapshot-based orchestration;
-- temporal consistency contract;
-- runtime phase synchronization rules.
+- invariant specification catalog;
+- deterministic invariant reconciliation;
+- runtime safety proof semantics;
+- invariant-aware orchestration contracts.
 ```
 
 ---
