@@ -1,9 +1,10 @@
 VAR_GLOBAL
     // ======================================================
-    // RECOVERY CLEANUP GOVERNANCE STATE
+    // RECOVERY CLEANUP STATE
     // ======================================================
-    // Centralized recovery semantic cleanup authority.
-    // Prevents semantic residue resurrection after recovery.
+    // Centralized downstream recovery cleanup and residue state.
+    // Recovery cleanup does not participate in upstream runtime
+    // publication authority and must not feed back into runtime barrier.
     // ======================================================
 
     Recovery_Epoch : ULINT := 0;
