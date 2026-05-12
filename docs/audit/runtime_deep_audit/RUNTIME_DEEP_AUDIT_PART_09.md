@@ -82,6 +82,39 @@ Transport semantics mutate runtime context after arbitration decision but before
 
 ---
 
+# RISK-039
+
+## Absence of authoritative impossible-state rejection layer
+
+### Runtime mechanics
+System assumes impossible or contradictory semantic combinations cannot happen, but formal rejection barriers are absent.
+
+### Trigger conditions
+- startup transient overlap;
+- degraded/recovery overlap;
+- stale persistence replay;
+- transport resurrection;
+- arbitration drift.
+
+### Failure chain
+Runtime enters semantically impossible or contradictory state and survives across multiple PLC cycles.
+
+### Consequences
+- contradictory runtime truth coexistence;
+- invalid authority survival;
+- impossible semantic combinations reaching IO;
+- silent systemic corruption;
+- nondeterministic catastrophic behavior.
+
+### Corrective directions
+- invariant/assert enforcement layer;
+- impossible-state rejection barriers;
+- contradictory-authority detection;
+- mutually-exclusive semantic validation;
+- impossible-state diagnostics.
+
+---
+
 # Final forensic audit note
 
 Current forensic runtime audit:
