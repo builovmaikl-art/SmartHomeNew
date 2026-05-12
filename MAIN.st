@@ -76,29 +76,32 @@ PRG_Runtime_Snapshot_Governor();
 // 12. Distributed epoch reconciliation governance
 PRG_Distributed_Epoch_Governor();
 
-// 13. Observability authority governance
+// 13. Distributed immutable snapshot reconciliation governance
+PRG_Distributed_Snapshot_Governor();
+
+// 14. Observability authority governance
 PRG_Observability_Governor();
 
-// 14. Recovery cleanup governance
+// 15. Recovery cleanup governance
 PRG_Recovery_Cleanup_Governor();
 
-// 15. Domain execution and projection
+// 16. Domain execution and projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 16. Pre-output safety barrier
+// 17. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 17. Output freshness governance
+// 18. Output freshness governance
 PRG_Output_Freshness_Governor();
 
-// 18. Final physical IO projection
+// 19. Final physical IO projection
 PRG_IO_Write();
 
-// 19. Verification, diagnostics, history, HMI
+// 20. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
