@@ -1,21 +1,16 @@
 VAR_GLOBAL
     // ======================================================
-    // OBSERVABILITY AUTHORITY STATE
+    // OBSERVABILITY VISIBILITY STATE
     // ======================================================
-    // Centralized authoritative observability governance.
-    // Prevents false-safe visibility windows.
+    // Centralized downstream visibility aggregation only.
+    // Does not participate in runtime authority.
     // ======================================================
 
     Observability_Epoch : ULINT := 0;
     Observability_Snapshot_Epoch : ULINT := 0;
 
-    Authority_Snapshot_Valid : BOOL := FALSE;
-    Diagnostics_Synchronized : BOOL := FALSE;
-    Explainability_Synchronized : BOOL := FALSE;
-
     Unsafe_State_Published : BOOL := FALSE;
     Emergency_Visibility_Required : BOOL := FALSE;
-    PreActuation_Visibility_Ready : BOOL := FALSE;
 
     Runtime_Failure_Visible : BOOL := FALSE;
     Output_Decay_Visible : BOOL := FALSE;
@@ -54,9 +49,6 @@ VAR_GLOBAL
     // ======================================================
     // DISTRIBUTED COMMIT VISIBILITY
     // ======================================================
-    // Publication continuity visibility only.
-    // Downstream-only. Does not invalidate runtime authority.
-    // ======================================================
 
     Distributed_Commit_Visible : BOOL := FALSE;
     Distributed_Commit_Quarantine_Visible : BOOL := FALSE;
@@ -71,12 +63,8 @@ VAR_GLOBAL
 
     Commit_Lease_Expired_Visible : BOOL := FALSE;
 
-    Observability_Quarantine_Active : BOOL := FALSE;
-
     Observability_Last_Publication_MS : UDINT := 0;
 
     Observability_Last_Error_Code : UDINT := 0;
     Observability_Last_Error_Text : STRING(160) := '';
-
-    Observability_Invalidation_Count : UDINT := 0;
 END_VAR
