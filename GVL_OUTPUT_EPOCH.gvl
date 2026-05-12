@@ -23,6 +23,10 @@ VAR_GLOBAL
     Output_Stale_Detected : BOOL := FALSE;
     Output_Forced_Safe_Decay : BOOL := FALSE;
 
+    // Advisory-only semantic continuity visibility.
+    // Does not hard-stop physical output publication.
+    Output_Semantic_Continuity_Warning : BOOL := FALSE;
+
     Output_Last_Error_Code : UDINT := 0;
     Output_Last_Error_Text : STRING(160) := '';
 
