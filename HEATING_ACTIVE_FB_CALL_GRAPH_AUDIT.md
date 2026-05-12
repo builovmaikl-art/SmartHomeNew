@@ -2,27 +2,21 @@
 
 # Purpose
 
-This document now serves as a verified runtime ownership and donor-extraction audit.
+This document serves as the canonical runtime ownership and governance audit for the heating subsystem.
 
-The repository is no longer in:
+Current repository phase:
 
 ```text
-reconnect-first investigation phase
+GOVERNED PHASE-ORIENTED RUNTIME MAINTENANCE
 ```
 
-Current phase:
+The purpose is:
 
 ```text
-GOVERNED RUNTIME MAINTENANCE
-```
-
-The current purpose is:
-
-```text
-- document verified active runtime ownership;
-- classify historical donor FBs;
-- document absorbed logic paths;
-- prevent detached runtime resurrection;
+- document verified runtime ownership;
+- document deterministic runtime phases;
+- prevent detached orchestration resurrection;
+- preserve bounded ownership;
 - preserve compile/runtime stability.
 ```
 
@@ -34,15 +28,27 @@ Current confirmed state:
 
 ```text
 0 compile errors
-0 runtime authority conflicts detected during audit
-active runtime ownership chain verified
+single runtime ownership path verified
+phase-oriented orchestration verified
 ```
 
-Verified active runtime chain:
+Canonical runtime chain:
 
 ```text
 PRG_Heating
-→ FB_Heating_System_Manager
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Subsystem ownership chain:
+
+```text
+FB_Heating_System_Manager
     → Safety_Gate
     → Safe_State
     → Circuit_Control
@@ -51,11 +57,10 @@ PRG_Heating
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
-    → System_Manager post-manifold safety/test finalization
     → Boiler_Control
 ```
 
-Important:
+Important invariants:
 
 ```text
 compile participation
@@ -66,375 +71,141 @@ runtime ownership
 and:
 
 ```text
-grey POU
-≠
-automatically dead code.
+single active runtime authority path
 ```
 
 ---
 
-# Strategic correction
+# Runtime phase architecture
 
-The previous investigation focused on:
+The runtime orchestration was decomposed into deterministic bounded phases.
+
+Integrated runtime phases:
 
 ```text
-reconnect of historical orchestration fragments
+FB_Heating_Runtime_Observer_Phase
+FB_Heating_Runtime_Service_Gating_Phase
+FB_Heating_Runtime_State_Publication_Phase
+FB_Heating_Runtime_Diagnostics_Phase
+FB_Heating_Runtime_Output_Projection_Phase
 ```
 
-The verified conclusion is now:
+Current orchestrator role:
 
 ```text
-historical detached orchestration/runtime layers
-must NOT be reconnected.
-```
-
-The repository evolved toward:
-
-```text
-clean active runtime ownership
-+
-bounded helper execution
-+
-post-manifold finalization
-+
-passive governance/observability scaffold
+PRG_Heating acts primarily as:
+- sequencing layer;
+- phase scheduler;
+- runtime context coordinator.
 ```
 
 ---
 
-# Group 1 — Heating orchestration/allocation donor family
+# Verified donor cleanup result
 
-Historical donor examples:
+The historical disconnected donor cleanup is considered complete.
+
+Verified removed donor groups:
+
+```text
+- detached orchestration wrappers;
+- obsolete allocation layers;
+- duplicated protection layers;
+- disconnected Runtime_* scaffold;
+- detached diagnostics donors;
+- unused governance scaffold;
+- obsolete supervision scaffold.
+```
+
+Important:
+
+```text
+snapshots/history were intentionally preserved.
+```
+
+---
+
+# Verified removed donors
+
+## Removed orchestration donors
+
+```text
+FB_Heating_Execution_Core
+FB_Heating_Orchestration
+```
+
+Status:
+
+```text
+VERIFIED REMOVED
+```
+
+---
+
+## Removed allocation donors
 
 ```text
 FB_Heating_Decision_Context
-FB_Heating_Diagnostics
-FB_Heating_Execution_Core
-FB_Heating_Orchestration
-FB_Heating_Override_Layer
 FB_Heating_Thermal_Allocation
 ```
 
----
-
-## FB_Heating_Diagnostics
-
-Verified classification:
+Status:
 
 ```text
-DIAGNOSTICS / EVENT PROJECTION LAYER
+VERIFIED REMOVED
 ```
 
-Role:
+Replacement path:
 
 ```text
-read-only diagnostics projection
-```
-
-Important:
-
-```text
-NOT runtime authority.
-```
-
-Writes:
-
-```text
-GVL_STATUS.G_Diagnostics*
-```
-
-Does NOT own:
-
-```text
-- heating control;
-- boiler control;
-- manifold control;
-- valve control;
-- DHW control.
-```
-
-Current status:
-
-```text
-KEEP_GREY_RESERVED
-```
-
----
-
-## FB_Heating_Execution_Core
-
-Verified result:
-
-```text
-historical duplicate wrapper
-```
-
-Verified status:
-
-```text
-VERIFIED REMOVED DONOR
-```
-
-Reason:
-
-```text
-active ownership already exists in:
-FB_Heating_System_Manager
-+
-FB_DHW_Manager
-```
-
-Important:
-
-```text
-must NOT be reconnected
-as alternate orchestration layer.
-```
-
----
-
-## FB_Heating_Orchestration
-
-Verified result:
-
-```text
-historical detached orchestration shell
-```
-
-Verified status:
-
-```text
-VERIFIED REMOVED DONOR
-```
-
-Reason:
-
-```text
-would create second orchestration path
-parallel to active runtime ownership chain.
-```
-
-Reconnect policy:
-
-```text
-FORBIDDEN
-```
-
----
-
-## FB_Heating_Override_Layer
-
-Verified result:
-
-```text
-historical dangerous authority layer
-```
-
-Capabilities:
-
-```text
-- manifold suppression;
-- valve suppression;
-- OpenTherm suppression;
-- DHW suppression;
-- emergency runtime override.
-```
-
-Verified status:
-
-```text
-DO NOT CONNECT DIRECTLY
-```
-
-Current role:
-
-```text
-historical authority donor only
-```
-
-Future work:
-
-```text
-possible future conceptual extraction review only
-```
-
----
-
-## FB_Heating_Thermal_Allocation
-
-Verified result:
-
-```text
-policy/allocation donor
-```
-
-Verified extraction:
-
-```text
-logic absorbed into:
-- FB_Heating_Policy_Priority_Bridge
-- FB_Heating_Allocation_Filter
-```
-
-Verified status:
-
-```text
-VERIFIED EXTRACTED DONOR
-```
-
-Important:
-
-```text
-historical orchestration shell
-must NOT be restored.
-```
-
----
-
-## FB_Heating_Decision_Context
-
-Verified result:
-
-```text
-manifold decision/allocation donor
-```
-
-Verified extraction:
-
-```text
-logic absorbed into:
 FB_Heating_Allocation_Filter
-```
-
-Verified status:
-
-```text
-VERIFIED EXTRACTED DONOR
+FB_Heating_Policy_Priority_Bridge
 ```
 
 ---
 
-# Group 2 — Floor heating protection donor family
-
-Historical donor examples:
+## Removed protection donors
 
 ```text
 FB_FloorHeating_Freeze_Protection
 FB_FloorHeating_Overheat_Protection
-FB_FloorHeating_Controller
-```
-
----
-
-## FB_FloorHeating_Controller
-
-Verified result:
-
-```text
-ACTIVE INDIRECT RUNTIME DEPENDENCY
-```
-
-Current owner:
-
-```text
-FB_Heating_Circuit_Control
 ```
 
 Status:
 
 ```text
-KEEP_ACTIVE
+VERIFIED REMOVED
 ```
 
 ---
 
-## FB_FloorHeating_Freeze_Protection
-
-Verified result:
+## Removed diagnostics/snapshot donors
 
 ```text
-freeze protection donor
-```
-
-Verified absorption:
-
-```text
-absorbed into:
-FB_Heating_Safety_Gate
-FB_Heating_Safe_State
+FB_Heating_Diagnostics
+FB_State_Snapshot_Manager
 ```
 
 Status:
 
 ```text
-VERIFIED ABSORBED DONOR
+VERIFIED REMOVED
 ```
 
 ---
 
-## FB_FloorHeating_Overheat_Protection
+# Active retained runtime blocks
 
-Verified result:
+## Observer path
 
-```text
-overheat protection donor
-```
-
-Verified absorption:
+Verified active observer chain:
 
 ```text
-absorbed into:
-FB_Heating_Circuit_Control
-```
-
-Status:
-
-```text
-VERIFIED ABSORBED DONOR
-```
-
----
-
-# Group 3 — Runtime supervision / governance scaffold family
-
-Representative examples:
-
-```text
-FB_Heating_Runtime_Coordinator
-FB_Heating_Runtime_Event_Manager
-FB_Heating_Runtime_Observation_Aggregator
-FB_Heating_Runtime_Observation_Validator
-FB_Heating_Runtime_Orchestration_Shell
-FB_Heating_Runtime_Stability_Model
-FB_Heating_Runtime_Timeline_Observer
-FB_Heating_Runtime_Adaptive_*
-FB_Heating_Runtime_Anomaly_*
-FB_Heating_Runtime_Predictive_*
-```
-
-Verified active exceptions:
-
-```text
-FB_Heating_Runtime_Observer
-FB_Heating_Runtime_Observer_Authorization
-```
-
-Deep audit conclusion:
-
-```text
-this family does NOT contain missing production runtime authority.
-```
-
-Verified role:
-
-```text
-passive governance / observability / forensic scaffold
-```
-
-NOT:
-
-```text
-lost heating runtime controller.
+PRG_Heating
+→ FB_Heating_Runtime_Observer_Phase
+    → FB_Heating_Runtime_Observer_Authorization
+    → FB_Heating_Runtime_Observer
+    → GVL_Heating_Runtime_Observation
 ```
 
 Verified properties:
@@ -442,224 +213,79 @@ Verified properties:
 ```text
 - governance-gated;
 - observation-oriented;
-- telemetry-oriented;
-- sequencing validation oriented;
-- anomaly/risk aggregation oriented;
-- intentionally isolated from control ownership.
+- read-only semantics;
+- isolated from runtime control ownership.
 ```
 
-Verified active observer path:
+Status:
 
 ```text
-PRG_Heating
-→ FB_Heating_Runtime_Observer_Authorization
-→ FB_Heating_Runtime_Observer
-→ GVL_Heating_Runtime_Observation
-```
-
-Confirmed governance locks:
-
-```text
-Governance_Locked := TRUE
-Runtime_Attachment_Allowed := FALSE
-Observation-only semantics
-```
-
-Verified status:
-
-```text
-KEEP_GREY_RESERVED
-```
-
-Reconnect policy:
-
-```text
-DO NOT CONNECT WHOLE FAMILY
-```
-
-Allowed future direction:
-
-```text
-bounded read-only extensions only
+KEEP ACTIVE
 ```
 
 ---
 
-# Group 4 — Snapshot/test/simulation family
-
-Examples:
+## Runtime observability
 
 ```text
-FB_State_Snapshot_Manager
-PRG_Config_Simulation
-PRG_Scenario_Test_Harness
+FB_Heating_Runtime_Observability
 ```
 
-Verified role:
+Role:
 
 ```text
-test/support infrastructure
+runtime explainability and allocation visibility.
 ```
 
-Current recommendation:
+Status:
 
 ```text
-keep isolated from production runtime ownership chain
+KEEP ACTIVE
 ```
 
 ---
 
-# Updated classification model
-
-## Category A — Active production runtime
-
-Definition:
+## Retained utility
 
 ```text
-actively participates in verified production ownership chain
+F_Modbus_RTU_CRC16
 ```
 
-Examples:
+Status:
 
 ```text
-FB_Heating_System_Manager
-FB_Heating_Safety_Gate
-FB_Heating_Circuit_Control
-FB_Heating_Manifold_Control
-FB_Heating_Boiler_Control
+KEEP ACTIVE
 ```
 
----
-
-## Category B — Bounded helper execution layers
-
-Definition:
+Reason:
 
 ```text
-active helper execution
-inside runtime ownership chain
-```
-
-Examples:
-
-```text
-FB_Boiler_Cascade_Manager
-FB_Boiler_OpenTherm_Interface
-FB_Valve_Test_Manager
-```
-
-Important:
-
-```text
-helper authority escalation not detected.
+deterministic standalone utility.
 ```
 
 ---
 
-## Category C — Passive runtime observability/governance
+# Architectural anti-drift rules
 
-Definition:
-
-```text
-active or reserved read-only runtime scaffold
-```
-
-Examples:
+Forbidden directions:
 
 ```text
-FB_Heating_Runtime_Observer
-FB_Heating_Runtime_Observer_Authorization
-FB_Heating_Runtime_Contract_Validator
-FB_Heating_Runtime_Event_Manager
-```
-
----
-
-## Category D — Verified donor blocks
-
-Definition:
-
-```text
-historical runtime decomposition
-already absorbed or superseded
-```
-
-Examples:
-
-```text
-FB_Heating_Execution_Core
-FB_Heating_Orchestration
-FB_Heating_Thermal_Allocation
-FB_Heating_Decision_Context
-FB_FloorHeating_Freeze_Protection
-FB_FloorHeating_Overheat_Protection
-```
-
----
-
-## Category E — Historical dangerous authority donors
-
-Definition:
-
-```text
-historical detached authority layers
-unsafe to reconnect directly
-```
-
-Examples:
-
-```text
-FB_Heating_Override_Layer
-```
-
----
-
-# Main engineering rule
-
-From this point onward:
-
-```text
-NO detached reconnect
-NO reconnect-first engineering
-NO hidden authority expansion
+- detached orchestration resurrection;
+- duplicate runtime ownership;
+- Runtime_* actuation resurrection;
+- telemetry-driven control ownership;
+- hidden publication layers;
+- parallel runtime paths.
 ```
 
 Required workflow:
 
 ```text
-1. governance verification;
-2. ownership verification;
+1. ownership verification;
+2. governance verification;
 3. write-path verification;
-4. evidence-level runtime validation;
-5. only then bounded runtime evolution.
-```
-
----
-
-# Current verified risk model
-
-The primary risk is no longer:
-
-```text
-compile collapse
-```
-
-The primary risk is now:
-
-```text
-future architectural drift
-```
-
-Especially dangerous:
-
-```text
-- detached orchestration resurrection;
-- Runtime_* actuation;
-- helper authority escalation;
-- duplicate writers;
-- hidden finalization layers;
-- telemetry-driven control;
-- governance-driven control.
+4. deterministic runtime validation;
+5. only then bounded evolution.
 ```
 
 ---
@@ -675,12 +301,12 @@ legacy orchestration cleanup
 into:
 
 ```text
-governed runtime architecture maintenance
+deterministic phase-oriented runtime governance
 ```
 
-The primary goal now is:
+Primary engineering goal:
 
 ```text
-prevent future architectural drift
-while preserving explicit bounded ownership.
+preserve explicit bounded ownership
+while preventing future architectural drift.
 ```
