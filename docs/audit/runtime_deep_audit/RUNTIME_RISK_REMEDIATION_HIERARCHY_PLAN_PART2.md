@@ -2,14 +2,23 @@
 
 # Назначение
 
+Этот документ является:
+
+```text
+runtime structural validation workbook
+```
+
+А не cleanup-log.
+
 Документ содержит:
 
 ```text
-углублённую remediation детализацию
-cross-risk propagation
-field ownership cleanup
-remaining validation gaps
-runtime dependency graph
+writer graph validation
+hard-stop graph validation
+advisory leakage validation
+runtime evidence criteria
+remaining topology hypotheses
+cross-layer verification matrix
 ```
 
 Основной файл:
@@ -18,362 +27,102 @@ runtime dependency graph
 RUNTIME_RISK_REMEDIATION_HIERARCHY_PLAN.md
 ```
 
-остаётся:
+фиксирует:
 
 ```text
-authoritative remediation entry-point
+стратегию remediation
+иерархию рисков
+стадии работ
+```
+
+PART2 фиксирует:
+
+```text
+как именно проверяется архитектура
 ```
 
 ---
 
-# 1. ROOT CAUSE DEPENDENCY GRAPH
+# 1. CURRENT ARCHITECTURAL UNDERSTANDING
 
-## Правильная remediation dependency chain
+После cleanup стало ясно:
 
 ```text
-Compile/reference integrity
-    ↓
-Runtime authority normalization
-    ↓
-Immutable snapshot boundary
-    ↓
-Output hard-stop normalization
-    ↓
-Distributed peer normalization
-    ↓
-Observability demotion
-    ↓
-Semantic demotion
-    ↓
-Dead-state pruning
-    ↓
-Final topology validation
+главный риск больше не zombie fields
 ```
 
-## Почему remediation нельзя делать в обратном порядке
-
-### Ошибка №1
+Главный remaining risk:
 
 ```text
-semantic cleanup
-до
-runtime authority cleanup
+implicit authority propagation
 ```
 
-Создаёт:
+То есть:
 
 ```text
-symptom-fix without root-cause removal
+advisory layer
+visibility layer
+projection layer
 ```
 
-### Ошибка №2
+формально не являются authority,
+но downstream runtime-path начинает трактовать их как authority.
+
+Это особенно опасно для:
 
 ```text
-telemetry cleanup
-до
-output hard-stop normalization
-```
-
-Создаёт:
-
-```text
-fake stability with unsafe publication path
-```
-
-### Ошибка №3
-
-```text
-distributed strictness
-до
-peer session normalization
-```
-
-Создаёт:
-
-```text
-startup quarantine storms
+GVL_OUTPUT_EPOCH
+GVL_RUNTIME_EPOCH
+GVL_RUNTIME_SNAPSHOT
+GVL_DISTRIBUTED_*
+GVL_OBSERVABILITY_AUTHORITY
 ```
 
 ---
 
-# 2. CROSS-RISK PROPAGATION MATRIX
+# 2. VALIDATION MODEL
 
-## Runtime_Barrier cleanup propagation
+## Cleanup больше не считается доказательством
 
-### Первичное исправление
-
-Удаление:
+Удаление поля:
 
 ```text
-Runtime_Barrier ↔ Recovery_Governance
+не является runtime evidence
 ```
 
-### Прямое влияние
+Даже если:
 
 ```text
-A-RISK-001
+field выглядит redundant
 ```
 
-### Cascade impact
+Теперь remediation считается завершённым только если:
 
 ```text
-RISK-037
-RISK-047
-A-RISK-004
-O-RISK-001
-```
-
-### Почему
-
-Потому что recursive invalidation:
-
-```text
-усиливал quarantine
-ломал deterministic publication
-размазывал ownership authority
+writer graph validated
+hard-stop graph validated
+compile/reference convergence validated
+advisory leakage absence validated
+runtime topology remains deterministic
 ```
 
 ---
 
-## Runtime_Snapshot cleanup propagation
+# 3. WRITER GRAPH VALIDATION
 
-### Первичное исправление
+## Цель
 
-Удаление:
-
-```text
-Output_Forced_Safe_Decay dependency
-```
-
-### Прямое влияние
+Подтвердить:
 
 ```text
-A-RISK-006
-P-RISK-001
+single authoritative ownership
 ```
 
-### Cascade impact
-
-```text
-RISK-038
-RISK-040
-RISK-047
-S-RISK-001
-```
-
-### Почему
-
-Потому что snapshot recursion:
-
-```text
-создавала recursive decay
-создавала unstable publication authority
-ломала immutable publication boundary
-```
+для каждого runtime-critical field.
 
 ---
 
-## Observability demotion propagation
-
-### Первичное исправление
-
-Удаление observability authority semantics.
-
-### Удалённые поля
-
-```text
-PreActuation_Visibility_Ready
-Diagnostics_Synchronized
-Explainability_Synchronized
-Authority_Snapshot_Valid
-Observability_Quarantine_Active
-Observability_Invalidation_Count
-```
-
-### Прямое влияние
-
-```text
-O-RISK-001
-O-RISK-002
-O-RISK-004
-```
-
-### Cascade impact
-
-```text
-RISK-037
-RISK-040
-A-RISK-004
-P-RISK-004
-```
-
-### Почему
-
-Потому что observability:
-
-```text
-не должна участвовать в runtime authority
-не должна владеть synchronization barriers
-не должна блокировать publication
-```
-
----
-
-## Distributed peer-optional remediation propagation
-
-### Первичное исправление
-
-Distributed topology переведён в:
-
-```text
-peer-optional foundation mode
-```
-
-### Прямое влияние
-
-```text
-D-RISK-001
-D-RISK-002
-D-RISK-003
-```
-
-### Cascade impact
-
-```text
-RISK-037
-RISK-047
-P-RISK-002
-```
-
-### Почему
-
-Потому что ранее:
-
-```text
-missing peer = distributed failure
-```
-
-что создавало:
-
-```text
-forced decay
-startup quarantine
-split-brain without peer evidence
-```
-
----
-
-## Forced-safe mirror removal propagation
-
-### Первичное исправление
-
-Удаление:
-
-```text
-Distributed_Snapshot_Forced_Safe_Mode
-Distributed_Commit_Forced_Safe_Mode
-Snapshot_Invalidation_Count
-Distributed_*_Invalidation_Count
-```
-
-### Прямое влияние
-
-```text
-D-RISK-005
-A-RISK-008
-```
-
-### Cascade impact
-
-```text
-RISK-047
-C-RISK-004
-```
-
-### Почему
-
-Потому что duplicate mirrors:
-
-```text
-создавали fake degraded-state semantics
-усложняли ownership graph
-создавали runtime entropy
-```
-
----
-
-# 3. FIELD OWNERSHIP CLEANUP MATRIX
-
-## Runtime-authoritative ownership
-
-| Layer | Owner |
-|---|---|
-| Runtime barrier | `PRG_Runtime_Barrier` |
-| Runtime snapshot | `PRG_Runtime_Snapshot_Governor` |
-| Output freshness | `PRG_Output_Freshness_Governor` |
-| Distributed snapshot | `PRG_Distributed_Snapshot_Governor` |
-| Distributed commit | `PRG_Distributed_Commit_Governor` |
-
----
-
-## Ownership zones requiring revalidation
-
-### GVL_OUTPUT_EPOCH
-
-Проверить:
-
-```text
-нет ли duplicate writes
-нет ли semantic-driven hard-stop writes
-нет ли observability-owned resets
-```
-
-### GVL_DISTRIBUTED_EPOCH
-
-Проверить:
-
-```text
-нет ли remaining forced-safe mirrors
-нет ли startup divergence assumptions
-```
-
-### GVL_OBSERVABILITY_AUTHORITY
-
-Проверить:
-
-```text
-нет ли orphan visibility fields
-нет ли authority-owned visibility resets
-```
-
----
-
-# 4. REMAINING VALIDATION MATRIX
-
-## VALIDATION-001
-
-### Проверка
-
-```text
-absence of hidden authority cycles
-```
-
-### Нужно проверить
-
-```text
-indirect downstream feedback
-multi-stage invalidation fanout
-```
-
-### Статус
-
-```text
-IN_PROGRESS
-```
-
----
-
-## VALIDATION-002
+## VALIDATION-WG-001
 
 ### Проверка
 
@@ -381,12 +130,36 @@ IN_PROGRESS
 absence of duplicate writers
 ```
 
-### Нужно проверить
+### Нужно доказать
 
 ```text
-GVL_OUTPUT_EPOCH
-GVL_DISTRIBUTED_EPOCH
+authority field имеет только одного writer
+```
+
+### Проверяемые GVL
+
+```text
+GVL_RUNTIME_EPOCH
 GVL_RUNTIME_SNAPSHOT
+GVL_OUTPUT_EPOCH
+GVL_DISTRIBUTED_*
+GVL_OBSERVABILITY_AUTHORITY
+```
+
+### Риски
+
+```text
+A-RISK-008
+O-RISK-003
+P-RISK-004
+```
+
+### Evidence criteria
+
+```text
+нет второго PRG writer
+нет foreign reset
+нет projection mutation
 ```
 
 ### Статус
@@ -397,20 +170,335 @@ IN_PROGRESS
 
 ---
 
-## VALIDATION-003
+## VALIDATION-WG-002
 
 ### Проверка
 
 ```text
-absence of advisory hard-stop paths
+absence of foreign resets
+```
+
+### Нужно доказать
+
+```text
+visibility/advisory layers
+не могут сбрасывать authority state
+```
+
+### Особо опасные поля
+
+```text
+Output_Forced_Safe_Decay
+Runtime_IO_Publication_Allowed
+Distributed_Quarantine_Active
+```
+
+### Риски
+
+```text
+RISK-040
+RISK-047
+O-RISK-001
+```
+
+### Статус
+
+```text
+VALIDATION_REQUIRED
+```
+
+---
+
+# 4. HARD-STOP GRAPH VALIDATION
+
+## Цель
+
+Построить:
+
+```text
+real physical publication stop graph
+```
+
+---
+
+## VALIDATION-HS-001
+
+### Проверка
+
+```text
+allowed hard-stop paths only
+```
+
+### Разрешённые hard-stop причины
+
+```text
+runtime barrier invalidation
+immutable snapshot invalidation
+transport freshness invalidation
+real distributed reconciliation failure
+explicit peer fencing conflict
+pre-output safety failure
+```
+
+### Нужно доказать
+
+```text
+нет advisory influence на hard-stop
+```
+
+### Риски
+
+```text
+RISK-015
+RISK-038
+RISK-040
+RISK-047
+```
+
+### Статус
+
+```text
+VALIDATION_REQUIRED
+```
+
+---
+
+## VALIDATION-HS-002
+
+### Проверка
+
+```text
+Output_Forced_Safe_Decay ownership
+```
+
+### Нужно доказать
+
+```text
+semantic layer не может активировать forced decay
+observability layer не может активировать forced decay
+projection layers не могут активировать forced decay
+```
+
+### Проверяемые PRG
+
+```text
+PRG_Output_Freshness_Governor
+PRG_PreOutput_Safety_Barrier
+PRG_IO_Write
+```
+
+### Статус
+
+```text
+IN_PROGRESS
+```
+
+---
+
+# 5. ADVISORY LEAKAGE VALIDATION
+
+## Главная гипотеза
+
+Даже advisory field может стать runtime authority,
+если downstream layer трактует advisory как gate.
+
+---
+
+## VALIDATION-AL-001
+
+### Проверка
+
+```text
+semantic → hard-stop leakage
+```
+
+### Проверяемые поля
+
+```text
+Output_Semantic_Continuity_Warning
+Semantic_Progress_Quarantine_Active
+Semantic_Livelock_Suspected
+Semantic_Replay_Suspected
+```
+
+### Нужно доказать
+
+```text
+нет write-path до Output_Forced_Safe_Decay
+нет IO gating
+нет Runtime_Barrier gating
+```
+
+### Риски
+
+```text
+S-RISK-001
+S-RISK-004
+RISK-047
+```
+
+### Статус
+
+```text
+VALIDATION_REQUIRED
+```
+
+---
+
+## VALIDATION-AL-002
+
+### Проверка
+
+```text
+observability → authority leakage
+```
+
+### Проверяемые поля
+
+```text
+Emergency_Visibility_Required
+Unsafe_State_Published
+*_Visible
+```
+
+### Нужно доказать
+
+```text
+visibility fields не участвуют в hard-stop
+visibility fields не mutate runtime state
+visibility fields не reset authority state
+```
+
+### Риски
+
+```text
+O-RISK-001
+O-RISK-004
+RISK-037
+RISK-040
+```
+
+### Статус
+
+```text
+VALIDATION_REQUIRED
+```
+
+---
+
+# 6. DISTRIBUTED VALIDATION
+
+## Новая архитектурная модель
+
+Distributed layer теперь:
+
+```text
+peer-optional continuity foundation
+```
+
+Но это ещё не доказано runtime behavior.
+
+---
+
+## VALIDATION-D-001
+
+### Проверка
+
+```text
+startup without peer remains operational
+```
+
+### Нужно доказать
+
+```text
+missing peer != quarantine
+missing peer != forced decay
+missing peer != split-brain
+```
+
+### Риски
+
+```text
+D-RISK-001
+D-RISK-002
+RISK-047
+```
+
+### Статус
+
+```text
+UNVERIFIED_RUNTIME_BEHAVIOR
+```
+
+---
+
+## VALIDATION-D-002
+
+### Проверка
+
+```text
+real peer divergence still blocks publication
+```
+
+### Нужно доказать
+
+```text
+peer fencing conflict still authoritative
+real peer mismatch still authoritative
+```
+
+### Проверяемые поля
+
+```text
+Peer_Fencing_Conflict
+Peer_Commit_Mismatch
+Peer_Publication_Divergence
+```
+
+### Риски
+
+```text
+D-RISK-003
+D-RISK-004
+RISK-047
+```
+
+### Статус
+
+```text
+UNVERIFIED_RUNTIME_BEHAVIOR
+```
+
+---
+
+# 7. COMPILE / REFERENCE CONVERGENCE
+
+## VALIDATION-C-001
+
+### Проверка
+
+```text
+removed fields are not referenced
 ```
 
 ### Нужно проверить
 
 ```text
-semantic fanout
-observability fanout
-telemetry-driven output decay
+Snapshot_Observability_Synchronized
+Snapshot_Invalidation_Count
+Distributed_Forced_Safe_Mode
+Distributed_Invalidation_Count
+Distributed_Snapshot_Forced_Safe_Mode
+Distributed_Commit_Forced_Safe_Mode
+```
+
+### Риски
+
+```text
+C-RISK-001
+C-RISK-002
+C-RISK-003
+C-RISK-004
 ```
 
 ### Статус
@@ -421,20 +509,20 @@ IN_PROGRESS
 
 ---
 
-## VALIDATION-004
+## VALIDATION-C-002
 
 ### Проверка
 
 ```text
-compile/reference convergence
+documentation ↔ code consistency
 ```
 
-### Нужно проверить
+### Нужно доказать
 
 ```text
-stale deleted field references
-removed PRG references
-dead GVL projections
+ownership matrix соответствует коду
+main remediation plan соответствует topology
+part2 соответствует реальным validation stages
 ```
 
 ### Статус
@@ -445,80 +533,114 @@ IN_PROGRESS
 
 ---
 
-# 5. REMAINING HIGH-RISK ZONES
+# 8. HIGH-RISK ZONES
 
 ## Zone-01 — GVL_OUTPUT_EPOCH
 
-Риск:
+### Почему опасно
+
+Это:
 
 ```text
-output remains final runtime authority concentration point
+final authority concentration point
 ```
 
-Нужно проверить:
+Там сходятся:
 
 ```text
-foreign writes
-mirror semantics
-semantic hard-stop leakage
+runtime validity
+snapshot validity
+distributed validity
+semantic advisory
+output freshness
+forced decay
 ```
 
----
-
-## Zone-02 — Distributed epoch topology
-
-Риск:
+### Главный риск
 
 ```text
-remaining startup-era distributed assumptions
-```
-
-Нужно проверить:
-
-```text
-peer activation logic
-startup fencing assumptions
-quarantine escalation fanout
+implicit advisory escalation
 ```
 
 ---
 
-## Zone-03 — Remaining dead-state entropy
+## Zone-02 — Distributed runtime
 
-Риск:
+### Почему опасно
+
+После peer-optional normalization
+может появиться:
 
 ```text
-runtime complexity re-growth
+under-protected real divergence
 ```
 
-Нужно проверить:
+### Главный риск
 
 ```text
-orphan visibility fields
-unused counters
-duplicate degraded-state mirrors
+false negative distributed failure
 ```
 
 ---
 
-# 6. CURRENT ENGINEERING PRIORITY
+## Zone-03 — Ownership mirrors
 
-Текущий правильный focus:
+### Почему опасно
+
+Многие поля выглядят как authority,
+но по факту являются:
 
 ```text
-не добавлять новые governance layers
-а сжимать topology
-и устранять hidden ownership complexity
+projection mirrors
 ```
 
-Главный remaining риск сейчас:
+Например:
 
 ```text
-hidden authority duplication
+*_Valid
+*_Allowed
+*_Consistent
 ```
 
-а не:
+### Главный риск
 
 ```text
-missing semantic intelligence
+hidden topology complexity
+```
+
+---
+
+# 9. WHAT IS NOW FORBIDDEN
+
+Запрещено:
+
+```text
+cleanup by intuition
+removing fields without validation evidence
+adding speculative governance
+reintroducing forced-safe mirrors
+making visibility runtime-authoritative
+making semantic heuristics hard-stop authority
+```
+
+---
+
+# 10. CURRENT ENGINEERING PRIORITY
+
+Текущий focus:
+
+```text
+writer graph
+hard-stop graph
+advisory leakage graph
+compile/reference convergence
+runtime evidence
+```
+
+А НЕ:
+
+```text
+adding semantic intelligence
+adding new governance layers
+expanding observability authority
 ```
