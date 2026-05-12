@@ -11,22 +11,24 @@ PROGRAM MAIN
 //
 // Execution principle:
 //   1. Time / init / configuration
-//   2. PLC role arbitration
-//   3. PLC ownership / fencing governance
-//   4. IO read and input normalization
-//   5. Mode, presence and safety
-//   6. Intent, behavior, scenario and policy
-//   7. Command arbitration
-//   8. Runtime authority barrier
-//   9. Domain execution
-//   10. Pre-output safety barrier
-//   11. Output freshness governance
-//   12. Physical IO write
-//   13. Verification, diagnostics, history, HMI
+//   2. Monotonic time governance
+//   3. PLC role arbitration
+//   4. PLC ownership / fencing governance
+//   5. IO read and input normalization
+//   6. Mode, presence and safety
+//   7. Intent, behavior, scenario and policy
+//   8. Command arbitration
+//   9. Runtime authority barrier
+//   10. Domain execution
+//   11. Pre-output safety barrier
+//   12. Output freshness governance
+//   13. Physical IO write
+//   14. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
 PRG_Time_Service();
+PRG_Time_Monotonic_Governor();
 PRG_System_Init();
 PRG_Config_Manager();
 PRG_Config_Validation();
