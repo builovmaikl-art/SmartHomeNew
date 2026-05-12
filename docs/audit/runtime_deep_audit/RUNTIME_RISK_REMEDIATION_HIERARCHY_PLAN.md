@@ -39,12 +39,18 @@
 [done] Stage 9C — Distributed downstream publication quarantine
 [done] Stage 9D — Distributed immutable snapshot reconciliation foundation
 [done] Stage 9E — Distributed immutable publication freeze enforcement
+[done] Stage 9F — Deterministic peer publication handshake foundation
+[done] Stage 9F.1 — Distributed commit observability projection
+[done] Stage 9F.2 — Distributed commit downstream publication decay enforcement
+[done] Stage 9G — Semantic progress continuity foundation
+[done] Stage 9G.1 — Semantic progress observability projection
+[done] Stage 9H — Semantic continuity downstream publication enforcement
 ```
 
 ## CURRENT PRIORITY
 
 ```text
-[current] Stage 9F — Deterministic peer publication handshake
+[current] Stage 9I — Deterministic semantic publication commit coherence
 ```
 
 ---
@@ -66,6 +72,10 @@ Time_Service
 → Runtime_Snapshot_Governor
 → Distributed_Epoch_Governor
 → Distributed_Snapshot_Governor
+→ Distributed_Commit_Governor
+→ Distributed_Commit_Observability
+→ Semantic_Progress_Governor
+→ Semantic_Progress_Observability
 → Observability_Governor
 → Recovery_Cleanup_Governor
 → Domain_Execution
@@ -93,7 +103,7 @@ Monotonic_Time failure
 
 ---
 
-## Current distributed publication cascade
+## Current downstream distributed / semantic publication cascade
 
 ```text
 Distributed_Epoch divergence
@@ -111,19 +121,33 @@ Distributed_Immutable_Snapshot divergence
 → IO_Write safe projection
 ```
 
+```text
+Distributed_Commit failure
+→ Commit observability projection
+→ Output_Freshness forced decay
+→ IO_Write safe projection
+```
+
+```text
+Semantic_Progress failure
+→ Semantic observability projection
+→ Output_Freshness forced decay
+→ IO_Write safe projection
+```
+
 ---
 
 # CRITICAL ARCHITECTURAL BOUNDARIES
 
-## Distributed layers are downstream-only
+## Distributed and semantic layers are downstream-only
 
-Distributed reconciliation is intentionally:
+Distributed reconciliation, distributed commit and semantic progress are intentionally:
 
 ```text
 publication-authoritative only
 ```
 
-It must NOT become:
+They must NOT become:
 
 ```text
 runtime-authoritative
@@ -134,8 +158,10 @@ snapshot-authoritative upstream
 Reason:
 
 ```text
-peer packet jitter
-or delayed reconciliation
+peer packet jitter,
+delayed reconciliation,
+commit acknowledgement latency,
+or semantic execution stalls
 must not recursively collapse local runtime authority.
 ```
 
@@ -177,7 +203,7 @@ Runtime_Snapshot_Governor
 
 ---
 
-# IMPLEMENTED AUTHORITY LAYERS
+# IMPLEMENTED AUTHORITY / GOVERNANCE LAYERS
 
 ```text
 GVL_TIME_MONOTONIC
@@ -200,6 +226,14 @@ PRG_Distributed_Epoch_Governor
 
 GVL_DISTRIBUTED_SNAPSHOT
 PRG_Distributed_Snapshot_Governor
+
+GVL_DISTRIBUTED_COMMIT
+PRG_Distributed_Commit_Governor
+PRG_Distributed_Commit_Observability
+
+GVL_SEMANTIC_PROGRESS
+PRG_Semantic_Progress_Governor
+PRG_Semantic_Progress_Observability
 
 GVL_OBSERVABILITY_AUTHORITY
 PRG_Observability_Governor
@@ -245,8 +279,8 @@ runtime-integrated
 
 ```text
 - no consensus-grade semantic ownership continuity;
-- no peer publication commit acknowledgement;
-- no deterministic distributed commit epochs.
+- no semantic publication checkpoint coherence;
+- no deterministic semantic rollback fencing.
 ```
 
 ---
@@ -281,6 +315,8 @@ implemented
 runtime-authoritative
 snapshot-aware
 distributed-publication-aware
+commit-aware
+semantic-continuity-aware
 ```
 
 ## Implemented components
@@ -303,14 +339,16 @@ PRG_IO_Write freshness-aware hard stop
 - immutable snapshot publication validation;
 - distributed epoch quarantine validation;
 - distributed immutable publication freeze validation;
+- distributed commit quarantine validation;
+- semantic progress continuity validation;
 - authoritative freshness-aware IO gating.
 ```
 
 ## Remaining gaps
 
 ```text
-- no deterministic peer publication commit handshake;
-- no peer output publication acknowledgement;
+- no deterministic semantic publication checkpointing;
+- no semantic publication rollback fencing;
 - no retained-output quarantine beyond current forced decay foundation.
 ```
 
@@ -342,8 +380,8 @@ runtime-integrated
 
 ```text
 - no ownership consensus;
-- no semantic-progress watchdog;
-- no deterministic peer publication commit acknowledgement.
+- no semantic-progress ownership arbitration by design;
+- no transport-level transaction ID fencing.
 ```
 
 ---
@@ -450,6 +488,7 @@ runtime-integrated
 foundation implemented
 runtime-integrated
 distributed-aware
+semantic-aware
 ```
 
 ## Implemented properties
@@ -462,6 +501,8 @@ distributed-aware
 - visibility flags for runtime/output/transport/recovery/fencing/monotonic failures;
 - distributed epoch divergence visibility;
 - distributed immutable publication visibility;
+- distributed commit observability projection;
+- semantic progress observability projection;
 - observability-aware runtime invalidation.
 ```
 
@@ -516,14 +557,14 @@ PRG_IO_Write immutable snapshot hard-stop gate
 
 ---
 
-# STAGE 9 — DISTRIBUTED EPOCH CONSISTENCY / PEER RECONCILIATION
+# STAGE 9 — DISTRIBUTED / SEMANTIC PUBLICATION CONTINUITY
 
 ## Status
 
 ```text
 foundation implemented
 publication-integrated downstream
-current continuation: Stage 9F
+current continuation: Stage 9I
 ```
 
 ## Implemented components
@@ -535,9 +576,17 @@ PRG_Distributed_Epoch_Governor
 GVL_DISTRIBUTED_SNAPSHOT
 PRG_Distributed_Snapshot_Governor
 
-GVL_OBSERVABILITY_AUTHORITY distributed visibility fields
+GVL_DISTRIBUTED_COMMIT
+PRG_Distributed_Commit_Governor
+PRG_Distributed_Commit_Observability
+
+GVL_SEMANTIC_PROGRESS
+PRG_Semantic_Progress_Governor
+PRG_Semantic_Progress_Observability
+
+GVL_OBSERVABILITY_AUTHORITY distributed/semantic visibility fields
 PRG_Observability_Governor distributed visibility integration
-PRG_Output_Freshness_Governor distributed publication enforcement
+PRG_Output_Freshness_Governor distributed/commit/semantic publication enforcement
 ```
 
 ## Implemented properties
@@ -556,31 +605,41 @@ PRG_Output_Freshness_Governor distributed publication enforcement
 - distributed immutable snapshot consistency validation;
 - peer publication divergence detection;
 - peer publication reconciliation loss detection;
-- publication-bound output decay on distributed divergence.
+- deterministic peer publication commit foundation;
+- peer commit acknowledgement validation;
+- peer commit mismatch detection;
+- peer commit replay detection foundation;
+- commit lease expiration detection;
+- distributed commit observability projection;
+- publication-bound output decay on distributed commit failure;
+- semantic progress continuity foundation;
+- semantic replay/stagnation/livelock/deadlock suspicion foundation;
+- semantic progress observability projection;
+- publication-bound output decay on semantic continuity failure.
 ```
 
 ## Explicit boundary
 
 ```text
-Distributed reconciliation is downstream/publication-authoritative only.
-It must not be wired into Runtime_Barrier, PLC_Fencing_Governor,
-or Runtime_Snapshot_Governor as an upstream authority source.
+Distributed and semantic continuity are downstream/publication-authoritative only.
+They must not be wired into Runtime_Barrier, PLC_Fencing_Governor,
+or Runtime_Snapshot_Governor as upstream authority sources.
 ```
 
 ## Remaining gaps
 
 ```text
-- no deterministic peer publication handshake;
-- no peer commit acknowledgement;
-- no publication commit epoch exchange;
-- no consensus-grade publication continuity;
-- no semantic-progress watchdog;
-- no transport-level transaction ID fencing.
+- no deterministic semantic publication checkpointing;
+- no semantic publication commit coherence;
+- no semantic publication rollback fencing;
+- no semantic progression commit acknowledgement;
+- no transport-level transaction ID fencing;
+- no HMI/blackbox snapshot-bound semantic rendering.
 ```
 
 ---
 
-# STAGE 9F — DETERMINISTIC PEER PUBLICATION HANDSHAKE
+# STAGE 9I — DETERMINISTIC SEMANTIC PUBLICATION COMMIT COHERENCE
 
 ## Status
 
@@ -591,55 +650,57 @@ not started
 
 ## Назначение
 
-Устранить remaining distributed publication gap:
+Устранить remaining semantic publication gap:
 
 ```text
-publication reconciliation exists,
-but peer commit acknowledgement is not deterministic yet.
+semantic continuity exists,
+commit continuity exists,
+publication decay exists,
+but semantic commit coherence is not deterministic yet.
 ```
 
 ## Required remediation
 
 ```text
-- peer publication prepare/commit phases;
-- local publication commit epoch;
-- peer publication commit epoch;
-- commit acknowledgement timeout;
-- peer commit mismatch detection;
-- commit lease expiration;
-- downstream-only publication quarantine on commit failure.
+- semantic publication checkpoint epoch;
+- semantic commit epoch;
+- semantic checkpoint acknowledgement;
+- semantic checkpoint mismatch detection;
+- semantic rollback/replay fencing;
+- semantic progression commit acknowledgement;
+- downstream-only publication quarantine on semantic commit failure.
 ```
 
 ## Main runtime targets
 
 ```text
+GVL_SEMANTIC_COMMIT
+PRG_Semantic_Commit_Governor
+PRG_Semantic_Commit_Observability
+GVL_SEMANTIC_PROGRESS
 GVL_DISTRIBUTED_COMMIT
-PRG_Distributed_Commit_Governor
-GVL_DISTRIBUTED_EPOCH
-GVL_DISTRIBUTED_SNAPSHOT
-PRG_Observability_Governor
 PRG_Output_Freshness_Governor
 ```
 
 ## Required integration boundary
 
 ```text
-Distributed commit must remain downstream-only:
-Runtime_Snapshot
-→ Distributed_Epoch
-→ Distributed_Snapshot
-→ Distributed_Commit
+Semantic commit must remain downstream-only:
+Semantic_Progress
+→ Semantic_Commit
+→ Semantic_Commit_Observability
 → Observability
 → Output_Freshness
 → IO_Write
 ```
 
-Do not wire distributed commit upstream into:
+Do not wire semantic commit upstream into:
 
 ```text
 Runtime_Barrier
 PLC_Fencing_Governor
 Runtime_Snapshot_Governor
+Distributed ownership arbitration
 ```
 
 ---
@@ -658,8 +719,8 @@ Recommended practical implementation order:
 7. Stage 6 — Transport freshness governance [foundation implemented]
 8. Stage 7 — Safety-critical observability [foundation implemented]
 9. Stage 8 — Immutable runtime snapshot isolation [publication-integrated]
-10. Stage 9A-E — Distributed epoch/snapshot publication reconciliation [publication-integrated downstream]
-11. Stage 9F — Deterministic peer publication handshake [current priority]
+10. Stage 9A-H — Distributed/semantic publication continuity [publication-integrated downstream]
+11. Stage 9I — Deterministic semantic publication commit coherence [current priority]
 ```
 
 ---
@@ -679,7 +740,9 @@ Do NOT:
 - expose post-fact diagnostics as safety truth;
 - create upstream/downstream phase cycles;
 - make distributed reconciliation ownership-authoritative;
-- wire peer jitter into local runtime invalidation.
+- wire peer jitter into local runtime invalidation;
+- wire semantic stalls into local runtime invalidation;
+- make semantic continuity an execution ownership authority.
 ```
 
 Prefer:
@@ -690,5 +753,6 @@ with deterministic ownership,
 acyclic phase ordering,
 pre-actuation observability,
 publication-bound immutable snapshots,
-and downstream-only distributed publication governance.
+downstream-only distributed publication governance,
+and downstream-only semantic publication continuity.
 ```
