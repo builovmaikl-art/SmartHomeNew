@@ -19,11 +19,12 @@ PROGRAM MAIN
 //   7. Intent, behavior, scenario and policy
 //   8. Command arbitration
 //   9. Runtime authority barrier
-//   10. Domain execution
-//   11. Pre-output safety barrier
-//   12. Output freshness governance
-//   13. Physical IO write
-//   14. Verification, diagnostics, history, HMI
+//   10. Recovery cleanup governance
+//   11. Domain execution
+//   12. Pre-output safety barrier
+//   13. Output freshness governance
+//   14. Physical IO write
+//   15. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -92,26 +93,30 @@ PRG_OpenTherm_Adapter_Status();
 // Must execute after arbitration/fencing and before domain output projection.
 PRG_Runtime_Barrier();
 
-// 9. Domain execution and domain output projection
+// 9. Recovery cleanup governance.
+// Must execute before domain execution and physical publication.
+PRG_Recovery_Cleanup_Governor();
+
+// 10. Domain execution and domain output projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 10. Authoritative pre-output safety barrier.
+// 11. Authoritative pre-output safety barrier.
 // Must execute after all domain output projection and before output freshness governance.
 PRG_PreOutput_Safety_Barrier();
 
-// 11. Output freshness governance.
+// 12. Output freshness governance.
 // Must execute before physical IO publication.
 PRG_Output_Freshness_Governor();
 
-// 12. Final physical IO projection.
+// 13. Final physical IO projection.
 // Must remain after runtime/output authority barriers.
 PRG_IO_Write();
 
-// 13. Verification, explainability, diagnostics, history, HMI
+// 14. Verification, explainability, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
