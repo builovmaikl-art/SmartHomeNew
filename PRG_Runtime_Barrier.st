@@ -152,19 +152,6 @@ IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
 END_IF;
 
 // ------------------------------------------------------
-// Observability authority validation.
-// ------------------------------------------------------
-// Observability remains downstream visibility-oriented.
-// Only explicit observability quarantine may block runtime.
-// ------------------------------------------------------
-
-IF L_Runtime_OK AND GVL_OBSERVABILITY_AUTHORITY.Observability_Quarantine_Active THEN
-    L_Runtime_OK := FALSE;
-    L_Error_Code := 5304;
-    L_Error_Text := 'Observability quarantine active';
-END_IF;
-
-// ------------------------------------------------------
 // Recovery governance validation.
 // ------------------------------------------------------
 
