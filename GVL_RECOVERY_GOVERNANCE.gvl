@@ -1,0 +1,30 @@
+VAR_GLOBAL
+    // ======================================================
+    // RECOVERY CLEANUP GOVERNANCE STATE
+    // ======================================================
+    // Centralized recovery semantic cleanup authority.
+    // Prevents semantic residue resurrection after recovery.
+    // ======================================================
+
+    Recovery_Epoch : ULINT := 0;
+    Recovery_Cleanup_Epoch : ULINT := 0;
+
+    Recovery_Governance_Valid : BOOL := FALSE;
+    Recovery_Cleanup_Completed : BOOL := FALSE;
+    Recovery_Cleanup_Verified : BOOL := FALSE;
+
+    Recovery_Quarantine_Active : BOOL := FALSE;
+    Recovery_Forced_Safe_Mode : BOOL := FALSE;
+
+    Recovery_Semantic_Residue_Detected : BOOL := FALSE;
+    Recovery_Degraded_State_Residual : BOOL := FALSE;
+    Recovery_Retained_State_Residual : BOOL := FALSE;
+
+    Recovery_Last_Cleanup_Start_MS : UDINT := 0;
+    Recovery_Last_Cleanup_End_MS : UDINT := 0;
+
+    Recovery_Last_Error_Code : UDINT := 0;
+    Recovery_Last_Error_Text : STRING(160) := '';
+
+    Recovery_Invalidation_Count : UDINT := 0;
+END_VAR
