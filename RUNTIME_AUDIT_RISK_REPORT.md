@@ -40,6 +40,7 @@
 ✔ Intent/Policy/Command arbitration chain
 ✔ IO write / physical projection ownership
 ✔ Transport / Modbus / OpenTherm ownership
+✔ Diagnostics / Health / Explainability layers
 ```
 
 ---
@@ -143,14 +144,6 @@ PRG_IO_Read
 могли silently erase.
 ```
 
-Например:
-
-```text
-- Config validation errors;
-- Safety degradation;
-- manifold/runtime faults.
-```
-
 ---
 
 ## Что исправлено
@@ -160,12 +153,6 @@ PRG_IO_Read
 ```text
 IO/Input layer
 не очищает глобальные diagnostics.
-```
-
-Он:
-
-```text
-только добавляет свои faults.
 ```
 
 ---
@@ -181,60 +168,6 @@ IO/Input layer
 # RISK-004
 
 ## Safety shutdown aggregation fragility
-
-## Суть
-
-Сейчас:
-
-```text
-PRG_Safety
-→ создаёт safety intent
-
-PRG_Safety_Shutdown
-→ агрегирует final shutdown state
-
-PRG_Safety_Recovery
-→ работает уже через aggregated shutdown mode
-```
-
----
-
-## Проблема
-
-Архитектура сейчас:
-
-```text
-корректна,
-но fragile.
-```
-
-Если позже появится:
-
-```text
-ещё один writer
-в GVL_SAFETY_SHUTDOWN
-```
-
-то:
-
-```text
-Recovery layer
-может начать реагировать
-не только на реальные safety alarms.
-```
-
----
-
-## Обязательный invariant
-
-```text
-GVL_SAFETY_SHUTDOWN
-должен оставаться:
-
-single shutdown authority.
-```
-
----
 
 ## Статус
 
@@ -254,137 +187,6 @@ MEDIUM
 
 ## Distributed system mode ownership
 
-## Суть
-
-`GVL_STATE.G_System_Mode`
-имеет:
-
-```text
-несколько runtime writers.
-```
-
-Например:
-
-```text
-- Policy layer;
-- Recovery layer;
-- Health layer;
-- Safety-related orchestration.
-```
-
----
-
-## Что показала проверка
-
-Catastrophic conflict:
-
-```text
-НЕ найден.
-```
-
-Сейчас система работает как:
-
-```text
-layered escalation model.
-```
-
-Пример:
-
-```text
-NORMAL
-→ DEGRADED
-→ SAFE_STOP
-→ RECOVERY
-→ NORMAL
-```
-
-То есть сейчас:
-
-```text
-это intentional behavior,
-а не случайный conflict.
-```
-
----
-
-## Проблема
-
-Архитектура держится на:
-
-```text
-implicit discipline.
-```
-
-Нет formal owner для:
-
-```text
-system mode transitions.
-```
-
-Сейчас subsystem layers:
-
-```text
-"знают"
-какие transitions им разрешены.
-```
-
-Но это:
-
-```text
-fragile при дальнейшем росте системы.
-```
-
----
-
-## Возможные последствия в будущем
-
-```text
-- conflicting transitions;
-- stale recovery;
-- unsafe downgrade paths;
-- non-deterministic mode restore;
-- hidden escalation loops.
-```
-
----
-
-## Что важно
-
-Пока:
-
-```text
-runtime deterministic.
-```
-
-И:
-
-```text
-critical runtime conflict
-не обнаружен.
-```
-
-Но:
-
-```text
-risk accumulation присутствует.
-```
-
----
-
-## Рекомендуемое направление
-
-В будущем желательно:
-
-```text
-formalize:
-
-single system-mode authority
-или
-explicit transition contract.
-```
-
----
-
 ## Статус
 
 ```text
@@ -402,134 +204,6 @@ MEDIUM
 # RISK-006
 
 ## Monolithic IO projection complexity growth
-
-## Суть
-
-`PRG_IO_Write`
-стал:
-
-```text
-слишком большим aggregation/finalization layer.
-```
-
-Сейчас он содержит одновременно:
-
-```text
-- physical projection;
-- safety masking;
-- hard-stop logic;
-- freeze exceptions;
-- access suppression;
-- recovery masking;
-- siren logic;
-- failover logic.
-```
-
----
-
-## Что показала проверка
-
-На текущий момент:
-
-```text
-critical runtime conflict
-не найден.
-```
-
-Также подтверждено:
-
-```text
-✔ PRG_IO_Write остаётся single physical projection layer
-✔ hidden direct IO writers не обнаружены
-✔ shadow/output separation сохранён
-✔ hardware ownership пока coherent
-```
-
----
-
-## Проблема
-
-Архитектура пока:
-
-```text
-управляема.
-```
-
-Но:
-
-```text
-complexity accumulation
-уже заметна.
-```
-
-Особенно опасны future interactions между:
-
-```text
-- freeze exceptions;
-- gas/fire overrides;
-- recovery masking;
-- access emergency bypass.
-```
-
----
-
-## Возможные последствия в будущем
-
-```text
-- conflicting masking rules;
-- hidden output suppression;
-- unsafe override ordering;
-- difficult debugging;
-- accidental output starvation.
-```
-
----
-
-## Что важно
-
-Пока:
-
-```text
-single IO ownership
-сохраняется.
-```
-
-И:
-
-```text
-physical output architecture
-остаётся coherent.
-```
-
-Но:
-
-```text
-future masking conflicts
-становятся всё вероятнее.
-```
-
----
-
-## Рекомендуемое направление
-
-В будущем желательно:
-
-```text
-разделить:
-- projection;
-- masking;
-- failover policy;
-- emergency suppression.
-```
-
-При этом:
-
-```text
-single final IO ownership
-должен сохраниться.
-```
-
----
 
 ## Статус
 
@@ -549,127 +223,6 @@ MEDIUM
 
 ## Stale transport state acceptance
 
-## Суть
-
-Transport layer:
-
-```text
-слишком доверяет external wire state
-без explicit freshness governance.
-```
-
-Например:
-
-```text
-PRG_OpenTherm_Transport:
-- декодирует wire image;
-- публикует Raw_Status;
-- считает transport online.
-```
-
-Но при этом отсутствует полноценное:
-
-```text
-- stale frame detection;
-- heartbeat aging governance;
-- stale ACK validation;
-- frozen transport supervision.
-```
-
----
-
-## Что показала проверка
-
-Критических ownership conflicts:
-
-```text
-не найдено.
-```
-
-Также подтверждено:
-
-```text
-✔ transport layer остаётся bounded
-✔ protocol ownership coherent
-✔ hidden boiler authority не найден
-✔ direct output bypass не найден
-✔ Modbus scheduler isolation корректен
-✔ OpenTherm transport isolation корректен
-```
-
----
-
-## Проблема
-
-Сейчас:
-
-```text
-старые valid transport данные
-могут продолжать выглядеть валидными.
-```
-
-Особенно опасно если:
-
-```text
-- serial transport завис;
-- adapter подвис;
-- wire image перестал обновляться;
-- heartbeat frozen;
-- stale ACK остаётся valid.
-```
-
----
-
-## Возможные последствия в будущем
-
-```text
-- stale boiler state;
-- false online state;
-- delayed fault detection;
-- dangerous trust in frozen transport;
-- recovery instability.
-```
-
----
-
-## Что важно
-
-Пока:
-
-```text
-runtime deterministic.
-```
-
-И:
-
-```text
-transport layer
-не владеет runtime policy.
-```
-
-Но:
-
-```text
-freshness governance gap
-присутствует.
-```
-
----
-
-## Рекомендуемое направление
-
-В будущем желательно:
-
-```text
-formalize:
-- freshness ownership;
-- stale-state invalidation;
-- transport aging policy;
-- ACK expiration governance.
-```
-
----
-
 ## Статус
 
 ```text
@@ -684,207 +237,149 @@ MEDIUM
 
 ---
 
-# Что дополнительно подтверждено
+# RISK-008
 
-# Heating runtime
+## Global degraded-state accumulation without lifecycle ownership
 
-Подтверждено:
+## Суть
+
+`Subsystem_Degraded`
+стал:
 
 ```text
-✔ нет detached orchestration
-✔ нет Runtime_* actuation
-✔ нет duplicate boiler ownership
-✔ нет hidden manifold finalizer
-✔ phase-oriented runtime сохранён
-✔ bounded finalization сохранён
+глобальным accumulation flag.
+```
+
+Сейчас множество subsystem layers
+могут выставлять:
+
+```text
+Subsystem_Degraded := TRUE
+```
+
+Например:
+
+```text
+- IO_Read;
+- Diagnostics;
+- Health;
+- Policy;
+- Config validation;
+- subsystem managers.
 ```
 
 ---
 
-# MAIN architecture
+## Проблема
 
-Подтверждено:
+Нет централизованного owner для:
 
 ```text
-✔ MAIN вызывает только PRG_*
-✔ FB остаются subordinate layers
-✔ нет hidden FB orchestration
+- reset;
+- aging;
+- recovery;
+- degradation expiration.
+```
+
+Сейчас архитектура работает как:
+
+```text
+sticky degradation accumulation.
+```
+
+То есть subsystem может:
+
+```text
+permanently degraded систему,
+если recovery path неполный.
 ```
 
 ---
 
-# Config/runtime separation
+## Дополнительная опасность
 
-Подтверждено:
+В будущем возможно:
 
 ```text
-✔ Config simulation изолирован
-✔ commissioning validation отделён от runtime
-✔ heating phases не загрязнены config logic
+recursive degradation amplification.
+```
+
+Пример:
+
+```text
+Health
+→ выставляет degraded
+
+Diagnostics
+→ усиливает severity
+
+Policy
+→ переводит system mode
+
+Health
+→ снова усиливает degraded
 ```
 
 ---
 
-# Safety ownership
+## Что важно
 
-Подтверждено:
+Пока:
 
 ```text
-✔ single safety intent owner
-✔ single shutdown aggregation owner
-✔ recovery layer не владеет outputs
-✔ duplicate emergency ownership не найден
+реального recursive loop
+не найдено.
+```
+
+И:
+
+```text
+runtime пока deterministic.
+```
+
+Но:
+
+```text
+degradation lifecycle governance
+уже недостаточно formalized.
 ```
 
 ---
 
-# Intent / Command arbitration
-
-Подтверждено:
+## Возможные последствия
 
 ```text
-✔ direct arbitration bypass не найден
-✔ hidden command writers пока не найдены
-✔ GVL_COMMAND_SHADOW остаётся главным command aggregation layer
-✔ catastrophic command conflicts пока не найдены
+- stale degraded state;
+- non-resettable degradation;
+- recursive escalation loops;
+- false degraded persistence;
+- recovery instability.
 ```
 
 ---
 
-# IO ownership
+## Рекомендуемое направление
 
-Подтверждено:
+В будущем желательно:
 
 ```text
-✔ direct runtime writers в GVL_IO вне PRG_IO_Write не найдены
-✔ physical IO ownership централизован
-✔ hidden hardware bypass пока не найден
-✔ domain layers используют dedicated OUTPUT GVL
+formalize:
+- degraded-state ownership;
+- degradation aging;
+- recovery authority;
+- degradation expiration lifecycle.
 ```
 
 ---
 
-# Transport ownership
-
-Подтверждено:
+## Статус
 
 ```text
-✔ transport layer не владеет runtime policy
-✔ hidden boiler authority не найден
-✔ transport isolation coherent
-✔ protocol ownership централизован
-✔ direct IO bypass не найден
-```
-
----
-
-# Самые опасные future drift направления
-
-# 1. Runtime_* authority growth
-
-Риск:
-
-```text
-наблюдательные/governance слои
-начнут получать actuation writes.
+АКТИВНЫЙ РИСК
 ```
 
 Severity:
 
 ```text
-HIGH
-```
-
----
-
-# 2. Hidden output finalization
-
-Риск:
-
-```text
-появятся новые output masking layers
-вне explicit phase finalization.
-```
-
-Severity:
-
-```text
-HIGH
-```
-
----
-
-# 3. Policy bypass
-
-Риск:
-
-```text
-policy layer
-начнёт напрямую менять outputs
-вместо influence-only semantics.
-```
-
-Severity:
-
-```text
-HIGH
-```
-
----
-
-# 4. Duplicate safety aggregation
-
-Риск:
-
-```text
-появятся параллельные shutdown aggregators.
-```
-
-Severity:
-
-```text
-MEDIUM
-```
-
----
-
-# Текущее состояние архитектуры
-
-На текущий момент:
-
-```text
-архитектура выглядит:
-- coherent;
-- deterministic;
-- governance-consistent.
-```
-
-Подтверждено:
-
-```text
-✔ ownership boundaries сохранены
-✔ write-boundary governance сохранён
-✔ phase runtime сохранён
-✔ detached runtime resurrection не найден
-✔ catastrophic runtime conflicts пока не обнаружены
-```
-
----
-
-# Следующая audit-зона
-
-Следующий этап проверки:
-
-```text
-Diagnostics / History / Explainability / Health
-```
-
-Там наиболее вероятны:
-
-```text
-- recursive degradation loops;
-- stale diagnostics;
-- hidden runtime mutation из observability layers;
-- health escalation feedback;
-- explainability/runtime coupling.
+MEDIUM-HIGH
 ```
