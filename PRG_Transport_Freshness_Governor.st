@@ -17,31 +17,22 @@ L_Error_Text := '';
 // ======================================================
 // Governs transport freshness semantics.
 // Prevents stale transport semantic publication.
+//
+// Transport freshness is upstream of runtime barrier in MAIN.
+// It must not consume runtime barrier or downstream recovery
+// governance state, because runtime barrier consumes transport
+// freshness state later in the same scan-cycle.
 // ======================================================
 
 GVL_TRANSPORT_FRESHNESS.Transport_Stale_Frame_Detected := FALSE;
 GVL_TRANSPORT_FRESHNESS.Transport_Transaction_Mismatch := FALSE;
 GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid := FALSE;
 
-// Runtime authority linkage.
-IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
-    L_Transport_Valid := FALSE;
-    L_Error_Code := 10000;
-    L_Error_Text := 'Transport runtime authority invalid';
-END_IF;
-
 // Monotonic authority linkage.
 IF L_Transport_Valid AND (NOT GVL_TIME_MONOTONIC.Monotonic_Time_Valid) THEN
     L_Transport_Valid := FALSE;
     L_Error_Code := 10001;
     L_Error_Text := 'Transport monotonic authority invalid';
-END_IF;
-
-// Recovery governance linkage.
-IF L_Transport_Valid AND GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active THEN
-    L_Transport_Valid := FALSE;
-    L_Error_Code := 10002;
-    L_Error_Text := 'Transport blocked by recovery quarantine';
 END_IF;
 
 // Transport reconnect quarantine.
