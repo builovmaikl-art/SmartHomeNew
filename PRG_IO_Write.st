@@ -101,7 +101,7 @@ IF L_Heating_Forced_Off AND NOT (L_Gas_Safety_Stop AND L_Freeze_Active) THEN
     GVL_IO.DO_Backup_Circulation_Pump := FALSE;
     GVL_IO.DO_Electric_Heater_Enable := FALSE;
 ELSE
-    GVL_IO.DO_DHW_Heating_Pump := FALSE;
+    GVL_IO.DO_DHW_Heating_Pump := GVL_HEATING_OUTPUT.DO_DHW_Heating_Pump;
     GVL_IO.DO_DHW_Circ_Pump := GVL_HEATING_OUTPUT.DO_DHW_Circ_Pump;
     GVL_IO.DO_Backup_Circulation_Pump := GVL_HEATING_OUTPUT.DO_Backup_Circulation_Pump;
     GVL_IO.DO_Electric_Heater_Enable := GVL_HEATING_OUTPUT.DO_Electric_Heater_Enable;
