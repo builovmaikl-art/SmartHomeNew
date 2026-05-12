@@ -41,6 +41,7 @@
 ✔ IO write / physical projection ownership
 ✔ Transport / Modbus / OpenTherm ownership
 ✔ Diagnostics / Health / Explainability layers
+✔ Scheduler / timing / persistence audit
 ```
 
 ---
@@ -257,67 +258,86 @@ MEDIUM
 Subsystem_Degraded := TRUE
 ```
 
-Например:
+---
+
+## Статус
 
 ```text
-- IO_Read;
-- Diagnostics;
-- Health;
-- Policy;
-- Config validation;
-- subsystem managers.
+АКТИВНЫЙ РИСК
+```
+
+Severity:
+
+```text
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-009
+
+## Distributed timer lifecycle semantics
+
+## Суть
+
+Система использует:
+
+```text
+- FB_System_Timer;
+- FB_System_Timer_TOF.
+```
+
+Но lifecycle semantics таймеров:
+
+```text
+не централизованы.
+```
+
+Subsystem FB:
+
+```text
+- самостоятельно управляют reset behavior;
+- самостоятельно определяют persistence semantics;
+- самостоятельно интерпретируют expiration.
 ```
 
 ---
 
 ## Проблема
 
-Нет централизованного owner для:
+Пока:
+
+```text
+явных catastrophic timing bugs
+не найдено.
+```
+
+Но уже присутствует:
+
+```text
+timing semantics fragmentation.
+```
+
+Разные subsystem могут по-разному трактовать:
 
 ```text
 - reset;
-- aging;
-- recovery;
-- degradation expiration.
-```
-
-Сейчас архитектура работает как:
-
-```text
-sticky degradation accumulation.
-```
-
-То есть subsystem может:
-
-```text
-permanently degraded систему,
-если recovery path неполный.
+- expiration;
+- latch clear;
+- recovery timing;
+- freeze persistence.
 ```
 
 ---
 
-## Дополнительная опасность
-
-В будущем возможно:
+## Возможные последствия
 
 ```text
-recursive degradation amplification.
-```
-
-Пример:
-
-```text
-Health
-→ выставляет degraded
-
-Diagnostics
-→ усиливает severity
-
-Policy
-→ переводит system mode
-
-Health
-→ снова усиливает degraded
+- inconsistent recovery timing;
+- stale timer latches;
+- phase persistence leaks;
+- recovery races;
+- difficult deterministic debugging.
 ```
 
 ---
@@ -327,47 +347,29 @@ Health
 Пока:
 
 ```text
-реального recursive loop
-не найдено.
-```
-
-И:
-
-```text
-runtime пока deterministic.
+- broken timer reset не найден;
+- catastrophic race не найден;
+- deadlock не найден.
 ```
 
 Но:
 
 ```text
-degradation lifecycle governance
+timer lifecycle governance
 уже недостаточно formalized.
-```
-
----
-
-## Возможные последствия
-
-```text
-- stale degraded state;
-- non-resettable degradation;
-- recursive escalation loops;
-- false degraded persistence;
-- recovery instability.
 ```
 
 ---
 
 ## Рекомендуемое направление
 
-В будущем желательно:
+В будущем желательно formalize:
 
 ```text
-formalize:
-- degraded-state ownership;
-- degradation aging;
-- recovery authority;
-- degradation expiration lifecycle.
+- timer lifecycle ownership;
+- reset semantics;
+- latch expiration semantics;
+- recovery timer policy.
 ```
 
 ---
@@ -381,5 +383,5 @@ formalize:
 Severity:
 
 ```text
-MEDIUM-HIGH
+MEDIUM
 ```
