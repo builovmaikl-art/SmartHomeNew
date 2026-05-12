@@ -64,9 +64,6 @@ END_IF;
 // ------------------------------------------------------
 // Peer session detection.
 // ------------------------------------------------------
-// Peer synchronization becomes authoritative only after
-// real peer epochs or acknowledgements exist.
-// ------------------------------------------------------
 
 IF GVL_DISTRIBUTED_COMMIT.Peer_Publication_Commit_Epoch > 0 THEN
     L_Peer_Session_Active := TRUE;
@@ -82,9 +79,6 @@ END_IF;
 
 // ------------------------------------------------------
 // Commit lease freshness validation.
-// ------------------------------------------------------
-// Lease validation is peer-authoritative only after
-// peer session establishment.
 // ------------------------------------------------------
 
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
@@ -103,9 +97,6 @@ END_IF;
 
 // ------------------------------------------------------
 // Peer commit acknowledgement validation.
-// ------------------------------------------------------
-// Missing peer acknowledgement is not treated as
-// divergence until peer session exists.
 // ------------------------------------------------------
 
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
@@ -166,7 +157,6 @@ IF L_Commit_Valid THEN
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := TRUE;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := FALSE;
-    GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Forced_Safe_Mode := FALSE;
 
     GVL_DISTRIBUTED_COMMIT.Commit_Last_Reconciliation_MS := L_Now_MS;
 
@@ -177,11 +167,8 @@ ELSE
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := FALSE;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := TRUE;
-    GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Forced_Safe_Mode := TRUE;
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code := L_Error_Code;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Text := L_Error_Text;
-
-    GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Invalidation_Count := GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Invalidation_Count + 1;
 END_IF;
 END_PROGRAM
