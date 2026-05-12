@@ -41,10 +41,7 @@ VAR_GLOBAL
 
     Distributed_Commit_Valid : BOOL := FALSE;
     Distributed_Commit_Quarantine_Active : BOOL := FALSE;
-    Distributed_Commit_Forced_Safe_Mode : BOOL := FALSE;
 
     Distributed_Commit_Last_Error_Code : UDINT := 0;
     Distributed_Commit_Last_Error_Text : STRING(160) := '';
-
-    Distributed_Commit_Invalidation_Count : UDINT := 0;
 END_VAR
