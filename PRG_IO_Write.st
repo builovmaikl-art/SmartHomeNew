@@ -12,12 +12,14 @@ VAR
     L_Gas_Fire_Siren_Enable : BOOL;
     L_PreOutput_Block_IO : BOOL;
     L_Output_Freshness_Block : BOOL;
+    L_Snapshot_Block : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
 L_PreOutput_Block_IO := GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay OR (NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid) OR GVL_OUTPUT_EPOCH.Output_Lease_Expired;
-L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO OR L_Output_Freshness_Block;
+L_Snapshot_Block := (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid) OR GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
+L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO OR L_Output_Freshness_Block OR L_Snapshot_Block;
 L_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_COMMAND_SHADOW.G_Boiler_Stop;
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
 L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Siren OR GVL_ALARM.G_Global_Critical;
@@ -30,13 +32,8 @@ L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Sire
 //   - emergency stop is active;
 //   - pre-output barrier rejected current-cycle runtime projection;
 //   - output freshness governor invalidated publication;
-//   - output lease expired or forced safe decay is active.
-//
-// RISK coverage:
-//   - RISK-037
-//   - RISK-038
-//   - RISK-040
-//   - RISK-047
+//   - immutable snapshot authority invalidated publication;
+//   - snapshot mutation was detected.
 // ======================================================
 
 IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
@@ -95,6 +92,10 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
 
     IF L_Output_Freshness_Block THEN
         fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_OUTPUT_EPOCH.Output_Last_Error_Code),iText := 'IO forced safe by output freshness decay');
+    END_IF;
+
+    IF L_Snapshot_Block THEN
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Error_Code),iText := 'IO blocked by immutable snapshot authority');
     END_IF;
 
     RETURN;
