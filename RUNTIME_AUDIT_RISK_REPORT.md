@@ -37,6 +37,7 @@
 ✔ Freeze/recovery interaction audit
 ✔ Runtime publication/state consistency audit
 ✔ Orchestration determinism audit
+✔ Command/arbitration/finalization timing audit
 ```
 
 ---
@@ -165,49 +166,67 @@ MEDIUM-HIGH
 
 ## Non-atomic cross-subsystem transition visibility
 
-## Суть
-
-System transitions:
+Severity:
 
 ```text
-не atomic
-относительно полного PLC cycle.
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-015
+
+## Command-validity and execution-validity divergence
+
+## Суть
+
+Command arbitration:
+
+```text
+отделён
+от final execution suppression.
 ```
 
 Subsystem может:
 
 ```text
-- изменить state;
-- следующий subsystem уже увидит новый state;
-- остальные subsystem ещё работают на старом контексте.
+- опубликовать command intent;
+- arbitration подтвердит command;
+- downstream subsystem увидит command;
+- final IO suppression позже его отменит.
 ```
 
 То есть:
 
 ```text
-cycle-wide transition snapshot
-отсутствует.
+command visibility
+не эквивалентна
+command executability.
 ```
 
 ---
 
 ## Проблема
 
-Во время transitions:
+Subsystem может считать:
 
 ```text
-- SAFE_STOP;
-- RECOVERY;
-- DEGRADED;
-- freeze escalation;
-- policy escalation.
+command уже valid/active.
 ```
 
-часть subsystem может:
+Хотя:
 
 ```text
-работать
-на partially-transitioned state.
+- safety;
+- recovery;
+- freeze;
+- IO suppression
+```
+
+позже:
+
+```text
+заблокируют execution.
 ```
 
 ---
@@ -217,15 +236,15 @@ cycle-wide transition snapshot
 Пока НЕ найдено:
 
 ```text
-- catastrophic orchestration corruption;
-- impossible runtime state;
-- broken execution ordering.
+- unsafe execution bypass;
+- hidden direct actuation;
+- arbitration corruption.
 ```
 
 Но найдено:
 
 ```text
-cross-cycle transition non-atomicity.
+late-stage execution invalidation.
 ```
 
 ---
@@ -233,11 +252,11 @@ cross-cycle transition non-atomicity.
 ## Возможные последствия
 
 ```text
-- partially-transitioned reactions;
-- subsystem coordination drift;
-- order-dependent behavior;
-- inconsistent same-cycle orchestration;
-- difficult deterministic debugging.
+- stale active-command assumptions;
+- inconsistent subsystem coordination;
+- false-positive runtime intent visibility;
+- preemption asymmetry;
+- difficult execution-state debugging.
 ```
 
 ---
@@ -247,10 +266,10 @@ cross-cycle transition non-atomicity.
 В будущем желательно formalize:
 
 ```text
-- cycle-wide transition snapshots;
-- transition publication barrier;
-- atomic orchestration semantics;
-- subsystem visibility contract.
+- execution-validity lifecycle;
+- command executability contract;
+- arbitration/finalization synchronization;
+- final execution publication semantics.
 ```
 
 ---
