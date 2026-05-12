@@ -2,16 +2,13 @@ PROGRAM PRG_Heating
 VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
-    fbOutputProjection : FB_Heating_Output_Projection;
-    fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
-    fbHeatingDiagnostics : FB_Heating_Diagnostics;
-    fbRuntimeObserver : FB_Heating_Runtime_Observer;
-    fbRuntimeObserverAuthorization : FB_Heating_Runtime_Observer_Authorization;
+    fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
+    fbObserverPhase : FB_Heating_Runtime_Observer_Phase;
+    fbServiceGatingPhase : FB_Heating_Runtime_Service_Gating_Phase;
+    fbStatePublicationPhase : FB_Heating_Runtime_State_Publication_Phase;
+    fbOutputProjectionPhase : FB_Heating_Runtime_Output_Projection_Phase;
 
     L_Runtime_Context : ST_Heating_Runtime_Context;
-
-    L_Runtime_Observer_Enable_Last : BOOL := FALSE;
-    L_Runtime_Observer_Activation_Stabilized : BOOL := FALSE;
 
     L_i : INT;
     L_Current_Hour : UINT;
@@ -76,62 +73,14 @@ L_Runtime_Context.Cascade_Ownership_Valid := TRUE;
 L_Runtime_Context.Runtime_Status_Code := 1;
 L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
 
-// ======================================================
-// GOVERNED OBSERVER AUTHORIZATION EVALUATION
-// ======================================================
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-    E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_PENDING;
-GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-    E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_PENDING;
-GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 10;
-GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-    'Heating runtime observer authorization pending';
-GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Active :=
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request;
+L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_IDLE;
 
-fbRuntimeObserverAuthorization(
-    VI_Enable_Request := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request,
-    VI_Bootstrap_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Bootstrap_Mode,
-    VI_Passive_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Passive_Mode,
-    VI_ReadOnly_Mode := GVL_Heating_Runtime_Observer.G_Runtime_Observer_ReadOnly_Mode,
-    VI_Governance_Locked := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Governance_Locked,
-    VI_Runtime_Authority_Disabled := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Runtime_Authority_Disabled,
-    VI_Writable_Exports_Disabled := GVL_Heating_Runtime_Observer.G_Runtime_Observer_Writable_Exports_Disabled
+fbObserverPhase(
+    VI_Authorization_Stage := TRUE,
+    VI_Finalization_Stage := FALSE,
+    VI_Runtime_Context := L_Runtime_Context,
+    VI_Diagnostics_Valid := TRUE
 );
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Authorized :=
-    fbRuntimeObserverAuthorization.VO_Enable_Authorized;
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective :=
-    fbRuntimeObserverAuthorization.VO_Enable_Effective;
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Valid :=
-    fbRuntimeObserverAuthorization.VO_Authorization_Valid;
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Code :=
-    fbRuntimeObserverAuthorization.VO_Status_Code;
-
-GVL_Heating_Runtime_Observer.G_Runtime_Observer_Authorization_Status_Text :=
-    fbRuntimeObserverAuthorization.VO_Status_Text;
-
-IF NOT GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request THEN
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 0;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-        'Heating runtime observer inactive';
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Active := FALSE;
-ELSIF NOT GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-        E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 20;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-        'Heating runtime observer authorization denied';
-END_IF;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 
@@ -204,258 +153,63 @@ L_Runtime_Context.Heating_Executed := TRUE;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_SERVICE_GATING;
 
-GVL_STATUS.G_Diagnostics.Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service;
-GVL_STATUS.G_Diagnostics.Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service;
+fbServiceGatingPhase(
+    VI_Enable := TRUE,
+    VIO_Manifold_Pumps := L_Manifold_Pumps,
+    VIO_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+    VIO_Electric_Heater_Enable := L_Electric_Heater_Enable,
+    VIO_DHW_Heating_Pump := L_DHW_Heating_Pump,
+    VIO_DHW_Circ_Pump := L_DHW_Circ_Pump,
+    VIO_DHW_Status := L_DHW_Status,
+    VIO_Freeze_Risk_Status := L_Freeze_Risk_Status
+);
 
-IF NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service THEN
-    L_Backup_Circulation_Pump := FALSE;
-END_IF;
-
-IF NOT GVL_CONFIG.G_Electric_Heater_In_Service THEN
-    L_Electric_Heater_Enable := FALSE;
-END_IF;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    GVL_STATUS.G_Diagnostics.Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
-    IF NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i] THEN
-        L_Manifold_Pumps[L_i] := FALSE;
-    END_IF;
-END_FOR;
-
-GVL_STATUS.G_Diagnostics.DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service;
-IF NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service THEN
-    L_DHW_Heating_Pump := FALSE;
-    L_DHW_Status.Heating_Pump_On := FALSE;
-END_IF;
-
-GVL_STATUS.G_Diagnostics.DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service;
-IF NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service THEN
-    L_DHW_Circ_Pump := FALSE;
-    L_DHW_Status.Circ_Pump_On := FALSE;
-END_IF;
-
-GVL_STATE.G_Freeze_Hardware_Degraded := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault OR GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
-GVL_STATE.G_Freeze_Hardware_Failed := GVL_STATUS.G_Diagnostics.Backup_Pump_Fault AND GVL_STATUS.G_Diagnostics.Electric_Heater_Fault;
-
-IF GVL_STATE.G_Freeze_Hardware_Failed THEN
-    L_Backup_Circulation_Pump := FALSE;
-    L_Electric_Heater_Enable := FALSE;
-    L_Freeze_Risk_Status := TRUE;
-END_IF;
-
-L_Runtime_Context.Service_Gating_Executed := TRUE;
+L_Runtime_Context.Service_Gating_Executed := fbServiceGatingPhase.VO_Executed;
+L_Runtime_Context.Safety_Isolation_Valid := fbServiceGatingPhase.VO_Valid;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_STATE_PUBLICATION;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
-END_FOR;
+fbStatePublicationPhase(
+    VI_Enable := TRUE,
+    VI_Zone_Valves := L_Zone_Valves,
+    VI_Manifold_Pumps := L_Manifold_Pumps,
+    VI_Manifold_Valves := L_Manifold_Valves,
+    VI_Boiler_OT_Enable := L_Boiler_OT_Enable,
+    VI_Boiler_OT_Setpoint := L_Boiler_OT_Setpoint,
+    VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+    VI_Electric_Heater_Enable := L_Electric_Heater_Enable,
+    VI_Freeze_Risk_Status := L_Freeze_Risk_Status,
+    VI_Manifold_Status := L_Manifold_Status,
+    VI_Boiler_Status := L_Boiler_Status,
+    VI_DHW_Heating_Pump := L_DHW_Heating_Pump,
+    VI_DHW_Circ_Pump := L_DHW_Circ_Pump,
+    VI_DHW_Status := L_DHW_Status
+);
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    GVL_STATE.G_Manifold_Pumps[L_i] := L_Manifold_Pumps[L_i];
-    GVL_STATE.G_Manifold_Valves[L_i] := L_Manifold_Valves[L_i];
-    GVL_STATUS.G_Manifold_Status[L_i] := L_Manifold_Status[L_i];
-END_FOR;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-    GVL_STATE.G_Boiler_OT_Enable[L_i] := L_Boiler_OT_Enable[L_i];
-    GVL_STATE.G_Boiler_OT_Setpoint[L_i] := L_Boiler_OT_Setpoint[L_i];
-    GVL_STATUS.G_Boiler_Status[L_i] := L_Boiler_Status[L_i];
-END_FOR;
-
-GVL_STATE.G_Backup_Circulation_Pump := L_Backup_Circulation_Pump;
-GVL_STATE.G_Electric_Heater_Enable := L_Electric_Heater_Enable;
-GVL_STATE.G_Safety_Freeze_Risk := L_Freeze_Risk_Status;
-GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
-GVL_STATE.G_DHW_Circ_Pump := L_DHW_Circ_Pump;
-GVL_STATUS.G_DHW_Status := L_DHW_Status;
-
-L_Runtime_Context.State_Publication_Executed := TRUE;
+L_Runtime_Context.State_Publication_Executed := fbStatePublicationPhase.VO_Executed;
+L_Runtime_Context.State_Publication_Before_Diagnostics_Valid := fbStatePublicationPhase.VO_Valid;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 
-fbRootCauseDiagnostics(
-    VI_Enable := TRUE
-);
-
-fbHeatingDiagnostics(
+fbDiagnosticsPhase(
+    VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
-L_Runtime_Context.Diagnostics_Executed := TRUE;
+L_Runtime_Context.Diagnostics_Executed := fbDiagnosticsPhase.VO_Executed;
+L_Runtime_Context.Diagnostics_Isolation_Valid := fbDiagnosticsPhase.VO_Valid;
 
-// ======================================================
-// GOVERNED FINALIZED-STATE RUNTIME OBSERVER
-// ======================================================
-IF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective THEN
-
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Rollback_Validated := FALSE;
-
-    IF NOT L_Runtime_Observer_Enable_Last THEN
-        L_Runtime_Observer_Activation_Stabilized := FALSE;
-
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_STABILIZATION;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_STABILIZATION;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 30;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-            'Heating runtime observer stabilization active';
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Required := TRUE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Active := TRUE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Complete := FALSE;
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := FALSE;
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code := 100;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
-            'Heating runtime observer stabilization cycle active';
-    END_IF;
-
-    fbRuntimeObserver(
-        VI_Enable := TRUE,
-        VI_Runtime_Context := L_Runtime_Context,
-        VI_Diagnostics_Valid := TRUE
-    );
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation :=
-        fbRuntimeObserver.VO_Observation;
-
-    IF L_Runtime_Observer_Activation_Stabilized THEN
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_OPERATIONAL;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_OPERATIONAL;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 40;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-            'Heating runtime observer operational';
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Required := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Active := FALSE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Complete := TRUE;
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := TRUE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := TRUE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := TRUE;
-
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := TRUE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready :=
-            fbRuntimeObserver.VO_Observer_Ready;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault :=
-            fbRuntimeObserver.VO_Observer_Fault;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code :=
-            fbRuntimeObserver.VO_Status_Code;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
-            fbRuntimeObserver.VO_Status_Text;
-
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Activation_Validated := TRUE;
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Sequencing_Validated := TRUE;
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Publication_Validated := TRUE;
-    ELSE
-        L_Runtime_Observer_Activation_Stabilized := TRUE;
-    END_IF;
-
-ELSE
-    L_Runtime_Observer_Activation_Stabilized := FALSE;
-
-    IF L_Runtime_Observer_Enable_Last THEN
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_ROLLBACK;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_ROLLBACK;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 50;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-            'Heating runtime observer rollback cleanup completed';
-    ELSIF GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Request THEN
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_AUTHORIZATION_DENIED;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 20;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-            'Heating runtime observer authorization denied';
-    ELSE
-        GVL_Heating_Runtime_Observer.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_State :=
-            E_Runtime_Observer_Lifecycle_State.ROS_INACTIVE;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Code := 0;
-        GVL_Heating_Runtime_Observation.G_Runtime_Observer_Lifecycle_Text :=
-            'Heating runtime observer inactive';
-    END_IF;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Required := TRUE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Commissioning_Complete := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ready := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Fault := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Current_Phase := E_Heating_Runtime_Phase.HRP_DISABLED;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Demand_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Heating_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Circulation_Active := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Demand_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Runtime_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Output_Active := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Available := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Degraded := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Active_Boilers := 0;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Available_Boilers := 0;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Online := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Command_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Transport_Degraded := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Active := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Explainability_Active := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Before_Heating_Observed := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_After_Publication_Observed := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Output_Projection_Last_Observed := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ownership_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Ownership_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Ownership_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Ownership_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Safety_Ownership_Valid := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Code := 0;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Text :=
-        'Heating runtime observation inactive';
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Publication_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Stabilization_Complete := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Operational := FALSE;
-
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault := FALSE;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code := 0;
-    GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text :=
-        'Heating runtime observation inactive';
-
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Activation_Validated := FALSE;
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Sequencing_Validated := FALSE;
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Publication_Validated := FALSE;
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Rollback_Validated := TRUE;
-END_IF;
-
-L_Runtime_Observer_Enable_Last :=
-    GVL_Heating_Runtime_Observer.G_Runtime_Observer_Enable_Effective;
+fbObserverPhase(
+    VI_Authorization_Stage := FALSE,
+    VI_Finalization_Stage := TRUE,
+    VI_Runtime_Context := L_Runtime_Context,
+    VI_Diagnostics_Valid := L_Runtime_Context.Diagnostics_Isolation_Valid
+);
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
-fbOutputProjection(
+fbOutputProjectionPhase(
+    VI_Enable := TRUE,
     VI_Zone_Valves := L_Zone_Valves,
     VI_Manifold_Pumps := L_Manifold_Pumps,
     VI_Manifold_Valves := L_Manifold_Valves,
@@ -465,7 +219,9 @@ fbOutputProjection(
     VI_Electric_Heater_Enable := L_Electric_Heater_Enable
 );
 
-L_Runtime_Context.Output_Projection_Executed := TRUE;
+L_Runtime_Context.Output_Projection_Executed := fbOutputProjectionPhase.VO_Executed;
+L_Runtime_Context.Output_Projection_Last_Valid := fbOutputProjectionPhase.VO_Valid;
+
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_COMPLETE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
