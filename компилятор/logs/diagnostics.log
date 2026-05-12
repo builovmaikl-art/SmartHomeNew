@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2432
+total 2428
 -rw-r--r--  1 runner runner  13067 May 12 06:53 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 14 runner runner  20480 May 12 06:53 .
 drwxr-xr-x  3 runner runner   4096 May 12 06:53 ..
@@ -99,7 +99,6 @@ drwxr-xr-x  3 runner runner   4096 May 12 06:53 .github
 -rw-r--r--  1 runner runner   5392 May 12 06:53 FB_Heating_Runtime_Observer.st
 -rw-r--r--  1 runner runner   2775 May 12 06:53 FB_Heating_Runtime_Observer_Authorization.st
 -rw-r--r--  1 runner runner   2522 May 12 06:53 FB_Heating_Runtime_RootCause_Correlator.st
--rw-r--r--  1 runner runner   1337 May 12 06:53 FB_Heating_Runtime_Supervision_Integrity_Validator.st
 -rw-r--r--  1 runner runner   3661 May 12 06:53 FB_Heating_Safe_State.st
 -rw-r--r--  1 runner runner   2082 May 12 06:53 FB_Heating_Safety_Gate.st
 -rw-r--r--  1 runner runner   5900 May 12 06:53 FB_Heating_Schedule_Preheat.st
@@ -422,8 +421,8 @@ drwxr-xr-x  2 runner runner   4096 May 12 06:53 out
 -rw-r--r--  1 runner runner    177 May 12 06:53 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1356
+total 1352
 drwxr-xr-x 2 runner runner    4096 May 12 06:53 .
 drwxr-xr-x 5 runner runner    4096 May 12 06:53 ..
 -rw-r--r-- 1 runner runner       0 May 12 06:53 .gitkeep
--rw-r--r-- 1 runner runner 1376358 May 12 06:53 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1373573 May 12 06:53 RESULT_methods_clean.xml
