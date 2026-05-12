@@ -41,6 +41,7 @@
 ✔ Cross-subsystem dependency audit
 ✔ Persistence/governance coupling audit
 ✔ Initialization / cold-start / reboot integrity audit
+✔ Startup barrier / early-consumer audit
 ```
 
 ---
@@ -229,70 +230,69 @@ HIGH
 
 ## Config validation is diagnostic-visible but not runtime-authoritative
 
-## Суть
-
-`PRG_Config_Validation`
-корректно выставляет:
+Severity:
 
 ```text
-GVL_CONFIG_VALIDATION.G_Config_Valid
-GVL_CONFIG_VALIDATION.G_Config_Critical_Error
+HIGH
 ```
 
-Но:
+---
+
+# RISK-020
+
+## Absence of unified validated-runtime barrier
+
+## Суть
+
+В системе отсутствует:
 
 ```text
-critical config validation state
-не используется
-как hard runtime barrier.
+единый validated-runtime / initialized-runtime contract.
+```
+
+Проверка показала:
+
+```text
+- G_System_Initialized не найден;
+- Init_Done / Startup_Complete / FirstScan guards отсутствуют;
+- unified startup barrier отсутствует;
+- subsystem-wide initialization contract отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Проверка показала:
+Subsystem начинают runtime execution:
 
 ```text
-G_Config_Critical_Error
-почти нигде
-не участвует в:
-- command arbitration;
-- domain execution;
-- IO finalization;
-- startup suppression.
+без единой гарантии,
+что:
+- config validated;
+- mappings stable;
+- runtime restored;
+- persistence replay completed;
+- startup sequencing finalized.
 ```
 
-То есть:
+Startup semantics сейчас:
 
 ```text
-config validation
-может обнаружить critical error,
-но runtime pipeline
-всё равно продолжит execution.
+distributed and implicit.
 ```
 
----
-
-## Что показала проверка
-
-Это уже:
+Каждый subsystem:
 
 ```text
-не просто diagnostics smell.
+предполагает,
+что system уже готова.
 ```
 
-Найден:
+Но:
 
 ```text
-runtime-authority gap.
-```
-
-Validation layer:
-
-```text
-сообщает об ошибке,
-но не гарантирует durable runtime block.
+нет authoritative signal,
+что runtime действительно validated.
 ```
 
 ---
@@ -300,11 +300,12 @@ Validation layer:
 ## Возможные последствия
 
 ```text
-- runtime execution при invalid config;
-- partially validated startup;
-- inconsistent startup safety behavior;
-- diagnostics/runtime divergence;
-- unsafe subsystem activation.
+- partially initialized execution;
+- startup-only nondeterminism;
+- reboot behavior drift;
+- unstable early-cycle reads;
+- subsystem startup asymmetry;
+- invalid runtime assumptions.
 ```
 
 ---
@@ -314,23 +315,25 @@ Validation layer:
 Нужно formalize:
 
 ```text
-config validation authority model.
+validated-runtime lifecycle.
 ```
 
 Предпочтительное направление:
 
 ```text
-critical config validation
-→ explicit startup/runtime inhibit source
-→ integrated into arbitration/safety pipeline.
+- explicit startup barrier;
+- validated-runtime state;
+- runtime-ready publication;
+- subsystem activation gating.
 ```
 
-Также желательно ввести:
+Также желательно:
 
 ```text
-- startup validation barrier;
-- validated-runtime state;
-- config-safe execution contract.
+- separate init phase;
+- post-validation activation phase;
+- startup synchronization contract;
+- reboot stabilization semantics.
 ```
 
 ---
