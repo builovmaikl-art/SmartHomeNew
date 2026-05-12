@@ -8,23 +8,6 @@ PROGRAM MAIN
 //   - Do not assign child PRG_* programs directly to the same task.
 //   - Configure the real cycle time in CODESYS Task Configuration.
 //   - Recommended main control cycle: 100 ms.
-//
-// Execution principle:
-//   1. Time / init / configuration
-//   2. Monotonic time governance
-//   3. PLC role arbitration
-//   4. PLC ownership / fencing governance
-//   5. IO read and input normalization
-//   6. Mode, presence and safety
-//   7. Intent, behavior, scenario and policy
-//   8. Command arbitration
-//   9. Runtime authority barrier
-//   10. Recovery cleanup governance
-//   11. Domain execution
-//   12. Pre-output safety barrier
-//   13. Output freshness governance
-//   14. Physical IO write
-//   15. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -39,8 +22,7 @@ PRG_System_Runtime_Base();
 // 2. PLC role arbitration
 PRG_PLC_Arbitration();
 
-// 3. PLC ownership / fencing governance.
-// Must execute immediately after arbitration and before runtime publication.
+// 3. PLC ownership / fencing governance
 PRG_PLC_Fencing_Governor();
 
 // 4. IO read and normalized inputs
@@ -72,14 +54,7 @@ PRG_System_Coordinator();
 // 7. Command arbitration
 PRG_Command_Arbitration();
 
-// 7.5 Modbus/OpenTherm transport pipeline.
-// Modbus master schedules requests.
-// RTU bridge exports request/imports confirmed response.
-// RTU driver builds TX frame and consumes validated RX frame.
-// SysCom backend performs physical serial IO.
-// SysCom transport boundary transfers bytes between backend and RTU runtime.
-// Register scanner is strictly read-only diagnostics.
-// OpenTherm transport decodes wire image before validation.
+// 8. Transport pipeline
 PRG_Modbus_Master();
 PRG_Modbus_RTU_Bridge();
 PRG_Modbus_RTU_Driver();
@@ -89,34 +64,32 @@ PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
 
-// 8. Authoritative runtime barrier.
-// Must execute after arbitration/fencing and before domain output projection.
+// 9. Transport freshness governance
+PRG_Transport_Freshness_Governor();
+
+// 10. Runtime authority barrier
 PRG_Runtime_Barrier();
 
-// 9. Recovery cleanup governance.
-// Must execute before domain execution and physical publication.
+// 11. Recovery cleanup governance
 PRG_Recovery_Cleanup_Governor();
 
-// 10. Domain execution and domain output projection
+// 12. Domain execution and projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 11. Authoritative pre-output safety barrier.
-// Must execute after all domain output projection and before output freshness governance.
+// 13. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 12. Output freshness governance.
-// Must execute before physical IO publication.
+// 14. Output freshness governance
 PRG_Output_Freshness_Governor();
 
-// 13. Final physical IO projection.
-// Must remain after runtime/output authority barriers.
+// 15. Final physical IO projection
 PRG_IO_Write();
 
-// 14. Verification, explainability, diagnostics, history, HMI
+// 16. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
