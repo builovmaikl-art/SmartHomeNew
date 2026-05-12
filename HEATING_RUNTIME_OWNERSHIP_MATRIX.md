@@ -4,26 +4,26 @@
 
 This document defines authoritative runtime ownership boundaries for the heating architecture.
 
-The goal is to prevent:
+Primary goals:
 
 ```text
-- duplicate writers;
-- hidden authority overlap;
-- accidental orchestration resurrection;
-- projection/control confusion;
-- unsafe reconnects;
-- runtime ownership drift.
+- prevent duplicate writers;
+- prevent detached runtime authority;
+- prevent hidden authority overlap;
+- prevent projection/control confusion;
+- preserve deterministic phase sequencing;
+- preserve explicit ownership boundaries.
 ```
 
 This document is authoritative for:
 
 ```text
-- runtime authority ownership;
+- runtime ownership;
 - allowed write boundaries;
-- projection-only layers;
-- observability-only layers;
-- governance-only layers;
-- safety override ownership.
+- observability boundaries;
+- governance boundaries;
+- finalization boundaries;
+- safety ownership.
 ```
 
 ---
@@ -36,11 +36,23 @@ The invariant that must never be violated:
 single active runtime authority path
 ```
 
-Authoritative runtime path:
+Current verified orchestration:
 
 ```text
 PRG_Heating
-→ FB_Heating_System_Manager
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Current verified subsystem ownership:
+
+```text
+FB_Heating_System_Manager
     → Safety_Gate
     → Safe_State
     → Circuit_Control
@@ -49,11 +61,10 @@ PRG_Heating
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
-    → System_Manager post-manifold safety/test finalization
     → Boiler_Control
 ```
 
-No additional orchestration layer may bypass this chain.
+No detached orchestration may bypass this chain.
 
 ---
 
@@ -67,30 +78,22 @@ Every runtime authority domain must have:
 ONE authoritative runtime ownership chain
 ```
 
-Important clarification:
-
-```text
-A bounded top-level runtime finalizer
-inside the same ownership chain
-is NOT considered a detached second authority path.
-```
-
-Additional blocks may:
+Additional layers may:
 
 ```text
 - observe;
-- validate;
+- validate sequencing;
 - project telemetry;
 - publish diagnostics;
-- calculate analytics.
+- perform governance validation.
 ```
 
 But may NOT:
 
 ```text
 - create detached runtime ownership;
-- create hidden second authority paths;
-- bypass active runtime chain.
+- bypass active runtime chain;
+- create hidden authority overlap.
 ```
 
 ---
@@ -101,9 +104,9 @@ Projection layers:
 
 ```text
 - Runtime_Observability;
-- telemetry aggregators;
-- anomaly correlators;
-- governance scaffold.
+- observer infrastructure;
+- telemetry publishers;
+- diagnostics publishers.
 ```
 
 must never become:
@@ -116,21 +119,21 @@ runtime controllers.
 
 ## Rule 3 — Governance ≠ orchestration
 
-Governance scaffold may:
+Governance infrastructure may:
 
 ```text
 - validate sequencing;
 - validate contracts;
-- validate phase consistency;
-- validate attachment policy.
+- validate lifecycle consistency;
+- validate integration boundaries.
 ```
 
 But may NOT:
 
 ```text
 - own runtime execution;
-- own pumps;
 - own valves;
+- own pumps;
 - own OpenTherm;
 - own DHW.
 ```
@@ -139,7 +142,33 @@ But may NOT:
 
 # Authority ownership matrix
 
-## Heating master runtime ownership
+## Runtime orchestration ownership
+
+Authoritative owner:
+
+```text
+PRG_Heating
+```
+
+Authority:
+
+```text
+- deterministic phase sequencing;
+- runtime context coordination;
+- bounded phase orchestration.
+```
+
+Explicit non-authority:
+
+```text
+- no detached execution ownership;
+- no hidden actuation ownership;
+- no alternate runtime path.
+```
+
+---
+
+## Heating runtime ownership
 
 Authoritative owner:
 
@@ -150,35 +179,19 @@ FB_Heating_System_Manager
 Authority:
 
 ```text
-- heating runtime sequencing;
-- active heating execution chain;
-- runtime coordination;
+- heating runtime execution;
 - bounded policy integration;
 - allocation integration;
-- manifold execution ordering;
-- post-manifold safety/test finalization.
+- manifold execution coordination;
+- heating realization ownership.
 ```
 
-Important:
-
-```text
-System_Manager remains the top-level runtime owner.
-```
-
-Verified post-manifold finalization responsibilities:
-
-```text
-- low-pressure pump suppression;
-- confidence-fallback pump suppression;
-- valve-test override finalization.
-```
-
-Forbidden external ownership:
+Forbidden ownership:
 
 ```text
 - detached orchestration shells;
 - Runtime_* governance scaffold;
-- historical override layers.
+- detached override layers.
 ```
 
 ---
@@ -194,21 +207,13 @@ FB_Heating_Circuit_Control
 Authority:
 
 ```text
-- floor temperature evaluation;
-- overheat shutdown;
-- valve thermal protection decisions;
-- circuit enable state.
+- floor thermal evaluation;
+- thermal shutdown;
+- circuit enable state;
+- bounded thermal suppression.
 ```
 
-Forbidden ownership:
-
-```text
-- Runtime_* analytics;
-- detached protection duplicates;
-- telemetry layers.
-```
-
-Historical absorbed donors:
+Historical absorbed donor:
 
 ```text
 FB_FloorHeating_Overheat_Protection
@@ -228,21 +233,12 @@ FB_Heating_Safe_State
 Authority:
 
 ```text
-- freeze detection;
-- freeze-safe operating mode;
-- freeze circulation semantics;
-- emergency-safe heating preservation.
+- freeze-safe runtime state;
+- emergency-safe circulation semantics;
+- freeze protection ownership.
 ```
 
-Forbidden ownership:
-
-```text
-- Runtime_* governance scaffold;
-- detached freeze protection duplicates;
-- historical override layers.
-```
-
-Historical absorbed donors:
+Historical absorbed donor:
 
 ```text
 FB_FloorHeating_Freeze_Protection
@@ -250,7 +246,7 @@ FB_FloorHeating_Freeze_Protection
 
 ---
 
-## Allocation authority ownership
+## Allocation ownership
 
 Authoritative owner:
 
@@ -261,10 +257,9 @@ FB_Heating_Allocation_Filter
 Authority:
 
 ```text
-- bounded thermal allocation;
+- bounded allocation authorization;
 - manifold admission filtering;
-- manifold thermal budget decisions;
-- degraded manifold exclusion;
+- degraded manifold filtering;
 - availability filtering.
 ```
 
@@ -272,14 +267,6 @@ Allowed upstream influence:
 
 ```text
 FB_Heating_Policy_Priority_Bridge
-```
-
-Forbidden ownership:
-
-```text
-- detached allocation orchestrators;
-- historical thermal allocation runtime;
-- Runtime_* analytics.
 ```
 
 Historical absorbed donors:
@@ -302,26 +289,16 @@ FB_Heating_Policy_Priority_Bridge
 Authority:
 
 ```text
-- zone priority bias;
-- manifold effective priority;
-- policy priority multiplier;
-- bounded priority buckets;
-- neutral unset handling.
-```
-
-Forbidden ownership:
-
-```text
-- detached policy orchestrators;
-- Runtime_* governance scaffold;
-- telemetry-only layers.
+- effective runtime priorities;
+- bounded policy multipliers;
+- bounded priority reduction.
 ```
 
 ---
 
 ## Manifold execution ownership
 
-Primary actuator helper:
+Primary owner:
 
 ```text
 FB_Heating_Manifold_Control
@@ -331,39 +308,39 @@ Authority:
 
 ```text
 - manifold valve realization;
-- manifold runtime enable realization;
-- manifold PID execution;
-- manifold DHW suppression;
-- manifold freeze minimum behavior.
+- manifold pump realization;
+- manifold runtime realization;
+- DHW suppression realization;
+- freeze minimum realization.
 ```
 
-Important clarification:
+Explicit bounded finalization owner:
 
 ```text
-Manifold_Control is the primary manifold actuator helper,
-but not the final manifold output finalizer.
+FB_Heating_Runtime_Service_Gating_Phase
 ```
 
-Final manifold output finalization remains inside:
+Allowed finalization authority:
 
 ```text
-FB_Heating_System_Manager
+- out-of-service suppression;
+- freeze hardware suppression;
+- bounded runtime masking.
 ```
 
-for:
+Important:
 
 ```text
-- low-pressure safety suppression;
-- confidence-fallback suppression;
-- valve-test override finalization.
+finalization remains explicit,
+phase-oriented and bounded.
 ```
 
 Forbidden ownership:
 
 ```text
-- Runtime_* scaffold;
-- telemetry layers;
-- detached override shells.
+- detached override layers;
+- Runtime_* governance scaffold;
+- telemetry-only layers.
 ```
 
 ---
@@ -381,24 +358,15 @@ Authority:
 ```text
 - boiler enable;
 - OpenTherm interaction;
-- supply target execution;
+- supply target realization;
 - thermal source coordination.
 ```
 
-Verified implementation:
+Verified helper chain:
 
 ```text
-OpenTherm authority flows through:
 FB_Boiler_Cascade_Manager
 → FB_Boiler_OpenTherm_Interface
-```
-
-Forbidden ownership:
-
-```text
-- Runtime_* scaffold;
-- detached override layers;
-- diagnostics-only blocks.
 ```
 
 Historical dangerous donor:
@@ -407,12 +375,12 @@ Historical dangerous donor:
 FB_Heating_Override_Layer
 ```
 
-Important:
+Forbidden ownership:
 
 ```text
-historical override semantics
-must never be reintroduced
-as detached authority layer.
+- detached override semantics;
+- Runtime_* governance scaffold;
+- diagnostics-only layers.
 ```
 
 ---
@@ -430,9 +398,9 @@ Authority:
 ```text
 - telemetry projection;
 - runtime publication;
-- runtime state projection;
 - allocation observability;
-- policy observability.
+- policy observability;
+- explainability projection.
 ```
 
 Explicit non-authority:
@@ -447,25 +415,25 @@ Explicit non-authority:
 
 ---
 
-## Governance / sequencing ownership
+## Observer/diagnostics ownership
 
-Authoritative governance scaffold:
+Authoritative governance/observer layers:
 
 ```text
-FB_Heating_Runtime_Orchestration_Shell
-FB_Heating_Runtime_Coordinator
-FB_Heating_Runtime_Integration_Bridge_Manager
-FB_Heating_Runtime_Contract_Validator
+FB_Heating_Runtime_Observer_Phase
+FB_Heating_Runtime_Observer
+FB_Heating_Runtime_Observer_Authorization
+FB_Heating_Runtime_Diagnostics_Phase
 ```
 
 Allowed authority:
 
 ```text
+- diagnostics publication;
 - sequencing validation;
 - governance validation;
-- runtime contract validation;
-- attachment validation;
-- integration consistency checks.
+- lifecycle telemetry;
+- observation publication.
 ```
 
 Forbidden authority:
@@ -476,15 +444,15 @@ Forbidden authority:
 - valve control;
 - OpenTherm control;
 - DHW control;
-- emergency override ownership.
+- safety ownership.
 ```
 
-Governance locks:
+Governance rules:
 
 ```text
 Governance_Locked := TRUE
-Runtime_Attachment_Allowed := FALSE
 Observation-only semantics
+No detached runtime authority
 ```
 
 ---
@@ -495,12 +463,11 @@ Observation-only semantics
 
 ```text
 - observability;
-- analytics;
 - telemetry;
 - diagnostics;
 - governance;
-- forensic reconstruction;
-- sequencing validation.
+- sequencing validation;
+- forensic reconstruction.
 ```
 
 ---
@@ -511,8 +478,8 @@ Observation-only semantics
 - hidden runtime authority;
 - detached orchestration execution;
 - output ownership;
-- duplicate detached writers;
-- alternate heating runtime.
+- duplicate writers;
+- alternate runtime execution.
 ```
 
 ---
@@ -527,42 +494,62 @@ Must be written ONLY by authoritative runtime ownership chain.
 
 ## Observability state
 
-May be written by:
+May be written ONLY by approved observability publishers.
+
+Examples:
 
 ```text
 FB_Heating_Runtime_Observability
+FB_Heating_Runtime_Observer
 ```
-
-and approved telemetry publishers.
 
 ---
 
 ## Governance state
 
-May be written by:
+May be written ONLY by approved governance infrastructure.
+
+Required invariant:
 
 ```text
-Runtime_* governance scaffold
+no runtime authority attachment.
 ```
 
-ONLY if:
+---
+
+# Explicit deterministic finalization phases
+
+Verified finalization phases:
 
 ```text
-- read-only semantics preserved;
-- no runtime authority attached.
+FB_Heating_Runtime_Service_Gating_Phase
+FB_Heating_Runtime_State_Publication_Phase
+FB_Heating_Runtime_Output_Projection_Phase
+```
+
+Required invariant:
+
+```text
+finalization must remain explicit and phase-oriented.
+```
+
+Forbidden:
+
+```text
+hidden output finalization layers.
 ```
 
 ---
 
 # Explicit forbidden architectures
 
-The following architectures are forbidden:
+Forbidden:
 
 ```text
 - detached orchestration runtime;
 - hidden override shell;
 - second detached runtime authority path;
-- Runtime_* direct runtime execution;
+- Runtime_* direct execution;
 - telemetry-driven control ownership;
 - governance-driven actuation.
 ```
@@ -571,16 +558,18 @@ The following architectures are forbidden:
 
 # Strategic conclusion
 
-The repository architecture now follows:
+The repository now follows:
 
 ```text
-clean top-level runtime authority
+explicit deterministic runtime ownership
 +
-bounded helper execution layers
+phase-oriented orchestration
 +
-post-manifold safety/test finalization
+bounded helper execution
 +
-passive observability/governance scaffold
+explicit finalization phases
++
+passive governance/observability infrastructure
 ```
 
-This separation must remain explicit and preserved.
+This separation must remain explicit and continuously verified.
