@@ -1,6 +1,14 @@
 VAR_GLOBAL
-    // Operational command layer produced by PRG_Command_Arbitration during migration.
-    // Used by downstream execution consumers and PRG_IO_Write.
+    // ======================================================
+    // OPERATIONAL COMMAND SHADOW STATE
+    // ======================================================
+    // Operational command layer produced exclusively by
+    // PRG_Command_Arbitration during migration.
+    //
+    // Downstream execution layers consume these fields as read-only.
+    // PreOutput barriers, verifier layers and IO publication layers
+    // must not mutate command shadow ownership state.
+    // ======================================================
 
     // Gas / boiler / ventilation
     G_Gas_Valve_Close : BOOL := FALSE;
