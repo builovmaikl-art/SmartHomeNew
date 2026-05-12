@@ -31,12 +31,14 @@
 [done] Stage 4 — Monotonic time / startup quarantine foundation
 [done] Stage 5 — Recovery cleanup governance foundation
 [done] Stage 6 — Transport freshness governance foundation
+[done] Stage 7 — Safety-critical observability foundation
+[done] Stage 8 — Immutable runtime snapshot isolation foundation
 ```
 
 ## CURRENT PRIORITY
 
 ```text
-[current] Stage 7 — Safety-critical observability
+[current] Stage 9 — Distributed epoch consistency / peer reconciliation
 ```
 
 ---
@@ -55,6 +57,8 @@ Time_Service
 → Transport_Pipeline
 → Transport_Freshness_Governor
 → Runtime_Barrier
+→ Runtime_Snapshot_Governor
+→ Observability_Governor
 → Recovery_Cleanup_Governor
 → Domain_Execution
 → PreOutput_Barrier
@@ -71,11 +75,44 @@ Time_Service
 Monotonic_Time failure
 → PLC_Fencing failure
 → Transport_Freshness failure
-→ Recovery_Governance failure
 → Runtime_Barrier invalid
+→ Runtime_Snapshot invalid/frozen publication denied
+→ Observability synchronization failure
+→ Recovery_Governance failure
 → Output_Freshness forced decay
 → IO_Write safe projection
 ```
+
+---
+
+## Important PRG_Runtime_Barrier note
+
+`PRG_Runtime_Barrier` intentionally does **not** directly depend on `Snapshot_Frozen`, `Snapshot_Publication_Allowed`, `Snapshot_Copy_Valid` or `Snapshot_Isolation_Valid`.
+
+Reason:
+
+```text
+PRG_Runtime_Barrier
+→ PRG_Runtime_Snapshot_Governor
+```
+
+A direct current-cycle snapshot dependency inside `PRG_Runtime_Barrier` would create a phase-cycle:
+
+```text
+Runtime_Barrier requires Snapshot
+while
+Snapshot requires Runtime_Barrier
+```
+
+Therefore snapshot enforcement is correctly located at publication boundaries:
+
+```text
+Runtime_Snapshot_Governor
+→ Output_Freshness_Governor
+→ PRG_IO_Write hard-stop gate
+```
+
+This keeps the execution graph acyclic and deterministic.
 
 ---
 
@@ -91,11 +128,17 @@ PRG_PLC_Fencing_Governor
 GVL_TRANSPORT_FRESHNESS
 PRG_Transport_Freshness_Governor
 
-GVL_RECOVERY_GOVERNANCE
-PRG_Recovery_Cleanup_Governor
-
 GVL_RUNTIME_EPOCH
 PRG_Runtime_Barrier
+
+GVL_RUNTIME_SNAPSHOT
+PRG_Runtime_Snapshot_Governor
+
+GVL_OBSERVABILITY_AUTHORITY
+PRG_Observability_Governor
+
+GVL_RECOVERY_GOVERNANCE
+PRG_Recovery_Cleanup_Governor
 
 GVL_COMMAND_VERIFY.PreOutput_*
 PRG_PreOutput_Safety_Barrier
@@ -127,35 +170,16 @@ runtime-integrated
 - monotonic-aware runtime invalidation;
 - fencing-aware runtime invalidation;
 - transport-aware runtime invalidation;
-- recovery-aware runtime invalidation.
-```
-
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-024
-RISK-025
-RISK-026
-RISK-032
-RISK-037
-
-partially mitigated:
-RISK-005
-RISK-016
-RISK-020
-RISK-021
-RISK-031
-RISK-039
+- recovery-aware runtime invalidation;
+- observability-aware runtime invalidation.
 ```
 
 ## Remaining gaps
 
 ```text
-- immutable runtime snapshot copy isolation still incomplete;
-- no full publication freeze barrier;
-- no distributed runtime epoch synchronization;
-- no authoritative HMI snapshot layer.
+- distributed runtime epoch synchronization remains incomplete;
+- peer reconciliation not implemented;
+- no consensus-grade semantic ownership continuity.
 ```
 
 ---
@@ -179,27 +203,6 @@ runtime-integrated
 - blocked-publication traceability.
 ```
 
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-037
-RISK-038
-RISK-040
-
-partially mitigated:
-RISK-015
-RISK-041
-RISK-047
-```
-
-## Remaining gaps
-
-```text
-- verifier remains post-actuation;
-- no pre-actuation HMI/diagnostics publication.
-```
-
 ---
 
 # STAGE 2 — OUTPUT FRESHNESS / OUTPUT VALIDITY
@@ -209,6 +212,7 @@ RISK-047
 ```text
 implemented
 runtime-authoritative
+snapshot-aware
 ```
 
 ## Implemented components
@@ -228,28 +232,16 @@ PRG_IO_Write freshness-aware hard stop
 - stale-output invalidation;
 - runtime/output epoch linkage;
 - lease-expiration shutdown;
+- immutable snapshot publication validation;
 - authoritative freshness-aware IO gating.
-```
-
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-040
-RISK-047
-
-partially mitigated:
-RISK-044
-RISK-045
-RISK-046
 ```
 
 ## Remaining gaps
 
 ```text
 - no distributed output epoch fencing;
-- no retained-output quarantine beyond current forced decay foundation;
-- no HMI-facing output validity snapshot.
+- no peer output publication reconciliation;
+- no retained-output quarantine beyond current forced decay foundation.
 ```
 
 ---
@@ -263,14 +255,6 @@ foundation implemented
 runtime-integrated
 ```
 
-## Implemented components
-
-```text
-GVL_PLC_FENCING
-PRG_PLC_Fencing_Governor
-Runtime_Barrier fencing integration
-```
-
 ## Implemented properties
 
 ```text
@@ -282,18 +266,6 @@ Runtime_Barrier fencing integration
 - asymmetric partition detection foundation;
 - authority lease expiration;
 - fencing-aware runtime invalidation.
-```
-
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-044
-RISK-045
-
-partially mitigated:
-RISK-046
-RISK-047
 ```
 
 ## Remaining gaps
@@ -316,14 +288,6 @@ foundation implemented
 runtime-integrated
 ```
 
-## Implemented components
-
-```text
-GVL_TIME_MONOTONIC
-PRG_Time_Monotonic_Governor
-Runtime_Barrier monotonic integration
-```
-
 ## Implemented properties
 
 ```text
@@ -335,26 +299,13 @@ Runtime_Barrier monotonic integration
 - runtime invalidation on time anomaly.
 ```
 
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-048
-RISK-049
-
-partially mitigated:
-RISK-009
-RISK-017
-RISK-030
-```
-
 ## Remaining gaps
 
 ```text
 - no reusable overflow-safe delta function block;
 - no explicit retained-state scrubber;
 - no persisted boot-generation reconciliation;
-- no HMI-visible startup quarantine diagnostics.
+- no peer boot-generation comparison.
 ```
 
 ---
@@ -368,14 +319,6 @@ foundation implemented
 runtime-integrated
 ```
 
-## Implemented components
-
-```text
-GVL_RECOVERY_GOVERNANCE
-PRG_Recovery_Cleanup_Governor
-Runtime_Barrier recovery integration
-```
-
 ## Implemented properties
 
 ```text
@@ -385,21 +328,6 @@ Runtime_Barrier recovery integration
 - degraded-state residual detection;
 - retained-state residual detection;
 - recovery-aware runtime invalidation.
-```
-
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-031
-RISK-035
-RISK-043
-
-partially mitigated:
-RISK-008
-RISK-010
-RISK-011
-RISK-012
 ```
 
 ## Remaining gaps
@@ -422,14 +350,6 @@ foundation implemented
 runtime-integrated
 ```
 
-## Implemented components
-
-```text
-GVL_TRANSPORT_FRESHNESS
-PRG_Transport_Freshness_Governor
-Runtime_Barrier transport integration
-```
-
 ## Implemented properties
 
 ```text
@@ -439,19 +359,6 @@ Runtime_Barrier transport integration
 - reconnect quarantine foundation;
 - stale snapshot invalidation foundation;
 - transport-aware runtime invalidation.
-```
-
-## Risks addressed
-
-```text
-substantially mitigated:
-RISK-027
-RISK-028
-RISK-029
-
-partially mitigated:
-RISK-007
-RISK-038
 ```
 
 ## Remaining gaps
@@ -471,51 +378,118 @@ RISK-038
 ## Status
 
 ```text
-current remaining priority
+foundation implemented
+runtime-integrated
+```
+
+## Implemented properties
+
+```text
+- observability authority state;
+- emergency visibility foundation;
+- pre-actuation visibility readiness;
+- diagnostics/explainability synchronization foundation;
+- visibility flags for runtime/output/transport/recovery/fencing/monotonic failures;
+- observability-aware runtime invalidation.
+```
+
+## Remaining gaps
+
+```text
+- HMI/diagnostics/blackbox consumers still need snapshot-bound rendering;
+- post-actuation verifier still needs authority snapshot linkage;
+- emergency visibility is governed but not yet domain-specific in UI.
+```
+
+---
+
+# STAGE 8 — IMMUTABLE RUNTIME SNAPSHOT ISOLATION
+
+## Status
+
+```text
+foundation implemented
+publication-integrated
+```
+
+## Implemented components
+
+```text
+GVL_RUNTIME_SNAPSHOT
+PRG_Runtime_Snapshot_Governor
+PRG_Output_Freshness_Governor snapshot validation
+PRG_IO_Write immutable snapshot hard-stop gate
+```
+
+## Implemented properties
+
+```text
+- immutable snapshot epoch foundation;
+- snapshot freeze foundation;
+- snapshot publication allowed flag;
+- snapshot copy validity foundation;
+- snapshot isolation validity foundation;
+- snapshot mutation detection foundation;
+- output freshness validation against snapshot authority;
+- final physical IO hard-stop on snapshot failure.
+```
+
+## PRG_Runtime_Barrier decision
+
+`PRG_Runtime_Barrier` remains upstream and does not directly validate current-cycle snapshot freeze flags.
+This is intentional to avoid cyclic dependency.
+Snapshot authority is enforced downstream at publication boundaries.
+
+## Remaining gaps
+
+```text
+- no deep copy of all domain/runtime state yet;
+- no struct-level immutable snapshot schema;
+- no snapshot-bound HMI/blackbox rendering yet;
+- no distributed immutable snapshot reconciliation.
+```
+
+---
+
+# STAGE 9 — DISTRIBUTED EPOCH CONSISTENCY / PEER RECONCILIATION
+
+## Status
+
+```text
+current priority
 not started
 ```
 
 ## Назначение
 
-Устранить:
+Устранить remaining distributed gap:
 
 ```text
-false-safe observability windows.
-```
-
-## Primary risks addressed
-
-```text
-RISK-023
-RISK-041
+local deterministic authority exists,
+but peer epoch consistency is not authoritative yet.
 ```
 
 ## Required remediation
 
 ```text
-- pre-actuation unsafe-state publication;
-- authoritative runtime/HMI snapshots;
-- emergency visibility barrier;
-- diagnostics synchronized with authority chain;
-- blackbox linkage to runtime/fencing/output/transport/recovery failures;
-- explainability synchronized before and after IO publication.
+- distributed epoch negotiation;
+- cross-PLC fencing reconciliation;
+- peer boot-generation comparison;
+- distributed snapshot epoch exchange;
+- peer transport transaction fencing;
+- authoritative distributed publication reconciliation;
+- semantic-progress watchdog.
 ```
 
 ## Main runtime targets
 
 ```text
-PRG_System_Diagnostics
-PRG_System_BlackBox
-PRG_HMI_Dashboard
-PRG_Debug_View
-GVL_DEBUG_VIEW
-GVL_EXPLAINABILITY
-GVL_RUNTIME_EPOCH
-GVL_COMMAND_VERIFY
-GVL_OUTPUT_EPOCH
-GVL_TRANSPORT_FRESHNESS
-GVL_RECOVERY_GOVERNANCE
+PRG_PLC_Arbitration
+PRG_PLC_Fencing_Governor
 GVL_PLC_FENCING
+GVL_RUNTIME_EPOCH
+GVL_RUNTIME_SNAPSHOT
+GVL_TRANSPORT_FRESHNESS
 GVL_TIME_MONOTONIC
 ```
 
@@ -533,7 +507,9 @@ Recommended practical implementation order:
 5. Stage 4 — Monotonic time/startup quarantine [foundation implemented]
 6. Stage 5 — Recovery cleanup governance [foundation implemented]
 7. Stage 6 — Transport freshness governance [foundation implemented]
-8. Stage 7 — Safety-critical observability [current priority]
+8. Stage 7 — Safety-critical observability [foundation implemented]
+9. Stage 8 — Immutable runtime snapshot isolation [publication-integrated]
+10. Stage 9 — Distributed epoch consistency [current priority]
 ```
 
 ---
@@ -550,13 +526,16 @@ Do NOT:
 - mutate execution order without full runtime review;
 - perform partial file rewrites for runtime-critical files;
 - integrate lease semantics without monotonic time governance;
-- expose post-fact diagnostics as safety truth.
+- expose post-fact diagnostics as safety truth;
+- create upstream/downstream phase cycles.
 ```
 
 Prefer:
 
 ```text
 single authoritative runtime barriers
-with deterministic ownership
-and pre-actuation observability.
+with deterministic ownership,
+acyclic phase ordering,
+pre-actuation observability,
+and publication-bound immutable snapshots.
 ```
