@@ -43,6 +43,7 @@
 ✔ Initialization / cold-start / reboot integrity audit
 ✔ Startup barrier / early-consumer audit
 ✔ Startup transient stabilization audit
+✔ Runtime degradation / fault containment audit
 ```
 
 ---
@@ -255,50 +256,95 @@ HIGH
 
 ## Absence of startup transient stabilization barrier
 
-## Суть
-
-В системе отсутствует:
+Severity:
 
 ```text
-centralized startup stabilization layer.
+HIGH
+```
+
+---
+
+# RISK-022
+
+## Absence of explicit subsystem fault-containment boundaries
+
+## Суть
+
+Degraded/fault semantics:
+
+```text
+не локализованы
+по subsystem boundaries.
 ```
 
 Проверка показала:
 
 ```text
-- centralized warmup timers не найдены;
-- startup stabilization gate отсутствует;
-- explicit IO stabilization barrier перед PRG_IO_Write отсутствует;
-- unified transient suppression layer отсутствует.
+fault/degraded context
+распространяется через:
+- heating decision context;
+- thermal allocation;
+- recovery/governance layers;
+- policy context.
+```
+
+Но:
+
+```text
+explicit fault-containment boundaries
+отсутствуют.
 ```
 
 ---
 
 ## Проблема
 
-Во время первых PLC cycles:
+Fault/degraded state:
 
 ```text
-transient commands
-могут пройти
-до полной runtime stabilization.
+может менять runtime semantics
+далеко за пределами
+исходного subsystem.
 ```
 
-Особенно при:
+Особенно когда:
 
 ```text
-- reboot;
-- recovery;
-- persistence replay;
-- delayed transport availability;
-- partially initialized config;
-- asynchronous diagnostics restore.
+- diagnostics escalation;
+- transport degradation;
+- thermal allocation fault;
+- recovery escalation;
+- partial subsystem instability.
 ```
 
-runtime может:
+влияют на:
 
 ```text
-публиковать unstable intermediate intent/state.
+global runtime decisions.
+```
+
+Возникает:
+
+```text
+cascading semantic degradation.
+```
+
+---
+
+## Что показала проверка
+
+Пока НЕ найдено:
+
+```text
+- catastrophic shutdown cascade;
+- infinite degradation escalation;
+- unrecoverable orchestration collapse.
+```
+
+Но найдено:
+
+```text
+fault containment ambiguity.
 ```
 
 ---
@@ -306,11 +352,11 @@ runtime может:
 ## Возможные последствия
 
 ```text
-- first-cycle unsafe outputs;
-- transient command leakage;
-- startup oscillation windows;
-- unstable early-cycle IO behavior;
-- reboot transient nondeterminism.
+- unrelated subsystem degradation;
+- cascading runtime semantic drift;
+- globalized fault behavior;
+- difficult partial-failure recovery;
+- unstable degraded-mode orchestration.
 ```
 
 ---
@@ -320,25 +366,25 @@ runtime может:
 Нужно formalize:
 
 ```text
-startup stabilization semantics.
+subsystem fault-containment model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- startup transient suppression barrier;
-- runtime warmup phase;
-- IO stabilization gate;
-- delayed output enable;
-- post-startup synchronization window.
+- local degraded domains;
+- fault-isolation boundaries;
+- containment-aware escalation;
+- scoped recovery semantics;
+- subsystem-local degradation authority.
 ```
 
 Также желательно:
 
 ```text
-- transient-safe startup contract;
-- first-cycle output masking;
-- startup deterministic timing model.
+- degradation propagation contract;
+- cross-domain escalation rules;
+- partial-failure survivability model.
 ```
 
 ---
