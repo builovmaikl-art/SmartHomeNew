@@ -208,12 +208,6 @@ IF L_Runtime_OK AND (NOT GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK) THEN
     L_Error_Text := 'Runtime sanity invalid';
 END_IF;
 
-IF L_Runtime_OK AND GVL_COMMAND_VERIFY.PreOutput_Block_IO THEN
-    L_Runtime_OK := FALSE;
-    L_Error_Code := 5002;
-    L_Error_Text := 'Runtime blocked by pre-output barrier';
-END_IF;
-
 // ------------------------------------------------------
 // Impossible-state rejection.
 // ------------------------------------------------------
