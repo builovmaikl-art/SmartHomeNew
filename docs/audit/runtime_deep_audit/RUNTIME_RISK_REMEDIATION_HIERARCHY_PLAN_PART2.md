@@ -43,6 +43,322 @@ PART2 фиксирует:
 
 ---
 
+# 0. RUNTIME REMEDIATION STATE CHECKPOINT
+
+Дата фиксации:
+
+```text
+2026-05-13
+```
+
+Назначение checkpoint:
+
+```text
+зафиксировать фактическое состояние после первых bounded remediation-пакетов
+```
+
+Этот раздел не заменяет исходную remediation strategy.
+Он обновляет validation state, чтобы:
+
+```text
+не проходить уже закрытые риски повторно
+не потерять новые validation items
+не начинать residual cleanup до live-consumer sweep
+```
+
+---
+
+## 0.1 Resolved / remediated authority issues
+
+### IO hard-stop narrowing
+
+Исправлено:
+
+```text
+PRG_IO_Write больше не трактует
+Output_Publication_Valid / Output_Lease_Expired
+как отдельные hard-stop authorities
+```
+
+Текущее правило:
+
+```text
+GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
+является единственным output freshness hard-stop export для IO_Write
+```
+
+---
+
+### PreOutput command-shadow foreign mutation
+
+Исправлено:
+
+```text
+PRG_PreOutput_Safety_Barrier больше не пишет GVL_COMMAND_SHADOW.*
+```
+
+Текущее правило:
+
+```text
+GVL_COMMAND_SHADOW остаётся owned by PRG_Command_Arbitration
+PRG_PreOutput_Safety_Barrier публикует только PreOutput_* barrier state
+```
+
+---
+
+### Runtime barrier downstream feedback removal
+
+Исправлено:
+
+```text
+PRG_Runtime_Barrier больше не потребляет downstream state из:
+- GVL_COMMAND_VERIFY.PreOutput_Block_IO
+- GVL_OBSERVABILITY_AUTHORITY.* quarantine/authority residues
+- GVL_RECOVERY_GOVERNANCE.*
+- GVL_CONFIG_VALIDATION.G_Runtime_*
+```
+
+Текущее правило:
+
+```text
+Runtime_Barrier является upstream runtime authority layer
+и не должен читать post-output diagnostics, recovery cleanup или observability state
+```
+
+---
+
+### Transport/runtime recursive dependency removal
+
+Исправлено:
+
+```text
+PRG_Transport_Freshness_Governor больше не читает Runtime_Barrier / Recovery state
+```
+
+Текущее правило:
+
+```text
+Transport freshness является upstream freshness authority
+Runtime_Barrier потребляет transport state, но не наоборот
+```
+
+---
+
+### Distributed commit downstream publication feedback removal
+
+Исправлено:
+
+```text
+PRG_Distributed_Commit_Governor больше не использует GVL_OUTPUT_EPOCH.Output_Publication_Epoch
+как local commit baseline
+```
+
+Текущее правило:
+
+```text
+Distributed commit baseline берётся из upstream distributed snapshot epoch
+а не из downstream output publication state
+```
+
+---
+
+### Observability authority residue cleanup
+
+Исправлено:
+
+```text
+PRG_Observability_Governor больше не пишет stale Authority_Snapshot_Valid
+```
+
+Текущее правило:
+
+```text
+GVL_OBSERVABILITY_AUTHORITY остаётся downstream visibility-only layer
+```
+
+---
+
+### Command verifier diagnostics localization
+
+Исправлено:
+
+```text
+PRG_Command_Verifier больше не публикует runtime diagnostics в GVL_CONFIG_VALIDATION.G_Runtime_*
+```
+
+Текущее правило:
+
+```text
+post-IO verifier diagnostics owned by GVL_COMMAND_VERIFY.Runtime_*
+```
+
+---
+
+## 0.2 Current directed authority stack
+
+Текущая validated directionality:
+
+```text
+Monotonic
+  ↓
+Transport_Freshness
+  ↓
+PLC_Fencing
+  ↓
+Runtime_Barrier
+  ↓
+Runtime_Snapshot
+  ↓
+Distributed_Epoch / Distributed_Snapshot / Distributed_Commit
+  ↓
+PreOutput_Barrier
+  ↓
+Output_Freshness
+  ↓
+IO_Write
+  ↓
+Command_Verifier
+  ↓
+Recovery_Cleanup
+  ↓
+Observability
+```
+
+Важно:
+
+```text
+эта цепочка является validation model,
+а не разрешением на blind refactor execution order
+```
+
+Любое изменение execution order требует отдельного runtime evidence.
+
+---
+
+## 0.3 Currently verified clean zones
+
+Проверены как bounded / clean на текущем проходе:
+
+```text
+GVL_TRANSPORT_FRESHNESS
+GVL_PLC_FENCING
+GVL_RUNTIME_SNAPSHOT
+GVL_OUTPUT_EPOCH
+GVL_COMMAND_VERIFY
+```
+
+Текущий статус:
+
+```text
+нет подтверждённых live duplicate writers
+нет подтверждённого downstream authority feedback
+нет необходимости в immediate remediation
+```
+
+Ограничение:
+
+```text
+search index может отставать от main,
+поэтому verification должен опираться на fetch-after-write / direct file fetch
+```
+
+---
+
+## 0.4 Active validation items
+
+Остаются активными:
+
+```text
+Peer_Fencing_Conflict equality semantics
+```
+
+Причина:
+
+```text
+PRG_Distributed_Epoch_Governor treats equal peer/local fencing token as conflict
+```
+
+Текущий статус:
+
+```text
+VALIDATION_REQUIRED
+```
+
+Запрещено:
+
+```text
+менять equality/inequality semantics без token issuance contract evidence
+```
+
+---
+
+Остаётся активным:
+
+```text
+GVL_CONFIG_VALIDATION.G_Runtime_* residual fields
+```
+
+Причина:
+
+```text
+live authority consumers removed
+live Command_Verifier writes removed
+но fields still exist in GVL declaration
+```
+
+Текущий статус:
+
+```text
+RESIDUAL_CLEANUP_CANDIDATE_AFTER_LIVE_CONSUMER_SWEEP
+```
+
+Запрещено:
+
+```text
+удалять поля из GVL_CONFIG_VALIDATION до отдельного live-code consumer sweep
+```
+
+---
+
+## 0.5 Deferred / do not touch yet
+
+Не трогать в рамках текущего pass:
+
+```text
+domain PRGs
+safety orchestration internals
+snapshot archives
+historical docs cleanup
+distributed token conflict semantics without evidence
+new governance layers
+semantic hard-stop escalation
+observability hard-stop escalation
+```
+
+Причина:
+
+```text
+текущий pass направлен на authority directionality,
+writer ownership и compile/reference convergence,
+а не на broad architecture rewrite
+```
+
+---
+
+## 0.6 Current engineering priority after checkpoint
+
+Следующий порядок:
+
+```text
+1. live consumer sweep for residual fields
+2. distributed fencing token contract validation
+3. compile/reference convergence check
+4. bounded residual cleanup
+5. only then docs/snapshots consistency cleanup
+```
+
+---
+
 # 1. CURRENT ARCHITECTURAL UNDERSTANDING
 
 После cleanup стало ясно:
@@ -165,8 +481,20 @@ P-RISK-004
 ### Статус
 
 ```text
-IN_PROGRESS
+PARTIALLY_VALIDATED_AFTER_CHECKPOINT
 ```
+
+### Checkpoint note
+
+```text
+GVL_TRANSPORT_FRESHNESS
+GVL_PLC_FENCING
+GVL_RUNTIME_SNAPSHOT
+GVL_OUTPUT_EPOCH
+GVL_COMMAND_VERIFY
+```
+
+на текущем проходе не имеют подтверждённых live duplicate writers.
 
 ---
 
@@ -204,7 +532,7 @@ O-RISK-001
 ### Статус
 
 ```text
-VALIDATION_REQUIRED
+PARTIALLY_VALIDATED_AFTER_CHECKPOINT
 ```
 
 ---
@@ -258,7 +586,7 @@ RISK-047
 ### Статус
 
 ```text
-VALIDATION_REQUIRED
+IN_PROGRESS_AFTER_CHECKPOINT
 ```
 
 ---
@@ -290,7 +618,14 @@ PRG_IO_Write
 ### Статус
 
 ```text
-IN_PROGRESS
+VALIDATED_FOR_IO_WRITE_CONSUMER_PATH
+```
+
+### Checkpoint note
+
+```text
+IO_Write consumes Output_Forced_Safe_Decay only for output freshness hard-stop.
+Output_Publication_Valid / lease / stale fields remain diagnostics/observability state.
 ```
 
 ---
@@ -340,7 +675,14 @@ RISK-047
 ### Статус
 
 ```text
-VALIDATION_REQUIRED
+PARTIALLY_VALIDATED_AFTER_CHECKPOINT
+```
+
+### Checkpoint note
+
+```text
+Output_Semantic_Continuity_Warning remains advisory-only in PRG_Output_Freshness_Governor.
+No confirmed direct hard-stop consumer was found in current pass.
 ```
 
 ---
@@ -381,7 +723,14 @@ RISK-040
 ### Статус
 
 ```text
-VALIDATION_REQUIRED
+PARTIALLY_VALIDATED_AFTER_CHECKPOINT
+```
+
+### Checkpoint note
+
+```text
+Runtime_Barrier no longer consumes observability authority/quarantine residues.
+PRG_Observability_Governor no longer writes stale Authority_Snapshot_Valid.
 ```
 
 ---
@@ -466,7 +815,14 @@ RISK-047
 ### Статус
 
 ```text
-UNVERIFIED_RUNTIME_BEHAVIOR
+VALIDATION_REQUIRED_AFTER_CHECKPOINT
+```
+
+### Checkpoint note
+
+```text
+Peer_Fencing_Conflict currently triggers on equal peer/local fencing token.
+Do not change this without explicit token issuance contract evidence.
 ```
 
 ---
@@ -504,7 +860,15 @@ C-RISK-004
 ### Статус
 
 ```text
-IN_PROGRESS
+IN_PROGRESS_AFTER_CHECKPOINT
+```
+
+### Checkpoint note
+
+```text
+Output_Invalidation_Count live write removed.
+Authority_Snapshot_Valid live write removed.
+GVL_CONFIG_VALIDATION.G_Runtime_* still declared and now requires live consumer sweep before deletion.
 ```
 
 ---
@@ -528,7 +892,7 @@ part2 соответствует реальным validation stages
 ### Статус
 
 ```text
-IN_PROGRESS
+IN_PROGRESS_AFTER_CHECKPOINT
 ```
 
 ---
@@ -562,6 +926,18 @@ forced decay
 implicit advisory escalation
 ```
 
+### Checkpoint status
+
+```text
+IMPROVED
+```
+
+Причина:
+
+```text
+IO_Write hard-stop consumer path narrowed to Output_Forced_Safe_Decay.
+```
+
 ---
 
 ## Zone-02 — Distributed runtime
@@ -579,6 +955,18 @@ under-protected real divergence
 
 ```text
 false negative distributed failure
+```
+
+### Checkpoint status
+
+```text
+ACTIVE_VALIDATION_REQUIRED
+```
+
+Причина:
+
+```text
+Peer_Fencing_Conflict equality semantics requires token contract evidence.
 ```
 
 ---
@@ -608,6 +996,19 @@ projection mirrors
 hidden topology complexity
 ```
 
+### Checkpoint status
+
+```text
+IMPROVED_BUT_NOT_COMPLETE
+```
+
+Причина:
+
+```text
+several duplicate/foreign writer paths removed,
+but residual declarations still require consumer sweep before cleanup.
+```
+
 ---
 
 # 9. WHAT IS NOW FORBIDDEN
@@ -621,6 +1022,8 @@ adding speculative governance
 reintroducing forced-safe mirrors
 making visibility runtime-authoritative
 making semantic heuristics hard-stop authority
+changing distributed fencing token semantics without contract evidence
+editing files through partial patches that can truncate ST files
 ```
 
 ---
@@ -643,4 +1046,13 @@ runtime evidence
 adding semantic intelligence
 adding new governance layers
 expanding observability authority
+```
+
+После checkpoint текущий immediate priority:
+
+```text
+1. live consumer sweep for GVL_CONFIG_VALIDATION.G_Runtime_*
+2. distributed fencing token contract validation
+3. compile/reference convergence check
+4. bounded residual cleanup only after evidence
 ```
