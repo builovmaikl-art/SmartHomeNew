@@ -1,5 +1,7 @@
 PROGRAM PRG_Config_Validation
 VAR
+    fbConfigSimulation : FB_Config_Simulation;
+
     L_i : INT;
     L_Zone : INT;
     L_Sensor : INT;
@@ -231,6 +233,19 @@ IF GVL_CONSTANTS.C_MAX_CO_SENSORS < 8 THEN
 END_IF;
 
 IF GVL_CONSTANTS.C_MAX_FLOOD_SENSORS < 9 THEN
+    L_Config_Error := TRUE;
+END_IF;
+
+// ======================================================
+// CONFIG SIMULATION / COMMISSIONING VALIDATION
+// ======================================================
+fbConfigSimulation(
+    VI_Enable := TRUE,
+    VI_Request := GVL_CONFIG_SIMULATION.G_Simulation_Request,
+    VI_Confirm := GVL_CONFIG_SIMULATION.G_Simulation_Confirm
+);
+
+IF fbConfigSimulation.VO_Executed AND NOT fbConfigSimulation.VO_Result_OK THEN
     L_Config_Error := TRUE;
 END_IF;
 
