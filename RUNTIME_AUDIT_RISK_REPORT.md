@@ -39,6 +39,7 @@
 ✔ Orchestration determinism audit
 ✔ Command/arbitration/finalization timing audit
 ✔ Cross-subsystem dependency audit
+✔ Persistence/governance coupling audit
 ```
 
 ---
@@ -191,61 +192,87 @@ MEDIUM-HIGH
 
 ## Implicit semantic dependency hub around G_System_Mode
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-017
+
+## Persisted-state and runtime-authority overlap
+
 ## Суть
 
-`G_System_Mode`
-стал:
+Persisted state:
 
 ```text
-implicit semantic dependency hub.
+не только хранит configuration/state,
+но участвует в:
+- recovery;
+- initialization;
+- runtime restoration;
+- startup semantics.
 ```
 
-От него зависят:
+То есть:
 
 ```text
-- Policy;
-- Recovery;
-- Health orchestrator;
-- Heating policy;
-- Ventilation;
-- Security;
-- Scenario rules;
-- diagnostics/history layers.
-```
-
-Но каждый subsystem:
-
-```text
-интерпретирует mode
-по-своему.
+persisted state
+частично влияет
+на runtime governance.
 ```
 
 ---
 
 ## Проблема
 
-`G_System_Mode`
-используется одновременно как:
+Persisted truth:
 
 ```text
-- governance signal;
-- coordination signal;
-- suppression hint;
-- runtime semantic context.
+не полностью отделён
+от runtime authority.
 ```
 
-То есть:
+После reboot/startup:
 
 ```text
-system mode
-стал hidden semantic bus.
+persisted semantic state
+может:
+- влиять на runtime decisions;
+- менять restore behavior;
+- участвовать в governance.
 ```
 
-Subsystem начинают:
+Возникает:
 
 ```text
-неявно зависеть
-от semantics друг друга.
+persisted-truth
+vs
+runtime-truth ambiguity.
+```
+
+---
+
+## Особенно опасно
+
+При:
+
+```text
+- partial recovery;
+- interrupted persistence write;
+- schema evolution;
+- config migration;
+- abnormal shutdown.
+```
+
+persisted semantics могут:
+
+```text
+расходиться
+с runtime expectations.
 ```
 
 ---
@@ -255,15 +282,16 @@ Subsystem начинают:
 Пока НЕ найдено:
 
 ```text
-- direct recursive runtime loop;
-- catastrophic mode oscillation;
-- impossible mode graph.
+- catastrophic corrupt startup;
+- unrecoverable boot loop;
+- invalid persist replay.
 ```
 
 Но найдено:
 
 ```text
-semantic dependency centralization.
+semantic authority overlap
+между runtime и persisted state.
 ```
 
 ---
@@ -271,35 +299,41 @@ semantic dependency centralization.
 ## Возможные последствия
 
 ```text
-- hidden subsystem coupling;
-- mode interpretation drift;
-- governance recursion;
-- difficult subsystem isolation;
-- emergent orchestration behavior;
-- unintended cross-subsystem reactions.
+- stale governance restore;
+- reboot semantic drift;
+- startup asymmetry;
+- inconsistent recovery after restart;
+- latent persisted-state corruption effects.
 ```
 
 ---
 
 ## Действие
 
-Запланировать future decomposition:
+Запланировать future separation:
 
 ```text
-G_System_Mode
-→ split into:
-- runtime mode;
-- safety mode;
-- coordination mode;
-- publication mode.
+persisted state
+!=
+runtime authority.
+```
+
+Ввести explicit layers:
+
+```text
+- persisted configuration;
+- persisted telemetry/history;
+- persisted recovery hints;
+- runtime authoritative state.
 ```
 
 И formalize:
 
 ```text
-- mode ownership;
-- mode visibility contract;
-- subsystem interpretation semantics.
+- startup restore contract;
+- persistence replay validation;
+- reboot semantic integrity rules;
+- migration/version compatibility semantics.
 ```
 
 ---
