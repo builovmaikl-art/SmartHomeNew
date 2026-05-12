@@ -49,64 +49,62 @@ RUNTIME_AUDIT_RISK_REPORT.md
 
 ## Absence of authoritative analog plausibility/sanitization model
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-037
+
+## Absence of formal PLC scan-cycle temporal visibility model
+
 ## Суть
 
 В системе фактически отсутствует:
 
 ```text
-formal analog plausibility/sanitization layer.
+formal PLC scan-cycle temporal visibility model.
 ```
 
 Проверка показала:
 
 ```text
-- centralized analog plausibility validation не найден;
-- sensor sanity barrier отсутствует;
-- hardware transient filtering semantics не найдены;
-- authoritative analog invalidation layer отсутствует;
-- field-value confidence model отсутствует.
+- explicit scan-phase barriers не найдены;
+- runtime publication epochs отсутствуют;
+- intra-cycle visibility contracts отсутствуют;
+- output commit phase formalized не найден;
+- partial-cycle state exposure possible.
 ```
 
 ---
 
 ## Проблема
 
-Runtime:
+Во время PLC scan-cycle:
 
 ```text
-в основном доверяет
-hardware/sensor values
-как semantically valid.
+subsystem могут видеть
+runtime state
+в partially updated form.
 ```
 
-Но:
+Если:
 
 ```text
-formal validation semantics
-не найдено.
+- arbitration обновился;
+- safety ещё нет;
+- IO publish уже начался;
+- subsystem читает mid-cycle state.
 ```
 
----
-
-## Почему это опасно
-
-При:
+То:
 
 ```text
-- analog spikes;
-- ADC corruption;
-- sensor brownout;
-- floating input;
-- stale fieldbus values;
-- reconnect transient.
-```
-
-runtime может:
-
-```text
-- принять invalid analog semantics;
-- принять transient как real state;
-- использовать corrupted sensor state в arbitration/safety logic.
+возможны transient semantic inconsistencies
+внутри одного PLC cycle.
 ```
 
 ---
@@ -116,17 +114,17 @@ runtime может:
 В сочетании с:
 
 ```text
-- missing invariant enforcement;
-- startup transient gaps;
-- stale transport semantics;
-- fallback inconsistency;
-- snapshot absence.
+- shared mutable globals;
+- snapshot absence;
+- execution-order dependency;
+- fallback overlap;
+- transport transient recovery.
 ```
 
 Возникает:
 
 ```text
-hardware-originated semantic corruption risk.
+single-cycle unsafe transient visibility risk.
 ```
 
 ---
@@ -134,12 +132,12 @@ hardware-originated semantic corruption risk.
 ## Возможные последствия
 
 ```text
-- transient sensor corruption accepted as valid;
-- unsafe arbitration decisions;
-- hardware-noise-induced runtime instability;
-- stale analog value survival;
-- nondeterministic field-state behavior;
-- unsafe freeze/heating reactions.
+- transient unsafe outputs;
+- one-cycle arbitration inconsistency;
+- partial runtime publication;
+- scan-order-dependent behavior;
+- nondeterministic IO edge reactions;
+- ultra-hard-to-debug transient faults.
 ```
 
 ---
@@ -149,26 +147,26 @@ hardware-originated semantic corruption risk.
 Нужно formalize:
 
 ```text
-authoritative analog plausibility/sanitization model.
+PLC scan-cycle temporal visibility model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized analog sanity barrier;
-- plausibility windows;
-- sensor confidence state;
-- stale analog invalidation;
-- hardware transient filtering semantics.
+- explicit scan phases;
+- runtime publication epochs;
+- output commit barrier;
+- intra-cycle visibility contracts;
+- deterministic output publication semantics.
 ```
 
 Также желательно:
 
 ```text
-- analog fault quarantine;
-- invalid-sensor fallback rules;
-- sensor recovery stabilization window;
-- field-value freshness contract.
+- snapshot-before-publish model;
+- cycle-stable runtime views;
+- phase-aware IO finalization;
+- transient visibility diagnostics.
 ```
 
 ---
