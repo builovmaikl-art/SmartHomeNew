@@ -6,13 +6,14 @@ This document defines the current authoritative runtime remediation state.
 
 It reflects:
 
-- actual active runtime topology;
-- removed speculative layers;
+- current compressed runtime topology;
 - normalized authority ownership;
-- current downstream-only semantic boundaries;
-- peer-optional distributed foundation model;
-- forbidden recursive governance patterns;
-- remaining runtime validation tasks.
+- removed speculative governance layers;
+- peer-optional distributed foundations;
+- downstream-only observability semantics;
+- advisory-only semantic continuity;
+- removed recursive authority cycles;
+- remaining convergence tasks.
 
 This document is the authoritative runtime architecture reference.
 
@@ -31,50 +32,11 @@ This document is the authoritative runtime architecture reference.
 [active] Distributed epoch foundation
 [active] Distributed snapshot foundation
 [active] Distributed commit foundation
-[active] Semantic progress continuity
+[active] Semantic progress advisory continuity
 [active] Output freshness authority
 ```
 
-## DORMANT FOUNDATIONS
-
-```text
-[dormant] Semantic publication commit coherence
-[dormant] Semantic checkpoint acknowledgement topology
-[dormant] Semantic replay fencing topology
-```
-
-Dormant means:
-
-```text
-implemented in source
-not active in MAIN
-not publication-authoritative
-not runtime-authoritative
-```
-
-## REMOVED SPECULATIVE LAYERS
-
-```text
-[removed] Passive semantic observability fanout
-[removed] Semantic telemetry observability
-[removed] Semantic stabilization observability
-[removed] Semantic diagnostics projections
-[removed] Semantic blackbox projections
-```
-
-Reason:
-
-```text
-Non-authoritative speculative fanout.
-Reset-owned visibility writes.
-No runtime-authoritative effect.
-```
-
----
-
-# CURRENT AUTHORITATIVE TOPOLOGY
-
-## ACTIVE EXECUTION FLOW
+## CURRENT ACTIVE EXECUTION FLOW
 
 ```text
 Time_Monotonic
@@ -90,7 +52,7 @@ Time_Monotonic
 → IO_Write
 ```
 
-## AUXILIARY DOWNSTREAM-ONLY LAYERS
+## DOWNSTREAM-ONLY AUXILIARY LAYERS
 
 ```text
 Observability
@@ -105,37 +67,40 @@ HMI
 These layers:
 
 ```text
-must not invalidate runtime authority
-must not own publication authority
-must not hard-stop physical IO
+must not own runtime authority
+must not invalidate runtime barrier
+must not hard-stop outputs
+must not arbitrate publication
 ```
 
 ---
 
-# DISTRIBUTED FOUNDATION NORMALIZATION
+# RUNTIME TOPOLOGY COMPRESSION STATUS
 
-## Previous invalid model
+## Removed recursive governance cycles
 
-Previous architecture implicitly assumed:
-
-```text
-missing peer
-= distributed failure
-```
-
-This created:
+Removed:
 
 ```text
-startup quarantine storms
-forced safe decay
-fake split-brain states
-artificial replay detection
-publication collapse without peers
+Runtime_Barrier ↔ Recovery_Governance
+Runtime_Snapshot ↔ Output_Freshness
+Observability ↔ Runtime authority
+Semantic continuity ↔ Physical publication authority
 ```
 
-## Current normalized model
+## Removed speculative distributed semantics
 
-Distributed governors now operate as:
+Removed:
+
+```text
+missing peer = distributed failure
+startup peer invalidation
+forced safe decay without peers
+strict startup peer quarantine
+fake split-brain startup states
+```
+
+Distributed topology now operates as:
 
 ```text
 peer-optional foundation mode
@@ -148,120 +113,33 @@ local authority remains valid
 until real peer synchronization exists
 ```
 
-## Peer validation activation rule
-
-Distributed peer validation activates only after:
+Peer validation activates only after:
 
 ```text
-real peer session establishment
-```
-
-Detected via:
-
-```text
-peer epochs
+real peer epochs
 peer acknowledgements
 peer publication continuity
-peer snapshot continuity
-```
-
-Until then:
-
-```text
-missing peer != divergence
-missing peer != replay
-missing peer != quarantine
+peer immutable snapshot continuity
 ```
 
 ---
 
-# NORMALIZED DISTRIBUTED GOVERNORS
+# OBSERVABILITY NORMALIZATION STATUS
 
-## Distributed epoch governor
-
-Normalized:
-
-```text
-PRG_Distributed_Epoch_Governor
-```
-
-Removed:
-
-```text
-implicit peer-authoritative lease semantics
-startup peer invalidation
-```
-
-## Distributed snapshot governor
-
-Normalized:
-
-```text
-PRG_Distributed_Snapshot_Governor
-```
-
-Removed:
-
-```text
-missing-peer immutable snapshot failure
-startup distributed snapshot collapse
-```
-
-## Distributed commit governor
-
-Normalized:
-
-```text
-PRG_Distributed_Commit_Governor
-```
-
-Removed:
-
-```text
-missing peer ack hard-failure
-forced safe decay without peer topology
-startup commit quarantine storms
-```
-
----
-
-# OBSERVABILITY NORMALIZATION
-
-## Previous invalid model
-
-Observability previously leaked into runtime authority.
-
-Examples:
-
-```text
-observability
-→ runtime invalidation
-```
-
-```text
-diagnostics sync
-→ output publication block
-```
-
-```text
-explainability sync
-→ runtime collapse
-```
-
-## Current normalized model
+## Current observability model
 
 Observability is now:
 
 ```text
-downstream visibility-oriented only
+downstream visibility aggregation only
 ```
 
 Observability may:
 
 ```text
 publish warnings
-publish visibility
 publish diagnostics
+publish visibility
 publish quarantine visibility
 ```
 
@@ -269,11 +147,33 @@ Observability must NOT:
 
 ```text
 own runtime authority
-block runtime publication
+participate in publication arbitration
+maintain synchronization barriers
 hard-stop physical outputs
 ```
 
-## Ownership rule
+## Removed observability residues
+
+Removed:
+
+```text
+PreActuation_Visibility_Ready
+Diagnostics_Synchronized
+Explainability_Synchronized
+Authority_Snapshot_Valid
+Observability_Quarantine_Active
+Observability_Invalidation_Count
+```
+
+Reason:
+
+```text
+dead synchronization residue
+non-authoritative telemetry baggage
+pseudo-governance mirrors
+```
+
+## Current observability ownership
 
 Only `PRG_Observability_Governor` owns:
 
@@ -282,59 +182,130 @@ Emergency_Visibility_Required
 Unsafe_State_Published
 ```
 
-Projection layers must not write reset-owned escalation fields.
-
 ---
 
-# RUNTIME / RECOVERY NORMALIZATION
+# RUNTIME SNAPSHOT NORMALIZATION STATUS
 
-## Previous invalid model
+## Current runtime snapshot model
 
-A recursive governance loop existed:
-
-```text
-Runtime_Barrier
-↔ Recovery_Governance
-```
-
-This created:
+Runtime snapshot is now:
 
 ```text
-mutual invalidation
-recursive quarantine escalation
-self-amplifying runtime collapse
-```
-
-## Current normalized model
-
-Recovery governance is now:
-
-```text
-downstream cleanup governance only
+minimal immutable publication authority
 ```
 
 Topology:
 
 ```text
 Runtime_Barrier
-→ Recovery_Governance
+→ Runtime_Snapshot
+→ Output_Freshness
 ```
 
-Recovery must not:
+## Removed runtime snapshot residues
+
+Removed:
 
 ```text
-co-own runtime authority
-recursively invalidate runtime barrier
-participate in runtime publication arbitration
+Snapshot_Observability_Synchronized
+Snapshot_Invalidation_Count
+```
+
+Removed downstream dependency:
+
+```text
+Output_Forced_Safe_Decay
+```
+
+Reason:
+
+```text
+recursive downstream authority coupling
+fake synchronization semantics
+telemetry-only invalidation baggage
 ```
 
 ---
 
-# SEMANTIC LAYER NORMALIZATION
+# DISTRIBUTED SNAPSHOT NORMALIZATION STATUS
 
-## Current semantic scope
+## Current distributed snapshot model
 
-Only active semantic layer:
+Distributed snapshot now governs:
+
+```text
+immutable publication continuity only
+```
+
+It does NOT:
+
+```text
+invalidate runtime barrier
+invalidate PLC fencing
+override local immutable snapshot authority
+```
+
+## Removed distributed snapshot residues
+
+Removed:
+
+```text
+Distributed_Snapshot_Forced_Safe_Mode
+Distributed_Snapshot_Invalidation_Count
+```
+
+Reason:
+
+```text
+duplicate degraded-state mirrors
+legacy escalation residue
+telemetry-governance baggage
+```
+
+---
+
+# DISTRIBUTED COMMIT NORMALIZATION STATUS
+
+## Current distributed commit model
+
+Distributed commit now governs:
+
+```text
+deterministic publication continuity only
+```
+
+It does NOT:
+
+```text
+invalidate runtime barrier
+invalidate immutable snapshot authority
+participate in PLC fencing authority
+```
+
+## Removed distributed commit residues
+
+Removed:
+
+```text
+Distributed_Commit_Forced_Safe_Mode
+Distributed_Commit_Invalidation_Count
+```
+
+Reason:
+
+```text
+duplicate degradation semantics
+legacy telemetry residue
+non-authoritative mirrors
+```
+
+---
+
+# SEMANTIC CONTINUITY STATUS
+
+## Current semantic model
+
+Only active semantic governor:
 
 ```text
 PRG_Semantic_Progress_Governor
@@ -343,48 +314,12 @@ PRG_Semantic_Progress_Governor
 Semantic continuity is now:
 
 ```text
-downstream advisory continuity only
+advisory-only
+non-authoritative
+non-blocking
 ```
 
-## Previous invalid model
-
-Semantic heuristics previously participated in:
-
-```text
-physical output hard-stop authority
-```
-
-Examples:
-
-```text
-semantic livelock suspected
-→ forced output decay
-```
-
-```text
-semantic replay suspected
-→ physical publication block
-```
-
-## Current normalized model
-
-Semantic continuity may:
-
-```text
-publish warnings
-publish advisory continuity state
-publish visibility
-```
-
-Semantic continuity must NOT:
-
-```text
-hard-stop outputs
-invalidate runtime barrier
-override physical publication authority
-```
-
-## Output semantic advisory field
+## Output semantic linkage
 
 Current advisory linkage:
 
@@ -392,147 +327,113 @@ Current advisory linkage:
 GVL_OUTPUT_EPOCH.Output_Semantic_Continuity_Warning
 ```
 
-This field is:
+This field:
 
 ```text
-visibility-only
-non-authoritative
-non-blocking
+must not hard-stop outputs
+must not invalidate runtime authority
+must not trigger forced decay
 ```
 
 ---
 
-# OUTPUT AUTHORITY MODEL
-
-## Current hard-stop authorities
+# CURRENT HARD-STOP AUTHORITIES
 
 Physical output publication may only be blocked by:
 
 ```text
-runtime authority invalidation
+runtime barrier invalidation
 immutable snapshot invalidation
 transport freshness invalidation
-distributed authoritative reconciliation failure
+real distributed reconciliation failure
 explicit peer fencing conflict
 ```
 
-## Forbidden hard-stop authorities
-
-The following must NOT hard-stop physical outputs:
+The following must NOT hard-stop outputs:
 
 ```text
-semantic heuristics
+semantic suspicion
 observability visibility
-explainability synchronization
 telemetry stabilization
-diagnostics projections
 trend/history delays
+explainability synchronization
+diagnostics projections
 ```
 
 ---
 
-# FORBIDDEN ARCHITECTURAL PATTERNS
+# REMOVED ARCHITECTURAL PATTERNS
 
-## Forbidden recursive governance
+## Removed recursive authority ownership
 
-Forbidden:
+Removed:
 
 ```text
 A ↔ B governance ownership
+upstream/downstream authority cycles
+visibility-driven invalidation
+semantic-driven publication arbitration
 ```
 
-Forbidden:
+## Removed speculative authority models
 
-```text
-Runtime ↔ Recovery mutual invalidation
-```
-
-Forbidden:
-
-```text
-Observability ↔ Runtime authority
-```
-
-Forbidden:
-
-```text
-Semantic continuity ↔ Physical publication authority
-```
-
----
-
-## Forbidden speculative authority
-
-Forbidden:
-
-```text
-missing peer = distributed failure
-```
-
-Forbidden:
+Removed:
 
 ```text
 visibility = authority
-```
-
-Forbidden:
-
-```text
-telemetry = hard-stop authority
-```
-
-Forbidden:
-
-```text
-semantic suspicion = output decay
-```
-
-Forbidden:
-
-```text
-advisory diagnostics = publication arbitration
+telemetry = authority
+missing peer = divergence
+missing peer = quarantine
+semantic suspicion = forced decay
 ```
 
 ---
 
-# CURRENT REMAINING TASKS
+# CURRENT CONVERGENCE STATUS
 
-## R1 — Compile/reference consistency validation
-
-Need to verify:
+## Already completed
 
 ```text
-all PRG references valid
-all GVL fields valid
-no stale removed-layer references remain
+compile/reference consistency pass
+observability cleanup
+runtime snapshot cleanup
+distributed commit cleanup
+distributed snapshot cleanup
+recursive authority cycle removal
+peer-optional distributed normalization
+runtime topology compression
 ```
 
-## R2 — Authority ownership audit
+## Remaining work
+
+### R1 — Final ownership sweep
 
 Need to verify:
 
 ```text
-no duplicate ownership of authority fields
-no foreign reset-owned writes
+no duplicate writers
+no foreign resets
+no authority mirror duplication
 ```
 
-## R3 — Runtime simplification audit
+### R2 — Final dead-state pruning
 
 Need to verify:
 
 ```text
-no dead distributed branches
+no orphan visibility fields
 no unreachable quarantine states
-no speculative escalation fanout
+no stale counters
 ```
 
-## R4 — Output authority audit
+### R3 — Final runtime simplification validation
 
 Need to verify:
 
 ```text
-only physically-authoritative failures
-may hard-stop outputs
+minimal deterministic authority graph
+acyclic execution topology
+no hidden recursive invalidation paths
 ```
 
 ---
@@ -542,23 +443,21 @@ may hard-stop outputs
 Do NOT:
 
 ```text
-expand speculative governance
-add semantic layers without runtime evidence
+re-expand speculative governance
 add telemetry-driven authority
-create recursive governance
-introduce upstream/downstream cycles
+create recursive synchronization
+reintroduce forced-safe mirrors
 make visibility runtime-authoritative
-use semantic suspicion as hard-stop authority
+use semantic heuristics as hard-stop authority
 ```
 
 Prefer:
 
 ```text
 single-direction authority flow
-runtime-backed authority
+minimal deterministic topology
 peer-optional distributed foundations
 advisory-only semantic continuity
-centralized observability ownership
-minimal hard-stop publication authority
-acyclic deterministic topology
+compressed runtime governance
+runtime-backed authority only
 ```
