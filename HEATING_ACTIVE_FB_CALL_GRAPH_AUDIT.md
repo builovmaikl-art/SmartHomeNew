@@ -1,127 +1,110 @@
-# HEATING_ACTIVE_FB_CALL_GRAPH_AUDIT.md
+# HEATING_ACTIVE_FB_CALL_GRAPH_AUDIT
 
 # Purpose
 
-This document no longer focuses primarily on heating runtime supervision activation.
+This document now serves as a verified runtime ownership and donor-extraction audit.
+
+The repository is no longer in:
+
+```text
+reconnect-first investigation phase
+```
+
+Current phase:
+
+```text
+GOVERNED RUNTIME MAINTENANCE
+```
 
 The current purpose is:
 
 ```text
-Classify grey/inactive POU objects visible in the CODESYS project tree
-without breaking the current 0-error compile baseline.
+- document verified active runtime ownership;
+- classify historical donor FBs;
+- document absorbed logic paths;
+- prevent detached runtime resurrection;
+- preserve compile/runtime stability.
 ```
-
-The project currently compiles successfully in the real CODESYS environment.
-
-That compile-clean state is now considered the authoritative engineering baseline.
 
 ---
 
-# Important baseline rule
+# Verified runtime baseline
 
 Current confirmed state:
 
 ```text
 0 compile errors
-0 warnings affecting build validity
-project operational baseline restored
+0 runtime authority conflicts detected during audit
+active runtime ownership chain verified
 ```
 
-This baseline must not be destabilized.
+Verified active runtime chain:
 
-From this point:
+```text
+PRG_Heating
+→ FB_Heating_System_Manager
+    → Safety_Gate
+    → Safe_State
+    → Circuit_Control
+    → Demand_Map
+    → Policy_Priority_Bridge
+    → Allocation_Filter
+    → Runtime_Observability
+    → Manifold_Control
+    → System_Manager post-manifold safety/test finalization
+    → Boiler_Control
+```
 
-- grey POU objects are NOT automatically considered broken;
-- blue POU objects are NOT automatically considered correct architecture;
-- compile participation and runtime participation are different things;
-- project-tree visibility and runtime execution are different things.
+Important:
+
+```text
+compile participation
+≠
+runtime ownership
+```
+
+and:
+
+```text
+grey POU
+≠
+automatically dead code.
+```
 
 ---
 
-# Current strategic correction
+# Strategic correction
 
-The audit must proceed logic-first, not reconnect-first.
-
-Working hypothesis:
+The previous investigation focused on:
 
 ```text
-Some behavior currently considered "lost" may already exist inside other grey POU
-that have not yet been classified.
+reconnect of historical orchestration fragments
 ```
 
-Therefore the correct order is now:
+The verified conclusion is now:
 
 ```text
-1. full grey POU logic audit;
-2. responsibility / behavior map;
-3. duplicate and overlap detection;
-4. lost-behavior identification;
-5. cleanup / deletion of proven invalid root blocks;
-6. only then intentional reconnect or code changes.
+historical detached orchestration/runtime layers
+must NOT be reconnected.
 ```
 
-Do NOT restore historical links blindly.
+The repository evolved toward:
 
-Do NOT assume the 2026-05-04 pipeline should be reconnected as-is.
-
-Do NOT assume the current runtime is complete until all grey logic is classified.
+```text
+clean active runtime ownership
++
+bounded helper execution
++
+post-manifold finalization
++
+passive governance/observability scaffold
+```
 
 ---
 
-# What "grey POU" means in this audit
+# Group 1 — Heating orchestration/allocation donor family
 
-Grey POU in the CODESYS tree currently means:
-
-```text
-present in repository/project
-but not participating in current compile/runtime graph
-```
-
-This does NOT automatically mean:
-
-```text
-- obsolete;
-- removable;
-- dead code;
-- invalid architecture;
-- safe to reconnect.
-```
-
-The previous mistake was assuming that compile-visible infrastructure could be safely connected without a complete dependency and project-registration audit.
-
-This audit exists specifically to avoid repeating that mistake.
-
----
-
-# Scope of this audit
-
-Included:
-
-```text
-FB_Heating_*
-FB_FloorHeating_*
-FB_State_*
-selected PRG_* test/simulation layers
-selected runtime supervision FBs
-```
-
-Explicitly excluded:
-
-```text
-PRG_PLC_A
-PRG_PLC_B
-PRG_PLC_*
-```
-
-Those PRGs are outside the current grey-POU investigation scope.
-
----
-
-# Current observed grey groups
-
-## Group 1 — Heating orchestration / allocation family
-
-Observed examples:
+Historical donor examples:
 
 ```text
 FB_Heating_Decision_Context
@@ -132,65 +115,32 @@ FB_Heating_Override_Layer
 FB_Heating_Thermal_Allocation
 ```
 
-Current interpretation:
+---
+
+## FB_Heating_Diagnostics
+
+Verified classification:
 
 ```text
-alternative heating orchestration/runtime decomposition path
-partially overlaps current PRG_Heating execution ownership
-```
-
-Important correction:
-
-```text
-Decision_Context + Thermal_Allocation must NOT currently be treated
-as automatically obsolete.
-```
-
-Reason:
-
-```text
-existing system behavior was reportedly corrected/improved
-relative to earlier runtime behavior using these logic paths.
-```
-
-This means:
-
-```text
-these FBs may represent intended target behavior
-that lost integration path visibility later,
-or their behavior may now be represented in another grey/active block.
-```
-
-Completed diagnostics sub-audit:
-
-```text
-FB_Heating_Diagnostics is NOT missing heating-control behavior.
+DIAGNOSTICS / EVENT PROJECTION LAYER
 ```
 
 Role:
 
 ```text
-read-only diagnostics / event projection layer
+read-only diagnostics projection
 ```
 
-Implemented logic:
+Important:
 
 ```text
-- service / out-of-service diagnostics aggregation;
-- backup pump OOS event;
-- electric heater OOS event;
-- manifold pump OOS events;
-- DHW pump OOS events;
-- freeze hardware critical event projection;
-- diagnostics text/status aggregation.
+NOT runtime authority.
 ```
 
 Writes:
 
 ```text
 GVL_STATUS.G_Diagnostics*
-GVL_STATUS.G_Diagnostics_Events
-GVL_STATUS.G_Diagnostics_Count
 ```
 
 Does NOT own:
@@ -200,176 +150,173 @@ Does NOT own:
 - boiler control;
 - manifold control;
 - valve control;
-- DHW control;
-- runtime sequencing;
-- output projection.
+- DHW control.
 ```
 
-Current classification:
+Current status:
 
 ```text
-FB_Heating_Diagnostics
-    → KEEP_GREY_RESERVED / DIAGNOSTICS PROJECTION CANDIDATE
-```
-
-Current reconnect policy:
-
-```text
-Do not reconnect as control logic.
-Only consider later as diagnostics/event projection if active diagnostics pipeline needs this exact behavior.
-```
-
-Completed orchestration/allocation sub-audit:
-
-```text
-FB_Heating_Execution_Core is NOT missing target behavior.
-FB_Heating_Orchestration is NOT missing target behavior by itself.
-FB_Heating_Override_Layer is dangerous direct authority.
-FB_Heating_Thermal_Allocation + FB_Heating_Decision_Context are the confirmed lost-behavior candidates.
-```
-
-Execution core result:
-
-```text
-FB_Heating_Execution_Core
-    → duplicate wrapper over active FB_Heating_System_Manager + FB_DHW_Manager
-```
-
-It adds no independent heating policy, arbitration, or safety behavior beyond calling the active managers.
-
-Current classification:
-
-```text
-FB_Heating_Execution_Core
-    → OBSOLETE DUPLICATE WRAPPER CANDIDATE
-```
-
-Orchestration result:
-
-```text
-FB_Heating_Orchestration
-    → wrapper over FB_Heating_Execution_Core + FB_Heating_Override_Layer
-```
-
-It should not be reconnected as a new top-level runtime path because that would create a second upper orchestration layer parallel to current PRG_Heating.
-
-Current classification:
-
-```text
-FB_Heating_Orchestration
-    → OBSOLETE / DANGEROUS DUPLICATE ORCHESTRATION CANDIDATE
-```
-
-Override layer result:
-
-```text
-FB_Heating_Override_Layer
-    → hard authority layer
-```
-
-It can force-disable:
-
-```text
-- manifold pumps;
-- manifold valves;
-- zone valves;
-- boiler OT enable;
-- boiler OT setpoints;
-- backup circulation pump;
-- electric heater;
-- DHW heating pump;
-- DHW circulation pump.
-```
-
-Current classification:
-
-```text
-FB_Heating_Override_Layer
-    → DO NOT CONNECT DIRECTLY
-    → AUTHORITY LOGIC ONLY FOR POSSIBLE FUTURE MERGE/DESIGN REVIEW
-```
-
-Thermal allocation result:
-
-```text
-FB_Heating_Thermal_Allocation
-    → confirmed policy/allocation lost-behavior candidate
-```
-
-Implemented logic:
-
-```text
-- manifold base priority;
-- zone priority bias;
-- guest preheat priority boost;
-- zone target adjustment priority effect;
-- zone self level priority effect;
-- policy priority multiplier;
-- manifold thermal weight;
-- max thermal budget input;
-- adjusted manifold priority output.
-```
-
-Decision context result:
-
-```text
-FB_Heating_Decision_Context
-    → confirmed manifold enable decision helper
-```
-
-Implemented logic:
-
-```text
-- manifold allowed state from service/fault conditions;
-- pressure fault exclusion;
-- current fault exclusion;
-- pump in-service exclusion;
-- degraded flag when a manifold is disallowed;
-- priority ordered selection;
-- max thermal budget limiting;
-- manifold enabled output.
-```
-
-Confirmed search result:
-
-```text
-thermal-budget / allocation vocabulary is not broadly present in active runtime.
-It is concentrated in FB_Heating_Thermal_Allocation and historical/test harness snapshots.
-```
-
-Current classification:
-
-```text
-FB_Heating_Thermal_Allocation
-    → RECONNECT_LATER / MERGE_LOGIC_INTO_ACTIVE_OWNER CANDIDATE
-
-FB_Heating_Decision_Context
-    → RECONNECT_LATER / MERGE_LOGIC_INTO_ACTIVE_OWNER CANDIDATE
-```
-
-Current reconnect policy:
-
-```text
-Do NOT reconnect old Orchestration pipeline wholesale.
-Do NOT reconnect Override_Layer directly.
-Do NOT reconnect Thermal_Allocation without input contract audit.
-```
-
-Required next design step for this cluster:
-
-```text
-1. identify current active owner for manifold availability / priority / budget decisions;
-2. determine whether policy inputs still exist in GVL_CONFIG / HMI / scenarios;
-3. define safe integration point before FB_Heating_System_Manager output authority;
-4. merge only allocation decision outputs, not historical orchestration shell;
-5. preserve current 0-error baseline until design is complete.
+KEEP_GREY_RESERVED
 ```
 
 ---
 
-## Group 2 — Floor heating protection family
+## FB_Heating_Execution_Core
 
-Observed examples:
+Verified result:
+
+```text
+historical duplicate wrapper
+```
+
+Verified status:
+
+```text
+VERIFIED REMOVED DONOR
+```
+
+Reason:
+
+```text
+active ownership already exists in:
+FB_Heating_System_Manager
++
+FB_DHW_Manager
+```
+
+Important:
+
+```text
+must NOT be reconnected
+as alternate orchestration layer.
+```
+
+---
+
+## FB_Heating_Orchestration
+
+Verified result:
+
+```text
+historical detached orchestration shell
+```
+
+Verified status:
+
+```text
+VERIFIED REMOVED DONOR
+```
+
+Reason:
+
+```text
+would create second orchestration path
+parallel to active runtime ownership chain.
+```
+
+Reconnect policy:
+
+```text
+FORBIDDEN
+```
+
+---
+
+## FB_Heating_Override_Layer
+
+Verified result:
+
+```text
+historical dangerous authority layer
+```
+
+Capabilities:
+
+```text
+- manifold suppression;
+- valve suppression;
+- OpenTherm suppression;
+- DHW suppression;
+- emergency runtime override.
+```
+
+Verified status:
+
+```text
+DO NOT CONNECT DIRECTLY
+```
+
+Current role:
+
+```text
+historical authority donor only
+```
+
+Future work:
+
+```text
+possible future conceptual extraction review only
+```
+
+---
+
+## FB_Heating_Thermal_Allocation
+
+Verified result:
+
+```text
+policy/allocation donor
+```
+
+Verified extraction:
+
+```text
+logic absorbed into:
+- FB_Heating_Policy_Priority_Bridge
+- FB_Heating_Allocation_Filter
+```
+
+Verified status:
+
+```text
+VERIFIED EXTRACTED DONOR
+```
+
+Important:
+
+```text
+historical orchestration shell
+must NOT be restored.
+```
+
+---
+
+## FB_Heating_Decision_Context
+
+Verified result:
+
+```text
+manifold decision/allocation donor
+```
+
+Verified extraction:
+
+```text
+logic absorbed into:
+FB_Heating_Allocation_Filter
+```
+
+Verified status:
+
+```text
+VERIFIED EXTRACTED DONOR
+```
+
+---
+
+# Group 2 — Floor heating protection donor family
+
+Historical donor examples:
 
 ```text
 FB_FloorHeating_Freeze_Protection
@@ -377,65 +324,14 @@ FB_FloorHeating_Overheat_Protection
 FB_FloorHeating_Controller
 ```
 
-Completed overlap audit:
+---
+
+## FB_FloorHeating_Controller
+
+Verified result:
 
 ```text
-FB_FloorHeating_Controller is NOT obsolete.
-```
-
-Reason:
-
-```text
-current active FB_Heating_Circuit_Control directly instantiates
-FB_FloorHeating_Controller as active per-circuit PID/PWM runtime controller.
-```
-
-Therefore:
-
-```text
-FB_FloorHeating_Controller = ACTIVE INDIRECT RUNTIME DEPENDENCY
-```
-
-Completed safety overlap result:
-
-```text
-FB_FloorHeating_Freeze_Protection logic is absorbed.
-FB_FloorHeating_Overheat_Protection logic is absorbed.
-```
-
-Freeze protection overlap:
-
-```text
-old logic:
-- floor freeze detection
-- outdoor freeze detection
-- force circulation/pump behavior
-```
-
-Current owners:
-
-```text
-FB_Heating_Safety_Gate
-FB_Heating_Safe_State
-```
-
-Current runtime now additionally includes:
-
-```text
-- freeze target supply logic;
-- IO failsafe handling;
-- gas safety interaction;
-- backup circulation;
-- electric heater integration;
-- manifold-level freeze circulation.
-```
-
-Overheat overlap:
-
-```text
-old logic:
-- threshold detect
-- lock overheated circuits
+ACTIVE INDIRECT RUNTIME DEPENDENCY
 ```
 
 Current owner:
@@ -444,40 +340,64 @@ Current owner:
 FB_Heating_Circuit_Control
 ```
 
-Current runtime now additionally includes:
+Status:
 
 ```text
-- validated sensor inputs;
-- 60s debounce timer;
-- room/floor fallback selection;
-- rule-action arbitration.
-```
-
-Current classification:
-
-```text
-FB_FloorHeating_Controller
-    → KEEP_ACTIVE
-
-FB_FloorHeating_Freeze_Protection
-    → OBSOLETE DUPLICATE CANDIDATE
-
-FB_FloorHeating_Overheat_Protection
-    → OBSOLETE DUPLICATE CANDIDATE
-```
-
-Current deletion status:
-
-```text
-not deleted yet
-awaiting full-system audit completion
+KEEP_ACTIVE
 ```
 
 ---
 
-## Group 3 — Runtime supervision scaffold family
+## FB_FloorHeating_Freeze_Protection
 
-Observed examples:
+Verified result:
+
+```text
+freeze protection donor
+```
+
+Verified absorption:
+
+```text
+absorbed into:
+FB_Heating_Safety_Gate
+FB_Heating_Safe_State
+```
+
+Status:
+
+```text
+VERIFIED ABSORBED DONOR
+```
+
+---
+
+## FB_FloorHeating_Overheat_Protection
+
+Verified result:
+
+```text
+overheat protection donor
+```
+
+Verified absorption:
+
+```text
+absorbed into:
+FB_Heating_Circuit_Control
+```
+
+Status:
+
+```text
+VERIFIED ABSORBED DONOR
+```
+
+---
+
+# Group 3 — Runtime supervision / governance scaffold family
+
+Representative examples:
 
 ```text
 FB_Heating_Runtime_Coordinator
@@ -487,45 +407,48 @@ FB_Heating_Runtime_Observation_Validator
 FB_Heating_Runtime_Orchestration_Shell
 FB_Heating_Runtime_Stability_Model
 FB_Heating_Runtime_Timeline_Observer
-FB_Heating_Runtime_Jitter_Detector
-FB_Heating_Runtime_Latency_Validator
 FB_Heating_Runtime_Adaptive_*
 FB_Heating_Runtime_Anomaly_*
 FB_Heating_Runtime_Predictive_*
 ```
 
-Currently active exceptions:
+Verified active exceptions:
 
 ```text
 FB_Heating_Runtime_Observer
 FB_Heating_Runtime_Observer_Authorization
 ```
 
-Deep audit result:
+Deep audit conclusion:
 
 ```text
-this family does NOT contain missing heating-control runtime logic.
+this family does NOT contain missing production runtime authority.
 ```
 
-Main architectural role:
+Verified role:
 
 ```text
-read-only runtime supervision / telemetry / validation scaffold
+passive governance / observability / forensic scaffold
 ```
 
-Confirmed properties:
+NOT:
+
+```text
+lost heating runtime controller.
+```
+
+Verified properties:
 
 ```text
 - governance-gated;
 - observation-oriented;
-- ownership validation oriented;
+- telemetry-oriented;
 - sequencing validation oriented;
 - anomaly/risk aggregation oriented;
-- runtime-health projection oriented;
-- intentionally isolated from control authority.
+- intentionally isolated from control ownership.
 ```
 
-Verified active path:
+Verified active observer path:
 
 ```text
 PRG_Heating
@@ -534,85 +457,21 @@ PRG_Heating
 → GVL_Heating_Runtime_Observation
 ```
 
-Confirmed status:
+Confirmed governance locks:
 
 ```text
-bounded passive observer path only
+Governance_Locked := TRUE
+Runtime_Attachment_Allowed := FALSE
+Observation-only semantics
 ```
 
-Important confirmed conclusion:
+Verified status:
 
 ```text
-Coordinator / Orchestration_Shell are NOT missing production runtime.
+KEEP_GREY_RESERVED
 ```
 
-They are:
-
-```text
-future-reserved orchestration/supervision shell layers
-```
-
-NOT:
-
-```text
-lost heating runtime authority.
-```
-
-Confirmed reconnect risk:
-
-```text
-wholesale reconnect would create parallel orchestration/runtime authority illusion
-without restoring actual heating behavior.
-```
-
-Confirmed current role examples:
-
-```text
-FB_Heating_Runtime_Contract_Validator
-    → sequencing/isolation validator
-
-FB_Heating_Runtime_Event_Manager
-    → bounded telemetry/event buffer
-
-FB_Heating_Runtime_Observation_Validator
-    → passive observation integrity validator
-
-FB_Heating_Runtime_Observation_Aggregator
-    → runtime health aggregation
-
-FB_Heating_Runtime_Adaptive_*
-FB_Heating_Runtime_Anomaly_*
-FB_Heating_Runtime_Predictive_*
-    → supervision/risk/anomaly analytics scaffold
-```
-
-Current classification:
-
-```text
-FB_Heating_Runtime_Observer
-    → KEEP_ACTIVE
-
-FB_Heating_Runtime_Observer_Authorization
-    → KEEP_ACTIVE
-
-remaining FB_Heating_Runtime_*
-    → KEEP_GREY_RESERVED
-```
-
-Current deletion policy:
-
-```text
-DO NOT DELETE YET
-```
-
-Reason:
-
-```text
-they are architecturally coherent supervision scaffolding,
-not random garbage or broken duplicates.
-```
-
-Current connection policy:
+Reconnect policy:
 
 ```text
 DO NOT CONNECT WHOLE FAMILY
@@ -622,14 +481,13 @@ Allowed future direction:
 
 ```text
 bounded read-only extensions only
-through existing observer authorization path.
 ```
 
 ---
 
-## Group 4 — Snapshot/test/simulation family
+# Group 4 — Snapshot/test/simulation family
 
-Observed examples:
+Examples:
 
 ```text
 FB_State_Snapshot_Manager
@@ -637,87 +495,73 @@ PRG_Config_Simulation
 PRG_Scenario_Test_Harness
 ```
 
-Interpretation:
+Verified role:
 
 ```text
 test/support infrastructure
-not production runtime path
 ```
 
 Current recommendation:
 
 ```text
-keep isolated from production runtime execution graph
+keep isolated from production runtime ownership chain
 ```
 
 ---
 
-# New classification model
-
-The previous classification model was too runtime-centric.
-
-The new model focuses on safe engineering decisions.
-
----
+# Updated classification model
 
 ## Category A — Active production runtime
 
 Definition:
 
 ```text
-actively participates in current production execution graph
+actively participates in verified production ownership chain
 ```
 
 Examples:
 
 ```text
 FB_Heating_System_Manager
-FB_DHW_Manager
-FB_Heating_Output_Projection
-FB_Heating_RootCause_Diagnostics
-```
-
-Action:
-
-```text
-protect
-verify carefully before modification
+FB_Heating_Safety_Gate
+FB_Heating_Circuit_Control
+FB_Heating_Manifold_Control
+FB_Heating_Boiler_Control
 ```
 
 ---
 
-## Category B — Indirect active runtime
+## Category B — Bounded helper execution layers
 
 Definition:
 
 ```text
-called from active runtime FBs
+active helper execution
+inside runtime ownership chain
 ```
 
 Examples:
 
 ```text
-FB_Heating_Safety_Gate
-FB_Heating_Circuit_Control
-FB_Heating_Manifold_Control
-FB_Heating_Boiler_Control
-FB_FloorHeating_Controller
+FB_Boiler_Cascade_Manager
+FB_Boiler_OpenTherm_Interface
+FB_Valve_Test_Manager
 ```
 
-Action:
+Important:
 
 ```text
-trace ownership before touching
+helper authority escalation not detected.
 ```
 
 ---
 
-## Category C — Passive observer runtime
+## Category C — Passive runtime observability/governance
 
 Definition:
 
 ```text
-active but read-only/passive
+active or reserved read-only runtime scaffold
 ```
 
 Examples:
@@ -725,96 +569,47 @@ Examples:
 ```text
 FB_Heating_Runtime_Observer
 FB_Heating_Runtime_Observer_Authorization
-```
-
-Action:
-
-```text
-bounded extension only
+FB_Heating_Runtime_Contract_Validator
+FB_Heating_Runtime_Event_Manager
 ```
 
 ---
 
-## Category D — Grey inactive project objects
+## Category D — Verified donor blocks
 
 Definition:
 
 ```text
-present in project tree
-not participating in current compile/runtime graph
+historical runtime decomposition
+already absorbed or superseded
 ```
 
-This is now the MAIN investigation category.
-
-Possible meanings:
+Examples:
 
 ```text
-- legacy decomposition;
-- future-reserved architecture;
-- disabled experiments;
-- detached scaffolding;
-- archived runtime concepts;
-- test infrastructure;
-- missing target behavior waiting for safe integration.
-```
-
-Action:
-
-```text
-classify by logic and ownership before reconnecting or deleting
+FB_Heating_Execution_Core
+FB_Heating_Orchestration
+FB_Heating_Thermal_Allocation
+FB_Heating_Decision_Context
+FB_FloorHeating_Freeze_Protection
+FB_FloorHeating_Overheat_Protection
 ```
 
 ---
 
-## Category E — Future-reserved architecture
+## Category E — Historical dangerous authority donors
 
 Definition:
 
 ```text
-intentionally inactive
-but architecturally valuable
+historical detached authority layers
+unsafe to reconnect directly
 ```
 
-Action:
+Examples:
 
 ```text
-keep documented
-keep isolated
-do not claim active behavior
-```
-
----
-
-## Category F — Obsolete duplicate candidates
-
-Definition:
-
-```text
-older implementation replaced by current active architecture
-```
-
-Requirements before deletion:
-
-```text
-1. ownership verified;
-2. no active references;
-3. no hidden project dependencies;
-4. no retained safety behavior;
-5. no retained HMI/config dependency;
-6. snapshot or audit trail exists.
-```
-
-Important:
-
-```text
-compile absence alone is NOT sufficient deletion proof
-```
-
-If a root block is proven invalid in the current architecture:
-
-```text
-delete without preserving root clutter
-but only after audit evidence is recorded
+FB_Heating_Override_Layer
 ```
 
 ---
@@ -824,160 +619,68 @@ but only after audit evidence is recorded
 From this point onward:
 
 ```text
-NO reconnect first
-NO delete first unless proven invalid
-classification first
-logic-first audit before lost-behavior claims
+NO detached reconnect
+NO reconnect-first engineering
+NO hidden authority expansion
 ```
 
-The previous failure happened because connection work started before:
+Required workflow:
 
 ```text
-- dependency audit;
-- project registration audit;
-- ownership audit;
-- compile graph audit;
-- rollback chain verification.
-```
-
-This document changes the workflow.
-
----
-
-# Required investigation workflow
-
-## Step 1 — Determine project participation
-
-For every grey POU:
-
-```text
-- exists in repository?
-- exists in project tree?
-- excluded from build?
-- instantiated anywhere?
-- referenced by active runtime?
-- referenced by HMI/config/safety?
+1. governance verification;
+2. ownership verification;
+3. write-path verification;
+4. evidence-level runtime validation;
+5. only then bounded runtime evolution.
 ```
 
 ---
 
-## Step 2 — Determine logic responsibility
+# Current verified risk model
 
-For every grey POU:
+The primary risk is no longer:
 
 ```text
-- what behavior does it implement?
-- is that behavior present in current active runtime?
-- is that behavior present in another grey POU?
-- does it own control authority?
-- does it only compute diagnostics/observation?
-- does it write GVL_STATE / GVL_STATUS / GVL_OUTPUT?
-- does it touch safety, boiler, manifold, DHW, or IO authority?
+compile collapse
 ```
 
----
-
-## Step 3 — Determine architectural role
-
-Possible outcomes:
+The primary risk is now:
 
 ```text
-- active dependency hidden by tree state;
-- future-reserved scaffold;
-- obsolete duplicate;
-- safety-isolated helper;
-- simulation/test only;
-- historical artifact;
-- target behavior waiting for safe integration;
-- duplicate authority that must be deleted or redesigned.
-```
-
----
-
-## Step 4 — Decide safe action
-
-Allowed actions:
-
-```text
-KEEP_ACTIVE
-KEEP_GREY_RESERVED
-MOVE_TO_ARCHIVE
-MOVE_TO_TEST_SCOPE
-RECONNECT_LATER
-DELETE_AFTER_FULL_AUDIT
-MERGE_LOGIC_INTO_ACTIVE_OWNER
-```
-
----
-
-# Current risk statement
-
-The current risk is no longer compile failure.
-
-The real risk is:
-
-```text
-incorrect reconnect of detached architecture fragments
-or premature deletion of behavior that exists only in grey POU
+future architectural drift
 ```
 
 Especially dangerous:
 
 ```text
-- safety FB reconnect;
-- orchestration reconnect;
-- duplicate ownership paths;
-- predictive runtime authority;
-- reconnecting supervision scaffold as live runtime;
-- deleting allocation/policy logic before confirming replacement.
+- detached orchestration resurrection;
+- Runtime_* actuation;
+- helper authority escalation;
+- duplicate writers;
+- hidden finalization layers;
+- telemetry-driven control;
+- governance-driven control.
 ```
 
 ---
 
-# Current engineering recommendation
+# Strategic conclusion
 
-Current recommendation is intentionally conservative:
-
-```text
-1. keep current 0-error baseline stable;
-2. complete full grey POU logic audit;
-3. reconnect nothing automatically;
-4. delete only blocks proven invalid in current architecture;
-5. identify true obsolete duplicates;
-6. identify true future-reserved architecture;
-7. identify behavior implemented only in grey POU;
-8. reconnect or merge only after dependency proof.
-```
-
----
-
-# Current audit focus
-
-Immediate focus:
+The repository evolved from:
 
 ```text
-Grey POU Logic Classification Table
+legacy orchestration cleanup
 ```
 
-Columns:
+into:
 
 ```text
-POU Name
-POU Type
-Grey/Blue State
-Repository File Exists
-Project Present
-Compile Participant
-Runtime Participant
-Safety Related
-Writes State/Outputs
-Test/Simulation Only
-Implemented Logic
-Replacement Exists
-Overlap With Active Runtime
-Reconnect Risk
-Recommended Action
-Notes
+governed runtime architecture maintenance
 ```
 
-This classification table is now the primary engineering task.
+The primary goal now is:
+
+```text
+prevent future architectural drift
+while preserving explicit bounded ownership.
+```
