@@ -89,6 +89,24 @@ GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
 
 ---
 
+### Output freshness distributed hard-stop fanout narrowing
+
+Исправлено:
+
+```text
+PRG_Output_Freshness_Governor больше не использует peer-detail distributed fields
+как прямые hard-stop причины
+```
+
+Текущее правило:
+
+```text
+Output_Freshness consumes distributed aggregate validity/quarantine only.
+Peer-detail diagnostics are owned by distributed governors and observability.
+```
+
+---
+
 ### PreOutput command-shadow foreign mutation
 
 Исправлено:
@@ -180,6 +198,26 @@ Distributed commit baseline берётся из upstream distributed snapshot ep
 
 ---
 
+### Distributed commit unused token residue cleanup
+
+Исправлено после live-consumer sweep:
+
+```text
+GVL_DISTRIBUTED_COMMIT.Local_Commit_Token
+GVL_DISTRIBUTED_COMMIT.Peer_Commit_Token
+```
+
+удалены из live declaration.
+
+Текущее правило:
+
+```text
+commit continuity сейчас основана на prepare/publication epoch + ack/lease/mismatch/replay fields,
+а не на unused commit-token mirrors
+```
+
+---
+
 ### Observability authority residue cleanup
 
 Исправлено:
@@ -246,6 +284,23 @@ runtime verifier diagnostics live in GVL_COMMAND_VERIFY.Runtime_*
 
 ---
 
+### Recovery cleanup role convergence
+
+Исправлено:
+
+```text
+PRG_Recovery_Cleanup_Governor и GVL_RECOVERY_GOVERNANCE comments больше не описывают recovery cleanup
+как upstream runtime authority dependency
+```
+
+Текущее правило:
+
+```text
+Recovery cleanup is downstream residue state and must not feed back into Runtime_Barrier.
+```
+
+---
+
 ## 0.2 Current directed authority stack
 
 Текущая validated directionality:
@@ -294,11 +349,14 @@ Observability
 ```text
 GVL_TRANSPORT_FRESHNESS
 GVL_PLC_FENCING
+GVL_RUNTIME_EPOCH
 GVL_RUNTIME_SNAPSHOT
 GVL_OUTPUT_EPOCH
 GVL_COMMAND_VERIFY
 GVL_CONFIG_VALIDATION
 GVL_OBSERVABILITY_AUTHORITY
+GVL_DISTRIBUTED_SNAPSHOT
+GVL_DISTRIBUTED_COMMIT
 ```
 
 Текущий статус:
@@ -350,15 +408,14 @@ Resolved after checkpoint:
 
 ```text
 GVL_CONFIG_VALIDATION.G_Runtime_* residual fields
+GVL_DISTRIBUTED_COMMIT.Local_Commit_Token / Peer_Commit_Token residues
 ```
 
 Причина:
 
 ```text
-live authority consumers removed
-live Command_Verifier writes removed
 live consumer sweep passed
-fields removed from GVL declaration
+fields removed from live declarations
 ```
 
 Текущий статус:
@@ -379,6 +436,7 @@ safety orchestration internals
 snapshot archives
 historical docs cleanup
 distributed token conflict semantics without evidence
+distributed peer-input fields without ingestion contract evidence
 new governance layers
 semantic hard-stop escalation
 observability hard-stop escalation
@@ -400,9 +458,10 @@ writer ownership и compile/reference convergence,
 
 ```text
 1. distributed fencing token contract validation
-2. compile/reference convergence check
-3. bounded residual cleanup only after evidence
-4. only then docs/snapshots consistency cleanup
+2. broader hard-stop graph validation with direct fetch evidence
+3. ownership matrix/doc consistency update
+4. bounded residual cleanup only after evidence
+5. only then docs/snapshots consistency cleanup
 ```
 
 ---
@@ -415,6 +474,9 @@ writer ownership и compile/reference convergence,
 GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep
 PRG_Distributed_Snapshot_Governor baseline moved from Output_Publication_Epoch to Snapshot_Publication_Epoch
 PRG_Observability_Governor now covers distributed commit visibility fields
+PRG_Output_Freshness_Governor now consumes distributed aggregate authority only
+GVL_DISTRIBUTED_COMMIT unused commit-token residues removed
+Recovery cleanup code comments and GVL declaration aligned with downstream cleanup role
 known removed-field sweep returned clean
 ```
 
@@ -422,6 +484,7 @@ known removed-field sweep returned clean
 
 ```text
 distributed snapshot/commit no longer consume downstream output publication epoch
+output freshness no longer consumes peer-detail distributed diagnostics directly
 observability remains downstream visibility-only
 compile/reference convergence for known removed fields is currently clean
 ```
@@ -564,11 +627,14 @@ PARTIALLY_VALIDATED_AFTER_CHECKPOINT
 ```text
 GVL_TRANSPORT_FRESHNESS
 GVL_PLC_FENCING
+GVL_RUNTIME_EPOCH
 GVL_RUNTIME_SNAPSHOT
 GVL_OUTPUT_EPOCH
 GVL_COMMAND_VERIFY
 GVL_CONFIG_VALIDATION
 GVL_OBSERVABILITY_AUTHORITY
+GVL_DISTRIBUTED_SNAPSHOT
+GVL_DISTRIBUTED_COMMIT
 ```
 
 на текущем проходе не имеют подтверждённых live duplicate writers.
@@ -703,6 +769,7 @@ VALIDATED_FOR_IO_WRITE_CONSUMER_PATH
 ```text
 IO_Write consumes Output_Forced_Safe_Decay only for output freshness hard-stop.
 Output_Publication_Valid / lease / stale fields remain diagnostics/observability state.
+Output_Freshness consumes distributed aggregate authority only, not peer-detail diagnostics.
 ```
 
 ---
@@ -902,6 +969,7 @@ VALIDATION_REQUIRED_AFTER_CHECKPOINT
 Peer_Fencing_Conflict currently triggers on equal peer/local fencing token.
 Do not change this without explicit token issuance contract evidence.
 Distributed snapshot/commit baselines no longer consume downstream output publication epoch.
+Output_Freshness consumes aggregate distributed validity/quarantine only.
 ```
 
 ---
@@ -948,6 +1016,7 @@ CURRENTLY_CLEAN_AFTER_CHECKPOINT_SWEEP
 Output_Invalidation_Count live write removed.
 Authority_Snapshot_Valid live write removed.
 GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep.
+GVL_DISTRIBUTED_COMMIT.Local_Commit_Token / Peer_Commit_Token removed after live consumer sweep.
 Known removed-field sweep returned clean after latest convergence pass.
 ```
 
@@ -1016,6 +1085,7 @@ IMPROVED
 
 ```text
 IO_Write hard-stop consumer path narrowed to Output_Forced_Safe_Decay.
+Output_Freshness distributed consumer path narrowed to aggregate authority fields.
 ```
 
 ---
@@ -1086,7 +1156,8 @@ IMPROVED_BUT_NOT_COMPLETE
 
 ```text
 several duplicate/foreign writer paths removed,
-but residual declarations still require consumer sweep before cleanup.
+several residual declarations removed after consumer sweep,
+but peer-input fields remain deferred until ingestion contract evidence exists.
 ```
 
 ---
@@ -1103,6 +1174,7 @@ reintroducing forced-safe mirrors
 making visibility runtime-authoritative
 making semantic heuristics hard-stop authority
 changing distributed fencing token semantics without contract evidence
+removing distributed peer-input fields without ingestion contract evidence
 editing files through partial patches that can truncate ST files
 ```
 
