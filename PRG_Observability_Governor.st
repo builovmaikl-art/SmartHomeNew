@@ -41,6 +41,16 @@ GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Reconciliation_Lost_Visible := FALS
 GVL_OBSERVABILITY_AUTHORITY.Peer_Snapshot_Not_Immutable_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Distributed_Immutable_Snapshot_Quarantine_Visible := FALSE;
 
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Commit_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Commit_Quarantine_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Publication_Prepare_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Publication_Commit_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Ack_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Mismatch_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Replay_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Missing_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Commit_Lease_Expired_Visible := FALSE;
+
 GVL_OBSERVABILITY_AUTHORITY.Unsafe_State_Published := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := FALSE;
 
@@ -136,6 +146,46 @@ END_IF;
 
 IF GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active THEN
     GVL_OBSERVABILITY_AUTHORITY.Distributed_Immutable_Snapshot_Quarantine_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Commit_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Commit_Quarantine_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF NOT GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid THEN
+    GVL_OBSERVABILITY_AUTHORITY.Publication_Prepare_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Publication_Commit_Requested AND (NOT GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed) THEN
+    GVL_OBSERVABILITY_AUTHORITY.Publication_Commit_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Expired THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Ack_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Mismatch_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Replay_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Commit_Missing_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired THEN
+    GVL_OBSERVABILITY_AUTHORITY.Commit_Lease_Expired_Visible := TRUE;
     GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
 END_IF;
 
