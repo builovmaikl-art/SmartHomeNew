@@ -41,12 +41,15 @@ Authoritative runtime path:
 ```text
 PRG_Heating
 → FB_Heating_System_Manager
+    → Safety_Gate
+    → Safe_State
     → Circuit_Control
     → Demand_Map
     → Policy_Priority_Bridge
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
+    → System_Manager post-manifold safety/test finalization
     → Boiler_Control
 ```
 
@@ -61,7 +64,15 @@ No additional orchestration layer may bypass this chain.
 Every runtime authority domain must have:
 
 ```text
-ONE authoritative writer
+ONE authoritative runtime ownership chain
+```
+
+Important clarification:
+
+```text
+A bounded top-level runtime finalizer
+inside the same ownership chain
+is NOT considered a detached second authority path.
 ```
 
 Additional blocks may:
@@ -77,9 +88,9 @@ Additional blocks may:
 But may NOT:
 
 ```text
-- override ownership silently;
-- duplicate control outputs;
-- create secondary authority paths.
+- create detached runtime ownership;
+- create hidden second authority paths;
+- bypass active runtime chain.
 ```
 
 ---
@@ -144,7 +155,22 @@ Authority:
 - runtime coordination;
 - bounded policy integration;
 - allocation integration;
-- manifold execution ordering.
+- manifold execution ordering;
+- post-manifold safety/test finalization.
+```
+
+Important:
+
+```text
+System_Manager remains the top-level runtime owner.
+```
+
+Verified post-manifold finalization responsibilities:
+
+```text
+- low-pressure pump suppression;
+- confidence-fallback pump suppression;
+- valve-test override finalization.
 ```
 
 Forbidden external ownership:
@@ -295,7 +321,7 @@ Forbidden ownership:
 
 ## Manifold execution ownership
 
-Authoritative owner:
+Primary actuator helper:
 
 ```text
 FB_Heating_Manifold_Control
@@ -304,9 +330,32 @@ FB_Heating_Manifold_Control
 Authority:
 
 ```text
-- manifold valve execution;
-- manifold runtime enable;
-- manifold command realization.
+- manifold valve realization;
+- manifold runtime enable realization;
+- manifold PID execution;
+- manifold DHW suppression;
+- manifold freeze minimum behavior.
+```
+
+Important clarification:
+
+```text
+Manifold_Control is the primary manifold actuator helper,
+but not the final manifold output finalizer.
+```
+
+Final manifold output finalization remains inside:
+
+```text
+FB_Heating_System_Manager
+```
+
+for:
+
+```text
+- low-pressure safety suppression;
+- confidence-fallback suppression;
+- valve-test override finalization.
 ```
 
 Forbidden ownership:
@@ -334,6 +383,14 @@ Authority:
 - OpenTherm interaction;
 - supply target execution;
 - thermal source coordination.
+```
+
+Verified implementation:
+
+```text
+OpenTherm authority flows through:
+FB_Boiler_Cascade_Manager
+→ FB_Boiler_OpenTherm_Interface
 ```
 
 Forbidden ownership:
@@ -454,7 +511,7 @@ Observation-only semantics
 - hidden runtime authority;
 - detached orchestration execution;
 - output ownership;
-- duplicate writers;
+- duplicate detached writers;
 - alternate heating runtime.
 ```
 
@@ -464,7 +521,7 @@ Observation-only semantics
 
 ## Runtime control state
 
-Must be written ONLY by authoritative runtime owners.
+Must be written ONLY by authoritative runtime ownership chain.
 
 ---
 
@@ -504,7 +561,7 @@ The following architectures are forbidden:
 ```text
 - detached orchestration runtime;
 - hidden override shell;
-- second runtime authority path;
+- second detached runtime authority path;
 - Runtime_* direct runtime execution;
 - telemetry-driven control ownership;
 - governance-driven actuation.
@@ -517,9 +574,11 @@ The following architectures are forbidden:
 The repository architecture now follows:
 
 ```text
-clean runtime authority
+clean top-level runtime authority
 +
-bounded policy integration
+bounded helper execution layers
++
+post-manifold safety/test finalization
 +
 passive observability/governance scaffold
 ```
