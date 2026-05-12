@@ -16,7 +16,8 @@ L_Error_Text := '';
 // ======================================================
 // Creates authoritative runtime publication semantics.
 // Rejects impossible runtime states before physical publication.
-// PLC fencing failures invalidate runtime publication authority.
+// PLC fencing failures and monotonic-time failures invalidate
+// runtime publication authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -24,11 +25,59 @@ GVL_RUNTIME_EPOCH.Runtime_Snapshot_Published := FALSE;
 GVL_RUNTIME_EPOCH.Runtime_Impossible_State_Detected := FALSE;
 GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed := FALSE;
 
-IF NOT GVL_STATUS.G_Is_Active_PLC THEN
+// ------------------------------------------------------
+// Monotonic time authority validation.
+// ------------------------------------------------------
+
+IF NOT GVL_TIME_MONOTONIC.Monotonic_Time_Initialized THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4900;
+    L_Error_Text := 'Monotonic time not initialized';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_TIME_MONOTONIC.Monotonic_Time_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4901;
+    L_Error_Text := 'Monotonic time invalid';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TIME_MONOTONIC.Startup_Quarantine_Active THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4902;
+    L_Error_Text := 'Startup quarantine active';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TIME_MONOTONIC.Time_Rollback_Detected THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4903;
+    L_Error_Text := 'Monotonic rollback detected';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TIME_MONOTONIC.Retained_Time_Invalid THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4904;
+    L_Error_Text := 'Retained monotonic time invalid';
+END_IF;
+
+IF L_Runtime_OK AND (GVL_TIME_MONOTONIC.Boot_Generation_ID = 0) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 4905;
+    L_Error_Text := 'Boot generation missing';
+END_IF;
+
+// ------------------------------------------------------
+// Base PLC/runtime authority validation.
+// ------------------------------------------------------
+
+IF L_Runtime_OK AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5000;
     L_Error_Text := 'Runtime barrier inactive PLC';
 END_IF;
+
+// ------------------------------------------------------
+// PLC fencing authority validation.
+// ------------------------------------------------------
 
 IF L_Runtime_OK AND (NOT GVL_PLC_FENCING.PLC_Ownership_Valid) THEN
     L_Runtime_OK := FALSE;
@@ -60,6 +109,10 @@ IF L_Runtime_OK AND (GVL_PLC_FENCING.PLC_Fencing_Token = 0) THEN
     L_Error_Text := 'PLC fencing token missing';
 END_IF;
 
+// ------------------------------------------------------
+// Runtime sanity validation.
+// ------------------------------------------------------
+
 IF L_Runtime_OK AND (NOT GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK) THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5001;
@@ -71,6 +124,10 @@ IF L_Runtime_OK AND GVL_COMMAND_VERIFY.PreOutput_Block_IO THEN
     L_Error_Code := 5002;
     L_Error_Text := 'Runtime blocked by pre-output barrier';
 END_IF;
+
+// ------------------------------------------------------
+// Impossible-state rejection.
+// ------------------------------------------------------
 
 IF L_Runtime_OK THEN
     IF (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
@@ -92,9 +149,18 @@ IF L_Runtime_OK THEN
     END_IF;
 END_IF;
 
+// ------------------------------------------------------
+// Authoritative runtime publication.
+// ------------------------------------------------------
+
 GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK := L_Runtime_OK;
 GVL_RUNTIME_EPOCH.Runtime_Snapshot_Valid := L_Runtime_OK;
-GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid := GVL_STATUS.G_Is_Active_PLC AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid AND GVL_PLC_FENCING.PLC_Ownership_Valid;
+GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid :=
+    GVL_STATUS.G_Is_Active_PLC
+    AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid
+    AND GVL_PLC_FENCING.PLC_Ownership_Valid
+    AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid;
+
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
 IF L_Runtime_OK THEN
