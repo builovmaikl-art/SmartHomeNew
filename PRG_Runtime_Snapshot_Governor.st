@@ -16,38 +16,29 @@ L_Error_Text := '';
 // ======================================================
 // Governs immutable publication snapshot semantics.
 // Prevents mutable runtime publication leakage.
+//
+// Runtime snapshot is upstream of output freshness.
+// It must not depend on downstream output decay state.
 // ======================================================
 
 GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected := FALSE;
 GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed := FALSE;
 GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen := FALSE;
 
+// ------------------------------------------------------
 // Runtime authority linkage.
+// ------------------------------------------------------
+
 IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
     L_Snapshot_Valid := FALSE;
     L_Error_Code := 12000;
     L_Error_Text := 'Runtime authority invalid';
 END_IF;
 
-// Observability synchronization linkage.
-IF L_Snapshot_Valid
-AND (NOT GVL_OBSERVABILITY_AUTHORITY.Authority_Snapshot_Valid)
-THEN
-    L_Snapshot_Valid := FALSE;
-    L_Error_Code := 12001;
-    L_Error_Text := 'Observability snapshot invalid';
-END_IF;
-
-// Output freshness linkage.
-IF L_Snapshot_Valid
-AND GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
-THEN
-    L_Snapshot_Valid := FALSE;
-    L_Error_Code := 12002;
-    L_Error_Text := 'Output decay active';
-END_IF;
-
+// ------------------------------------------------------
 // Mutation detection foundation.
+// ------------------------------------------------------
+
 IF L_Snapshot_Valid
 AND GVL_RUNTIME_EPOCH.Runtime_Impossible_State_Detected
 THEN
@@ -58,7 +49,10 @@ THEN
     GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected := TRUE;
 END_IF;
 
+// ------------------------------------------------------
 // Immutable snapshot freeze semantics.
+// ------------------------------------------------------
+
 IF L_Snapshot_Valid THEN
     GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen := TRUE;
     GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed := TRUE;
@@ -67,7 +61,7 @@ IF L_Snapshot_Valid THEN
     GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid := TRUE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Runtime_Authority_Valid := TRUE;
-    GVL_RUNTIME_SNAPSHOT.Snapshot_Observability_Synchronized := TRUE;
+    GVL_RUNTIME_SNAPSHOT.Snapshot_Observability_Synchronized := FALSE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Freeze_Start_MS := L_Now_MS;
     GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Publication_MS := L_Now_MS;
