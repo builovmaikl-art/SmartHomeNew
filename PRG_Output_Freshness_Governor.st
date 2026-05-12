@@ -151,6 +151,50 @@ IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_A
 END_IF;
 
 // ------------------------------------------------------
+// Deterministic distributed commit decay enforcement.
+// ------------------------------------------------------
+// Publication continuity governance only.
+// Downstream-only. Does not invalidate runtime,
+// fencing or immutable snapshot authority.
+// ------------------------------------------------------
+
+IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6400;
+    L_Error_Text := 'Distributed commit invalid';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6401;
+    L_Error_Text := 'Distributed commit quarantine active';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6402;
+    L_Error_Text := 'Peer commit mismatch detected';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6403;
+    L_Error_Text := 'Peer commit replay detected';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6404;
+    L_Error_Text := 'Peer commit acknowledgement missing';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6405;
+    L_Error_Text := 'Distributed commit lease expired';
+END_IF;
+
+// ------------------------------------------------------
 // Epoch linkage validation.
 // ------------------------------------------------------
 
