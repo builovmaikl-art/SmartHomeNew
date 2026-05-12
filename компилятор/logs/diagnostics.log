@@ -267,7 +267,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 19:15 .github
 -rw-r--r--  1 runner runner   8665 May 12 19:15 PRG_Config_Validation.st
 -rw-r--r--  1 runner runner   1606 May 12 19:15 PRG_Config_Versioning.st
 -rw-r--r--  1 runner runner   4241 May 12 19:15 PRG_Debug_View.st
--rw-r--r--  1 runner runner   7247 May 12 19:15 PRG_Distributed_Commit_Governor.st
+-rw-r--r--  1 runner runner   6514 May 12 19:15 PRG_Distributed_Commit_Governor.st
 -rw-r--r--  1 runner runner   2960 May 12 19:15 PRG_Distributed_Commit_Observability.st
 -rw-r--r--  1 runner runner   6607 May 12 19:15 PRG_Distributed_Epoch_Governor.st
 -rw-r--r--  1 runner runner   7162 May 12 19:15 PRG_Distributed_Snapshot_Governor.st
@@ -444,8 +444,8 @@ drwxr-xr-x  2 runner runner   4096 May 12 19:15 out
 -rw-r--r--  1 runner runner    177 May 12 19:15 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1480
+total 1476
 drwxr-xr-x 2 runner runner    4096 May 12 19:15 .
 drwxr-xr-x 5 runner runner    4096 May 12 19:15 ..
 -rw-r--r-- 1 runner runner       0 May 12 19:15 .gitkeep
--rw-r--r-- 1 runner runner 1503449 May 12 19:15 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1503164 May 12 19:15 RESULT_methods_clean.xml
