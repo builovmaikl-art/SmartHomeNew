@@ -61,7 +61,6 @@ IF L_Snapshot_Valid THEN
     GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid := TRUE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Runtime_Authority_Valid := TRUE;
-    GVL_RUNTIME_SNAPSHOT.Snapshot_Observability_Synchronized := FALSE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Freeze_Start_MS := L_Now_MS;
     GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Publication_MS := L_Now_MS;
@@ -79,11 +78,8 @@ ELSE
     GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid := FALSE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Runtime_Authority_Valid := FALSE;
-    GVL_RUNTIME_SNAPSHOT.Snapshot_Observability_Synchronized := FALSE;
 
     GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Error_Code := L_Error_Code;
     GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Error_Text := L_Error_Text;
-
-    GVL_RUNTIME_SNAPSHOT.Snapshot_Invalidation_Count := GVL_RUNTIME_SNAPSHOT.Snapshot_Invalidation_Count + 1;
 END_IF;
 END_PROGRAM
