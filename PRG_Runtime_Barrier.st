@@ -22,9 +22,9 @@ L_Error_Text := '';
 // - PLC fencing authoritative;
 // - transport freshness authoritative.
 //
-// Recovery cleanup and observability remain downstream-oriented.
-// Diagnostics/explainability synchronization must not
-// become upstream runtime authority.
+// Recovery cleanup, command verification and observability
+// remain downstream-oriented. Diagnostics/explainability
+// synchronization must not become upstream runtime authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -148,16 +148,6 @@ IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5204;
     L_Error_Text := 'Transport snapshot invalid';
-END_IF;
-
-// ------------------------------------------------------
-// Runtime sanity validation.
-// ------------------------------------------------------
-
-IF L_Runtime_OK AND (NOT GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK) THEN
-    L_Runtime_OK := FALSE;
-    L_Error_Code := 5001;
-    L_Error_Text := 'Runtime sanity invalid';
 END_IF;
 
 // ------------------------------------------------------
