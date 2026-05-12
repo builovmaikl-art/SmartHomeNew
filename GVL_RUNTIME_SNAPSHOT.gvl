@@ -1,0 +1,29 @@
+VAR_GLOBAL
+    // ======================================================
+    // IMMUTABLE RUNTIME SNAPSHOT AUTHORITY STATE
+    // ======================================================
+    // Centralized immutable publication snapshot governance.
+    // Prevents mutable publication leakage across cycle boundaries.
+    // ======================================================
+
+    Snapshot_Epoch : ULINT := 0;
+    Snapshot_Publication_Epoch : ULINT := 0;
+
+    Snapshot_Frozen : BOOL := FALSE;
+    Snapshot_Publication_Allowed : BOOL := FALSE;
+
+    Snapshot_Copy_Valid : BOOL := FALSE;
+    Snapshot_Isolation_Valid : BOOL := FALSE;
+    Snapshot_Mutation_Detected : BOOL := FALSE;
+
+    Snapshot_Runtime_Authority_Valid : BOOL := FALSE;
+    Snapshot_Observability_Synchronized : BOOL := FALSE;
+
+    Snapshot_Freeze_Start_MS : UDINT := 0;
+    Snapshot_Last_Publication_MS : UDINT := 0;
+
+    Snapshot_Last_Error_Code : UDINT := 0;
+    Snapshot_Last_Error_Text : STRING(160) := '';
+
+    Snapshot_Invalidation_Count : UDINT := 0;
+END_VAR
