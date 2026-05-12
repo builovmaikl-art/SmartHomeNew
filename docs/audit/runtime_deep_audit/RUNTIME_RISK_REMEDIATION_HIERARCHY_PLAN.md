@@ -1,42 +1,32 @@
-# RUNTIME_RISK_REMEDIATION_HIERARCHY_PLAN
+# ПЛАН УСТРАНЕНИЯ РИСКОВ И НОРМАЛИЗАЦИИ RUNTIME-АРХИТЕКТУРЫ
 
-## PURPOSE
+## Назначение документа
 
-This document defines the current authoritative runtime remediation state.
+Документ фиксирует:
 
-It reflects:
+- текущее состояние remediation;
+- устранённые архитектурные риски;
+- текущую runtime topology;
+- remaining risks;
+- traceability между:
+  - risk;
+  - причиной;
+  - remediation;
+  - текущим статусом.
 
-- current compressed runtime topology;
-- normalized authority ownership;
-- removed speculative governance layers;
-- peer-optional distributed foundations;
-- downstream-only observability semantics;
-- advisory-only semantic continuity;
-- removed recursive authority cycles;
-- remaining convergence tasks.
+Документ является:
 
-This document is the authoritative runtime architecture reference.
+```text
+runtime remediation audit artifact
+```
+
+а не narrative architecture summary.
 
 ---
 
-# CURRENT RUNTIME STATUS
+# ТЕКУЩИЙ СТАТУС CONVERGENCE
 
-## ACTIVE AUTHORITATIVE RUNTIME LAYERS
-
-```text
-[active] Monotonic time authority
-[active] PLC fencing authority
-[active] Transport freshness authority
-[active] Runtime barrier authority
-[active] Immutable runtime snapshot authority
-[active] Distributed epoch foundation
-[active] Distributed snapshot foundation
-[active] Distributed commit foundation
-[active] Semantic progress advisory continuity
-[active] Output freshness authority
-```
-
-## CURRENT ACTIVE EXECUTION FLOW
+## Текущее runtime topology
 
 ```text
 Time_Monotonic
@@ -52,109 +42,169 @@ Time_Monotonic
 → IO_Write
 ```
 
-## DOWNSTREAM-ONLY AUXILIARY LAYERS
+## Текущий convergence state
 
 ```text
-Observability
-Diagnostics
-Explainability
-Trend
-History
-Simulation
-HMI
+compressed deterministic runtime governance
 ```
 
-These layers:
+Завершено:
 
 ```text
-must not own runtime authority
-must not invalidate runtime barrier
-must not hard-stop outputs
-must not arbitrate publication
+recursive authority cleanup
+observability normalization
+runtime snapshot normalization
+distributed snapshot normalization
+distributed commit normalization
+peer-optional distributed normalization
+runtime topology compression
+compile/reference convergence pass
 ```
 
 ---
 
-# RUNTIME TOPOLOGY COMPRESSION STATUS
+# ACTIVE AUTHORITATIVE LAYERS
 
-## Removed recursive governance cycles
+## Runtime-authoritative layers
 
-Removed:
+```text
+[active] Monotonic time authority
+[active] PLC fencing authority
+[active] Transport freshness authority
+[active] Runtime barrier authority
+[active] Immutable runtime snapshot authority
+[active] Distributed epoch foundation
+[active] Distributed snapshot foundation
+[active] Distributed commit foundation
+[active] Output freshness authority
+```
+
+## Advisory-only layers
+
+```text
+[advisory] Semantic progress continuity
+[advisory] Observability
+[advisory] Diagnostics
+[advisory] Explainability
+```
+
+---
+
+# RISK TRACEABILITY MATRIX
+
+---
+
+## RISK-001 — Recursive runtime governance
+
+### Исходная проблема
+
+Существовал цикл:
 
 ```text
 Runtime_Barrier ↔ Recovery_Governance
-Runtime_Snapshot ↔ Output_Freshness
-Observability ↔ Runtime authority
-Semantic continuity ↔ Physical publication authority
 ```
 
-## Removed speculative distributed semantics
-
-Removed:
+Что приводило к:
 
 ```text
-missing peer = distributed failure
-startup peer invalidation
-forced safe decay without peers
-strict startup peer quarantine
-fake split-brain startup states
+recursive invalidation
+quarantine amplification
+runtime collapse escalation
 ```
 
-Distributed topology now operates as:
+### Remediation
+
+Recovery_Governance переведён в:
 
 ```text
-peer-optional foundation mode
+downstream cleanup governance only
 ```
 
-Meaning:
+Текущее topology:
 
 ```text
-local authority remains valid
-until real peer synchronization exists
+Runtime_Barrier
+→ Recovery_Governance
 ```
 
-Peer validation activates only after:
+### Статус
 
 ```text
-real peer epochs
-peer acknowledgements
-peer publication continuity
-peer immutable snapshot continuity
+RESOLVED
 ```
 
 ---
 
-# OBSERVABILITY NORMALIZATION STATUS
+## RISK-002 — Runtime snapshot ↔ output recursion
 
-## Current observability model
+### Исходная проблема
 
-Observability is now:
+Существовал цикл:
+
+```text
+Runtime_Snapshot
+↔ Output_Freshness
+```
+
+Причина:
+
+```text
+Runtime_Snapshot зависел
+от Output_Forced_Safe_Decay
+```
+
+### Remediation
+
+Удалена downstream dependency:
+
+```text
+Output_Forced_Safe_Decay
+```
+
+Текущее topology:
+
+```text
+Runtime_Barrier
+→ Runtime_Snapshot
+→ Output_Freshness
+```
+
+### Статус
+
+```text
+RESOLVED
+```
+
+---
+
+## RISK-003 — Observability authority leakage
+
+### Исходная проблема
+
+Observability участвовал в:
+
+```text
+runtime invalidation
+publication arbitration
+synchronization barriers
+```
+
+Что создавало:
+
+```text
+visibility → authority leakage
+pseudo-runtime governance
+```
+
+### Remediation
+
+Observability переведён в:
 
 ```text
 downstream visibility aggregation only
 ```
 
-Observability may:
-
-```text
-publish warnings
-publish diagnostics
-publish visibility
-publish quarantine visibility
-```
-
-Observability must NOT:
-
-```text
-own runtime authority
-participate in publication arbitration
-maintain synchronization barriers
-hard-stop physical outputs
-```
-
-## Removed observability residues
-
-Removed:
+Удалены:
 
 ```text
 PreActuation_Visibility_Ready
@@ -165,181 +215,166 @@ Observability_Quarantine_Active
 Observability_Invalidation_Count
 ```
 
-Reason:
+### Статус
 
 ```text
-dead synchronization residue
-non-authoritative telemetry baggage
-pseudo-governance mirrors
-```
-
-## Current observability ownership
-
-Only `PRG_Observability_Governor` owns:
-
-```text
-Emergency_Visibility_Required
-Unsafe_State_Published
+RESOLVED
 ```
 
 ---
 
-# RUNTIME SNAPSHOT NORMALIZATION STATUS
+## RISK-004 — Semantic hard-stop authority
 
-## Current runtime snapshot model
+### Исходная проблема
 
-Runtime snapshot is now:
-
-```text
-minimal immutable publication authority
-```
-
-Topology:
+Semantic heuristics участвовали в:
 
 ```text
-Runtime_Barrier
-→ Runtime_Snapshot
-→ Output_Freshness
+physical publication blocking
+forced output decay
 ```
 
-## Removed runtime snapshot residues
+### Remediation
 
-Removed:
+Semantic continuity переведён в:
+
+```text
+advisory-only continuity
+```
+
+Текущий advisory linkage:
+
+```text
+GVL_OUTPUT_EPOCH.Output_Semantic_Continuity_Warning
+```
+
+Поле является:
+
+```text
+non-authoritative
+non-blocking
+visibility-only
+```
+
+### Статус
+
+```text
+RESOLVED
+```
+
+---
+
+## RISK-005 — Strict peer-required distributed startup
+
+### Исходная проблема
+
+Архитектура предполагала:
+
+```text
+missing peer = distributed failure
+```
+
+Что приводило к:
+
+```text
+startup quarantine storms
+forced safe decay
+fake split-brain states
+publication collapse without peers
+```
+
+### Remediation
+
+Distributed topology переведён в:
+
+```text
+peer-optional foundation mode
+```
+
+Peer validation активируется только после:
+
+```text
+real peer synchronization state
+```
+
+### Статус
+
+```text
+RESOLVED
+```
+
+---
+
+## RISK-006 — Duplicate degraded-state mirrors
+
+### Исходная проблема
+
+Distributed snapshot/commit layers содержали:
+
+```text
+Forced_Safe_Mode mirrors
+Invalidation_Count mirrors
+```
+
+Что создавало:
+
+```text
+duplicate degradation semantics
+telemetry-governance residue
+```
+
+### Remediation
+
+Удалены:
+
+```text
+Distributed_Snapshot_Forced_Safe_Mode
+Distributed_Snapshot_Invalidation_Count
+Distributed_Commit_Forced_Safe_Mode
+Distributed_Commit_Invalidation_Count
+```
+
+### Статус
+
+```text
+RESOLVED
+```
+
+---
+
+## RISK-007 — Runtime snapshot synchronization residue
+
+### Исходная проблема
+
+Runtime snapshot layer содержал:
+
+```text
+fake observability synchronization semantics
+telemetry invalidation baggage
+```
+
+### Remediation
+
+Удалены:
 
 ```text
 Snapshot_Observability_Synchronized
 Snapshot_Invalidation_Count
 ```
 
-Removed downstream dependency:
+### Статус
 
 ```text
-Output_Forced_Safe_Decay
-```
-
-Reason:
-
-```text
-recursive downstream authority coupling
-fake synchronization semantics
-telemetry-only invalidation baggage
+RESOLVED
 ```
 
 ---
 
-# DISTRIBUTED SNAPSHOT NORMALIZATION STATUS
+# ТЕКУЩИЕ HARD-STOP ГРАНИЦЫ
 
-## Current distributed snapshot model
+## Разрешённые hard-stop authorities
 
-Distributed snapshot now governs:
-
-```text
-immutable publication continuity only
-```
-
-It does NOT:
-
-```text
-invalidate runtime barrier
-invalidate PLC fencing
-override local immutable snapshot authority
-```
-
-## Removed distributed snapshot residues
-
-Removed:
-
-```text
-Distributed_Snapshot_Forced_Safe_Mode
-Distributed_Snapshot_Invalidation_Count
-```
-
-Reason:
-
-```text
-duplicate degraded-state mirrors
-legacy escalation residue
-telemetry-governance baggage
-```
-
----
-
-# DISTRIBUTED COMMIT NORMALIZATION STATUS
-
-## Current distributed commit model
-
-Distributed commit now governs:
-
-```text
-deterministic publication continuity only
-```
-
-It does NOT:
-
-```text
-invalidate runtime barrier
-invalidate immutable snapshot authority
-participate in PLC fencing authority
-```
-
-## Removed distributed commit residues
-
-Removed:
-
-```text
-Distributed_Commit_Forced_Safe_Mode
-Distributed_Commit_Invalidation_Count
-```
-
-Reason:
-
-```text
-duplicate degradation semantics
-legacy telemetry residue
-non-authoritative mirrors
-```
-
----
-
-# SEMANTIC CONTINUITY STATUS
-
-## Current semantic model
-
-Only active semantic governor:
-
-```text
-PRG_Semantic_Progress_Governor
-```
-
-Semantic continuity is now:
-
-```text
-advisory-only
-non-authoritative
-non-blocking
-```
-
-## Output semantic linkage
-
-Current advisory linkage:
-
-```text
-GVL_OUTPUT_EPOCH.Output_Semantic_Continuity_Warning
-```
-
-This field:
-
-```text
-must not hard-stop outputs
-must not invalidate runtime authority
-must not trigger forced decay
-```
-
----
-
-# CURRENT HARD-STOP AUTHORITIES
-
-Physical output publication may only be blocked by:
+Physical output publication могут блокировать только:
 
 ```text
 runtime barrier invalidation
@@ -349,35 +384,37 @@ real distributed reconciliation failure
 explicit peer fencing conflict
 ```
 
-The following must NOT hard-stop outputs:
+## Запрещённые hard-stop authorities
+
+Не должны блокировать outputs:
 
 ```text
-semantic suspicion
+semantic heuristics
 observability visibility
 telemetry stabilization
-trend/history delays
 explainability synchronization
 diagnostics projections
+trend/history delays
 ```
 
 ---
 
-# REMOVED ARCHITECTURAL PATTERNS
+# УДАЛЁННЫЕ ARCHITECTURAL PATTERNS
 
-## Removed recursive authority ownership
+## Удалённые recursive patterns
 
-Removed:
+Удалены:
 
 ```text
-A ↔ B governance ownership
-upstream/downstream authority cycles
-visibility-driven invalidation
+A ↔ B authority ownership
+upstream/downstream recursive invalidation
+visibility-driven authority
 semantic-driven publication arbitration
 ```
 
-## Removed speculative authority models
+## Удалённые speculative models
 
-Removed:
+Удалены:
 
 ```text
 visibility = authority
@@ -389,26 +426,11 @@ semantic suspicion = forced decay
 
 ---
 
-# CURRENT CONVERGENCE STATUS
+# REMAINING TASKS
 
-## Already completed
+## R-TASK-001 — Final ownership sweep
 
-```text
-compile/reference consistency pass
-observability cleanup
-runtime snapshot cleanup
-distributed commit cleanup
-distributed snapshot cleanup
-recursive authority cycle removal
-peer-optional distributed normalization
-runtime topology compression
-```
-
-## Remaining work
-
-### R1 — Final ownership sweep
-
-Need to verify:
+### Нужно проверить
 
 ```text
 no duplicate writers
@@ -416,48 +438,69 @@ no foreign resets
 no authority mirror duplication
 ```
 
-### R2 — Final dead-state pruning
-
-Need to verify:
+### Статус
 
 ```text
-no orphan visibility fields
-no unreachable quarantine states
-no stale counters
-```
-
-### R3 — Final runtime simplification validation
-
-Need to verify:
-
-```text
-minimal deterministic authority graph
-acyclic execution topology
-no hidden recursive invalidation paths
+IN_PROGRESS
 ```
 
 ---
 
-# CURRENT ENGINEERING RULE
+## R-TASK-002 — Final dead-state pruning
 
-Do NOT:
+### Нужно проверить
+
+```text
+no orphan visibility fields
+no stale counters
+no unreachable quarantine states
+```
+
+### Статус
+
+```text
+IN_PROGRESS
+```
+
+---
+
+## R-TASK-003 — Final runtime simplification validation
+
+### Нужно проверить
+
+```text
+minimal deterministic authority graph
+acyclic runtime topology
+absence of hidden invalidation loops
+```
+
+### Статус
+
+```text
+IN_PROGRESS
+```
+
+---
+
+# ТЕКУЩЕЕ ENGINEERING RULE
+
+## Запрещено
 
 ```text
 re-expand speculative governance
-add telemetry-driven authority
-create recursive synchronization
 reintroduce forced-safe mirrors
+create recursive synchronization
 make visibility runtime-authoritative
 use semantic heuristics as hard-stop authority
 ```
 
-Prefer:
+## Предпочтительно
 
 ```text
 single-direction authority flow
 minimal deterministic topology
-peer-optional distributed foundations
-advisory-only semantic continuity
 compressed runtime governance
+peer-optional distributed foundations
 runtime-backed authority only
+advisory-only semantic continuity
 ```
