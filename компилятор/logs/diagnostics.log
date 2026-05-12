@@ -388,7 +388,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 12:54 .github
 -rw-r--r--  1 runner runner    262 May 12 12:54 ST_Zone_Adapt_State.dut
 -rw-r--r--  1 runner runner    256 May 12 12:54 ST_Zone_Sensors.dut
 -rw-r--r--  1 runner runner   2571 May 12 12:54 TZ_NEW.txt
-drwxr-xr-x  7 runner runner   4096 May 12 12:54 docs
+drwxr-xr-x  6 runner runner   4096 May 12 12:54 docs
 drwxr-xr-x  2 runner runner   4096 May 12 12:54 migration_logs
 drwxr-xr-x 11 runner runner   4096 May 12 12:54 node_modules
 drwxr-xr-x  2 runner runner   4096 May 12 12:54 scripts
