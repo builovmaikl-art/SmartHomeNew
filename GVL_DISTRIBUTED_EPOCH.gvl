@@ -39,10 +39,7 @@ VAR_GLOBAL
     Peer_Semantic_Continuity_Lost : BOOL := FALSE;
 
     Distributed_Quarantine_Active : BOOL := FALSE;
-    Distributed_Forced_Safe_Mode : BOOL := FALSE;
 
     Distributed_Last_Error_Code : UDINT := 0;
     Distributed_Last_Error_Text : STRING(160) := '';
-
-    Distributed_Invalidation_Count : UDINT := 0;
 END_VAR
