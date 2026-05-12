@@ -695,3 +695,153 @@ asymmetric split-brain risk.
 - split-brain failover simulation;
 - delayed heartbeat replay.
 ```
+
+---
+
+# RISK-046
+
+## Система считает liveness эквивалентом semantic validity runtime
+
+Severity:
+
+```text
+CRITICAL
+```
+
+### Runtime mechanics
+
+Текущая архитектура heavily relies on:
+
+```text
+- heartbeat;
+- pulse;
+- timeout;
+- alive checks.
+```
+
+Однако почти не найдено механизмов проверки:
+
+```text
+semantic execution integrity.
+```
+
+Не обнаружено:
+
+```text
+- cycle execution watchdog;
+- semantic progress watchdog;
+- execution starvation detector;
+- stale output invalidation;
+- runtime phase timeout barrier;
+- partial-freeze detection.
+```
+
+В результате:
+
+```text
+runtime может быть
+semantically invalid,
+но всё ещё considered alive.
+```
+
+---
+
+### Trigger conditions
+
+```text
+- runtime overload;
+- brownout;
+- partial execution starvation;
+- timer drift;
+- degraded scheduling collapse;
+- delayed execution phases.
+```
+
+---
+
+### Failure chain
+
+```text
+runtime overload/brownout occurs
+↓
+execution phases partially starve
+↓
+heartbeat still alive
+↓
+arbitration still trusts PLC
+↓
+stale/invalid runtime semantics survive
+↓
+system continues acting on corrupted execution state
+```
+
+---
+
+### Consequences
+
+```text
+- semantically dead but authoritative PLC;
+- stale outputs remain active;
+- invalid arbitration decisions;
+- delayed verifier execution;
+- false healthy-state visibility;
+- catastrophic degraded-runtime behavior.
+```
+
+---
+
+### Почему это критично
+
+Сейчас система предполагает:
+
+```text
+runtime executes
+≈ runtime semantically valid.
+```
+
+Но для industrial distributed runtime:
+
+```text
+alive
+не означает
+correctly progressing.
+```
+
+Это создаёт:
+
+```text
+semantic brownout survivability.
+```
+
+Особенно опасно вместе с:
+
+```text
+- RISK-040 verifier-after-IO;
+- RISK-041 observability lag;
+- RISK-044 stale authority resurrection;
+- RISK-045 asymmetric visibility.
+```
+
+---
+
+### Corrective directions
+
+```text
+- внедрить semantic progress watchdog;
+- контролировать cycle execution deadlines;
+- добавить stale-output invalidation;
+- реализовать execution starvation detection;
+- разделить liveness и semantic validity.
+```
+
+---
+
+### Verification strategy
+
+```text
+- overload execution tests;
+- brownout simulation;
+- delayed execution phase injection;
+- partial runtime freeze;
+- stale output survivability tests.
+```
