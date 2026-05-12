@@ -4,31 +4,22 @@
 
 This document formalizes architectural anti-patterns and governance violations for the heating runtime.
 
-The goal is to prevent:
+Primary goals:
 
 ```text
-- architectural drift;
-- detached runtime resurrection;
-- hidden authority growth;
-- duplicate runtime writers;
-- unsafe helper escalation;
-- telemetry/control coupling;
-- governance/control coupling.
+- prevent architectural drift;
+- prevent detached runtime resurrection;
+- prevent hidden authority growth;
+- prevent duplicate runtime writers;
+- prevent helper escalation;
+- prevent telemetry/control coupling;
+- preserve deterministic phase sequencing.
 ```
 
 This document converts accumulated runtime audits into:
 
 ```text
 long-term architectural protection rules.
-```
-
-This document complements:
-
-```text
-HEATING_RUNTIME_GOVERNANCE_CLASSIFICATION.md
-HEATING_RUNTIME_OWNERSHIP_MATRIX.md
-HEATING_GVL_WRITE_AUDIT.md
-HEATING_ACTIVE_WRITE_PATH_VERIFICATION.md
 ```
 
 ---
@@ -41,11 +32,23 @@ The invariant that must never be violated:
 single active runtime ownership chain
 ```
 
-Current verified chain:
+Current verified orchestration:
 
 ```text
 PRG_Heating
-→ FB_Heating_System_Manager
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Current verified subsystem ownership:
+
+```text
+FB_Heating_System_Manager
     → Safety_Gate
     → Safe_State
     → Circuit_Control
@@ -54,7 +57,6 @@ PRG_Heating
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
-    → System_Manager post-manifold finalization
     → Boiler_Control
 ```
 
@@ -78,7 +80,7 @@ Examples:
 ```text
 - parallel orchestration shells;
 - detached execution coordinators;
-- alternate heating execution runtime;
+- alternate heating runtime paths;
 - hidden runtime supervisors.
 ```
 
@@ -91,7 +93,7 @@ creates second authority path
 Historical context:
 
 ```text
-historical orchestration donors were removed from production root
+historical orchestration donors were removed.
 ```
 
 ---
@@ -130,21 +132,13 @@ Forbidden:
 Runtime_* family directly controlling runtime outputs
 ```
 
-Examples:
-
-```text
-- Runtime_* valve writes;
-- Runtime_* boiler writes;
-- Runtime_* OpenTherm writes;
-- Runtime_* emergency override ownership.
-```
-
 Allowed:
 
 ```text
 - observability;
 - diagnostics;
 - telemetry;
+- sequencing validation;
 - governance validation;
 - forensic reconstruction.
 ```
@@ -153,7 +147,7 @@ Reason:
 
 ```text
 Runtime_* family is governance/observability infrastructure,
-not active runtime authority.
+not runtime authority.
 ```
 
 ---
@@ -165,14 +159,6 @@ Forbidden:
 ```text
 telemetry or analytics layers
 performing direct runtime actuation
-```
-
-Examples:
-
-```text
-- anomaly detector suppressing valves directly;
-- telemetry confidence score directly disabling heating;
-- diagnostics layer mutating runtime outputs.
 ```
 
 Allowed:
@@ -193,19 +179,10 @@ governance scaffold
 performing runtime execution
 ```
 
-Examples:
-
-```text
-- Orchestration_Shell writing outputs;
-- Coordinator owning pumps;
-- Contract_Validator suppressing valves.
-```
-
 Required governance locks:
 
 ```text
 Governance_Locked := TRUE
-Runtime_Attachment_Allowed := FALSE
 Observation-only semantics
 ```
 
@@ -217,15 +194,6 @@ Forbidden:
 
 ```text
 bounded helpers silently becoming runtime owners
-```
-
-Examples:
-
-```text
-- helper mutating unrelated outputs;
-- helper performing hidden arbitration;
-- helper performing implicit safety override;
-- helper bypassing top-level runtime chain.
 ```
 
 Allowed:
@@ -243,13 +211,6 @@ FB_Boiler_OpenTherm_Interface
 FB_Valve_Test_Manager
 ```
 
-Reason:
-
-```text
-helpers must remain explicit execution/support layers,
-not hidden authority centers.
-```
-
 ---
 
 ## AP-007 — Detached override resurrection
@@ -257,30 +218,13 @@ not hidden authority centers.
 Forbidden:
 
 ```text
-reintroducing historical detached override semantics
-```
-
-Examples:
-
-```text
-- detached pump override;
-- detached boiler override;
-- detached OpenTherm suppression layer;
-- detached emergency authority shell.
+reintroducing detached override semantics
 ```
 
 Historical reference:
 
 ```text
 FB_Heating_Override_Layer
-```
-
-Important:
-
-```text
-bounded top-level finalization
-inside System_Manager
-is NOT detached override resurrection.
 ```
 
 ---
@@ -292,14 +236,6 @@ Forbidden:
 ```text
 projection and runtime authority
 inside the same logical layer
-```
-
-Examples:
-
-```text
-- observability directly mutating runtime outputs;
-- telemetry projection coupled to actuation;
-- diagnostics coupled to control ownership.
 ```
 
 Required separation:
@@ -328,13 +264,6 @@ FB_Heating_Safety_Gate
 FB_Heating_Safe_State
 ```
 
-Allowed bounded exceptions:
-
-```text
-System_Manager post-manifold pressure finalization
-inside active runtime chain.
-```
-
 ---
 
 ## AP-010 — Undocumented finalization layers
@@ -352,16 +281,12 @@ Reason:
 creates ownership ambiguity
 ```
 
-Current verified finalization layer:
+Current verified finalization layers:
 
 ```text
-System_Manager post-manifold safety/test finalization
-```
-
-Future rule:
-
-```text
-all finalization layers must remain explicit.
+Service_Gating_Phase
+State_Publication_Phase
+Output_Projection_Phase
 ```
 
 ---
@@ -415,13 +340,6 @@ all override semantics
 must be explicit and discoverable.
 ```
 
-Verified acceptable example:
-
-```text
-FB_Valve_Test_Manager
-→ explicit VO_Test_Active semantics
-```
-
 ---
 
 ## RP-004 — Explicit finalization ownership
@@ -429,14 +347,8 @@ FB_Valve_Test_Manager
 Required:
 
 ```text
-all output finalization layers
-must be explicitly documented.
-```
-
-Current verified example:
-
-```text
-System_Manager post-manifold safety/test finalization
+all finalization layers
+must remain explicit and documented.
 ```
 
 ---
@@ -448,16 +360,6 @@ Required:
 ```text
 Runtime_* family
 must remain governance/observability oriented.
-```
-
-Allowed:
-
-```text
-- telemetry;
-- diagnostics;
-- sequencing validation;
-- governance validation;
-- forensic analysis.
 ```
 
 Forbidden:
@@ -475,12 +377,6 @@ Required:
 ```text
 ownership claims must be validated
 against actual write paths.
-```
-
-Not:
-
-```text
-assumed architecturally.
 ```
 
 ---
@@ -505,15 +401,15 @@ The following changes REQUIRE governance review:
 
 # Mandatory verification workflow
 
-Before approving any runtime ownership change:
+Before approving runtime ownership changes:
 
 ```text
-1. verify ownership matrix consistency;
+1. verify ownership consistency;
 2. verify write-boundary consistency;
-3. verify governance classification consistency;
+3. verify governance consistency;
 4. verify no detached authority path;
 5. verify no Runtime_* actuation;
-6. verify no hidden helper escalation;
+6. verify no helper escalation;
 7. verify evidence-level write paths.
 ```
 
@@ -525,30 +421,24 @@ Current evidence indicates:
 
 ```text
 - detached orchestration runtime removed;
-- detached override runtime removed from root;
-- Runtime_* family remains governance/observability oriented;
+- detached override runtime removed;
+- Runtime_* family remains observability-oriented;
 - helper authority escalation not detected;
-- hidden Runtime_* actuation not detected;
-- active runtime ownership chain appears bounded and explicit.
+- deterministic phase sequencing established;
+- active runtime ownership chain remains bounded.
 ```
 
-Remaining architectural concern:
+Primary remaining risk:
 
 ```text
-future complexity drift
-```
-
-rather than:
-
-```text
-historical runtime collapse.
+future architectural drift.
 ```
 
 ---
 
 # Strategic conclusion
 
-The repository has evolved from:
+The repository evolved from:
 
 ```text
 legacy orchestration cleanup
@@ -557,12 +447,12 @@ legacy orchestration cleanup
 into:
 
 ```text
-governed runtime architecture maintenance.
+deterministic runtime governance maintenance.
 ```
 
-The primary goal now is:
+Primary engineering goal:
 
 ```text
 prevent future architectural drift
-while preserving runtime clarity and bounded ownership.
+while preserving bounded ownership and runtime clarity.
 ```
