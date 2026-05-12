@@ -270,7 +270,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 19:17 .github
 -rw-r--r--  1 runner runner   6514 May 12 19:17 PRG_Distributed_Commit_Governor.st
 -rw-r--r--  1 runner runner   2960 May 12 19:17 PRG_Distributed_Commit_Observability.st
 -rw-r--r--  1 runner runner   6607 May 12 19:17 PRG_Distributed_Epoch_Governor.st
--rw-r--r--  1 runner runner   7162 May 12 19:17 PRG_Distributed_Snapshot_Governor.st
+-rw-r--r--  1 runner runner   6704 May 12 19:17 PRG_Distributed_Snapshot_Governor.st
 -rw-r--r--  1 runner runner   2453 May 12 19:17 PRG_Explainability.st
 -rw-r--r--  1 runner runner   3492 May 12 19:17 PRG_HMI_Dashboard.st
 -rw-r--r--  1 runner runner   9216 May 12 19:17 PRG_Heating.st
@@ -448,4 +448,4 @@ total 1476
 drwxr-xr-x 2 runner runner    4096 May 12 19:17 .
 drwxr-xr-x 5 runner runner    4096 May 12 19:17 ..
 -rw-r--r-- 1 runner runner       0 May 12 19:17 .gitkeep
--rw-r--r-- 1 runner runner 1502431 May 12 19:17 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1502142 May 12 19:17 RESULT_methods_clean.xml
