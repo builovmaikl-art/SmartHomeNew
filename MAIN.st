@@ -12,16 +12,17 @@ PROGRAM MAIN
 // Execution principle:
 //   1. Time / init / configuration
 //   2. PLC role arbitration
-//   3. IO read and input normalization
-//   4. Mode, presence and safety
-//   5. Intent, behavior, scenario and policy
-//   6. Command arbitration
-//   7. Runtime authority barrier
-//   8. Domain execution
-//   9. Pre-output safety barrier
-//   10. Output freshness governance
-//   11. Physical IO write
-//   12. Verification, diagnostics, history, HMI
+//   3. PLC ownership / fencing governance
+//   4. IO read and input normalization
+//   5. Mode, presence and safety
+//   6. Intent, behavior, scenario and policy
+//   7. Command arbitration
+//   8. Runtime authority barrier
+//   9. Domain execution
+//   10. Pre-output safety barrier
+//   11. Output freshness governance
+//   12. Physical IO write
+//   13. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -35,11 +36,15 @@ PRG_System_Runtime_Base();
 // 2. PLC role arbitration
 PRG_PLC_Arbitration();
 
-// 3. IO read and normalized inputs
+// 3. PLC ownership / fencing governance.
+// Must execute immediately after arbitration and before runtime publication.
+PRG_PLC_Fencing_Governor();
+
+// 4. IO read and normalized inputs
 PRG_IO_Read();
 PRG_Input_Processing();
 
-// 4. Base mode, presence and safety
+// 5. Base mode, presence and safety
 PRG_Mode_Manager();
 PRG_Presence_Manager();
 PRG_Safety();
@@ -47,7 +52,7 @@ PRG_Safety_Operator();
 PRG_Safety_Shutdown();
 PRG_Safety_Recovery();
 
-// 5. Intent, adaptive behavior, scenario and policy
+// 6. Intent, adaptive behavior, scenario and policy
 PRG_System_Intent();
 PRG_Security();
 PRG_System_Access_Maintenance();
@@ -61,10 +66,10 @@ PRG_Heating_Policy_Manager();
 PRG_Heating_Policy_Observer();
 PRG_System_Coordinator();
 
-// 6. Command arbitration
+// 7. Command arbitration
 PRG_Command_Arbitration();
 
-// 6.5 Modbus/OpenTherm transport pipeline.
+// 7.5 Modbus/OpenTherm transport pipeline.
 // Modbus master schedules requests.
 // RTU bridge exports request/imports confirmed response.
 // RTU driver builds TX frame and consumes validated RX frame.
@@ -81,30 +86,30 @@ PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
 
-// 7. Authoritative runtime barrier.
-// Must execute after arbitration and before domain output projection.
+// 8. Authoritative runtime barrier.
+// Must execute after arbitration/fencing and before domain output projection.
 PRG_Runtime_Barrier();
 
-// 8. Domain execution and domain output projection
+// 9. Domain execution and domain output projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 9. Authoritative pre-output safety barrier.
+// 10. Authoritative pre-output safety barrier.
 // Must execute after all domain output projection and before output freshness governance.
 PRG_PreOutput_Safety_Barrier();
 
-// 10. Output freshness governance.
+// 11. Output freshness governance.
 // Must execute before physical IO publication.
 PRG_Output_Freshness_Governor();
 
-// 11. Final physical IO projection.
+// 12. Final physical IO projection.
 // Must remain after runtime/output authority barriers.
 PRG_IO_Write();
 
-// 12. Verification, explainability, diagnostics, history, HMI
+// 13. Verification, explainability, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
