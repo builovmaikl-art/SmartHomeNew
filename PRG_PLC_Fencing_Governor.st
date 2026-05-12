@@ -24,13 +24,6 @@ GVL_PLC_FENCING.PLC_Stale_Owner_Detected := FALSE;
 GVL_PLC_FENCING.PLC_Asymmetric_Partition_Detected := FALSE;
 GVL_PLC_FENCING.PLC_Forced_Safe_Quarantine := FALSE;
 
-// Runtime authority linkage.
-IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
-    L_Authority_Valid := FALSE;
-    L_Error_Code := 7000;
-    L_Error_Text := 'PLC fencing runtime invalid';
-END_IF;
-
 // Active PLC ownership validation.
 IF L_Authority_Valid AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
     L_Authority_Valid := FALSE;
