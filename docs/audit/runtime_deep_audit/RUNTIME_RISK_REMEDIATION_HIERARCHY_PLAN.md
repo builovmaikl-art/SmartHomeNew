@@ -6,10 +6,10 @@
 
 - текущее состояние remediation;
 - устранённые архитектурные риски;
-- текущую runtime topology;
-- remaining risks;
+- текущее runtime topology;
+- незавершённые remediation gaps;
 - traceability между:
-  - risk;
+  - риском;
   - причиной;
   - remediation;
   - текущим статусом.
@@ -24,9 +24,9 @@ runtime remediation audit artifact
 
 ---
 
-# ТЕКУЩИЙ СТАТУС CONVERGENCE
+# ТЕКУЩЕЕ СОСТОЯНИЕ RUNTIME TOPOLOGY
 
-## Текущее runtime topology
+## Текущее execution topology
 
 ```text
 Time_Monotonic
@@ -42,7 +42,9 @@ Time_Monotonic
 → IO_Write
 ```
 
-## Текущий convergence state
+## Текущее состояние convergence
+
+Текущее состояние runtime:
 
 ```text
 compressed deterministic runtime governance
@@ -51,14 +53,22 @@ compressed deterministic runtime governance
 Завершено:
 
 ```text
-recursive authority cleanup
-observability normalization
-runtime snapshot normalization
-distributed snapshot normalization
-distributed commit normalization
+устранение recursive authority cycles
+normalization observability
+normalization runtime snapshot
+normalization distributed snapshot
+normalization distributed commit
 peer-optional distributed normalization
 runtime topology compression
 compile/reference convergence pass
+```
+
+Остаются незавершённые области:
+
+```text
+final ownership cleanup
+remaining dead-state pruning
+final deterministic topology validation
 ```
 
 ---
@@ -90,7 +100,7 @@ compile/reference convergence pass
 
 ---
 
-# RISK TRACEABILITY MATRIX
+# МАТРИЦА РИСКОВ И REMEDIATION
 
 ---
 
@@ -112,7 +122,7 @@ quarantine amplification
 runtime collapse escalation
 ```
 
-### Remediation
+### Выполненное remediation
 
 Recovery_Governance переведён в:
 
@@ -127,10 +137,19 @@ Runtime_Barrier
 → Recovery_Governance
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+отсутствие indirect recovery feedback paths
+отсутствие hidden invalidation fanout
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -153,7 +172,7 @@ Runtime_Snapshot зависел
 от Output_Forced_Safe_Decay
 ```
 
-### Remediation
+### Выполненное remediation
 
 Удалена downstream dependency:
 
@@ -169,10 +188,19 @@ Runtime_Barrier
 → Output_Freshness
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+отсутствие hidden snapshot feedback paths
+отсутствие output-driven snapshot invalidation
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -196,7 +224,7 @@ visibility → authority leakage
 pseudo-runtime governance
 ```
 
-### Remediation
+### Выполненное remediation
 
 Observability переведён в:
 
@@ -215,10 +243,19 @@ Observability_Quarantine_Active
 Observability_Invalidation_Count
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+отсутствие visibility-driven resets
+отсутствие observability-owned authority fields
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -234,7 +271,7 @@ physical publication blocking
 forced output decay
 ```
 
-### Remediation
+### Выполненное remediation
 
 Semantic continuity переведён в:
 
@@ -256,10 +293,19 @@ non-blocking
 visibility-only
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+отсутствие semantic-driven output invalidation
+отсутствие semantic quarantine fanout
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -283,7 +329,7 @@ fake split-brain states
 publication collapse without peers
 ```
 
-### Remediation
+### Выполненное remediation
 
 Distributed topology переведён в:
 
@@ -297,10 +343,19 @@ Peer validation активируется только после:
 real peer synchronization state
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+absence of startup peer quarantine fanout
+absence of implicit peer-required assumptions
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -323,7 +378,7 @@ duplicate degradation semantics
 telemetry-governance residue
 ```
 
-### Remediation
+### Выполненное remediation
 
 Удалены:
 
@@ -334,10 +389,19 @@ Distributed_Commit_Forced_Safe_Mode
 Distributed_Commit_Invalidation_Count
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+отсутствие remaining degradation mirrors
+отсутствие duplicate quarantine semantics
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -353,7 +417,7 @@ fake observability synchronization semantics
 telemetry invalidation baggage
 ```
 
-### Remediation
+### Выполненное remediation
 
 Удалены:
 
@@ -362,10 +426,19 @@ Snapshot_Observability_Synchronized
 Snapshot_Invalidation_Count
 ```
 
+### Что ещё не доделано
+
+Нужно дополнительно проверить:
+
+```text
+absence of hidden snapshot synchronization residue
+absence of snapshot telemetry mirrors
+```
+
 ### Статус
 
 ```text
-RESOLVED
+MOSTLY_RESOLVED
 ```
 
 ---
@@ -433,9 +506,15 @@ semantic suspicion = forced decay
 ### Нужно проверить
 
 ```text
-no duplicate writers
-no foreign resets
-no authority mirror duplication
+отсутствие duplicate writers
+отсутствие foreign resets
+отсутствие authority mirror duplication
+```
+
+### Текущий прогресс
+
+```text
+частично выполнено
 ```
 
 ### Статус
@@ -451,9 +530,15 @@ IN_PROGRESS
 ### Нужно проверить
 
 ```text
-no orphan visibility fields
-no stale counters
-no unreachable quarantine states
+отсутствие orphan visibility fields
+отсутствие stale counters
+отсутствие unreachable quarantine states
+```
+
+### Текущий прогресс
+
+```text
+основной cleanup выполнен
 ```
 
 ### Статус
@@ -474,6 +559,12 @@ acyclic runtime topology
 absence of hidden invalidation loops
 ```
 
+### Текущий прогресс
+
+```text
+topology существенно упрощён
+```
+
 ### Статус
 
 ```text
@@ -482,7 +573,7 @@ IN_PROGRESS
 
 ---
 
-# ТЕКУЩЕЕ ENGINEERING RULE
+# ТЕКУЩИЕ ENGINEERING RULES
 
 ## Запрещено
 
