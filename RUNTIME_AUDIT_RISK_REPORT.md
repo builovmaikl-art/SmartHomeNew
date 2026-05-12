@@ -42,6 +42,7 @@
 ✔ Transport / Modbus / OpenTherm ownership
 ✔ Diagnostics / Health / Explainability layers
 ✔ Scheduler / timing / persistence audit
+✔ Recovery / watchdog / stabilization timing
 ```
 
 ---
@@ -55,26 +56,6 @@
 ```text
 FB_Config_Simulation
 сбрасывал результат проверки каждый цикл.
-```
-
-Из-за этого:
-
-```text
-PRG_Config_Manager
-не мог надёжно блокировать применение
-опасной конфигурации.
-```
-
----
-
-## Что исправлено
-
-Теперь:
-
-```text
-результат simulation/validation
-сохраняется
-до следующего подтверждённого запуска.
 ```
 
 ---
@@ -96,25 +77,6 @@ PRG_PLC_Arbitration
 некорректно обрабатывал одинаковые PLC ID.
 ```
 
-При одинаковых ID:
-
-```text
-локальная PLC
-могла потерять ownership.
-```
-
----
-
-## Что исправлено
-
-Теперь:
-
-```text
-- lower ID wins;
-- equality keeps local owner;
-- arbitration стал deterministic.
-```
-
 ---
 
 ## Статус
@@ -131,29 +93,7 @@ PRG_PLC_Arbitration
 
 ```text
 PRG_IO_Read
-сбрасывал:
-- Sensor_Fault
-- Subsystem_Degraded
-```
-
-в середине execution pipeline.
-
-Из-за этого:
-
-```text
-другие subsystem diagnostics
-могли silently erase.
-```
-
----
-
-## Что исправлено
-
-Теперь:
-
-```text
-IO/Input layer
-не очищает глобальные diagnostics.
+сбрасывал diagnostics.
 ```
 
 ---
@@ -170,12 +110,6 @@ IO/Input layer
 
 ## Safety shutdown aggregation fragility
 
-## Статус
-
-```text
-АКТИВНЫЙ РИСК
-```
-
 Severity:
 
 ```text
@@ -187,12 +121,6 @@ MEDIUM
 # RISK-005
 
 ## Distributed system mode ownership
-
-## Статус
-
-```text
-АКТИВНЫЙ РИСК
-```
 
 Severity:
 
@@ -206,12 +134,6 @@ MEDIUM
 
 ## Monolithic IO projection complexity growth
 
-## Статус
-
-```text
-АКТИВНЫЙ РИСК
-```
-
 Severity:
 
 ```text
@@ -223,12 +145,6 @@ MEDIUM
 # RISK-007
 
 ## Stale transport state acceptance
-
-## Статус
-
-```text
-АКТИВНЫЙ РИСК
-```
 
 Severity:
 
@@ -242,20 +158,126 @@ MEDIUM
 
 ## Global degraded-state accumulation without lifecycle ownership
 
-## Суть
-
-`Subsystem_Degraded`
-стал:
+Severity:
 
 ```text
-глобальным accumulation flag.
+MEDIUM-HIGH
 ```
 
-Сейчас множество subsystem layers
-могут выставлять:
+---
+
+# RISK-009
+
+## Distributed timer lifecycle semantics
+
+Severity:
 
 ```text
-Subsystem_Degraded := TRUE
+MEDIUM
+```
+
+---
+
+# RISK-010
+
+## Distributed recovery lifecycle governance
+
+## Суть
+
+`Recovery_Active`
+используется как:
+
+```text
+cross-system recovery latch.
+```
+
+Многие subsystem:
+
+```text
+неявно зависят
+от Recovery_Active.
+```
+
+Например:
+
+```text
+PRG_IO_Write
+использует recovery suppression
+для access outputs.
+```
+
+---
+
+## Проблема
+
+Recovery lifecycle:
+
+```text
+размазан между:
+- PRG_Safety_Recovery;
+- recovery GVL;
+- safety shutdown state;
+- external subsystem conditions.
+```
+
+Но отсутствует:
+
+```text
+formal transition contract.
+```
+
+Не fully formalized:
+
+```text
+- кто запускает recovery;
+- кто завершает recovery;
+- кто может prolong recovery;
+- когда suppression обязан сниматься.
+```
+
+---
+
+## Что показала проверка
+
+Пока НЕ найдено:
+
+```text
+- infinite recovery loop;
+- hard deadlock;
+- unrecoverable latch;
+- permanent suppression.
+```
+
+Но уже присутствует:
+
+```text
+architectural precondition
+для recovery nondeterminism.
+```
+
+---
+
+## Возможные последствия
+
+```text
+- stale recovery suppression;
+- recovery prolongation;
+- inconsistent subsystem restore timing;
+- partial subsystem recovery;
+- timing-dependent behavior after SAFE_STOP.
+```
+
+---
+
+## Рекомендуемое направление
+
+В будущем желательно formalize:
+
+```text
+- recovery lifecycle ownership;
+- recovery completion contract;
+- suppression release semantics;
+- recovery transition governance.
 ```
 
 ---
@@ -270,118 +292,4 @@ Severity:
 
 ```text
 MEDIUM-HIGH
-```
-
----
-
-# RISK-009
-
-## Distributed timer lifecycle semantics
-
-## Суть
-
-Система использует:
-
-```text
-- FB_System_Timer;
-- FB_System_Timer_TOF.
-```
-
-Но lifecycle semantics таймеров:
-
-```text
-не централизованы.
-```
-
-Subsystem FB:
-
-```text
-- самостоятельно управляют reset behavior;
-- самостоятельно определяют persistence semantics;
-- самостоятельно интерпретируют expiration.
-```
-
----
-
-## Проблема
-
-Пока:
-
-```text
-явных catastrophic timing bugs
-не найдено.
-```
-
-Но уже присутствует:
-
-```text
-timing semantics fragmentation.
-```
-
-Разные subsystem могут по-разному трактовать:
-
-```text
-- reset;
-- expiration;
-- latch clear;
-- recovery timing;
-- freeze persistence.
-```
-
----
-
-## Возможные последствия
-
-```text
-- inconsistent recovery timing;
-- stale timer latches;
-- phase persistence leaks;
-- recovery races;
-- difficult deterministic debugging.
-```
-
----
-
-## Что важно
-
-Пока:
-
-```text
-- broken timer reset не найден;
-- catastrophic race не найден;
-- deadlock не найден.
-```
-
-Но:
-
-```text
-timer lifecycle governance
-уже недостаточно formalized.
-```
-
----
-
-## Рекомендуемое направление
-
-В будущем желательно formalize:
-
-```text
-- timer lifecycle ownership;
-- reset semantics;
-- latch expiration semantics;
-- recovery timer policy.
-```
-
----
-
-## Статус
-
-```text
-АКТИВНЫЙ РИСК
-```
-
-Severity:
-
-```text
-MEDIUM
 ```
