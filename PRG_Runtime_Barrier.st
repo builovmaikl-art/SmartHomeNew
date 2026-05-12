@@ -17,8 +17,8 @@ L_Error_Text := '';
 // Creates authoritative runtime publication semantics.
 // Rejects impossible runtime states before physical publication.
 // Monotonic-time failures, PLC fencing failures,
-// transport freshness failures and recovery-governance
-// failures invalidate runtime authority.
+// transport freshness failures, observability desynchronization
+// and recovery-governance failures invalidate runtime authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -145,6 +145,43 @@ IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
 END_IF;
 
 // ------------------------------------------------------
+// Observability authority validation.
+// ------------------------------------------------------
+
+IF L_Runtime_OK AND (NOT GVL_OBSERVABILITY_AUTHORITY.Authority_Snapshot_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5300;
+    L_Error_Text := 'Observability snapshot invalid';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_OBSERVABILITY_AUTHORITY.Diagnostics_Synchronized) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5301;
+    L_Error_Text := 'Diagnostics synchronization invalid';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_OBSERVABILITY_AUTHORITY.Explainability_Synchronized) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5302;
+    L_Error_Text := 'Explainability synchronization invalid';
+END_IF;
+
+IF L_Runtime_OK
+AND GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required
+AND (NOT GVL_OBSERVABILITY_AUTHORITY.PreActuation_Visibility_Ready)
+THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5303;
+    L_Error_Text := 'Pre-actuation visibility not ready';
+END_IF;
+
+IF L_Runtime_OK AND GVL_OBSERVABILITY_AUTHORITY.Observability_Quarantine_Active THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5304;
+    L_Error_Text := 'Observability quarantine active';
+END_IF;
+
+// ------------------------------------------------------
 // Recovery governance validation.
 // ------------------------------------------------------
 
@@ -230,7 +267,8 @@ GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid :=
     AND GVL_PLC_FENCING.PLC_Ownership_Valid
     AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid
     AND GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid
-    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid;
+    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid
+    AND GVL_OBSERVABILITY_AUTHORITY.Authority_Snapshot_Valid;
 
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
