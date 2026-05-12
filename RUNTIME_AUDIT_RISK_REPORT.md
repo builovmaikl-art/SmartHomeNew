@@ -40,6 +40,7 @@
 ✔ Command/arbitration/finalization timing audit
 ✔ Cross-subsystem dependency audit
 ✔ Persistence/governance coupling audit
+✔ Initialization / cold-start / reboot integrity audit
 ```
 
 ---
@@ -204,94 +205,85 @@ HIGH
 
 ## Persisted-state and runtime-authority overlap
 
-## Суть
-
-Persisted state:
+Severity:
 
 ```text
-не только хранит configuration/state,
-но участвует в:
-- recovery;
-- initialization;
-- runtime restoration;
-- startup semantics.
+HIGH
 ```
 
-То есть:
+---
+
+# RISK-018
+
+## Startup/init safety clamp can be overwritten by arbitration
+
+## Суть
+
+`PRG_System_Init`
+при ошибке конфигурации напрямую выставляет:
 
 ```text
-persisted state
-частично влияет
-на runtime governance.
+GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
+GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
+```
+
+Но в `MAIN` после `PRG_System_Init` позже вызывается:
+
+```text
+PRG_Command_Arbitration();
+```
+
+`PRG_Command_Arbitration`:
+
+```text
+- сбрасывает локальный command buffer;
+- не учитывает init/config fault как отдельный authority source;
+- в конце полностью перезаписывает GVL_COMMAND_SHADOW.
 ```
 
 ---
 
 ## Проблема
 
-Persisted truth:
+Startup config safety clamp:
 
 ```text
-не полностью отделён
-от runtime authority.
+может быть снят
+в том же PLC cycle
+самим arbitration layer.
 ```
 
-После reboot/startup:
+То есть invalid config может сначала выставить:
 
 ```text
-persisted semantic state
-может:
-- влиять на runtime decisions;
-- менять restore behavior;
-- участвовать в governance.
+heating/boiler block
 ```
 
-Возникает:
+но command arbitration позже:
 
 ```text
-persisted-truth
-vs
-runtime-truth ambiguity.
-```
-
----
-
-## Особенно опасно
-
-При:
-
-```text
-- partial recovery;
-- interrupted persistence write;
-- schema evolution;
-- config migration;
-- abnormal shutdown.
-```
-
-persisted semantics могут:
-
-```text
-расходиться
-с runtime expectations.
+не обязан сохранить этот block.
 ```
 
 ---
 
 ## Что показала проверка
 
-Пока НЕ найдено:
+Это уже не просто architectural smell.
+
+Найден:
 
 ```text
-- catastrophic corrupt startup;
-- unrecoverable boot loop;
-- invalid persist replay.
+реальный runtime defect.
 ```
 
-Но найдено:
+Проверено:
 
 ```text
-semantic authority overlap
-между runtime и persisted state.
+- PRG_System_Init действительно пишет в GVL_COMMAND_SHADOW;
+- MAIN вызывает PRG_Command_Arbitration после init/config этапа;
+- PRG_Command_Arbitration полностью перезаписывает shadow commands;
+- config/init fault не включён в arbitration priority model.
 ```
 
 ---
@@ -299,41 +291,33 @@ semantic authority overlap
 ## Возможные последствия
 
 ```text
-- stale governance restore;
-- reboot semantic drift;
-- startup asymmetry;
-- inconsistent recovery after restart;
-- latent persisted-state corruption effects.
+- invalid config не удержит heating block;
+- boiler stop может быть снят позже в том же cycle;
+- startup safety clamp выглядит активным, но не является durable;
+- диагностика config fault расходится с фактическим command shadow;
+- небезопасный startup behavior при ошибке конфигурации.
 ```
 
 ---
 
 ## Действие
 
-Запланировать future separation:
+Нужно исправлять архитектурно:
 
 ```text
-persisted state
-!=
-runtime authority.
+не писать startup safety clamp напрямую в GVL_COMMAND_SHADOW
+или
+добавить init/config fault как explicit high-priority source
+в PRG_Command_Arbitration.
 ```
 
-Ввести explicit layers:
+Предпочтительное направление:
 
 ```text
-- persisted configuration;
-- persisted telemetry/history;
-- persisted recovery hints;
-- runtime authoritative state.
-```
-
-И formalize:
-
-```text
-- startup restore contract;
-- persistence replay validation;
-- reboot semantic integrity rules;
-- migration/version compatibility semantics.
+PRG_System_Init / PRG_Config_Validation
+→ публикуют config/init fault intent
+→ PRG_Command_Arbitration удерживает block/boiler stop
+   как priority выше user/automation/domain commands.
 ```
 
 ---
@@ -341,7 +325,7 @@ runtime authority.
 ## Статус
 
 ```text
-АКТИВНЫЙ РИСК
+ТРЕБУЕТ ИСПРАВЛЕНИЯ
 ```
 
 Severity:
