@@ -257,7 +257,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 08:02 .github
 -rw-r--r--  1 runner runner   4241 May 12 08:02 PRG_Debug_View.st
 -rw-r--r--  1 runner runner   2453 May 12 08:02 PRG_Explainability.st
 -rw-r--r--  1 runner runner   3492 May 12 08:02 PRG_HMI_Dashboard.st
--rw-r--r--  1 runner runner   9148 May 12 08:02 PRG_Heating.st
+-rw-r--r--  1 runner runner   9053 May 12 08:02 PRG_Heating.st
 -rw-r--r--  1 runner runner   2478 May 12 08:02 PRG_Heating_Policy_Manager.st
 -rw-r--r--  1 runner runner    811 May 12 08:02 PRG_Heating_Policy_Observer.st
 -rw-r--r--  1 runner runner  16147 May 12 08:02 PRG_IO_Read.st
@@ -422,8 +422,8 @@ drwxr-xr-x  2 runner runner   4096 May 12 08:02 out
 -rw-r--r--  1 runner runner    177 May 12 08:02 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1352
+total 1356
 drwxr-xr-x 2 runner runner    4096 May 12 08:02 .
 drwxr-xr-x 5 runner runner    4096 May 12 08:02 ..
 -rw-r--r-- 1 runner runner       0 May 12 08:02 .gitkeep
--rw-r--r-- 1 runner runner 1372296 May 12 08:02 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1377396 May 12 08:02 RESULT_methods_clean.xml
