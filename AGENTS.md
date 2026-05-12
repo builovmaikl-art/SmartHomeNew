@@ -413,5 +413,5 @@ Any future safety refactor should begin by separating operator/test/recover work
 Recommended opening instruction for any new assistant session:
 
 ```text
-Read AGENTS.md first, then read docs/MASTER_GUIDE.md and docs/WORKFLOW.md. Work only from the current repository state. Preserve the active pipeline IO → INPUT → SCENARIO/SAFETY → COMMAND → DOMAIN OUTPUT → IO, with TRACE/EXPLAINABILITY/DEBUG_VIEW as read-only observability. Use full-file repository updates with fetch-after verification for existing code files. Do not claim terminal/build verification unless it was actually run. For safety refactors, prioritize separating operator/test/recover workflow from PRG_Safety after any compile/runtime blockers are resolved.
+Read AGENTS.md Work only from the current repository state. Preserve the active pipeline IO → INPUT → SCENARIO/SAFETY → COMMAND → DOMAIN OUTPUT → IO, with TRACE/EXPLAINABILITY/DEBUG_VIEW as read-only observability. Use full-file repository updates with fetch-after verification for existing code files. Do not claim terminal/build verification unless it was actually run. For safety refactors, prioritize separating operator/test/recover workflow from PRG_Safety after any compile/runtime blockers are resolved.
 ```
