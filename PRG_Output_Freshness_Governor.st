@@ -176,7 +176,5 @@ ELSE
     GVL_OUTPUT_EPOCH.Output_Last_Invalidation_MS := L_Now_MS;
     GVL_OUTPUT_EPOCH.Output_Last_Error_Code := L_Error_Code;
     GVL_OUTPUT_EPOCH.Output_Last_Error_Text := L_Error_Text;
-
-    GVL_OUTPUT_EPOCH.Output_Invalidation_Count := GVL_OUTPUT_EPOCH.Output_Invalidation_Count + 1;
 END_IF;
 END_PROGRAM
