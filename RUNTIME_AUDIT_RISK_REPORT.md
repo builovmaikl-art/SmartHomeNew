@@ -37,6 +37,7 @@
 ✔ Safety/Shutdown/Recovery chain
 ✔ Heating runtime governance
 ✔ Runtime ownership consistency
+✔ Intent/Policy/Command arbitration chain
 ```
 
 ---
@@ -249,6 +250,155 @@ MEDIUM
 
 ---
 
+# RISK-005
+
+## Distributed system mode ownership
+
+## Суть
+
+`GVL_STATE.G_System_Mode`
+имеет:
+
+```text
+несколько runtime writers.
+```
+
+Например:
+
+```text
+- Policy layer;
+- Recovery layer;
+- Health layer;
+- Safety-related orchestration.
+```
+
+---
+
+## Что показала проверка
+
+Catastrophic conflict:
+
+```text
+НЕ найден.
+```
+
+Сейчас система работает как:
+
+```text
+layered escalation model.
+```
+
+Пример:
+
+```text
+NORMAL
+→ DEGRADED
+→ SAFE_STOP
+→ RECOVERY
+→ NORMAL
+```
+
+То есть сейчас:
+
+```text
+это intentional behavior,
+а не случайный conflict.
+```
+
+---
+
+## Проблема
+
+Архитектура держится на:
+
+```text
+implicit discipline.
+```
+
+Нет formal owner для:
+
+```text
+system mode transitions.
+```
+
+Сейчас subsystem layers:
+
+```text
+"знают"
+какие transitions им разрешены.
+```
+
+Но это:
+
+```text
+fragile при дальнейшем росте системы.
+```
+
+---
+
+## Возможные последствия в будущем
+
+```text
+- conflicting transitions;
+- stale recovery;
+- unsafe downgrade paths;
+- non-deterministic mode restore;
+- hidden escalation loops.
+```
+
+---
+
+## Что важно
+
+Пока:
+
+```text
+runtime deterministic.
+```
+
+И:
+
+```text
+critical runtime conflict
+не обнаружен.
+```
+
+Но:
+
+```text
+risk accumulation присутствует.
+```
+
+---
+
+## Рекомендуемое направление
+
+В будущем желательно:
+
+```text
+formalize:
+
+single system-mode authority
+или
+explicit transition contract.
+```
+
+---
+
+## Статус
+
+```text
+АКТИВНЫЙ РИСК
+```
+
+Severity:
+
+```text
+MEDIUM
+```
+
+---
+
 # Что дополнительно подтверждено
 
 # Heating runtime
@@ -299,6 +449,19 @@ MEDIUM
 ✔ single shutdown aggregation owner
 ✔ recovery layer не владеет outputs
 ✔ duplicate emergency ownership не найден
+```
+
+---
+
+# Intent / Command arbitration
+
+Подтверждено:
+
+```text
+✔ direct arbitration bypass не найден
+✔ hidden command writers пока не найдены
+✔ GVL_COMMAND_SHADOW остаётся главным command aggregation layer
+✔ catastrophic command conflicts пока не найдены
 ```
 
 ---
@@ -401,21 +564,18 @@ MEDIUM
 Следующий этап проверки:
 
 ```text
-Intent / Policy / Command Arbitration chain
+Transport / IO Write / Domain output realization
 ```
 
-Это сейчас:
-
-```text
-самая опасная оставшаяся зона.
-```
+Это одна из самых опасных remaining zones.
 
 Там наиболее вероятны:
 
 ```text
-- hidden policy overrides;
-- competing command authorities;
-- arbitration bypass;
-- stale intent propagation;
-- direct output writes outside arbitration.
+- hidden output writers;
+- shadow/output bypass;
+- direct IO mutation;
+- duplicated hardware ownership;
+- transport/runtime coupling;
+- unsafe final output masking.
 ```
