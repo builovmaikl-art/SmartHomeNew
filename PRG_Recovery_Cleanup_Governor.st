@@ -17,8 +17,9 @@ L_Error_Text := '';
 // Governs cleanup and residue validation after recovery.
 //
 // Recovery governance is downstream cleanup-oriented.
-// It must not recursively depend on runtime barrier state
-// because runtime barrier already consumes recovery state.
+// It must not feed back into runtime barrier authority.
+// Runtime publication authority remains upstream and
+// recovery cleanup remains a post-publication residue layer.
 // ======================================================
 
 GVL_RECOVERY_GOVERNANCE.Recovery_Semantic_Residue_Detected := FALSE;
