@@ -24,6 +24,21 @@ VAR_GLOBAL
     Fencing_Failure_Visible : BOOL := FALSE;
     Monotonic_Failure_Visible : BOOL := FALSE;
 
+    // ======================================================
+    // DISTRIBUTED RECONCILIATION VISIBILITY
+    // ======================================================
+    // Downstream-only visibility for peer divergence.
+    // Does not feed back into PLC fencing or runtime barrier.
+    // ======================================================
+
+    Distributed_Failure_Visible : BOOL := FALSE;
+    Distributed_Quarantine_Visible : BOOL := FALSE;
+    Peer_Runtime_Stale_Visible : BOOL := FALSE;
+    Peer_Snapshot_Stale_Visible : BOOL := FALSE;
+    Peer_Boot_Mismatch_Visible : BOOL := FALSE;
+    Peer_Fencing_Conflict_Visible : BOOL := FALSE;
+    Peer_Semantic_Continuity_Lost_Visible : BOOL := FALSE;
+
     Observability_Quarantine_Active : BOOL := FALSE;
 
     Observability_Last_Publication_MS : UDINT := 0;
