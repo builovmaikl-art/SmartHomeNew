@@ -17,13 +17,10 @@ VAR_GLOBAL
     Snapshot_Mutation_Detected : BOOL := FALSE;
 
     Snapshot_Runtime_Authority_Valid : BOOL := FALSE;
-    Snapshot_Observability_Synchronized : BOOL := FALSE;
 
     Snapshot_Freeze_Start_MS : UDINT := 0;
     Snapshot_Last_Publication_MS : UDINT := 0;
 
     Snapshot_Last_Error_Code : UDINT := 0;
     Snapshot_Last_Error_Text : STRING(160) := '';
-
-    Snapshot_Invalidation_Count : UDINT := 0;
 END_VAR
