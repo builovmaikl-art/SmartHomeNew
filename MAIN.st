@@ -19,8 +19,9 @@ PROGRAM MAIN
 //   7. Runtime authority barrier
 //   8. Domain execution
 //   9. Pre-output safety barrier
-//   10. Physical IO write
-//   11. Verification, diagnostics, history, HMI
+//   10. Output freshness governance
+//   11. Physical IO write
+//   12. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -92,14 +93,18 @@ PRG_Access();
 PRG_Lighting();
 
 // 9. Authoritative pre-output safety barrier.
-// Must execute after all domain output projection and before PRG_IO_Write.
+// Must execute after all domain output projection and before output freshness governance.
 PRG_PreOutput_Safety_Barrier();
 
-// 10. Final physical IO projection.
-// Must remain after pre-output barrier and all domain execution.
+// 10. Output freshness governance.
+// Must execute before physical IO publication.
+PRG_Output_Freshness_Governor();
+
+// 11. Final physical IO projection.
+// Must remain after runtime/output authority barriers.
 PRG_IO_Write();
 
-// 11. Verification, explainability, diagnostics, history, HMI
+// 12. Verification, explainability, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
