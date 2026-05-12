@@ -42,14 +42,8 @@ The source of truth is always the actual repository code, not older audit docume
 Before doing any analysis, planning, coding, or proposing changes for this repository, read:
 
 1. `AGENTS.md`
-2. `docs/MASTER_GUIDE.md`
-3. `docs/WORKFLOW.md`
-4. `docs/CHANGELOG_WORK.md`
-5. `docs/ARCHITECTURE_NOTES.md`
-6. `docs/EQUIPMENT_DECISIONS.md`
-7. `docs/IO_MAPPING_CONCEPT.md`
-8. newest relevant audit/report files under `docs/`
-9. newest files under `документация проекта/` if present
+2. newest relevant audit/report files under `docs/`
+3. newest files under `документация проекта/` if present
 
 If there is a conflict:
 
