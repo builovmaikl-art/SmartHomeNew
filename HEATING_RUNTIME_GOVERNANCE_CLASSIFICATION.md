@@ -14,7 +14,13 @@ The goal is to prevent:
 - unsafe cleanup of passive forensic infrastructure.
 ```
 
-This document formalizes the results of the runtime governance audit.
+This document formalizes the verified runtime governance model.
+
+Current phase:
+
+```text
+GOVERNED RUNTIME MAINTENANCE
+```
 
 ---
 
@@ -23,20 +29,23 @@ This document formalizes the results of the runtime governance audit.
 The invariant that must never be violated:
 
 ```text
-single active runtime authority path
+single active runtime ownership chain
 ```
 
-Active runtime authority remains:
+Verified active runtime chain:
 
 ```text
 PRG_Heating
 → FB_Heating_System_Manager
+    → Safety_Gate
+    → Safe_State
     → Circuit_Control
     → Demand_Map
     → Policy_Priority_Bridge
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
+    → System_Manager post-manifold safety/test finalization
     → Boiler_Control
 ```
 
@@ -56,7 +65,7 @@ PRG_Heating
 The repository evolved toward a split architecture:
 
 ```text
-ACTIVE RUNTIME AUTHORITY
+ACTIVE RUNTIME OWNERSHIP
 separated from
 RUNTIME OBSERVABILITY / FORENSICS / GOVERNANCE
 ```
@@ -170,20 +179,6 @@ Forbidden behavior:
 - emergency ownership.
 ```
 
-Representative files:
-
-```text
-FB_Heating_Runtime_Anomaly_Correlator
-FB_Heating_Runtime_RootCause_Correlator
-FB_Heating_Runtime_Fault_Replay_Analyzer
-FB_Heating_Runtime_Degradation_Timeline_Rebuilder
-FB_Heating_Runtime_Adaptive_Drift_Detector
-FB_Heating_Runtime_Cascade_Collapse_Predictor
-FB_Heating_Runtime_Confidence_Decay_Analyzer
-FB_Heating_Runtime_Observation_Aggregator
-FB_Heating_Runtime_Phase_Telemetry_Aggregator
-```
-
 ---
 
 ## CLASS C — Governance / contract scaffold
@@ -213,7 +208,7 @@ These files may contain orchestration semantics
 WITHOUT being active orchestration engines.
 ```
 
-Critical governance locks already detected:
+Critical governance locks already verified:
 
 ```text
 Governance_Locked := TRUE
@@ -242,15 +237,6 @@ future architecture placeholders
 not currently connected to active runtime ownership
 ```
 
-Characteristics:
-
-```text
-- partial integration;
-- governance preparation;
-- future analytics expansion;
-- future diagnostics infrastructure.
-```
-
 Rules:
 
 ```text
@@ -274,18 +260,17 @@ files with:
 - no future scaffold value.
 ```
 
-Status:
+Current verified status:
 
 ```text
-No confirmed CLASS E Runtime_* files yet.
+No confirmed CLASS E Runtime_* files.
 ```
 
 Meaning:
 
 ```text
-Runtime_* family is currently treated as
-intentional governance/observability architecture
-instead of dead legacy garbage.
+Runtime_* family is intentional governance/observability architecture,
+not dead legacy garbage.
 ```
 
 ---
@@ -313,6 +298,13 @@ FB_Heating_Manifold_Control
 FB_Heating_Boiler_Control
 FB_Heating_Safety_Gate
 FB_Heating_Safe_State
+```
+
+Important clarification:
+
+```text
+Manifold_Control is the primary actuator helper.
+System_Manager remains bounded final post-manifold finalizer.
 ```
 
 ---
@@ -369,20 +361,50 @@ No Runtime_* files currently satisfy proven-dead criteria.
 
 ---
 
+# Current architectural status
+
+Verified state:
+
+```text
+- detached orchestration runtime removed from production root;
+- dangerous override path removed from production root;
+- Runtime_* family remains governance/observability oriented;
+- helper authority escalation not detected;
+- hidden Runtime_* actuation not detected.
+```
+
+Remaining concern:
+
+```text
+future architectural drift
+```
+
+rather than:
+
+```text
+historical runtime collapse.
+```
+
+---
+
 # Strategic conclusion
 
-The repository already evolved away from:
+The repository evolved away from:
 
 ```text
 detached orchestration runtime architecture
 ```
 
-toward:
+into:
 
 ```text
-clean active runtime authority
+clean active runtime ownership
++
+bounded helper execution
++
+post-manifold finalization
 +
 passive governance / observability / forensic infrastructure
 ```
 
-This split must be preserved.
+This split must remain explicit and preserved.
