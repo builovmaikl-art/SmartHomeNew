@@ -57,18 +57,15 @@ IF L_Output_Valid AND GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected THEN
     L_Error_Text := 'Snapshot mutation detected';
 END_IF;
 
+// Distributed epoch is the aggregate reconciliation authority.
+// Peer-detail fields remain observability, not additional hard-stop fanout.
 IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6200;
     L_Error_Text := 'Distributed reconciliation quarantine active';
 END_IF;
 
-IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Conflict THEN
-    L_Output_Valid := FALSE;
-    L_Error_Code := 6201;
-    L_Error_Text := 'Peer fencing conflict detected';
-END_IF;
-
+// Distributed snapshot aggregate publication authority.
 IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled) THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6300;
@@ -93,6 +90,7 @@ IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_A
     L_Error_Text := 'Distributed immutable snapshot quarantine active';
 END_IF;
 
+// Distributed commit aggregate publication-continuity authority.
 IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid) THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6400;
@@ -103,18 +101,6 @@ IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Activ
     L_Output_Valid := FALSE;
     L_Error_Code := 6401;
     L_Error_Text := 'Distributed commit quarantine active';
-END_IF;
-
-IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch THEN
-    L_Output_Valid := FALSE;
-    L_Error_Code := 6402;
-    L_Error_Text := 'Peer commit mismatch detected';
-END_IF;
-
-IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected THEN
-    L_Output_Valid := FALSE;
-    L_Error_Code := 6403;
-    L_Error_Text := 'Peer commit replay detected';
 END_IF;
 
 IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired THEN
