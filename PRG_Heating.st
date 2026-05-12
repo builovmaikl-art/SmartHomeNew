@@ -3,8 +3,7 @@ VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
     fbOutputProjection : FB_Heating_Output_Projection;
-    fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
-    fbHeatingDiagnostics : FB_Heating_Diagnostics;
+    fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
     fbRuntimeObserver : FB_Heating_Runtime_Observer;
     fbRuntimeObserverAuthorization : FB_Heating_Runtime_Observer_Authorization;
 
@@ -274,15 +273,13 @@ L_Runtime_Context.State_Publication_Executed := TRUE;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 
-fbRootCauseDiagnostics(
-    VI_Enable := TRUE
-);
-
-fbHeatingDiagnostics(
+fbDiagnosticsPhase(
+    VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
-L_Runtime_Context.Diagnostics_Executed := TRUE;
+L_Runtime_Context.Diagnostics_Executed := fbDiagnosticsPhase.VO_Executed;
+L_Runtime_Context.Diagnostics_Isolation_Valid := fbDiagnosticsPhase.VO_Valid;
 
 // ======================================================
 // GOVERNED FINALIZED-STATE RUNTIME OBSERVER
