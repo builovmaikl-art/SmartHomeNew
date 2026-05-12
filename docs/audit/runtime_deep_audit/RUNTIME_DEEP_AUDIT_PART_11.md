@@ -301,3 +301,149 @@ time-dependent safety logic
 - corrupted time injection;
 - monotonic violation failover tests.
 ```
+
+---
+
+# RISK-049
+
+## Reboot/startup path не имеет authoritative retained-state invalidation
+
+Severity:
+
+```text
+CRITICAL
+```
+
+### Runtime mechanics
+
+Проверка startup/reboot semantics не выявила:
+
+```text
+- authoritative cold-start epoch;
+- retained-state invalidation barrier;
+- reboot-generation fencing;
+- startup semantic quarantine;
+- retained ownership expiration;
+- corruption-safe startup convergence.
+```
+
+Это означает:
+
+```text
+после reboot
+runtime может восстановить
+semantically obsolete state
+как valid.
+```
+
+Особенно опасно после reboot во время:
+
+```text
+- degraded recovery;
+- split-brain;
+- reconnect race;
+- semantic brownout;
+- stale output persistence;
+- arbitration transition.
+```
+
+---
+
+### Trigger conditions
+
+```text
+- reboot during degraded state;
+- retained corrupted state;
+- startup during reconnect instability;
+- failover reboot loop;
+- stale authority persistence;
+- recovery interruption.
+```
+
+---
+
+### Failure chain
+
+```text
+reboot occurs
+↓
+retained/runtime residue survives
+↓
+startup reuses stale semantics
+↓
+authority/output/recovery state resurrects
+↓
+system re-enters corrupted convergence path
+```
+
+---
+
+### Consequences
+
+```text
+- reboot resurrects stale authority;
+- endless recovery/failover oscillation;
+- startup split-brain persistence;
+- retained semantic corruption replay;
+- catastrophic reboot-loop instability.
+```
+
+---
+
+### Почему это критично
+
+Сейчас reboot/startup path предполагает:
+
+```text
+retained state
+≈ trustworthy state.
+```
+
+Но distributed safety runtime должен считать:
+
+```text
+retained state
+potentially corrupted
+until convergence is re-proven.
+```
+
+Без startup invalidation barriers:
+
+```text
+reboot может resurrect
+старую semantic corruption.
+```
+
+Особенно опасно вместе с:
+
+```text
+- RISK-044 ownership resurrection;
+- RISK-045 asymmetric visibility;
+- RISK-046 semantic brownout;
+- RISK-047 stale outputs;
+- RISK-048 monotonic timing corruption.
+```
+
+---
+
+### Corrective directions
+
+```text
+- внедрить cold-start epochs;
+- quarantine retained state after reboot;
+- добавить reboot-generation fencing;
+- revalidate ownership after startup;
+- separate retained state from trusted state.
+```
+
+---
+
+### Verification strategy
+
+```text
+- reboot during degraded recovery;
+- retained corruption replay tests;
+- reboot-loop survivability tests;
+- split-brain reboot simulation;
+- startup convergence validation.
+```
