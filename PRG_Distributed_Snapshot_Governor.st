@@ -5,6 +5,7 @@ VAR
     L_Distributed_Snapshot_Valid : BOOL := TRUE;
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
+    L_Peer_Session_Active : BOOL := FALSE;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -19,6 +20,13 @@ L_Error_Text := '';
 // Publication-authoritative only.
 // Does not invalidate runtime barrier, PLC fencing
 // or local immutable snapshot freeze.
+//
+// Current implementation mode:
+// peer-optional foundation mode.
+//
+// Missing peer topology is NOT treated as divergence.
+// Peer validation activates only after real peer
+// synchronization state exists.
 // ======================================================
 
 GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Stale := FALSE;
@@ -54,20 +62,43 @@ ELSE
 END_IF;
 
 // ------------------------------------------------------
+// Peer session detection.
+// ------------------------------------------------------
+// Peer snapshot checks become authoritative only after
+// real peer snapshot publication state exists.
+// ------------------------------------------------------
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Epoch > 0 THEN
+    L_Peer_Session_Active := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Runtime_Snapshot_Epoch > 0 THEN
+    L_Peer_Session_Active := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Distributed_Snapshot_Epoch > 0 THEN
+    L_Peer_Session_Active := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Immutable THEN
+    L_Peer_Session_Active := TRUE;
+END_IF;
+
+// ------------------------------------------------------
 // Peer snapshot lease validation.
 // ------------------------------------------------------
 
-L_Delta_MS := L_Now_MS - GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Last_Refresh_MS;
+IF L_Distributed_Snapshot_Valid AND L_Peer_Session_Active THEN
+    L_Delta_MS := L_Now_MS - GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Last_Refresh_MS;
 
-IF L_Distributed_Snapshot_Valid
-AND GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Active
-THEN
-    IF L_Delta_MS > GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Timeout_MS THEN
-        GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Expired := TRUE;
+    IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Active THEN
+        IF L_Delta_MS > GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Timeout_MS THEN
+            GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Expired := TRUE;
 
-        L_Distributed_Snapshot_Valid := FALSE;
-        L_Error_Code := 14001;
-        L_Error_Text := 'Peer snapshot lease expired';
+            L_Distributed_Snapshot_Valid := FALSE;
+            L_Error_Code := 14001;
+            L_Error_Text := 'Peer snapshot lease expired';
+        END_IF;
     END_IF;
 END_IF;
 
@@ -75,7 +106,7 @@ END_IF;
 // Peer immutable snapshot semantics.
 // ------------------------------------------------------
 
-IF L_Distributed_Snapshot_Valid THEN
+IF L_Distributed_Snapshot_Valid AND L_Peer_Session_Active THEN
     IF NOT GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Immutable THEN
         GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Not_Immutable := TRUE;
 
@@ -89,11 +120,9 @@ END_IF;
 // Peer publication continuity.
 // ------------------------------------------------------
 
-IF L_Distributed_Snapshot_Valid THEN
-    IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Epoch > 0 THEN
-        IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Epoch < GVL_DISTRIBUTED_SNAPSHOT.Local_Publication_Epoch THEN
-            GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Stale := TRUE;
-        END_IF;
+IF L_Distributed_Snapshot_Valid AND L_Peer_Session_Active THEN
+    IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Epoch < GVL_DISTRIBUTED_SNAPSHOT.Local_Publication_Epoch THEN
+        GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Stale := TRUE;
     END_IF;
 END_IF;
 
@@ -101,11 +130,9 @@ END_IF;
 // Peer publication reconciliation continuity.
 // ------------------------------------------------------
 
-IF L_Distributed_Snapshot_Valid THEN
-    IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Runtime_Snapshot_Epoch > 0 THEN
-        IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Runtime_Snapshot_Epoch <> GVL_DISTRIBUTED_SNAPSHOT.Local_Runtime_Snapshot_Epoch THEN
-            GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Divergence := TRUE;
-        END_IF;
+IF L_Distributed_Snapshot_Valid AND L_Peer_Session_Active THEN
+    IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Runtime_Snapshot_Epoch <> GVL_DISTRIBUTED_SNAPSHOT.Local_Runtime_Snapshot_Epoch THEN
+        GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Divergence := TRUE;
     END_IF;
 END_IF;
 
