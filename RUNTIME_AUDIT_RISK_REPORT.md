@@ -18,8 +18,6 @@
 живым audit-report.
 ```
 
-Он должен обновляться после каждого крупного audit/refactor этапа.
-
 ---
 
 # Что уже проверено
@@ -29,79 +27,13 @@
 ```text
 ✔ MAIN orchestration
 ✔ Config pipeline
-✔ Config simulation integration
-✔ Runtime base layer
-✔ PLC arbitration
-✔ IO/Input pipeline
-✔ Diagnostics persistence
-✔ Safety/Shutdown/Recovery chain
-✔ Heating runtime governance
-✔ Runtime ownership consistency
-✔ Intent/Policy/Command arbitration chain
-✔ IO write / physical projection ownership
-✔ Transport / Modbus / OpenTherm ownership
-✔ Diagnostics / Health / Explainability layers
-✔ Scheduler / timing / persistence audit
-✔ Recovery / watchdog / stabilization timing
-```
-
----
-
-# Исправленные проблемы
-
-# RISK-001
-
-## Проблема
-
-```text
-FB_Config_Simulation
-сбрасывал результат проверки каждый цикл.
-```
-
----
-
-## Статус
-
-```text
-ИСПРАВЛЕНО
-```
-
----
-
-# RISK-002
-
-## Проблема
-
-```text
-PRG_PLC_Arbitration
-некорректно обрабатывал одинаковые PLC ID.
-```
-
----
-
-## Статус
-
-```text
-ИСПРАВЛЕНО
-```
-
----
-
-# RISK-003
-
-## Проблема
-
-```text
-PRG_IO_Read
-сбрасывал diagnostics.
-```
-
----
-
-## Статус
-
-```text
-ИСПРАВЛЕНО
+✔ Runtime governance
+✔ IO ownership
+✔ Transport ownership
+✔ Diagnostics/Health layers
+✔ Scheduler/timing/persistence
+✔ Recovery/watchdog timing
+✔ SAFE_STOP sequencing audit
 ```
 
 ---
@@ -182,57 +114,59 @@ MEDIUM
 
 ## Distributed recovery lifecycle governance
 
+Severity:
+
+```text
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-011
+
+## Non-formalized suppression release sequencing
+
 ## Суть
 
-`Recovery_Active`
-используется как:
+Suppression flags:
 
 ```text
-cross-system recovery latch.
+- G_Heating_Block;
+- emergency inhibit flags;
+- recovery suppression.
 ```
 
-Многие subsystem:
+могут приходить из:
 
 ```text
-неявно зависят
-от Recovery_Active.
+- safety;
+- arbitration;
+- recovery;
+- governance/policy layers.
 ```
 
-Например:
+Но release semantics:
 
 ```text
-PRG_IO_Write
-использует recovery suppression
-для access outputs.
+не formalized.
 ```
 
 ---
 
 ## Проблема
 
-Recovery lifecycle:
+SAFE_STOP exit:
 
 ```text
-размазан между:
-- PRG_Safety_Recovery;
-- recovery GVL;
-- safety shutdown state;
-- external subsystem conditions.
+не fully contract-driven.
 ```
 
-Но отсутствует:
+Разные subsystem могут:
 
 ```text
-formal transition contract.
-```
-
-Не fully formalized:
-
-```text
-- кто запускает recovery;
-- кто завершает recovery;
-- кто может prolong recovery;
-- когда suppression обязан сниматься.
+- считать unblock уже допустимым;
+- продолжать удерживать suppression;
+- восстанавливать runtime в разном порядке.
 ```
 
 ---
@@ -242,17 +176,15 @@ formal transition contract.
 Пока НЕ найдено:
 
 ```text
-- infinite recovery loop;
-- hard deadlock;
-- unrecoverable latch;
-- permanent suppression.
+- permanent heating lock;
+- unrecoverable inhibit;
+- catastrophic deadlock.
 ```
 
-Но уже присутствует:
+Но найдено:
 
 ```text
-architectural precondition
-для recovery nondeterminism.
+restore-order ambiguity.
 ```
 
 ---
@@ -260,11 +192,11 @@ architectural precondition
 ## Возможные последствия
 
 ```text
-- stale recovery suppression;
-- recovery prolongation;
-- inconsistent subsystem restore timing;
-- partial subsystem recovery;
-- timing-dependent behavior after SAFE_STOP.
+- partial subsystem restore;
+- inconsistent unblock timing;
+- stale inhibit persistence;
+- recovery asymmetry;
+- timing-dependent restart behavior.
 ```
 
 ---
@@ -274,10 +206,10 @@ architectural precondition
 В будущем желательно formalize:
 
 ```text
-- recovery lifecycle ownership;
-- recovery completion contract;
-- suppression release semantics;
-- recovery transition governance.
+- suppression release ownership;
+- unblock sequencing;
+- restore authority;
+- SAFE_STOP exit contract.
 ```
 
 ---
