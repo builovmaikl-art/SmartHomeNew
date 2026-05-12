@@ -35,6 +35,15 @@ GVL_OBSERVABILITY_AUTHORITY.Peer_Boot_Mismatch_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Peer_Fencing_Conflict_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Peer_Semantic_Continuity_Lost_Visible := FALSE;
 
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Publication_Reconciliation_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Publication_Freeze_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Snapshot_Consistency_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Stale_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Divergence_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Reconciliation_Lost_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Snapshot_Not_Immutable_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Immutable_Snapshot_Quarantine_Visible := FALSE;
+
 GVL_OBSERVABILITY_AUTHORITY.Unsafe_State_Published := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := FALSE;
 
@@ -109,6 +118,51 @@ END_IF;
 
 IF GVL_DISTRIBUTED_EPOCH.Peer_Semantic_Continuity_Lost THEN
     GVL_OBSERVABILITY_AUTHORITY.Peer_Semantic_Continuity_Lost_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+// ======================================================
+// DISTRIBUTED IMMUTABLE SNAPSHOT VISIBILITY
+// ======================================================
+// Publication-authoritative visibility only.
+// Does not invalidate runtime barrier or ownership.
+// ======================================================
+
+IF NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Publication_Reconciliation_Visible := TRUE;
+END_IF;
+
+IF NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Publication_Freeze_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Snapshot_Consistency_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Stale THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Stale_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Divergence THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Divergence_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Reconciliation_Lost THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Publication_Reconciliation_Lost_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Not_Immutable THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Snapshot_Not_Immutable_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Immutable_Snapshot_Quarantine_Visible := TRUE;
     GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
 END_IF;
 
