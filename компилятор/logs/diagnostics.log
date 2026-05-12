@@ -389,7 +389,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 12:50 .github
 -rw-r--r--  1 runner runner    256 May 12 12:50 ST_Zone_Sensors.dut
 -rw-r--r--  1 runner runner   2571 May 12 12:50 TZ_NEW.txt
 drwxr-xr-x  3 runner runner   4096 May 12 12:50 diagnostics
-drwxr-xr-x 14 runner runner   4096 May 12 12:50 docs
+drwxr-xr-x 13 runner runner   4096 May 12 12:50 docs
 drwxr-xr-x  2 runner runner   4096 May 12 12:50 migration_logs
 drwxr-xr-x 11 runner runner   4096 May 12 12:50 node_modules
 drwxr-xr-x  2 runner runner   4096 May 12 12:50 scripts
