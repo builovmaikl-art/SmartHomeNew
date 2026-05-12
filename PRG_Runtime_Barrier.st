@@ -16,8 +16,9 @@ L_Error_Text := '';
 // ======================================================
 // Creates authoritative runtime publication semantics.
 // Rejects impossible runtime states before physical publication.
-// Monotonic-time failures, PLC fencing failures and
-// recovery-governance failures invalidate runtime authority.
+// Monotonic-time failures, PLC fencing failures,
+// transport freshness failures and recovery-governance
+// failures invalidate runtime authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -110,6 +111,40 @@ IF L_Runtime_OK AND (GVL_PLC_FENCING.PLC_Fencing_Token = 0) THEN
 END_IF;
 
 // ------------------------------------------------------
+// Transport freshness validation.
+// ------------------------------------------------------
+
+IF L_Runtime_OK AND (NOT GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5200;
+    L_Error_Text := 'Transport freshness invalid';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_TRANSPORT_FRESHNESS.Transport_Publication_Allowed) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5201;
+    L_Error_Text := 'Transport publication blocked';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Quarantine_Active THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5202;
+    L_Error_Text := 'Transport quarantine active';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Lease_Expired THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5203;
+    L_Error_Text := 'Transport lease expired';
+END_IF;
+
+IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5204;
+    L_Error_Text := 'Transport snapshot invalid';
+END_IF;
+
+// ------------------------------------------------------
 // Recovery governance validation.
 // ------------------------------------------------------
 
@@ -194,7 +229,8 @@ GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid :=
     AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid
     AND GVL_PLC_FENCING.PLC_Ownership_Valid
     AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid
-    AND GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid;
+    AND GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid
+    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid;
 
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
