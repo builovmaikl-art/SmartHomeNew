@@ -4,6 +4,7 @@ VAR
     fbDHWManager : FB_DHW_Manager;
     fbOutputProjection : FB_Heating_Output_Projection;
     fbRootCauseDiagnostics : FB_Heating_RootCause_Diagnostics;
+    fbHeatingDiagnostics : FB_Heating_Diagnostics;
     fbRuntimeObserver : FB_Heating_Runtime_Observer;
     fbRuntimeObserverAuthorization : FB_Heating_Runtime_Observer_Authorization;
 
@@ -275,6 +276,10 @@ L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 
 fbRootCauseDiagnostics(
     VI_Enable := TRUE
+);
+
+fbHeatingDiagnostics(
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 L_Runtime_Context.Diagnostics_Executed := TRUE;
