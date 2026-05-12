@@ -1,0 +1,49 @@
+TYPE ST_Heating_Runtime_Predictive_State :
+STRUCT
+    // ======================================================
+    // Predictive analytics visibility
+    // Passive analytics only.
+    // No predictive authority exists.
+    // ======================================================
+    Predictive_Analytics_Visible : BOOL;
+    Predictive_Analytics_Degraded : BOOL;
+    Predictive_Analytics_Attention : BOOL;
+
+    // ======================================================
+    // Runtime stability observation
+    // ======================================================
+    Runtime_Stable : BOOL;
+    Runtime_Stability_Score : UINT;
+
+    // ======================================================
+    // Runtime degradation observation
+    // ======================================================
+    Runtime_Degradation_Observation : UINT;
+    Runtime_Failure_Observation : UINT;
+
+    // ======================================================
+    // Cascade observational analytics
+    // ======================================================
+    Cascade_Degradation_Observation : UINT;
+    Cascade_Degraded_Trend_Visible : BOOL;
+
+    // ======================================================
+    // OpenTherm observational analytics
+    // ======================================================
+    OpenTherm_Instability_Observation : UINT;
+    OpenTherm_Degraded_Trend_Visible : BOOL;
+
+    // ======================================================
+    // Runtime integrity observation
+    // ======================================================
+    Sequencing_Observation : UINT;
+    Ownership_Observation : UINT;
+    Synchronization_Observation : UINT;
+
+    // ======================================================
+    // Predictive analytics status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

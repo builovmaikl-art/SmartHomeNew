@@ -1,0 +1,131 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Last_Valid_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Last_Valid_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Temp_Sensor_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Floor_Temp_Sensor_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    G_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    G_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Water_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Smoke_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF BOOL;
+    G_Methane_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
+    G_CO_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
+    G_Manifold_Pressures : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_Currents : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Predictive_Pump_Pressure_Drop : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Predictive_Pump_Current_Rise : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Manifold_T_Supply : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_T_Return : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Boiler_Flame : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Command_Ack : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Command_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Heartbeat_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Adapter_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Heartbeat_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Boiler_OT_Command_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_Boiler_OT_Adapter_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Adapter_State;
+    G_Boiler_OT_Error_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Error;
+    G_Boiler_OT_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_Boiler_OT_Setpoint : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+
+    // Heating cascade semantic aggregate state
+    G_Heating_Cascade_Available : BOOL;
+    G_Heating_Cascade_Degraded : BOOL;
+    G_Heating_Cascade_Partial_Capacity : BOOL;
+    G_Heating_Cascade_No_Flame : BOOL;
+    G_Heating_Cascade_Transport_Degraded : BOOL;
+    G_Heating_Cascade_Ignition_Timeout : BOOL;
+    G_Heating_Cascade_Active_Boilers : UINT;
+    G_Heating_Cascade_Available_Boilers : UINT;
+
+    G_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    G_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    G_Outdoor_Temp : REAL;
+    G_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF REAL;
+    G_DHW_Temp : REAL;
+    G_DHW_Pressure : REAL;
+    G_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Manifold_End_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF REAL;
+    G_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF REAL;
+    G_Vent_Heater_Power : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+    G_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
+    G_Blinds_Positions : ARRAY[1..GVL_CONSTANTS.C_MAX_BLINDS] OF BYTE;
+    G_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+    G_DHW_Heating_Pump : BOOL;
+    G_DHW_Circ_Pump : BOOL;
+    G_Backup_Circulation_Pump : BOOL;
+    G_Electric_Heater_Enable : BOOL;
+    G_Safety_Gas_Alarm : BOOL;
+    G_Safety_Leak_Alarm : BOOL;
+    G_Safety_Smoke_Alarm : BOOL;
+    G_Safety_Emergency_Stop : BOOL;
+    G_Safety_Gas_Latched : BOOL;
+    G_Safety_Leak_Latched : BOOL;
+    G_Safety_Smoke_Latched : BOOL;
+    G_Safety_Freeze_Risk : BOOL;
+    G_System_Mode : E_System_Operating_Mode := E_System_Operating_Mode.MODE_NORMAL;
+    G_System_Mode_Text : STRING(64);
+    G_Heating_IO_Fault : BOOL;
+    G_Heating_Sensor_Fault : BOOL;
+    G_Heating_Subsystem_Degraded : BOOL;
+
+    // Allocation / policy observability
+    G_Allocation_Policy_Active : BOOL;
+    G_Allocation_Freeze_Bypass_Active : BOOL;
+    G_Allocation_DHW_Bypass_Active : BOOL;
+    G_Allocation_Budget_Max : REAL;
+    G_Allocation_Budget_Used : REAL;
+    G_Allocation_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Allowed : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Filtered : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_Allocation_Block_Reason : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF E_Heating_Allocation_Block_Reason;
+    G_Allocation_Effective_Priority : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+
+    // Policy bridge observability
+    G_Policy_Target_Adjustment_Active : BOOL;
+    G_Policy_Target_Adjustment_Applied : REAL;
+    G_Policy_Priority_Multiplier_Applied : REAL;
+    G_Policy_Priority_Bridge_Active : BOOL;
+    G_Policy_Priority_Bias_Applied : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
+    G_Policy_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
+
+    G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
+    G_Heating_RootConfidence : REAL;
+    G_Heating_Confidence : REAL := 1.0;
+    G_Heating_Error_Score : REAL := 0.0;
+    G_Heating_Confidence_Reason_Code : INT := 0;
+    G_Heating_Confidence_Reason_Text : STRING(128) := 'OK';
+    G_DHW_IO_Fault : BOOL;
+    G_DHW_Sensor_Fault : BOOL;
+    G_DHW_Subsystem_Degraded : BOOL;
+    G_Ventilation_IO_Fault : BOOL;
+    G_Ventilation_Subsystem_Degraded : BOOL;
+    G_Lighting_IO_Fault : BOOL;
+    G_Lighting_Subsystem_Degraded : BOOL;
+    G_Access_Comm_Fault : BOOL;
+    G_Evacuation_Lighting_Active : BOOL;
+    G_Evac_Hazard_Zone : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    G_Evac_Guidance : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF INT;
+
+    G_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action;
+    G_Sim_Lights : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
+    G_Freeze_Hardware_Degraded : BOOL;
+    G_Freeze_Hardware_Failed : BOOL;
+    G_Water_Zone_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    G_Water_Zone_Open_FB : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    G_Water_Zone_Close_FB : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    G_Water_Zone_Exercise_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
+    G_Preheat_Request : BOOL;
+    G_Freeze_Request : BOOL;
+    G_Target_Temperature : REAL;
+END_VAR

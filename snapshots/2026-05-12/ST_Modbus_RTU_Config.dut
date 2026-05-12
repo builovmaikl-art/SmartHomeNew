@@ -1,0 +1,13 @@
+TYPE ST_Modbus_RTU_Config :
+STRUCT
+    Port_Name : STRING(32);
+    Baudrate : UDINT;
+    Parity : BYTE; // 0=None, 1=Even, 2=Odd
+    Stop_Bits : BYTE; // 1 or 2
+    Data_Bits : BYTE; // usually 8
+    Slave_ID : BYTE;
+    Poll_Interval_MS : UDINT;
+    Request_Timeout_MS : UDINT;
+    Retry_Count : INT;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,9 @@
+TYPE ST_EVENT :
+STRUCT
+    Event_ID    : UDINT;
+    Event_Type  : UINT;
+    Timestamp   : UDINT;
+    Param1      : UDINT;
+    Param2      : UDINT;
+END_STRUCT
+END_TYPE

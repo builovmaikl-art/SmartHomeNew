@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_TwoFactor_Data :
+STRUCT
+    operator_id : STRING(10);
+    AuthMethod : BYTE; // E_TwoFactor_Method
+    rfid_tag : STRING(20);
+    totp_secret : STRING(32);
+    last_modified : UDINT;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,52 @@
+TYPE ST_Heating_Runtime_Causality_Node :
+STRUCT
+    // ======================================================
+    // Node identity
+    // ======================================================
+    Node_ID : UINT;
+    Node_Active : BOOL;
+
+    // ======================================================
+    // Runtime source state
+    // ======================================================
+    Runtime_Degraded : BOOL;
+    Runtime_Fault : BOOL;
+
+    // ======================================================
+    // Cascade source state
+    // ======================================================
+    Cascade_Degraded : BOOL;
+    Cascade_Boiler_Loss : BOOL;
+
+    // ======================================================
+    // OpenTherm source state
+    // ======================================================
+    OpenTherm_Degraded : BOOL;
+    OpenTherm_Command_Invalid : BOOL;
+
+    // ======================================================
+    // Diagnostics source state
+    // ======================================================
+    Diagnostics_Degraded : BOOL;
+    Explainability_Degraded : BOOL;
+
+    // ======================================================
+    // Sequencing/integrity state
+    // ======================================================
+    Sequencing_Invalid : BOOL;
+    Ownership_Invalid : BOOL;
+    Synchronization_Invalid : BOOL;
+
+    // ======================================================
+    // Causality severity
+    // ======================================================
+    Severity_Level : UINT;
+    Root_Cause_Candidate : BOOL;
+
+    // ======================================================
+    // Node status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

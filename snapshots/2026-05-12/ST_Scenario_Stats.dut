@@ -1,0 +1,11 @@
+TYPE ST_Scenario_Stats :
+STRUCT
+    Activations : UDINT;
+    Success_Count : UDINT;
+    Failure_Count : UDINT;
+    Success_Rate : REAL;
+    Avg_Result_Value : REAL;
+    Stability_Counter : INT;
+    Last_Activation : UDINT;
+END_STRUCT
+END_TYPE

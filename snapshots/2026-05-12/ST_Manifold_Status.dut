@@ -1,0 +1,14 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Manifold_Status :
+STRUCT
+    Pump_On : BOOL;
+    Pump_Current : REAL;
+    Pressure : REAL;
+    Temp_Supply : REAL;
+    Temp_Return : REAL;
+    Valve_Pos : REAL;
+    Error : BOOL;
+    Error_ID : WORD;
+    Health : ST_Device_Health; // Диагностика насоса
+END_STRUCT
+END_TYPE

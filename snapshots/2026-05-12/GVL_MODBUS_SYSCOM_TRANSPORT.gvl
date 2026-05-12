@@ -1,0 +1,64 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // MODBUS RTU SYSCOM BYTE TRANSPORT BOUNDARY
+    // ======================================================
+
+    G_Transport_Enabled : BOOL := FALSE;
+    G_Transport_Attached : BOOL := FALSE;
+
+    // Backend runtime/reconnect state
+    G_Backend_State : E_Modbus_SysCom_Backend_State := MB_SYSCOM_CLOSED;
+    G_Backend_Last_Error_MS : UDINT := 0;
+    G_Backend_Reconnect_Delay_MS : UDINT := 3000;
+    G_Backend_Reconnect_Attempts : UDINT := 0;
+    G_Backend_Online : BOOL := FALSE;
+
+    // TX runtime
+    G_TX_Request : BOOL := FALSE;
+    G_TX_Buffer : ARRAY[0..255] OF BYTE;
+    G_TX_Length : UINT := 0;
+    G_TX_Done : BOOL := FALSE;
+    G_TX_Error : BOOL := FALSE;
+    G_TX_Error_Code : WORD := 0;
+
+    // RX runtime
+    G_RX_Ready : BOOL := FALSE;
+    G_RX_Buffer : ARRAY[0..255] OF BYTE;
+    G_RX_Length : UINT := 0;
+    G_RX_Error : BOOL := FALSE;
+    G_RX_Error_Code : WORD := 0;
+
+    // RX assembler/runtime state
+    G_RX_State : E_Modbus_RTU_RX_State := MB_RTU_RX_IDLE;
+
+    G_RX_Assembler_Active : BOOL := FALSE;
+    G_RX_Assembler_Length : UINT := 0;
+    G_RX_Assembler_Last_Byte_MS : UDINT := 0;
+    G_RX_Assembler_InterFrame_MS : UDINT := 20;
+    G_RX_Assembler_Overflow : BOOL := FALSE;
+    G_RX_Assembler_CRC_OK : BOOL := FALSE;
+    G_RX_Assembler_CRC_Frame : WORD := 0;
+    G_RX_Assembler_CRC_Calc : WORD := 0;
+
+    // Watchdog timestamps
+    G_Last_TX_Request_MS : UDINT := 0;
+    G_Last_TX_Done_MS : UDINT := 0;
+    G_Last_RX_MS : UDINT := 0;
+
+    // Runtime watchdog flags
+    G_TX_Watchdog_Timeout : BOOL := FALSE;
+    G_RX_Watchdog_Timeout : BOOL := FALSE;
+    G_Bus_Silent : BOOL := FALSE;
+
+    // Statistics
+    G_Total_TX : UDINT := 0;
+    G_Total_RX : UDINT := 0;
+    G_Total_Errors : UDINT := 0;
+    G_Total_RX_Overflow : UDINT := 0;
+    G_Total_RX_Short_Frame : UDINT := 0;
+    G_Total_RX_CRC_Error : UDINT := 0;
+    G_Total_Reconnects : UDINT := 0;
+    G_Total_TX_Watchdog : UDINT := 0;
+    G_Total_RX_Watchdog : UDINT := 0;
+END_VAR

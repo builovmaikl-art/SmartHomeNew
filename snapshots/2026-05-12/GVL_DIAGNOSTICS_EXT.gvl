@@ -1,0 +1,41 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Health scores (0..1)
+    G_Health_Heating : REAL := 1.0;
+    G_Health_Safety : REAL := 1.0;
+    G_Health_IO : REAL := 1.0;
+
+    // Error counters
+    G_Error_Count_Heating : UDINT := 0;
+    G_Error_Count_Safety : UDINT := 0;
+    G_Error_Count_IO : UDINT := 0;
+
+    // Last error timestamps
+    G_Last_Error_Time_Heating : UDINT := 0;
+    G_Last_Error_Time_Safety : UDINT := 0;
+    G_Last_Error_Time_IO : UDINT := 0;
+
+    // Timing
+    G_Last_Update_Time : UDINT := 0;
+
+    // Cycle / watchdog statistics (interval between diagnostics executions)
+    G_Cycle_Expected_MS : UDINT := 250;
+    G_Cycle_Warning_MS : UDINT := 375;
+    G_Cycle_Critical_MS : UDINT := 500;
+    G_Cycle_Last_MS : UDINT := 0;
+    G_Cycle_Max_MS : UDINT := 0;
+    G_Cycle_Min_MS : UDINT := 0;
+    G_Cycle_Avg_MS : REAL := 0.0;
+    G_Cycle_Sample_Count : UDINT := 0;
+    G_Cycle_Overrun_Count : UDINT := 0;
+    G_Cycle_Critical_Count : UDINT := 0;
+    G_Cycle_Last_Overrun_MS : UDINT := 0;
+    G_Cycle_Last_Overrun_Time_MS : UDINT := 0;
+    G_Cycle_Overrun_Active : BOOL := FALSE;
+    G_Cycle_Critical_Active : BOOL := FALSE;
+
+    // States
+    G_Heating_State : INT := 0; // 0=OK,1=DEGRADED,2=CRITICAL
+    G_Safety_State : INT := 0;
+    G_IO_State : INT := 0;
+END_VAR

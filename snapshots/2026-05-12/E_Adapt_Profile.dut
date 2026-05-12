@@ -1,0 +1,8 @@
+{attribute 'strict'}
+TYPE E_Adapt_Profile :
+(
+    ADAPT_PROFILE_STABLE := 0,
+    ADAPT_PROFILE_BALANCED := 1,
+    ADAPT_PROFILE_AGGRESSIVE := 2
+) USINT;
+END_TYPE

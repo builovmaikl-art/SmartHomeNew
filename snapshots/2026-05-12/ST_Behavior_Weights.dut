@@ -1,0 +1,9 @@
+TYPE ST_Behavior_Weights :
+STRUCT
+    W_Comfort : REAL;
+    W_Night : REAL;
+    W_Preheat : REAL;
+    W_VentBoost : REAL;
+    W_AccessSecure : REAL;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Rule_Action :
+STRUCT
+    Active : BOOL;
+    Triggered : BOOL;
+    Action_Type : E_Rule_Action_Type;
+    Target_ID : BYTE;
+    Value : REAL;
+END_STRUCT
+END_TYPE

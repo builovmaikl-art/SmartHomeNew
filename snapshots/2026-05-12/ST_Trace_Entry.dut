@@ -1,0 +1,11 @@
+TYPE ST_Trace_Entry :
+STRUCT
+    Timestamp_MS : UDINT;
+    Layer : E_Trace_Layer;
+    Source : E_Trace_Source;
+    Reason_Code : E_System_Reason_Code;
+    Value_Bool : BOOL;
+    Value_Real : REAL;
+    Text : STRING(120);
+END_STRUCT
+END_TYPE
