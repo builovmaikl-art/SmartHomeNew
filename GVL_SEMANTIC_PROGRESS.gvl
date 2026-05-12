@@ -1,0 +1,37 @@
+VAR_GLOBAL
+    // ======================================================
+    // SEMANTIC PROGRESS CONTINUITY STATE
+    // ======================================================
+    // Isolated semantic execution continuity foundation.
+    // Visibility/publication continuity only.
+    // Does not invalidate runtime barrier,
+    // PLC fencing, immutable snapshots or IO authority.
+    // ======================================================
+
+    Semantic_Progress_Epoch : ULINT := 0;
+    Semantic_Continuity_Epoch : ULINT := 0;
+
+    Semantic_Forward_Progress_Valid : BOOL := FALSE;
+    Semantic_Execution_Continuity_OK : BOOL := FALSE;
+
+    Semantic_Execution_Counter : ULINT := 0;
+    Semantic_Last_Execution_Counter : ULINT := 0;
+
+    Semantic_Progress_Last_Update_MS : UDINT := 0;
+    Semantic_Progress_Timeout_MS : UDINT := 10000;
+
+    Semantic_Stagnation_Detected : BOOL := FALSE;
+    Semantic_Replay_Suspected : BOOL := FALSE;
+    Semantic_Livelock_Suspected : BOOL := FALSE;
+    Semantic_Deadlock_Suspected : BOOL := FALSE;
+
+    Semantic_Progress_Lease_Active : BOOL := FALSE;
+    Semantic_Progress_Lease_Expired : BOOL := FALSE;
+
+    Semantic_Progress_Quarantine_Active : BOOL := FALSE;
+
+    Semantic_Last_Error_Code : UDINT := 0;
+    Semantic_Last_Error_Text : STRING(160) := '';
+
+    Semantic_Invalidation_Count : UDINT := 0;
+END_VAR
