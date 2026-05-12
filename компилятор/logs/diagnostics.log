@@ -174,7 +174,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 23:47 .github
 -rw-r--r--  1 runner runner   1390 May 12 23:47 GVL_BEHAVIOR_ADAPT.gvl
 -rw-r--r--  1 runner runner   1856 May 12 23:47 GVL_COMMAND.gvl
 -rw-r--r--  1 runner runner   1483 May 12 23:47 GVL_COMMAND_POLICY_CONFIG.gvl
--rw-r--r--  1 runner runner   1140 May 12 23:47 GVL_COMMAND_SHADOW.gvl
+-rw-r--r--  1 runner runner   1522 May 12 23:47 GVL_COMMAND_SHADOW.gvl
 -rw-r--r--  1 runner runner   1420 May 12 23:47 GVL_COMMAND_VERIFY.gvl
 -rw-r--r--  1 runner runner   8006 May 12 23:47 GVL_CONFIG.gvl
 -rw-r--r--  1 runner runner    357 May 12 23:47 GVL_CONFIG_BACKUP.gvl
