@@ -217,73 +217,82 @@ HIGH
 
 ## Startup/init safety clamp can be overwritten by arbitration
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-019
+
+## Config validation is diagnostic-visible but not runtime-authoritative
+
 ## Суть
 
-`PRG_System_Init`
-при ошибке конфигурации напрямую выставляет:
+`PRG_Config_Validation`
+корректно выставляет:
 
 ```text
-GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
+GVL_CONFIG_VALIDATION.G_Config_Valid
+GVL_CONFIG_VALIDATION.G_Config_Critical_Error
 ```
 
-Но в `MAIN` после `PRG_System_Init` позже вызывается:
+Но:
 
 ```text
-PRG_Command_Arbitration();
-```
-
-`PRG_Command_Arbitration`:
-
-```text
-- сбрасывает локальный command buffer;
-- не учитывает init/config fault как отдельный authority source;
-- в конце полностью перезаписывает GVL_COMMAND_SHADOW.
+critical config validation state
+не используется
+как hard runtime barrier.
 ```
 
 ---
 
 ## Проблема
 
-Startup config safety clamp:
+Проверка показала:
 
 ```text
-может быть снят
-в том же PLC cycle
-самим arbitration layer.
+G_Config_Critical_Error
+почти нигде
+не участвует в:
+- command arbitration;
+- domain execution;
+- IO finalization;
+- startup suppression.
 ```
 
-То есть invalid config может сначала выставить:
+То есть:
 
 ```text
-heating/boiler block
-```
-
-но command arbitration позже:
-
-```text
-не обязан сохранить этот block.
+config validation
+может обнаружить critical error,
+но runtime pipeline
+всё равно продолжит execution.
 ```
 
 ---
 
 ## Что показала проверка
 
-Это уже не просто architectural smell.
+Это уже:
+
+```text
+не просто diagnostics smell.
+```
 
 Найден:
 
 ```text
-реальный runtime defect.
+runtime-authority gap.
 ```
 
-Проверено:
+Validation layer:
 
 ```text
-- PRG_System_Init действительно пишет в GVL_COMMAND_SHADOW;
-- MAIN вызывает PRG_Command_Arbitration после init/config этапа;
-- PRG_Command_Arbitration полностью перезаписывает shadow commands;
-- config/init fault не включён в arbitration priority model.
+сообщает об ошибке,
+но не гарантирует durable runtime block.
 ```
 
 ---
@@ -291,33 +300,37 @@ heating/boiler block
 ## Возможные последствия
 
 ```text
-- invalid config не удержит heating block;
-- boiler stop может быть снят позже в том же cycle;
-- startup safety clamp выглядит активным, но не является durable;
-- диагностика config fault расходится с фактическим command shadow;
-- небезопасный startup behavior при ошибке конфигурации.
+- runtime execution при invalid config;
+- partially validated startup;
+- inconsistent startup safety behavior;
+- diagnostics/runtime divergence;
+- unsafe subsystem activation.
 ```
 
 ---
 
 ## Действие
 
-Нужно исправлять архитектурно:
+Нужно formalize:
 
 ```text
-не писать startup safety clamp напрямую в GVL_COMMAND_SHADOW
-или
-добавить init/config fault как explicit high-priority source
-в PRG_Command_Arbitration.
+config validation authority model.
 ```
 
 Предпочтительное направление:
 
 ```text
-PRG_System_Init / PRG_Config_Validation
-→ публикуют config/init fault intent
-→ PRG_Command_Arbitration удерживает block/boiler stop
-   как priority выше user/automation/domain commands.
+critical config validation
+→ explicit startup/runtime inhibit source
+→ integrated into arbitration/safety pipeline.
+```
+
+Также желательно ввести:
+
+```text
+- startup validation barrier;
+- validated-runtime state;
+- config-safe execution contract.
 ```
 
 ---
