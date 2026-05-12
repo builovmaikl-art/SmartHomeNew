@@ -45,6 +45,7 @@
 ✔ Startup transient stabilization audit
 ✔ Runtime degradation / fault containment audit
 ✔ Diagnostics / observability audit
+✔ Runtime ownership / authority audit
 ```
 
 ---
@@ -281,75 +282,92 @@ HIGH
 
 ## Absence of authoritative diagnostics truth model
 
-## Суть
-
-В системе фактически отсутствует:
+Severity:
 
 ```text
-unified diagnostics truth model.
+HIGH
+```
+
+---
+
+# RISK-024
+
+## Absence of explicit runtime authority ownership graph
+
+## Суть
+
+Runtime authority model:
+
+```text
+частично implicit и distributed.
 ```
 
 Проверка показала:
 
 ```text
-- unified Health_OK model не найден;
-- centralized Diagnostics_OK authority отсутствует;
-- global health truth source отсутствует;
-- subsystem diagnostics fragmented.
+- множество coordinator/manager blocks;
+- shadow-state layers;
+- replicated runtime semantics;
+- distributed state managers;
+- overlapping orchestration responsibilities.
+```
+
+Особенно:
+
+```text
+- FB_State_Manager;
+- FB_State_Replication;
+- FB_System_Coordinator;
+- PRG_Command_Verifier;
+- PRG_Safety;
+- PRG_Command_Arbitration;
+- PRG_IO_Write.
 ```
 
 ---
 
 ## Проблема
 
-Diagnostics сейчас:
+Часть runtime authority:
 
 ```text
-distributed and semantically inconsistent.
+не закреплена
+за одним authoritative owner.
 ```
 
-Каждый subsystem:
+State/command semantics могут:
 
 ```text
-публикует
-своё понимание:
-- healthy;
-- degraded;
-- faulted;
-- unavailable.
+- shadow-replicate;
+- re-publish;
+- override;
+- reinterpret.
 ```
 
-Но:
-
-```text
-единая authoritative observability truth
-отсутствует.
-```
-
----
-
-## Почему это опасно
-
-Runtime может:
-
-```text
-быть degraded,
-но часть diagnostics
-останется healthy-looking.
-```
-
-И наоборот:
-
-```text
-fault publication
-может жить дольше
-реального runtime fault.
-```
+между разными orchestration layers.
 
 Возникает:
 
 ```text
-runtime/diagnostics semantic divergence.
+implicit distributed authority graph.
+```
+
+---
+
+## Что показала проверка
+
+Пока НЕ найдено:
+
+```text
+- catastrophic write storm;
+- direct recursive overwrite loop;
+- uncontrolled oscillation.
+```
+
+Но найдено:
+
+```text
+authority-boundary ambiguity.
 ```
 
 ---
@@ -357,12 +375,12 @@ runtime/diagnostics semantic divergence.
 ## Возможные последствия
 
 ```text
-- false healthy-state publication;
-- stale diagnostics visibility;
-- hidden runtime degradation;
-- inconsistent observability;
-- unreliable monitoring semantics;
-- difficult operational debugging.
+- hidden authority collisions;
+- non-authoritative overrides;
+- duplicated runtime truth;
+- difficult deterministic reasoning;
+- orchestration semantic drift;
+- latent multi-writer defects.
 ```
 
 ---
@@ -372,25 +390,26 @@ runtime/diagnostics semantic divergence.
 Нужно formalize:
 
 ```text
-authoritative diagnostics truth model.
+runtime authority ownership graph.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized runtime health authority;
-- authoritative degraded/fault semantics;
-- diagnostics lifecycle ownership;
-- observability publication contract;
-- stale-diagnostics invalidation semantics.
+- single authoritative owner per runtime domain;
+- explicit writer ownership;
+- runtime publication hierarchy;
+- authority-boundary contracts;
+- anti-multiwriter governance.
 ```
 
 Также желательно:
 
 ```text
-- unified health-state aggregation;
-- runtime-vs-diagnostics reconciliation;
-- explicit observability consistency rules.
+- shadow-state minimization;
+- authority audit tooling;
+- runtime ownership documentation;
+- explicit override precedence semantics.
 ```
 
 ---
