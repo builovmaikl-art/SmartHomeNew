@@ -36,6 +36,7 @@
 ✔ SAFE_STOP sequencing audit
 ✔ Freeze/recovery interaction audit
 ✔ Runtime publication/state consistency audit
+✔ Orchestration determinism audit
 ```
 
 ---
@@ -152,53 +153,61 @@ MEDIUM
 
 ## Runtime-state and published-state semantic coupling
 
+Severity:
+
+```text
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-014
+
+## Non-atomic cross-subsystem transition visibility
+
 ## Суть
 
-`GVL_STATE`
-используется одновременно как:
+System transitions:
 
 ```text
-- runtime state;
-- published/public state;
-- policy coordination state.
+не atomic
+относительно полного PLC cycle.
 ```
 
-Например:
+Subsystem может:
 
 ```text
-G_System_Mode
-изменяется:
-- PRG_Policy;
-- FB_System_Recovery;
-- FB_System_Health_Orchestrator.
+- изменить state;
+- следующий subsystem уже увидит новый state;
+- остальные subsystem ещё работают на старом контексте.
 ```
 
-Но отсутствует separation между:
+То есть:
 
 ```text
-runtime truth
-vs
-published/system-visible state.
+cycle-wide transition snapshot
+отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Subsystem могут:
+Во время transitions:
 
 ```text
-- читать transitional state;
-- реагировать на partially-updated state;
-- публиковать derived state обратно.
+- SAFE_STOP;
+- RECOVERY;
+- DEGRADED;
+- freeze escalation;
+- policy escalation.
 ```
 
-То есть:
+часть subsystem может:
 
 ```text
-runtime state
-и coordination/publication state
-semanticly coupled.
+работать
+на partially-transitioned state.
 ```
 
 ---
@@ -208,15 +217,15 @@ semanticly coupled.
 Пока НЕ найдено:
 
 ```text
-- catastrophic state corruption;
-- impossible mode;
-- direct publication loop.
+- catastrophic orchestration corruption;
+- impossible runtime state;
+- broken execution ordering.
 ```
 
 Но найдено:
 
 ```text
-publication/runtime semantic coupling.
+cross-cycle transition non-atomicity.
 ```
 
 ---
@@ -224,11 +233,11 @@ publication/runtime semantic coupling.
 ## Возможные последствия
 
 ```text
-- stale published state;
-- transitional-state reactions;
-- inconsistent subsystem coordination;
-- state/publication drift;
-- timing-dependent orchestration behavior.
+- partially-transitioned reactions;
+- subsystem coordination drift;
+- order-dependent behavior;
+- inconsistent same-cycle orchestration;
+- difficult deterministic debugging.
 ```
 
 ---
@@ -238,10 +247,10 @@ publication/runtime semantic coupling.
 В будущем желательно formalize:
 
 ```text
-- runtime truth ownership;
-- published-state lifecycle;
-- transition publication contract;
-- public-state synchronization semantics.
+- cycle-wide transition snapshots;
+- transition publication barrier;
+- atomic orchestration semantics;
+- subsystem visibility contract.
 ```
 
 ---
