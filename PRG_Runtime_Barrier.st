@@ -16,8 +16,8 @@ L_Error_Text := '';
 // ======================================================
 // Creates authoritative runtime publication semantics.
 // Rejects impossible runtime states before physical publication.
-// PLC fencing failures and monotonic-time failures invalidate
-// runtime publication authority.
+// Monotonic-time failures, PLC fencing failures and
+// recovery-governance failures invalidate runtime authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -110,6 +110,40 @@ IF L_Runtime_OK AND (GVL_PLC_FENCING.PLC_Fencing_Token = 0) THEN
 END_IF;
 
 // ------------------------------------------------------
+// Recovery governance validation.
+// ------------------------------------------------------
+
+IF L_Runtime_OK AND (NOT GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5100;
+    L_Error_Text := 'Recovery governance invalid';
+END_IF;
+
+IF L_Runtime_OK AND GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5101;
+    L_Error_Text := 'Recovery quarantine active';
+END_IF;
+
+IF L_Runtime_OK AND GVL_RECOVERY_GOVERNANCE.Recovery_Forced_Safe_Mode THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5102;
+    L_Error_Text := 'Recovery forced safe mode active';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5103;
+    L_Error_Text := 'Recovery cleanup not verified';
+END_IF;
+
+IF L_Runtime_OK AND GVL_RECOVERY_GOVERNANCE.Recovery_Semantic_Residue_Detected THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5104;
+    L_Error_Text := 'Recovery semantic residue detected';
+END_IF;
+
+// ------------------------------------------------------
 // Runtime sanity validation.
 // ------------------------------------------------------
 
@@ -159,7 +193,8 @@ GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid :=
     GVL_STATUS.G_Is_Active_PLC
     AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid
     AND GVL_PLC_FENCING.PLC_Ownership_Valid
-    AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid;
+    AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid
+    AND GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid;
 
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
