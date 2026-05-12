@@ -50,6 +50,7 @@
 ✔ Safety dominance / invariant enforcement audit
 ✔ Communication / transport resilience audit
 ✔ Transport reconnect / retry / recovery determinism audit
+✔ Transport backpressure / queue integrity audit
 ```
 
 ---
@@ -346,71 +347,83 @@ HIGH
 
 ## Absence of deterministic transport reconnect stabilization model
 
-## Суть
-
-В transport runtime отсутствует:
+Severity:
 
 ```text
-formal reconnect/recovery stabilization lifecycle.
+HIGH
+```
+
+---
+
+# RISK-029
+
+## Absence of deterministic transport queue/backpressure model
+
+## Суть
+
+Transport scheduler:
+
+```text
+не имеет formal queue/backpressure semantics.
 ```
 
 Проверка показала:
 
 ```text
-FB_Modbus_RTU_Driver:
-- использует L_Last_Success_MS;
-- выставляет Driver_Online по timeout window;
-- локально сбрасывает Busy/Exchange state;
-- но не имеет explicit reconnect phase/state machine.
+PRG_Modbus_Master:
+- сканирует Request[1..16];
+- берёт первый Enable;
+- держит один Active transaction;
+- retry выполняется inline;
+- fairness/priority model отсутствует.
 ```
 
 Также не найдено:
 
 ```text
-- reconnect stabilization window;
-- retry backoff model;
-- recovery cooldown semantics;
-- transport re-sync phase;
-- stale transport cleanup phase.
+- request queue lifecycle;
+- starvation prevention;
+- retry isolation;
+- transport saturation policy;
+- delayed-request invalidation;
+- backpressure semantics.
 ```
 
 ---
 
 ## Проблема
 
-После:
+При:
 
 ```text
-- timeout;
-- cable reconnect;
-- delayed RX;
-- temporary bus freeze;
-- serial recovery.
+- timeout storm;
+- slow slave;
+- reconnect oscillation;
+- repeated retries;
+- permanently enabled requests.
 ```
 
-transport runtime:
+scheduler:
 
 ```text
-может сразу вернуться
-в active exchange semantics
-без explicit stabilization phase.
+может:
+- starvation других requests;
+- endlessly retry same request;
+- накапливать delayed semantics;
+- создавать unfair transport behavior.
 ```
 
-Recovery сейчас:
+Особенно важно:
 
 ```text
-implicit and timing-dependent.
+retry встроен прямо в active transaction lifecycle.
 ```
 
-Нет formal guarantees:
+То есть:
 
 ```text
-что:
-- stale RX очищен;
-- previous exchange завершён;
-- retry storm не начнётся;
-- reconnect stabilized;
-- transport state synchronized.
+один unstable exchange
+может monopolize transport execution window.
 ```
 
 ---
@@ -418,12 +431,12 @@ implicit and timing-dependent.
 ## Возможные последствия
 
 ```text
-- reconnect oscillation;
-- retry storms;
-- unstable online/offline flapping;
-- stale transport recovery;
-- communication-induced runtime jitter;
-- nondeterministic reconnect behavior.
+- transport starvation;
+- retry amplification;
+- unfair request scheduling;
+- delayed command execution;
+- transport saturation instability;
+- communication jitter propagation.
 ```
 
 ---
@@ -433,26 +446,26 @@ implicit and timing-dependent.
 Нужно formalize:
 
 ```text
-deterministic transport reconnect lifecycle.
+deterministic transport scheduling/backpressure model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- reconnect stabilization phase;
-- retry backoff semantics;
-- transport cooldown window;
-- stale transport cleanup;
-- reconnect-safe exchange barrier.
+- explicit request queue lifecycle;
+- retry isolation semantics;
+- starvation prevention;
+- transport fairness policy;
+- saturation-aware scheduling.
 ```
 
 Также желательно:
 
 ```text
-- reconnect state machine;
-- deterministic transport recovery contract;
-- communication stabilization timers;
-- transport oscillation suppression.
+- queue aging/invalidation;
+- retry cooldown windows;
+- deterministic scheduler policy;
+- transport load governance.
 ```
 
 ---
