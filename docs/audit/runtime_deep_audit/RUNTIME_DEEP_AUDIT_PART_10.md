@@ -133,3 +133,134 @@ Need explicit tests for:
 - degraded overlap during output generation;
 - transient invalid output suppression.
 ```
+
+---
+
+# RISK-041
+
+## Diagnostics and HMI observe runtime corruption only after physical actuation
+
+Severity:
+
+```text
+CRITICAL
+```
+
+### Runtime mechanics
+
+Execution order in `MAIN`:
+
+```text
+PRG_IO_Write
+↓
+PRG_Command_Verifier
+↓
+PRG_System_Health
+↓
+PRG_System_Diagnostics
+↓
+PRG_System_BlackBox
+↓
+PRG_HMI_Dashboard
+```
+
+Diagnostics, health, blackbox and HMI layers execute only after:
+
+```text
+- domain execution;
+- physical IO publication;
+- runtime verifier execution.
+```
+
+---
+
+### Trigger conditions
+
+- same-cycle unsafe output;
+- reconnect mutation;
+- degraded overlap;
+- transient runtime corruption;
+- impossible-state entry.
+
+---
+
+### Failure chain
+
+```text
+runtime corruption occurs
+↓
+unsafe physical outputs already published
+↓
+diagnostics/health layers execute later
+↓
+HMI still temporarily shows healthy semantics
+↓
+operator observes outdated runtime truth
+```
+
+---
+
+### Consequences
+
+```text
+- HMI displays stale healthy-state;
+- diagnostics lag behind unsafe runtime;
+- blackbox/history records event too late;
+- operators observe semantically outdated truth;
+- transient catastrophic outputs not visible in time;
+- false-safe operator decisions.
+```
+
+---
+
+### Why this is critical
+
+System creates:
+
+```text
+false-safe observability window.
+```
+
+During this window:
+
+```text
+runtime is already unsafe,
+but observability layers
+still imply valid/safe behavior.
+```
+
+Especially dangerous together with:
+
+```text
+- RISK-040 verifier-after-IO execution;
+- RISK-037 scan-cycle visibility gaps;
+- RISK-039 impossible-state survivability;
+- reconnect/recovery transients;
+- delayed diagnostics publication.
+```
+
+---
+
+### Corrective directions
+
+```text
+- introduce pre-actuation safety observability barrier;
+- create authoritative runtime snapshot before IO publication;
+- separate safety-critical diagnostics from post-fact analytics;
+- publish emergency runtime state before physical IO commit;
+- add real-time unsafe-state signaling path.
+```
+
+---
+
+### Verification strategy
+
+Need explicit tests for:
+
+```text
+- same-cycle unsafe output visibility;
+- HMI stale-safe windows;
+- delayed diagnostics propagation;
+- transient catastrophic event capture;
+- unsafe runtime publication latency.
+```
