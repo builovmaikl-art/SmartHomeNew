@@ -35,6 +35,7 @@
 ✔ Recovery/watchdog timing
 ✔ SAFE_STOP sequencing audit
 ✔ Freeze/recovery interaction audit
+✔ Runtime publication/state consistency audit
 ```
 
 ---
@@ -139,52 +140,65 @@ MEDIUM-HIGH
 
 ## Freeze-protection and recovery semantic overlap
 
+Severity:
+
+```text
+MEDIUM
+```
+
+---
+
+# RISK-013
+
+## Runtime-state and published-state semantic coupling
+
 ## Суть
 
-Freeze protection semantics:
+`GVL_STATE`
+используется одновременно как:
 
 ```text
-не полностью изолированы
-как dedicated runtime mode.
+- runtime state;
+- published/public state;
+- policy coordination state.
 ```
 
-Freeze behavior влияет:
+Например:
 
 ```text
-- на IO masking;
-- на heating restart;
-- на manifold behavior;
-- на suppression exceptions.
+G_System_Mode
+изменяется:
+- PRG_Policy;
+- FB_System_Recovery;
+- FB_System_Health_Orchestrator.
 ```
 
-Но lifecycle freeze-state:
+Но отсутствует separation между:
 
 ```text
-не formalized
-как отдельный contract.
+runtime truth
+vs
+published/system-visible state.
 ```
 
 ---
 
 ## Проблема
 
-Freeze behavior:
+Subsystem могут:
 
 ```text
-переплетён
-с:
-- SAFE_STOP;
-- recovery;
-- suppression;
-- heating unblock.
+- читать transitional state;
+- реагировать на partially-updated state;
+- публиковать derived state обратно.
 ```
 
-Из-за этого:
+То есть:
 
 ```text
-restore sequencing
-может зависеть
-от freeze-state persistence.
+runtime state
+и coordination/publication state
+semanticly coupled.
 ```
 
 ---
@@ -194,15 +208,15 @@ restore sequencing
 Пока НЕ найдено:
 
 ```text
-- permanent freeze latch;
-- freeze deadlock;
-- unrecoverable heating stop.
+- catastrophic state corruption;
+- impossible mode;
+- direct publication loop.
 ```
 
 Но найдено:
 
 ```text
-freeze/recovery semantic overlap.
+publication/runtime semantic coupling.
 ```
 
 ---
@@ -210,11 +224,11 @@ freeze/recovery semantic overlap.
 ## Возможные последствия
 
 ```text
-- asymmetric restart behavior;
-- latent freeze override persistence;
-- partial heating restore;
-- timing-dependent manifold restart;
-- difficult freeze-state debugging.
+- stale published state;
+- transitional-state reactions;
+- inconsistent subsystem coordination;
+- state/publication drift;
+- timing-dependent orchestration behavior.
 ```
 
 ---
@@ -224,10 +238,10 @@ freeze/recovery semantic overlap.
 В будущем желательно formalize:
 
 ```text
-- freeze lifecycle ownership;
-- freeze-mode semantics;
-- freeze/recovery interaction contract;
-- freeze-state restore sequencing.
+- runtime truth ownership;
+- published-state lifecycle;
+- transition publication contract;
+- public-state synchronization semantics.
 ```
 
 ---
@@ -241,5 +255,5 @@ freeze/recovery semantic overlap.
 Severity:
 
 ```text
-MEDIUM
+MEDIUM-HIGH
 ```
