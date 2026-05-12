@@ -143,14 +143,10 @@ GVL_COMMAND_VERIFY.PreOutput_Last_Error_Text := L_Error_Text;
 
 IF L_Block_IO THEN
     GVL_COMMAND_VERIFY.PreOutput_Last_Error_Time_MS := L_Now_MS;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK := FALSE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_Error := TRUE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Code := L_Error_Code;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Text := L_Error_Text;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_MS := L_Now_MS;
 
     // IO_Write consumes PreOutput_Block_IO as the hard-stop gate.
     // Command shadow remains owned by PRG_Command_Arbitration.
+    // Runtime sanity diagnostics remain owned by PRG_Command_Verifier.
     IF NOT L_Prev_Block_IO THEN
         GVL_COMMAND_VERIFY.PreOutput_Block_Count := GVL_COMMAND_VERIFY.PreOutput_Block_Count + 1;
         fbLog(
