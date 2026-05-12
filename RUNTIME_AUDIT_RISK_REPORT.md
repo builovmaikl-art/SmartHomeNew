@@ -54,6 +54,7 @@
 ✔ Persistence corruption / state survivability audit
 ✔ Memory/state lifetime integrity audit
 ✔ Execution-phase coupling / cyclic dependency audit
+✔ Fail-safe fallback / degraded survivability audit
 ```
 
 ---
@@ -398,69 +399,88 @@ HIGH
 
 ## Absence of formal execution-phase dependency model
 
-## Суть
-
-В системе фактически отсутствует:
+Severity:
 
 ```text
-formal execution dependency graph.
+HIGH
 ```
 
-Проверка показала:
+---
+
+# RISK-033
+
+## Local fail-safe logic exists without system-wide fallback contract
+
+## Суть
+
+В системе присутствуют локальные fail-safe блоки:
 
 ```text
-- subsystem orchestration relies on shared globals;
-- execution phases implicit;
-- ordering semantics distributed;
-- cross-subsystem assumptions hidden;
-- dependency contracts отсутствуют.
+например FB_Heating_Safe_State.
+```
+
+Он действительно реализует:
+
+```text
+- freeze protection;
+- boiler shutdown;
+- backup circulation;
+- electric heater fallback;
+- IO failsafe behavior.
+```
+
+Но:
+
+```text
+это subsystem-local fallback logic,
+а не system-wide fail-safe contract.
 ```
 
 ---
 
 ## Проблема
 
-Runtime correctness сейчас:
+Не найдено:
 
 ```text
-частично зависит
-от текущего порядка MAIN execution.
+- global fallback ownership;
+- authoritative fallback coordinator;
+- fallback override protection;
+- degraded/failsafe synchronization contract;
+- system-wide safe-state confirmation.
 ```
 
-Subsystem могут:
+Из-за этого:
 
 ```text
-- читать state до stabilization;
-- предполагать execution другого layer;
-- зависеть от previous phase side-effects;
-- implicitly participate in semantic cycles.
-```
-
-Но:
-
-```text
-formal orchestration dependency model
-не найден.
+safe-state semantics
+могут быть:
+- локальными;
+- partially applied;
+- overridden downstream;
+- inconsistent между subsystem.
 ```
 
 ---
 
-## Особенно опасно
+## Почему это опасно
 
-В сочетании с:
+Subsystem может:
 
 ```text
-- shared mutable globals;
-- authority overlap;
-- snapshot absence;
-- startup transient windows;
-- degradation escalation.
+перейти в safe-state локально,
+но system-wide runtime
+останется semantically inconsistent.
 ```
 
-Возникает:
+Особенно опасно при:
 
 ```text
-hidden execution-order fragility.
+- degraded escalation;
+- IO finalization;
+- arbitration overrides;
+- partial subsystem failure;
+- transport instability.
 ```
 
 ---
@@ -468,12 +488,11 @@ hidden execution-order fragility.
 ## Возможные последствия
 
 ```text
-- reorder-sensitive behavior;
-- latent orchestration recursion;
-- hidden cyclic dependencies;
-- nondeterministic runtime semantics;
-- fragile refactoring behavior;
-- execution-phase coupling defects.
+- partial fail-safe;
+- fallback override downstream;
+- inconsistent degraded survival;
+- subsystem-local safe state without global guarantee;
+- difficult proof that system is actually safe.
 ```
 
 ---
@@ -483,26 +502,26 @@ hidden execution-order fragility.
 Нужно formalize:
 
 ```text
-execution-phase dependency model.
+system-wide fail-safe fallback contract.
 ```
 
 Предпочтительное направление:
 
 ```text
-- explicit orchestration phases;
-- dependency contracts;
-- execution-order governance;
-- phase visibility barriers;
-- orchestration dependency graph.
+- centralized fallback authority;
+- safe-state confirmation layer;
+- fallback override protection;
+- degraded-safe orchestration model;
+- global fail-safe synchronization semantics.
 ```
 
 Также желательно:
 
 ```text
-- phase-aware runtime validation;
-- cycle dependency detection;
-- orchestration topology documentation;
-- deterministic execution contracts.
+- fail-safe execution phases;
+- subsystem-safe capability matrix;
+- degraded survivability contracts;
+- deterministic safe-output guarantees.
 ```
 
 ---
