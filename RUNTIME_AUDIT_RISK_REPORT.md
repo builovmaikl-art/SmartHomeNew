@@ -56,6 +56,7 @@
 ✔ Execution-phase coupling / cyclic dependency audit
 ✔ Fail-safe fallback / degraded survivability audit
 ✔ Watchdog escalation / runaway-runtime containment audit
+✔ Resource exhaustion / long-run degradation accumulation audit
 ```
 
 ---
@@ -424,70 +425,67 @@ HIGH
 
 ## Absence of authoritative watchdog/escalation containment model
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-035
+
+## Absence of long-run degradation accumulation governance
+
 ## Суть
 
 В системе фактически отсутствует:
 
 ```text
-formal watchdog/escalation containment model.
+formal long-run degradation governance.
 ```
 
 Проверка показала:
 
 ```text
-- centralized watchdog authority не найден;
-- escalation state machine отсутствует;
-- irreversible degraded containment semantics отсутствуют;
-- runaway-runtime containment layer отсутствует;
-- final escalation barrier не найден.
+- accumulation lifecycle semantics не найдены;
+- degradation decay/recovery model отсутствует;
+- retry/fault aging governance отсутствует;
+- runtime saturation contracts отсутствуют;
+- long-uptime stabilization semantics не найдены.
 ```
 
 ---
 
 ## Проблема
 
-Diagnostics/degraded/runtime faults сейчас:
+Runtime:
 
 ```text
-в основном:
-- distributed;
-- local;
-- assumption-based.
+предполагается
+как semantically stable over time,
+но formal aging/stabilization model
+не найден.
 ```
-
-Но:
-
-```text
-нет authoritative escalation contract,
-который гарантирует:
-- containment;
-- irreversible safety lock;
-- deterministic shutdown path;
-- controlled recovery semantics.
-```
-
----
-
-## Почему это опасно
 
 При:
 
 ```text
-- runaway runtime behavior;
-- oscillating faults;
-- stuck orchestration;
-- persistent degraded loops;
-- unstable recovery cycles.
+- длительном uptime;
+- repeated retries;
+- intermittent faults;
+- reconnect oscillations;
+- recurring degraded transitions.
 ```
 
 system:
 
 ```text
 может:
-- endlessly oscillate;
-- semantically survive in invalid runtime;
-- partially recover indefinitely;
-- never reach authoritative safe containment.
+- накапливать latent degradation;
+- drift semantically;
+- progressively destabilize;
+- сохранять stale fault influence.
 ```
 
 ---
@@ -497,17 +495,17 @@ system:
 В сочетании с:
 
 ```text
-- missing invariant enforcement;
-- authority overlap;
-- fallback inconsistency;
+- missing lifecycle governance;
 - restart semantic drift;
-- transport instability.
+- transport instability;
+- sticky runtime state;
+- authority overlap.
 ```
 
 Возникает:
 
 ```text
-non-authoritative escalation survivability.
+uptime-dependent runtime behavior.
 ```
 
 ---
@@ -515,12 +513,12 @@ non-authoritative escalation survivability.
 ## Возможные последствия
 
 ```text
-- runaway degraded oscillation;
-- uncontrolled recovery loops;
-- irreversible invalid runtime survival;
-- nondeterministic emergency behavior;
-- partial shutdown survivability;
-- difficult fault containment debugging.
+- uptime-dependent instability;
+- progressive runtime degradation;
+- stale fault accumulation;
+- retry/fault amplification over time;
+- nondeterministic long-run behavior;
+- aging-related runtime drift.
 ```
 
 ---
@@ -530,26 +528,26 @@ non-authoritative escalation survivability.
 Нужно formalize:
 
 ```text
-authoritative watchdog/escalation containment model.
+long-run degradation governance model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized watchdog authority;
-- escalation state machine;
-- irreversible containment barrier;
-- deterministic shutdown semantics;
-- runaway-runtime containment layer.
+- degradation decay semantics;
+- retry/fault aging governance;
+- runtime stabilization contracts;
+- saturation recovery logic;
+- long-uptime survivability validation.
 ```
 
 Также желательно:
 
 ```text
-- escalation recovery contracts;
-- degraded-lock governance;
-- emergency runtime phases;
-- watchdog escalation topology.
+- runtime aging metrics;
+- degradation cleanup epochs;
+- retry/fault decay timers;
+- uptime-aware stabilization diagnostics.
 ```
 
 ---
