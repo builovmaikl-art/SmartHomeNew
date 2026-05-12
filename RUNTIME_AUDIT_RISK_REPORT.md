@@ -55,6 +55,7 @@
 ✔ Memory/state lifetime integrity audit
 ✔ Execution-phase coupling / cyclic dependency audit
 ✔ Fail-safe fallback / degraded survivability audit
+✔ Watchdog escalation / runaway-runtime containment audit
 ```
 
 ---
@@ -411,76 +412,102 @@ HIGH
 
 ## Local fail-safe logic exists without system-wide fallback contract
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-034
+
+## Absence of authoritative watchdog/escalation containment model
+
 ## Суть
 
-В системе присутствуют локальные fail-safe блоки:
+В системе фактически отсутствует:
 
 ```text
-например FB_Heating_Safe_State.
+formal watchdog/escalation containment model.
 ```
 
-Он действительно реализует:
+Проверка показала:
 
 ```text
-- freeze protection;
-- boiler shutdown;
-- backup circulation;
-- electric heater fallback;
-- IO failsafe behavior.
-```
-
-Но:
-
-```text
-это subsystem-local fallback logic,
-а не system-wide fail-safe contract.
+- centralized watchdog authority не найден;
+- escalation state machine отсутствует;
+- irreversible degraded containment semantics отсутствуют;
+- runaway-runtime containment layer отсутствует;
+- final escalation barrier не найден.
 ```
 
 ---
 
 ## Проблема
 
-Не найдено:
+Diagnostics/degraded/runtime faults сейчас:
 
 ```text
-- global fallback ownership;
-- authoritative fallback coordinator;
-- fallback override protection;
-- degraded/failsafe synchronization contract;
-- system-wide safe-state confirmation.
+в основном:
+- distributed;
+- local;
+- assumption-based.
 ```
 
-Из-за этого:
+Но:
 
 ```text
-safe-state semantics
-могут быть:
-- локальными;
-- partially applied;
-- overridden downstream;
-- inconsistent между subsystem.
+нет authoritative escalation contract,
+который гарантирует:
+- containment;
+- irreversible safety lock;
+- deterministic shutdown path;
+- controlled recovery semantics.
 ```
 
 ---
 
 ## Почему это опасно
 
-Subsystem может:
+При:
 
 ```text
-перейти в safe-state локально,
-но system-wide runtime
-останется semantically inconsistent.
+- runaway runtime behavior;
+- oscillating faults;
+- stuck orchestration;
+- persistent degraded loops;
+- unstable recovery cycles.
 ```
 
-Особенно опасно при:
+system:
 
 ```text
-- degraded escalation;
-- IO finalization;
-- arbitration overrides;
-- partial subsystem failure;
+может:
+- endlessly oscillate;
+- semantically survive in invalid runtime;
+- partially recover indefinitely;
+- never reach authoritative safe containment.
+```
+
+---
+
+## Особенно опасно
+
+В сочетании с:
+
+```text
+- missing invariant enforcement;
+- authority overlap;
+- fallback inconsistency;
+- restart semantic drift;
 - transport instability.
+```
+
+Возникает:
+
+```text
+non-authoritative escalation survivability.
 ```
 
 ---
@@ -488,11 +515,12 @@ Subsystem может:
 ## Возможные последствия
 
 ```text
-- partial fail-safe;
-- fallback override downstream;
-- inconsistent degraded survival;
-- subsystem-local safe state without global guarantee;
-- difficult proof that system is actually safe.
+- runaway degraded oscillation;
+- uncontrolled recovery loops;
+- irreversible invalid runtime survival;
+- nondeterministic emergency behavior;
+- partial shutdown survivability;
+- difficult fault containment debugging.
 ```
 
 ---
@@ -502,26 +530,26 @@ Subsystem может:
 Нужно formalize:
 
 ```text
-system-wide fail-safe fallback contract.
+authoritative watchdog/escalation containment model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized fallback authority;
-- safe-state confirmation layer;
-- fallback override protection;
-- degraded-safe orchestration model;
-- global fail-safe synchronization semantics.
+- centralized watchdog authority;
+- escalation state machine;
+- irreversible containment barrier;
+- deterministic shutdown semantics;
+- runaway-runtime containment layer.
 ```
 
 Также желательно:
 
 ```text
-- fail-safe execution phases;
-- subsystem-safe capability matrix;
-- degraded survivability contracts;
-- deterministic safe-output guarantees.
+- escalation recovery contracts;
+- degraded-lock governance;
+- emergency runtime phases;
+- watchdog escalation topology.
 ```
 
 ---
