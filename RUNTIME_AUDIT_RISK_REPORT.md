@@ -38,6 +38,7 @@
 ✔ Runtime publication/state consistency audit
 ✔ Orchestration determinism audit
 ✔ Command/arbitration/finalization timing audit
+✔ Cross-subsystem dependency audit
 ```
 
 ---
@@ -178,55 +179,73 @@ MEDIUM-HIGH
 
 ## Command-validity and execution-validity divergence
 
+Severity:
+
+```text
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-016
+
+## Implicit semantic dependency hub around G_System_Mode
+
 ## Суть
 
-Command arbitration:
+`G_System_Mode`
+стал:
 
 ```text
-отделён
-от final execution suppression.
+implicit semantic dependency hub.
 ```
 
-Subsystem может:
+От него зависят:
 
 ```text
-- опубликовать command intent;
-- arbitration подтвердит command;
-- downstream subsystem увидит command;
-- final IO suppression позже его отменит.
+- Policy;
+- Recovery;
+- Health orchestrator;
+- Heating policy;
+- Ventilation;
+- Security;
+- Scenario rules;
+- diagnostics/history layers.
 ```
 
-То есть:
+Но каждый subsystem:
 
 ```text
-command visibility
-не эквивалентна
-command executability.
+интерпретирует mode
+по-своему.
 ```
 
 ---
 
 ## Проблема
 
-Subsystem может считать:
+`G_System_Mode`
+используется одновременно как:
 
 ```text
-command уже valid/active.
+- governance signal;
+- coordination signal;
+- suppression hint;
+- runtime semantic context.
 ```
 
-Хотя:
+То есть:
 
 ```text
-- safety;
-- recovery;
-- freeze;
-- IO suppression
+system mode
+стал hidden semantic bus.
 ```
 
-позже:
+Subsystem начинают:
 
 ```text
-заблокируют execution.
+неявно зависеть
+от semantics друг друга.
 ```
 
 ---
@@ -236,15 +255,15 @@ command уже valid/active.
 Пока НЕ найдено:
 
 ```text
-- unsafe execution bypass;
-- hidden direct actuation;
-- arbitration corruption.
+- direct recursive runtime loop;
+- catastrophic mode oscillation;
+- impossible mode graph.
 ```
 
 Но найдено:
 
 ```text
-late-stage execution invalidation.
+semantic dependency centralization.
 ```
 
 ---
@@ -252,24 +271,35 @@ late-stage execution invalidation.
 ## Возможные последствия
 
 ```text
-- stale active-command assumptions;
-- inconsistent subsystem coordination;
-- false-positive runtime intent visibility;
-- preemption asymmetry;
-- difficult execution-state debugging.
+- hidden subsystem coupling;
+- mode interpretation drift;
+- governance recursion;
+- difficult subsystem isolation;
+- emergent orchestration behavior;
+- unintended cross-subsystem reactions.
 ```
 
 ---
 
-## Рекомендуемое направление
+## Действие
 
-В будущем желательно formalize:
+Запланировать future decomposition:
 
 ```text
-- execution-validity lifecycle;
-- command executability contract;
-- arbitration/finalization synchronization;
-- final execution publication semantics.
+G_System_Mode
+→ split into:
+- runtime mode;
+- safety mode;
+- coordination mode;
+- publication mode.
+```
+
+И formalize:
+
+```text
+- mode ownership;
+- mode visibility contract;
+- subsystem interpretation semantics.
 ```
 
 ---
@@ -283,5 +313,5 @@ late-stage execution invalidation.
 Severity:
 
 ```text
-MEDIUM-HIGH
+HIGH
 ```
