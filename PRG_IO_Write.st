@@ -17,7 +17,7 @@ VAR
 END_VAR
 
 L_PreOutput_Block_IO := GVL_COMMAND_VERIFY.PreOutput_Block_IO;
-L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay OR (NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid) OR GVL_OUTPUT_EPOCH.Output_Lease_Expired;
+L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 L_Snapshot_Block := (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid) OR GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
 L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO OR L_Output_Freshness_Block OR L_Snapshot_Block;
 L_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_COMMAND_SHADOW.G_Boiler_Stop;
