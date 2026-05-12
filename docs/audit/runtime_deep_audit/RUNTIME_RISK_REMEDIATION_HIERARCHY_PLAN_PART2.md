@@ -144,6 +144,24 @@ Runtime_Barrier потребляет transport state, но не наоборот
 
 ---
 
+### Distributed snapshot downstream publication feedback removal
+
+Исправлено:
+
+```text
+PRG_Distributed_Snapshot_Governor больше не использует GVL_OUTPUT_EPOCH.Output_Publication_Epoch
+как local distributed snapshot publication baseline
+```
+
+Текущее правило:
+
+```text
+Distributed snapshot baseline берётся из upstream runtime snapshot publication epoch
+а не из downstream output publication state
+```
+
+---
+
 ### Distributed commit downstream publication feedback removal
 
 Исправлено:
@@ -178,6 +196,23 @@ GVL_OBSERVABILITY_AUTHORITY остаётся downstream visibility-only layer
 
 ---
 
+### Observability distributed commit coverage convergence
+
+Исправлено:
+
+```text
+PRG_Observability_Governor теперь reset/publish для distributed commit visibility fields
+```
+
+Текущее правило:
+
+```text
+GVL_OBSERVABILITY_AUTHORITY distributed commit fields являются visibility-only projections
+и не участвуют в authority / quarantine governance
+```
+
+---
+
 ### Command verifier diagnostics localization
 
 Исправлено:
@@ -190,6 +225,23 @@ PRG_Command_Verifier больше не публикует runtime diagnostics в
 
 ```text
 post-IO verifier diagnostics owned by GVL_COMMAND_VERIFY.Runtime_*
+```
+
+---
+
+### Config/runtime diagnostics residual cleanup
+
+Исправлено после live-consumer sweep:
+
+```text
+GVL_CONFIG_VALIDATION.G_Runtime_* fields removed from live declaration
+```
+
+Текущее правило:
+
+```text
+GVL_CONFIG_VALIDATION contains config validation state only
+runtime verifier diagnostics live in GVL_COMMAND_VERIFY.Runtime_*
 ```
 
 ---
@@ -245,6 +297,8 @@ GVL_PLC_FENCING
 GVL_RUNTIME_SNAPSHOT
 GVL_OUTPUT_EPOCH
 GVL_COMMAND_VERIFY
+GVL_CONFIG_VALIDATION
+GVL_OBSERVABILITY_AUTHORITY
 ```
 
 Текущий статус:
@@ -266,7 +320,7 @@ search index может отставать от main,
 
 ## 0.4 Active validation items
 
-Остаются активными:
+Остаётся активным:
 
 ```text
 Peer_Fencing_Conflict equality semantics
@@ -292,7 +346,7 @@ VALIDATION_REQUIRED
 
 ---
 
-Остаётся активным:
+Resolved after checkpoint:
 
 ```text
 GVL_CONFIG_VALIDATION.G_Runtime_* residual fields
@@ -303,19 +357,14 @@ GVL_CONFIG_VALIDATION.G_Runtime_* residual fields
 ```text
 live authority consumers removed
 live Command_Verifier writes removed
-но fields still exist in GVL declaration
+live consumer sweep passed
+fields removed from GVL declaration
 ```
 
 Текущий статус:
 
 ```text
-RESIDUAL_CLEANUP_CANDIDATE_AFTER_LIVE_CONSUMER_SWEEP
-```
-
-Запрещено:
-
-```text
-удалять поля из GVL_CONFIG_VALIDATION до отдельного live-code consumer sweep
+RESOLVED_AFTER_LIVE_CONSUMER_SWEEP
 ```
 
 ---
@@ -350,11 +399,37 @@ writer ownership и compile/reference convergence,
 Следующий порядок:
 
 ```text
-1. live consumer sweep for residual fields
-2. distributed fencing token contract validation
-3. compile/reference convergence check
-4. bounded residual cleanup
-5. only then docs/snapshots consistency cleanup
+1. distributed fencing token contract validation
+2. compile/reference convergence check
+3. bounded residual cleanup only after evidence
+4. only then docs/snapshots consistency cleanup
+```
+
+---
+
+## 0.7 Latest convergence delta
+
+После checkpoint выполнено:
+
+```text
+GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep
+PRG_Distributed_Snapshot_Governor baseline moved from Output_Publication_Epoch to Snapshot_Publication_Epoch
+PRG_Observability_Governor now covers distributed commit visibility fields
+known removed-field sweep returned clean
+```
+
+Текущее состояние:
+
+```text
+distributed snapshot/commit no longer consume downstream output publication epoch
+observability remains downstream visibility-only
+compile/reference convergence for known removed fields is currently clean
+```
+
+Остаётся главным validation item:
+
+```text
+Peer_Fencing_Conflict equality semantics requires token issuance contract evidence
 ```
 
 ---
@@ -492,6 +567,8 @@ GVL_PLC_FENCING
 GVL_RUNTIME_SNAPSHOT
 GVL_OUTPUT_EPOCH
 GVL_COMMAND_VERIFY
+GVL_CONFIG_VALIDATION
+GVL_OBSERVABILITY_AUTHORITY
 ```
 
 на текущем проходе не имеют подтверждённых live duplicate writers.
@@ -731,6 +808,7 @@ PARTIALLY_VALIDATED_AFTER_CHECKPOINT
 ```text
 Runtime_Barrier no longer consumes observability authority/quarantine residues.
 PRG_Observability_Governor no longer writes stale Authority_Snapshot_Valid.
+Distributed commit visibility fields are now covered by PRG_Observability_Governor.
 ```
 
 ---
@@ -823,6 +901,7 @@ VALIDATION_REQUIRED_AFTER_CHECKPOINT
 ```text
 Peer_Fencing_Conflict currently triggers on equal peer/local fencing token.
 Do not change this without explicit token issuance contract evidence.
+Distributed snapshot/commit baselines no longer consume downstream output publication epoch.
 ```
 
 ---
@@ -860,7 +939,7 @@ C-RISK-004
 ### Статус
 
 ```text
-IN_PROGRESS_AFTER_CHECKPOINT
+CURRENTLY_CLEAN_AFTER_CHECKPOINT_SWEEP
 ```
 
 ### Checkpoint note
@@ -868,7 +947,8 @@ IN_PROGRESS_AFTER_CHECKPOINT
 ```text
 Output_Invalidation_Count live write removed.
 Authority_Snapshot_Valid live write removed.
-GVL_CONFIG_VALIDATION.G_Runtime_* still declared and now requires live consumer sweep before deletion.
+GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep.
+Known removed-field sweep returned clean after latest convergence pass.
 ```
 
 ---
@@ -1048,11 +1128,11 @@ adding new governance layers
 expanding observability authority
 ```
 
-После checkpoint текущий immediate priority:
+После latest convergence delta текущий immediate priority:
 
 ```text
-1. live consumer sweep for GVL_CONFIG_VALIDATION.G_Runtime_*
-2. distributed fencing token contract validation
-3. compile/reference convergence check
+1. distributed fencing token contract validation
+2. broader hard-stop graph validation with direct fetch evidence
+3. ownership matrix/doc consistency update
 4. bounded residual cleanup only after evidence
 ```
