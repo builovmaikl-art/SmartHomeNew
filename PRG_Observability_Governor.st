@@ -146,7 +146,6 @@ END_IF;
 GVL_OBSERVABILITY_AUTHORITY.Observability_Epoch := GVL_OBSERVABILITY_AUTHORITY.Observability_Epoch + 1;
 GVL_OBSERVABILITY_AUTHORITY.Observability_Snapshot_Epoch := GVL_OBSERVABILITY_AUTHORITY.Observability_Snapshot_Epoch + 1;
 
-GVL_OBSERVABILITY_AUTHORITY.Authority_Snapshot_Valid := TRUE;
 GVL_OBSERVABILITY_AUTHORITY.Observability_Last_Publication_MS := L_Now_MS;
 
 GVL_OBSERVABILITY_AUTHORITY.Observability_Last_Error_Code := 0;
