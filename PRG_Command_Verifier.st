@@ -147,11 +147,6 @@ IF L_Runtime_Error THEN
     GVL_COMMAND_VERIFY.Runtime_Last_Error_Code := L_Runtime_Error_Code;
     GVL_COMMAND_VERIFY.Runtime_Last_Error_Text := L_Runtime_Error_Text;
     GVL_COMMAND_VERIFY.Runtime_Last_Error_Time_MS := L_Now_MS;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK := FALSE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_Error := TRUE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Code := L_Runtime_Error_Code;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Text := L_Runtime_Error_Text;
-    GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_MS := L_Now_MS;
 
     IF NOT L_Prev_Runtime_Error THEN
         GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count := GVL_COMMAND_VERIFY.Runtime_Sanity_Error_Count + 1;
@@ -164,8 +159,6 @@ IF L_Runtime_Error THEN
     END_IF;
 ELSE
     GVL_COMMAND_VERIFY.Runtime_Sanity_OK := TRUE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK := TRUE;
-    GVL_CONFIG_VALIDATION.G_Runtime_Sanity_Error := FALSE;
 END_IF;
 
 L_Prev_Runtime_Error := L_Runtime_Error;
