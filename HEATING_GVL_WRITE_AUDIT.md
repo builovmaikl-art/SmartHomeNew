@@ -4,15 +4,16 @@
 
 This document formalizes runtime write-boundary enforcement for the heating architecture.
 
-The goal is to prevent:
+Primary goals:
 
 ```text
-- duplicate writers;
-- hidden side-effect writers;
-- telemetry-to-control drift;
-- governance-to-control drift;
-- projection/control confusion;
-- accidental runtime authority bypass.
+- prevent duplicate writers;
+- prevent hidden side-effect writers;
+- prevent detached runtime authority;
+- prevent telemetry/control coupling;
+- prevent governance/control coupling;
+- preserve deterministic phase sequencing;
+- preserve explicit ownership boundaries.
 ```
 
 This document extends:
@@ -25,12 +26,12 @@ HEATING_RUNTIME_OWNERSHIP_MATRIX.md
 into:
 
 ```text
-practical runtime write enforcement.
+practical runtime write-boundary enforcement.
 ```
 
 ---
 
-# Core enforcement invariant
+# Core invariant
 
 The invariant that must never be violated:
 
@@ -43,81 +44,72 @@ Meaning:
 ```text
 runtime write authority
 must remain inside
-active runtime ownership chain.
+explicit active runtime ownership chain.
 ```
 
-A bounded top-level finalizer inside `FB_Heating_System_Manager` is acceptable.
-A detached writer outside the active chain is not acceptable.
+Detached writers are forbidden.
+
+---
+
+# Current canonical runtime architecture
+
+Verified orchestration:
+
+```text
+PRG_Heating
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Verified subsystem ownership:
+
+```text
+FB_Heating_System_Manager
+    → Safety_Gate
+    → Safe_State
+    → Circuit_Control
+    → Demand_Map
+    → Policy_Priority_Bridge
+    → Allocation_Filter
+    → Runtime_Observability
+    → Manifold_Control
+    → Boiler_Control
+```
 
 ---
 
 # Write-boundary model
 
-## Authoritative runtime chain
+## Runtime orchestrator layer
 
-Definition:
+Authoritative role:
 
 ```text
-single active runtime ownership chain
-allowed to mutate authoritative control state
+PRG_Heating
 ```
 
-Current active chain:
+Allowed responsibilities:
 
 ```text
-FB_Heating_System_Manager
-→ subsystem helpers
-→ System_Manager post-helper finalization where required
+- deterministic phase sequencing;
+- runtime context coordination;
+- bounded phase invocation ordering.
 ```
 
----
-
-## Observers
-
-Allowed:
+Forbidden responsibilities:
 
 ```text
-- read runtime state;
-- aggregate telemetry;
-- publish diagnostics;
-- project analytics;
-- validate sequencing.
-```
-
-Forbidden:
-
-```text
-- mutate runtime control state;
-- alter heating execution;
-- alter boiler ownership;
-- alter valve ownership;
-- alter safety authority.
+- detached actuation ownership;
+- hidden output mutation;
+- parallel runtime execution paths.
 ```
 
 ---
-
-## Governance scaffold
-
-Allowed:
-
-```text
-- validate contracts;
-- validate sequencing;
-- validate attachment policy;
-- validate integration consistency.
-```
-
-Forbidden:
-
-```text
-- runtime actuation;
-- control ownership;
-- hidden side-effect writes.
-```
-
----
-
-# Runtime authority write matrix
 
 ## Heating runtime execution state
 
@@ -130,11 +122,10 @@ FB_Heating_System_Manager
 Allowed writes:
 
 ```text
-- runtime sequencing state;
-- active heating execution state;
+- runtime execution state;
 - manifold execution coordination;
 - bounded runtime coordination;
-- post-manifold safety/test finalization.
+- heating realization state.
 ```
 
 Forbidden writers:
@@ -142,8 +133,8 @@ Forbidden writers:
 ```text
 - Runtime_* governance scaffold;
 - telemetry aggregators;
-- anomaly analyzers;
-- detached orchestration shells.
+- detached orchestration layers;
+- observer infrastructure.
 ```
 
 ---
@@ -159,17 +150,17 @@ FB_Heating_Circuit_Control
 Allowed writes:
 
 ```text
-- overheat shutdown state;
 - circuit enable state;
-- thermal protection valve state.
+- thermal protection state;
+- bounded thermal suppression.
 ```
 
 Forbidden writers:
 
 ```text
-- Runtime_* analytics;
-- telemetry-only layers;
-- governance scaffold.
+- Runtime_* observability scaffold;
+- detached diagnostics layers;
+- governance infrastructure.
 ```
 
 ---
@@ -186,9 +177,9 @@ FB_Heating_Safe_State
 Allowed writes:
 
 ```text
-- freeze-safe state;
-- freeze circulation requests;
-- emergency-safe heating state.
+- freeze-safe runtime state;
+- emergency-safe circulation state;
+- safety shutdown state.
 ```
 
 Forbidden writers:
@@ -196,7 +187,7 @@ Forbidden writers:
 ```text
 - Runtime_* scaffold;
 - telemetry-only layers;
-- detached override logic.
+- detached override semantics.
 ```
 
 ---
@@ -213,8 +204,8 @@ Allowed writes:
 
 ```text
 - manifold admission decisions;
-- bounded thermal allocation;
-- degraded manifold exclusion;
+- bounded allocation authorization;
+- degraded manifold filtering;
 - allocation enable decisions.
 ```
 
@@ -228,8 +219,8 @@ Forbidden writers:
 
 ```text
 - Runtime_* governance scaffold;
-- anomaly analytics;
-- detached allocation logic.
+- analytics-only infrastructure;
+- detached allocation layers.
 ```
 
 ---
@@ -245,18 +236,17 @@ FB_Heating_Policy_Priority_Bridge
 Allowed writes:
 
 ```text
-- effective priority values;
-- bounded priority buckets;
-- policy multipliers;
-- neutral priority fallback semantics.
+- effective runtime priority values;
+- bounded policy multipliers;
+- bounded priority reductions.
 ```
 
 Forbidden writers:
 
 ```text
 - Runtime_* analytics;
-- telemetry aggregators;
-- detached policy orchestrators.
+- detached policy orchestrators;
+- governance-only infrastructure.
 ```
 
 ---
@@ -274,38 +264,36 @@ Allowed writes:
 ```text
 - manifold valve realization;
 - manifold pump realization;
-- manifold runtime realization;
-- DHW manifold suppression;
-- freeze manifold minimum behavior.
+- DHW suppression realization;
+- freeze minimum realization.
 ```
 
-Finalizer:
+Allowed bounded finalization:
 
 ```text
-FB_Heating_System_Manager
+FB_Heating_Runtime_Service_Gating_Phase
 ```
 
-Allowed post-manifold finalization writes:
+Allowed finalization writes:
 
 ```text
-- low-pressure pump suppression;
-- confidence-fallback pump suppression;
-- valve-test selected valve/pump finalization.
+- out-of-service suppression;
+- freeze hardware suppression;
+- bounded runtime masking.
 ```
 
 Important:
 
 ```text
-This is an in-chain top-level finalization layer,
-not a detached second writer path.
+this is an explicit deterministic finalization phase,
+not a detached second runtime authority.
 ```
 
 Forbidden writers:
 
 ```text
 - Runtime_* governance scaffold;
-- telemetry-only layers;
-- analytics layers;
+- analytics-only layers;
 - detached override layers.
 ```
 
@@ -322,13 +310,13 @@ FB_Heating_Boiler_Control
 Allowed writes:
 
 ```text
-- boiler enable;
-- OpenTherm command state;
-- supply target execution;
+- boiler enable state;
+- OpenTherm command realization;
+- supply target realization;
 - thermal source coordination.
 ```
 
-Verified internal path:
+Verified bounded helper chain:
 
 ```text
 FB_Boiler_Cascade_Manager
@@ -338,22 +326,15 @@ FB_Boiler_Cascade_Manager
 Forbidden writers:
 
 ```text
-- Runtime_* scaffold;
-- governance-only layers;
-- detached override semantics.
+- Runtime_* governance scaffold;
+- detached override semantics;
+- telemetry-only infrastructure.
 ```
 
-Critical historical risk:
+Historical risk reference:
 
 ```text
 FB_Heating_Override_Layer
-```
-
-Important:
-
-```text
-override semantics must never reappear
-as detached write authority.
 ```
 
 ---
@@ -370,8 +351,8 @@ Allowed writes:
 
 ```text
 - telemetry publication;
-- runtime observability projection;
-- allocation observability state;
+- explainability projection;
+- allocation observability;
 - diagnostics publication.
 ```
 
@@ -386,49 +367,50 @@ Forbidden writes:
 
 ---
 
-## Governance state
+## Observer/governance state
 
-Allowed governance writers:
+Allowed observer/governance writers:
 
 ```text
-FB_Heating_Runtime_Orchestration_Shell
-FB_Heating_Runtime_Coordinator
-FB_Heating_Runtime_Integration_Bridge_Manager
-FB_Heating_Runtime_Contract_Validator
+FB_Heating_Runtime_Observer_Phase
+FB_Heating_Runtime_Observer
+FB_Heating_Runtime_Observer_Authorization
+FB_Heating_Runtime_Diagnostics_Phase
 ```
 
 Allowed writes:
 
 ```text
-- governance validation state;
-- sequencing validation state;
-- attachment policy state;
-- runtime consistency state.
+- observation publication;
+- sequencing validation;
+- diagnostics publication;
+- governance validation;
+- lifecycle telemetry.
 ```
 
 Forbidden writes:
 
 ```text
 - runtime outputs;
-- control actuation;
-- valve commands;
 - boiler commands;
-- safety commands.
+- manifold commands;
+- safety commands;
+- physical actuation.
 ```
 
-Mandatory governance locks:
+Mandatory governance rules:
 
 ```text
 Governance_Locked := TRUE
-Runtime_Attachment_Allowed := FALSE
 Observation-only semantics
+No detached runtime authority
 ```
 
 ---
 
 # Runtime_* family enforcement policy
 
-## Allowed Runtime_* write domains
+## Allowed Runtime_* domains
 
 ```text
 - observability;
@@ -441,7 +423,7 @@ Observation-only semantics
 
 ---
 
-## Forbidden Runtime_* write domains
+## Forbidden Runtime_* domains
 
 ```text
 - heating actuation;
@@ -454,74 +436,97 @@ Observation-only semantics
 
 ---
 
+# Explicit deterministic finalization layers
+
+Verified explicit finalization phases:
+
+```text
+FB_Heating_Runtime_Service_Gating_Phase
+FB_Heating_Runtime_State_Publication_Phase
+FB_Heating_Runtime_Output_Projection_Phase
+```
+
+Required invariant:
+
+```text
+finalization must remain explicit,
+bounded and phase-oriented.
+```
+
+Forbidden:
+
+```text
+hidden finalization layers
+or detached output suppression.
+```
+
+---
+
 # Forbidden write patterns
 
-The following write patterns are forbidden:
+Forbidden:
 
 ```text
 - telemetry-driven runtime actuation;
 - governance-driven control execution;
-- analytics-driven valve ownership;
-- hidden side-effect writers outside active runtime chain;
+- hidden side-effect writers;
 - detached override writers;
 - duplicate boiler writers;
-- duplicate manifold writers outside System_Manager/Manifold_Control chain.
+- duplicate manifold writers;
+- Runtime_* authority escalation;
+- hidden publication layers.
 ```
 
 ---
 
 # Verification workflow
 
-Before adding ANY new runtime writer:
+Before adding ANY runtime writer:
 
 ```text
 1. identify authoritative owner;
 2. verify no detached writer overlap;
 3. verify ownership matrix consistency;
-4. verify governance classification consistency;
+4. verify governance consistency;
 5. verify no Runtime_* authority drift;
-6. verify no second detached runtime authority path.
+6. verify deterministic phase consistency;
+7. verify evidence-level write paths.
 ```
 
 ---
 
-# Runtime audit status
+# Current runtime audit result
 
-Current audit result:
+Current verified result:
 
 ```text
-No verified Runtime_* hidden authority writers detected.
+- no detached Runtime_* authority detected;
+- deterministic phase sequencing established;
+- explicit finalization phases established;
+- helper authority escalation not detected;
+- write-boundary governance remains bounded.
 ```
 
-Current architecture state:
+Primary remaining risk:
 
 ```text
-runtime authority appears separated from
-observability/governance infrastructure.
-```
-
-Verified nuance:
-
-```text
-Manifold outputs have a layered in-chain writer model:
-Manifold_Control performs primary realization;
-System_Manager performs bounded final safety/test finalization.
+future architectural drift.
 ```
 
 ---
 
 # Strategic conclusion
 
-The heating repository now follows:
+The repository now follows:
 
 ```text
-single runtime ownership chain
+single deterministic runtime ownership chain
++
+explicit phase-oriented orchestration
 +
 bounded policy integration
 +
-primary helper execution
-+
-post-helper safety/test finalization
+explicit finalization phases
 +
 passive observability/governance infrastructure
 +
