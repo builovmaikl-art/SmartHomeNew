@@ -264,3 +264,142 @@ Need explicit tests for:
 - transient catastrophic event capture;
 - unsafe runtime publication latency.
 ```
+
+---
+
+# RISK-043
+
+## Recovery completion clears recovery flags but not systemic semantic residue
+
+Severity:
+
+```text
+HIGH
+```
+
+### Runtime mechanics
+
+`PRG_Safety_Recovery` resets only recovery-control flags during successful completion:
+
+```text
+G_Recovery_Phase := IDLE
+G_Recovery_Active := FALSE
+G_Recovery_Requested := FALSE
+G_Recovery_Manual_Confirm := FALSE
+```
+
+During `ABORTED` phase only:
+
+```text
+G_Recovery_Active := FALSE
+```
+
+is reset.
+
+No authoritative cleanup was found for:
+
+```text
+- degraded semantic residue;
+- runtime sanity error state;
+- stale subsystem authority;
+- transport recovery residue;
+- persistence/replay residue;
+- diagnostics stale-fault residue;
+- failed recovery context.
+```
+
+---
+
+### Trigger conditions
+
+- repeated degraded recovery;
+- reconnect instability;
+- failed recovery attempts;
+- stale persistence state;
+- partial subsystem convergence.
+
+---
+
+### Failure chain
+
+```text
+fault/degraded state occurs
+↓
+recovery phase completes
+↓
+local recovery flags reset
+↓
+runtime continues execution
+↓
+stale semantic residue may remain active elsewhere
+```
+
+---
+
+### Consequences
+
+```text
+- false-clean recovery;
+- latent degraded-state fossilization;
+- stale authority survival;
+- repeated recovery degradation;
+- uptime-dependent semantic corrosion.
+```
+
+---
+
+### Why this is dangerous
+
+System demonstrates:
+
+```text
+good escalation capability
+```
+
+but weak:
+
+```text
+semantic cleanup guarantees.
+```
+
+This creates:
+
+```text
+runtime semantic scar accumulation.
+```
+
+Especially dangerous together with:
+
+```text
+- RISK-042 false recovery convergence;
+- persistence replay semantics;
+- reconnect instability;
+- distributed degraded ownership;
+- missing invariant enforcement.
+```
+
+---
+
+### Corrective directions
+
+```text
+- introduce authoritative runtime cleanup epochs;
+- invalidate stale degraded semantics;
+- reset subsystem authority during recovery;
+- separate recovery completion from cleanup completion;
+- add semantic residue diagnostics.
+```
+
+---
+
+### Verification strategy
+
+Need explicit tests for:
+
+```text
+- repeated degraded recovery cycles;
+- reconnect/recovery accumulation;
+- stale authority persistence;
+- recovery after impossible-state;
+- long-uptime semantic drift.
+```
