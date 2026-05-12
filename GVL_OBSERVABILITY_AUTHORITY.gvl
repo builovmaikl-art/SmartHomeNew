@@ -1,0 +1,35 @@
+VAR_GLOBAL
+    // ======================================================
+    // OBSERVABILITY AUTHORITY STATE
+    // ======================================================
+    // Centralized authoritative observability governance.
+    // Prevents false-safe visibility windows.
+    // ======================================================
+
+    Observability_Epoch : ULINT := 0;
+    Observability_Snapshot_Epoch : ULINT := 0;
+
+    Authority_Snapshot_Valid : BOOL := FALSE;
+    Diagnostics_Synchronized : BOOL := FALSE;
+    Explainability_Synchronized : BOOL := FALSE;
+
+    Unsafe_State_Published : BOOL := FALSE;
+    Emergency_Visibility_Required : BOOL := FALSE;
+    PreActuation_Visibility_Ready : BOOL := FALSE;
+
+    Runtime_Failure_Visible : BOOL := FALSE;
+    Output_Decay_Visible : BOOL := FALSE;
+    Transport_Failure_Visible : BOOL := FALSE;
+    Recovery_Failure_Visible : BOOL := FALSE;
+    Fencing_Failure_Visible : BOOL := FALSE;
+    Monotonic_Failure_Visible : BOOL := FALSE;
+
+    Observability_Quarantine_Active : BOOL := FALSE;
+
+    Observability_Last_Publication_MS : UDINT := 0;
+
+    Observability_Last_Error_Code : UDINT := 0;
+    Observability_Last_Error_Text : STRING(160) := '';
+
+    Observability_Invalidation_Count : UDINT := 0;
+END_VAR
