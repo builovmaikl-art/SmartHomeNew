@@ -8,10 +8,4 @@ VAR_GLOBAL
     G_Config_Last_Error_Text : STRING(200) := '';
     G_Config_Last_Action_Text : STRING(200) := '';
     G_Config_Last_Update_MS : UDINT := 0;
-
-    G_Runtime_Sanity_OK : BOOL := TRUE;
-    G_Runtime_Sanity_Error : BOOL := FALSE;
-    G_Runtime_Last_Error_Text : STRING(200) := '';
-    G_Runtime_Last_Error_Code : UDINT := 0;
-    G_Runtime_Last_Error_MS : UDINT := 0;
 END_VAR
