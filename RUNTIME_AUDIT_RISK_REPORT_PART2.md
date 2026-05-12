@@ -61,70 +61,104 @@ HIGH
 
 ## Absence of formal PLC scan-cycle temporal visibility model
 
-## Суть
-
-В системе фактически отсутствует:
+Severity:
 
 ```text
-formal PLC scan-cycle temporal visibility model.
+HIGH
 ```
 
-Проверка показала:
+---
+
+# RISK-038
+
+## Post-arbitration transport update can affect same-cycle domain execution
+
+## Суть
+
+В `MAIN` фактический порядок execution pipeline такой:
 
 ```text
-- explicit scan-phase barriers не найдены;
-- runtime publication epochs отсутствуют;
-- intra-cycle visibility contracts отсутствуют;
-- output commit phase formalized не найден;
-- partial-cycle state exposure possible.
+1-6: init/config/safety/policy/command arbitration
+6.5: Modbus/OpenTherm transport update
+7: domain execution
+8: PRG_IO_Write
+9: verifier/diagnostics
+```
+
+Ключевая проблема:
+
+```text
+transport update происходит
+после command arbitration,
+но до domain execution.
+```
+
+---
+
+## Реальная compound-chain
+
+Возможна цепочка:
+
+```text
+PRG_Command_Arbitration
+уже принял command decision
+↓
+transport получает stale/delayed/reconnect response
+↓
+domain execution видит новое transport state
+↓
+domain output меняется
+↓
+PRG_IO_Write публикует physical outputs
+↓
+PRG_Command_Verifier срабатывает только после IO write
 ```
 
 ---
 
 ## Проблема
 
-Во время PLC scan-cycle:
+Command arbitration:
 
 ```text
-subsystem могут видеть
-runtime state
-в partially updated form.
+не видит transport update,
+который произойдёт позже
+в том же PLC cycle.
 ```
 
-Если:
+При этом domain execution:
 
 ```text
-- arbitration обновился;
-- safety ещё нет;
-- IO publish уже начался;
-- subsystem читает mid-cycle state.
+уже может увидеть transport state,
+обновлённый после arbitration.
 ```
 
-То:
+То есть возникает:
 
 ```text
-возможны transient semantic inconsistencies
-внутри одного PLC cycle.
+same-cycle arbitration/domain divergence.
 ```
 
 ---
 
-## Особенно опасно
+## Почему это опасно
 
-В сочетании с:
+Это не одиночный smell, а cross-risk amplification chain между:
 
 ```text
-- shared mutable globals;
-- snapshot absence;
-- execution-order dependency;
-- fallback overlap;
-- transport transient recovery.
+- RISK-015 command/execution validity divergence;
+- RISK-027 transport transaction matching gap;
+- RISK-037 scan-cycle temporal visibility gap;
+- transport reconnect/stale response risks;
+- verifier-after-IO ordering.
 ```
 
-Возникает:
+Transport response может:
 
 ```text
-single-cycle unsafe transient visibility risk.
+повлиять на domain output
+после arbitration,
+но до physical IO write.
 ```
 
 ---
@@ -132,12 +166,12 @@ single-cycle unsafe transient visibility risk.
 ## Возможные последствия
 
 ```text
-- transient unsafe outputs;
-- one-cycle arbitration inconsistency;
-- partial runtime publication;
-- scan-order-dependent behavior;
-- nondeterministic IO edge reactions;
-- ultra-hard-to-debug transient faults.
+- same-cycle arbitration/domain divergence;
+- stale transport response affecting domain output;
+- verifier too late to prevent physical write;
+- transport-induced output inconsistency;
+- compound interaction between transport, arbitration and IO finalization;
+- ultra-hard-to-debug one-cycle physical output anomaly.
 ```
 
 ---
@@ -147,26 +181,28 @@ single-cycle unsafe transient visibility risk.
 Нужно formalize:
 
 ```text
-PLC scan-cycle temporal visibility model.
+post-transport arbitration/validation barrier
+или
+transport update phase isolation.
 ```
 
 Предпочтительное направление:
 
 ```text
-- explicit scan phases;
-- runtime publication epochs;
-- output commit barrier;
-- intra-cycle visibility contracts;
-- deterministic output publication semantics.
+- transport updates produce staged state;
+- domain execution reads cycle-stable transport snapshot;
+- arbitration sees the same snapshot as domains;
+- verifier/pre-IO validation happens before PRG_IO_Write;
+- post-transport changes cannot affect same-cycle physical outputs without revalidation.
 ```
 
 Также желательно:
 
 ```text
-- snapshot-before-publish model;
-- cycle-stable runtime views;
-- phase-aware IO finalization;
-- transient visibility diagnostics.
+- transport/domain phase contract;
+- staged transport publication;
+- pre-IO command verifier barrier;
+- deterministic transport-to-domain propagation semantics.
 ```
 
 ---
