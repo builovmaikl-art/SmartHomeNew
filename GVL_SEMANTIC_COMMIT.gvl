@@ -45,6 +45,20 @@ VAR_GLOBAL
     Semantic_Commit_Stabilization_Window_MS : UDINT := 3000;
     Semantic_Commit_Last_Stable_MS : UDINT := 0;
 
+    // ======================================================
+    // PASSIVE SEMANTIC TELEMETRY FOUNDATION
+    // ======================================================
+
+    Semantic_Drift_Event_Count : ULINT := 0;
+    Semantic_Jitter_Event_Count : ULINT := 0;
+    Semantic_Replay_Storm_Event_Count : ULINT := 0;
+
+    Semantic_Last_Drift_MS : UDINT := 0;
+    Semantic_Last_Jitter_MS : UDINT := 0;
+    Semantic_Last_Replay_Storm_MS : UDINT := 0;
+
+    Semantic_Stabilization_Telemetry_Valid : BOOL := FALSE;
+
     Semantic_Commit_Lease_Active : BOOL := FALSE;
     Semantic_Commit_Lease_Expired : BOOL := FALSE;
     Semantic_Commit_Timeout_MS : UDINT := 5000;
