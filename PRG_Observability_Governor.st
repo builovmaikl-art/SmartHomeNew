@@ -16,6 +16,8 @@ L_Error_Text := '';
 // ======================================================
 // Governs authoritative observability semantics.
 // Prevents false-safe visibility windows.
+// Distributed reconciliation visibility is downstream-only
+// and does not feed back into runtime barrier or PLC fencing.
 // ======================================================
 
 GVL_OBSERVABILITY_AUTHORITY.Runtime_Failure_Visible := FALSE;
@@ -24,6 +26,15 @@ GVL_OBSERVABILITY_AUTHORITY.Transport_Failure_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Recovery_Failure_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Fencing_Failure_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Monotonic_Failure_Visible := FALSE;
+
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Failure_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Distributed_Quarantine_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Runtime_Stale_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Snapshot_Stale_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Boot_Mismatch_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Fencing_Conflict_Visible := FALSE;
+GVL_OBSERVABILITY_AUTHORITY.Peer_Semantic_Continuity_Lost_Visible := FALSE;
+
 GVL_OBSERVABILITY_AUTHORITY.Unsafe_State_Published := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := FALSE;
 
@@ -60,6 +71,44 @@ END_IF;
 // Monotonic visibility linkage.
 IF NOT GVL_TIME_MONOTONIC.Monotonic_Time_Valid THEN
     GVL_OBSERVABILITY_AUTHORITY.Monotonic_Failure_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+// ======================================================
+// DISTRIBUTED RECONCILIATION VISIBILITY
+// ======================================================
+// Downstream visibility only.
+// Does not invalidate runtime barrier or PLC fencing.
+// ======================================================
+
+IF NOT GVL_DISTRIBUTED_EPOCH.Distributed_Reconciliation_Valid THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Failure_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active THEN
+    GVL_OBSERVABILITY_AUTHORITY.Distributed_Quarantine_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Runtime_Stale THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Runtime_Stale_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Snapshot_Stale THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Snapshot_Stale_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Boot_Mismatch THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Boot_Mismatch_Visible := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Conflict THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Fencing_Conflict_Visible := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Semantic_Continuity_Lost THEN
+    GVL_OBSERVABILITY_AUTHORITY.Peer_Semantic_Continuity_Lost_Visible := TRUE;
     GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
 END_IF;
 
