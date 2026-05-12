@@ -1,0 +1,26 @@
+VAR_GLOBAL
+    // ======================================================
+    // AUTHORITATIVE RUNTIME EPOCH STATE
+    // ======================================================
+    // Single authoritative runtime publication layer.
+    // Used to stabilize scan-cycle visibility semantics.
+    // ======================================================
+
+    Runtime_Epoch : ULINT := 0;
+    Runtime_Snapshot_Valid : BOOL := FALSE;
+    Runtime_Snapshot_Published : BOOL := FALSE;
+    Runtime_Runtime_Barrier_OK : BOOL := TRUE;
+    Runtime_Impossible_State_Detected : BOOL := FALSE;
+
+    Runtime_Last_Validation_Time_MS : UDINT := 0;
+    Runtime_Last_Error_Code : UDINT := 0;
+    Runtime_Last_Error_Text : STRING(160) := '';
+
+    Runtime_Cycle_Start_MS : UDINT := 0;
+    Runtime_Cycle_End_MS : UDINT := 0;
+
+    Runtime_PLC_Authority_Valid : BOOL := FALSE;
+    Runtime_IO_Publication_Allowed : BOOL := FALSE;
+
+    Runtime_Barrier_Block_Count : UDINT := 0;
+END_VAR
