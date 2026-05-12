@@ -403,3 +403,144 @@ Need explicit tests for:
 - recovery after impossible-state;
 - long-uptime semantic drift.
 ```
+
+---
+
+# RISK-044
+
+## PLC arbitration lacks authoritative ownership epoch and fencing model
+
+Severity:
+
+```text
+CRITICAL
+```
+
+### Runtime mechanics
+
+`PRG_PLC_Arbitration` performs arbitration using:
+
+```text
+- heartbeat presence;
+- last_seen timeout;
+- PLC ID comparison.
+```
+
+Core logic:
+
+```text
+IF NOT Remote_Alive
+    → local becomes active
+ELSE
+    → lowest PLC ID wins
+```
+
+However no authoritative mechanism was found for:
+
+```text
+- ownership epochs;
+- fencing tokens;
+- stale-owner invalidation;
+- generation/version arbitration;
+- split-brain prevention.
+```
+
+---
+
+### Trigger conditions
+
+- reconnect after network partition;
+- delayed heartbeat recovery;
+- stale transport visibility;
+- partial PLC restart;
+- arbitration oscillation.
+
+---
+
+### Failure chain
+
+```text
+PLC-A active
+↓
+network partition/reconnect occurs
+↓
+PLC-B temporarily becomes active
+↓
+stale heartbeat/order recovers
+↓
+old authority semantically resurrects
+↓
+runtime ownership becomes ambiguous
+```
+
+---
+
+### Consequences
+
+```text
+- split-brain runtime authority;
+- stale controller resurrection;
+- dual ownership semantics;
+- arbitration oscillation;
+- conflicting physical outputs;
+- catastrophic multi-controller behavior.
+```
+
+---
+
+### Why this is critical
+
+Current arbitration assumes:
+
+```text
+heartbeat visibility
+≈ authoritative ownership truth.
+```
+
+But distributed runtime recovery requires:
+
+```text
+authoritative ownership invalidation semantics.
+```
+
+Without fencing/epochs:
+
+```text
+old authority may silently return.
+```
+
+Especially dangerous together with:
+
+```text
+- reconnect instability;
+- stale transport semantics;
+- degraded recovery overlap;
+- snapshot absence;
+- impossible-state survivability.
+```
+
+---
+
+### Corrective directions
+
+```text
+- introduce ownership epochs;
+- implement fencing tokens;
+- invalidate stale authorities after failover;
+- add split-brain detection barrier;
+- separate liveness from ownership validity.
+```
+
+---
+
+### Verification strategy
+
+Need explicit tests for:
+
+```text
+- network partition recovery;
+- delayed heartbeat replay;
+- stale ownership resurrection;
+- dual-controller arbitration;
+- reconnect oscillation scenarios.
+```
