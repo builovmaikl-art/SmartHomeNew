@@ -6,6 +6,7 @@ VAR
     fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
     fbObserverPhase : FB_Heating_Runtime_Observer_Phase;
     fbServiceGatingPhase : FB_Heating_Runtime_Service_Gating_Phase;
+    fbStatePublicationPhase : FB_Heating_Runtime_State_Publication_Phase;
 
     L_Runtime_Context : ST_Heating_Runtime_Context;
 
@@ -168,30 +169,25 @@ L_Runtime_Context.Safety_Isolation_Valid := fbServiceGatingPhase.VO_Valid;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_STATE_PUBLICATION;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    GVL_STATE.G_Zone_Valves[L_i] := L_Zone_Valves[L_i];
-END_FOR;
+fbStatePublicationPhase(
+    VI_Enable := TRUE,
+    VI_Zone_Valves := L_Zone_Valves,
+    VI_Manifold_Pumps := L_Manifold_Pumps,
+    VI_Manifold_Valves := L_Manifold_Valves,
+    VI_Boiler_OT_Enable := L_Boiler_OT_Enable,
+    VI_Boiler_OT_Setpoint := L_Boiler_OT_Setpoint,
+    VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+    VI_Electric_Heater_Enable := L_Electric_Heater_Enable,
+    VI_Freeze_Risk_Status := L_Freeze_Risk_Status,
+    VI_Manifold_Status := L_Manifold_Status,
+    VI_Boiler_Status := L_Boiler_Status,
+    VI_DHW_Heating_Pump := L_DHW_Heating_Pump,
+    VI_DHW_Circ_Pump := L_DHW_Circ_Pump,
+    VI_DHW_Status := L_DHW_Status
+);
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    GVL_STATE.G_Manifold_Pumps[L_i] := L_Manifold_Pumps[L_i];
-    GVL_STATE.G_Manifold_Valves[L_i] := L_Manifold_Valves[L_i];
-    GVL_STATUS.G_Manifold_Status[L_i] := L_Manifold_Status[L_i];
-END_FOR;
-
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-    GVL_STATE.G_Boiler_OT_Enable[L_i] := L_Boiler_OT_Enable[L_i];
-    GVL_STATE.G_Boiler_OT_Setpoint[L_i] := L_Boiler_OT_Setpoint[L_i];
-    GVL_STATUS.G_Boiler_Status[L_i] := L_Boiler_Status[L_i];
-END_FOR;
-
-GVL_STATE.G_Backup_Circulation_Pump := L_Backup_Circulation_Pump;
-GVL_STATE.G_Electric_Heater_Enable := L_Electric_Heater_Enable;
-GVL_STATE.G_Safety_Freeze_Risk := L_Freeze_Risk_Status;
-GVL_STATE.G_DHW_Heating_Pump := L_DHW_Heating_Pump;
-GVL_STATE.G_DHW_Circ_Pump := L_DHW_Circ_Pump;
-GVL_STATUS.G_DHW_Status := L_DHW_Status;
-
-L_Runtime_Context.State_Publication_Executed := TRUE;
+L_Runtime_Context.State_Publication_Executed := fbStatePublicationPhase.VO_Executed;
+L_Runtime_Context.State_Publication_Before_Diagnostics_Valid := fbStatePublicationPhase.VO_Valid;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DIAGNOSTICS;
 
