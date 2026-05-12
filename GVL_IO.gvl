@@ -1,5 +1,17 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // ======================================================
+    // PHYSICAL IO SURFACE
+    // ======================================================
+    // Input fields are hardware/mapping observations.
+    // Output fields are the terminal physical publication surface.
+    //
+    // PRG_IO_Write is the only runtime-layer publisher for physical
+    // output commands in this GVL. Upstream authority/governance,
+    // verifier, recovery and observability layers must not write
+    // physical outputs directly.
+    // ======================================================
+
     DI_Security_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL;
     DI_Security_Glass : ARRAY[1..GVL_CONSTANTS.C_MAX_SECURITY_SENSORS] OF BOOL;
     DI_Security_2F_Group : BOOL;
