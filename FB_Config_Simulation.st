@@ -19,11 +19,8 @@ VAR
 END_VAR
 
 VO_Executed := FALSE;
-VO_Result_OK := TRUE;
-VO_Error_Text := '';
-
-GVL_CONFIG_SIMULATION.G_Simulation_Result_OK := TRUE;
-GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := '';
+VO_Result_OK := GVL_CONFIG_SIMULATION.G_Simulation_Result_OK;
+VO_Error_Text := GVL_CONFIG_SIMULATION.G_Simulation_Error_Text;
 
 IF NOT VI_Enable THEN
     RETURN;
@@ -32,6 +29,8 @@ END_IF;
 IF VI_Request AND VI_Confirm THEN
 
     L_Error := FALSE;
+    VO_Result_OK := TRUE;
+    VO_Error_Text := '';
 
     // Simulate INPUT constraints
     IF (GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate < 0.0) OR (GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate > 1.0) THEN
@@ -67,14 +66,8 @@ IF VI_Request AND VI_Confirm THEN
         L_Error := TRUE;
     END_IF;
 
-    IF L_Error THEN
-        GVL_CONFIG_SIMULATION.G_Simulation_Result_OK := FALSE;
-        GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := VO_Error_Text;
-    ELSE
-        GVL_CONFIG_SIMULATION.G_Simulation_Result_OK := TRUE;
-        GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := '';
-    END_IF;
-
+    GVL_CONFIG_SIMULATION.G_Simulation_Result_OK := NOT L_Error;
+    GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := VO_Error_Text;
     GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS := GVL_TIME_SERVICE.G_Now_MS;
     VO_Executed := TRUE;
 
