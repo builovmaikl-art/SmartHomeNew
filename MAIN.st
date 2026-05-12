@@ -17,8 +17,9 @@ PROGRAM MAIN
 //   5. Intent, behavior, scenario and policy
 //   6. Command arbitration
 //   7. Domain execution
-//   8. Physical IO write
-//   9. Verification, diagnostics, history, HMI
+//   8. Pre-output safety barrier
+//   9. Physical IO write
+//   10. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -85,10 +86,15 @@ PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 8. Final physical IO projection. Must remain after all domain execution.
+// 8. Authoritative pre-output safety barrier.
+// Must execute after all domain output projection and before PRG_IO_Write.
+PRG_PreOutput_Safety_Barrier();
+
+// 9. Final physical IO projection.
+// Must remain after pre-output barrier and all domain execution.
 PRG_IO_Write();
 
-// 9. Verification, explainability, diagnostics, history, HMI
+// 10. Verification, explainability, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
