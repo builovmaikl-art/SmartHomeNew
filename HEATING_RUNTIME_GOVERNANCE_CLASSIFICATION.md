@@ -2,24 +2,23 @@
 
 # Purpose
 
-This document defines the governance classification for the `FB_Heating_Runtime_*` family.
+This document defines governance classification and authority boundaries for the `FB_Heating_Runtime_*` family.
 
-The goal is to prevent:
+Primary goals:
 
 ```text
-- accidental reconnect of detached orchestration layers;
-- destruction of observability infrastructure;
-- duplicate runtime authority paths;
-- misuse of governance scaffold as runtime control;
-- unsafe cleanup of passive forensic infrastructure.
+- prevent detached runtime resurrection;
+- prevent duplicate authority paths;
+- prevent Runtime_* actuation drift;
+- preserve bounded governance semantics;
+- preserve deterministic phase sequencing;
+- preserve explicit ownership boundaries.
 ```
 
-This document formalizes the verified runtime governance model.
-
-Current phase:
+Current repository phase:
 
 ```text
-GOVERNED RUNTIME MAINTENANCE
+DETERMINISTIC PHASE-ORIENTED RUNTIME MAINTENANCE
 ```
 
 ---
@@ -32,11 +31,23 @@ The invariant that must never be violated:
 single active runtime ownership chain
 ```
 
-Verified active runtime chain:
+Current verified orchestration:
 
 ```text
 PRG_Heating
-→ FB_Heating_System_Manager
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Current verified subsystem ownership:
+
+```text
+FB_Heating_System_Manager
     → Safety_Gate
     → Safe_State
     → Circuit_Control
@@ -45,96 +56,94 @@ PRG_Heating
     → Allocation_Filter
     → Runtime_Observability
     → Manifold_Control
-    → System_Manager post-manifold safety/test finalization
     → Boiler_Control
 ```
 
-`FB_Heating_Runtime_*` files are NOT allowed to create:
+Runtime_* infrastructure is NOT allowed to create:
 
 ```text
-- parallel runtime orchestration;
-- alternate heating ownership;
-- duplicate safety authority;
-- detached control execution.
+- parallel orchestration;
+- detached authority paths;
+- duplicate safety ownership;
+- hidden runtime execution.
 ```
 
 ---
 
 # Runtime governance model
 
-The repository evolved toward a split architecture:
+The repository evolved toward explicit separation:
 
 ```text
 ACTIVE RUNTIME OWNERSHIP
-separated from
-RUNTIME OBSERVABILITY / FORENSICS / GOVERNANCE
+≠
+RUNTIME GOVERNANCE / OBSERVABILITY
 ```
 
 Meaning:
 
 ```text
-Runtime_* family mostly provides:
+Runtime_* family primarily provides:
 - observability;
 - diagnostics;
+- sequencing validation;
 - governance validation;
-- sequencing contracts;
 - telemetry aggregation;
-- anomaly analysis;
+- explainability;
 - forensic reconstruction.
 ```
 
 NOT:
 
 ```text
-runtime control ownership.
+runtime actuation ownership.
 ```
 
 ---
 
 # Classification groups
 
-## CLASS A — Active runtime observability participants
+## CLASS A — Active observability participants
 
 Definition:
 
 ```text
-actively instantiated or runtime-adjacent
-but not authority-owning
+runtime-adjacent infrastructure
+without runtime authority ownership
 ```
 
 Characteristics:
 
 ```text
-- projection;
 - telemetry publication;
 - runtime diagnostics;
 - sequencing validation;
-- event tracking.
+- event tracking;
+- explainability projection.
 ```
 
 Authority restrictions:
 
 ```text
-- must not own pumps;
-- must not own valves;
-- must not own OpenTherm;
-- must not own DHW;
-- must not own safety shutdown.
+- no pump ownership;
+- no valve ownership;
+- no OpenTherm ownership;
+- no DHW ownership;
+- no safety ownership.
 ```
 
 Representative files:
 
 ```text
 FB_Heating_Runtime_Observability
-FB_Heating_Runtime_Event_Manager
-FB_Heating_Runtime_Synchronization_Monitor
-FB_Heating_Runtime_Phase_Sequencing_Validator
-FB_Heating_Runtime_Contract_Validator
+FB_Heating_Runtime_Observer
+FB_Heating_Runtime_Observer_Phase
+FB_Heating_Runtime_Diagnostics_Phase
 ```
 
 ---
 
-## CLASS B — Passive intelligence / forensic analytics
+## CLASS B — Passive forensic/analytics infrastructure
 
 Definition:
 
@@ -146,18 +155,11 @@ Characteristics:
 
 ```text
 - anomaly correlation;
-- drift analysis;
-- predictive scoring;
 - replay analysis;
 - timeline reconstruction;
 - telemetry aggregation;
-- confidence analysis.
-```
-
-Important:
-
-```text
-These are NOT runtime controllers.
+- confidence analysis;
+- diagnostics analytics.
 ```
 
 Allowed behavior:
@@ -166,22 +168,21 @@ Allowed behavior:
 - read runtime state;
 - aggregate telemetry;
 - classify anomalies;
-- reconstruct event chains;
-- produce diagnostics.
+- publish diagnostics.
 ```
 
 Forbidden behavior:
 
 ```text
-- output ownership;
 - runtime control;
-- direct heating actuation;
-- emergency ownership.
+- output ownership;
+- safety actuation;
+- detached execution.
 ```
 
 ---
 
-## CLASS C — Governance / contract scaffold
+## CLASS C — Governance/validation scaffold
 
 Definition:
 
@@ -193,48 +194,45 @@ without runtime attachment authority
 Characteristics:
 
 ```text
-- sequencing contracts;
+- sequencing validation;
 - governance validation;
-- attachment locks;
-- integration boundaries;
-- orchestration projection;
-- runtime contract verification.
+- runtime contract validation;
+- lifecycle validation;
+- integration boundary verification.
 ```
 
 Important:
 
 ```text
-These files may contain orchestration semantics
-WITHOUT being active orchestration engines.
+these layers may contain orchestration semantics
+WITHOUT becoming orchestration engines.
 ```
 
-Critical governance locks already verified:
+Mandatory governance rules:
 
 ```text
 Governance_Locked := TRUE
-Runtime_Attachment_Allowed := FALSE
-Runtime_Attachment_Active := FALSE
 Observation-only semantics
+No detached runtime authority
 ```
 
 Representative files:
 
 ```text
-FB_Heating_Runtime_Orchestration_Shell
-FB_Heating_Runtime_Coordinator
-FB_Heating_Runtime_Integration_Bridge_Manager
+FB_Heating_Runtime_Observer_Authorization
 FB_Heating_Runtime_Contract_Validator
+FB_Heating_Runtime_Phase_Sequencing_Validator
 ```
 
 ---
 
-## CLASS D — Future reserved scaffold
+## CLASS D — Reserved scaffold
 
 Definition:
 
 ```text
-future architecture placeholders
-not currently connected to active runtime ownership
+future or partially integrated scaffold
+without active runtime ownership
 ```
 
 Rules:
@@ -242,7 +240,7 @@ Rules:
 ```text
 - no blind reconnect;
 - no blind cleanup;
-- classification required before modification.
+- governance classification required before modification.
 ```
 
 ---
@@ -263,14 +261,7 @@ files with:
 Current verified status:
 
 ```text
-No confirmed CLASS E Runtime_* files.
-```
-
-Meaning:
-
-```text
-Runtime_* family is intentional governance/observability architecture,
-not dead legacy garbage.
+No confirmed active Runtime_* CLASS E files.
 ```
 
 ---
@@ -300,13 +291,6 @@ FB_Heating_Safety_Gate
 FB_Heating_Safe_State
 ```
 
-Important clarification:
-
-```text
-Manifold_Control is the primary actuator helper.
-System_Manager remains bounded final post-manifold finalizer.
-```
-
 ---
 
 # Runtime reconnect policy
@@ -314,10 +298,10 @@ System_Manager remains bounded final post-manifold finalizer.
 ## Forbidden
 
 ```text
-- reconnect Runtime_* files blindly;
-- reconnect orchestration shells directly;
+- reconnect Runtime_* blindly;
 - use governance scaffold as runtime controller;
-- bypass active runtime ownership chain.
+- bypass deterministic phase chain;
+- bypass active ownership hierarchy.
 ```
 
 ---
@@ -340,7 +324,7 @@ System_Manager remains bounded final post-manifold finalizer.
 Current policy:
 
 ```text
-Runtime_* family is NOT primary cleanup target.
+Runtime_* family is NOT blanket cleanup target.
 ```
 
 Cleanup allowed ONLY if ALL are proven:
@@ -353,12 +337,6 @@ Cleanup allowed ONLY if ALL are proven:
 - no future scaffold role.
 ```
 
-Current audit result:
-
-```text
-No Runtime_* files currently satisfy proven-dead criteria.
-```
-
 ---
 
 # Current architectural status
@@ -366,45 +344,40 @@ No Runtime_* files currently satisfy proven-dead criteria.
 Verified state:
 
 ```text
-- detached orchestration runtime removed from production root;
-- dangerous override path removed from production root;
-- Runtime_* family remains governance/observability oriented;
-- helper authority escalation not detected;
-- hidden Runtime_* actuation not detected.
+- detached orchestration runtime removed;
+- detached override runtime removed;
+- deterministic phase sequencing established;
+- Runtime_* family remains governance-oriented;
+- hidden Runtime_* actuation not detected;
+- helper authority escalation not detected.
 ```
 
-Remaining concern:
+Primary remaining risk:
 
 ```text
-future architectural drift
-```
-
-rather than:
-
-```text
-historical runtime collapse.
+future architectural drift.
 ```
 
 ---
 
 # Strategic conclusion
 
-The repository evolved away from:
+The repository evolved from:
 
 ```text
-detached orchestration runtime architecture
+legacy detached orchestration
 ```
 
 into:
 
 ```text
-clean active runtime ownership
+explicit deterministic runtime ownership
++
+phase-oriented orchestration
 +
 bounded helper execution
 +
-post-manifold finalization
-+
-passive governance / observability / forensic infrastructure
+passive governance/observability infrastructure
 ```
 
-This split must remain explicit and preserved.
+This separation must remain explicit and continuously verified.
