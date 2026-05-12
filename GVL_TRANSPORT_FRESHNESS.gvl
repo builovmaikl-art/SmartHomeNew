@@ -1,0 +1,34 @@
+VAR_GLOBAL
+    // ======================================================
+    // TRANSPORT FRESHNESS GOVERNANCE STATE
+    // ======================================================
+    // Centralized transport freshness authority.
+    // Prevents stale transport semantic publication.
+    // ======================================================
+
+    Transport_Epoch : ULINT := 0;
+    Transport_Publication_Epoch : ULINT := 0;
+
+    Transport_Freshness_Valid : BOOL := FALSE;
+    Transport_Publication_Allowed : BOOL := FALSE;
+
+    Transport_Lease_Valid : BOOL := FALSE;
+    Transport_Lease_Expired : BOOL := FALSE;
+    Transport_Lease_Timeout_MS : UDINT := 5000;
+
+    Transport_Quarantine_Active : BOOL := FALSE;
+    Transport_Reconnect_Stabilizing : BOOL := FALSE;
+
+    Transport_Stale_Frame_Detected : BOOL := FALSE;
+    Transport_Transaction_Mismatch : BOOL := FALSE;
+    Transport_Snapshot_Invalid : BOOL := FALSE;
+
+    Transport_Last_Refresh_MS : UDINT := 0;
+    Transport_Last_Reconnect_MS : UDINT := 0;
+    Transport_Last_Publication_MS : UDINT := 0;
+
+    Transport_Last_Error_Code : UDINT := 0;
+    Transport_Last_Error_Text : STRING(160) := '';
+
+    Transport_Invalidation_Count : UDINT := 0;
+END_VAR
