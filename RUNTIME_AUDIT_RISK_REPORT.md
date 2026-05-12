@@ -46,6 +46,7 @@
 ✔ Runtime degradation / fault containment audit
 ✔ Diagnostics / observability audit
 ✔ Runtime ownership / authority audit
+✔ Runtime synchronization / temporal consistency audit
 ```
 
 ---
@@ -294,80 +295,84 @@ HIGH
 
 ## Absence of explicit runtime authority ownership graph
 
-## Суть
-
-Runtime authority model:
+Severity:
 
 ```text
-частично implicit и distributed.
+HIGH
+```
+
+---
+
+# RISK-025
+
+## Absence of authoritative runtime snapshot/publication model
+
+## Суть
+
+В системе фактически отсутствует:
+
+```text
+centralized runtime publication/snapshot layer.
 ```
 
 Проверка показала:
 
 ```text
-- множество coordinator/manager blocks;
-- shadow-state layers;
-- replicated runtime semantics;
-- distributed state managers;
-- overlapping orchestration responsibilities.
-```
-
-Особенно:
-
-```text
-- FB_State_Manager;
-- FB_State_Replication;
-- FB_System_Coordinator;
-- PRG_Command_Verifier;
-- PRG_Safety;
-- PRG_Command_Arbitration;
-- PRG_IO_Write.
+- unified runtime publication layer не найден;
+- staged publication semantics отсутствуют;
+- runtime snapshot model отсутствует;
+- centralized cached-runtime visibility отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Часть runtime authority:
+Subsystem:
 
 ```text
-не закреплена
-за одним authoritative owner.
+читают runtime state
+не из единого snapshot,
+а напрямую
+из mutable live globals.
 ```
 
-State/command semantics могут:
+Во время одного PLC cycle:
 
 ```text
-- shadow-replicate;
-- re-publish;
-- override;
-- reinterpret.
+часть subsystem
+может видеть:
+- старое state;
+- partially updated state;
+- уже overridden state;
+- state следующей orchestration phase.
 ```
-
-между разными orchestration layers.
 
 Возникает:
 
 ```text
-implicit distributed authority graph.
+temporal semantic inconsistency.
 ```
 
 ---
 
-## Что показала проверка
+## Особенно опасно
 
-Пока НЕ найдено:
+Когда:
 
 ```text
-- catastrophic write storm;
-- direct recursive overwrite loop;
-- uncontrolled oscillation.
+- arbitration;
+- safety suppression;
+- recovery escalation;
+- diagnostics publication;
+- transport update;
+- persistence replay.
 ```
 
-Но найдено:
+происходят:
 
 ```text
-authority-boundary ambiguity.
+в разных execution phases.
 ```
 
 ---
@@ -375,12 +380,12 @@ authority-boundary ambiguity.
 ## Возможные последствия
 
 ```text
-- hidden authority collisions;
-- non-authoritative overrides;
-- duplicated runtime truth;
-- difficult deterministic reasoning;
-- orchestration semantic drift;
-- latent multi-writer defects.
+- timing-dependent behavior;
+- cross-cycle inconsistency windows;
+- stale runtime visibility;
+- partially updated orchestration decisions;
+- difficult deterministic replay/debugging;
+- hidden temporal races.
 ```
 
 ---
@@ -390,26 +395,26 @@ authority-boundary ambiguity.
 Нужно formalize:
 
 ```text
-runtime authority ownership graph.
+authoritative runtime snapshot/publication model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- single authoritative owner per runtime domain;
-- explicit writer ownership;
-- runtime publication hierarchy;
-- authority-boundary contracts;
-- anti-multiwriter governance.
+- cycle-wide runtime snapshot;
+- staged publication phases;
+- immutable runtime-read model;
+- centralized runtime visibility layer;
+- publication barrier semantics.
 ```
 
 Также желательно:
 
 ```text
-- shadow-state minimization;
-- authority audit tooling;
-- runtime ownership documentation;
-- explicit override precedence semantics.
+- deterministic runtime replay model;
+- snapshot-based orchestration;
+- temporal consistency contract;
+- runtime phase synchronization rules.
 ```
 
 ---
