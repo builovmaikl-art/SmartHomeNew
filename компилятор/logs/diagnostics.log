@@ -13,7 +13,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 === repo tree root ===
 total 2568
 -rw-r--r--  1 runner runner  13067 May 12 06:25 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 14 runner runner  20480 May 12 06:25 .
+drwxr-xr-x 14 runner runner  24576 May 12 06:25 .
 drwxr-xr-x  3 runner runner   4096 May 12 06:25 ..
 drwxr-xr-x  7 runner runner   4096 May 12 06:25 .git
 drwxr-xr-x  3 runner runner   4096 May 12 06:25 .github
@@ -95,7 +95,6 @@ drwxr-xr-x  3 runner runner   4096 May 12 06:25 .github
 -rw-r--r--  1 runner runner   4543 May 12 06:25 FB_Heating_Policy_Priority_Bridge.st
 -rw-r--r--  1 runner runner   1491 May 12 06:25 FB_Heating_Predictive_Controller.st
 -rw-r--r--  1 runner runner   3472 May 12 06:25 FB_Heating_RootCause_Diagnostics.st
--rw-r--r--  1 runner runner   1743 May 12 06:25 FB_Heating_Runtime_Anomaly_Correlator.st
 -rw-r--r--  1 runner runner   1639 May 12 06:25 FB_Heating_Runtime_Anomaly_Severity_Classifier.st
 -rw-r--r--  1 runner runner   1471 May 12 06:25 FB_Heating_Runtime_Anomaly_Weighting_Engine.st
 -rw-r--r--  1 runner runner   1560 May 12 06:25 FB_Heating_Runtime_Cascade_Collapse_Predictor.st
@@ -434,9 +433,9 @@ drwxr-xr-x  5 runner runner   4096 May 12 06:25 компилятор
 -rw-r--r--  1 runner runner   5136 May 12 06:25 ошибки компиляции.txt
 
 === compiler dir ===
-total 588
+total 592
 drwxr-xr-x  5 runner runner   4096 May 12 06:25 .
-drwxr-xr-x 14 runner runner  20480 May 12 06:25 ..
+drwxr-xr-x 14 runner runner  24576 May 12 06:25 ..
 -rw-r--r--  1 runner runner  21153 May 12 06:25 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May 12 06:25 __pycache__
 -rw-r--r--  1 runner runner  34293 May 12 06:25 import_codesys_FINAL.py
@@ -453,8 +452,8 @@ drwxr-xr-x  2 runner runner   4096 May 12 06:25 out
 -rw-r--r--  1 runner runner    177 May 12 06:25 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1472
+total 1468
 drwxr-xr-x 2 runner runner    4096 May 12 06:25 .
 drwxr-xr-x 5 runner runner    4096 May 12 06:25 ..
 -rw-r--r-- 1 runner runner       0 May 12 06:25 .gitkeep
--rw-r--r-- 1 runner runner 1495491 May 12 06:25 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1492802 May 12 06:25 RESULT_methods_clean.xml
