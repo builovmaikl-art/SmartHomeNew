@@ -44,6 +44,7 @@
 ✔ Startup barrier / early-consumer audit
 ✔ Startup transient stabilization audit
 ✔ Runtime degradation / fault containment audit
+✔ Diagnostics / observability audit
 ```
 
 ---
@@ -268,83 +269,87 @@ HIGH
 
 ## Absence of explicit subsystem fault-containment boundaries
 
-## Суть
-
-Degraded/fault semantics:
+Severity:
 
 ```text
-не локализованы
-по subsystem boundaries.
+HIGH
+```
+
+---
+
+# RISK-023
+
+## Absence of authoritative diagnostics truth model
+
+## Суть
+
+В системе фактически отсутствует:
+
+```text
+unified diagnostics truth model.
 ```
 
 Проверка показала:
 
 ```text
-fault/degraded context
-распространяется через:
-- heating decision context;
-- thermal allocation;
-- recovery/governance layers;
-- policy context.
-```
-
-Но:
-
-```text
-explicit fault-containment boundaries
-отсутствуют.
+- unified Health_OK model не найден;
+- centralized Diagnostics_OK authority отсутствует;
+- global health truth source отсутствует;
+- subsystem diagnostics fragmented.
 ```
 
 ---
 
 ## Проблема
 
-Fault/degraded state:
+Diagnostics сейчас:
 
 ```text
-может менять runtime semantics
-далеко за пределами
-исходного subsystem.
+distributed and semantically inconsistent.
 ```
 
-Особенно когда:
+Каждый subsystem:
 
 ```text
-- diagnostics escalation;
-- transport degradation;
-- thermal allocation fault;
-- recovery escalation;
-- partial subsystem instability.
+публикует
+своё понимание:
+- healthy;
+- degraded;
+- faulted;
+- unavailable.
 ```
 
-влияют на:
+Но:
 
 ```text
-global runtime decisions.
+единая authoritative observability truth
+отсутствует.
+```
+
+---
+
+## Почему это опасно
+
+Runtime может:
+
+```text
+быть degraded,
+но часть diagnostics
+останется healthy-looking.
+```
+
+И наоборот:
+
+```text
+fault publication
+может жить дольше
+реального runtime fault.
 ```
 
 Возникает:
 
 ```text
-cascading semantic degradation.
-```
-
----
-
-## Что показала проверка
-
-Пока НЕ найдено:
-
-```text
-- catastrophic shutdown cascade;
-- infinite degradation escalation;
-- unrecoverable orchestration collapse.
-```
-
-Но найдено:
-
-```text
-fault containment ambiguity.
+runtime/diagnostics semantic divergence.
 ```
 
 ---
@@ -352,11 +357,12 @@ fault containment ambiguity.
 ## Возможные последствия
 
 ```text
-- unrelated subsystem degradation;
-- cascading runtime semantic drift;
-- globalized fault behavior;
-- difficult partial-failure recovery;
-- unstable degraded-mode orchestration.
+- false healthy-state publication;
+- stale diagnostics visibility;
+- hidden runtime degradation;
+- inconsistent observability;
+- unreliable monitoring semantics;
+- difficult operational debugging.
 ```
 
 ---
@@ -366,25 +372,25 @@ fault containment ambiguity.
 Нужно formalize:
 
 ```text
-subsystem fault-containment model.
+authoritative diagnostics truth model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- local degraded domains;
-- fault-isolation boundaries;
-- containment-aware escalation;
-- scoped recovery semantics;
-- subsystem-local degradation authority.
+- centralized runtime health authority;
+- authoritative degraded/fault semantics;
+- diagnostics lifecycle ownership;
+- observability publication contract;
+- stale-diagnostics invalidation semantics.
 ```
 
 Также желательно:
 
 ```text
-- degradation propagation contract;
-- cross-domain escalation rules;
-- partial-failure survivability model.
+- unified health-state aggregation;
+- runtime-vs-diagnostics reconciliation;
+- explicit observability consistency rules.
 ```
 
 ---
