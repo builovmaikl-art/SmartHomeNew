@@ -1,0 +1,50 @@
+VAR_GLOBAL
+    // ======================================================
+    // DISTRIBUTED PUBLICATION COMMIT STATE
+    // ======================================================
+    // Deterministic peer publication commit handshake foundation.
+    // Publication-continuity governance only.
+    // Does not invalidate runtime barrier, PLC fencing
+    // or local immutable snapshot authority.
+    // ======================================================
+
+    Distributed_Commit_Epoch : ULINT := 0;
+    Distributed_Commit_Reconciliation_Epoch : ULINT := 0;
+
+    Local_Publication_Commit_Epoch : ULINT := 0;
+    Peer_Publication_Commit_Epoch : ULINT := 0;
+
+    Local_Prepare_Epoch : ULINT := 0;
+    Peer_Prepare_Epoch : ULINT := 0;
+
+    Local_Commit_Token : ULINT := 0;
+    Peer_Commit_Token : ULINT := 0;
+
+    Publication_Prepare_Active : BOOL := FALSE;
+    Publication_Prepare_Valid : BOOL := FALSE;
+    Publication_Commit_Requested : BOOL := FALSE;
+    Publication_Commit_Confirmed : BOOL := FALSE;
+
+    Peer_Commit_Ack_Valid : BOOL := FALSE;
+    Peer_Commit_Ack_Expired : BOOL := FALSE;
+    Peer_Commit_Mismatch : BOOL := FALSE;
+    Peer_Commit_Replay_Detected : BOOL := FALSE;
+    Peer_Commit_Missing : BOOL := FALSE;
+
+    Commit_Lease_Active : BOOL := FALSE;
+    Commit_Lease_Expired : BOOL := FALSE;
+    Commit_Timeout_MS : UDINT := 5000;
+
+    Local_Commit_Last_Refresh_MS : UDINT := 0;
+    Peer_Commit_Last_Refresh_MS : UDINT := 0;
+    Commit_Last_Reconciliation_MS : UDINT := 0;
+
+    Distributed_Commit_Valid : BOOL := FALSE;
+    Distributed_Commit_Quarantine_Active : BOOL := FALSE;
+    Distributed_Commit_Forced_Safe_Mode : BOOL := FALSE;
+
+    Distributed_Commit_Last_Error_Code : UDINT := 0;
+    Distributed_Commit_Last_Error_Text : STRING(160) := '';
+
+    Distributed_Commit_Invalidation_Count : UDINT := 0;
+END_VAR
