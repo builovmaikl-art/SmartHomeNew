@@ -18,7 +18,7 @@ L_Error_Text := '';
 // Governs physical output publication freshness.
 // Prevents stale output survivability, mutable
 // snapshot publication leakage and downstream
-// distributed reconciliation divergence publication.
+// distributed/semantic continuity divergence publication.
 // ======================================================
 
 GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay := FALSE;
@@ -192,6 +192,62 @@ IF L_Output_Valid AND GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6405;
     L_Error_Text := 'Distributed commit lease expired';
+END_IF;
+
+// ------------------------------------------------------
+// Semantic continuity publication enforcement.
+// ------------------------------------------------------
+// Semantic continuity is publication-authoritative only.
+// It does not invalidate runtime barrier,
+// PLC fencing or immutable snapshot authority.
+// ------------------------------------------------------
+
+IF L_Output_Valid AND (NOT GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6500;
+    L_Error_Text := 'Semantic forward progress invalid';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6501;
+    L_Error_Text := 'Semantic execution continuity invalid';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Stagnation_Detected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6502;
+    L_Error_Text := 'Semantic stagnation detected';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Replay_Suspected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6503;
+    L_Error_Text := 'Semantic replay suspected';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6504;
+    L_Error_Text := 'Semantic livelock suspected';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6505;
+    L_Error_Text := 'Semantic deadlock suspected';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6506;
+    L_Error_Text := 'Semantic progress lease expired';
+END_IF;
+
+IF L_Output_Valid AND GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6507;
+    L_Error_Text := 'Semantic progress quarantine active';
 END_IF;
 
 // ------------------------------------------------------
