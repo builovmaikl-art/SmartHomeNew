@@ -64,9 +64,6 @@ END_IF;
 // ------------------------------------------------------
 // Peer session detection.
 // ------------------------------------------------------
-// Peer snapshot checks become authoritative only after
-// real peer snapshot publication state exists.
-// ------------------------------------------------------
 
 IF GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Epoch > 0 THEN
     L_Peer_Session_Active := TRUE;
@@ -156,7 +153,6 @@ IF L_Distributed_Snapshot_Valid THEN
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent := TRUE;
 
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active := FALSE;
-    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Forced_Safe_Mode := FALSE;
 
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Code := 0;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Text := '';
@@ -166,11 +162,8 @@ ELSE
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent := FALSE;
 
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active := TRUE;
-    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Forced_Safe_Mode := TRUE;
 
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Code := L_Error_Code;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Text := L_Error_Text;
-
-    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Invalidation_Count := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Invalidation_Count + 1;
 END_IF;
 END_PROGRAM
