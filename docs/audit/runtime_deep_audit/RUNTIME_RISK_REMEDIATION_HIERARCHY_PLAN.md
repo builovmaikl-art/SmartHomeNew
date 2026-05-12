@@ -8,7 +8,8 @@
 - фактически внедрённые remediation stages;
 - remaining gaps;
 - актуальный порядок дальнейших исправлений;
-- правило full-file rewrite для runtime-critical файлов.
+- правило full-file rewrite для runtime-critical файлов;
+- запрет upstream/downstream phase cycles.
 
 Цель:
 
@@ -33,12 +34,17 @@
 [done] Stage 6 — Transport freshness governance foundation
 [done] Stage 7 — Safety-critical observability foundation
 [done] Stage 8 — Immutable runtime snapshot isolation foundation
+[done] Stage 9A — Distributed epoch reconciliation foundation
+[done] Stage 9B — Distributed reconciliation visibility
+[done] Stage 9C — Distributed downstream publication quarantine
+[done] Stage 9D — Distributed immutable snapshot reconciliation foundation
+[done] Stage 9E — Distributed immutable publication freeze enforcement
 ```
 
 ## CURRENT PRIORITY
 
 ```text
-[current] Stage 9 — Distributed epoch consistency / peer reconciliation
+[current] Stage 9F — Deterministic peer publication handshake
 ```
 
 ---
@@ -58,6 +64,8 @@ Time_Service
 → Transport_Freshness_Governor
 → Runtime_Barrier
 → Runtime_Snapshot_Governor
+→ Distributed_Epoch_Governor
+→ Distributed_Snapshot_Governor
 → Observability_Governor
 → Recovery_Cleanup_Governor
 → Domain_Execution
@@ -69,7 +77,7 @@ Time_Service
 
 ---
 
-## Current authority cascade
+## Current local authority cascade
 
 ```text
 Monotonic_Time failure
@@ -85,9 +93,64 @@ Monotonic_Time failure
 
 ---
 
-## Important PRG_Runtime_Barrier note
+## Current distributed publication cascade
 
-`PRG_Runtime_Barrier` intentionally does **not** directly depend on `Snapshot_Frozen`, `Snapshot_Publication_Allowed`, `Snapshot_Copy_Valid` or `Snapshot_Isolation_Valid`.
+```text
+Distributed_Epoch divergence
+→ Distributed_Reconciliation quarantine
+→ Observability distributed visibility
+→ Output_Freshness forced decay
+→ IO_Write safe projection
+```
+
+```text
+Distributed_Immutable_Snapshot divergence
+→ Distributed_Publication_Freeze invalid
+→ Observability distributed immutable visibility
+→ Output_Freshness forced decay
+→ IO_Write safe projection
+```
+
+---
+
+# CRITICAL ARCHITECTURAL BOUNDARIES
+
+## Distributed layers are downstream-only
+
+Distributed reconciliation is intentionally:
+
+```text
+publication-authoritative only
+```
+
+It must NOT become:
+
+```text
+runtime-authoritative
+ownership-authoritative
+snapshot-authoritative upstream
+```
+
+Reason:
+
+```text
+peer packet jitter
+or delayed reconciliation
+must not recursively collapse local runtime authority.
+```
+
+---
+
+## PRG_Runtime_Barrier snapshot decision
+
+`PRG_Runtime_Barrier` intentionally does **not** directly depend on current-cycle snapshot flags:
+
+```text
+Snapshot_Frozen
+Snapshot_Publication_Allowed
+Snapshot_Copy_Valid
+Snapshot_Isolation_Valid
+```
 
 Reason:
 
@@ -96,7 +159,7 @@ PRG_Runtime_Barrier
 → PRG_Runtime_Snapshot_Governor
 ```
 
-A direct current-cycle snapshot dependency inside `PRG_Runtime_Barrier` would create a phase-cycle:
+A direct dependency would create:
 
 ```text
 Runtime_Barrier requires Snapshot
@@ -104,7 +167,7 @@ while
 Snapshot requires Runtime_Barrier
 ```
 
-Therefore snapshot enforcement is correctly located at publication boundaries:
+Therefore snapshot enforcement is located at publication boundaries:
 
 ```text
 Runtime_Snapshot_Governor
@@ -112,11 +175,9 @@ Runtime_Snapshot_Governor
 → PRG_IO_Write hard-stop gate
 ```
 
-This keeps the execution graph acyclic and deterministic.
-
 ---
 
-## Implemented authority layers
+# IMPLEMENTED AUTHORITY LAYERS
 
 ```text
 GVL_TIME_MONOTONIC
@@ -133,6 +194,12 @@ PRG_Runtime_Barrier
 
 GVL_RUNTIME_SNAPSHOT
 PRG_Runtime_Snapshot_Governor
+
+GVL_DISTRIBUTED_EPOCH
+PRG_Distributed_Epoch_Governor
+
+GVL_DISTRIBUTED_SNAPSHOT
+PRG_Distributed_Snapshot_Governor
 
 GVL_OBSERVABILITY_AUTHORITY
 PRG_Observability_Governor
@@ -177,9 +244,9 @@ runtime-integrated
 ## Remaining gaps
 
 ```text
-- distributed runtime epoch synchronization remains incomplete;
-- peer reconciliation not implemented;
-- no consensus-grade semantic ownership continuity.
+- no consensus-grade semantic ownership continuity;
+- no peer publication commit acknowledgement;
+- no deterministic distributed commit epochs.
 ```
 
 ---
@@ -213,6 +280,7 @@ runtime-integrated
 implemented
 runtime-authoritative
 snapshot-aware
+distributed-publication-aware
 ```
 
 ## Implemented components
@@ -233,14 +301,16 @@ PRG_IO_Write freshness-aware hard stop
 - runtime/output epoch linkage;
 - lease-expiration shutdown;
 - immutable snapshot publication validation;
+- distributed epoch quarantine validation;
+- distributed immutable publication freeze validation;
 - authoritative freshness-aware IO gating.
 ```
 
 ## Remaining gaps
 
 ```text
-- no distributed output epoch fencing;
-- no peer output publication reconciliation;
+- no deterministic peer publication commit handshake;
+- no peer output publication acknowledgement;
 - no retained-output quarantine beyond current forced decay foundation.
 ```
 
@@ -271,10 +341,9 @@ runtime-integrated
 ## Remaining gaps
 
 ```text
-- no peer epoch negotiation;
-- no distributed fencing synchronization;
+- no ownership consensus;
 - no semantic-progress watchdog;
-- no external peer transaction fencing.
+- no deterministic peer publication commit acknowledgement.
 ```
 
 ---
@@ -305,7 +374,7 @@ runtime-integrated
 - no reusable overflow-safe delta function block;
 - no explicit retained-state scrubber;
 - no persisted boot-generation reconciliation;
-- no peer boot-generation comparison.
+- no peer boot-generation commit handshake.
 ```
 
 ---
@@ -380,6 +449,7 @@ runtime-integrated
 ```text
 foundation implemented
 runtime-integrated
+distributed-aware
 ```
 
 ## Implemented properties
@@ -390,6 +460,8 @@ runtime-integrated
 - pre-actuation visibility readiness;
 - diagnostics/explainability synchronization foundation;
 - visibility flags for runtime/output/transport/recovery/fencing/monotonic failures;
+- distributed epoch divergence visibility;
+- distributed immutable publication visibility;
 - observability-aware runtime invalidation.
 ```
 
@@ -434,24 +506,81 @@ PRG_IO_Write immutable snapshot hard-stop gate
 - final physical IO hard-stop on snapshot failure.
 ```
 
-## PRG_Runtime_Barrier decision
-
-`PRG_Runtime_Barrier` remains upstream and does not directly validate current-cycle snapshot freeze flags.
-This is intentional to avoid cyclic dependency.
-Snapshot authority is enforced downstream at publication boundaries.
-
 ## Remaining gaps
 
 ```text
 - no deep copy of all domain/runtime state yet;
 - no struct-level immutable snapshot schema;
-- no snapshot-bound HMI/blackbox rendering yet;
-- no distributed immutable snapshot reconciliation.
+- no snapshot-bound HMI/blackbox rendering yet.
 ```
 
 ---
 
 # STAGE 9 — DISTRIBUTED EPOCH CONSISTENCY / PEER RECONCILIATION
+
+## Status
+
+```text
+foundation implemented
+publication-integrated downstream
+current continuation: Stage 9F
+```
+
+## Implemented components
+
+```text
+GVL_DISTRIBUTED_EPOCH
+PRG_Distributed_Epoch_Governor
+
+GVL_DISTRIBUTED_SNAPSHOT
+PRG_Distributed_Snapshot_Governor
+
+GVL_OBSERVABILITY_AUTHORITY distributed visibility fields
+PRG_Observability_Governor distributed visibility integration
+PRG_Output_Freshness_Governor distributed publication enforcement
+```
+
+## Implemented properties
+
+```text
+- distributed epoch reconciliation foundation;
+- peer runtime epoch projection;
+- peer snapshot epoch projection;
+- peer boot generation projection;
+- peer fencing token projection;
+- peer semantic continuity loss detection;
+- downstream distributed quarantine visibility;
+- downstream distributed publication quarantine;
+- distributed immutable snapshot reconciliation foundation;
+- distributed publication freeze validation;
+- distributed immutable snapshot consistency validation;
+- peer publication divergence detection;
+- peer publication reconciliation loss detection;
+- publication-bound output decay on distributed divergence.
+```
+
+## Explicit boundary
+
+```text
+Distributed reconciliation is downstream/publication-authoritative only.
+It must not be wired into Runtime_Barrier, PLC_Fencing_Governor,
+or Runtime_Snapshot_Governor as an upstream authority source.
+```
+
+## Remaining gaps
+
+```text
+- no deterministic peer publication handshake;
+- no peer commit acknowledgement;
+- no publication commit epoch exchange;
+- no consensus-grade publication continuity;
+- no semantic-progress watchdog;
+- no transport-level transaction ID fencing.
+```
+
+---
+
+# STAGE 9F — DETERMINISTIC PEER PUBLICATION HANDSHAKE
 
 ## Status
 
@@ -462,35 +591,55 @@ not started
 
 ## Назначение
 
-Устранить remaining distributed gap:
+Устранить remaining distributed publication gap:
 
 ```text
-local deterministic authority exists,
-but peer epoch consistency is not authoritative yet.
+publication reconciliation exists,
+but peer commit acknowledgement is not deterministic yet.
 ```
 
 ## Required remediation
 
 ```text
-- distributed epoch negotiation;
-- cross-PLC fencing reconciliation;
-- peer boot-generation comparison;
-- distributed snapshot epoch exchange;
-- peer transport transaction fencing;
-- authoritative distributed publication reconciliation;
-- semantic-progress watchdog.
+- peer publication prepare/commit phases;
+- local publication commit epoch;
+- peer publication commit epoch;
+- commit acknowledgement timeout;
+- peer commit mismatch detection;
+- commit lease expiration;
+- downstream-only publication quarantine on commit failure.
 ```
 
 ## Main runtime targets
 
 ```text
-PRG_PLC_Arbitration
-PRG_PLC_Fencing_Governor
-GVL_PLC_FENCING
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-GVL_TRANSPORT_FRESHNESS
-GVL_TIME_MONOTONIC
+GVL_DISTRIBUTED_COMMIT
+PRG_Distributed_Commit_Governor
+GVL_DISTRIBUTED_EPOCH
+GVL_DISTRIBUTED_SNAPSHOT
+PRG_Observability_Governor
+PRG_Output_Freshness_Governor
+```
+
+## Required integration boundary
+
+```text
+Distributed commit must remain downstream-only:
+Runtime_Snapshot
+→ Distributed_Epoch
+→ Distributed_Snapshot
+→ Distributed_Commit
+→ Observability
+→ Output_Freshness
+→ IO_Write
+```
+
+Do not wire distributed commit upstream into:
+
+```text
+Runtime_Barrier
+PLC_Fencing_Governor
+Runtime_Snapshot_Governor
 ```
 
 ---
@@ -509,7 +658,8 @@ Recommended practical implementation order:
 7. Stage 6 — Transport freshness governance [foundation implemented]
 8. Stage 7 — Safety-critical observability [foundation implemented]
 9. Stage 8 — Immutable runtime snapshot isolation [publication-integrated]
-10. Stage 9 — Distributed epoch consistency [current priority]
+10. Stage 9A-E — Distributed epoch/snapshot publication reconciliation [publication-integrated downstream]
+11. Stage 9F — Deterministic peer publication handshake [current priority]
 ```
 
 ---
@@ -527,7 +677,9 @@ Do NOT:
 - perform partial file rewrites for runtime-critical files;
 - integrate lease semantics without monotonic time governance;
 - expose post-fact diagnostics as safety truth;
-- create upstream/downstream phase cycles.
+- create upstream/downstream phase cycles;
+- make distributed reconciliation ownership-authoritative;
+- wire peer jitter into local runtime invalidation.
 ```
 
 Prefer:
@@ -537,5 +689,6 @@ single authoritative runtime barriers
 with deterministic ownership,
 acyclic phase ordering,
 pre-actuation observability,
-and publication-bound immutable snapshots.
+publication-bound immutable snapshots,
+and downstream-only distributed publication governance.
 ```
