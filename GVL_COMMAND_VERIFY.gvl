@@ -1,4 +1,12 @@
 VAR_GLOBAL
+    // ======================================================
+    // COMMAND VERIFIER DIAGNOSTICS STATE
+    // ======================================================
+    // Post-IO diagnostics published by PRG_Command_Verifier.
+    // These fields are visibility/diagnostics only and must not
+    // become upstream runtime or output publication authority.
+    // ======================================================
+
     Command_Mismatch_Count : INT := 0;
     Command_Match_OK : BOOL := TRUE;
     Command_Mismatch_Active : BOOL := FALSE;
@@ -12,8 +20,8 @@ VAR_GLOBAL
     // ======================================================
     // PRE-OUTPUT SAFETY BARRIER STATE
     // ======================================================
-    // Authoritative barrier executed before PRG_IO_Write.
-    // Used to prevent unsafe physical publication.
+    // Authoritative current-cycle barrier executed before PRG_IO_Write.
+    // IO_Write consumes PreOutput_Block_IO as the pre-output hard-stop gate.
     // ======================================================
 
     PreOutput_Barrier_OK : BOOL := TRUE;
