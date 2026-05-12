@@ -149,19 +149,8 @@ IF L_Block_IO THEN
     GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_Text := L_Error_Text;
     GVL_CONFIG_VALIDATION.G_Runtime_Last_Error_MS := L_Now_MS;
 
-    // Force downstream IO_Write into safe projection through existing command gates.
-    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Heating_Block := TRUE;
-    GVL_COMMAND_SHADOW.G_Boiler_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Vent_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Vent_Block := TRUE;
-    GVL_COMMAND_SHADOW.G_Water_Block := TRUE;
-    GVL_COMMAND_SHADOW.G_Water_Emergency_Stop := TRUE;
-    GVL_COMMAND_SHADOW.G_Close_Valve_35 := TRUE;
-    GVL_COMMAND_SHADOW.G_Close_Valve_36 := TRUE;
-    GVL_COMMAND_SHADOW.G_Gas_Valve_Close := TRUE;
-
+    // IO_Write consumes PreOutput_Block_IO as the hard-stop gate.
+    // Command shadow remains owned by PRG_Command_Arbitration.
     IF NOT L_Prev_Block_IO THEN
         GVL_COMMAND_VERIFY.PreOutput_Block_Count := GVL_COMMAND_VERIFY.PreOutput_Block_Count + 1;
         fbLog(
