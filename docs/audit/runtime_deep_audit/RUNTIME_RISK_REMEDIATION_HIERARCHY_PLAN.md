@@ -8,6 +8,7 @@
 - минимальный remediation order;
 - dependency graph между рисками;
 - текущий implementation status;
+- runtime authority architecture status;
 - порядок исправлений с минимальным количеством runtime/code passes.
 
 Цель:
@@ -28,7 +29,8 @@ ROOT AUTHORITY
 → EXECUTION BARRIERS
 → OUTPUT VALIDITY
 → DISTRIBUTED OWNERSHIP
-→ TIME/RECOVERY
+→ TIME GOVERNANCE
+→ RECOVERY GOVERNANCE
 → TRANSPORT
 → OBSERVABILITY
 ```
@@ -42,24 +44,70 @@ ROOT AUTHORITY
 ## IMPLEMENTED
 
 ```text
-[done] Stage 1 — Pre-output safety barrier
 [done] Stage 0 — Runtime validity barrier foundation
+[done] Stage 1 — Pre-output safety barrier
+[done] Stage 2 — Output freshness / output validity
+[done] Stage 3 — Distributed ownership / PLC fencing foundation
 ```
 
-## IN PROGRESS
+## CURRENT PRIORITY
 
 ```text
-[in-progress] Stage 2 — Output freshness / output validity
+[current] Stage 4 — Monotonic time / startup quarantine
 ```
 
 ## NOT STARTED
 
 ```text
-[pending] Stage 3 — Distributed ownership / PLC fencing
-[pending] Stage 4 — Monotonic time / startup quarantine
 [pending] Stage 5 — Recovery cleanup governance
 [pending] Stage 6 — Transport freshness governance
 [pending] Stage 7 — Safety-critical observability
+```
+
+---
+
+# CURRENT AUTHORITATIVE RUNTIME CHAIN
+
+## Integrated execution order
+
+```text
+PLC_Arbitration
+→ PLC_Fencing_Governor
+→ Runtime_Barrier
+→ Domain_Execution
+→ PreOutput_Barrier
+→ Output_Freshness_Governor
+→ IO_Write
+→ PostActuation_Verifier
+```
+
+---
+
+## Current authority cascade
+
+```text
+PLC fencing failure
+→ Runtime invalidation
+→ Output freshness decay
+→ Forced safe IO projection
+```
+
+---
+
+## Current implemented authority layers
+
+```text
+GVL_RUNTIME_EPOCH
+PRG_Runtime_Barrier
+
+GVL_COMMAND_VERIFY.PreOutput_*
+PRG_PreOutput_Safety_Barrier
+
+GVL_OUTPUT_EPOCH
+PRG_Output_Freshness_Governor
+
+GVL_PLC_FENCING
+PRG_PLC_Fencing_Governor
 ```
 
 ---
@@ -72,28 +120,7 @@ ROOT AUTHORITY
 
 ```text
 foundation implemented
-```
-
----
-
-## Implemented runtime components
-
-```text
-GVL_RUNTIME_EPOCH
-PRG_Runtime_Barrier
-```
-
----
-
-## Integrated execution order
-
-```text
-Command_Arbitration
-→ Runtime_Barrier
-→ Domain_Execution
-→ PreOutput_Barrier
-→ IO_Write
-→ Verification
+partially integrated
 ```
 
 ---
@@ -106,8 +133,8 @@ Command_Arbitration
 - deterministic execution phases;
 - impossible-state rejection foundation;
 - runtime authority publication;
-- runtime barrier state;
-- runtime IO publication gating.
+- runtime IO publication gating;
+- fencing-aware runtime invalidation.
 ```
 
 ---
@@ -143,9 +170,9 @@ RISK-039
 - immutable runtime snapshots still incomplete;
 - no snapshot copy isolation;
 - no publication freeze barrier;
-- no distributed runtime epochs;
-- no stale snapshot invalidation;
-- no runtime lease semantics.
+- no distributed runtime epoch synchronization;
+- no monotonic epoch linkage;
+- no reboot-generation invalidation.
 ```
 
 ---
@@ -158,30 +185,7 @@ RISK-039
 
 ```text
 implemented
-```
-
----
-
-## Implemented runtime components
-
-```text
-PRG_PreOutput_Safety_Barrier
-GVL_COMMAND_VERIFY.PreOutput_*
-PRG_IO_Write authoritative block gate
-```
-
----
-
-## Implemented execution order
-
-Current MAIN order:
-
-```text
-Runtime_Barrier
-→ Domain_Execution
-→ PreOutput_Barrier
-→ IO_Write
-→ Command_Verifier
+runtime-integrated
 ```
 
 ---
@@ -222,11 +226,9 @@ RISK-047
 ## Remaining gaps
 
 ```text
-- no output freshness epochs;
-- no stale-output lease invalidation;
-- no retained output decay semantics;
 - verifier still post-actuation only;
-- no authoritative snapshot freeze before IO.
+- no immutable runtime snapshot freeze;
+- no pre-actuation HMI publication.
 ```
 
 ---
@@ -238,69 +240,62 @@ RISK-047
 ## Status
 
 ```text
-next critical implementation target
+implemented
+runtime-authoritative
 ```
 
 ---
 
-## Назначение
-
-Устранить:
+## Implemented runtime components
 
 ```text
-stale-output survivability.
+GVL_OUTPUT_EPOCH
+PRG_Output_Freshness_Governor
+PRG_IO_Write freshness-aware hard stop
 ```
 
 ---
 
-## Primary risks addressed
+## Implemented properties
+
+```text
+- output freshness epochs;
+- output lease semantics;
+- forced safe decay;
+- stale-output invalidation;
+- runtime/output epoch linkage;
+- lease-expiration shutdown;
+- authoritative freshness-aware IO gating.
+```
+
+---
+
+## Risks addressed
+
+### substantially mitigated
 
 ```text
 RISK-040
-RISK-044
-RISK-045
-RISK-046
 RISK-047
 ```
 
----
-
-## Required remediation
-
-Introduce:
+### partially mitigated
 
 ```text
-- output freshness epoch;
-- authority-bound outputs;
-- output lease timeout;
-- forced safe decay;
-- stale-output invalidation;
-- runtime epoch linkage to outputs.
+RISK-044
+RISK-045
+RISK-046
 ```
 
 ---
 
-## Main runtime targets
+## Remaining gaps
 
 ```text
-GVL_RUNTIME_EPOCH
-GVL_COMMAND_SHADOW
-GVL_IO
-PRG_IO_Write
-PRG_Command_Arbitration
-```
-
----
-
-## Priority rationale
-
-This stage became highest remaining priority because:
-
-```text
-- runtime authority chain already exists;
-- pre-output barrier already exists;
-- IO blocking already exists;
-- stale physical survivability is now the dominant unresolved safety gap.
+- no monotonic lease timebase;
+- no reboot-safe freshness invalidation;
+- no distributed output epoch fencing;
+- no retained-output quarantine.
 ```
 
 ---
@@ -309,48 +304,66 @@ This stage became highest remaining priority because:
 
 # DISTRIBUTED OWNERSHIP / PLC FENCING
 
-## Назначение
-
-Устранить:
+## Status
 
 ```text
-split-brain
-and stale authority resurrection.
+foundation implemented
+runtime-integrated
 ```
 
 ---
 
-## Primary risks addressed
+## Implemented runtime components
+
+```text
+GVL_PLC_FENCING
+PRG_PLC_Fencing_Governor
+Runtime_Barrier fencing integration
+```
+
+---
+
+## Implemented properties
+
+```text
+- ownership epochs;
+- fencing tokens;
+- semantic authority validation;
+- stale-owner detection foundation;
+- split-brain detection foundation;
+- asymmetric partition detection foundation;
+- fencing-aware runtime invalidation;
+- authority lease expiration.
+```
+
+---
+
+## Risks addressed
+
+### substantially mitigated
 
 ```text
 RISK-044
 RISK-045
+```
+
+### partially mitigated
+
+```text
 RISK-046
 RISK-047
 ```
 
 ---
 
-## Required remediation
-
-Introduce:
+## Remaining gaps
 
 ```text
-- ownership epochs;
-- fencing tokens;
-- stale-owner invalidation;
-- semantic-progress watchdog;
-- asymmetric partition detection.
-```
-
----
-
-## Main runtime targets
-
-```text
-PRG_PLC_Arbitration
-GVL_PLC
-heartbeat ownership semantics
+- no distributed fencing synchronization;
+- no peer epoch negotiation;
+- no semantic-progress watchdog;
+- no monotonic lease authority;
+- no reboot-safe ownership invalidation.
 ```
 
 ---
@@ -359,12 +372,31 @@ heartbeat ownership semantics
 
 # MONOTONIC TIME + STARTUP QUARANTINE
 
-## Назначение
-
-Устранить:
+## Status
 
 ```text
-rollback/reboot semantic corruption.
+highest remaining architectural priority
+not started
+```
+
+---
+
+## Architectural rationale
+
+Current system authority now depends on:
+
+```text
+- runtime epochs;
+- output freshness leases;
+- PLC fencing leases;
+- runtime publication timestamps.
+```
+
+Without monotonic governance:
+
+```text
+all authority chains remain vulnerable
+to rollback/reboot resurrection.
 ```
 
 ---
@@ -388,9 +420,22 @@ Introduce:
 ```text
 - monotonic epoch model;
 - rollback detection;
+- reboot generation IDs;
 - overflow-safe delta wrappers;
 - retained-state quarantine;
-- cold-start epoch.
+- startup quarantine windows;
+- reboot-safe lease invalidation.
+```
+
+---
+
+## Required implementation order
+
+```text
+1. Isolated monotonic layer
+2. Startup quarantine foundation
+3. Monotonic authority publication
+4. Runtime/output/fencing integration
 ```
 
 ---
@@ -398,6 +443,8 @@ Introduce:
 ## Main runtime targets
 
 ```text
+GVL_TIME_MONOTONIC
+PRG_Time_Monotonic_Governor
 PRG_Time_Service
 GVL_TIME_SERVICE
 startup/reboot path
@@ -434,43 +481,9 @@ RISK-043
 
 ---
 
-## Required remediation
-
-Introduce:
-
-```text
-- cleanup epochs;
-- degraded residue invalidation;
-- authority reset during recovery;
-- recovery-clean vs recovery-complete separation;
-- semantic cleanup diagnostics.
-```
-
----
-
-## Main runtime targets
-
-```text
-PRG_Safety_Recovery
-GVL_RECOVERY
-GVL_DEGRADED
-```
-
----
-
 # STAGE 6
 
 # TRANSPORT FRESHNESS GOVERNANCE
-
-## Назначение
-
-Устранить:
-
-```text
-stale transport semantics.
-```
-
----
 
 ## Primary risks addressed
 
@@ -484,43 +497,9 @@ RISK-038
 
 ---
 
-## Required remediation
-
-Introduce:
-
-```text
-- transaction matching;
-- freshness epochs;
-- reconnect stabilization phases;
-- staged transport snapshots;
-- transport acceptance barriers.
-```
-
----
-
-## Main runtime targets
-
-```text
-transport layer
-fieldbus synchronization
-transport publication path
-```
-
----
-
 # STAGE 7
 
 # SAFETY-CRITICAL OBSERVABILITY
-
-## Назначение
-
-Устранить:
-
-```text
-false-safe observability windows.
-```
-
----
 
 ## Primary risks addressed
 
@@ -531,41 +510,16 @@ RISK-041
 
 ---
 
-## Required remediation
-
-Introduce:
-
-```text
-- pre-actuation unsafe-state publication;
-- safety-critical diagnostics path;
-- authoritative runtime snapshots for HMI;
-- emergency visibility barrier.
-```
-
----
-
-## Main runtime targets
-
-```text
-PRG_System_Diagnostics
-PRG_System_BlackBox
-PRG_HMI_Dashboard
-GVL_DEBUG_VIEW
-GVL_EXPLAINABILITY
-```
-
----
-
 # UPDATED MINIMAL EXECUTION ORDER
 
 Recommended practical implementation order:
 
 ```text
 1. Stage 1 — Pre-output safety barrier [implemented]
-2. Stage 0 — Runtime validity/snapshot layer [foundation implemented]
-3. Stage 2 — Output freshness/decay [current priority]
-4. Stage 3 — PLC ownership/fencing
-5. Stage 4 — Monotonic time/startup quarantine
+2. Stage 0 — Runtime validity/snapshot layer [implemented foundation]
+3. Stage 2 — Output freshness/decay [implemented]
+4. Stage 3 — PLC ownership/fencing [implemented foundation]
+5. Stage 4 — Monotonic time/startup quarantine [current priority]
 6. Stage 5 — Recovery cleanup governance
 7. Stage 6 — Transport freshness governance
 8. Stage 7 — Safety-critical observability
@@ -583,7 +537,8 @@ Do NOT:
 - duplicate authority layers;
 - introduce new hidden arbitration paths;
 - mutate execution order without full runtime review;
-- perform partial file rewrites for runtime-critical files.
+- perform partial file rewrites for runtime-critical files;
+- integrate lease semantics without monotonic time governance.
 ```
 
 Prefer:
