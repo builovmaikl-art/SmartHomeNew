@@ -52,6 +52,7 @@
 ✔ Transport reconnect / retry / recovery determinism audit
 ✔ Transport backpressure / queue integrity audit
 ✔ Persistence corruption / state survivability audit
+✔ Memory/state lifetime integrity audit
 ```
 
 ---
@@ -372,81 +373,90 @@ HIGH
 
 ## Absence of authoritative persistence integrity/replay model
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-031
+
+## Absence of authoritative runtime state lifecycle/reset model
+
 ## Суть
 
 В системе фактически отсутствует:
 
 ```text
-formal persistence integrity/governance layer.
+formal runtime state lifecycle/reset governance.
 ```
 
 Проверка показала:
 
 ```text
-- explicit persistence manager не найден;
-- retained-state governance layer отсутствует;
-- persistence CRC/version semantics не найдены;
-- authoritative replay validation отсутствует;
-- retained-state compatibility model отсутствует.
+- explicit reset lifecycle model не найден;
+- centralized runtime cleanup phase отсутствует;
+- sticky/latched-state governance не найден;
+- subsystem-local state invalidation semantics отсутствуют;
+- authoritative runtime reset ownership отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Persistence replay сейчас:
+Runtime state lifecycle сейчас:
 
 ```text
-implicit and trust-based.
+implicit and path-dependent.
 ```
 
-Runtime:
+State:
 
 ```text
-предполагает,
-что retained/restored state:
-- compatible;
-- valid;
-- fresh;
-- semantically safe.
+может:
+- переживать recovery;
+- сохраняться после degraded transition;
+- не очищаться симметрично;
+- resurrection after restart/reconnect.
+```
+
+Очистка state:
+
+```text
+зависит:
+- от execution path;
+- от ordering;
+- от recovery branch;
+- от того, кто последний владел state.
 ```
 
 Но:
 
 ```text
-formal validation barrier
-не найден.
+нет centralized lifecycle governance.
 ```
 
 ---
 
-## Почему это опасно
+## Особенно опасно
 
-После:
-
-```text
-- firmware evolution;
-- partial corruption;
-- unexpected reboot;
-- stale retained memory;
-- incompatible structure change.
-```
-
-runtime:
+В сочетании с:
 
 ```text
-может принять invalid persisted semantics
-как authoritative runtime truth.
-```
-
-Особенно опасно:
-
-```text
-в сочетании с:
-- runtime authority overlap;
 - startup barrier absence;
+- authority overlap;
 - snapshot inconsistency;
-- invariant enforcement gaps.
+- persistence replay;
+- degradation escalation.
+```
+
+Возникает:
+
+```text
+latent semantic resurrection risk.
 ```
 
 ---
@@ -454,12 +464,12 @@ runtime:
 ## Возможные последствия
 
 ```text
-- corrupted retained-state replay;
-- stale runtime authority resurrection;
-- incompatible persistence restore;
-- reboot semantic drift;
-- invalid startup runtime assumptions;
-- difficult corruption recovery/debugging.
+- stale runtime resurrection;
+- sticky invalid state;
+- asymmetric recovery behavior;
+- hidden runtime authority persistence;
+- nondeterministic restart semantics;
+- latent degraded-state leakage.
 ```
 
 ---
@@ -469,26 +479,26 @@ runtime:
 Нужно formalize:
 
 ```text
-authoritative persistence integrity/replay model.
+runtime state lifecycle/reset governance model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- persistence validation barrier;
-- retained-state versioning;
-- CRC/integrity semantics;
-- replay compatibility checks;
-- startup persistence sanitization.
+- centralized runtime cleanup phase;
+- authoritative reset ownership;
+- lifecycle-aware state invalidation;
+- sticky-state governance;
+- deterministic recovery cleanup semantics.
 ```
 
 Также желательно:
 
 ```text
-- replay epoch semantics;
-- corruption recovery mode;
-- stale-retained invalidation;
-- deterministic persistence restore contract.
+- runtime lifecycle epochs;
+- subsystem-local reset contracts;
+- stale-state invalidation barriers;
+- deterministic restart semantics.
 ```
 
 ---
