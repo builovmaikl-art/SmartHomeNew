@@ -16,10 +16,11 @@ PROGRAM MAIN
 //   4. Mode, presence and safety
 //   5. Intent, behavior, scenario and policy
 //   6. Command arbitration
-//   7. Domain execution
-//   8. Pre-output safety barrier
-//   9. Physical IO write
-//   10. Verification, diagnostics, history, HMI
+//   7. Runtime authority barrier
+//   8. Domain execution
+//   9. Pre-output safety barrier
+//   10. Physical IO write
+//   11. Verification, diagnostics, history, HMI
 // ======================================================
 
 // 1. Time / init / configuration
@@ -79,22 +80,26 @@ PRG_Modbus_Register_Scan();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
 
-// 7. Domain execution and domain output projection
+// 7. Authoritative runtime barrier.
+// Must execute after arbitration and before domain output projection.
+PRG_Runtime_Barrier();
+
+// 8. Domain execution and domain output projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 8. Authoritative pre-output safety barrier.
+// 9. Authoritative pre-output safety barrier.
 // Must execute after all domain output projection and before PRG_IO_Write.
 PRG_PreOutput_Safety_Barrier();
 
-// 9. Final physical IO projection.
+// 10. Final physical IO projection.
 // Must remain after pre-output barrier and all domain execution.
 PRG_IO_Write();
 
-// 10. Verification, explainability, diagnostics, history, HMI
+// 11. Verification, explainability, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
