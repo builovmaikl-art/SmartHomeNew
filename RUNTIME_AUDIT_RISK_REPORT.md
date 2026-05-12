@@ -38,6 +38,7 @@
 ✔ Heating runtime governance
 ✔ Runtime ownership consistency
 ✔ Intent/Policy/Command arbitration chain
+✔ IO write / physical projection ownership
 ```
 
 ---
@@ -175,8 +176,6 @@ IO/Input layer
 ```
 
 ---
-
-# Текущие активные риски
 
 # RISK-004
 
@@ -399,6 +398,152 @@ MEDIUM
 
 ---
 
+# RISK-006
+
+## Monolithic IO projection complexity growth
+
+## Суть
+
+`PRG_IO_Write`
+стал:
+
+```text
+слишком большим aggregation/finalization layer.
+```
+
+Сейчас он содержит одновременно:
+
+```text
+- physical projection;
+- safety masking;
+- hard-stop logic;
+- freeze exceptions;
+- access suppression;
+- recovery masking;
+- siren logic;
+- failover logic.
+```
+
+---
+
+## Что показала проверка
+
+На текущий момент:
+
+```text
+critical runtime conflict
+не найден.
+```
+
+Также подтверждено:
+
+```text
+✔ PRG_IO_Write остаётся single physical projection layer
+✔ hidden direct IO writers не обнаружены
+✔ shadow/output separation сохранён
+✔ hardware ownership пока coherent
+```
+
+---
+
+## Проблема
+
+Архитектура пока:
+
+```text
+управляема.
+```
+
+Но:
+
+```text
+complexity accumulation
+уже заметна.
+```
+
+Особенно опасны future interactions между:
+
+```text
+- freeze exceptions;
+- gas/fire overrides;
+- recovery masking;
+- access emergency bypass.
+```
+
+---
+
+## Возможные последствия в будущем
+
+```text
+- conflicting masking rules;
+- hidden output suppression;
+- unsafe override ordering;
+- difficult debugging;
+- accidental output starvation.
+```
+
+---
+
+## Что важно
+
+Пока:
+
+```text
+single IO ownership
+сохраняется.
+```
+
+И:
+
+```text
+physical output architecture
+остаётся coherent.
+```
+
+Но:
+
+```text
+future masking conflicts
+становятся всё вероятнее.
+```
+
+---
+
+## Рекомендуемое направление
+
+В будущем желательно:
+
+```text
+разделить:
+- projection;
+- masking;
+- failover policy;
+- emergency suppression.
+```
+
+При этом:
+
+```text
+single final IO ownership
+должен сохраниться.
+```
+
+---
+
+## Статус
+
+```text
+АКТИВНЫЙ РИСК
+```
+
+Severity:
+
+```text
+MEDIUM
+```
+
+---
+
 # Что дополнительно подтверждено
 
 # Heating runtime
@@ -462,6 +607,19 @@ MEDIUM
 ✔ hidden command writers пока не найдены
 ✔ GVL_COMMAND_SHADOW остаётся главным command aggregation layer
 ✔ catastrophic command conflicts пока не найдены
+```
+
+---
+
+# IO ownership
+
+Подтверждено:
+
+```text
+✔ direct runtime writers в GVL_IO вне PRG_IO_Write не найдены
+✔ physical IO ownership централизован
+✔ hidden hardware bypass пока не найден
+✔ domain layers используют dedicated OUTPUT GVL
 ```
 
 ---
@@ -564,18 +722,15 @@ MEDIUM
 Следующий этап проверки:
 
 ```text
-Transport / IO Write / Domain output realization
+Transport / Modbus / OpenTherm ownership
 ```
-
-Это одна из самых опасных remaining zones.
 
 Там наиболее вероятны:
 
 ```text
-- hidden output writers;
-- shadow/output bypass;
-- direct IO mutation;
-- duplicated hardware ownership;
 - transport/runtime coupling;
-- unsafe final output masking.
+- hidden boiler authority;
+- duplicated transport ownership;
+- stale communication recovery;
+- transport-layer command bypass.
 ```
