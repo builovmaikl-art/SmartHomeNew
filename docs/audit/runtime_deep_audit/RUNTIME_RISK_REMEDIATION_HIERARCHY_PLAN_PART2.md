@@ -396,10 +396,32 @@ PRG_Distributed_Epoch_Governor treats equal peer/local fencing token as conflict
 VALIDATION_REQUIRED
 ```
 
+Дополнительный finding:
+
+```text
+Peer-input ingestion contract is absent from live repository code.
+```
+
+Подтверждённые наблюдения:
+
+```text
+Peer_Fencing_Token / Peer_Runtime_Epoch / Peer_Snapshot_Epoch /
+Peer_Boot_Generation / Peer_Last_Refresh_MS / Peer_Lease_Active
+currently have declaration + consumer logic, but no confirmed live ingestion producer.
+```
+
+Текущий вывод:
+
+```text
+Peer fencing equality cannot be classified as correct or inverted until
+peer-input ingestion and token issuance contract are defined or recovered.
+```
+
 Запрещено:
 
 ```text
 менять equality/inequality semantics без token issuance contract evidence
+удалять peer-input поля без ingestion contract decision
 ```
 
 ---
@@ -457,11 +479,14 @@ writer ownership и compile/reference convergence,
 Следующий порядок:
 
 ```text
-1. distributed fencing token contract validation
-2. broader hard-stop graph validation with direct fetch evidence
-3. ownership matrix/doc consistency update
-4. bounded residual cleanup only after evidence
-5. only then docs/snapshots consistency cleanup
+1. decide distributed peer-input contract direction:
+   - implement/recover ingestion contract, or
+   - explicitly mark peer layer dormant/foundation-only
+2. distributed fencing token contract validation
+3. broader hard-stop graph validation with direct fetch evidence
+4. ownership matrix/doc consistency update
+5. bounded residual cleanup only after evidence
+6. only then docs/snapshots consistency cleanup
 ```
 
 ---
@@ -478,6 +503,7 @@ PRG_Output_Freshness_Governor now consumes distributed aggregate authority only
 GVL_DISTRIBUTED_COMMIT unused commit-token residues removed
 Recovery cleanup code comments and GVL declaration aligned with downstream cleanup role
 known removed-field sweep returned clean
+Peer-input ingestion contract absence recorded
 ```
 
 Текущее состояние:
@@ -487,12 +513,13 @@ distributed snapshot/commit no longer consume downstream output publication epoc
 output freshness no longer consumes peer-detail distributed diagnostics directly
 observability remains downstream visibility-only
 compile/reference convergence for known removed fields is currently clean
+peer-input fields remain unresolved contract surface, not cleanup target
 ```
 
 Остаётся главным validation item:
 
 ```text
-Peer_Fencing_Conflict equality semantics requires token issuance contract evidence
+Peer_Fencing_Conflict equality semantics requires peer-input ingestion + token issuance contract evidence
 ```
 
 ---
@@ -892,6 +919,19 @@ peer-optional continuity foundation
 
 Но это ещё не доказано runtime behavior.
 
+Текущий critical finding:
+
+```text
+Peer-input ingestion contract is not present in live repository code.
+```
+
+Это значит:
+
+```text
+peer fields currently behave as unresolved contract surface,
+not as fully validated live distributed protocol.
+```
+
 ---
 
 ## VALIDATION-D-001
@@ -922,6 +962,14 @@ RISK-047
 
 ```text
 UNVERIFIED_RUNTIME_BEHAVIOR
+```
+
+### Checkpoint note
+
+```text
+No live peer-input ingestion producer was found for distributed peer fields.
+Startup-without-peer behavior must be validated against actual PLC/runtime execution,
+not inferred from declarations alone.
 ```
 
 ---
@@ -960,7 +1008,7 @@ RISK-047
 ### Статус
 
 ```text
-VALIDATION_REQUIRED_AFTER_CHECKPOINT
+BLOCKED_BY_MISSING_PEER_INPUT_CONTRACT
 ```
 
 ### Checkpoint note
@@ -970,6 +1018,55 @@ Peer_Fencing_Conflict currently triggers on equal peer/local fencing token.
 Do not change this without explicit token issuance contract evidence.
 Distributed snapshot/commit baselines no longer consume downstream output publication epoch.
 Output_Freshness consumes aggregate distributed validity/quarantine only.
+Peer-input ingestion producer is not present in live repository code.
+```
+
+---
+
+## VALIDATION-D-003
+
+### Проверка
+
+```text
+peer-input ingestion contract
+```
+
+### Нужно доказать
+
+```text
+who writes Peer_Runtime_Epoch
+who writes Peer_Snapshot_Epoch
+who writes Peer_Boot_Generation
+who writes Peer_Fencing_Token
+who writes Peer_Last_Refresh_MS
+who writes Peer_Lease_Active
+```
+
+### Текущий результат
+
+```text
+No confirmed live producer in repository.
+```
+
+### Статус
+
+```text
+CONTRACT_MISSING_OR_EXTERNAL
+```
+
+### Запрещено
+
+```text
+classify Peer_Fencing_Token equality semantics
+remove peer-input fields
+promote peer validation to stronger authority
+```
+
+до решения:
+
+```text
+implement/recover peer ingestion contract
+or explicitly mark distributed peer layer dormant/foundation-only
 ```
 
 ---
@@ -1110,13 +1207,14 @@ false negative distributed failure
 ### Checkpoint status
 
 ```text
-ACTIVE_VALIDATION_REQUIRED
+BLOCKED_BY_MISSING_PEER_INPUT_CONTRACT
 ```
 
 Причина:
 
 ```text
-Peer_Fencing_Conflict equality semantics requires token contract evidence.
+Peer_Fencing_Conflict equality semantics requires token contract evidence,
+but peer-input ingestion producer is absent from live repository code.
 ```
 
 ---
@@ -1200,11 +1298,14 @@ adding new governance layers
 expanding observability authority
 ```
 
-После latest convergence delta текущий immediate priority:
+После latest distributed validation finding текущий immediate priority:
 
 ```text
-1. distributed fencing token contract validation
-2. broader hard-stop graph validation with direct fetch evidence
-3. ownership matrix/doc consistency update
-4. bounded residual cleanup only after evidence
+1. decide distributed peer-input contract direction:
+   - implement/recover ingestion contract, or
+   - explicitly mark peer layer dormant/foundation-only
+2. only then classify Peer_Fencing_Conflict equality semantics
+3. broader hard-stop graph validation with direct fetch evidence
+4. ownership matrix/doc consistency update
+5. bounded residual cleanup only after evidence
 ```
