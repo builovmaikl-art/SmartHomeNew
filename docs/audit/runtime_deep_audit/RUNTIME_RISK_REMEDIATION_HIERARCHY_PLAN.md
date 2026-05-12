@@ -7,6 +7,7 @@
 - иерархию возникновения runtime risks;
 - минимальный remediation order;
 - dependency graph между рисками;
+- текущий implementation status;
 - порядок исправлений с минимальным количеством runtime/code passes.
 
 Цель:
@@ -36,68 +37,115 @@ ROOT AUTHORITY
 
 ---
 
-# STAGE 0
+# CURRENT IMPLEMENTATION STATUS
 
-# AUTHORITATIVE RUNTIME VALIDITY MODEL
-
-## Назначение
-
-Создать:
+## IMPLEMENTED
 
 ```text
-- authoritative runtime epoch;
-- immutable runtime snapshot semantics;
-- execution phase visibility model;
-- invariant enforcement;
-- impossible-state rejection.
+[done] Stage 1 — Pre-output safety barrier
+[done] Stage 0 — Runtime validity barrier foundation
 ```
 
-Без этого последующие fixes будут:
+## IN PROGRESS
 
 ```text
-patch-level
-и semantically unstable.
+[in-progress] Stage 2 — Output freshness / output validity
+```
+
+## NOT STARTED
+
+```text
+[pending] Stage 3 — Distributed ownership / PLC fencing
+[pending] Stage 4 — Monotonic time / startup quarantine
+[pending] Stage 5 — Recovery cleanup governance
+[pending] Stage 6 — Transport freshness governance
+[pending] Stage 7 — Safety-critical observability
 ```
 
 ---
 
-## Primary risks addressed
+# STAGE 0
+
+# AUTHORITATIVE RUNTIME VALIDITY MODEL
+
+## Status
+
+```text
+foundation implemented
+```
+
+---
+
+## Implemented runtime components
+
+```text
+GVL_RUNTIME_EPOCH
+PRG_Runtime_Barrier
+```
+
+---
+
+## Integrated execution order
+
+```text
+Command_Arbitration
+→ Runtime_Barrier
+→ Domain_Execution
+→ PreOutput_Barrier
+→ IO_Write
+→ Verification
+```
+
+---
+
+## Implemented runtime properties
+
+```text
+- authoritative runtime epoch;
+- runtime validity publication;
+- deterministic execution phases;
+- impossible-state rejection foundation;
+- runtime authority publication;
+- runtime barrier state;
+- runtime IO publication gating.
+```
+
+---
+
+## Risks addressed
+
+### substantially mitigated
+
+```text
+RISK-024
+RISK-025
+RISK-026
+RISK-032
+RISK-037
+```
+
+### partially mitigated
 
 ```text
 RISK-005
 RISK-016
 RISK-020
 RISK-021
-RISK-024
-RISK-025
-RISK-026
 RISK-031
-RISK-032
-RISK-037
 RISK-039
 ```
 
 ---
 
-## Main runtime targets
+## Remaining gaps
 
 ```text
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-PRG_Runtime_Barrier
-PRG_Runtime_Invariant_Check
-```
-
----
-
-## Required properties
-
-```text
-- cycle-stable visibility;
-- immutable publication epoch;
-- impossible-state rejection;
-- authoritative runtime validity;
-- deterministic execution phases.
+- immutable runtime snapshots still incomplete;
+- no snapshot copy isolation;
+- no publication freeze barrier;
+- no distributed runtime epochs;
+- no stale snapshot invalidation;
+- no runtime lease semantics.
 ```
 
 ---
@@ -106,80 +154,79 @@ PRG_Runtime_Invariant_Check
 
 # PRE-OUTPUT SAFETY BARRIER
 
-## Назначение
-
-Устранить:
+## Status
 
 ```text
-unsafe physical publication
-before verification.
-```
-
-Главный immediate blocker.
-
----
-
-## Primary risks addressed
-
-```text
-RISK-015
-RISK-037
-RISK-038
-RISK-040
-RISK-041 (partial)
-RISK-047 (partial)
+implemented
 ```
 
 ---
 
-## Current critical flaw
+## Implemented runtime components
+
+```text
+PRG_PreOutput_Safety_Barrier
+GVL_COMMAND_VERIFY.PreOutput_*
+PRG_IO_Write authoritative block gate
+```
+
+---
+
+## Implemented execution order
 
 Current MAIN order:
 
 ```text
-PRG_IO_Write();
-PRG_Command_Verifier();
-```
-
-creates:
-
-```text
-same-cycle unsafe physical window.
+Runtime_Barrier
+→ Domain_Execution
+→ PreOutput_Barrier
+→ IO_Write
+→ Command_Verifier
 ```
 
 ---
 
-## Required remediation
-
-Target order:
+## Implemented properties
 
 ```text
-PRG_Command_Verifier
-→ PRG_PreOutput_Safety_Barrier
-→ PRG_IO_Write
-```
-
-Verifier must become:
-
-```text
-blocking authoritative safety barrier
-```
-
-instead of:
-
-```text
-diagnostic-after-fact layer.
+- authoritative pre-output validation;
+- hard IO publication gate;
+- forced safe projection;
+- command/output mismatch rejection;
+- impossible-state rejection before IO publication;
+- blocked-publication traceability.
 ```
 
 ---
 
-## Main runtime targets
+## Risks addressed
+
+### substantially mitigated
 
 ```text
-MAIN
-PRG_Command_Verifier
-PRG_IO_Write
-PRG_PreOutput_Safety_Barrier
+RISK-037
+RISK-038
+RISK-040
+```
+
+### partially mitigated
+
+```text
+RISK-015
+RISK-041
+RISK-047
+```
+
+---
+
+## Remaining gaps
+
+```text
+- no output freshness epochs;
+- no stale-output lease invalidation;
+- no retained output decay semantics;
+- verifier still post-actuation only;
+- no authoritative snapshot freeze before IO.
 ```
 
 ---
@@ -187,6 +234,14 @@ PRG_PreOutput_Safety_Barrier
 # STAGE 2
 
 # OUTPUT FRESHNESS / OUTPUT VALIDITY
+
+## Status
+
+```text
+next critical implementation target
+```
+
+---
 
 ## Назначение
 
@@ -219,7 +274,8 @@ Introduce:
 - authority-bound outputs;
 - output lease timeout;
 - forced safe decay;
-- stale-output invalidation.
+- stale-output invalidation;
+- runtime epoch linkage to outputs.
 ```
 
 ---
@@ -227,10 +283,24 @@ Introduce:
 ## Main runtime targets
 
 ```text
+GVL_RUNTIME_EPOCH
 GVL_COMMAND_SHADOW
 GVL_IO
 PRG_IO_Write
 PRG_Command_Arbitration
+```
+
+---
+
+## Priority rationale
+
+This stage became highest remaining priority because:
+
+```text
+- runtime authority chain already exists;
+- pre-output barrier already exists;
+- IO blocking already exists;
+- stale physical survivability is now the dominant unresolved safety gap.
 ```
 
 ---
@@ -486,14 +556,14 @@ GVL_EXPLAINABILITY
 
 ---
 
-# MINIMAL EXECUTION ORDER
+# UPDATED MINIMAL EXECUTION ORDER
 
 Recommended practical implementation order:
 
 ```text
-1. Stage 1 — Pre-output safety barrier
-2. Stage 0 — Runtime validity/snapshot layer
-3. Stage 2 — Output freshness/decay
+1. Stage 1 — Pre-output safety barrier [implemented]
+2. Stage 0 — Runtime validity/snapshot layer [foundation implemented]
+3. Stage 2 — Output freshness/decay [current priority]
 4. Stage 3 — PLC ownership/fencing
 5. Stage 4 — Monotonic time/startup quarantine
 6. Stage 5 — Recovery cleanup governance
@@ -511,7 +581,9 @@ Do NOT:
 - patch isolated risks independently;
 - add scattered local fixes;
 - duplicate authority layers;
-- introduce new hidden arbitration paths.
+- introduce new hidden arbitration paths;
+- mutate execution order without full runtime review;
+- perform partial file rewrites for runtime-critical files.
 ```
 
 Prefer:
