@@ -2,480 +2,91 @@
 
 # Purpose
 
-This document defines the active donor-extraction workflow for unused/disconnected `FB_Heating*.st` blocks.
+This document records the finalized donor-cleanup and runtime decomposition direction for the heating subsystem.
 
-The project no longer treats grey/disconnected heating FBs as automatic reconnect candidates.
+The project no longer treats disconnected `FB_Heating*.st` blocks as reconnect candidates.
 
-The new direction is:
+Canonical engineering direction:
 
 ```text
-extract useful behavior
-→ merge into active runtime owners
+extract bounded useful semantics
+→ integrate into active runtime owners
 → verify ownership/runtime path
 → remove donor blocks
 ```
 
-without creating:
+without introducing:
 
 ```text
-- second orchestration layer;
-- duplicate runtime authority;
-- detached parallel runtime path;
-- hidden safety ownership conflicts.
-```
-
-This document continues the direction already established in:
-
-```text
-HEATING_ACTIVE_FB_CALL_GRAPH_AUDIT.md
-HEATING_ALLOCATION_MIGRATION_PHASE.md
+- duplicate orchestration layers;
+- parallel runtime authority;
+- detached execution paths;
+- hidden ownership conflicts.
 ```
 
 ---
 
-# Core engineering rule
+# Final architectural result
+
+The heating runtime is now phase-oriented.
+
+Canonical runtime orchestration:
 
 ```text
-DONOR EXTRACTION FIRST
-RECONNECT NEVER BY DEFAULT
+PRG_Heating
+ ├── Observer_Phase
+ ├── DHW_Manager
+ ├── Heating_Manager
+ ├── Service_Gating_Phase
+ ├── State_Publication_Phase
+ ├── Diagnostics_Phase
+ └── Output_Projection_Phase
+```
+
+Important invariant:
+
+```text
+single active runtime authority path
 ```
 
 Meaning:
 
 ```text
-old FBs are mined for useful bounded logic
-instead of reconnecting historical orchestration pipelines.
-```
-
-Allowed:
-
-```text
-- bounded logic extraction;
-- ownership-safe merge;
-- observability extraction;
-- policy extraction;
-- diagnostics extraction;
-- allocation semantics extraction.
-```
-
-Forbidden:
-
-```text
-- reconnecting obsolete orchestration shells;
-- reconnecting detached authority layers;
-- creating parallel runtime paths;
-- restoring historical runtime wholesale.
+all donor behavior must be merged
+into active runtime ownership layers
+instead of reconnecting historical orchestration.
 ```
 
 ---
 
-# Current active target architecture
+# Final donor cleanup result
 
-Current active direction:
+The disconnected heating donor cleanup is considered complete.
 
-```text
-PRG_Heating
-→ FB_Heating_System_Manager
-    → Circuit_Control
-    → Demand_Map
-    → Policy_Priority_Bridge
-    → Allocation_Filter
-    → Runtime_Observability
-    → Manifold_Control
-    → Boiler_Control
-```
-
-Important rule:
+Verified removed groups include:
 
 ```text
-All extracted donor behavior must be merged
-into existing active runtime owners.
-```
-
-NOT:
-
-```text
-new upper orchestration shells.
-```
-
----
-
-# Donor classification model
-
-## Category A — Already extracted / obsolete donor
-
-Definition:
-
-```text
-useful logic already absorbed into active runtime
-```
-
-Expected final action:
-
-```text
-delete donor after verification
-```
-
----
-
-## Category B — Useful donor remains
-
-Definition:
-
-```text
-still contains bounded useful logic
-not yet fully represented in active runtime
-```
-
-Expected action:
-
-```text
-extract incrementally
-then delete donor
-```
-
----
-
-## Category C — Dangerous authority donor
-
-Definition:
-
-```text
-contains hard authority logic
-unsafe for direct reconnect
-```
-
-Expected action:
-
-```text
-extract concepts only
-never reconnect directly
-```
-
----
-
-## Category D — Grey reserved scaffold
-
-Definition:
-
-```text
-future-reserved or supervision-oriented architecture
-not active runtime logic donor
-```
-
-Expected action:
-
-```text
-keep isolated
-no reconnect
-no blind deletion
-```
-
----
-
-# Current donor inventory
-
-## 1. FB_Heating_Decision_Context
-
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no production-root file remains;
-- no active runtime reference remains;
-- only docs/test-harness/snapshots/history references remain;
-- active replacement path is FB_Heating_Allocation_Filter.
-```
-
-Useful behavior historically provided:
-
-```text
-- manifold availability filtering;
-- service-state exclusion;
-- pressure/current degradation exclusion;
-- manifold enable decision;
-- priority-ordered selection;
-- thermal budget limiting.
-```
-
-Current active replacement path:
-
-```text
-FB_Heating_Allocation_Filter
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 2 VERIFIED COMPLETE
-```
-
----
-
-## 2. FB_Heating_Thermal_Allocation
-
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no production-root file remains;
-- no active runtime reference remains;
-- only docs/snapshots/history references remain;
-- active replacement path is FB_Heating_Policy_Priority_Bridge + FB_Heating_Allocation_Filter.
-```
-
-Useful behavior historically provided:
-
-```text
-- manifold base priority;
-- zone priority bias;
-- guest preheat priority boost;
-- policy priority multiplier;
-- manifold thermal weight;
-- thermal budget semantics.
-```
-
-Current active replacement path:
-
-```text
-FB_Heating_Policy_Priority_Bridge
-FB_Heating_Allocation_Filter
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 2 VERIFIED COMPLETE
-```
-
----
-
-## 3. FB_Heating_Execution_Core
-
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no active runtime references found;
-- no production-root file remains;
-- only snapshots/history references remain.
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 1 VERIFIED COMPLETE
-```
-
----
-
-## 4. FB_Heating_Orchestration
-
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no active runtime references found;
-- no production-root file remains;
-- only snapshots/history references remain.
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 1 VERIFIED COMPLETE
-```
-
----
-
-## 5. FB_Heating_Override_Layer
-
-Current status:
-
-```text
-dangerous hard-authority donor
-```
-
-Historical authority:
-
-```text
-- pump disable;
-- valve disable;
-- boiler OT override;
-- DHW override;
-- heater override.
+- orchestration wrappers;
+- detached execution shells;
+- obsolete allocation layers;
+- duplicated protection layers;
+- disconnected Runtime_* experimental scaffold;
+- detached diagnostics donors;
+- disconnected supervision scaffold;
+- unused runtime analytics scaffold.
 ```
 
 Important:
 
 ```text
-contains useful authority-isolation concepts
-but must never be reconnected directly.
-```
-
-Current direction:
-
-```text
-extract concepts only
-then delete if fully superseded
-```
-
-Current classification:
-
-```text
-CATEGORY C
-BATCH 4 TARGET
+snapshots/history were intentionally preserved.
 ```
 
 ---
 
-## 6. FB_FloorHeating_Freeze_Protection
+# Verified completed donor removals
 
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no production-root file remains;
-- no active runtime reference remains;
-- only docs/snapshots/history references remain;
-- active replacement path is FB_Heating_Safety_Gate + FB_Heating_Safe_State.
-```
-
-Historical behavior:
-
-```text
-- floor freeze detection;
-- outdoor freeze detection;
-- forced circulation / pump behavior.
-```
-
-Current active replacement path:
-
-```text
-FB_Heating_Safety_Gate
-FB_Heating_Safe_State
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 3 VERIFIED COMPLETE
-```
-
----
-
-## 7. FB_FloorHeating_Overheat_Protection
-
-Current status:
-
-```text
-verified removed from production root
-```
-
-Verification result:
-
-```text
-- no production-root file remains;
-- no active runtime reference remains;
-- only docs/snapshots/history references remain;
-- active replacement path is FB_Heating_Circuit_Control.
-```
-
-Historical behavior:
-
-```text
-- floor overheat threshold detection;
-- circuit valve shutdown.
-```
-
-Current active replacement path:
-
-```text
-FB_Heating_Circuit_Control
-```
-
-Current classification:
-
-```text
-CATEGORY A
-BATCH 3 VERIFIED COMPLETE
-```
-
----
-
-## 8. FB_Heating_Runtime_* family
-
-Current status:
-
-```text
-mostly supervision / telemetry / analytics scaffold
-```
-
-Important:
-
-```text
-these are NOT direct runtime-control donors.
-```
-
-Allowed extraction:
-
-```text
-- observability ideas;
-- telemetry projection;
-- runtime validation semantics;
-- anomaly analytics;
-- passive diagnostics.
-```
-
-Forbidden:
-
-```text
-wholesale reconnect
-```
-
-Current classification:
-
-```text
-CATEGORY D
-```
-
----
-
-# Cleanup strategy
-
-## Batch 1 — Proven obsolete wrappers
-
-Candidates:
+## Removed orchestration donors
 
 ```text
 FB_Heating_Execution_Core
@@ -485,22 +96,12 @@ FB_Heating_Orchestration
 Status:
 
 ```text
-VERIFIED COMPLETE
-```
-
-Verification result:
-
-```text
-- no active runtime references found;
-- no production-root files remain;
-- snapshots/history copies preserved.
+VERIFIED REMOVED
 ```
 
 ---
 
-## Batch 2 — Extracted allocation donors
-
-Candidates:
+## Removed allocation donors
 
 ```text
 FB_Heating_Decision_Context
@@ -510,23 +111,19 @@ FB_Heating_Thermal_Allocation
 Status:
 
 ```text
-VERIFIED COMPLETE
+VERIFIED REMOVED
 ```
 
-Verification result:
+Replacement path:
 
 ```text
-- no production-root files remain;
-- no active runtime references remain;
-- active replacement path verified through Allocation_Filter and Policy_Priority_Bridge;
-- snapshots/history copies preserved.
+FB_Heating_Allocation_Filter
+FB_Heating_Policy_Priority_Bridge
 ```
 
 ---
 
-## Batch 3 — Absorbed protection duplicates
-
-Candidates:
+## Removed duplicated protection donors
 
 ```text
 FB_FloorHeating_Freeze_Protection
@@ -536,77 +133,99 @@ FB_FloorHeating_Overheat_Protection
 Status:
 
 ```text
-VERIFIED COMPLETE
+VERIFIED REMOVED
 ```
 
-Verification result:
+Replacement path:
 
 ```text
-- no production-root files remain;
-- no active runtime references remain;
-- freeze behavior replacement verified in Safety_Gate + Safe_State;
-- overheat behavior replacement verified in Circuit_Control;
-- snapshots/history copies preserved.
+FB_Heating_Safety_Gate
+FB_Heating_Safe_State
+FB_Heating_Circuit_Control
 ```
 
 ---
 
-## Batch 4 — Dangerous authority donor review
-
-Candidate:
+## Removed diagnostics/supervision donors
 
 ```text
-FB_Heating_Override_Layer
+FB_Heating_Diagnostics
+FB_State_Snapshot_Manager
 ```
 
 Status:
 
 ```text
-NEXT ACTIVE TARGET
-```
-
-Special rule:
-
-```text
-do not delete blindly
+VERIFIED REMOVED
 ```
 
 Reason:
 
 ```text
-contains historical authority semantics
-that may still be useful architecturally.
+their remaining useful semantics were either integrated
+or deemed architecturally unjustified.
 ```
 
 ---
 
-# Required verification workflow
-
-Before any donor deletion or verified-complete marking:
+## Retained utility
 
 ```text
-1. repository reference search;
-2. project participation check;
-3. ownership overlap verification;
-4. replacement-path verification;
-5. compile/runtime risk review;
-6. fetch-after-verification.
+F_Modbus_RTU_CRC16
+```
+
+Status:
+
+```text
+KEEP ACTIVE
+```
+
+Reason:
+
+```text
+deterministic standalone utility function.
 ```
 
 ---
 
-# Main architectural invariant
+# Runtime decomposition result
 
-The invariant that must never be violated:
+The previous monolithic procedural runtime orchestration was decomposed into explicit deterministic phases.
 
-```text
-single active runtime authority path
-```
-
-Meaning:
+Integrated runtime phases:
 
 ```text
-all useful donor behavior
-must be merged into existing active owners
-instead of restoring detached orchestration layers.
+FB_Heating_Runtime_Observer_Phase
+FB_Heating_Runtime_Service_Gating_Phase
+FB_Heating_Runtime_State_Publication_Phase
+FB_Heating_Runtime_Diagnostics_Phase
+FB_Heating_Runtime_Output_Projection_Phase
 ```
+
+Result:
+
+```text
+PRG_Heating now acts primarily as:
+- sequencing layer;
+- runtime context coordinator;
+- deterministic phase scheduler.
+```
+
+---
+
+# Strategic conclusion
+
+The heating donor cleanup and runtime decomposition initiative is considered complete.
+
+Future work should focus on:
+
+```text
+- bounded subsystem evolution;
+- policy refinement;
+- observability improvements;
+- diagnostics quality;
+- runtime explainability;
+- safety verification.
+```
+
+NOT on restoring historical orchestration layers.
