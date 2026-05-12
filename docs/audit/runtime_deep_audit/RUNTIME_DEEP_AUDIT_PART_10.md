@@ -544,3 +544,154 @@ Need explicit tests for:
 - dual-controller arbitration;
 - reconnect oscillation scenarios.
 ```
+
+---
+
+# RISK-045
+
+## Арбитраж PLC не защищён от асимметричной видимости heartbeat
+
+Severity:
+
+```text
+CRITICAL
+```
+
+### Runtime mechanics
+
+В `PRG_PLC_Arbitration` каждый PLC принимает решение локально на основании:
+
+```text
+G_Remote_PLC_Pulse
+G_Remote_PLC_Last_Seen_MS
+G_Remote_PLC_Alive
+G_Local_PLC_ID
+G_Active_PLC_ID
+```
+
+Критично:
+
+```text
+G_Remote_PLC_Alive
+вычисляется локально
+по локальному last_seen.
+```
+
+Это позволяет ситуации:
+
+```text
+PLC-A считает PLC-B alive
+PLC-B считает PLC-A dead
+```
+
+или наоборот.
+
+Не найдено:
+
+```text
+- quorum/consensus;
+- mutual ownership confirmation;
+- asymmetric partition detection;
+- bidirectional liveness proof;
+- split-brain suppression window.
+```
+
+---
+
+### Trigger conditions
+
+```text
+- асимметричный network partition;
+- one-sided packet loss;
+- delayed heartbeat delivery;
+- transport half-recovery;
+- reconnect race.
+```
+
+---
+
+### Failure chain
+
+```text
+heartbeat visibility becomes asymmetric
+↓
+PLC-A computes remote alive
+↓
+PLC-B computes remote dead
+↓
+both execute different ownership logic
+↓
+runtime authority diverges
+```
+
+---
+
+### Consequences
+
+```text
+- asymmetric split-brain;
+- dual-active control windows;
+- one-sided failover;
+- conflicting runtime ownership;
+- nondeterministic physical outputs;
+- catastrophic controller disagreement.
+```
+
+---
+
+### Почему это критично
+
+Сейчас система предполагает:
+
+```text
+local heartbeat visibility
+≈ global ownership truth.
+```
+
+Но при distributed recovery:
+
+```text
+локальная видимость
+не гарантирует
+глобальную согласованность ownership.
+```
+
+Это создаёт:
+
+```text
+asymmetric split-brain risk.
+```
+
+Особенно опасно вместе с:
+
+```text
+- RISK-044 stale authority resurrection;
+- reconnect instability;
+- transport lag;
+- отсутствием fencing tokens;
+- отсутствием ownership epochs.
+```
+
+---
+
+### Corrective directions
+
+```text
+- ввести bidirectional ownership confirmation;
+- добавить asymmetric partition detection;
+- реализовать quorum/fencing semantics;
+- разделить liveness и ownership validity;
+- добавить split-brain suppression barrier.
+```
+
+---
+
+### Verification strategy
+
+```text
+- asymmetric packet loss;
+- one-sided heartbeat visibility;
+- reconnect under partial partition;
+- split-brain failover simulation;
+- delayed heartbeat replay.
+```
