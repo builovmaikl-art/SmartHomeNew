@@ -42,6 +42,7 @@
 ✔ Persistence/governance coupling audit
 ✔ Initialization / cold-start / reboot integrity audit
 ✔ Startup barrier / early-consumer audit
+✔ Startup transient stabilization audit
 ```
 
 ---
@@ -242,57 +243,62 @@ HIGH
 
 ## Absence of unified validated-runtime barrier
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-021
+
+## Absence of startup transient stabilization barrier
+
 ## Суть
 
 В системе отсутствует:
 
 ```text
-единый validated-runtime / initialized-runtime contract.
+centralized startup stabilization layer.
 ```
 
 Проверка показала:
 
 ```text
-- G_System_Initialized не найден;
-- Init_Done / Startup_Complete / FirstScan guards отсутствуют;
-- unified startup barrier отсутствует;
-- subsystem-wide initialization contract отсутствует.
+- centralized warmup timers не найдены;
+- startup stabilization gate отсутствует;
+- explicit IO stabilization barrier перед PRG_IO_Write отсутствует;
+- unified transient suppression layer отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Subsystem начинают runtime execution:
+Во время первых PLC cycles:
 
 ```text
-без единой гарантии,
-что:
-- config validated;
-- mappings stable;
-- runtime restored;
-- persistence replay completed;
-- startup sequencing finalized.
+transient commands
+могут пройти
+до полной runtime stabilization.
 ```
 
-Startup semantics сейчас:
+Особенно при:
 
 ```text
-distributed and implicit.
+- reboot;
+- recovery;
+- persistence replay;
+- delayed transport availability;
+- partially initialized config;
+- asynchronous diagnostics restore.
 ```
 
-Каждый subsystem:
+runtime может:
 
 ```text
-предполагает,
-что system уже готова.
-```
-
-Но:
-
-```text
-нет authoritative signal,
-что runtime действительно validated.
+публиковать unstable intermediate intent/state.
 ```
 
 ---
@@ -300,12 +306,11 @@ distributed and implicit.
 ## Возможные последствия
 
 ```text
-- partially initialized execution;
-- startup-only nondeterminism;
-- reboot behavior drift;
-- unstable early-cycle reads;
-- subsystem startup asymmetry;
-- invalid runtime assumptions.
+- first-cycle unsafe outputs;
+- transient command leakage;
+- startup oscillation windows;
+- unstable early-cycle IO behavior;
+- reboot transient nondeterminism.
 ```
 
 ---
@@ -315,25 +320,25 @@ distributed and implicit.
 Нужно formalize:
 
 ```text
-validated-runtime lifecycle.
+startup stabilization semantics.
 ```
 
 Предпочтительное направление:
 
 ```text
-- explicit startup barrier;
-- validated-runtime state;
-- runtime-ready publication;
-- subsystem activation gating.
+- startup transient suppression barrier;
+- runtime warmup phase;
+- IO stabilization gate;
+- delayed output enable;
+- post-startup synchronization window.
 ```
 
 Также желательно:
 
 ```text
-- separate init phase;
-- post-validation activation phase;
-- startup synchronization contract;
-- reboot stabilization semantics.
+- transient-safe startup contract;
+- first-cycle output masking;
+- startup deterministic timing model.
 ```
 
 ---
