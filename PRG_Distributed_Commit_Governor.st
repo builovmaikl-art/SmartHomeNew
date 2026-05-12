@@ -38,8 +38,12 @@ GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired := FALSE;
 // ------------------------------------------------------
 // Local publication projection.
 // ------------------------------------------------------
+// Distributed commit is upstream of output freshness in MAIN.
+// Therefore local commit baseline must not read GVL_OUTPUT_EPOCH.
+// It uses the already-prepared distributed snapshot epoch instead.
+// ------------------------------------------------------
 
-GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch := GVL_OUTPUT_EPOCH.Output_Publication_Epoch;
+GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 
 // ------------------------------------------------------
