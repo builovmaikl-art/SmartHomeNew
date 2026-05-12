@@ -51,6 +51,7 @@
 ✔ Communication / transport resilience audit
 ✔ Transport reconnect / retry / recovery determinism audit
 ✔ Transport backpressure / queue integrity audit
+✔ Persistence corruption / state survivability audit
 ```
 
 ---
@@ -359,71 +360,93 @@ HIGH
 
 ## Absence of deterministic transport queue/backpressure model
 
-## Суть
-
-Transport scheduler:
+Severity:
 
 ```text
-не имеет formal queue/backpressure semantics.
+HIGH
+```
+
+---
+
+# RISK-030
+
+## Absence of authoritative persistence integrity/replay model
+
+## Суть
+
+В системе фактически отсутствует:
+
+```text
+formal persistence integrity/governance layer.
 ```
 
 Проверка показала:
 
 ```text
-PRG_Modbus_Master:
-- сканирует Request[1..16];
-- берёт первый Enable;
-- держит один Active transaction;
-- retry выполняется inline;
-- fairness/priority model отсутствует.
-```
-
-Также не найдено:
-
-```text
-- request queue lifecycle;
-- starvation prevention;
-- retry isolation;
-- transport saturation policy;
-- delayed-request invalidation;
-- backpressure semantics.
+- explicit persistence manager не найден;
+- retained-state governance layer отсутствует;
+- persistence CRC/version semantics не найдены;
+- authoritative replay validation отсутствует;
+- retained-state compatibility model отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-При:
+Persistence replay сейчас:
 
 ```text
-- timeout storm;
-- slow slave;
-- reconnect oscillation;
-- repeated retries;
-- permanently enabled requests.
+implicit and trust-based.
 ```
 
-scheduler:
+Runtime:
 
 ```text
-может:
-- starvation других requests;
-- endlessly retry same request;
-- накапливать delayed semantics;
-- создавать unfair transport behavior.
+предполагает,
+что retained/restored state:
+- compatible;
+- valid;
+- fresh;
+- semantically safe.
 ```
 
-Особенно важно:
+Но:
 
 ```text
-retry встроен прямо в active transaction lifecycle.
+formal validation barrier
+не найден.
 ```
 
-То есть:
+---
+
+## Почему это опасно
+
+После:
 
 ```text
-один unstable exchange
-может monopolize transport execution window.
+- firmware evolution;
+- partial corruption;
+- unexpected reboot;
+- stale retained memory;
+- incompatible structure change.
+```
+
+runtime:
+
+```text
+может принять invalid persisted semantics
+как authoritative runtime truth.
+```
+
+Особенно опасно:
+
+```text
+в сочетании с:
+- runtime authority overlap;
+- startup barrier absence;
+- snapshot inconsistency;
+- invariant enforcement gaps.
 ```
 
 ---
@@ -431,12 +454,12 @@ retry встроен прямо в active transaction lifecycle.
 ## Возможные последствия
 
 ```text
-- transport starvation;
-- retry amplification;
-- unfair request scheduling;
-- delayed command execution;
-- transport saturation instability;
-- communication jitter propagation.
+- corrupted retained-state replay;
+- stale runtime authority resurrection;
+- incompatible persistence restore;
+- reboot semantic drift;
+- invalid startup runtime assumptions;
+- difficult corruption recovery/debugging.
 ```
 
 ---
@@ -446,26 +469,26 @@ retry встроен прямо в active transaction lifecycle.
 Нужно formalize:
 
 ```text
-deterministic transport scheduling/backpressure model.
+authoritative persistence integrity/replay model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- explicit request queue lifecycle;
-- retry isolation semantics;
-- starvation prevention;
-- transport fairness policy;
-- saturation-aware scheduling.
+- persistence validation barrier;
+- retained-state versioning;
+- CRC/integrity semantics;
+- replay compatibility checks;
+- startup persistence sanitization.
 ```
 
 Также желательно:
 
 ```text
-- queue aging/invalidation;
-- retry cooldown windows;
-- deterministic scheduler policy;
-- transport load governance.
+- replay epoch semantics;
+- corruption recovery mode;
+- stale-retained invalidation;
+- deterministic persistence restore contract.
 ```
 
 ---
