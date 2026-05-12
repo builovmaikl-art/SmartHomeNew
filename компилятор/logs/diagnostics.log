@@ -285,7 +285,7 @@ drwxr-xr-x  3 runner runner   4096 May 12 16:26 .github
 -rw-r--r--  1 runner runner   9152 May 12 16:26 PRG_Observability_Governor.st
 -rw-r--r--  1 runner runner   5109 May 12 16:26 PRG_OpenTherm_Adapter_Status.st
 -rw-r--r--  1 runner runner   4130 May 12 16:26 PRG_OpenTherm_Transport.st
--rw-r--r--  1 runner runner   5621 May 12 16:26 PRG_Output_Freshness_Governor.st
+-rw-r--r--  1 runner runner   7504 May 12 16:26 PRG_Output_Freshness_Governor.st
 -rw-r--r--  1 runner runner    206 May 12 16:26 PRG_PLC_A.st
 -rw-r--r--  1 runner runner   1094 May 12 16:26 PRG_PLC_Arbitration.st
 -rw-r--r--  1 runner runner    205 May 12 16:26 PRG_PLC_B.st
@@ -441,4 +441,4 @@ total 1440
 drwxr-xr-x 2 runner runner    4096 May 12 16:26 .
 drwxr-xr-x 5 runner runner    4096 May 12 16:26 ..
 -rw-r--r-- 1 runner runner       0 May 12 16:26 .gitkeep
--rw-r--r-- 1 runner runner 1462356 May 12 16:26 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1464991 May 12 16:26 RESULT_methods_clean.xml
