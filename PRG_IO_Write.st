@@ -11,22 +11,26 @@ VAR
     L_Freeze_Active : BOOL;
     L_Gas_Fire_Siren_Enable : BOOL;
     L_PreOutput_Block_IO : BOOL;
+    L_Output_Freshness_Block : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
 L_PreOutput_Block_IO := GVL_COMMAND_VERIFY.PreOutput_Block_IO;
-L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO;
+L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay OR (NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid) OR GVL_OUTPUT_EPOCH.Output_Lease_Expired;
+L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO OR L_Output_Freshness_Block;
 L_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_COMMAND_SHADOW.G_Boiler_Stop;
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
 L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Siren OR GVL_ALARM.G_Global_Critical;
 
 // ======================================================
-// AUTHORITATIVE PRE-OUTPUT IO BLOCK GATE
+// AUTHORITATIVE IO HARD-STOP GATE
 // ======================================================
 // Physical IO publication must never continue when:
 //   - PLC authority is lost;
 //   - emergency stop is active;
-//   - pre-output barrier rejected current-cycle runtime projection.
+//   - pre-output barrier rejected current-cycle runtime projection;
+//   - output freshness governor invalidated publication;
+//   - output lease expired or forced safe decay is active.
 //
 // RISK coverage:
 //   - RISK-037
@@ -87,6 +91,10 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
 
     IF L_PreOutput_Block_IO THEN
         fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_COMMAND_VERIFY.PreOutput_Last_Error_Code),iText := 'IO blocked by pre-output barrier');
+    END_IF;
+
+    IF L_Output_Freshness_Block THEN
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_OUTPUT_EPOCH.Output_Last_Error_Code),iText := 'IO forced safe by output freshness decay');
     END_IF;
 
     RETURN;
