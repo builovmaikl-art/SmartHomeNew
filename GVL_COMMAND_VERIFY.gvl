@@ -8,4 +8,18 @@ VAR_GLOBAL
     Runtime_Last_Error_Code : UDINT := 0;
     Runtime_Last_Error_Time_MS : UDINT := 0;
     Runtime_Last_Error_Text : STRING(160) := '';
+
+    // ======================================================
+    // PRE-OUTPUT SAFETY BARRIER STATE
+    // ======================================================
+    // Authoritative barrier executed before PRG_IO_Write.
+    // Used to prevent unsafe physical publication.
+    // ======================================================
+
+    PreOutput_Barrier_OK : BOOL := TRUE;
+    PreOutput_Block_IO : BOOL := FALSE;
+    PreOutput_Block_Count : UDINT := 0;
+    PreOutput_Last_Error_Code : UDINT := 0;
+    PreOutput_Last_Error_Time_MS : UDINT := 0;
+    PreOutput_Last_Error_Text : STRING(160) := '';
 END_VAR
