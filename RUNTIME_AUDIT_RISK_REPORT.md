@@ -48,6 +48,7 @@
 ✔ Runtime ownership / authority audit
 ✔ Runtime synchronization / temporal consistency audit
 ✔ Safety dominance / invariant enforcement audit
+✔ Communication / transport resilience audit
 ```
 
 ---
@@ -320,79 +321,77 @@ HIGH
 
 ## Absence of formal runtime invariant enforcement layer
 
-## Суть
-
-В системе фактически отсутствует:
+Severity:
 
 ```text
-formal invariant enforcement layer.
+HIGH
+```
+
+---
+
+# RISK-027
+
+## Missing authoritative transport transaction matching barrier
+
+## Суть
+
+В Modbus/OpenTherm transport pipeline:
+
+```text
+есть sequence fields,
+но отсутствует
+единая authoritative transaction matching policy.
 ```
 
 Проверка показала:
 
 ```text
-- centralized impossible-state validator не найден;
-- runtime consistency reconciliation layer отсутствует;
-- formal invariant enforcement semantics отсутствуют;
-- cross-domain invariant validation отсутствует.
+- PRG_Modbus_Master хранит Active_Index/Active_Sequence;
+- PRG_Modbus_RTU_Bridge применяет response по Request_Index;
+- FB_Modbus_RTU_Driver отслеживает sequence;
+- но centralized stale/mismatched response barrier отсутствует.
 ```
 
 ---
 
 ## Проблема
 
-Safety semantics сейчас:
+Late/stale response:
 
 ```text
-distributed and assumption-based.
+может быть semanticly accepted
+не как explicit stale event,
+а как обычный response path.
 ```
 
-Subsystem:
+Отсутствует formal policy:
 
 ```text
-предполагают,
-что:
-- dangerous combinations не появятся;
-- safety suppression сохранится;
-- orchestration phases не создадут invalid state.
-```
-
-Но:
-
-```text
-нет authoritative layer,
-который это гарантирует.
+- reject stale response;
+- reject mismatched response;
+- isolate late response;
+- invalidate old transaction generation;
+- quarantine delayed RX.
 ```
 
 ---
 
 ## Почему это опасно
 
-Runtime theoretically может:
+Transport recovery/reconnect:
 
 ```text
-создать impossible/intermediate state,
-который:
-- не запрещён centrally;
-- не validated globally;
-- не reconciled before execution.
-```
-
-Особенно при:
-
-```text
-- arbitration override;
-- degraded recovery;
-- startup transient;
-- cross-domain escalation;
-- partially updated runtime state.
+может смешивать:
+- previous transaction state;
+- delayed RX frame;
+- current active request;
+- reconnect transition.
 ```
 
 Возникает:
 
 ```text
-implicit safety assumptions
-without authoritative invariant enforcement.
+transport semantic ambiguity.
 ```
 
 ---
@@ -400,11 +399,12 @@ without authoritative invariant enforcement.
 ## Возможные последствия
 
 ```text
-- theoretically impossible runtime states;
-- latent unsafe orchestration combinations;
-- safety drift between subsystems;
-- hidden invariant violations;
-- timing-dependent unsafe intermediate states.
+- stale response acceptance;
+- response/request mismatch;
+- reconnect semantic drift;
+- delayed RX contaminating current transaction;
+- difficult transport recovery debugging;
+- communication-induced runtime instability.
 ```
 
 ---
@@ -414,26 +414,26 @@ without authoritative invariant enforcement.
 Нужно formalize:
 
 ```text
-runtime invariant enforcement model.
+authoritative transport transaction lifecycle.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized invariant validator;
-- impossible-state reconciliation;
-- safety dominance layer;
-- cross-domain invariant checks;
-- authoritative invariant enforcement phase.
+- authoritative transaction generation;
+- response/request matching barrier;
+- stale response invalidation;
+- late-response quarantine semantics;
+- reconnect-safe transport sequencing.
 ```
 
 Также желательно:
 
 ```text
-- invariant specification catalog;
-- deterministic invariant reconciliation;
-- runtime safety proof semantics;
-- invariant-aware orchestration contracts.
+- transaction epoch model;
+- delayed RX invalidation window;
+- deterministic reconnect recovery contract;
+- transport semantic reconciliation layer.
 ```
 
 ---
