@@ -2,11 +2,11 @@ PROGRAM PRG_Heating
 VAR
     fbHeatingManager : FB_Heating_System_Manager;
     fbDHWManager : FB_DHW_Manager;
-    fbOutputProjection : FB_Heating_Output_Projection;
     fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
     fbObserverPhase : FB_Heating_Runtime_Observer_Phase;
     fbServiceGatingPhase : FB_Heating_Runtime_Service_Gating_Phase;
     fbStatePublicationPhase : FB_Heating_Runtime_State_Publication_Phase;
+    fbOutputProjectionPhase : FB_Heating_Runtime_Output_Projection_Phase;
 
     L_Runtime_Context : ST_Heating_Runtime_Context;
 
@@ -208,7 +208,8 @@ fbObserverPhase(
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
-fbOutputProjection(
+fbOutputProjectionPhase(
+    VI_Enable := TRUE,
     VI_Zone_Valves := L_Zone_Valves,
     VI_Manifold_Pumps := L_Manifold_Pumps,
     VI_Manifold_Valves := L_Manifold_Valves,
@@ -218,7 +219,9 @@ fbOutputProjection(
     VI_Electric_Heater_Enable := L_Electric_Heater_Enable
 );
 
-L_Runtime_Context.Output_Projection_Executed := TRUE;
+L_Runtime_Context.Output_Projection_Executed := fbOutputProjectionPhase.VO_Executed;
+L_Runtime_Context.Output_Projection_Last_Valid := fbOutputProjectionPhase.VO_Valid;
+
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_COMPLETE;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Heating <<<
