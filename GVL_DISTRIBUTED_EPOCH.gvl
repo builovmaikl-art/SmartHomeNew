@@ -1,0 +1,48 @@
+VAR_GLOBAL
+    // ======================================================
+    // DISTRIBUTED EPOCH CONSISTENCY STATE
+    // ======================================================
+    // Centralized peer epoch reconciliation foundation.
+    // Prevents distributed stale authority and split-brain continuity.
+    // ======================================================
+
+    Distributed_Epoch : ULINT := 0;
+    Distributed_Reconciliation_Epoch : ULINT := 0;
+
+    Local_Runtime_Epoch : ULINT := 0;
+    Peer_Runtime_Epoch : ULINT := 0;
+
+    Local_Snapshot_Epoch : ULINT := 0;
+    Peer_Snapshot_Epoch : ULINT := 0;
+
+    Local_Boot_Generation : ULINT := 0;
+    Peer_Boot_Generation : ULINT := 0;
+
+    Local_Fencing_Token : ULINT := 0;
+    Peer_Fencing_Token : ULINT := 0;
+
+    Distributed_Epoch_Consistent : BOOL := FALSE;
+    Distributed_Reconciliation_Valid : BOOL := FALSE;
+    Distributed_Publication_Allowed : BOOL := FALSE;
+
+    Peer_Lease_Active : BOOL := FALSE;
+    Peer_Lease_Expired : BOOL := FALSE;
+    Peer_Lease_Timeout_MS : UDINT := 5000;
+
+    Peer_Last_Refresh_MS : UDINT := 0;
+    Peer_Last_Reconciliation_MS : UDINT := 0;
+
+    Peer_Snapshot_Stale : BOOL := FALSE;
+    Peer_Runtime_Stale : BOOL := FALSE;
+    Peer_Boot_Mismatch : BOOL := FALSE;
+    Peer_Fencing_Conflict : BOOL := FALSE;
+    Peer_Semantic_Continuity_Lost : BOOL := FALSE;
+
+    Distributed_Quarantine_Active : BOOL := FALSE;
+    Distributed_Forced_Safe_Mode : BOOL := FALSE;
+
+    Distributed_Last_Error_Code : UDINT := 0;
+    Distributed_Last_Error_Text : STRING(160) := '';
+
+    Distributed_Invalidation_Count : UDINT := 0;
+END_VAR
