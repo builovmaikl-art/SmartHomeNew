@@ -101,6 +101,56 @@ IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Peer_Semantic_Continuity_Lost THEN
 END_IF;
 
 // ------------------------------------------------------
+// Distributed immutable publication freeze enforcement.
+// ------------------------------------------------------
+// Publication-authoritative only.
+// Does not invalidate runtime barrier,
+// PLC fencing or local immutable snapshot authority.
+// ------------------------------------------------------
+
+IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6300;
+    L_Error_Text := 'Distributed publication reconciliation invalid';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6301;
+    L_Error_Text := 'Distributed publication freeze invalid';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6302;
+    L_Error_Text := 'Distributed immutable snapshot inconsistent';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Divergence THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6303;
+    L_Error_Text := 'Peer publication divergence detected';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Reconciliation_Lost THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6304;
+    L_Error_Text := 'Peer publication reconciliation lost';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Not_Immutable THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6305;
+    L_Error_Text := 'Peer snapshot immutable contract violated';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6306;
+    L_Error_Text := 'Distributed immutable snapshot quarantine active';
+END_IF;
+
+// ------------------------------------------------------
 // Epoch linkage validation.
 // ------------------------------------------------------
 
