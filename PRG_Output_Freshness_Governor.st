@@ -16,8 +16,9 @@ L_Error_Text := '';
 // OUTPUT FRESHNESS GOVERNOR
 // ======================================================
 // Governs physical output publication freshness.
-// Prevents stale output survivability and mutable
-// snapshot publication leakage.
+// Prevents stale output survivability, mutable
+// snapshot publication leakage and downstream
+// distributed reconciliation divergence publication.
 // ======================================================
 
 GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay := FALSE;
@@ -71,6 +72,32 @@ IF L_Output_Valid AND GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6104;
     L_Error_Text := 'Snapshot mutation detected';
+END_IF;
+
+// ------------------------------------------------------
+// Downstream distributed reconciliation quarantine.
+// ------------------------------------------------------
+// Distributed divergence is publication-authoritative
+// only. It does not invalidate runtime barrier,
+// PLC fencing or immutable snapshot authority.
+// ------------------------------------------------------
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6200;
+    L_Error_Text := 'Distributed reconciliation quarantine active';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Conflict THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6201;
+    L_Error_Text := 'Peer fencing conflict detected';
+END_IF;
+
+IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Peer_Semantic_Continuity_Lost THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6202;
+    L_Error_Text := 'Peer semantic continuity lost';
 END_IF;
 
 // ------------------------------------------------------
