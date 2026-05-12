@@ -34,6 +34,7 @@
 ✔ Scheduler/timing/persistence
 ✔ Recovery/watchdog timing
 ✔ SAFE_STOP sequencing audit
+✔ Freeze/recovery interaction audit
 ```
 
 ---
@@ -126,47 +127,64 @@ MEDIUM-HIGH
 
 ## Non-formalized suppression release sequencing
 
+Severity:
+
+```text
+MEDIUM-HIGH
+```
+
+---
+
+# RISK-012
+
+## Freeze-protection and recovery semantic overlap
+
 ## Суть
 
-Suppression flags:
+Freeze protection semantics:
 
 ```text
-- G_Heating_Block;
-- emergency inhibit flags;
-- recovery suppression.
+не полностью изолированы
+как dedicated runtime mode.
 ```
 
-могут приходить из:
+Freeze behavior влияет:
 
 ```text
-- safety;
-- arbitration;
-- recovery;
-- governance/policy layers.
+- на IO masking;
+- на heating restart;
+- на manifold behavior;
+- на suppression exceptions.
 ```
 
-Но release semantics:
+Но lifecycle freeze-state:
 
 ```text
-не formalized.
+не formalized
+как отдельный contract.
 ```
 
 ---
 
 ## Проблема
 
-SAFE_STOP exit:
+Freeze behavior:
 
 ```text
-не fully contract-driven.
+переплетён
+с:
+- SAFE_STOP;
+- recovery;
+- suppression;
+- heating unblock.
 ```
 
-Разные subsystem могут:
+Из-за этого:
 
 ```text
-- считать unblock уже допустимым;
-- продолжать удерживать suppression;
-- восстанавливать runtime в разном порядке.
+restore sequencing
+может зависеть
+от freeze-state persistence.
 ```
 
 ---
@@ -176,15 +194,15 @@ SAFE_STOP exit:
 Пока НЕ найдено:
 
 ```text
-- permanent heating lock;
-- unrecoverable inhibit;
-- catastrophic deadlock.
+- permanent freeze latch;
+- freeze deadlock;
+- unrecoverable heating stop.
 ```
 
 Но найдено:
 
 ```text
-restore-order ambiguity.
+freeze/recovery semantic overlap.
 ```
 
 ---
@@ -192,11 +210,11 @@ restore-order ambiguity.
 ## Возможные последствия
 
 ```text
-- partial subsystem restore;
-- inconsistent unblock timing;
-- stale inhibit persistence;
-- recovery asymmetry;
-- timing-dependent restart behavior.
+- asymmetric restart behavior;
+- latent freeze override persistence;
+- partial heating restore;
+- timing-dependent manifold restart;
+- difficult freeze-state debugging.
 ```
 
 ---
@@ -206,10 +224,10 @@ restore-order ambiguity.
 В будущем желательно formalize:
 
 ```text
-- suppression release ownership;
-- unblock sequencing;
-- restore authority;
-- SAFE_STOP exit contract.
+- freeze lifecycle ownership;
+- freeze-mode semantics;
+- freeze/recovery interaction contract;
+- freeze-state restore sequencing.
 ```
 
 ---
@@ -223,5 +241,5 @@ restore-order ambiguity.
 Severity:
 
 ```text
-MEDIUM-HIGH
+MEDIUM
 ```
