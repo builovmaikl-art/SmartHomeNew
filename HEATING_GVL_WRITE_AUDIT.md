@@ -35,28 +35,39 @@ practical runtime write enforcement.
 The invariant that must never be violated:
 
 ```text
-single authoritative writer per runtime authority domain
+single authoritative runtime ownership chain per authority domain
 ```
 
 Meaning:
 
 ```text
-runtime ownership
-must match
-runtime write authority.
+runtime write authority
+must remain inside
+active runtime ownership chain.
 ```
+
+A bounded top-level finalizer inside `FB_Heating_System_Manager` is acceptable.
+A detached writer outside the active chain is not acceptable.
 
 ---
 
 # Write-boundary model
 
-## Authoritative writer
+## Authoritative runtime chain
 
 Definition:
 
 ```text
-single runtime owner
+single active runtime ownership chain
 allowed to mutate authoritative control state
+```
+
+Current active chain:
+
+```text
+FB_Heating_System_Manager
+→ subsystem helpers
+→ System_Manager post-helper finalization where required
 ```
 
 ---
@@ -122,7 +133,8 @@ Allowed writes:
 - runtime sequencing state;
 - active heating execution state;
 - manifold execution coordination;
-- bounded runtime coordination.
+- bounded runtime coordination;
+- post-manifold safety/test finalization.
 ```
 
 Forbidden writers:
@@ -251,7 +263,7 @@ Forbidden writers:
 
 ## Manifold execution state
 
-Authoritative writer:
+Primary writer:
 
 ```text
 FB_Heating_Manifold_Control
@@ -260,9 +272,32 @@ FB_Heating_Manifold_Control
 Allowed writes:
 
 ```text
-- manifold valve commands;
-- manifold enable execution;
-- manifold runtime realization.
+- manifold valve realization;
+- manifold pump realization;
+- manifold runtime realization;
+- DHW manifold suppression;
+- freeze manifold minimum behavior.
+```
+
+Finalizer:
+
+```text
+FB_Heating_System_Manager
+```
+
+Allowed post-manifold finalization writes:
+
+```text
+- low-pressure pump suppression;
+- confidence-fallback pump suppression;
+- valve-test selected valve/pump finalization.
+```
+
+Important:
+
+```text
+This is an in-chain top-level finalization layer,
+not a detached second writer path.
 ```
 
 Forbidden writers:
@@ -270,7 +305,8 @@ Forbidden writers:
 ```text
 - Runtime_* governance scaffold;
 - telemetry-only layers;
-- analytics layers.
+- analytics layers;
+- detached override layers.
 ```
 
 ---
@@ -290,6 +326,13 @@ Allowed writes:
 - OpenTherm command state;
 - supply target execution;
 - thermal source coordination.
+```
+
+Verified internal path:
+
+```text
+FB_Boiler_Cascade_Manager
+→ FB_Boiler_OpenTherm_Interface
 ```
 
 Forbidden writers:
@@ -419,10 +462,10 @@ The following write patterns are forbidden:
 - telemetry-driven runtime actuation;
 - governance-driven control execution;
 - analytics-driven valve ownership;
-- hidden side-effect writers;
+- hidden side-effect writers outside active runtime chain;
 - detached override writers;
 - duplicate boiler writers;
-- duplicate manifold writers.
+- duplicate manifold writers outside System_Manager/Manifold_Control chain.
 ```
 
 ---
@@ -433,11 +476,11 @@ Before adding ANY new runtime writer:
 
 ```text
 1. identify authoritative owner;
-2. verify no existing writer overlap;
+2. verify no detached writer overlap;
 3. verify ownership matrix consistency;
 4. verify governance classification consistency;
 5. verify no Runtime_* authority drift;
-6. verify no second runtime authority path.
+6. verify no second detached runtime authority path.
 ```
 
 ---
@@ -457,6 +500,14 @@ runtime authority appears separated from
 observability/governance infrastructure.
 ```
 
+Verified nuance:
+
+```text
+Manifold outputs have a layered in-chain writer model:
+Manifold_Control performs primary realization;
+System_Manager performs bounded final safety/test finalization.
+```
+
 ---
 
 # Strategic conclusion
@@ -464,9 +515,13 @@ observability/governance infrastructure.
 The heating repository now follows:
 
 ```text
-single-writer runtime ownership
+single runtime ownership chain
 +
 bounded policy integration
++
+primary helper execution
++
+post-helper safety/test finalization
 +
 passive observability/governance infrastructure
 +
