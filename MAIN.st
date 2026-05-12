@@ -1,4 +1,7 @@
 PROGRAM MAIN
+VAR
+    fbConfigSimulation : FB_Config_Simulation;
+END_VAR
 
 // ======================================================
 // MAIN CYCLIC EXECUTION PIPELINE
@@ -27,6 +30,11 @@ PRG_System_Init();
 PRG_Config_Manager();
 PRG_Config_Validation();
 PRG_Config_Versioning();
+fbConfigSimulation(
+    VI_Enable := TRUE,
+    VI_Request := GVL_CONFIG_SIMULATION.G_Simulation_Request,
+    VI_Confirm := GVL_CONFIG_SIMULATION.G_Simulation_Confirm
+);
 PRG_System_Runtime_Base();
 
 // 2. PLC role arbitration
