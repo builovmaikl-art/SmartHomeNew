@@ -16,6 +16,7 @@ L_Error_Text := '';
 // ======================================================
 // Creates authoritative runtime publication semantics.
 // Rejects impossible runtime states before physical publication.
+// PLC fencing failures invalidate runtime publication authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -27,6 +28,36 @@ IF NOT GVL_STATUS.G_Is_Active_PLC THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5000;
     L_Error_Text := 'Runtime barrier inactive PLC';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_PLC_FENCING.PLC_Ownership_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5010;
+    L_Error_Text := 'PLC ownership invalid';
+END_IF;
+
+IF L_Runtime_OK AND (NOT GVL_PLC_FENCING.PLC_Semantic_Authority_Valid) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5011;
+    L_Error_Text := 'PLC semantic authority invalid';
+END_IF;
+
+IF L_Runtime_OK AND GVL_PLC_FENCING.PLC_Forced_Safe_Quarantine THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5012;
+    L_Error_Text := 'PLC fencing quarantine active';
+END_IF;
+
+IF L_Runtime_OK AND GVL_PLC_FENCING.PLC_Lease_Expired THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5013;
+    L_Error_Text := 'PLC authority lease expired';
+END_IF;
+
+IF L_Runtime_OK AND (GVL_PLC_FENCING.PLC_Fencing_Token = 0) THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5014;
+    L_Error_Text := 'PLC fencing token missing';
 END_IF;
 
 IF L_Runtime_OK AND (NOT GVL_CONFIG_VALIDATION.G_Runtime_Sanity_OK) THEN
@@ -63,7 +94,7 @@ END_IF;
 
 GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK := L_Runtime_OK;
 GVL_RUNTIME_EPOCH.Runtime_Snapshot_Valid := L_Runtime_OK;
-GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid := GVL_STATUS.G_Is_Active_PLC;
+GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid := GVL_STATUS.G_Is_Active_PLC AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid AND GVL_PLC_FENCING.PLC_Ownership_Valid;
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
 IF L_Runtime_OK THEN
