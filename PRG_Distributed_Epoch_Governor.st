@@ -153,7 +153,6 @@ IF L_Distributed_Valid THEN
     GVL_DISTRIBUTED_EPOCH.Distributed_Publication_Allowed := TRUE;
 
     GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active := FALSE;
-    GVL_DISTRIBUTED_EPOCH.Distributed_Forced_Safe_Mode := FALSE;
 
     GVL_DISTRIBUTED_EPOCH.Peer_Last_Reconciliation_MS := L_Now_MS;
 
@@ -165,11 +164,8 @@ ELSE
     GVL_DISTRIBUTED_EPOCH.Distributed_Publication_Allowed := FALSE;
 
     GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active := TRUE;
-    GVL_DISTRIBUTED_EPOCH.Distributed_Forced_Safe_Mode := TRUE;
 
     GVL_DISTRIBUTED_EPOCH.Distributed_Last_Error_Code := L_Error_Code;
     GVL_DISTRIBUTED_EPOCH.Distributed_Last_Error_Text := L_Error_Text;
-
-    GVL_DISTRIBUTED_EPOCH.Distributed_Invalidation_Count := GVL_DISTRIBUTED_EPOCH.Distributed_Invalidation_Count + 1;
 END_IF;
 END_PROGRAM
