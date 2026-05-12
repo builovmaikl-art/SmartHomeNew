@@ -16,13 +16,17 @@ L_Error_Text := '';
 // OUTPUT FRESHNESS GOVERNOR
 // ======================================================
 // Governs physical output publication freshness.
-// Prevents stale output survivability.
+// Prevents stale output survivability and mutable
+// snapshot publication leakage.
 // ======================================================
 
 GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay := FALSE;
 GVL_OUTPUT_EPOCH.Output_Stale_Detected := FALSE;
 
+// ------------------------------------------------------
 // Runtime authority linkage.
+// ------------------------------------------------------
+
 IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6000;
@@ -35,7 +39,44 @@ IF L_Output_Valid AND (NOT GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed) THE
     L_Error_Text := 'Output publication not allowed';
 END_IF;
 
+// ------------------------------------------------------
+// Immutable snapshot isolation validation.
+// ------------------------------------------------------
+
+IF L_Output_Valid AND (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6100;
+    L_Error_Text := 'Runtime snapshot not frozen';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6101;
+    L_Error_Text := 'Snapshot publication blocked';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6102;
+    L_Error_Text := 'Snapshot copy invalid';
+END_IF;
+
+IF L_Output_Valid AND (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid) THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6103;
+    L_Error_Text := 'Snapshot isolation invalid';
+END_IF;
+
+IF L_Output_Valid AND GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6104;
+    L_Error_Text := 'Snapshot mutation detected';
+END_IF;
+
+// ------------------------------------------------------
 // Epoch linkage validation.
+// ------------------------------------------------------
+
 IF L_Output_Valid THEN
     IF GVL_OUTPUT_EPOCH.Output_Runtime_Epoch > GVL_RUNTIME_EPOCH.Runtime_Epoch THEN
         L_Output_Valid := FALSE;
@@ -44,7 +85,10 @@ IF L_Output_Valid THEN
     END_IF;
 END_IF;
 
+// ------------------------------------------------------
 // Lease freshness validation.
+// ------------------------------------------------------
+
 L_Delta_MS := L_Now_MS - GVL_OUTPUT_EPOCH.Output_Last_Refresh_MS;
 
 IF L_Output_Valid AND GVL_OUTPUT_EPOCH.Output_Lease_Active THEN
@@ -55,9 +99,13 @@ IF L_Output_Valid AND GVL_OUTPUT_EPOCH.Output_Lease_Active THEN
     END_IF;
 END_IF;
 
+// ------------------------------------------------------
 // Publish authoritative output freshness state.
+// ------------------------------------------------------
+
 IF L_Output_Valid THEN
     GVL_OUTPUT_EPOCH.Output_Publication_Epoch := GVL_OUTPUT_EPOCH.Output_Publication_Epoch + 1;
+
     GVL_OUTPUT_EPOCH.Output_Publication_Valid := TRUE;
     GVL_OUTPUT_EPOCH.Output_Lease_Active := TRUE;
     GVL_OUTPUT_EPOCH.Output_Lease_Expired := FALSE;
