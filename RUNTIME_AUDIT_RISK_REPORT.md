@@ -49,6 +49,7 @@
 ✔ Runtime synchronization / temporal consistency audit
 ✔ Safety dominance / invariant enforcement audit
 ✔ Communication / transport resilience audit
+✔ Transport reconnect / retry / recovery determinism audit
 ```
 
 ---
@@ -333,65 +334,83 @@ HIGH
 
 ## Missing authoritative transport transaction matching barrier
 
-## Суть
-
-В Modbus/OpenTherm transport pipeline:
+Severity:
 
 ```text
-есть sequence fields,
-но отсутствует
-единая authoritative transaction matching policy.
+HIGH
+```
+
+---
+
+# RISK-028
+
+## Absence of deterministic transport reconnect stabilization model
+
+## Суть
+
+В transport runtime отсутствует:
+
+```text
+formal reconnect/recovery stabilization lifecycle.
 ```
 
 Проверка показала:
 
 ```text
-- PRG_Modbus_Master хранит Active_Index/Active_Sequence;
-- PRG_Modbus_RTU_Bridge применяет response по Request_Index;
-- FB_Modbus_RTU_Driver отслеживает sequence;
-- но centralized stale/mismatched response barrier отсутствует.
+FB_Modbus_RTU_Driver:
+- использует L_Last_Success_MS;
+- выставляет Driver_Online по timeout window;
+- локально сбрасывает Busy/Exchange state;
+- но не имеет explicit reconnect phase/state machine.
+```
+
+Также не найдено:
+
+```text
+- reconnect stabilization window;
+- retry backoff model;
+- recovery cooldown semantics;
+- transport re-sync phase;
+- stale transport cleanup phase.
 ```
 
 ---
 
 ## Проблема
 
-Late/stale response:
+После:
 
 ```text
-может быть semanticly accepted
-не как explicit stale event,
-а как обычный response path.
+- timeout;
+- cable reconnect;
+- delayed RX;
+- temporary bus freeze;
+- serial recovery.
 ```
 
-Отсутствует formal policy:
+transport runtime:
 
 ```text
-- reject stale response;
-- reject mismatched response;
-- isolate late response;
-- invalidate old transaction generation;
-- quarantine delayed RX.
+может сразу вернуться
+в active exchange semantics
+без explicit stabilization phase.
 ```
 
----
-
-## Почему это опасно
-
-Transport recovery/reconnect:
+Recovery сейчас:
 
 ```text
-может смешивать:
-- previous transaction state;
-- delayed RX frame;
-- current active request;
-- reconnect transition.
+implicit and timing-dependent.
 ```
 
-Возникает:
+Нет formal guarantees:
 
 ```text
-transport semantic ambiguity.
+что:
+- stale RX очищен;
+- previous exchange завершён;
+- retry storm не начнётся;
+- reconnect stabilized;
+- transport state synchronized.
 ```
 
 ---
@@ -399,12 +418,12 @@ transport semantic ambiguity.
 ## Возможные последствия
 
 ```text
-- stale response acceptance;
-- response/request mismatch;
-- reconnect semantic drift;
-- delayed RX contaminating current transaction;
-- difficult transport recovery debugging;
-- communication-induced runtime instability.
+- reconnect oscillation;
+- retry storms;
+- unstable online/offline flapping;
+- stale transport recovery;
+- communication-induced runtime jitter;
+- nondeterministic reconnect behavior.
 ```
 
 ---
@@ -414,26 +433,26 @@ transport semantic ambiguity.
 Нужно formalize:
 
 ```text
-authoritative transport transaction lifecycle.
+deterministic transport reconnect lifecycle.
 ```
 
 Предпочтительное направление:
 
 ```text
-- authoritative transaction generation;
-- response/request matching barrier;
-- stale response invalidation;
-- late-response quarantine semantics;
-- reconnect-safe transport sequencing.
+- reconnect stabilization phase;
+- retry backoff semantics;
+- transport cooldown window;
+- stale transport cleanup;
+- reconnect-safe exchange barrier.
 ```
 
 Также желательно:
 
 ```text
-- transaction epoch model;
-- delayed RX invalidation window;
-- deterministic reconnect recovery contract;
-- transport semantic reconciliation layer.
+- reconnect state machine;
+- deterministic transport recovery contract;
+- communication stabilization timers;
+- transport oscillation suppression.
 ```
 
 ---
