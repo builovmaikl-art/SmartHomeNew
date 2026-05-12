@@ -1,21 +1,28 @@
 VAR_GLOBAL
     // ======================================================
-    // AUTHORITATIVE OUTPUT FRESHNESS STATE
+    // OUTPUT PUBLICATION AUTHORITY STATE
     // ======================================================
-    // Centralized output publication freshness governance.
-    // Used to prevent stale physical output survivability.
+    // Centralized final physical publication arbitration state.
+    //
+    // Output_Forced_Safe_Decay is the final output hard-stop
+    // authority exported to IO_Write.
+    //
+    // Output_Publication_Valid / lease / stale fields are
+    // derived publication diagnostics and observability state.
+    // They must not be reinterpreted by IO_Write as separate
+    // hard-stop authorities.
     // ======================================================
 
     Output_Publication_Epoch : ULINT := 0;
     Output_Publication_Valid : BOOL := FALSE;
+
     Output_Lease_Active : BOOL := FALSE;
     Output_Lease_Expired : BOOL := FALSE;
+    Output_Lease_Timeout_MS : UDINT := 3000;
 
     Output_Last_Publication_MS : UDINT := 0;
     Output_Last_Refresh_MS : UDINT := 0;
     Output_Last_Invalidation_MS : UDINT := 0;
-
-    Output_Lease_Timeout_MS : UDINT := 3000;
 
     Output_Runtime_Epoch : ULINT := 0;
     Output_Runtime_Epoch_Valid : BOOL := FALSE;
@@ -29,6 +36,4 @@ VAR_GLOBAL
 
     Output_Last_Error_Code : UDINT := 0;
     Output_Last_Error_Text : STRING(160) := '';
-
-    Output_Invalidation_Count : UDINT := 0;
 END_VAR
