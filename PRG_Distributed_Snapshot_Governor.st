@@ -38,10 +38,14 @@ GVL_DISTRIBUTED_SNAPSHOT.Peer_Snapshot_Lease_Expired := FALSE;
 // ------------------------------------------------------
 // Local immutable publication projection.
 // ------------------------------------------------------
+// Distributed snapshot is upstream of output freshness in MAIN.
+// Therefore local publication baseline must not read GVL_OUTPUT_EPOCH.
+// It uses the already-frozen runtime snapshot epoch instead.
+// ------------------------------------------------------
 
 GVL_DISTRIBUTED_SNAPSHOT.Local_Distributed_Snapshot_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 GVL_DISTRIBUTED_SNAPSHOT.Local_Runtime_Snapshot_Epoch := GVL_RUNTIME_SNAPSHOT.Snapshot_Epoch;
-GVL_DISTRIBUTED_SNAPSHOT.Local_Publication_Epoch := GVL_OUTPUT_EPOCH.Output_Publication_Epoch;
+GVL_DISTRIBUTED_SNAPSHOT.Local_Publication_Epoch := GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Epoch;
 
 // ------------------------------------------------------
 // Local immutable publication freeze semantics.
