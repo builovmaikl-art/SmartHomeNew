@@ -39,6 +39,24 @@ VAR_GLOBAL
     Peer_Fencing_Conflict_Visible : BOOL := FALSE;
     Peer_Semantic_Continuity_Lost_Visible : BOOL := FALSE;
 
+    // ======================================================
+    // DISTRIBUTED IMMUTABLE SNAPSHOT VISIBILITY
+    // ======================================================
+    // Publication-authoritative visibility only.
+    // Does not invalidate runtime or ownership authority.
+    // ======================================================
+
+    Distributed_Publication_Reconciliation_Visible : BOOL := FALSE;
+    Distributed_Publication_Freeze_Visible : BOOL := FALSE;
+    Distributed_Snapshot_Consistency_Visible : BOOL := FALSE;
+
+    Peer_Publication_Stale_Visible : BOOL := FALSE;
+    Peer_Publication_Divergence_Visible : BOOL := FALSE;
+    Peer_Publication_Reconciliation_Lost_Visible : BOOL := FALSE;
+    Peer_Snapshot_Not_Immutable_Visible : BOOL := FALSE;
+
+    Distributed_Immutable_Snapshot_Quarantine_Visible : BOOL := FALSE;
+
     Observability_Quarantine_Active : BOOL := FALSE;
 
     Observability_Last_Publication_MS : UDINT := 0;
