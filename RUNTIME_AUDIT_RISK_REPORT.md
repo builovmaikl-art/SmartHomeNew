@@ -53,6 +53,7 @@
 ✔ Transport backpressure / queue integrity audit
 ✔ Persistence corruption / state survivability audit
 ✔ Memory/state lifetime integrity audit
+✔ Execution-phase coupling / cyclic dependency audit
 ```
 
 ---
@@ -385,58 +386,61 @@ HIGH
 
 ## Absence of authoritative runtime state lifecycle/reset model
 
+Severity:
+
+```text
+HIGH
+```
+
+---
+
+# RISK-032
+
+## Absence of formal execution-phase dependency model
+
 ## Суть
 
 В системе фактически отсутствует:
 
 ```text
-formal runtime state lifecycle/reset governance.
+formal execution dependency graph.
 ```
 
 Проверка показала:
 
 ```text
-- explicit reset lifecycle model не найден;
-- centralized runtime cleanup phase отсутствует;
-- sticky/latched-state governance не найден;
-- subsystem-local state invalidation semantics отсутствуют;
-- authoritative runtime reset ownership отсутствует.
+- subsystem orchestration relies on shared globals;
+- execution phases implicit;
+- ordering semantics distributed;
+- cross-subsystem assumptions hidden;
+- dependency contracts отсутствуют.
 ```
 
 ---
 
 ## Проблема
 
-Runtime state lifecycle сейчас:
+Runtime correctness сейчас:
 
 ```text
-implicit and path-dependent.
+частично зависит
+от текущего порядка MAIN execution.
 ```
 
-State:
+Subsystem могут:
 
 ```text
-может:
-- переживать recovery;
-- сохраняться после degraded transition;
-- не очищаться симметрично;
-- resurrection after restart/reconnect.
-```
-
-Очистка state:
-
-```text
-зависит:
-- от execution path;
-- от ordering;
-- от recovery branch;
-- от того, кто последний владел state.
+- читать state до stabilization;
+- предполагать execution другого layer;
+- зависеть от previous phase side-effects;
+- implicitly participate in semantic cycles.
 ```
 
 Но:
 
 ```text
-нет centralized lifecycle governance.
+formal orchestration dependency model
+не найден.
 ```
 
 ---
@@ -446,17 +450,17 @@ State:
 В сочетании с:
 
 ```text
-- startup barrier absence;
+- shared mutable globals;
 - authority overlap;
-- snapshot inconsistency;
-- persistence replay;
+- snapshot absence;
+- startup transient windows;
 - degradation escalation.
 ```
 
 Возникает:
 
 ```text
-latent semantic resurrection risk.
+hidden execution-order fragility.
 ```
 
 ---
@@ -464,12 +468,12 @@ latent semantic resurrection risk.
 ## Возможные последствия
 
 ```text
-- stale runtime resurrection;
-- sticky invalid state;
-- asymmetric recovery behavior;
-- hidden runtime authority persistence;
-- nondeterministic restart semantics;
-- latent degraded-state leakage.
+- reorder-sensitive behavior;
+- latent orchestration recursion;
+- hidden cyclic dependencies;
+- nondeterministic runtime semantics;
+- fragile refactoring behavior;
+- execution-phase coupling defects.
 ```
 
 ---
@@ -479,26 +483,26 @@ latent semantic resurrection risk.
 Нужно formalize:
 
 ```text
-runtime state lifecycle/reset governance model.
+execution-phase dependency model.
 ```
 
 Предпочтительное направление:
 
 ```text
-- centralized runtime cleanup phase;
-- authoritative reset ownership;
-- lifecycle-aware state invalidation;
-- sticky-state governance;
-- deterministic recovery cleanup semantics.
+- explicit orchestration phases;
+- dependency contracts;
+- execution-order governance;
+- phase visibility barriers;
+- orchestration dependency graph.
 ```
 
 Также желательно:
 
 ```text
-- runtime lifecycle epochs;
-- subsystem-local reset contracts;
-- stale-state invalidation barriers;
-- deterministic restart semantics.
+- phase-aware runtime validation;
+- cycle dependency detection;
+- orchestration topology documentation;
+- deterministic execution contracts.
 ```
 
 ---
