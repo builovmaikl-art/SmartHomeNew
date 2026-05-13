@@ -269,7 +269,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 00:14 .github
 -rw-r--r--  1 runner runner   4241 May 13 00:14 PRG_Debug_View.st
 -rw-r--r--  1 runner runner   6780 May 13 00:14 PRG_Distributed_Commit_Governor.st
 -rw-r--r--  1 runner runner   2960 May 13 00:14 PRG_Distributed_Commit_Observability.st
--rw-r--r--  1 runner runner   6359 May 13 00:14 PRG_Distributed_Epoch_Governor.st
+-rw-r--r--  1 runner runner   7092 May 13 00:14 PRG_Distributed_Epoch_Governor.st
 -rw-r--r--  1 runner runner   2179 May 13 00:14 PRG_Distributed_Peer_Ingestion.st
 -rw-r--r--  1 runner runner   6967 May 13 00:14 PRG_Distributed_Snapshot_Governor.st
 -rw-r--r--  1 runner runner   2453 May 13 00:14 PRG_Explainability.st
