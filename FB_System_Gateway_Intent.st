@@ -14,7 +14,16 @@ END_VAR
 
 VAR
     fbGateway : FB_Gateway_Interface;
+    L_Gateway_Flood_Alarm_Active : BOOL;
+    L_Gateway_Gas_Alarm_Active : BOOL;
+    L_Gateway_Fire_Alarm_Active : BOOL;
 END_VAR
+
+// Gateway telemetry must expose authoritative safety truth and latches,
+// not stale alarm projection fields.
+L_Gateway_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;
+L_Gateway_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_STATE.G_Safety_Gas_Latched;
+L_Gateway_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;
 
 fbGateway(
     VI_System_Time_MS := VI_System_Time_MS,
@@ -28,9 +37,9 @@ fbGateway(
     VI_Manifold_Pump_States := GVL_STATE.G_Manifold_Pumps,
     VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
     VI_Security_Armed := GVL_ALARM.G_Security_Armed,
-    VI_Flood_Alarm_Active := GVL_ALARM.G_Flood_Alarm_Active,
-    VI_Gas_Alarm_Active := GVL_ALARM.G_Gas_Alarm_Active,
-    VI_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active,
+    VI_Flood_Alarm_Active := L_Gateway_Flood_Alarm_Active,
+    VI_Gas_Alarm_Active := L_Gateway_Gas_Alarm_Active,
+    VI_Fire_Alarm_Active := L_Gateway_Fire_Alarm_Active,
     VI_Methane_Concentration := GVL_STATE.G_Methane_Sensors[1],
     VI_Lighting_Base_Levels := VIO_Lighting_Base_Levels,
     VI_Socket_States := GVL_STATE.G_Socket_States,
