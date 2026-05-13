@@ -98,7 +98,18 @@ ELSE
 END_IF;
 
 L_Error_Heating := GVL_STATE.G_Heating_Subsystem_Degraded;
-L_Error_Safety := GVL_STATE.G_Safety_Gas_Alarm OR GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Smoke_Alarm;
+
+// Extended diagnostics must use authoritative safety truth and latches,
+// not stale projected GVL_STATE.G_Safety_*_Alarm compatibility fields.
+L_Error_Safety :=
+    GVL_HEALTH_BRIDGE.G_Gas_Detected OR
+    GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR
+    GVL_HEALTH_BRIDGE.G_Leak_Detected OR
+    GVL_HEALTH_BRIDGE.G_Smoke_Detected OR
+    GVL_STATE.G_Safety_Gas_Latched OR
+    GVL_STATE.G_Safety_Leak_Latched OR
+    GVL_STATE.G_Safety_Smoke_Latched;
+
 L_Error_IO := GVL_STATE.G_Heating_IO_Fault;
 
 IF L_Error_Heating THEN
