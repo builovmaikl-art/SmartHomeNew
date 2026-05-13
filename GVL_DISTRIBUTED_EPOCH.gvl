@@ -2,8 +2,18 @@ VAR_GLOBAL
     // ======================================================
     // DISTRIBUTED EPOCH CONSISTENCY STATE
     // ======================================================
-    // Centralized peer epoch reconciliation foundation.
-    // Prevents distributed stale authority and split-brain continuity.
+    // Distributed peer epoch reconciliation foundation.
+    //
+    // Ownership split:
+    // - Local_* fields are local authority projections written by
+    //   PRG_Distributed_Epoch_Governor.
+    // - Peer_* input fields are normalized peer-session projections
+    //   written by PRG_Distributed_Peer_Ingestion.
+    // - Distributed_* aggregate authority fields are written by
+    //   PRG_Distributed_Epoch_Governor.
+    //
+    // This GVL must not be written by output, verifier, recovery
+    // or observability layers.
     // ======================================================
 
     Distributed_Epoch : ULINT := 0;
