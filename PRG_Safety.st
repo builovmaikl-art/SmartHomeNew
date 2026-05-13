@@ -58,11 +58,13 @@ GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
 
+// Ownership watchdog must observe authoritative safety truth, not stale
+// projected GVL_STATE.G_Safety_*_Alarm compatibility fields.
 fbOwnership(
     VI_Gas_Level := GVL_Safety_Selector.G_Methane_Effective_Array[GVL_CONSTANTS.C_PRIMARY_EFFECTIVE_GAS_INDEX],
-    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
-    VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
-    VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm
+    VI_Gas_Alarm := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
+    VI_Leak_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
+    VI_Smoke_Alarm := GVL_HEALTH_BRIDGE.G_Smoke_Detected
 );
 
 IF fbOwnership.VO_Ownership_Violation THEN
