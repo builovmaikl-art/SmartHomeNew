@@ -4,7 +4,6 @@ VAR_GLOBAL
     // MODBUS RTU SYSCOM BYTE TRANSPORT BOUNDARY
     // ======================================================
 
-    G_Transport_Enabled : BOOL := FALSE;
     G_Transport_Attached : BOOL := FALSE;
 
     // Backend runtime/reconnect state
@@ -27,7 +26,6 @@ VAR_GLOBAL
     G_RX_Buffer : ARRAY[0..255] OF BYTE;
     G_RX_Length : UINT := 0;
     G_RX_Error : BOOL := FALSE;
-    G_RX_Error_Code : WORD := 0;
 
     // RX assembler/runtime state
     G_RX_State : E_Modbus_RTU_RX_State := MB_RTU_RX_IDLE;
