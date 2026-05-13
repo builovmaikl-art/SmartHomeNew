@@ -1,24 +1,54 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 19 (Объявл.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Runtime_Observability(Строка 11 (Объявл.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: GVL_STATE(Строка 86): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 37, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.NONE'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 37, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 57, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.FREEZE_BYPASS'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 57, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 73, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.DHW_BYPASS'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 73, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 86, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.PRESSURE_UNAVAILABLE'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 86, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 91, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.SERVICE_DISABLED'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 91, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 96, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.PREDICTIVE_DEGRADED'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 96, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0077:  Неизвестный тип: 'E_Heating_Allocation_Block_Reason.NONE'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 154, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 155, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'E_Heating_Allocation_Block_Reason.POLICY_BUDGET_SHED'' в тип 'E_Heating_Allocation_Block_Reason'
-[ERROR]         Без имени5: FB_Heating_Allocation_Filter(Строка 155, Столбец 1 (Реализ.)): C0046:  Идентификатор 'E_Heating_Allocation_Block_Reason' не задан
-                Компиляция завершена -- 20 ошибок, 0 предупреждений
-                Компиляция завершена -- 20 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'iText'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 72, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'iText'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 76, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0007:  Вместо 'REAL' требуется выражение
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ','
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо 'iText'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0189:  ';' требуется вместо ')'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 80, Столбец 1 (Реализ.)): C0009:  Обнаружен недопустимый символ ')'
+                Компиляция завершена -- 18 ошибок, 0 предупреждений
+                Компиляция завершена -- 18 ошибок, 0 предупреждений : загрузка невозможна
+
+
+
+блоки без активных входов/выходов
+
+FB_PLC_Heartbeat
+FB_Redundancy_Manager
+FB_State_Replication
+FB_System_Redundancy_Orchestrator
+PRG_Distributed_Commit_Governor
+PRG_Distributed_Commit_Ingestion
+PRG_Distributed_Commit_Observability
+PRG_Distributed_Commit_Publication
+PRG_Distributed_Epoch_Governor
+PRG_Distributed_Peer_Ingestion
+PRG_Distributed_Snapshot_Governor
+PRG_Distributed_Snapshot_Ingestion
+PRG_Distributed_Snapshot_Publication
+PRG_HA_Session_Replication
+PRG_Observability_Governor
+PRG_Output_Freshness_Governor
+PRG_Peer_Heartbeat_Ingestion
+PRG_Peer_Session_Publication
+PRG_PLC_Fencing_Governor
+PRG_PreOutput_Safety_Barrier
+PRG_Recovery_Cleanup_Governor
+PRG_Runtime_Barrier
+PRG_Runtime_Snapshot_Governor
+PRG_Semantic_Commit_Governor
+PRG_Semantic_Progress_Governor
+PRG_Time_Monotonic_Governor
+PRG_Transport_Freshness_Governor
