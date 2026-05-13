@@ -18,6 +18,11 @@ L_Error_Text := '';
 //
 // Prevents one-cycle false recovery by requiring sustained
 // healthy evidence before quarantine/degraded release.
+//
+// Important: convergence lease is derived from underlying
+// healthy evidence, not from quarantine/forced-decay flags
+// that are themselves released by this lease. This prevents
+// circular dependency during recovery.
 // ======================================================
 
 // ------------------------------------------------------
@@ -39,12 +44,10 @@ GVL_CONVERGENCE.Convergence_Runtime_Snapshot_OK :=
 GVL_CONVERGENCE.Convergence_Distributed_Snapshot_OK :=
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
-    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
-    AND NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active;
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent;
 
 GVL_CONVERGENCE.Convergence_Distributed_Commit_OK :=
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
-    AND NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active
     AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
 GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
@@ -54,15 +57,21 @@ GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Replay_Suspected
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected
-    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
-    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active;
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired;
 
 GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
-    GVL_OUTPUT_EPOCH.Output_Publication_Valid
-    AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
-    AND NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired
-    AND NOT GVL_OUTPUT_EPOCH.Output_Stale_Detected
-    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
+    GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK
+    AND GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid
+    AND NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
 // ------------------------------------------------------
 // Aggregate convergence health.
@@ -125,6 +134,9 @@ IF L_Healthy THEN
     AND (GVL_CONVERGENCE.Recovery_Stable_Time_MS >= GVL_CONVERGENCE.Convergence_Min_Stable_Time_MS) THEN
         GVL_CONVERGENCE.Convergence_Lease_OK := TRUE;
         GVL_CONVERGENCE.Convergence_Release_Allowed := TRUE;
+    ELSE
+        GVL_CONVERGENCE.Convergence_Lease_OK := FALSE;
+        GVL_CONVERGENCE.Convergence_Release_Allowed := FALSE;
     END_IF;
 
     GVL_CONVERGENCE.Convergence_Last_Error_Code := 0;
