@@ -1,14 +1,39 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // ======================================================
+    // MIXED GLOBAL STATUS SURFACE
+    // ======================================================
+    // Historical global status surface containing time, PLC role,
+    // domain status, diagnostics and HMI text projections.
+    //
+    // Ownership boundaries:
+    // - time fields are owned by PRG_Time_Service / monotonic time flow;
+    // - PLC role fields are owned by PRG_PLC_Arbitration;
+    // - domain status fields are projections owned by domain PRGs/FBs;
+    // - diagnostics fields are diagnostics/status projections only;
+    // - this GVL must not be used as a hidden distributed replication
+    //   or direct-state HA apply surface.
+    //
+    // Note:
+    // G_PLC_ID and G_Local_PLC_ID coexist as historical PLC ID surfaces.
+    // Do not remove or merge without direct reference sweep.
+    // ======================================================
+
+    // Time / calendar status
     G_System_Time_MS : UDINT;
     G_Last_System_Time_MS : UDINT := 0;
     G_Time_Of_Day_MS : UDINT := 0;
     G_Current_Day : UINT := 1;
     G_Day_Of_Year : UINT := 1;
     G_Current_TOD : TOD;
+
+    // Scenario / day-state status
     G_Current_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Previous_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Is_Night : BOOL;
+
+    // PLC role / heartbeat authority projection.
+    // Owner: PRG_PLC_Arbitration.
     G_PLC_ID : BYTE := 1;
     G_Is_Active_PLC : BOOL;
     G_Other_PLC_Is_Active : BOOL;
@@ -20,6 +45,7 @@ VAR_GLOBAL
     G_Active_PLC_ID : BYTE := 1;
     G_Remote_PLC_Pulse : BOOL;
 
+    // Domain / HMI status text projections
     G_Security_Status_Msg : STRING(200);
     G_Gas_Status_Msg : STRING(200);
     G_Flood_Status_Msg : STRING(200);
@@ -31,9 +57,11 @@ VAR_GLOBAL
 
     G_IO_Modules_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_MODULES] OF BOOL;
 
+    // Simulation / convenience status projections
     G_Sim_Active : BOOL;
     G_Wet_Zone_Light_Active : BOOL;
 
+    // System mode / reason text projections
     G_System_Mode_Msg : STRING(200);
     G_System_Mode_Cause : STRING(200);
     G_System_Mode_Text : STRING(200);
@@ -41,6 +69,7 @@ VAR_GLOBAL
     G_Evac_Target_Zone_Name : STRING(80);
     G_Evac_Hazard_Zone_Name : STRING(80);
 
+    // Diagnostics projection surface
     G_Diagnostics : ST_System_Diagnostics;
     G_Diagnostics_Events : ARRAY[1..50] OF ST_Diagnostic_Event;
     G_Diagnostics_Count : INT := 0;
