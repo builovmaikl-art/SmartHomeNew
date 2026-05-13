@@ -171,7 +171,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 14:58 .github
 -rw-r--r--  1 runner runner    496 May 13 14:58 FB_Water_Output_Projection.st
 -rw-r--r--  1 runner runner    234 May 13 14:58 GVL_ACCESS_OUTPUT.gvl
 -rw-r--r--  1 runner runner    806 May 13 14:58 GVL_ALARM.gvl
--rw-r--r--  1 runner runner   1390 May 13 14:58 GVL_BEHAVIOR_ADAPT.gvl
+-rw-r--r--  1 runner runner   1057 May 13 14:58 GVL_BEHAVIOR_ADAPT.gvl
 -rw-r--r--  1 runner runner   2528 May 13 14:58 GVL_COMMAND.gvl
 -rw-r--r--  1 runner runner   1446 May 13 14:58 GVL_COMMAND_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner   1522 May 13 14:58 GVL_COMMAND_SHADOW.gvl
@@ -462,4 +462,4 @@ total 1508
 drwxr-xr-x 2 runner runner    4096 May 13 14:58 .
 drwxr-xr-x 5 runner runner    4096 May 13 14:58 ..
 -rw-r--r-- 1 runner runner       0 May 13 14:58 .gitkeep
--rw-r--r-- 1 runner runner 1534768 May 13 14:58 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1534363 May 13 14:58 RESULT_methods_clean.xml
