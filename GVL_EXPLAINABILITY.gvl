@@ -22,13 +22,9 @@ TYPE E_System_Reason_Code :
 END_TYPE
 
 VAR_GLOBAL
-    G_Last_Global_Reason_Code : E_System_Reason_Code := REASON_NONE;
     G_Last_Global_Reason_Text : STRING(255) := 'No active reason';
     G_Last_Safety_Mode : E_Safety_Mode := NORMAL;
     G_Last_Recovery_Phase : E_Recovery_Phase := IDLE;
-    G_Last_Command_Source : STRING(80) := '';
-    G_Last_Domain_Affected : STRING(80) := '';
-    G_Last_Output_Affected : STRING(80) := '';
     G_Last_Update_MS : UDINT := 0;
 
     G_Behavior_Why_Active : STRING(255) := '';
