@@ -15,10 +15,18 @@ Usage:
     python3 scripts/runtime_invariant_audit.py
     python3 scripts/runtime_invariant_audit.py --root /path/to/repo
     python3 scripts/runtime_invariant_audit.py --strict
+    python3 scripts/runtime_invariant_audit.py --report-dir runtime_verification_reports
 
 Exit codes:
     0 - no blocking violations found
     1 - blocking violations found
+
+Reports:
+    By default the script writes:
+      runtime_verification_reports/latest/runtime_verification_latest.log
+      runtime_verification_reports/latest/runtime_verification_latest.json
+      runtime_verification_reports/latest/runtime_verification_summary.txt
+      runtime_verification_reports/history/<timestamp>_runtime_verification.*
 
 Notes:
     This script is static-pattern based. It is intentionally conservative and
@@ -28,9 +36,12 @@ Notes:
 from __future__ import annotations
 
 import argparse
+import json
 import re
+import shutil
 import sys
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Pattern
 
@@ -44,7 +55,10 @@ EXCLUDED_PARTS = {
     "docs",
     "reports",
     "logs",
+    "runtime_verification_reports",
 }
+
+REPORT_DIR_DEFAULT = "runtime_verification_reports"
 
 
 @dataclass(frozen=True)
@@ -131,12 +145,7 @@ STALE_TRUTH_RULES: tuple[PatternRule, ...] = (
         name="stale_alarm_active_truth_usage",
         severity="WARN",
         pattern=re.compile(r"\bGVL_ALARM\.G_.*_Alarm_Active\b", re.IGNORECASE),
-        allowed_paths=(
-            "GVL_ALARM.gvl",
-            "RUNTIME_REMAINING_RISKS_AND_DEBT.md",
-            "RUNTIME_INVARIANTS.md",
-            "RUNTIME_VERIFICATION_PLAN.md",
-        ),
+        allowed_paths=("GVL_ALARM.gvl",),
         detail="Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.",
     ),
     PatternRule(
@@ -167,14 +176,19 @@ PERSISTENCE_RULES: tuple[PatternRule, ...] = (
 )
 
 
-LEASE_RELEASE_TARGETS = (
+# TRUE values are usually release/completion. FALSE values are often safe invalidation
+# and should not be reported unless the context explicitly looks like a release path.
+LEASE_RELEASE_TRUE_TARGETS = (
+    "Recovery_Cleanup_Completed",
+    "Recovery_Cleanup_Verified",
+)
+
+LEASE_RELEASE_FALSE_TARGETS = (
     "Output_Stale_Detected",
     "Output_Forced_Safe_Decay",
     "Distributed_Snapshot_Quarantine_Active",
     "Distributed_Commit_Quarantine_Active",
     "Recovery_Quarantine_Active",
-    "Recovery_Cleanup_Completed",
-    "Recovery_Cleanup_Verified",
 )
 
 LEASE_REQUIRED_FILES = {
@@ -194,15 +208,15 @@ SEMANTIC_REQUIRED_EVIDENCE = (
 )
 
 
+def utc_timestamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
 def iter_source_files(root: Path) -> Iterable[Path]:
     for path in root.rglob("*"):
         if not path.is_file():
             continue
-        if path.suffix not in SOURCE_SUFFIXES and path.name not in {
-            "RUNTIME_REMAINING_RISKS_AND_DEBT.md",
-            "RUNTIME_INVARIANTS.md",
-            "RUNTIME_VERIFICATION_PLAN.md",
-        }:
+        if path.suffix not in SOURCE_SUFFIXES:
             continue
         rel_parts = set(path.relative_to(root).parts)
         if rel_parts & EXCLUDED_PARTS:
@@ -246,6 +260,24 @@ def check_pattern_rules(root: Path, rules: Iterable[PatternRule]) -> list[Findin
     return findings
 
 
+def context_has_lease(context: str) -> bool:
+    return (
+        "GVL_CONVERGENCE.Convergence_Release_Allowed" in context
+        or "GVL_CONVERGENCE.Convergence_Lease_OK" in context
+    )
+
+
+def context_looks_like_release(context: str) -> bool:
+    lowered = context.lower()
+    return (
+        "l_recovery_valid" in lowered
+        or "l_output_valid" in lowered
+        or "l_commit_valid" in lowered
+        or "l_distributed_snapshot_valid" in lowered
+        or "if l_" in lowered and "valid" in lowered
+    )
+
+
 def check_release_before_convergence(root: Path) -> list[Finding]:
     findings: list[Finding] = []
     for path in iter_source_files(root):
@@ -255,40 +287,49 @@ def check_release_before_convergence(root: Path) -> list[Finding]:
         text = read_text(path)
         lines = text.splitlines()
         for i, line in enumerate(lines):
-            if not any(target in line for target in LEASE_RELEASE_TARGETS):
-                continue
-            if ":= FALSE" not in line and ":= TRUE" not in line:
+            target_true = any(target in line for target in LEASE_RELEASE_TRUE_TARGETS)
+            target_false = any(target in line for target in LEASE_RELEASE_FALSE_TARGETS)
+            if not (target_true or target_false):
                 continue
 
-            # Look at a small local context. A release line should be in a block that
-            # references Convergence_Release_Allowed or Convergence_Lease_OK.
-            start = max(0, i - 8)
-            end = min(len(lines), i + 4)
+            start = max(0, i - 10)
+            end = min(len(lines), i + 5)
             context = "\n".join(lines[start:end])
-            if "GVL_CONVERGENCE.Convergence_Release_Allowed" in context:
-                continue
-            if "GVL_CONVERGENCE.Convergence_Lease_OK" in context:
+            if context_has_lease(context):
                 continue
 
-            # Invalid-state escalation is allowed to set quarantine/forced-safe TRUE.
-            if ":= TRUE" in line and (
-                "Quarantine_Active" in line
-                or "Forced_Safe" in line
-                or "Stale_Detected" in line
-                or "Cleanup_Completed" not in line
-            ):
-                continue
+            stripped = line.strip()
 
-            findings.append(
-                Finding(
-                    severity="ERROR",
-                    check="release_before_convergence",
-                    path=rel.as_posix(),
-                    line=i + 1,
-                    text=line.strip(),
-                    detail="Release/completion of protected recovery state must be gated by convergence lease.",
+            # Completion TRUE without lease is unsafe release.
+            if target_true and ":= TRUE" in stripped:
+                findings.append(
+                    Finding(
+                        severity="ERROR",
+                        check="release_before_convergence",
+                        path=rel.as_posix(),
+                        line=i + 1,
+                        text=stripped,
+                        detail="Completion/release TRUE of protected recovery state must be gated by convergence lease.",
+                    )
                 )
-            )
+                continue
+
+            # Quarantine/stale/forced-safe FALSE can be release; flag only if the local context looks like valid/recovery path.
+            if target_false and ":= FALSE" in stripped and context_looks_like_release(context):
+                findings.append(
+                    Finding(
+                        severity="ERROR",
+                        check="release_before_convergence",
+                        path=rel.as_posix(),
+                        line=i + 1,
+                        text=stripped,
+                        detail="Release FALSE of protected recovery/quarantine state must be gated by convergence lease.",
+                    )
+                )
+                continue
+
+            # FALSE on completion/verified is invalidation and should not be treated as release.
+            # TRUE on quarantine/stale/forced-safe is escalation and is allowed.
     return findings
 
 
@@ -378,9 +419,38 @@ def check_convergence_governor(root: Path) -> list[Finding]:
     return findings
 
 
+def summarize(findings: list[Finding], strict: bool) -> dict[str, object]:
+    errors = sum(1 for f in findings if f.severity == "ERROR")
+    warnings = sum(1 for f in findings if f.severity == "WARN")
+    blocking = errors + (warnings if strict else 0)
+    return {
+        "status": "FAILED" if blocking else "PASSED",
+        "errors": errors,
+        "warnings": warnings,
+        "total_findings": len(findings),
+        "strict": strict,
+        "blocking_findings": blocking,
+    }
+
+
+def format_summary(summary: dict[str, object]) -> str:
+    return "\n".join(
+        [
+            "Runtime invariant audit summary",
+            "================================",
+            f"STATUS: {summary['status']}",
+            f"ERRORS: {summary['errors']}",
+            f"WARNINGS: {summary['warnings']}",
+            f"TOTAL FINDINGS: {summary['total_findings']}",
+            f"STRICT MODE: {summary['strict']}",
+            f"BLOCKING FINDINGS: {summary['blocking_findings']}",
+        ]
+    )
+
+
 def format_findings(findings: list[Finding]) -> str:
     if not findings:
-        return "OK: no blocking runtime invariant violations found."
+        return "OK: no runtime invariant findings."
 
     lines: list[str] = []
     for item in findings:
@@ -391,10 +461,65 @@ def format_findings(findings: list[Finding]) -> str:
     return "\n".join(lines)
 
 
+def build_report(root: Path, findings: list[Finding], strict: bool, started_at: str) -> dict[str, object]:
+    summary = summarize(findings, strict)
+    return {
+        "tool": "runtime_invariant_audit.py",
+        "version": 2,
+        "started_at_utc": started_at,
+        "root": str(root),
+        "summary": summary,
+        "findings": [asdict(f) for f in findings],
+    }
+
+
+def write_reports(report: dict[str, object], report_dir: Path) -> dict[str, str]:
+    latest = report_dir / "latest"
+    history = report_dir / "history"
+    latest.mkdir(parents=True, exist_ok=True)
+    history.mkdir(parents=True, exist_ok=True)
+
+    started = str(report["started_at_utc"])
+    stem = f"{started}_runtime_verification"
+
+    findings = [Finding(**item) for item in report["findings"]]  # type: ignore[arg-type]
+    summary_text = format_summary(report["summary"])  # type: ignore[arg-type]
+    log_text = summary_text + "\n\n" + format_findings(findings) + "\n"
+    json_text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+
+    latest_log = latest / "runtime_verification_latest.log"
+    latest_json = latest / "runtime_verification_latest.json"
+    latest_summary = latest / "runtime_verification_summary.txt"
+
+    latest_log.write_text(log_text, encoding="utf-8")
+    latest_json.write_text(json_text, encoding="utf-8")
+    latest_summary.write_text(summary_text + "\n", encoding="utf-8")
+
+    history_log = history / f"{stem}.log"
+    history_json = history / f"{stem}.json"
+    history_summary = history / f"{stem}_summary.txt"
+    shutil.copyfile(latest_log, history_log)
+    shutil.copyfile(latest_json, history_json)
+    shutil.copyfile(latest_summary, history_summary)
+
+    return {
+        "latest_log": latest_log.as_posix(),
+        "latest_json": latest_json.as_posix(),
+        "latest_summary": latest_summary.as_posix(),
+        "history_log": history_log.as_posix(),
+        "history_json": history_json.as_posix(),
+        "history_summary": history_summary.as_posix(),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Runtime invariant audit toolkit")
     parser.add_argument("--root", default=".", help="Repository root path")
     parser.add_argument("--strict", action="store_true", help="Treat WARN findings as blocking")
+    parser.add_argument("--report-dir", default=REPORT_DIR_DEFAULT, help="Directory for persistent verification reports")
+    parser.add_argument("--no-report", action="store_true", help="Do not write persistent report files")
+    parser.add_argument("--json", action="store_true", help="Print JSON report to stdout")
+    parser.add_argument("--summary", action="store_true", help="Print summary only to stdout")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -402,6 +527,7 @@ def main() -> int:
         print(f"ERROR: root does not exist: {root}", file=sys.stderr)
         return 1
 
+    started_at = utc_timestamp()
     findings: list[Finding] = []
     findings.extend(check_pattern_rules(root, OWNERSHIP_RULES))
     findings.extend(check_pattern_rules(root, STALE_TRUTH_RULES))
@@ -410,9 +536,29 @@ def main() -> int:
     findings.extend(check_semantic_progress_evidence(root))
     findings.extend(check_convergence_governor(root))
 
-    print(format_findings(findings))
+    report = build_report(root, findings, args.strict, started_at)
+    summary = report["summary"]
 
-    blocking = [f for f in findings if f.severity == "ERROR" or args.strict]
+    if not args.no_report:
+        paths = write_reports(report, root / args.report_dir)
+        report["report_paths"] = paths
+
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    elif args.summary:
+        print(format_summary(summary))  # type: ignore[arg-type]
+    else:
+        print(format_summary(summary))  # type: ignore[arg-type]
+        print()
+        print(format_findings(findings))
+        if not args.no_report:
+            paths = report.get("report_paths", {})
+            print()
+            print("Reports written:")
+            for key, value in paths.items():
+                print(f"  {key}: {value}")
+
+    blocking = int(summary["blocking_findings"])  # type: ignore[index]
     return 1 if blocking else 0
 
 
