@@ -3,7 +3,6 @@ VAR
     fbSystemInit : FB_System_Init;
     fbSystemRecovery : FB_System_Recovery;
     fbSystemPersist : FB_System_Persist_Manager;
-    fbSystemRedundancy : FB_System_Redundancy_Orchestrator;
 
     L_Local_State : ST_System_State_Snapshot;
     L_Remote_State : ST_System_State_Snapshot;
@@ -19,6 +18,21 @@ VAR
     L_NVRAM_Err : BOOL;
     L_NVRAM_ErrID : UDINT;
 END_VAR
+
+// ======================================================
+// SYSTEM RUNTIME BASE
+// ======================================================
+// Initializes and maintains base system runtime helpers.
+//
+// Legacy direct-state redundancy orchestration is intentionally
+// disconnected from active runtime execution.
+// Current HA/distributed runtime path is:
+// PRG_Peer_Heartbeat_Ingestion -> PRG_Peer_Session_Publication
+// -> PRG_HA_Session_Replication -> distributed ingestion/governors.
+//
+// Do not reconnect FB_System_Redundancy_Orchestrator here without
+// explicit barrier/governance review.
+// ======================================================
 
 fbSystemInit(
     VIO_Local_State := L_Local_State,
@@ -43,9 +57,5 @@ fbSystemPersist(
     VIO_NVRAM_ErrID := L_NVRAM_ErrID
 );
 
-fbSystemRedundancy(
-    VIO_Local_State := L_Local_State,
-    VIO_Remote_State := L_Remote_State
-);
-
+// >>> BULK_SYNC_ANCHOR: PRG_System_Runtime_Base <<<
 END_PROGRAM
