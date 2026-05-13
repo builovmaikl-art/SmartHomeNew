@@ -200,7 +200,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 15:09 .github
 -rw-r--r--  1 runner runner    202 May 13 15:09 GVL_HEATING_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner    136 May 13 15:09 GVL_HEATING_REQUEST.gvl
 -rw-r--r--  1 runner runner   1785 May 13 15:09 GVL_HMI.gvl
--rw-r--r--  1 runner runner   1116 May 13 15:09 GVL_Heating_Runtime_Observation.gvl
+-rw-r--r--  1 runner runner   1005 May 13 15:09 GVL_Heating_Runtime_Observation.gvl
 -rw-r--r--  1 runner runner   1148 May 13 15:09 GVL_Heating_Runtime_Observer.gvl
 -rw-r--r--  1 runner runner   1750 May 13 15:09 GVL_INPUT.gvl
 -rw-r--r--  1 runner runner    699 May 13 15:09 GVL_INPUT_VALIDATION_CONFIG.gvl
@@ -462,4 +462,4 @@ total 1500
 drwxr-xr-x 2 runner runner    4096 May 13 15:09 .
 drwxr-xr-x 5 runner runner    4096 May 13 15:09 ..
 -rw-r--r-- 1 runner runner       0 May 13 15:09 .gitkeep
--rw-r--r-- 1 runner runner 1527417 May 13 15:09 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1527184 May 13 15:09 RESULT_methods_clean.xml
