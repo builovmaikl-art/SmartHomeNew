@@ -21,12 +21,9 @@ L_Error_Text := '';
 // Does not invalidate runtime barrier,
 // PLC fencing or immutable snapshot authority.
 //
-// Current implementation mode:
-// peer-optional foundation mode.
-//
-// Missing peer topology is NOT treated as divergence.
-// Peer validation activates only after real peer
-// synchronization state exists.
+// Recovery/release is convergence-lease based:
+// distributed commit quarantine is not released on a
+// single healthy scan.
 // ======================================================
 
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Expired := FALSE;
@@ -160,13 +157,18 @@ IF L_Commit_Valid THEN
     END_IF;
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := TRUE;
-    GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := FALSE;
+
+    // Lease-based recovery release.
+    IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
+        GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := FALSE;
+    END_IF;
 
     GVL_DISTRIBUTED_COMMIT.Commit_Last_Reconciliation_MS := L_Now_MS;
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code := 0;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Text := '';
 ELSE
+    // Invalid distributed commit state escalates immediately.
     GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := FALSE;
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := FALSE;
