@@ -21,12 +21,9 @@ L_Error_Text := '';
 // Does not invalidate runtime barrier, PLC fencing
 // or local immutable snapshot freeze.
 //
-// Current implementation mode:
-// peer-optional foundation mode.
-//
-// Missing peer topology is NOT treated as divergence.
-// Peer validation activates only after real peer
-// synchronization state exists.
+// Recovery/release is convergence-lease based:
+// distributed snapshot quarantine is not released on a
+// single healthy scan.
 // ======================================================
 
 GVL_DISTRIBUTED_SNAPSHOT.Peer_Publication_Stale := FALSE;
@@ -156,11 +153,15 @@ IF L_Distributed_Snapshot_Valid THEN
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid := TRUE;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent := TRUE;
 
-    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active := FALSE;
+    // Lease-based recovery release.
+    IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
+        GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Quarantine_Active := FALSE;
+    END_IF;
 
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Code := 0;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Last_Error_Text := '';
 ELSE
+    // Invalid distributed snapshot state escalates immediately.
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled := FALSE;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid := FALSE;
     GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent := FALSE;
