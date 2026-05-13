@@ -14,6 +14,7 @@ VAR_GLOBAL
     // - PRG_Peer_Session_Publication exports canonical local state
     // - HA/session transport publishes replicated remote state
     // - PRG_Distributed_Peer_Ingestion consumes replicated state
+    // - PRG_Distributed_Snapshot_Ingestion consumes replicated snapshot state
     // - PRG_Distributed_Commit_Ingestion consumes replicated commit state
     //
     // This GVL intentionally separates:
@@ -38,6 +39,12 @@ VAR_GLOBAL
 
     HA_Remote_Publication_Allowed : BOOL := FALSE;
     HA_Remote_Runtime_Healthy : BOOL := FALSE;
+
+    HA_Remote_Distributed_Snapshot_Epoch : ULINT := 0;
+    HA_Remote_Runtime_Snapshot_Epoch : ULINT := 0;
+    HA_Remote_Publication_Epoch : ULINT := 0;
+    HA_Remote_Snapshot_Immutable : BOOL := FALSE;
+    HA_Remote_Snapshot_Last_Refresh_MS : UDINT := 0;
 
     HA_Remote_Publication_Commit_Epoch : ULINT := 0;
     HA_Remote_Prepare_Epoch : ULINT := 0;
