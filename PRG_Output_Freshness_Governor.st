@@ -12,8 +12,15 @@ L_Output_Valid := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
 
-GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay := FALSE;
-GVL_OUTPUT_EPOCH.Output_Stale_Detected := FALSE;
+// ======================================================
+// OUTPUT FRESHNESS GOVERNOR
+// ======================================================
+// Invalid output state escalates immediately.
+//
+// Recovery/release is convergence-lease based:
+// outputs are not released from stale/forced-safe-decay
+// on a single healthy scan.
+// ======================================================
 
 IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
     L_Output_Valid := FALSE;
@@ -58,7 +65,6 @@ IF L_Output_Valid AND GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected THEN
 END_IF;
 
 // Distributed epoch is the aggregate reconciliation authority.
-// Peer-detail fields remain observability, not additional hard-stop fanout.
 IF L_Output_Valid AND GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active THEN
     L_Output_Valid := FALSE;
     L_Error_Code := 6200;
@@ -151,9 +157,18 @@ IF L_Output_Valid THEN
     GVL_OUTPUT_EPOCH.Output_Last_Publication_MS := L_Now_MS;
     GVL_OUTPUT_EPOCH.Output_Last_Refresh_MS := L_Now_MS;
 
+    // --------------------------------------------------
+    // Lease-based recovery release.
+    // --------------------------------------------------
+    IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
+        GVL_OUTPUT_EPOCH.Output_Stale_Detected := FALSE;
+        GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay := FALSE;
+    END_IF;
+
     GVL_OUTPUT_EPOCH.Output_Last_Error_Code := 0;
     GVL_OUTPUT_EPOCH.Output_Last_Error_Text := '';
 ELSE
+    // Invalid output state escalates immediately.
     GVL_OUTPUT_EPOCH.Output_Publication_Valid := FALSE;
     GVL_OUTPUT_EPOCH.Output_Lease_Expired := TRUE;
     GVL_OUTPUT_EPOCH.Output_Stale_Detected := TRUE;
