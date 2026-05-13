@@ -14,6 +14,4 @@ VAR_GLOBAL
     G_Runtime_Observer_Fault : BOOL := FALSE;
     G_Runtime_Observation_Status_Code : UINT := 0;
     G_Runtime_Observation_Status_Text : STRING(128) := 'Heating runtime observation inactive';
-    G_Runtime_Observation_ReadOnly : BOOL := TRUE;
-    G_Runtime_Observation_Governance_Locked : BOOL := TRUE;
 END_VAR
