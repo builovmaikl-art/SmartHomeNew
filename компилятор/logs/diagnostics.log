@@ -458,8 +458,8 @@ drwxr-xr-x  2 runner runner   4096 May 13 14:51 out
 -rw-r--r--  1 runner runner    177 May 13 14:51 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1512
+total 1508
 drwxr-xr-x 2 runner runner    4096 May 13 14:51 .
 drwxr-xr-x 5 runner runner    4096 May 13 14:51 ..
 -rw-r--r-- 1 runner runner       0 May 13 14:51 .gitkeep
--rw-r--r-- 1 runner runner 1536481 May 13 14:51 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1535315 May 13 14:51 RESULT_methods_clean.xml
