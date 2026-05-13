@@ -6,6 +6,7 @@ VAR
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
     L_Peer_Session_Active : BOOL := FALSE;
+    L_Transitional_Peer_Projection : BOOL := FALSE;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -42,6 +43,21 @@ GVL_DISTRIBUTED_EPOCH.Local_Runtime_Epoch := GVL_RUNTIME_EPOCH.Runtime_Epoch;
 GVL_DISTRIBUTED_EPOCH.Local_Snapshot_Epoch := GVL_RUNTIME_SNAPSHOT.Snapshot_Epoch;
 GVL_DISTRIBUTED_EPOCH.Local_Boot_Generation := GVL_TIME_MONOTONIC.Boot_Generation_ID;
 GVL_DISTRIBUTED_EPOCH.Local_Fencing_Token := GVL_PLC_FENCING.PLC_Fencing_Token;
+
+// ------------------------------------------------------
+// Transitional peer-ingestion detection.
+// ------------------------------------------------------
+// During bounded peer-ingestion restoration the peer layer
+// still mirrors local-visible runtime/session state.
+//
+// Real remote fencing exchange is not implemented yet.
+// Equality-based fencing conflict semantics therefore remain
+// suppressed until explicit remote token transport exists.
+// ------------------------------------------------------
+
+IF GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Token = GVL_STATUS.G_Active_PLC_ID THEN
+    L_Transitional_Peer_Projection := TRUE;
+END_IF;
 
 // ------------------------------------------------------
 // Peer session detection.
@@ -118,7 +134,10 @@ END_IF;
 // Peer fencing continuity foundation.
 // ------------------------------------------------------
 
-IF L_Distributed_Valid AND L_Peer_Session_Active THEN
+IF L_Distributed_Valid
+AND L_Peer_Session_Active
+AND NOT L_Transitional_Peer_Projection
+THEN
     IF GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Token = GVL_DISTRIBUTED_EPOCH.Local_Fencing_Token THEN
         GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Conflict := TRUE;
 
