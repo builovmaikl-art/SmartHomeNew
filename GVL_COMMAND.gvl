@@ -1,5 +1,19 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // ======================================================
+    // LEGACY / OPERATOR COMMAND REQUEST SURFACE
+    // ======================================================
+    // This GVL is retained as legacy/operator command request
+    // surface and comparison source for command verification.
+    //
+    // Runtime operational command ownership lives in
+    // GVL_COMMAND_SHADOW and is published by PRG_Command_Arbitration.
+    //
+    // PreOutput and Command_Verifier may compare this surface against
+    // GVL_COMMAND_SHADOW, but must not treat GVL_COMMAND as final
+    // physical output authority.
+    // ======================================================
+
     G_Gas_Valve_Close : BOOL := FALSE;
     G_Boiler_Stop : BOOL := FALSE;
     G_Supply_100_Req : BOOL := FALSE;
