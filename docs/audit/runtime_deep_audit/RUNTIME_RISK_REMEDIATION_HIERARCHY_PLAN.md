@@ -2,12 +2,12 @@
 
 ## Назначение
 
-Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup и последующего восстановления distributed peer/commit topology.
+Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup, восстановления distributed peer/commit topology и отключения legacy direct-state redundancy bypass.
 
 Текущий этап:
 
 ```text
-post-cleanup structural validation + distributed topology restoration
+post-cleanup structural validation + distributed topology restoration + legacy bypass containment
 ```
 
 Главный принцип:
@@ -95,6 +95,7 @@ Time_Monotonic
 
 ```text
 restored explicit distributed peer/commit topology foundation
+legacy direct-state redundancy bypass disconnected from runtime base
 ```
 
 Ограничение:
@@ -254,7 +255,62 @@ Real remote commit acknowledgement transport is still required.
 
 ---
 
-## 3.4 Observability demotion
+## 3.4 Legacy direct-state redundancy bypass containment
+
+Найден активный runtime bypass:
+
+```text
+MAIN
+→ PRG_System_Runtime_Base
+→ FB_System_Redundancy_Orchestrator
+→ FB_Redundancy_Manager
+→ FB_State_Replication
+→ direct GVL_STATUS / GVL_ALARM / GVL_STATE / GVL_COMMAND apply
+```
+
+Проблема:
+
+```text
+legacy redundancy path bypassed Runtime_Barrier, Runtime_Snapshot,
+Distributed_Epoch, Distributed_Commit, Output_Freshness and new HA topology.
+```
+
+Исправлено:
+
+```text
+FB_System_Redundancy_Orchestrator disconnected from PRG_System_Runtime_Base.
+ST_System_State_Snapshot marked as legacy direct-state replication snapshot.
+```
+
+Влияние:
+
+```text
+RISK-037
+RISK-038
+RISK-040
+RISK-047
+A-RISK-008
+D-RISK-001
+D-RISK-004
+```
+
+Статус:
+
+```text
+CONFIRMED_RESOLVED_FOR_ACTIVE_RUNTIME_PATH
+```
+
+Остаётся проверить:
+
+```text
+no remaining indirect invocation of FB_System_Redundancy_Orchestrator
+no simulator/diagnostics/maintenance path can reconnect legacy direct-state apply
+ownership matrix marks legacy redundancy subsystem frozen
+```
+
+---
+
+## 3.5 Observability demotion
 
 Observability приведён к:
 
@@ -289,7 +345,7 @@ HMI/diagnostics consumers after ownership matrix refresh
 
 ---
 
-## 3.5 Semantic demotion
+## 3.6 Semantic demotion
 
 Semantic continuity переведён в:
 
@@ -326,7 +382,7 @@ future diagnostics/HMI paths do not reinterpret semantic warning as hard-stop au
 
 ---
 
-## 3.6 Dead-state / mirror pruning
+## 3.7 Dead-state / mirror pruning
 
 Удалены duplicate degraded-state mirrors and verified removed-field convergence, including:
 
@@ -379,10 +435,11 @@ speculative semantic / observability governance
 Сейчас главный remaining risk:
 
 ```text
-transport-backed distributed validation gap
+transport-backed distributed validation gap + legacy bypass regression
 ```
 
-То есть topology восстановлена, но bounded loopback foundation ещё не доказывает real peer divergence behavior.
+То есть topology восстановлена и active legacy direct-state bypass отключён,
+но bounded loopback foundation ещё не доказывает real peer divergence behavior.
 
 Особенно опасны:
 
@@ -391,6 +448,7 @@ self-mirroring HA replication
 self-ack commit validation
 ghost peer session after invalid HA transport
 real remote fencing-token equality semantics
+legacy direct-state redundancy reconnection
 ```
 
 ---
@@ -409,6 +467,7 @@ STAGE-A Freeze current topology
 → STAGE-E Validate distributed peer behavior
 → STAGE-E2 Replace bounded HA loopback with real transport backend
 → STAGE-E3 Validate real remote token/commit semantics
+→ STAGE-E4 Freeze legacy redundancy subsystem
 → STAGE-F Compile/reference convergence
 → STAGE-G Targeted remediation only if evidence exists
 → STAGE-H Update plans and ownership matrix
@@ -434,6 +493,7 @@ Evidence:
 MAIN now contains explicit peer heartbeat, peer session publication,
 HA session replication, distributed peer ingestion,
 distributed commit publication and distributed commit ingestion stages.
+Legacy FB_System_Redundancy_Orchestrator disconnected from PRG_System_Runtime_Base.
 ```
 
 ---
@@ -457,6 +517,7 @@ GVL_PEER_SESSION
 GVL_HA_SESSION_REPLICATION
 GVL_OBSERVABILITY_AUTHORITY
 GVL_SEMANTIC_PROGRESS
+GVL_STATUS / GVL_STATE / GVL_COMMAND / GVL_ALARM legacy direct-write paths
 ```
 
 ## Evidence required
@@ -468,12 +529,13 @@ GVL_SEMANTIC_PROGRESS
 нет foreign reset
 нет duplicate writer
 нет projection writer в authority field
+нет legacy direct-state bypass writer in active runtime path
 ```
 
 ## Статус
 
 ```text
-IN_PROGRESS_AFTER_TOPOLOGY_RESTORATION
+IN_PROGRESS_AFTER_LEGACY_BYPASS_DISCONNECTION
 ```
 
 ---
@@ -496,12 +558,14 @@ Evidence:
 IO_Write consumes Output_Forced_Safe_Decay as final output freshness hard-stop.
 Output_Freshness consumes distributed aggregate authority only, not peer-detail diagnostics.
 Recovery and observability do not write distributed/peer authority state.
+Legacy direct-state redundancy runtime bypass was disconnected from PRG_System_Runtime_Base.
 ```
 
 Остаётся:
 
 ```text
 runtime validation after real HA transport backend replacement
+legacy subsystem freeze verification
 ```
 
 ---
@@ -529,6 +593,7 @@ Semantic continuity remains advisory-only for Output_Freshness.
 
 ```text
 HMI/diagnostics ownership sweep
+legacy subsystem freeze verification
 ```
 
 ---
@@ -548,6 +613,7 @@ real peer session activates validation
 real peer mismatch can quarantine publication
 real peer fencing conflict still hard-stops output
 real commit ack/replay behavior is not self-acknowledged
+legacy direct-state redundancy cannot run in parallel
 ```
 
 ## Статус
@@ -562,6 +628,7 @@ FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 replace bounded HA loopback with real PLC-to-PLC backend
 validate real remote fencing token issuance/exchange
 validate real remote commit acknowledgement exchange
+freeze legacy redundancy subsystem
 ```
 
 ---
@@ -578,6 +645,7 @@ validate real remote commit acknowledgement exchange
 removed fields are not referenced
 new PRGs are called exactly once from MAIN
 new GVLs are declared and consumed by intended owners
+legacy redundancy FBs are not reachable from active runtime
 ownership matrix matches code
 PART2 matches current plan
 ```
@@ -585,7 +653,7 @@ PART2 matches current plan
 ## Статус
 
 ```text
-IN_PROGRESS_AFTER_NEW_PRG_ADDITIONS
+IN_PROGRESS_AFTER_LEGACY_BYPASS_DISCONNECTION
 ```
 
 ---
@@ -602,6 +670,7 @@ advisory leakage found
 stale compile reference found
 real topology cycle found
 self-ack / self-mirror validation found
+legacy active runtime bypass found
 ```
 
 Запрещено:
@@ -611,6 +680,7 @@ cleanup by intuition
 удалять fields только потому что они выглядят лишними
 переписывать topology без writer/hard-stop evidence
 оставлять bounded loopback HA replication as production behavior
+reconnecting legacy direct-state redundancy without governance review
 ```
 
 ---
@@ -620,15 +690,16 @@ cleanup by intuition
 Используются только эти статусы:
 
 ```text
-CONFIRMED_RESOLVED                доказано кодом и reference validation
+CONFIRMED_RESOLVED
 CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
 CONFIRMED_RESOLVED_FOR_KNOWN_REMOVED_FIELDS
-STRUCTURALLY_REDUCED              структура исправлена, но runtime evidence ещё нужна
+CONFIRMED_RESOLVED_FOR_ACTIVE_RUNTIME_PATH
+STRUCTURALLY_REDUCED
 FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 PARTIALLY_CONFIRMED_FOR_DIRECT_PATHS
-VALIDATION_REQUIRED               гипотеза или зона риска, нужна проверка
-UNVERIFIED_RUNTIME_BEHAVIOR        поведение не подтверждено runtime evidence
-IN_PROGRESS                        работа идёт
+VALIDATION_REQUIRED
+UNVERIFIED_RUNTIME_BEHAVIOR
+IN_PROGRESS
 ```
 
 ---
@@ -636,7 +707,7 @@ IN_PROGRESS                        работа идёт
 # 14. Текущий главный риск
 
 ```text
-transport-backed distributed validation gap
+transport-backed distributed validation gap + legacy bypass regression
 ```
 
 А не:
@@ -649,6 +720,7 @@ missing semantic intelligence
 
 ```text
 real HA backend replacement
+legacy redundancy subsystem freeze
 writer graph refresh
 hard-stop graph validation
 compile/reference convergence
