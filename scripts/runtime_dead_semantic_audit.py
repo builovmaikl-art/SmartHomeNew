@@ -14,16 +14,6 @@ IMPORTANT:
 
 Performance model:
     Single-pass source indexing. Designed for Codespaces/mobile terminal use.
-
-Usage:
-    python3 scripts/runtime_dead_semantic_audit.py
-    python3 scripts/runtime_dead_semantic_audit.py --summary
-    python3 scripts/runtime_dead_semantic_audit.py --json
-    python3 scripts/runtime_dead_semantic_audit.py --max-findings 1000
-
-Reports:
-    runtime_semantic_reports/latest/
-    runtime_semantic_reports/history/
 """
 
 from __future__ import annotations
@@ -44,8 +34,13 @@ EXCLUDED_PARTS = {
     ".git",
     "archive",
     "archives",
+    "backup",
+    "backups",
     "generated",
     "docs",
+    "logs",
+    "reports",
+    "snapshots",
     "runtime_verification_reports",
     "runtime_semantic_reports",
 }
@@ -205,42 +200,15 @@ def build_findings(index: SourceIndex, max_findings: int) -> tuple[list[Finding]
 
     for decl in index.gvl_fields:
         if index.token_counts.get(decl.symbol, 0) <= 1:
-            append(
-                Finding(
-                    category="UNUSED_GVL_FIELD",
-                    severity="WARN",
-                    symbol=decl.symbol,
-                    path=decl.path,
-                    line=decl.line,
-                    detail="GVL field appears declared but not referenced.",
-                )
-            )
+            append(Finding("UNUSED_GVL_FIELD", "WARN", decl.symbol, decl.path, decl.line, "GVL field appears declared but not referenced."))
 
     for decl in index.dut_fields:
         if index.member_counts.get(decl.symbol, 0) == 0:
-            append(
-                Finding(
-                    category="UNUSED_DUT_FIELD",
-                    severity="WARN",
-                    symbol=decl.symbol,
-                    path=decl.path,
-                    line=decl.line,
-                    detail="DUT field appears unused as a member access.",
-                )
-            )
+            append(Finding("UNUSED_DUT_FIELD", "WARN", decl.symbol, decl.path, decl.line, "DUT field appears unused as a member access."))
 
     for decl in index.dut_types:
         if index.token_counts.get(decl.symbol, 0) <= 1:
-            append(
-                Finding(
-                    category="ORPHAN_DUT_TYPE",
-                    severity="WARN",
-                    symbol=decl.symbol,
-                    path=decl.path,
-                    line=decl.line,
-                    detail="DUT type appears declared but never instantiated/referenced.",
-                )
-            )
+            append(Finding("ORPHAN_DUT_TYPE", "WARN", decl.symbol, decl.path, decl.line, "DUT type appears declared but never instantiated/referenced."))
 
     for item in index.zombie_findings:
         append(item)
@@ -277,22 +245,20 @@ def summarize(findings: list[Finding], index: SourceIndex, truncated: bool) -> d
 
 def summary_text(report: dict) -> str:
     s = report["summary"]
-    return "\n".join(
-        [
-            "Runtime dead semantic audit summary",
-            "===================================",
-            f"FILES_SCANNED: {s['files_scanned']}",
-            f"GVL_FIELDS_SCANNED: {s['gvl_fields_scanned']}",
-            f"DUT_FIELDS_SCANNED: {s['dut_fields_scanned']}",
-            f"DUT_TYPES_SCANNED: {s['dut_types_scanned']}",
-            f"UNUSED_GVL_FIELDS: {s['unused_gvl_fields']}",
-            f"UNUSED_DUT_FIELDS: {s['unused_dut_fields']}",
-            f"ORPHAN_DUT_TYPES: {s['orphan_dut_types']}",
-            f"SEMANTIC_ZOMBIE_PATTERNS: {s['semantic_zombie_patterns']}",
-            f"TOTAL_FINDINGS: {s['total_findings']}",
-            f"TRUNCATED: {s['truncated']}",
-        ]
-    ) + "\n"
+    return "\n".join([
+        "Runtime dead semantic audit summary",
+        "===================================",
+        f"FILES_SCANNED: {s['files_scanned']}",
+        f"GVL_FIELDS_SCANNED: {s['gvl_fields_scanned']}",
+        f"DUT_FIELDS_SCANNED: {s['dut_fields_scanned']}",
+        f"DUT_TYPES_SCANNED: {s['dut_types_scanned']}",
+        f"UNUSED_GVL_FIELDS: {s['unused_gvl_fields']}",
+        f"UNUSED_DUT_FIELDS: {s['unused_dut_fields']}",
+        f"ORPHAN_DUT_TYPES: {s['orphan_dut_types']}",
+        f"SEMANTIC_ZOMBIE_PATTERNS: {s['semantic_zombie_patterns']}",
+        f"TOTAL_FINDINGS: {s['total_findings']}",
+        f"TRUNCATED: {s['truncated']}",
+    ]) + "\n"
 
 
 def write_reports(report: dict, report_dir: Path) -> None:
@@ -307,6 +273,7 @@ def write_reports(report: dict, report_dir: Path) -> None:
         f"[{f['category']}] {f['symbol']} @ {f['path']}:{f['line']} - {f['detail']}"
         for f in report["findings"]
     ) + "\n"
+
     json_text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
 
     latest_summary = latest / "runtime_dead_semantic_summary.txt"
@@ -337,7 +304,7 @@ def main() -> int:
 
     report = {
         "tool": "runtime_dead_semantic_audit.py",
-        "version": 2,
+        "version": 3,
         "started_at_utc": utc_timestamp(),
         "summary": summarize(findings, index, truncated),
         "findings": [asdict(f) for f in findings],
