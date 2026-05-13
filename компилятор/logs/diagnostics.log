@@ -203,7 +203,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 14:35 .github
 -rw-r--r--  1 runner runner   1116 May 13 14:35 GVL_Heating_Runtime_Observation.gvl
 -rw-r--r--  1 runner runner   1319 May 13 14:35 GVL_Heating_Runtime_Observer.gvl
 -rw-r--r--  1 runner runner   1750 May 13 14:35 GVL_INPUT.gvl
--rw-r--r--  1 runner runner   1082 May 13 14:35 GVL_INPUT_VALIDATION_CONFIG.gvl
+-rw-r--r--  1 runner runner    699 May 13 14:35 GVL_INPUT_VALIDATION_CONFIG.gvl
 -rw-r--r--  1 runner runner   1465 May 13 14:35 GVL_INTENT_BEHAVIOR.gvl
 -rw-r--r--  1 runner runner    373 May 13 14:35 GVL_INTENT_POLICY.gvl
 -rw-r--r--  1 runner runner   1478 May 13 14:35 GVL_INTENT_SAFETY.gvl
@@ -458,8 +458,8 @@ drwxr-xr-x  2 runner runner   4096 May 13 14:35 out
 -rw-r--r--  1 runner runner    177 May 13 14:35 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1516
+total 1512
 drwxr-xr-x 2 runner runner    4096 May 13 14:35 .
 drwxr-xr-x 5 runner runner    4096 May 13 14:35 ..
 -rw-r--r-- 1 runner runner       0 May 13 14:35 .gitkeep
--rw-r--r-- 1 runner runner 1542457 May 13 14:35 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1539589 May 13 14:35 RESULT_methods_clean.xml
