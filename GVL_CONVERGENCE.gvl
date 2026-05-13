@@ -1,0 +1,48 @@
+VAR_GLOBAL
+    // ======================================================
+    // SYSTEMIC CONVERGENCE EVIDENCE STATE
+    // ======================================================
+    // Deterministic recovery/convergence foundation.
+    // This surface is technical runtime evidence only.
+    // It is not diagnostics, HMI state or business-domain state.
+    //
+    // Purpose:
+    // - prevent one-cycle false recovery;
+    // - provide sustained healthy evidence;
+    // - gate controlled release of quarantine/degraded recovery paths.
+    // ======================================================
+
+    Recovery_Stable_Cycle_Count : UDINT := 0;
+    Recovery_Stable_Time_MS : UDINT := 0;
+
+    Convergence_Healthy_Observed : BOOL := FALSE;
+    Convergence_Lease_OK : BOOL := FALSE;
+    Convergence_Release_Allowed : BOOL := FALSE;
+
+    Convergence_Last_Healthy_MS : UDINT := 0;
+    Convergence_Last_Invalidation_MS : UDINT := 0;
+
+    Convergence_Invalidation_Count : UDINT := 0;
+
+    // ------------------------------------------------------
+    // Convergence thresholds.
+    // ------------------------------------------------------
+    Convergence_Min_Stable_Cycles : UDINT := 5;
+    Convergence_Min_Stable_Time_MS : UDINT := 500;
+
+    // ------------------------------------------------------
+    // Current evidence inputs captured by PRG_Convergence_Governor.
+    // ------------------------------------------------------
+    Convergence_Runtime_Barrier_OK : BOOL := FALSE;
+    Convergence_Runtime_Snapshot_OK : BOOL := FALSE;
+    Convergence_Distributed_Snapshot_OK : BOOL := FALSE;
+    Convergence_Distributed_Commit_OK : BOOL := FALSE;
+    Convergence_Semantic_Progress_OK : BOOL := FALSE;
+    Convergence_Output_Freshness_OK : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Last invalidation details.
+    // ------------------------------------------------------
+    Convergence_Last_Error_Code : UDINT := 0;
+    Convergence_Last_Error_Text : STRING(160) := '';
+END_VAR
