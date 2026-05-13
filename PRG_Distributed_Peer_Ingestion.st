@@ -49,6 +49,11 @@ IF GVL_HA_SESSION_REPLICATION.HA_Remote_Session_Valid THEN
         GVL_HA_SESSION_REPLICATION.HA_Remote_Fencing_Token;
 ELSE
     GVL_DISTRIBUTED_EPOCH.Peer_Lease_Active := FALSE;
+    GVL_DISTRIBUTED_EPOCH.Peer_Runtime_Epoch := 0;
+    GVL_DISTRIBUTED_EPOCH.Peer_Snapshot_Epoch := 0;
+    GVL_DISTRIBUTED_EPOCH.Peer_Boot_Generation := 0;
+    GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Token := 0;
+    GVL_DISTRIBUTED_EPOCH.Peer_Last_Refresh_MS := 0;
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Distributed_Peer_Ingestion <<<
