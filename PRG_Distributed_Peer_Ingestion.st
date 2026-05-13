@@ -9,7 +9,7 @@ END_VAR
 // Bounded peer-session ingestion layer.
 //
 // Purpose:
-// normalize remote PLC liveness/session visibility into
+// normalize explicit remote PLC session contract state into
 // distributed peer-input fields consumed by distributed governors.
 //
 // This layer does NOT:
@@ -17,11 +17,6 @@ END_VAR
 // - perform split-brain detection
 // - validate peer publication correctness
 // - mutate local runtime authority
-//
-// Current implementation status:
-// peer epoch/token values are projected from currently available
-// remote PLC runtime visibility until a richer transport/session
-// contract is implemented.
 // ======================================================
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -31,33 +26,27 @@ L_Now_MS := GVL_STATUS.G_System_Time_MS;
 // ------------------------------------------------------
 
 GVL_DISTRIBUTED_EPOCH.Peer_Last_Refresh_MS :=
-    GVL_STATUS.G_Remote_PLC_Last_Seen_MS;
+    GVL_PEER_SESSION.Remote_Last_Refresh_MS;
 
 GVL_DISTRIBUTED_EPOCH.Peer_Lease_Active :=
-    GVL_STATUS.G_Remote_PLC_Alive;
+    GVL_PEER_SESSION.Remote_Session_Valid;
 
 // ------------------------------------------------------
-// Peer runtime visibility projection.
+// Explicit remote session ingestion.
 // ------------------------------------------------------
 
-IF GVL_STATUS.G_Remote_PLC_Alive THEN
-    // Transitional projection model:
-    // until explicit remote epoch transport exists,
-    // peer visibility mirrors current known remote-active session.
-
+IF GVL_PEER_SESSION.Remote_Session_Valid THEN
     GVL_DISTRIBUTED_EPOCH.Peer_Runtime_Epoch :=
-        GVL_RUNTIME_EPOCH.Runtime_Epoch;
+        GVL_PEER_SESSION.Remote_Runtime_Epoch;
 
     GVL_DISTRIBUTED_EPOCH.Peer_Snapshot_Epoch :=
-        GVL_RUNTIME_SNAPSHOT.Runtime_Snapshot_Epoch;
+        GVL_PEER_SESSION.Remote_Snapshot_Epoch;
 
     GVL_DISTRIBUTED_EPOCH.Peer_Boot_Generation :=
-        GVL_STATUS.G_Active_PLC_ID;
+        GVL_PEER_SESSION.Remote_Boot_Generation;
 
-    // Transitional fencing projection.
-    // Explicit remote fencing-token exchange is not yet implemented.
     GVL_DISTRIBUTED_EPOCH.Peer_Fencing_Token :=
-        GVL_STATUS.G_Active_PLC_ID;
+        GVL_PEER_SESSION.Remote_Fencing_Token;
 ELSE
     GVL_DISTRIBUTED_EPOCH.Peer_Lease_Active := FALSE;
 END_IF;
