@@ -1,20 +1,11 @@
 VAR_GLOBAL
     // Scenario behavior weights.
     // Scalar fields are the active compile-safe source used by PRG_Scenario_Engine.
-    // The structured value is kept as a repository-level model reference, but active code does not depend on direct component access to it.
     G_Behavior_Weight_Comfort : REAL := 1.0;
     G_Behavior_Weight_Night : REAL := 1.0;
     G_Behavior_Weight_Preheat : REAL := 1.0;
     G_Behavior_Weight_VentBoost : REAL := 1.0;
     G_Behavior_Weight_AccessSecure : REAL := 1.0;
-
-    G_Behavior_Weights : ST_Behavior_Weights := (
-        W_Comfort := 1.0,
-        W_Night := 1.0,
-        W_Preheat := 1.0,
-        W_VentBoost := 1.0,
-        W_AccessSecure := 1.0
-    );
 
     G_Scenario_Stats : ARRAY[0..10] OF ST_Scenario_Stats;
     G_VentBoost_Zone_Adapt : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Zone_Adapt_State;
