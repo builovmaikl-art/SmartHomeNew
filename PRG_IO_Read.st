@@ -65,12 +65,6 @@ fbDiagEventManager(
     VIO_Count := GVL_STATUS.G_Diagnostics_Count
 );
 
-IF L_IO_Error_Active THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        GVL_STATE.G_Manifold_Pumps[L_i] := FALSE;
-    END_FOR;
-END_IF;
-
 // Lighting and motion are sized by C_MAX_LIGHT_ZONES.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     fbDebounce_Switches[L_i](IN := GVL_IO.DI_Lighting_Switches[L_i], PT := L_Debounce_Time, VI_System_Time_MS := GVL_STATUS.G_System_Time_MS);
