@@ -13,7 +13,6 @@ VAR_GLOBAL
     // FIRE policy.
     G_Fire_Block_Heating : BOOL := TRUE;
     G_Fire_Stop_Boiler : BOOL := TRUE;
-    G_Fire_Stop_Vent : BOOL := TRUE;
     G_Fire_Open_Lock_1 : BOOL := TRUE;
     G_Fire_Open_Lock_2 : BOOL := TRUE;
     G_Fire_Open_Gate : BOOL := TRUE;
