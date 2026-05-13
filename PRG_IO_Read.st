@@ -334,9 +334,6 @@ END_FOR;
 
 GVL_STATE.G_Boiler_Flame := GVL_IO.AI_Boiler_Flame_Status;
 GVL_STATE.G_Boiler_Error := GVL_IO.DI_Boiler_Error;
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-    GVL_STATE.G_Boiler_OT_Online[L_i] := FALSE;
-END_FOR;
 
 GVL_STATE.G_DHW_Temp := GVL_IO.AI_DHW_Temp;
 GVL_STATE.G_DHW_Pressure := GVL_IO.AI_DHW_Pressure;
