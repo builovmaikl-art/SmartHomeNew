@@ -2,12 +2,12 @@
 
 ## Назначение
 
-Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup.
+Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup и последующего восстановления distributed peer/commit topology.
 
 Текущий этап:
 
 ```text
-post-cleanup structural validation
+post-cleanup structural validation + distributed topology restoration
 ```
 
 Главный принцип:
@@ -64,27 +64,45 @@ V-RISK-* — validation coverage gaps
 
 # 2. Текущая runtime topology
 
+Текущая validated directionality после remediation:
+
 ```text
 Time_Monotonic
-→ PLC_Fencing
 → Transport_Freshness
+→ PLC_Fencing
 → Runtime_Barrier
 → Runtime_Snapshot
+→ Peer_Session_Publication
+→ HA_Session_Replication
+→ Distributed_Peer_Ingestion
 → Distributed_Epoch
 → Distributed_Snapshot
+→ Distributed_Commit_Publication
+→ Distributed_Commit_Ingestion
 → Distributed_Commit
 → Semantic_Progress
+→ Observability
+→ Recovery_Cleanup
+→ Domain execution
+→ PreOutput_Barrier
 → Output_Freshness
 → IO_Write
+→ Command_Verifier
+→ Diagnostics / HMI
 ```
 
 Текущее состояние:
 
 ```text
-compressed deterministic runtime governance
+restored explicit distributed peer/commit topology foundation
 ```
 
-Но это состояние ещё не является финально доказанным runtime evidence.
+Ограничение:
+
+```text
+HA_Session_Replication currently remains bounded loopback foundation.
+Real PLC-to-PLC HA transport backend is still required before claiming real distributed runtime validation.
+```
 
 ---
 
@@ -99,6 +117,7 @@ Runtime_Barrier ↔ Recovery_Governance
 Runtime_Snapshot ↔ Output_Freshness
 Observability ↔ Runtime authority
 Semantic continuity ↔ Physical publication authority
+Distributed snapshot/commit ↔ downstream output publication epoch
 ```
 
 Влияние:
@@ -118,30 +137,42 @@ S-RISK-001
 Статус:
 
 ```text
-STRUCTURALLY_REDUCED
+CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
 ```
 
-Не доказано полностью:
+Остаётся проверить:
 
 ```text
-нет indirect feedback через вторичные fields
-нет downstream-driven invalidation через transitively consumed flags
+runtime evidence on PLC execution
+secondary diagnostics/HMI paths after future transport backend replacement
 ```
 
 ---
 
-## 3.2 Distributed peer normalization
+## 3.2 Distributed peer normalization and ingestion restoration
 
-Distributed layers переведены в:
+Distributed layers переведены из orphan peer fields в explicit topology:
 
 ```text
-peer-optional foundation mode
+physical peer heartbeat
+→ PRG_Peer_Heartbeat_Ingestion
+→ PRG_PLC_Arbitration
+→ PRG_PLC_Fencing_Governor
+→ PRG_Peer_Session_Publication
+→ GVL_PEER_SESSION
+→ PRG_HA_Session_Replication
+→ GVL_HA_SESSION_REPLICATION
+→ PRG_Distributed_Peer_Ingestion
+→ PRG_Distributed_Epoch_Governor
 ```
 
-Удалена старая модель:
+Исправлено:
 
 ```text
-missing peer = distributed failure
+missing heartbeat ingestion bridge
+missing peer-input ingestion owner
+stale peer fields after invalid HA session
+distributed peer ownership ambiguity
 ```
 
 Влияние:
@@ -158,20 +189,72 @@ D-RISK-004
 Статус:
 
 ```text
-STRUCTURALLY_REDUCED
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 ```
 
-Не доказано полностью:
+Ограничение:
 
 ```text
-корректность peer-session activation при реальном peer
-корректность real divergence hard-stop
-отсутствие startup quarantine fanout
+real remote PLC transport/session replication backend is not implemented yet.
+PRG_HA_Session_Replication is temporary bounded loopback foundation only.
+```
+
+Запрещено:
+
+```text
+оставлять bounded loopback as permanent production implementation
+удалять transitional fencing suppression before real remote token transport exists
 ```
 
 ---
 
-## 3.3 Observability demotion
+## 3.3 Distributed commit topology restoration
+
+Distributed commit peer fields переведены из orphan handshake state в explicit topology:
+
+```text
+Distributed_Snapshot
+→ PRG_Distributed_Commit_Publication
+→ GVL_HA_SESSION_REPLICATION
+→ PRG_Distributed_Commit_Ingestion
+→ GVL_DISTRIBUTED_COMMIT.Peer_*
+→ PRG_Distributed_Commit_Governor
+```
+
+Исправлено:
+
+```text
+missing commit peer ingestion owner
+missing replicated commit handshake boundary
+stale peer commit ack continuity after invalid HA session
+phantom peer commit session risk
+```
+
+Влияние:
+
+```text
+D-RISK-003
+D-RISK-004
+RISK-047
+C-RISK-004
+```
+
+Статус:
+
+```text
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
+```
+
+Ограничение:
+
+```text
+self-ack risk remains if bounded loopback is enabled and treated as real remote transport.
+Real remote commit acknowledgement transport is still required.
+```
+
+---
+
+## 3.4 Observability demotion
 
 Observability приведён к:
 
@@ -179,16 +262,7 @@ Observability приведён к:
 downstream visibility aggregation only
 ```
 
-Удалены legacy authority residues:
-
-```text
-PreActuation_Visibility_Ready
-Diagnostics_Synchronized
-Explainability_Synchronized
-Authority_Snapshot_Valid
-Observability_Quarantine_Active
-Observability_Invalidation_Count
-```
+Удалены legacy authority residues и добавлена missing distributed commit visibility coverage.
 
 Влияние:
 
@@ -204,20 +278,18 @@ O-RISK-004
 Статус:
 
 ```text
-STRUCTURALLY_REDUCED
+CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
 ```
 
-Не доказано полностью:
+Остаётся проверить:
 
 ```text
-нет foreign writes в visibility escalation fields
-нет observability-driven resets
-нет indirect HMI/diagnostics escalation в hard-stop path
+HMI/diagnostics consumers after ownership matrix refresh
 ```
 
 ---
 
-## 3.4 Semantic demotion
+## 3.5 Semantic demotion
 
 Semantic continuity переведён в:
 
@@ -243,22 +315,20 @@ P-RISK-004
 Статус:
 
 ```text
-STRUCTURALLY_REDUCED
+CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
 ```
 
-Не доказано полностью:
+Остаётся проверить:
 
 ```text
-нет semantic quarantine fanout
-нет semantic-driven output invalidation
-нет dormant semantic commit leakage
+future diagnostics/HMI paths do not reinterpret semantic warning as hard-stop authority
 ```
 
 ---
 
-## 3.5 Dead-state / mirror pruning
+## 3.6 Dead-state / mirror pruning
 
-Удалены duplicate degraded-state mirrors:
+Удалены duplicate degraded-state mirrors and verified removed-field convergence, including:
 
 ```text
 Snapshot_Observability_Synchronized
@@ -269,6 +339,9 @@ Distributed_Snapshot_Forced_Safe_Mode
 Distributed_Snapshot_Invalidation_Count
 Distributed_Commit_Forced_Safe_Mode
 Distributed_Commit_Invalidation_Count
+GVL_CONFIG_VALIDATION.G_Runtime_*
+GVL_DISTRIBUTED_COMMIT.Local_Commit_Token
+GVL_DISTRIBUTED_COMMIT.Peer_Commit_Token
 ```
 
 Влияние:
@@ -283,20 +356,19 @@ C-RISK-004
 Статус:
 
 ```text
-STRUCTURALLY_REDUCED
+CONFIRMED_RESOLVED_FOR_KNOWN_REMOVED_FIELDS
 ```
 
-Не доказано полностью:
+Остаётся проверить:
 
 ```text
-нет оставшихся mirror fields в GVL_OUTPUT_EPOCH
-нет orphan visibility fields
-нет stale references после removals
+fresh compile/reference sweep after latest PRG additions
+ownership matrix update
 ```
 
 ---
 
-# 4. Новое понимание после cleanup
+# 4. Текущее понимание после remediation
 
 Ранее главный риск выглядел как:
 
@@ -307,19 +379,18 @@ speculative semantic / observability governance
 Сейчас главный remaining risk:
 
 ```text
-implicit authority propagation
+transport-backed distributed validation gap
 ```
 
-То есть слой формально advisory или downstream, но другой downstream-код начинает трактовать его состояние как authority.
+То есть topology восстановлена, но bounded loopback foundation ещё не доказывает real peer divergence behavior.
 
-Это особенно опасно в:
+Особенно опасны:
 
 ```text
-GVL_OUTPUT_EPOCH
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-GVL_OBSERVABILITY_AUTHORITY
-GVL_DISTRIBUTED_*
+self-mirroring HA replication
+self-ack commit validation
+ghost peer session after invalid HA transport
+real remote fencing-token equality semantics
 ```
 
 ---
@@ -336,6 +407,8 @@ STAGE-A Freeze current topology
 → STAGE-C Build hard-stop graph
 → STAGE-D Build advisory leakage graph
 → STAGE-E Validate distributed peer behavior
+→ STAGE-E2 Replace bounded HA loopback with real transport backend
+→ STAGE-E3 Validate real remote token/commit semantics
 → STAGE-F Compile/reference convergence
 → STAGE-G Targeted remediation only if evidence exists
 → STAGE-H Update plans and ownership matrix
@@ -349,31 +422,18 @@ STAGE-A Freeze current topology
 
 Зафиксировать фактический execution graph перед следующими правками.
 
-## Нужно получить
-
-```text
-MAIN.st PRG order
-runtime authority order
-snapshot publication order
-distributed order
-output/IO order
-observability order
-```
-
-## Связанные риски
-
-```text
-RISK-037
-RISK-038
-RISK-040
-RISK-047
-C-RISK-004
-```
-
 ## Статус
 
 ```text
-IN_PROGRESS
+FOUNDATION_RESTORED_NEEDS_MATRIX_REFRESH
+```
+
+Evidence:
+
+```text
+MAIN now contains explicit peer heartbeat, peer session publication,
+HA session replication, distributed peer ingestion,
+distributed commit publication and distributed commit ingestion stages.
 ```
 
 ---
@@ -393,13 +453,15 @@ GVL_OUTPUT_EPOCH
 GVL_DISTRIBUTED_EPOCH
 GVL_DISTRIBUTED_SNAPSHOT
 GVL_DISTRIBUTED_COMMIT
+GVL_PEER_SESSION
+GVL_HA_SESSION_REPLICATION
 GVL_OBSERVABILITY_AUTHORITY
 GVL_SEMANTIC_PROGRESS
 ```
 
 ## Evidence required
 
-Для каждого authority field:
+Для каждого authority / replication / ingestion field:
 
 ```text
 единственный authoritative writer
@@ -408,19 +470,10 @@ GVL_SEMANTIC_PROGRESS
 нет projection writer в authority field
 ```
 
-## Связанные риски
-
-```text
-A-RISK-008
-O-RISK-003
-P-RISK-004
-C-RISK-004
-```
-
 ## Статус
 
 ```text
-IN_PROGRESS
+IN_PROGRESS_AFTER_TOPOLOGY_RESTORATION
 ```
 
 ---
@@ -431,52 +484,24 @@ IN_PROGRESS
 
 Доказать, что output hard-stop получает только physical-authoritative причины.
 
-## Проверяемые поля
-
-```text
-GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
-GVL_OUTPUT_EPOCH.Output_Publication_Valid
-GVL_COMMAND_VERIFY.PreOutput_Block_IO
-GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed
-GVL_RUNTIME_SNAPSHOT.*
-GVL_DISTRIBUTED_*.*Quarantine_Active
-```
-
-## Разрешённые hard-stop причины
-
-```text
-runtime barrier invalidation
-immutable snapshot invalidation
-transport freshness invalidation
-real distributed reconciliation failure
-explicit peer fencing conflict
-pre-output safety failure
-```
-
-## Запрещённые hard-stop причины
-
-```text
-semantic suspicion
-observability visibility
-telemetry stabilization
-explainability synchronization
-diagnostics projections
-trend/history delays
-```
-
-## Связанные audit risks
-
-```text
-RISK-015
-RISK-038
-RISK-040
-RISK-047
-```
-
 ## Статус
 
 ```text
-VALIDATION_REQUIRED
+PARTIALLY_CONFIRMED_FOR_DIRECT_PATHS
+```
+
+Evidence:
+
+```text
+IO_Write consumes Output_Forced_Safe_Decay as final output freshness hard-stop.
+Output_Freshness consumes distributed aggregate authority only, not peer-detail diagnostics.
+Recovery and observability do not write distributed/peer authority state.
+```
+
+Остаётся:
+
+```text
+runtime validation after real HA transport backend replacement
 ```
 
 ---
@@ -487,40 +512,23 @@ VALIDATION_REQUIRED
 
 Проверить, что advisory fields не становятся authority через downstream consumers.
 
-## Проверяемые advisory fields
-
-```text
-Output_Semantic_Continuity_Warning
-Semantic_Progress_Quarantine_Active
-Semantic_Livelock_Suspected
-Semantic_Replay_Suspected
-*_Visible
-Emergency_Visibility_Required
-Unsafe_State_Published
-```
-
-## Evidence required
-
-```text
-нет write-path от advisory к hard-stop
-нет IO dependency от advisory
-нет runtime barrier dependency от visibility
-```
-
-## Связанные риски
-
-```text
-RISK-037
-RISK-040
-RISK-047
-O-RISK-001
-S-RISK-001
-```
-
 ## Статус
 
 ```text
-VALIDATION_REQUIRED
+PARTIALLY_CONFIRMED_FOR_DIRECT_PATHS
+```
+
+Evidence:
+
+```text
+Observability remains downstream visibility-only.
+Semantic continuity remains advisory-only for Output_Freshness.
+```
+
+Остаётся:
+
+```text
+HMI/diagnostics ownership sweep
 ```
 
 ---
@@ -539,23 +547,21 @@ missing peer does not quarantine
 real peer session activates validation
 real peer mismatch can quarantine publication
 real peer fencing conflict still hard-stops output
-```
-
-## Связанные риски
-
-```text
-RISK-037
-RISK-047
-D-RISK-001
-D-RISK-002
-D-RISK-003
-D-RISK-004
+real commit ack/replay behavior is not self-acknowledged
 ```
 
 ## Статус
 
 ```text
-VALIDATION_REQUIRED
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
+```
+
+Остаётся:
+
+```text
+replace bounded HA loopback with real PLC-to-PLC backend
+validate real remote fencing token issuance/exchange
+validate real remote commit acknowledgement exchange
 ```
 
 ---
@@ -564,31 +570,22 @@ VALIDATION_REQUIRED
 
 ## Цель
 
-Подтвердить, что cleanup не оставил stale references.
+Подтвердить, что cleanup и topology restoration не оставили stale references.
 
 ## Проверить
 
 ```text
 removed fields are not referenced
-removed PRGs are not called
-new fields are declared
+new PRGs are called exactly once from MAIN
+new GVLs are declared and consumed by intended owners
 ownership matrix matches code
 PART2 matches current plan
-```
-
-## Связанные риски
-
-```text
-C-RISK-001
-C-RISK-002
-C-RISK-003
-C-RISK-004
 ```
 
 ## Статус
 
 ```text
-IN_PROGRESS
+IN_PROGRESS_AFTER_NEW_PRG_ADDITIONS
 ```
 
 ---
@@ -604,6 +601,7 @@ hidden hard-stop path found
 advisory leakage found
 stale compile reference found
 real topology cycle found
+self-ack / self-mirror validation found
 ```
 
 Запрещено:
@@ -612,6 +610,7 @@ real topology cycle found
 cleanup by intuition
 удалять fields только потому что они выглядят лишними
 переписывать topology без writer/hard-stop evidence
+оставлять bounded loopback HA replication as production behavior
 ```
 
 ---
@@ -621,11 +620,15 @@ cleanup by intuition
 Используются только эти статусы:
 
 ```text
-CONFIRMED_RESOLVED        доказано кодом и reference validation
-STRUCTURALLY_REDUCED      структура исправлена, но runtime evidence ещё нужна
-VALIDATION_REQUIRED       гипотеза или зона риска, нужна проверка
-UNVERIFIED_RUNTIME_BEHAVIOR поведение не подтверждено runtime evidence
-IN_PROGRESS               работа идёт
+CONFIRMED_RESOLVED                доказано кодом и reference validation
+CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
+CONFIRMED_RESOLVED_FOR_KNOWN_REMOVED_FIELDS
+STRUCTURALLY_REDUCED              структура исправлена, но runtime evidence ещё нужна
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
+PARTIALLY_CONFIRMED_FOR_DIRECT_PATHS
+VALIDATION_REQUIRED               гипотеза или зона риска, нужна проверка
+UNVERIFIED_RUNTIME_BEHAVIOR        поведение не подтверждено runtime evidence
+IN_PROGRESS                        работа идёт
 ```
 
 ---
@@ -633,7 +636,7 @@ IN_PROGRESS               работа идёт
 # 14. Текущий главный риск
 
 ```text
-implicit authority propagation
+transport-backed distributed validation gap
 ```
 
 А не:
@@ -645,8 +648,9 @@ missing semantic intelligence
 Главный фокус:
 
 ```text
-writer graph
-hard-stop graph
-advisory leakage graph
+real HA backend replacement
+writer graph refresh
+hard-stop graph validation
 compile/reference convergence
+ownership matrix update
 ```
