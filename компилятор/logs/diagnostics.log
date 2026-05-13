@@ -14,7 +14,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 total 2548
 -rw-r--r--  1 runner runner  13067 May 13 00:23 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 10 runner runner  20480 May 13 00:23 .
-drwxr-xr-x  3 runner runner   4096 May 13 00:22 ..
+drwxr-xr-x  3 runner runner   4096 May 13 00:23 ..
 drwxr-xr-x  7 runner runner   4096 May 13 00:23 .git
 drwxr-xr-x  3 runner runner   4096 May 13 00:23 .github
 -rw-r--r--  1 runner runner    241 May 13 00:23 ACCESS_SUMMARY.txt
@@ -272,7 +272,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 00:23 .github
 -rw-r--r--  1 runner runner   6780 May 13 00:23 PRG_Distributed_Commit_Governor.st
 -rw-r--r--  1 runner runner   2960 May 13 00:23 PRG_Distributed_Commit_Observability.st
 -rw-r--r--  1 runner runner   7092 May 13 00:23 PRG_Distributed_Epoch_Governor.st
--rw-r--r--  1 runner runner   1759 May 13 00:23 PRG_Distributed_Peer_Ingestion.st
+-rw-r--r--  1 runner runner   1837 May 13 00:23 PRG_Distributed_Peer_Ingestion.st
 -rw-r--r--  1 runner runner   6967 May 13 00:23 PRG_Distributed_Snapshot_Governor.st
 -rw-r--r--  1 runner runner   2453 May 13 00:23 PRG_Explainability.st
 -rw-r--r--  1 runner runner   2063 May 13 00:23 PRG_HA_Session_Replication.st
@@ -450,8 +450,8 @@ drwxr-xr-x  2 runner runner   4096 May 13 00:23 out
 -rw-r--r--  1 runner runner    177 May 13 00:23 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1484
+total 1488
 drwxr-xr-x 2 runner runner    4096 May 13 00:23 .
 drwxr-xr-x 5 runner runner    4096 May 13 00:23 ..
 -rw-r--r-- 1 runner runner       0 May 13 00:23 .gitkeep
--rw-r--r-- 1 runner runner 1510111 May 13 00:23 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1512714 May 13 00:23 RESULT_methods_clean.xml
