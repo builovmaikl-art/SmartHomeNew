@@ -267,6 +267,43 @@ Need explicit tests for:
 
 ---
 
+### Remediation status — 2026-05-13
+
+Status:
+
+```text
+PARTIALLY MITIGATED
+```
+
+Implemented cleanup:
+
+```text
+- `PRG_System_Diagnostics` no longer calls `FB_System_Diagnostics` as a duplicate aggregate diagnostics writer.
+- Aggregated diagnostics ownership for `Sensor_Fault`, `IO_Offline` and `Subsystem_Degraded` is consolidated in `FB_System_Health_Orchestrator`.
+- `PRG_System_Diagnostics` state tracing no longer reads stale `GVL_ALARM.*_Alarm_Active` inputs.
+- State tracing now uses current `GVL_HEALTH_BRIDGE` safety truth for gas/CO and leak visibility.
+- `FB_System_Alarm_Orchestrator` now routes gas/fire/flood alarm inputs from `GVL_HEALTH_BRIDGE` instead of stale `GVL_ALARM.*_Alarm_Active` fields.
+```
+
+Risk reduction:
+
+```text
+- reduced stale-safe observability windows;
+- removed duplicate diagnostics aggregation path;
+- removed stale alarm truth from observability traces;
+- improved single-source safety truth propagation.
+```
+
+Remaining exposure:
+
+```text
+- physical output ordering must still be proven through pre-output verifier/barrier path;
+- HMI/blackbox timing still requires final verification after output hard-stop proof;
+- semantic progress watchdog coverage is tracked under RISK-046.
+```
+
+---
+
 # RISK-043
 
 ## Recovery completion clears recovery flags but not systemic semantic residue
@@ -402,6 +439,42 @@ Need explicit tests for:
 - stale authority persistence;
 - recovery after impossible-state;
 - long-uptime semantic drift.
+```
+
+---
+
+### Remediation status — 2026-05-13
+
+Status:
+
+```text
+PARTIALLY MITIGATED
+```
+
+Implemented cleanup:
+
+```text
+- `FB_System_Recovery` no longer restores `GVL_STATE.G_Safety_*_Latched` directly from `GVL_PERSISTENT`.
+- `FB_System_Recovery` no longer restores `GVL_STATE.G_System_Mode` directly from `GVL_PERSISTENT`.
+- Recovery is reduced to a one-shot bootstrap marker; authoritative safety and mode state is reconstructed from runtime truth through orchestrators/managers.
+- `FB_System_Health_Orchestrator` now drives `FB_Safety_Manager` from `GVL_HEALTH_BRIDGE` safety truth instead of stale `GVL_STATE.G_Safety_*_Alarm` inputs.
+```
+
+Risk reduction:
+
+```text
+- removed boot-time stale safety latch resurrection;
+- removed boot-time stale system mode resurrection;
+- removed persistent direct authority injection;
+- improved recovery determinism and runtime ownership separation.
+```
+
+Remaining exposure:
+
+```text
+- recovery phase-specific cleanup in `PRG_Safety_Recovery` still requires a separate pass;
+- degraded convergence and watchdog escalation paths still require writer-graph validation;
+- runtime cleanup epoch design remains open.
 ```
 
 ---
@@ -844,4 +917,41 @@ semantic brownout survivability.
 - delayed execution phase injection;
 - partial runtime freeze;
 - stale output survivability tests.
+```
+
+---
+
+### Remediation status — 2026-05-13
+
+Status:
+
+```text
+PARTIALLY MITIGATED
+```
+
+Implemented cleanup:
+
+```text
+- ownership cleanup removed multiple hidden writer paths that could mask semantic invalidity as healthy state;
+- `GVL_HEALTH_BRIDGE` is now the consistent safety truth input for alarm aggregation, safety latches and state trace visibility;
+- duplicate diagnostics aggregate writer was removed from `PRG_System_Diagnostics`;
+- persistent recovery no longer resurrects stale safety/mode state after boot;
+- OpenTherm and heating runtime projections have clearer single-writer ownership.
+```
+
+Risk reduction:
+
+```text
+- reduced stale semantic survivability;
+- reduced hidden mutation ambiguity;
+- improved separation between liveness, health truth and authoritative state;
+- improved foundation for semantic progress watchdog validation.
+```
+
+Remaining exposure:
+
+```text
+- watchdog escalation path still requires active writer graph review;
+- semantic progress watchdog / execution starvation detection still require explicit implementation or proof;
+- degraded convergence guarantees still require source-specific ownership validation.
 ```
