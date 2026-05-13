@@ -1,6 +1,23 @@
 {attribute 'pack_mode' := '1'}
 TYPE ST_System_State_Snapshot :
 STRUCT
+    // ======================================================
+    // LEGACY DIRECT STATE REPLICATION SNAPSHOT
+    // ======================================================
+    // Used by legacy redundancy helpers that replicate/apply
+    // domain state directly.
+    //
+    // This DUT is NOT the current distributed runtime protocol.
+    // Current runtime-safe HA topology uses:
+    // - GVL_PEER_SESSION
+    // - GVL_HA_SESSION_REPLICATION
+    // - PRG_Distributed_Peer_Ingestion
+    // - PRG_Distributed_Commit_Ingestion
+    //
+    // Do not connect this snapshot path to MAIN as a parallel
+    // HA runtime path without explicit barrier/governance review.
+    // ======================================================
+
     System_Time_MS : UDINT;
     Current_Scenario : E_SCENARIO_TYPE;
     Security_Armed : BOOL;
