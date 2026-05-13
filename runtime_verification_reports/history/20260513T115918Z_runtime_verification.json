@@ -1,0 +1,200 @@
+{
+  "tool": "runtime_invariant_audit.py",
+  "version": 2,
+  "started_at_utc": "20260513T115918Z",
+  "root": "/workspaces/SmartHomeNew",
+  "summary": {
+    "status": "FAILED",
+    "errors": 6,
+    "warnings": 17,
+    "total_findings": 23,
+    "strict": true,
+    "blocking_findings": 23
+  },
+  "findings": [
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_subsystem_degraded_aggregate_writer",
+      "path": "PRG_Config_Validation.st",
+      "line": 261,
+      "text": "GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;",
+      "detail": "Subsystem_Degraded aggregate writer must be reviewed; avoid duplicate aggregate ownership."
+    },
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_sensor_fault_aggregate_writer",
+      "path": "FB_System_Diagnostics.st",
+      "line": 9,
+      "text": "GVL_STATUS.G_Diagnostics.Sensor_Fault :=",
+      "detail": "Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully."
+    },
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_io_offline_aggregate_writer",
+      "path": "FB_System_Diagnostics.st",
+      "line": 16,
+      "text": "GVL_STATUS.G_Diagnostics.IO_Offline :=",
+      "detail": "IO_Offline aggregate must be owned by FB_System_Health_Orchestrator."
+    },
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_subsystem_degraded_aggregate_writer",
+      "path": "FB_System_Diagnostics.st",
+      "line": 22,
+      "text": "GVL_STATUS.G_Diagnostics.Subsystem_Degraded :=",
+      "detail": "Subsystem_Degraded aggregate writer must be reviewed; avoid duplicate aggregate ownership."
+    },
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_sensor_fault_aggregate_writer",
+      "path": "PRG_System_Init.st",
+      "line": 26,
+      "text": "GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;",
+      "detail": "Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully."
+    },
+    {
+      "severity": "ERROR",
+      "check": "diagnostics_sensor_fault_aggregate_writer",
+      "path": "PRG_System_Init.st",
+      "line": 34,
+      "text": "GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;",
+      "detail": "Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_state_safety_alarm_truth_usage",
+      "path": "PRG_Safety.st",
+      "line": 63,
+      "text": "VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,",
+      "detail": "GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_state_safety_alarm_truth_usage",
+      "path": "PRG_Safety.st",
+      "line": 64,
+      "text": "VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,",
+      "detail": "GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_state_safety_alarm_truth_usage",
+      "path": "PRG_Safety.st",
+      "line": 65,
+      "text": "VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm",
+      "detail": "GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 31,
+      "text": "VI_Flood_Alarm_Active := GVL_ALARM.G_Flood_Alarm_Active,",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 32,
+      "text": "VI_Gas_Alarm_Active := GVL_ALARM.G_Gas_Alarm_Active,",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 33,
+      "text": "VI_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active,",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_IO_Write.st",
+      "line": 84,
+      "text": "GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_IO_Write.st",
+      "line": 85,
+      "text": "GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_IO_Write.st",
+      "line": 196,
+      "text": "GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_IO_Write.st",
+      "line": 197,
+      "text": "GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_System_BlackBox.st",
+      "line": 12,
+      "text": "L_BB_Record.Flood_Active := GVL_ALARM.G_Flood_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_System_BlackBox.st",
+      "line": 13,
+      "text": "L_BB_Record.Fire_Active := GVL_ALARM.G_Fire_Alarm_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_System_BlackBox.st",
+      "line": 23,
+      "text": "L_BB_Freeze := GVL_ALARM.G_Gas_Alarm_Active OR GVL_ALARM.G_Fire_Alarm_Active OR GVL_ALARM.G_Flood_Alarm_Active OR GVL_SYSTEM_HEALTH.G_First_Fault_Active;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_Lighting.st",
+      "line": 23,
+      "text": "L_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active OR GVL_STATE.G_Safety_Smoke_Latched;",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_Lighting.st",
+      "line": 89,
+      "text": "VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_alarm_active_truth_usage",
+      "path": "PRG_Lighting.st",
+      "line": 90,
+      "text": "VI_Flood_Alarm := GVL_ALARM.G_Flood_Alarm_Active,",
+      "detail": "Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE."
+    },
+    {
+      "severity": "WARN",
+      "check": "stale_state_safety_alarm_truth_usage",
+      "path": "PRG_System_Diagnostics_Ext.st",
+      "line": 101,
+      "text": "L_Error_Safety := GVL_STATE.G_Safety_Gas_Alarm OR GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Smoke_Alarm;",
+      "detail": "GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority."
+    }
+  ]
+}

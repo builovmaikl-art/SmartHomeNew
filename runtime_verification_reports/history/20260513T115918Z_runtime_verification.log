@@ -1,0 +1,78 @@
+Runtime invariant audit summary
+================================
+STATUS: FAILED
+ERRORS: 6
+WARNINGS: 17
+TOTAL FINDINGS: 23
+STRICT MODE: True
+BLOCKING FINDINGS: 23
+
+[ERROR] diagnostics_subsystem_degraded_aggregate_writer @ PRG_Config_Validation.st:261
+  text: GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
+  detail: Subsystem_Degraded aggregate writer must be reviewed; avoid duplicate aggregate ownership.
+[ERROR] diagnostics_sensor_fault_aggregate_writer @ FB_System_Diagnostics.st:9
+  text: GVL_STATUS.G_Diagnostics.Sensor_Fault :=
+  detail: Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully.
+[ERROR] diagnostics_io_offline_aggregate_writer @ FB_System_Diagnostics.st:16
+  text: GVL_STATUS.G_Diagnostics.IO_Offline :=
+  detail: IO_Offline aggregate must be owned by FB_System_Health_Orchestrator.
+[ERROR] diagnostics_subsystem_degraded_aggregate_writer @ FB_System_Diagnostics.st:22
+  text: GVL_STATUS.G_Diagnostics.Subsystem_Degraded :=
+  detail: Subsystem_Degraded aggregate writer must be reviewed; avoid duplicate aggregate ownership.
+[ERROR] diagnostics_sensor_fault_aggregate_writer @ PRG_System_Init.st:26
+  text: GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+  detail: Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully.
+[ERROR] diagnostics_sensor_fault_aggregate_writer @ PRG_System_Init.st:34
+  text: GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+  detail: Sensor_Fault aggregate must remain controlled by canonical health/diagnostics ownership. Review any writer carefully.
+[WARN] stale_state_safety_alarm_truth_usage @ PRG_Safety.st:63
+  text: VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
+  detail: GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority.
+[WARN] stale_state_safety_alarm_truth_usage @ PRG_Safety.st:64
+  text: VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
+  detail: GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority.
+[WARN] stale_state_safety_alarm_truth_usage @ PRG_Safety.st:65
+  text: VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm
+  detail: GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority.
+[WARN] stale_alarm_active_truth_usage @ FB_System_Gateway_Intent.st:31
+  text: VI_Flood_Alarm_Active := GVL_ALARM.G_Flood_Alarm_Active,
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ FB_System_Gateway_Intent.st:32
+  text: VI_Gas_Alarm_Active := GVL_ALARM.G_Gas_Alarm_Active,
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ FB_System_Gateway_Intent.st:33
+  text: VI_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active,
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_IO_Write.st:84
+  text: GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_IO_Write.st:85
+  text: GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_IO_Write.st:196
+  text: GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_IO_Write.st:197
+  text: GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_System_BlackBox.st:12
+  text: L_BB_Record.Flood_Active := GVL_ALARM.G_Flood_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_System_BlackBox.st:13
+  text: L_BB_Record.Fire_Active := GVL_ALARM.G_Fire_Alarm_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_System_BlackBox.st:23
+  text: L_BB_Freeze := GVL_ALARM.G_Gas_Alarm_Active OR GVL_ALARM.G_Fire_Alarm_Active OR GVL_ALARM.G_Flood_Alarm_Active OR GVL_SYSTEM_HEALTH.G_First_Fault_Active;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_Lighting.st:23
+  text: L_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active OR GVL_STATE.G_Safety_Smoke_Latched;
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_Lighting.st:89
+  text: VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_alarm_active_truth_usage @ PRG_Lighting.st:90
+  text: VI_Flood_Alarm := GVL_ALARM.G_Flood_Alarm_Active,
+  detail: Alarm active projections must not be used as authoritative safety truth; prefer GVL_HEALTH_BRIDGE.
+[WARN] stale_state_safety_alarm_truth_usage @ PRG_System_Diagnostics_Ext.st:101
+  text: L_Error_Safety := GVL_STATE.G_Safety_Gas_Alarm OR GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Smoke_Alarm;
+  detail: GVL_STATE safety alarm fields must not replace GVL_HEALTH_BRIDGE truth for latch/alarm authority.
