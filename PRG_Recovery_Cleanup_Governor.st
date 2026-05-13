@@ -20,12 +20,15 @@ L_Error_Text := '';
 // It must not feed back into runtime barrier authority.
 // Runtime publication authority remains upstream and
 // recovery cleanup remains a post-publication residue layer.
+//
+// Cleanup completion/release is convergence-lease based:
+// recovery cleanup is not marked completed/verified on a
+// single valid scan.
 // ======================================================
 
 GVL_RECOVERY_GOVERNANCE.Recovery_Semantic_Residue_Detected := FALSE;
 GVL_RECOVERY_GOVERNANCE.Recovery_Degraded_State_Residual := FALSE;
 GVL_RECOVERY_GOVERNANCE.Recovery_Retained_State_Residual := FALSE;
-GVL_RECOVERY_GOVERNANCE.Recovery_Forced_Safe_Mode := FALSE;
 
 // ------------------------------------------------------
 // Monotonic authority linkage.
@@ -86,15 +89,28 @@ IF L_Recovery_Valid THEN
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Epoch := GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Epoch + 1;
 
     GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid := TRUE;
-    GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := TRUE;
-    GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := TRUE;
 
-    GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active := FALSE;
-    GVL_RECOVERY_GOVERNANCE.Recovery_Last_Cleanup_End_MS := L_Now_MS;
+    // Lease-based cleanup release.
+    IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
+        GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := TRUE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := TRUE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active := FALSE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Forced_Safe_Mode := FALSE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Cleanup_End_MS := L_Now_MS;
 
-    GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Code := 0;
-    GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Text := '';
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Code := 0;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Text := '';
+    ELSE
+        GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := FALSE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := FALSE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active := TRUE;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Forced_Safe_Mode := TRUE;
+
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Code := 9005;
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Text := 'Recovery cleanup waiting for convergence lease';
+    END_IF;
 ELSE
+    // Invalid recovery cleanup state escalates immediately.
     GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid := FALSE;
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := FALSE;
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := FALSE;
