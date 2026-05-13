@@ -8,5 +8,4 @@ VAR_GLOBAL
     G_Block_Sockets_Override : BOOL := FALSE;
 
     G_Coordination_Code : UDINT := 0;
-    G_Coordination_Status_Msg : STRING(200) := '';
 END_VAR
