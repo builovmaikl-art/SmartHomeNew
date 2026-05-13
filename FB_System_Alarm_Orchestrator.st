@@ -18,9 +18,9 @@ END_VAR
 fbAlarmManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Gas_Alarm := GVL_ALARM.G_Gas_Alarm_Active,
-    VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
-    VI_Flood_Alarm := GVL_ALARM.G_Flood_Alarm_Active,
+    VI_Gas_Alarm := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
+    VI_Fire_Alarm := GVL_HEALTH_BRIDGE.G_Smoke_Detected,
+    VI_Flood_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
     VI_Security_Alarm := GVL_ALARM.G_Security_Alarm,
     VI_First_Fault_Active := VI_First_Fault_Active,
     VI_First_Fault_Type := VI_First_Fault_Type,
