@@ -13,9 +13,6 @@ VAR_GLOBAL
     G_Runtime_Observer_Governance_Locked : BOOL := TRUE;
     G_Runtime_Observer_Runtime_Authority_Disabled : BOOL := TRUE;
     G_Runtime_Observer_Writable_Exports_Disabled : BOOL := TRUE;
-    G_Runtime_Observer_Predictive_Disabled : BOOL := TRUE;
-    G_Runtime_Observer_Adaptive_Disabled : BOOL := TRUE;
-    G_Runtime_Observer_Replay_Disabled : BOOL := TRUE;
 
     G_Runtime_Observer_Authorization_Valid : BOOL := FALSE;
 
