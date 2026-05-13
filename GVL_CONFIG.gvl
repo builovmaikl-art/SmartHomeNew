@@ -2,10 +2,8 @@
 VAR_GLOBAL
     // Subsystem Configurations
     G_Heating_Config : ST_Heating_Config;
-    G_Ventilation_Config : ST_Ventilation_Config;
     G_DHW_Config : ST_DHW_Config;
     G_Security_Config : ST_Security_Global_Config;
-    G_Flood_Config : ST_Flood_Config;
 
     // HMI Configurations
     G_HMI_FloorHeating_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_FloorHeating_Circuit_Config;
@@ -13,16 +11,11 @@ VAR_GLOBAL
     G_Wet_Zone_Map : ARRAY[1..32] OF BOOL;
     G_HMI_Tariff_Settings : ST_Tariff_Config;
     G_HMI_Vent_Global_Config : ST_Ventilation_Global_Config;
-    G_HMI_Vent_Unit_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_VENT_UNITS] OF ST_Ventilation_Unit_Config;
     G_HMI_Scenario_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_SCENARIOS] OF ST_Scenario_Config;
-    G_HMI_Outdoor_Configs : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF ST_Outdoor_Zone_Config;
     G_HMI_Flood_Config : ST_Flood_Global_Config;
-    G_HMI_Gas_Config : ST_Gas_Valve_Configuration;
-    G_HMI_Sensor_Calibrations : ARRAY[1..GVL_CONSTANTS.C_MAX_CALIBRATIONS] OF ST_Sensor_Calibration_Record;
     G_HMI_User_Rules : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_User_Rule;
 
     // Sensor calibration pipeline
-    G_Enable_Sensor_Calibration : BOOL := TRUE;
     G_Calib_Outdoor_Temp : ST_Sensor_Calibration_Record;
     G_Calib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Sensor_Calibration_Record;
     G_Calib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
@@ -38,14 +31,6 @@ VAR_GLOBAL
     G_Valve_Test_Config : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF ST_Valve_Test_Config;
 
     // HMI Commands & States
-    G_HMI_Cleaning_Mode_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF BOOL;
-    G_HMI_Cleaning_Mode_TimeLeft : ARRAY[1..GVL_CONSTANTS.C_MAX_CLEANING_MODES] OF UINT;
-    G_HMI_Admin_2FA_Enabled : BOOL := FALSE;
-    G_HMI_Current_Operator_Factor2_Done : BOOL;
-    G_HMI_Current_Operator_ID : STRING(10);
-    G_HMI_Manual_Gas_Valve_Open : BOOL;
-    G_HMI_Manual_Gas_Valve_Time : UDINT := 5;
-    G_HMI_Manual_Gas_Valve_TimeLeft : UDINT;
     G_HMI_Apply_Settings : BOOL;
     G_HMI_Mute_Alarm : BOOL;
     G_HMI_Ack_Alarms : BOOL;
@@ -58,11 +43,6 @@ VAR_GLOBAL
     G_HMI_Lock_2_Open_Req : BOOL;
     G_HMI_Lock_2_Close_Req : BOOL;
     G_Access_Pulse_MS : UDINT := 500;
-
-    // HMI Settings
-    G_HMI_Language : BYTE := 0;
-    G_HMI_Brightness : BYTE := 80;
-    G_HMI_Screen_Saver_Timeout : UDINT := 300;
 
     // Network security
     G_Allowed_IPs : ARRAY[1..GVL_CONSTANTS.C_MAX_ALLOWED_IPS] OF STRING(15) := ['192.168.1.100','192.168.1.101','127.0.0.1','',''];
@@ -85,14 +65,11 @@ VAR_GLOBAL
     G_Water_Valve_Exercise_Enabled : BOOL := TRUE;
     G_Water_Valve_Exercise_Interval_MS : UDINT := 604800000;
     G_Water_Valve_Exercise_Duration_MS : UDINT := 15000;
-    G_Water_Valve_Exercise_Window_Start : TOD := TOD#04:00;
-    G_Water_Valve_Exercise_Window_End : TOD := TOD#05:00;
     G_Water_Valve_Close_Retry_Count : INT := 2;
     G_Water_Valve_Close_Retry_Delay_MS : UDINT := 3000;
 
     // OpenTherm / Modbus adapter configuration
     G_OpenTherm_Enabled : BOOL := FALSE;
-    G_OpenTherm_Adapter_Model : STRING(64) := 'ectoControl ES-BROT-01';
     G_OpenTherm_Heartbeat_Timeout_MS : UDINT := 5000;
     G_OpenTherm_Command_Ack_Timeout_MS : UDINT := 3000;
     G_OpenTherm_Register_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Register_Map;
@@ -119,9 +96,6 @@ VAR_GLOBAL
     // Evacuation config
     C_MAX_LIGHT_ZONES : INT := 32;
     G_Evac_Exit_Zones : ARRAY[1..32] OF BOOL;
-    G_Evac_Smoke_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_SMOKE_SENSORS] OF INT;
-    G_Evac_Leak_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF INT;
-    G_Evac_Gas_Zone_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF INT;
     G_Evac_Zone_Names : ARRAY[1..32] OF STRING(80);
 
 END_VAR
