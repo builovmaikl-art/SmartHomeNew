@@ -13,6 +13,8 @@ VAR
     L_PreOutput_Block_IO : BOOL;
     L_Output_Freshness_Block : BOOL;
     L_Snapshot_Block : BOOL;
+    L_Gas_Siren_Authority : BOOL;
+    L_Fire_Siren_Authority : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
@@ -23,6 +25,11 @@ L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput
 L_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_COMMAND_SHADOW.G_Boiler_Stop;
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
 L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Siren OR GVL_ALARM.G_Global_Critical;
+
+// Physical siren actuation must use authoritative safety truth,
+// not stale alarm projection fields.
+L_Gas_Siren_Authority := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_STATE.G_Safety_Gas_Latched;
+L_Fire_Siren_Authority := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;
 
 // ======================================================
 // AUTHORITATIVE IO HARD-STOP GATE
@@ -81,8 +88,8 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     GVL_IO.DO_Lock_1_Close := FALSE;
     GVL_IO.DO_Lock_2_Open := FALSE;
     GVL_IO.DO_Lock_2_Close := FALSE;
-    GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
-    GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+    GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND L_Gas_Siren_Authority;
+    GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND L_Fire_Siren_Authority;
     GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
     GVL_IO.DO_Gas_Valve_Close := TRUE;
 
@@ -193,8 +200,8 @@ ELSE
     GVL_IO.DO_Lock_2_Close := GVL_ACCESS_OUTPUT.DO_Lock_2_Close;
 END_IF;
 
-GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Gas_Alarm_Active;
-GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND GVL_ALARM.G_Fire_Alarm_Active;
+GVL_IO.DO_Gas_Siren := L_Gas_Fire_Siren_Enable AND L_Gas_Siren_Authority;
+GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND L_Fire_Siren_Authority;
 GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
 GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
 
