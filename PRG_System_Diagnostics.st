@@ -1,6 +1,5 @@
 PROGRAM PRG_System_Diagnostics
 VAR
-    fbSystemDiagnostics : FB_System_Diagnostics;
     fbStateTraceLog : FB_State_Trace_Log;
     fbAdapt : FB_Behavior_Adapt;
 
@@ -18,12 +17,10 @@ FOR L_i := 1 TO 4 DO
     L_Pumps_4[L_i] := GVL_HEATING_OUTPUT.DO_Manifold_Pumps[L_i];
 END_FOR;
 
-fbSystemDiagnostics();
-
 fbStateTraceLog(
     VI_System_Time := GVL_TIME_SERVICE.G_Now_MS,
-    VI_Gas_Alarm := GVL_ALARM.G_Gas_Alarm_Active,
-    VI_Leak_Alarm := GVL_ALARM.G_Flood_Alarm_Active,
+    VI_Gas_Alarm := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
+    VI_Leak_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
     VI_Pumps := L_Pumps_4,
     VO_Last_Change_Time => L_Last_State_Trace_MS
 );
