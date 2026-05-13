@@ -14,13 +14,17 @@ VAR
     L_Wet_Zone_Light_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF BOOL;
     L_Wet_Zone_Any_Active : BOOL;
     L_Fire_Alarm_Active : BOOL;
+    L_Flood_Alarm_Active : BOOL;
     L_Security_Armed : BOOL;
     L_Security_Alarm : BOOL;
     L_Evac_Blink_Phase : UDINT;
     L_Evac_Blink_On : BOOL;
 END_VAR
 
-L_Fire_Alarm_Active := GVL_ALARM.G_Fire_Alarm_Active OR GVL_STATE.G_Safety_Smoke_Latched;
+// Fire/flood lighting behavior must use authoritative safety truth and latches,
+// not stale alarm projection fields.
+L_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;
+L_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;
 L_Security_Armed := GVL_ALARM.G_Security_Armed;
 L_Security_Alarm := GVL_ALARM.G_Security_Alarm;
 L_Evac_Blink_Phase := (GVL_STATUS.G_System_Time_MS / 500) MOD 2;
@@ -86,8 +90,8 @@ fbSocketManager(
     VI_Manual_Override := L_Socket_Override,
     VI_Physical_Switches := GVL_STATE.G_Socket_Switches,
     VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
-    VI_Fire_Alarm := GVL_ALARM.G_Fire_Alarm_Active,
-    VI_Flood_Alarm := GVL_ALARM.G_Flood_Alarm_Active,
+    VI_Fire_Alarm := L_Fire_Alarm_Active,
+    VI_Flood_Alarm := L_Flood_Alarm_Active,
     VI_Security_Armed := GVL_ALARM.G_Security_Armed,
     VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
     VO_Socket_States => GVL_STATE.G_Socket_States
