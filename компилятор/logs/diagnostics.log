@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2604
+total 2600
 -rw-r--r--  1 runner runner  13067 May 13 14:58 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  20480 May 13 14:58 .
 drwxr-xr-x  3 runner runner   4096 May 13 14:58 ..
@@ -197,7 +197,7 @@ drwxr-xr-x  3 runner runner   4096 May 13 14:58 .github
 -rw-r--r--  1 runner runner    302 May 13 14:58 GVL_HEALTH_BRIDGE.gvl
 -rw-r--r--  1 runner runner    604 May 13 14:58 GVL_HEATING_OUTPUT.gvl
 -rw-r--r--  1 runner runner   2744 May 13 14:58 GVL_HEATING_POLICY.gvl
--rw-r--r--  1 runner runner    350 May 13 14:58 GVL_HEATING_POLICY_CONFIG.gvl
+-rw-r--r--  1 runner runner    202 May 13 14:58 GVL_HEATING_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner    136 May 13 14:58 GVL_HEATING_REQUEST.gvl
 -rw-r--r--  1 runner runner   1785 May 13 14:58 GVL_HMI.gvl
 -rw-r--r--  1 runner runner   1116 May 13 14:58 GVL_Heating_Runtime_Observation.gvl
@@ -439,7 +439,7 @@ drwxr-xr-x  5 runner runner   4096 May 13 14:58 компилятор
 -rw-r--r--  1 runner runner   4202 May 13 14:58 ошибки компиляции.txt
 
 === compiler dir ===
-total 592
+total 588
 drwxr-xr-x  5 runner runner   4096 May 13 14:58 .
 drwxr-xr-x 12 runner runner  20480 May 13 14:58 ..
 -rw-r--r--  1 runner runner  21153 May 13 14:58 001_universal_pou_builder_METHODS_V2.py
@@ -462,4 +462,4 @@ total 1508
 drwxr-xr-x 2 runner runner    4096 May 13 14:58 .
 drwxr-xr-x 5 runner runner    4096 May 13 14:58 ..
 -rw-r--r-- 1 runner runner       0 May 13 14:58 .gitkeep
--rw-r--r-- 1 runner runner 1535032 May 13 14:58 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1534768 May 13 14:58 RESULT_methods_clean.xml
