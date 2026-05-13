@@ -4,8 +4,11 @@ VAR_GLOBAL
     // ======================================================
     // Isolated semantic execution continuity foundation.
     // Visibility/publication continuity only.
-    // Does not invalidate runtime barrier,
+    // Does not directly invalidate runtime barrier,
     // PLC fencing, immutable snapshots or IO authority.
+    //
+    // This surface tracks real runtime phase evidence so
+    // semantic progress is no longer self-counter-only.
     // ======================================================
 
     Semantic_Progress_Epoch : ULINT := 0;
@@ -29,6 +32,28 @@ VAR_GLOBAL
     Semantic_Progress_Lease_Expired : BOOL := FALSE;
 
     Semantic_Progress_Quarantine_Active : BOOL := FALSE;
+
+    // ------------------------------------------------------
+    // Runtime phase evidence observed by semantic governor.
+    // ------------------------------------------------------
+    Semantic_Runtime_Barrier_Epoch : ULINT := 0;
+    Semantic_Runtime_Snapshot_Epoch : ULINT := 0;
+    Semantic_Distributed_Commit_Epoch : ULINT := 0;
+    Semantic_Output_Publication_Epoch : ULINT := 0;
+
+    Semantic_Last_Runtime_Barrier_Epoch : ULINT := 0;
+    Semantic_Last_Runtime_Snapshot_Epoch : ULINT := 0;
+    Semantic_Last_Distributed_Commit_Epoch : ULINT := 0;
+    Semantic_Last_Output_Publication_Epoch : ULINT := 0;
+
+    Semantic_Runtime_Barrier_Evidence_OK : BOOL := FALSE;
+    Semantic_Runtime_Snapshot_Evidence_OK : BOOL := FALSE;
+    Semantic_Distributed_Commit_Evidence_OK : BOOL := FALSE;
+    Semantic_Output_Publication_Evidence_OK : BOOL := FALSE;
+
+    Semantic_Phase_Evidence_OK : BOOL := FALSE;
+    Semantic_Phase_Stall_Detected : BOOL := FALSE;
+    Semantic_Output_Stall_Detected : BOOL := FALSE;
 
     Semantic_Last_Error_Code : UDINT := 0;
     Semantic_Last_Error_Text : STRING(160) := '';
