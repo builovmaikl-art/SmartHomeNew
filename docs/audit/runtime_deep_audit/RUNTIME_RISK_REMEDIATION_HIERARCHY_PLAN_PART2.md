@@ -107,196 +107,88 @@ Peer-detail diagnostics are owned by distributed governors and observability.
 
 ---
 
-### PreOutput command-shadow foreign mutation
+### Distributed peer ingestion topology restoration
 
 Исправлено:
 
 ```text
-PRG_PreOutput_Safety_Barrier больше не пишет GVL_COMMAND_SHADOW.*
+restored explicit distributed peer ingestion topology
+```
+
+Текущая topology:
+
+```text
+physical peer heartbeat
+    ↓
+PRG_Peer_Heartbeat_Ingestion
+    ↓
+PRG_PLC_Arbitration
+    ↓
+PRG_PLC_Fencing_Governor
+    ↓
+PRG_Peer_Session_Publication
+    ↓
+GVL_PEER_SESSION
+    ↓
+PRG_HA_Session_Replication
+    ↓
+GVL_HA_SESSION_REPLICATION
+    ↓
+PRG_Distributed_Peer_Ingestion
+    ↓
+PRG_Distributed_Epoch_Governor
 ```
 
 Текущее правило:
 
 ```text
-GVL_COMMAND_SHADOW остаётся owned by PRG_Command_Arbitration
-PRG_PreOutput_Safety_Barrier публикует только PreOutput_* barrier state
+peer-session publication
+HA/session replication
+peer ingestion
+and distributed reconciliation
+are now explicitly separated ownership layers.
+```
+
+Ограничение:
+
+```text
+HA replication currently operates in bounded loopback foundation mode.
+Real remote transport replication is not implemented yet.
 ```
 
 ---
 
-### Runtime barrier downstream feedback removal
+### Distributed peer ownership convergence
 
 Исправлено:
 
 ```text
-PRG_Runtime_Barrier больше не потребляет downstream state из:
-- GVL_COMMAND_VERIFY.PreOutput_Block_IO
-- GVL_OBSERVABILITY_AUTHORITY.* quarantine/authority residues
-- GVL_RECOVERY_GOVERNANCE.*
-- GVL_CONFIG_VALIDATION.G_Runtime_*
+Peer_* distributed fields now have explicit ingestion owner.
 ```
 
 Текущее правило:
 
 ```text
-Runtime_Barrier является upstream runtime authority layer
-и не должен читать post-output diagnostics, recovery cleanup или observability state
+PRG_Distributed_Peer_Ingestion owns Peer_* distributed input projections.
+PRG_Distributed_Epoch_Governor owns Local_* and Distributed_* authority state.
 ```
 
 ---
 
-### Transport/runtime recursive dependency removal
+### Distributed fencing transitional suppression
 
 Исправлено:
 
 ```text
-PRG_Transport_Freshness_Governor больше не читает Runtime_Barrier / Recovery state
+transitional peer-session projection no longer forces immediate fencing quarantine
 ```
 
 Текущее правило:
 
 ```text
-Transport freshness является upstream freshness authority
-Runtime_Barrier потребляет transport state, но не наоборот
-```
-
----
-
-### Distributed snapshot downstream publication feedback removal
-
-Исправлено:
-
-```text
-PRG_Distributed_Snapshot_Governor больше не использует GVL_OUTPUT_EPOCH.Output_Publication_Epoch
-как local distributed snapshot publication baseline
-```
-
-Текущее правило:
-
-```text
-Distributed snapshot baseline берётся из upstream runtime snapshot publication epoch
-а не из downstream output publication state
-```
-
----
-
-### Distributed commit downstream publication feedback removal
-
-Исправлено:
-
-```text
-PRG_Distributed_Commit_Governor больше не использует GVL_OUTPUT_EPOCH.Output_Publication_Epoch
-как local commit baseline
-```
-
-Текущее правило:
-
-```text
-Distributed commit baseline берётся из upstream distributed snapshot epoch
-а не из downstream output publication state
-```
-
----
-
-### Distributed commit unused token residue cleanup
-
-Исправлено после live-consumer sweep:
-
-```text
-GVL_DISTRIBUTED_COMMIT.Local_Commit_Token
-GVL_DISTRIBUTED_COMMIT.Peer_Commit_Token
-```
-
-удалены из live declaration.
-
-Текущее правило:
-
-```text
-commit continuity сейчас основана на prepare/publication epoch + ack/lease/mismatch/replay fields,
-а не на unused commit-token mirrors
-```
-
----
-
-### Observability authority residue cleanup
-
-Исправлено:
-
-```text
-PRG_Observability_Governor больше не пишет stale Authority_Snapshot_Valid
-```
-
-Текущее правило:
-
-```text
-GVL_OBSERVABILITY_AUTHORITY остаётся downstream visibility-only layer
-```
-
----
-
-### Observability distributed commit coverage convergence
-
-Исправлено:
-
-```text
-PRG_Observability_Governor теперь reset/publish для distributed commit visibility fields
-```
-
-Текущее правило:
-
-```text
-GVL_OBSERVABILITY_AUTHORITY distributed commit fields являются visibility-only projections
-и не участвуют в authority / quarantine governance
-```
-
----
-
-### Command verifier diagnostics localization
-
-Исправлено:
-
-```text
-PRG_Command_Verifier больше не публикует runtime diagnostics в GVL_CONFIG_VALIDATION.G_Runtime_*
-```
-
-Текущее правило:
-
-```text
-post-IO verifier diagnostics owned by GVL_COMMAND_VERIFY.Runtime_*
-```
-
----
-
-### Config/runtime diagnostics residual cleanup
-
-Исправлено после live-consumer sweep:
-
-```text
-GVL_CONFIG_VALIDATION.G_Runtime_* fields removed from live declaration
-```
-
-Текущее правило:
-
-```text
-GVL_CONFIG_VALIDATION contains config validation state only
-runtime verifier diagnostics live in GVL_COMMAND_VERIFY.Runtime_*
-```
-
----
-
-### Recovery cleanup role convergence
-
-Исправлено:
-
-```text
-PRG_Recovery_Cleanup_Governor и GVL_RECOVERY_GOVERNANCE comments больше не описывают recovery cleanup
-как upstream runtime authority dependency
-```
-
-Текущее правило:
-
-```text
-Recovery cleanup is downstream residue state and must not feed back into Runtime_Barrier.
+Peer_Fencing_Conflict equality semantics remain unresolved,
+but transitional local loopback projection is explicitly suppressed
+until real remote fencing-token transport exists.
 ```
 
 ---
@@ -315,6 +207,12 @@ PLC_Fencing
 Runtime_Barrier
   ↓
 Runtime_Snapshot
+  ↓
+Peer_Session_Publication
+  ↓
+HA_Session_Replication
+  ↓
+Distributed_Peer_Ingestion
   ↓
 Distributed_Epoch / Distributed_Snapshot / Distributed_Commit
   ↓
@@ -357,6 +255,8 @@ GVL_CONFIG_VALIDATION
 GVL_OBSERVABILITY_AUTHORITY
 GVL_DISTRIBUTED_SNAPSHOT
 GVL_DISTRIBUTED_COMMIT
+GVL_PEER_SESSION
+GVL_HA_SESSION_REPLICATION
 ```
 
 Текущий статус:
@@ -387,522 +287,27 @@ Peer_Fencing_Conflict equality semantics
 Причина:
 
 ```text
-PRG_Distributed_Epoch_Governor treats equal peer/local fencing token as conflict
+real remote fencing-token transport still absent
 ```
 
 Текущий статус:
 
 ```text
-VALIDATION_REQUIRED
-```
-
-Дополнительный finding:
-
-```text
-Peer-input ingestion contract is absent from live repository code.
-```
-
-Подтверждённые наблюдения:
-
-```text
-Peer_Fencing_Token / Peer_Runtime_Epoch / Peer_Snapshot_Epoch /
-Peer_Boot_Generation / Peer_Last_Refresh_MS / Peer_Lease_Active
-currently have declaration + consumer logic, but no confirmed live ingestion producer.
+TRANSITIONAL_SUPPRESSION_ACTIVE
 ```
 
 Текущий вывод:
 
 ```text
-Peer fencing equality cannot be classified as correct or inverted until
-peer-input ingestion and token issuance contract are defined or recovered.
+distributed peer ingestion topology is restored,
+but remote token issuance/exchange contract remains unresolved.
 ```
 
 Запрещено:
 
 ```text
+удалять transitional suppression without real remote replication
 менять equality/inequality semantics без token issuance contract evidence
-удалять peer-input поля без ingestion contract decision
-```
-
----
-
-Resolved after checkpoint:
-
-```text
-GVL_CONFIG_VALIDATION.G_Runtime_* residual fields
-GVL_DISTRIBUTED_COMMIT.Local_Commit_Token / Peer_Commit_Token residues
-```
-
-Причина:
-
-```text
-live consumer sweep passed
-fields removed from live declarations
-```
-
-Текущий статус:
-
-```text
-RESOLVED_AFTER_LIVE_CONSUMER_SWEEP
-```
-
----
-
-## 0.5 Deferred / do not touch yet
-
-Не трогать в рамках текущего pass:
-
-```text
-domain PRGs
-safety orchestration internals
-snapshot archives
-historical docs cleanup
-distributed token conflict semantics without evidence
-distributed peer-input fields without ingestion contract evidence
-new governance layers
-semantic hard-stop escalation
-observability hard-stop escalation
-```
-
-Причина:
-
-```text
-текущий pass направлен на authority directionality,
-writer ownership и compile/reference convergence,
-а не на broad architecture rewrite
-```
-
----
-
-## 0.6 Current engineering priority after checkpoint
-
-Следующий порядок:
-
-```text
-1. decide distributed peer-input contract direction:
-   - implement/recover ingestion contract, or
-   - explicitly mark peer layer dormant/foundation-only
-2. distributed fencing token contract validation
-3. broader hard-stop graph validation with direct fetch evidence
-4. ownership matrix/doc consistency update
-5. bounded residual cleanup only after evidence
-6. only then docs/snapshots consistency cleanup
-```
-
----
-
-## 0.7 Latest convergence delta
-
-После checkpoint выполнено:
-
-```text
-GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep
-PRG_Distributed_Snapshot_Governor baseline moved from Output_Publication_Epoch to Snapshot_Publication_Epoch
-PRG_Observability_Governor now covers distributed commit visibility fields
-PRG_Output_Freshness_Governor now consumes distributed aggregate authority only
-GVL_DISTRIBUTED_COMMIT unused commit-token residues removed
-Recovery cleanup code comments and GVL declaration aligned with downstream cleanup role
-known removed-field sweep returned clean
-Peer-input ingestion contract absence recorded
-```
-
-Текущее состояние:
-
-```text
-distributed snapshot/commit no longer consume downstream output publication epoch
-output freshness no longer consumes peer-detail distributed diagnostics directly
-observability remains downstream visibility-only
-compile/reference convergence for known removed fields is currently clean
-peer-input fields remain unresolved contract surface, not cleanup target
-```
-
-Остаётся главным validation item:
-
-```text
-Peer_Fencing_Conflict equality semantics requires peer-input ingestion + token issuance contract evidence
-```
-
----
-
-# 1. CURRENT ARCHITECTURAL UNDERSTANDING
-
-После cleanup стало ясно:
-
-```text
-главный риск больше не zombie fields
-```
-
-Главный remaining risk:
-
-```text
-implicit authority propagation
-```
-
-То есть:
-
-```text
-advisory layer
-visibility layer
-projection layer
-```
-
-формально не являются authority,
-но downstream runtime-path начинает трактовать их как authority.
-
-Это особенно опасно для:
-
-```text
-GVL_OUTPUT_EPOCH
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-GVL_DISTRIBUTED_*
-GVL_OBSERVABILITY_AUTHORITY
-```
-
----
-
-# 2. VALIDATION MODEL
-
-## Cleanup больше не считается доказательством
-
-Удаление поля:
-
-```text
-не является runtime evidence
-```
-
-Даже если:
-
-```text
-field выглядит redundant
-```
-
-Теперь remediation считается завершённым только если:
-
-```text
-writer graph validated
-hard-stop graph validated
-compile/reference convergence validated
-advisory leakage absence validated
-runtime topology remains deterministic
-```
-
----
-
-# 3. WRITER GRAPH VALIDATION
-
-## Цель
-
-Подтвердить:
-
-```text
-single authoritative ownership
-```
-
-для каждого runtime-critical field.
-
----
-
-## VALIDATION-WG-001
-
-### Проверка
-
-```text
-absence of duplicate writers
-```
-
-### Нужно доказать
-
-```text
-authority field имеет только одного writer
-```
-
-### Проверяемые GVL
-
-```text
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-GVL_OUTPUT_EPOCH
-GVL_DISTRIBUTED_*
-GVL_OBSERVABILITY_AUTHORITY
-```
-
-### Риски
-
-```text
-A-RISK-008
-O-RISK-003
-P-RISK-004
-```
-
-### Evidence criteria
-
-```text
-нет второго PRG writer
-нет foreign reset
-нет projection mutation
-```
-
-### Статус
-
-```text
-PARTIALLY_VALIDATED_AFTER_CHECKPOINT
-```
-
-### Checkpoint note
-
-```text
-GVL_TRANSPORT_FRESHNESS
-GVL_PLC_FENCING
-GVL_RUNTIME_EPOCH
-GVL_RUNTIME_SNAPSHOT
-GVL_OUTPUT_EPOCH
-GVL_COMMAND_VERIFY
-GVL_CONFIG_VALIDATION
-GVL_OBSERVABILITY_AUTHORITY
-GVL_DISTRIBUTED_SNAPSHOT
-GVL_DISTRIBUTED_COMMIT
-```
-
-на текущем проходе не имеют подтверждённых live duplicate writers.
-
----
-
-## VALIDATION-WG-002
-
-### Проверка
-
-```text
-absence of foreign resets
-```
-
-### Нужно доказать
-
-```text
-visibility/advisory layers
-не могут сбрасывать authority state
-```
-
-### Особо опасные поля
-
-```text
-Output_Forced_Safe_Decay
-Runtime_IO_Publication_Allowed
-Distributed_Quarantine_Active
-```
-
-### Риски
-
-```text
-RISK-040
-RISK-047
-O-RISK-001
-```
-
-### Статус
-
-```text
-PARTIALLY_VALIDATED_AFTER_CHECKPOINT
-```
-
----
-
-# 4. HARD-STOP GRAPH VALIDATION
-
-## Цель
-
-Построить:
-
-```text
-real physical publication stop graph
-```
-
----
-
-## VALIDATION-HS-001
-
-### Проверка
-
-```text
-allowed hard-stop paths only
-```
-
-### Разрешённые hard-stop причины
-
-```text
-runtime barrier invalidation
-immutable snapshot invalidation
-transport freshness invalidation
-real distributed reconciliation failure
-explicit peer fencing conflict
-pre-output safety failure
-```
-
-### Нужно доказать
-
-```text
-нет advisory influence на hard-stop
-```
-
-### Риски
-
-```text
-RISK-015
-RISK-038
-RISK-040
-RISK-047
-```
-
-### Статус
-
-```text
-IN_PROGRESS_AFTER_CHECKPOINT
-```
-
----
-
-## VALIDATION-HS-002
-
-### Проверка
-
-```text
-Output_Forced_Safe_Decay ownership
-```
-
-### Нужно доказать
-
-```text
-semantic layer не может активировать forced decay
-observability layer не может активировать forced decay
-projection layers не могут активировать forced decay
-```
-
-### Проверяемые PRG
-
-```text
-PRG_Output_Freshness_Governor
-PRG_PreOutput_Safety_Barrier
-PRG_IO_Write
-```
-
-### Статус
-
-```text
-VALIDATED_FOR_IO_WRITE_CONSUMER_PATH
-```
-
-### Checkpoint note
-
-```text
-IO_Write consumes Output_Forced_Safe_Decay only for output freshness hard-stop.
-Output_Publication_Valid / lease / stale fields remain diagnostics/observability state.
-Output_Freshness consumes distributed aggregate authority only, not peer-detail diagnostics.
-```
-
----
-
-# 5. ADVISORY LEAKAGE VALIDATION
-
-## Главная гипотеза
-
-Даже advisory field может стать runtime authority,
-если downstream layer трактует advisory как gate.
-
----
-
-## VALIDATION-AL-001
-
-### Проверка
-
-```text
-semantic → hard-stop leakage
-```
-
-### Проверяемые поля
-
-```text
-Output_Semantic_Continuity_Warning
-Semantic_Progress_Quarantine_Active
-Semantic_Livelock_Suspected
-Semantic_Replay_Suspected
-```
-
-### Нужно доказать
-
-```text
-нет write-path до Output_Forced_Safe_Decay
-нет IO gating
-нет Runtime_Barrier gating
-```
-
-### Риски
-
-```text
-S-RISK-001
-S-RISK-004
-RISK-047
-```
-
-### Статус
-
-```text
-PARTIALLY_VALIDATED_AFTER_CHECKPOINT
-```
-
-### Checkpoint note
-
-```text
-Output_Semantic_Continuity_Warning remains advisory-only in PRG_Output_Freshness_Governor.
-No confirmed direct hard-stop consumer was found in current pass.
-```
-
----
-
-## VALIDATION-AL-002
-
-### Проверка
-
-```text
-observability → authority leakage
-```
-
-### Проверяемые поля
-
-```text
-Emergency_Visibility_Required
-Unsafe_State_Published
-*_Visible
-```
-
-### Нужно доказать
-
-```text
-visibility fields не участвуют в hard-stop
-visibility fields не mutate runtime state
-visibility fields не reset authority state
-```
-
-### Риски
-
-```text
-O-RISK-001
-O-RISK-004
-RISK-037
-RISK-040
-```
-
-### Статус
-
-```text
-PARTIALLY_VALIDATED_AFTER_CHECKPOINT
-```
-
-### Checkpoint note
-
-```text
-Runtime_Barrier no longer consumes observability authority/quarantine residues.
-PRG_Observability_Governor no longer writes stale Authority_Snapshot_Valid.
-Distributed commit visibility fields are now covered by PRG_Observability_Governor.
 ```
 
 ---
@@ -914,111 +319,28 @@ Distributed commit visibility fields are now covered by PRG_Observability_Govern
 Distributed layer теперь:
 
 ```text
-peer-optional continuity foundation
+explicit peer-session ingestion and HA replication topology
 ```
 
-Но это ещё не доказано runtime behavior.
-
-Текущий critical finding:
+Текущая модель:
 
 ```text
-Peer-input ingestion contract is not present in live repository code.
+runtime authority
+    ↓
+peer session publication
+    ↓
+HA/session replication boundary
+    ↓
+distributed peer ingestion
+    ↓
+distributed reconciliation governors
 ```
 
-Это значит:
+Важно:
 
 ```text
-peer fields currently behave as unresolved contract surface,
-not as fully validated live distributed protocol.
-```
-
----
-
-## VALIDATION-D-001
-
-### Проверка
-
-```text
-startup without peer remains operational
-```
-
-### Нужно доказать
-
-```text
-missing peer != quarantine
-missing peer != forced decay
-missing peer != split-brain
-```
-
-### Риски
-
-```text
-D-RISK-001
-D-RISK-002
-RISK-047
-```
-
-### Статус
-
-```text
-UNVERIFIED_RUNTIME_BEHAVIOR
-```
-
-### Checkpoint note
-
-```text
-No live peer-input ingestion producer was found for distributed peer fields.
-Startup-without-peer behavior must be validated against actual PLC/runtime execution,
-not inferred from declarations alone.
-```
-
----
-
-## VALIDATION-D-002
-
-### Проверка
-
-```text
-real peer divergence still blocks publication
-```
-
-### Нужно доказать
-
-```text
-peer fencing conflict still authoritative
-real peer mismatch still authoritative
-```
-
-### Проверяемые поля
-
-```text
-Peer_Fencing_Conflict
-Peer_Commit_Mismatch
-Peer_Publication_Divergence
-```
-
-### Риски
-
-```text
-D-RISK-003
-D-RISK-004
-RISK-047
-```
-
-### Статус
-
-```text
-BLOCKED_BY_MISSING_PEER_INPUT_CONTRACT
-```
-
-### Checkpoint note
-
-```text
-Peer_Fencing_Conflict currently triggers on equal peer/local fencing token.
-Do not change this without explicit token issuance contract evidence.
-Distributed snapshot/commit baselines no longer consume downstream output publication epoch.
-Output_Freshness consumes aggregate distributed validity/quarantine only.
-Peer-input ingestion producer is not present in live repository code.
+Modbus RTU SysCom transport remains isolated byte/frame transport.
+HA peer replication must not contaminate Modbus runtime transport layers.
 ```
 
 ---
@@ -1031,281 +353,29 @@ Peer-input ingestion producer is not present in live repository code.
 peer-input ingestion contract
 ```
 
-### Нужно доказать
-
-```text
-who writes Peer_Runtime_Epoch
-who writes Peer_Snapshot_Epoch
-who writes Peer_Boot_Generation
-who writes Peer_Fencing_Token
-who writes Peer_Last_Refresh_MS
-who writes Peer_Lease_Active
-```
-
 ### Текущий результат
 
 ```text
-No confirmed live producer in repository.
+FOUNDATION_RESTORED
+```
+
+### Подтверждено
+
+```text
+explicit publication owner exists
+explicit HA replication boundary exists
+explicit peer ingestion owner exists
+execution order restored in MAIN
+```
+
+### Всё ещё отсутствует
+
+```text
+real remote PLC transport/session replication backend
 ```
 
 ### Статус
 
 ```text
-CONTRACT_MISSING_OR_EXTERNAL
-```
-
-### Запрещено
-
-```text
-classify Peer_Fencing_Token equality semantics
-remove peer-input fields
-promote peer validation to stronger authority
-```
-
-до решения:
-
-```text
-implement/recover peer ingestion contract
-or explicitly mark distributed peer layer dormant/foundation-only
-```
-
----
-
-# 7. COMPILE / REFERENCE CONVERGENCE
-
-## VALIDATION-C-001
-
-### Проверка
-
-```text
-removed fields are not referenced
-```
-
-### Нужно проверить
-
-```text
-Snapshot_Observability_Synchronized
-Snapshot_Invalidation_Count
-Distributed_Forced_Safe_Mode
-Distributed_Invalidation_Count
-Distributed_Snapshot_Forced_Safe_Mode
-Distributed_Commit_Forced_Safe_Mode
-```
-
-### Риски
-
-```text
-C-RISK-001
-C-RISK-002
-C-RISK-003
-C-RISK-004
-```
-
-### Статус
-
-```text
-CURRENTLY_CLEAN_AFTER_CHECKPOINT_SWEEP
-```
-
-### Checkpoint note
-
-```text
-Output_Invalidation_Count live write removed.
-Authority_Snapshot_Valid live write removed.
-GVL_CONFIG_VALIDATION.G_Runtime_* removed after live consumer sweep.
-GVL_DISTRIBUTED_COMMIT.Local_Commit_Token / Peer_Commit_Token removed after live consumer sweep.
-Known removed-field sweep returned clean after latest convergence pass.
-```
-
----
-
-## VALIDATION-C-002
-
-### Проверка
-
-```text
-documentation ↔ code consistency
-```
-
-### Нужно доказать
-
-```text
-ownership matrix соответствует коду
-main remediation plan соответствует topology
-part2 соответствует реальным validation stages
-```
-
-### Статус
-
-```text
-IN_PROGRESS_AFTER_CHECKPOINT
-```
-
----
-
-# 8. HIGH-RISK ZONES
-
-## Zone-01 — GVL_OUTPUT_EPOCH
-
-### Почему опасно
-
-Это:
-
-```text
-final authority concentration point
-```
-
-Там сходятся:
-
-```text
-runtime validity
-snapshot validity
-distributed validity
-semantic advisory
-output freshness
-forced decay
-```
-
-### Главный риск
-
-```text
-implicit advisory escalation
-```
-
-### Checkpoint status
-
-```text
-IMPROVED
-```
-
-Причина:
-
-```text
-IO_Write hard-stop consumer path narrowed to Output_Forced_Safe_Decay.
-Output_Freshness distributed consumer path narrowed to aggregate authority fields.
-```
-
----
-
-## Zone-02 — Distributed runtime
-
-### Почему опасно
-
-После peer-optional normalization
-может появиться:
-
-```text
-under-protected real divergence
-```
-
-### Главный риск
-
-```text
-false negative distributed failure
-```
-
-### Checkpoint status
-
-```text
-BLOCKED_BY_MISSING_PEER_INPUT_CONTRACT
-```
-
-Причина:
-
-```text
-Peer_Fencing_Conflict equality semantics requires token contract evidence,
-but peer-input ingestion producer is absent from live repository code.
-```
-
----
-
-## Zone-03 — Ownership mirrors
-
-### Почему опасно
-
-Многие поля выглядят как authority,
-но по факту являются:
-
-```text
-projection mirrors
-```
-
-Например:
-
-```text
-*_Valid
-*_Allowed
-*_Consistent
-```
-
-### Главный риск
-
-```text
-hidden topology complexity
-```
-
-### Checkpoint status
-
-```text
-IMPROVED_BUT_NOT_COMPLETE
-```
-
-Причина:
-
-```text
-several duplicate/foreign writer paths removed,
-several residual declarations removed after consumer sweep,
-but peer-input fields remain deferred until ingestion contract evidence exists.
-```
-
----
-
-# 9. WHAT IS NOW FORBIDDEN
-
-Запрещено:
-
-```text
-cleanup by intuition
-removing fields without validation evidence
-adding speculative governance
-reintroducing forced-safe mirrors
-making visibility runtime-authoritative
-making semantic heuristics hard-stop authority
-changing distributed fencing token semantics without contract evidence
-removing distributed peer-input fields without ingestion contract evidence
-editing files through partial patches that can truncate ST files
-```
-
----
-
-# 10. CURRENT ENGINEERING PRIORITY
-
-Текущий focus:
-
-```text
-writer graph
-hard-stop graph
-advisory leakage graph
-compile/reference convergence
-runtime evidence
-```
-
-А НЕ:
-
-```text
-adding semantic intelligence
-adding new governance layers
-expanding observability authority
-```
-
-После latest distributed validation finding текущий immediate priority:
-
-```text
-1. decide distributed peer-input contract direction:
-   - implement/recover ingestion contract, or
-   - explicitly mark peer layer dormant/foundation-only
-2. only then classify Peer_Fencing_Conflict equality semantics
-3. broader hard-stop graph validation with direct fetch evidence
-4. ownership matrix/doc consistency update
-5. bounded residual cleanup only after evidence
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 ```
