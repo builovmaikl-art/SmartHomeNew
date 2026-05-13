@@ -4,8 +4,6 @@ VAR_GLOBAL
     G_Config_Critical_Error : BOOL := FALSE;
     G_Config_Force_Safe_Mode : BOOL := TRUE;
     G_Config_Auto_Corrected : BOOL := FALSE;
-    G_Config_Reset_To_Default_Done : BOOL := FALSE;
     G_Config_Last_Error_Text : STRING(200) := '';
-    G_Config_Last_Action_Text : STRING(200) := '';
     G_Config_Last_Update_MS : UDINT := 0;
 END_VAR
