@@ -332,9 +332,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
     GVL_STATE.G_CO_Sensors[L_i] := fbCalib_CO[L_i].VO_Calibrated_Value;
 END_FOR;
 
-GVL_STATE.G_Boiler_Flame := GVL_IO.AI_Boiler_Flame_Status;
-GVL_STATE.G_Boiler_Error := GVL_IO.DI_Boiler_Error;
-
 GVL_STATE.G_DHW_Temp := GVL_IO.AI_DHW_Temp;
 GVL_STATE.G_DHW_Pressure := GVL_IO.AI_DHW_Pressure;
 
