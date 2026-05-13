@@ -2,12 +2,12 @@
 
 ## Назначение
 
-Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup, восстановления distributed peer/commit topology и отключения legacy direct-state redundancy bypass.
+Этот документ фиксирует не список удалений, а программу структурной валидации runtime-архитектуры после первичного cleanup, восстановления distributed peer/snapshot/commit topology, отключения legacy direct-state redundancy bypass и первичной классификации mixed GVL surfaces.
 
 Текущий этап:
 
 ```text
-post-cleanup structural validation + distributed topology restoration + legacy bypass containment
+post-cleanup structural validation + distributed topology restoration + legacy bypass containment + GVL ownership boundary classification
 ```
 
 Главный принцип:
@@ -76,6 +76,8 @@ Time_Monotonic
 → HA_Session_Replication
 → Distributed_Peer_Ingestion
 → Distributed_Epoch
+→ Distributed_Snapshot_Publication
+→ Distributed_Snapshot_Ingestion
 → Distributed_Snapshot
 → Distributed_Commit_Publication
 → Distributed_Commit_Ingestion
@@ -94,8 +96,9 @@ Time_Monotonic
 Текущее состояние:
 
 ```text
-restored explicit distributed peer/commit topology foundation
+restored explicit distributed peer/snapshot/commit topology foundation
 legacy direct-state redundancy bypass disconnected from runtime base
+GVL_STATUS / GVL_STATE / GVL_COMMAND / GVL_SIMULATION ownership boundaries documented
 ```
 
 Ограничение:
@@ -209,7 +212,56 @@ PRG_HA_Session_Replication is temporary bounded loopback foundation only.
 
 ---
 
-## 3.3 Distributed commit topology restoration
+## 3.3 Distributed snapshot topology restoration
+
+Distributed snapshot peer fields переведены из orphan peer snapshot state в explicit topology:
+
+```text
+Runtime_Snapshot
+→ PRG_Distributed_Snapshot_Publication
+→ GVL_HA_SESSION_REPLICATION
+→ PRG_Distributed_Snapshot_Ingestion
+→ GVL_DISTRIBUTED_SNAPSHOT.Peer_*
+→ PRG_Distributed_Snapshot_Governor
+```
+
+Исправлено:
+
+```text
+missing distributed snapshot publication owner
+missing distributed snapshot peer ingestion owner
+missing replicated snapshot handshake boundary
+stale peer snapshot continuity after invalid HA session
+phantom peer snapshot reconciliation risk
+```
+
+Влияние:
+
+```text
+D-RISK-002
+D-RISK-003
+D-RISK-004
+RISK-047
+C-RISK-004
+```
+
+Статус:
+
+```text
+FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
+```
+
+Ограничение:
+
+```text
+snapshot publication/ingestion currently uses existing scalar fields only.
+No new DUT is required by the newly added snapshot PRGs at this stage.
+Real remote snapshot transport still requires HA backend replacement.
+```
+
+---
+
+## 3.4 Distributed commit topology restoration
 
 Distributed commit peer fields переведены из orphan handshake state в explicit topology:
 
@@ -255,7 +307,7 @@ Real remote commit acknowledgement transport is still required.
 
 ---
 
-## 3.4 Legacy direct-state redundancy bypass containment
+## 3.5 Legacy direct-state redundancy bypass containment
 
 Найден активный runtime bypass:
 
@@ -272,7 +324,8 @@ MAIN
 
 ```text
 legacy redundancy path bypassed Runtime_Barrier, Runtime_Snapshot,
-Distributed_Epoch, Distributed_Commit, Output_Freshness and new HA topology.
+Distributed_Epoch, Distributed_Snapshot, Distributed_Commit,
+Output_Freshness and new HA topology.
 ```
 
 Исправлено:
@@ -310,7 +363,137 @@ ownership matrix marks legacy redundancy subsystem frozen
 
 ---
 
-## 3.5 Observability demotion
+## 3.6 Command authority ownership convergence
+
+Command surfaces classified:
+
+```text
+GVL_COMMAND
+    legacy/operator command request surface and verifier comparison source
+
+GVL_COMMAND_SHADOW
+    runtime operational command authority owned by PRG_Command_Arbitration
+
+GVL_COMMAND_VERIFY.PreOutput_*
+    pre-output hard-stop state owned by PRG_PreOutput_Safety_Barrier
+
+GVL_COMMAND_VERIFY.Command_*/Runtime_*
+    post-IO diagnostics owned by PRG_Command_Verifier
+```
+
+Исправлено:
+
+```text
+PRG_System_Init foreign writes to GVL_COMMAND_SHADOW removed.
+GVL_COMMAND ownership boundary documented.
+GVL_COMMAND_VERIFY split hard-stop/diagnostics ownership confirmed.
+```
+
+Влияние:
+
+```text
+RISK-015
+RISK-038
+RISK-040
+RISK-047
+A-RISK-001
+P-RISK-001
+```
+
+Статус:
+
+```text
+CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
+```
+
+Остаётся проверить:
+
+```text
+HMI/operator command writer graph for GVL_COMMAND
+no diagnostics/debug path mutates GVL_COMMAND_SHADOW
+```
+
+---
+
+## 3.7 Simulation boundary containment
+
+Simulation/test surface classified:
+
+```text
+GVL_SIMULATION
+    isolated simulation/test request and status surface
+```
+
+Проверено:
+
+```text
+PRG_System_Simulation writes only GVL_SIMULATION.
+FB_Simulation_Manager does not mutate production authority state.
+FB_Presence_Playback does not write production authority in current simulation call path.
+G_Sim_* live production consumers were not found in current search.
+```
+
+Статус:
+
+```text
+CONFIRMED_ISOLATED_FOR_KNOWN_DIRECT_PATHS
+```
+
+Ограничение:
+
+```text
+injection request flags remain as test-control inputs.
+A direct production injection bridge is not currently implemented.
+Any future injection bridge requires explicit boundary review.
+```
+
+---
+
+## 3.8 Mixed GVL ownership boundary classification
+
+Classified and documented:
+
+```text
+GVL_STATUS
+    mixed global status surface
+    time fields owned by time service / monotonic flow
+    PLC role fields owned by PRG_PLC_Arbitration
+    diagnostics/domain/HMI fields are projections
+
+GVL_STATE
+    mixed global domain state surface
+    sensor/input projections
+    domain runtime projections
+    physical/output feedback projections
+    safety projections
+    policy/allocation observability
+    simulation/convenience residues
+    diagnostics/explainability projections
+```
+
+Anti-regression rule:
+
+```text
+GVL_STATUS and GVL_STATE must not become hidden HA replication,
+distributed reconciliation or direct-state runtime authority buses.
+```
+
+Найден drift:
+
+```text
+GVL_STATUS contains both G_PLC_ID and G_Local_PLC_ID.
+Do not merge/remove without direct reference sweep.
+```
+
+Статус:
+
+```text
+BOUNDARY_CLASSIFIED_REFERENCE_SWEEP_PENDING
+```
+
+---
+
+## 3.9 Observability demotion
 
 Observability приведён к:
 
@@ -345,7 +528,7 @@ HMI/diagnostics consumers after ownership matrix refresh
 
 ---
 
-## 3.6 Semantic demotion
+## 3.10 Semantic demotion
 
 Semantic continuity переведён в:
 
@@ -382,7 +565,7 @@ future diagnostics/HMI paths do not reinterpret semantic warning as hard-stop au
 
 ---
 
-## 3.7 Dead-state / mirror pruning
+## 3.11 Dead-state / mirror pruning
 
 Удалены duplicate degraded-state mirrors and verified removed-field convergence, including:
 
@@ -435,11 +618,12 @@ speculative semantic / observability governance
 Сейчас главный remaining risk:
 
 ```text
-transport-backed distributed validation gap + legacy bypass regression
+transport-backed distributed validation gap + legacy bypass regression + mixed-GVL authority regression
 ```
 
 То есть topology восстановлена и active legacy direct-state bypass отключён,
 но bounded loopback foundation ещё не доказывает real peer divergence behavior.
+Также mixed global surfaces now require reference-backed ownership matrix refresh.
 
 Особенно опасны:
 
@@ -449,6 +633,8 @@ self-ack commit validation
 ghost peer session after invalid HA transport
 real remote fencing-token equality semantics
 legacy direct-state redundancy reconnection
+GVL_STATUS/GVL_STATE reinterpreted as hidden authority buses
+simulation injection bridge added without boundary review
 ```
 
 ---
@@ -466,7 +652,7 @@ STAGE-A Freeze current topology
 → STAGE-D Build advisory leakage graph
 → STAGE-E Validate distributed peer behavior
 → STAGE-E2 Replace bounded HA loopback with real transport backend
-→ STAGE-E3 Validate real remote token/commit semantics
+→ STAGE-E3 Validate real remote token/snapshot/commit semantics
 → STAGE-E4 Freeze legacy redundancy subsystem
 → STAGE-F Compile/reference convergence
 → STAGE-G Targeted remediation only if evidence exists
@@ -492,6 +678,7 @@ Evidence:
 ```text
 MAIN now contains explicit peer heartbeat, peer session publication,
 HA session replication, distributed peer ingestion,
+distributed snapshot publication, distributed snapshot ingestion,
 distributed commit publication and distributed commit ingestion stages.
 Legacy FB_System_Redundancy_Orchestrator disconnected from PRG_System_Runtime_Base.
 ```
@@ -518,6 +705,7 @@ GVL_HA_SESSION_REPLICATION
 GVL_OBSERVABILITY_AUTHORITY
 GVL_SEMANTIC_PROGRESS
 GVL_STATUS / GVL_STATE / GVL_COMMAND / GVL_ALARM legacy direct-write paths
+GVL_SIMULATION test/injection surfaces
 ```
 
 ## Evidence required
@@ -530,12 +718,13 @@ GVL_STATUS / GVL_STATE / GVL_COMMAND / GVL_ALARM legacy direct-write paths
 нет duplicate writer
 нет projection writer в authority field
 нет legacy direct-state bypass writer in active runtime path
+нет simulation/test bridge into production authority without explicit review
 ```
 
 ## Статус
 
 ```text
-IN_PROGRESS_AFTER_LEGACY_BYPASS_DISCONNECTION
+IN_PROGRESS_AFTER_TOPOLOGY_AND_GVL_BOUNDARY_RESTORATION
 ```
 
 ---
@@ -559,6 +748,7 @@ IO_Write consumes Output_Forced_Safe_Decay as final output freshness hard-stop.
 Output_Freshness consumes distributed aggregate authority only, not peer-detail diagnostics.
 Recovery and observability do not write distributed/peer authority state.
 Legacy direct-state redundancy runtime bypass was disconnected from PRG_System_Runtime_Base.
+PreOutput_Block_IO is owned by PRG_PreOutput_Safety_Barrier and consumed by IO_Write.
 ```
 
 Остаётся:
@@ -566,6 +756,7 @@ Legacy direct-state redundancy runtime bypass was disconnected from PRG_System_R
 ```text
 runtime validation after real HA transport backend replacement
 legacy subsystem freeze verification
+mixed GVL consumer sweep
 ```
 
 ---
@@ -587,6 +778,8 @@ Evidence:
 ```text
 Observability remains downstream visibility-only.
 Semantic continuity remains advisory-only for Output_Freshness.
+GVL_SIMULATION is isolated for known direct paths.
+GVL_STATUS/GVL_STATE boundaries classify diagnostics/policy/simulation fields as projections unless proven otherwise.
 ```
 
 Остаётся:
@@ -594,6 +787,7 @@ Semantic continuity remains advisory-only for Output_Freshness.
 ```text
 HMI/diagnostics ownership sweep
 legacy subsystem freeze verification
+GVL_STATE field-level consumer sweep
 ```
 
 ---
@@ -612,6 +806,7 @@ missing peer does not quarantine
 real peer session activates validation
 real peer mismatch can quarantine publication
 real peer fencing conflict still hard-stops output
+real snapshot divergence can quarantine publication
 real commit ack/replay behavior is not self-acknowledged
 legacy direct-state redundancy cannot run in parallel
 ```
@@ -627,6 +822,7 @@ FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 ```text
 replace bounded HA loopback with real PLC-to-PLC backend
 validate real remote fencing token issuance/exchange
+validate real remote snapshot exchange
 validate real remote commit acknowledgement exchange
 freeze legacy redundancy subsystem
 ```
@@ -648,12 +844,21 @@ new GVLs are declared and consumed by intended owners
 legacy redundancy FBs are not reachable from active runtime
 ownership matrix matches code
 PART2 matches current plan
+DUT requirements after new PRG/GVL additions
+```
+
+## Current DUT assessment
+
+```text
+New PRGs added for distributed snapshot publication/ingestion currently use existing scalar types only:
+BOOL, UDINT, ULINT and existing GVL fields.
+No new DUT is required at this stage.
 ```
 
 ## Статус
 
 ```text
-IN_PROGRESS_AFTER_LEGACY_BYPASS_DISCONNECTION
+IN_PROGRESS_AFTER_SNAPSHOT_TOPOLOGY_AND_GVL_BOUNDARY_CLASSIFICATION
 ```
 
 ---
@@ -671,6 +876,8 @@ stale compile reference found
 real topology cycle found
 self-ack / self-mirror validation found
 legacy active runtime bypass found
+mixed GVL authority reinterpretation found
+simulation/test bridge bypass found
 ```
 
 Запрещено:
@@ -681,6 +888,8 @@ cleanup by intuition
 переписывать topology без writer/hard-stop evidence
 оставлять bounded loopback HA replication as production behavior
 reconnecting legacy direct-state redundancy without governance review
+using GVL_STATUS/GVL_STATE as hidden direct-state replication surfaces
+adding simulation injection into production authority without explicit boundary review
 ```
 
 ---
@@ -694,6 +903,8 @@ CONFIRMED_RESOLVED
 CONFIRMED_RESOLVED_FOR_KNOWN_DIRECT_PATHS
 CONFIRMED_RESOLVED_FOR_KNOWN_REMOVED_FIELDS
 CONFIRMED_RESOLVED_FOR_ACTIVE_RUNTIME_PATH
+CONFIRMED_ISOLATED_FOR_KNOWN_DIRECT_PATHS
+BOUNDARY_CLASSIFIED_REFERENCE_SWEEP_PENDING
 STRUCTURALLY_REDUCED
 FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 PARTIALLY_CONFIRMED_FOR_DIRECT_PATHS
@@ -707,7 +918,7 @@ IN_PROGRESS
 # 14. Текущий главный риск
 
 ```text
-transport-backed distributed validation gap + legacy bypass regression
+transport-backed distributed validation gap + legacy bypass regression + mixed-GVL authority regression
 ```
 
 А не:
@@ -719,10 +930,12 @@ missing semantic intelligence
 Главный фокус:
 
 ```text
+compile/reference convergence
+ownership matrix update
+PART2 sync
 real HA backend replacement
 legacy redundancy subsystem freeze
 writer graph refresh
 hard-stop graph validation
-compile/reference convergence
-ownership matrix update
+mixed GVL consumer sweep
 ```
