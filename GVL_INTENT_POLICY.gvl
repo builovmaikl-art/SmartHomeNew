@@ -4,10 +4,8 @@ VAR_GLOBAL
 
     G_Preheat_Request : BOOL;
     G_Freeze_Request : BOOL;
-    G_Eco_Mode_Request : BOOL;
 
     // Zone-level intents
-    G_Zone_Heating_Request : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
     G_Zone_Target_Adjustment : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
 
 END_VAR
