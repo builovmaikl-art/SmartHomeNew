@@ -1,0 +1,8 @@
+Runtime invariant audit summary
+================================
+STATUS: FAILED
+ERRORS: 6
+WARNINGS: 17
+TOTAL FINDINGS: 23
+STRICT MODE: True
+BLOCKING FINDINGS: 23
