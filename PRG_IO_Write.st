@@ -87,15 +87,15 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     GVL_IO.DO_Gas_Valve_Close := TRUE;
 
     IF L_PreOutput_Block_IO THEN
-        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_COMMAND_VERIFY.PreOutput_Last_Error_Code),iText := 'IO blocked by pre-output barrier');
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := UDINT_TO_REAL(GVL_COMMAND_VERIFY.PreOutput_Last_Error_Code),iText := 'IO blocked by pre-output barrier');
     END_IF;
 
     IF L_Output_Freshness_Block THEN
-        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_OUTPUT_EPOCH.Output_Last_Error_Code),iText := 'IO forced safe by output freshness decay');
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := UDINT_TO_REAL(GVL_OUTPUT_EPOCH.Output_Last_Error_Code),iText := 'IO forced safe by output freshness decay');
     END_IF;
 
     IF L_Snapshot_Block THEN
-        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := REAL(GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Error_Code),iText := 'IO blocked by immutable snapshot authority');
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := UDINT_TO_REAL(GVL_RUNTIME_SNAPSHOT.Snapshot_Last_Error_Code),iText := 'IO blocked by immutable snapshot authority');
     END_IF;
 
     RETURN;
