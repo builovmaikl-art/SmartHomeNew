@@ -26,9 +26,9 @@ VAR
 END_VAR
 
 fbSafety(
-    VI_Gas_Alarm := GVL_STATE.G_Safety_Gas_Alarm,
-    VI_Leak_Alarm := GVL_STATE.G_Safety_Leak_Alarm,
-    VI_Smoke_Alarm := GVL_STATE.G_Safety_Smoke_Alarm,
+    VI_Gas_Alarm := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
+    VI_Leak_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
+    VI_Smoke_Alarm := GVL_HEALTH_BRIDGE.G_Smoke_Detected,
     VI_Reset := GVL_COMMAND.G_Reset_Errors,
     VO_Gas_Latched => GVL_STATE.G_Safety_Gas_Latched,
     VO_Leak_Latched => GVL_STATE.G_Safety_Leak_Latched,
