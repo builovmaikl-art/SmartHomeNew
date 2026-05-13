@@ -802,7 +802,7 @@ FOUNDATION_RESTORED_RUNTIME_VALIDATION_PENDING
 
 ## VALIDATION-C-001 — New PRG call graph
 
-### Проверить
+### Проверка
 
 ```text
 new PRGs are called exactly once from MAIN
@@ -821,10 +821,18 @@ PRG_Distributed_Commit_Publication
 PRG_Distributed_Commit_Ingestion
 ```
 
+### Подтверждено
+
+```text
+search found the new topology PRG invocation set in MAIN only.
+Direct MAIN inspection confirms each listed PRG is called exactly once.
+No secondary live execution path was found in the current search pass.
+```
+
 ### Статус
 
 ```text
-VALIDATION_REQUIRED
+CONFIRMED_FOR_CURRENT_MAIN_CALL_GRAPH
 ```
 
 ---
@@ -892,7 +900,7 @@ CONFIRMED_RESOLVED_FOR_ACTIVE_RUNTIME_PATH
 Следующий порядок действий:
 
 ```text
-1. compile/reference convergence for newly added PRGs and HA fields
+1. compile/reference convergence for newly added HA fields
 2. refresh RUNTIME_FIELD_OWNERSHIP_MATRIX.md
 3. field-level writer graph for GVL_STATE and GVL_ALARM
 4. HMI/diagnostics/operator command consumer sweep
