@@ -112,29 +112,32 @@ PRG_Distributed_Commit_Observability();
 // 24. Semantic execution continuity governance
 PRG_Semantic_Progress_Governor();
 
-// 25. Observability authority governance
+// 25. Systemic convergence governance
+PRG_Convergence_Governor();
+
+// 26. Observability authority governance
 PRG_Observability_Governor();
 
-// 26. Recovery cleanup governance
+// 27. Recovery cleanup governance
 PRG_Recovery_Cleanup_Governor();
 
-// 27. Domain execution and projection
+// 28. Domain execution and projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 28. Pre-output safety barrier
+// 29. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 29. Output freshness governance
+// 30. Output freshness governance
 PRG_Output_Freshness_Governor();
 
-// 30. Final physical IO projection
+// 31. Final physical IO projection
 PRG_IO_Write();
 
-// 31. Verification, diagnostics, history, HMI
+// 32. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
