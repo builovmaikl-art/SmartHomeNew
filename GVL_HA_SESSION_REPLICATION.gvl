@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // ======================================================
+    // HA SESSION REPLICATION BOUNDARY
+    // ======================================================
+    // Dedicated high-availability session replication boundary.
+    //
+    // Purpose:
+    // isolate peer-session replication from:
+    // - Modbus transport runtime
+    // - IO runtime
+    // - distributed reconciliation governors
+    //
+    // Ownership:
+    // - PRG_Peer_Session_Publication exports canonical local state
+    // - HA/session transport publishes replicated remote state
+    // - PRG_Distributed_Peer_Ingestion consumes replicated state
+    //
+    // This GVL intentionally separates:
+    // runtime authority
+    // transport replication
+    // distributed reconciliation
+    // ======================================================
+
+    HA_Replication_Enabled : BOOL := FALSE;
+    HA_Channel_Healthy : BOOL := FALSE;
+
+    HA_Last_TX_MS : UDINT := 0;
+    HA_Last_RX_MS : UDINT := 0;
+
+    HA_Remote_Session_Valid : BOOL := FALSE;
+    HA_Remote_Last_Refresh_MS : UDINT := 0;
+
+    HA_Remote_Runtime_Epoch : ULINT := 0;
+    HA_Remote_Snapshot_Epoch : ULINT := 0;
+    HA_Remote_Boot_Generation : ULINT := 0;
+    HA_Remote_Fencing_Token : ULINT := 0;
+
+    HA_Remote_Publication_Allowed : BOOL := FALSE;
+    HA_Remote_Runtime_Healthy : BOOL := FALSE;
+END_VAR
