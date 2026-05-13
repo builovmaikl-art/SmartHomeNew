@@ -1,5 +1,31 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // ======================================================
+    // MIXED GLOBAL DOMAIN STATE SURFACE
+    // ======================================================
+    // Historical global state surface containing:
+    // - normalized sensor/input state;
+    // - domain runtime state projections;
+    // - physical/output feedback projections;
+    // - safety latch/state projections;
+    // - policy/allocation observability;
+    // - simulation/convenience residues;
+    // - diagnostics/degraded-state projections.
+    //
+    // Ownership boundary:
+    // this GVL is NOT a distributed replication boundary,
+    // NOT an HA direct-state apply surface and NOT a hidden
+    // runtime authority bus.
+    //
+    // Runtime authority must flow through dedicated governors:
+    // GVL_RUNTIME_EPOCH, GVL_RUNTIME_SNAPSHOT,
+    // GVL_DISTRIBUTED_*, GVL_COMMAND_SHADOW and output GVLs.
+    //
+    // Fields in this GVL require per-domain writer validation before
+    // removal, merge or authority reinterpretation.
+    // ======================================================
+
+    // Normalized sensor/input state projections
     G_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     G_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
     G_Last_Valid_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
@@ -45,6 +71,7 @@ VAR_GLOBAL
     G_Heating_Cascade_Active_Boilers : UINT;
     G_Heating_Cascade_Available_Boilers : UINT;
 
+    // Physical/domain state projections
     G_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     G_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     G_Outdoor_Temp : REAL;
@@ -65,6 +92,9 @@ VAR_GLOBAL
     G_DHW_Circ_Pump : BOOL;
     G_Backup_Circulation_Pump : BOOL;
     G_Electric_Heater_Enable : BOOL;
+
+    // Safety state projections. Hard-stop authority must remain in
+    // safety/runtime/output governors, not in hidden external writers.
     G_Safety_Gas_Alarm : BOOL;
     G_Safety_Leak_Alarm : BOOL;
     G_Safety_Smoke_Alarm : BOOL;
@@ -75,6 +105,8 @@ VAR_GLOBAL
     G_Safety_Freeze_Risk : BOOL;
     G_System_Mode : E_System_Operating_Mode := E_System_Operating_Mode.MODE_NORMAL;
     G_System_Mode_Text : STRING(64);
+
+    // Domain degraded/fault projections
     G_Heating_IO_Fault : BOOL;
     G_Heating_Sensor_Fault : BOOL;
     G_Heating_Subsystem_Degraded : BOOL;
@@ -99,6 +131,7 @@ VAR_GLOBAL
     G_Policy_Priority_Bias_Applied : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
     G_Policy_Priority_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF INT;
 
+    // Explainability / diagnostics projections
     G_Heating_RootCause : E_Heating_RootCause := E_Heating_RootCause.RC_NONE;
     G_Heating_RootConfidence : REAL;
     G_Heating_Confidence : REAL := 1.0;
@@ -117,6 +150,7 @@ VAR_GLOBAL
     G_Evac_Hazard_Zone : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     G_Evac_Guidance : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF INT;
 
+    // Scenario/simulation/convenience projections
     G_Rule_Actions : ARRAY[1..GVL_CONSTANTS.C_MAX_RULES] OF ST_Rule_Action;
     G_Sim_Lights : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     G_Freeze_Hardware_Degraded : BOOL;
