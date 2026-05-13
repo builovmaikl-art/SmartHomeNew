@@ -76,47 +76,50 @@ PRG_Runtime_Barrier();
 // 12. Immutable runtime snapshot governance
 PRG_Runtime_Snapshot_Governor();
 
-// 13. Distributed peer ingestion
+// 13. Canonical peer session publication
+PRG_Peer_Session_Publication();
+
+// 14. Distributed peer ingestion
 PRG_Distributed_Peer_Ingestion();
 
-// 14. Distributed epoch reconciliation governance
+// 15. Distributed epoch reconciliation governance
 PRG_Distributed_Epoch_Governor();
 
-// 15. Distributed immutable snapshot reconciliation governance
+// 16. Distributed immutable snapshot reconciliation governance
 PRG_Distributed_Snapshot_Governor();
 
-// 16. Distributed deterministic publication commit governance
+// 17. Distributed deterministic publication commit governance
 PRG_Distributed_Commit_Governor();
 
-// 17. Distributed deterministic commit observability projection
+// 18. Distributed deterministic commit observability projection
 PRG_Distributed_Commit_Observability();
 
-// 18. Semantic execution continuity governance
+// 19. Semantic execution continuity governance
 PRG_Semantic_Progress_Governor();
 
-// 19. Observability authority governance
+// 20. Observability authority governance
 PRG_Observability_Governor();
 
-// 20. Recovery cleanup governance
+// 21. Recovery cleanup governance
 PRG_Recovery_Cleanup_Governor();
 
-// 21. Domain execution and projection
+// 22. Domain execution and projection
 PRG_Heating();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 22. Pre-output safety barrier
+// 23. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 23. Output freshness governance
+// 24. Output freshness governance
 PRG_Output_Freshness_Governor();
 
-// 24. Final physical IO projection
+// 25. Final physical IO projection
 PRG_IO_Write();
 
-// 25. Verification, diagnostics, history, HMI
+// 26. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
