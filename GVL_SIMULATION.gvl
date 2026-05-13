@@ -1,5 +1,24 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    // ======================================================
+    // ISOLATED SIMULATION / TEST REQUEST SURFACE
+    // ======================================================
+    // This GVL is a simulation/test request and status surface.
+    // PRG_System_Simulation may write G_Test_* and G_Sim_* fields.
+    //
+    // Current runtime contract:
+    // - simulation does NOT mutate production authority state;
+    // - simulation does NOT write runtime/distributed/output GVLs;
+    // - G_Sim_* fields are isolated effective test outputs;
+    // - production consumers must not treat G_Sim_* as live sensor,
+    //   command, fencing, transport or output authority without an
+    //   explicit simulation injection boundary review.
+    //
+    // Note:
+    // injection request flags are retained as test-control inputs.
+    // A direct production injection bridge is not currently implemented.
+    // ======================================================
+
     G_Simulation_Enable : BOOL := FALSE;
 
     // Scenario control
