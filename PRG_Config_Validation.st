@@ -13,8 +13,16 @@ END_VAR
 // ======================================================
 // CENTRAL CONFIGURATION VALIDATION
 // ======================================================
-// Diagnostic-only layer. It sets validation flags and degraded diagnostics,
-// but does not write command/shadow/output structures.
+// Diagnostic-only layer.
+//
+// This PRG may set validation/configuration status flags and text,
+// but must not directly mutate aggregated diagnostics fields.
+// Aggregated diagnostics ownership is centralized in:
+//
+//   FB_System_Health_Orchestrator
+//
+// This PRG also must not write command/shadow/output structures.
+// ======================================================
 
 L_Config_Error := FALSE;
 
@@ -258,7 +266,6 @@ GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
 
 IF L_Config_Error THEN
     GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := 'CONFIG VALIDATION ERROR';
-    GVL_STATUS.G_Diagnostics.Subsystem_Degraded := TRUE;
     GVL_STATUS.G_System_Mode_Text := 'CONFIG ERROR';
 ELSE
     GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := '';
