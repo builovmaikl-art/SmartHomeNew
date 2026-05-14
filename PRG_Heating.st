@@ -248,6 +248,12 @@ GVL_Heating_Runtime_Explainability.G_Runtime_Anomaly :=
 GVL_Heating_Runtime_Explainability.G_Runtime_Blackbox_Event :=
     fbExplainabilityPublisher.VO_Blackbox_Event;
 
+GVL_Heating_Runtime_Explainability.G_Runtime_Blackbox_Timeline :=
+    fbExplainabilityPublisher.VO_Blackbox_Timeline;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Event_Buffer :=
+    fbExplainabilityPublisher.VO_Event_Buffer;
+
 GVL_Heating_Runtime_Explainability.G_Runtime_Adaptive_Intelligence :=
     fbExplainabilityPublisher.VO_Adaptive_Intelligence;
 

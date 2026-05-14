@@ -12,6 +12,8 @@ VAR_OUTPUT
     VO_Phase_Event : ST_Heating_Runtime_Phase_Event;
     VO_Anomaly : ST_Heating_Runtime_Anomaly;
     VO_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
+    VO_Blackbox_Timeline : ST_Heating_Runtime_Blackbox_Timeline;
+    VO_Event_Buffer : ST_Heating_Runtime_Event_Buffer;
     VO_Adaptive_Intelligence : ST_Heating_Runtime_Adaptive_Intelligence;
     VO_Causality_Graph : ST_Heating_Runtime_Causality_Graph;
     VO_Integration_Bridge : ST_Heating_Runtime_Integration_Bridge;
@@ -109,6 +111,37 @@ VO_Blackbox_Event.Root_Cause_Candidate := VI_Runtime_Observer_Fault;
 VO_Blackbox_Event.Critical_Path := VI_Runtime_Observer_Fault;
 VO_Blackbox_Event.Status_Code := L_Status_Code;
 VO_Blackbox_Event.Status_Text := VI_Runtime_Status_Text;
+
+// Blackbox timeline snapshot
+VO_Blackbox_Timeline.Write_Index := 1;
+VO_Blackbox_Timeline.Event_Count := 1;
+VO_Blackbox_Timeline.Timeline_Overflow := FALSE;
+VO_Blackbox_Timeline.Reconstruction_Visible := TRUE;
+VO_Blackbox_Timeline.Forensic_Timeline_Visible := TRUE;
+VO_Blackbox_Timeline.Root_Cause_Reconstructed := VI_Runtime_Observer_Fault;
+VO_Blackbox_Timeline.Sequencing_Valid := L_Sequencing_Valid;
+VO_Blackbox_Timeline.Ownership_Valid := L_Ownership_Valid;
+VO_Blackbox_Timeline.Synchronization_Valid := L_Synchronization_Valid;
+VO_Blackbox_Timeline.Events[1] := VO_Blackbox_Event;
+VO_Blackbox_Timeline.Status_Code := L_Status_Code;
+VO_Blackbox_Timeline.Status_Text := VI_Runtime_Status_Text;
+
+// Runtime event buffer snapshot
+VO_Event_Buffer.Write_Index := 1;
+VO_Event_Buffer.Read_Index := 1;
+VO_Event_Buffer.Event_Count := 1;
+VO_Event_Buffer.Overflow := FALSE;
+VO_Event_Buffer.Ordering_Integrity_Valid := L_Sequencing_Valid;
+VO_Event_Buffer.Isolation_Integrity_Valid := VI_Runtime_Context.Diagnostics_Isolation_Valid;
+VO_Event_Buffer.Lifecycle_Integrity_Valid := VI_Runtime_Observation_Valid;
+VO_Event_Buffer.Diagnostics_Visibility_Valid := TRUE;
+VO_Event_Buffer.Explainability_Visibility_Valid := TRUE;
+VO_Event_Buffer.OpenTherm_Ownership_Valid := VI_Runtime_Context.OpenTherm_Ownership_Valid;
+VO_Event_Buffer.Cascade_Ownership_Valid := VI_Runtime_Context.Cascade_Ownership_Valid;
+VO_Event_Buffer.Safety_Ownership_Valid := VI_Runtime_Context.Safety_Isolation_Valid;
+VO_Event_Buffer.Events[1] := VO_Phase_Event;
+VO_Event_Buffer.Status_Code := L_Status_Code;
+VO_Event_Buffer.Status_Text := VI_Runtime_Status_Text;
 
 // Passive integration bridge
 VO_Integration_Bridge.Shell_Ready := VI_Runtime_Observation_Valid;
