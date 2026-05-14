@@ -1,0 +1,9 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Passive runtime meta-supervision publication surface.
+    // Observation-only: no command, output or runtime authority.
+    G_Runtime_Meta_Supervision : ST_Heating_Runtime_Meta_Supervision;
+    G_Runtime_Meta_Publication_Valid : BOOL := FALSE;
+    G_Runtime_Meta_Status_Code : UINT := 0;
+    G_Runtime_Meta_Status_Text : STRING(128) := 'Heating runtime meta supervision inactive';
+END_VAR
