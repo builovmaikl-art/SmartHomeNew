@@ -4,6 +4,7 @@ VAR
     fbDHWManager : FB_DHW_Manager;
     fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
     fbObserverPhase : FB_Heating_Runtime_Observer_Phase;
+    fbMetaSupervisionPublisher : FB_Heating_Runtime_Meta_Supervision_Publisher;
     fbServiceGatingPhase : FB_Heating_Runtime_Service_Gating_Phase;
     fbStatePublicationPhase : FB_Heating_Runtime_State_Publication_Phase;
     fbOutputProjectionPhase : FB_Heating_Runtime_Output_Projection_Phase;
@@ -205,6 +206,27 @@ fbObserverPhase(
     VI_Runtime_Context := L_Runtime_Context,
     VI_Diagnostics_Valid := L_Runtime_Context.Diagnostics_Isolation_Valid
 );
+
+fbMetaSupervisionPublisher(
+    VI_Enable := TRUE,
+    VI_Runtime_Observation_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid,
+    VI_Runtime_Observer_Ready := GVL_Heating_Runtime_Observation.G_Runtime_Observer_Ready,
+    VI_Runtime_Observer_Fault := GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault,
+    VI_Runtime_Status_Code := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code,
+    VI_Runtime_Status_Text := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text
+);
+
+GVL_Heating_Runtime_Meta.G_Runtime_Meta_Supervision :=
+    fbMetaSupervisionPublisher.VO_Meta;
+
+GVL_Heating_Runtime_Meta.G_Runtime_Meta_Publication_Valid :=
+    fbMetaSupervisionPublisher.VO_Publication_Valid;
+
+GVL_Heating_Runtime_Meta.G_Runtime_Meta_Status_Code :=
+    fbMetaSupervisionPublisher.VO_Meta.Status_Code;
+
+GVL_Heating_Runtime_Meta.G_Runtime_Meta_Status_Text :=
+    fbMetaSupervisionPublisher.VO_Meta.Status_Text;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
