@@ -1,0 +1,476 @@
+{
+  "tool": "runtime_zombie_semantic_audit.py",
+  "version": 1,
+  "started_at_utc": "20260514T113053Z",
+  "summary": {
+    "files_scanned": 401,
+    "total_zombie_pattern_hits": 44,
+    "by_classification": {
+      "LIVE_COMPATIBILITY_SEMANTICS": 31,
+      "REVIEW_ALARM_SEMANTICS": 13
+    },
+    "by_pattern": {
+      "_Alarm_Active": 44
+    },
+    "by_role": {
+      "ALARM_CONTRACT": 2,
+      "AUTHORITATIVE_SAFETY_INTENT": 9,
+      "EXTERNAL_TELEMETRY_ALARM_CONTRACT": 12,
+      "SAFETY_TO_GATEWAY_BRIDGE": 3,
+      "SECURITY_RUNTIME_ALARM_OUTPUT": 5,
+      "UNKNOWN_ALARM_CONTRACT": 13
+    },
+    "by_file": {
+      "FB_Gateway_Interface.st": 12,
+      "FB_Security_System_Manager.st": 5,
+      "FB_System_Gateway_Intent.st": 9,
+      "GVL_INTENT_SAFETY.gvl": 3,
+      "PRG_Lighting.st": 7,
+      "PRG_Safety.st": 6,
+      "PRG_Safety_Shutdown.st": 1,
+      "PRG_Security.st": 1
+    }
+  },
+  "findings": [
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Fire_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 11,
+      "raw": "GVL_INTENT_SAFETY.I_Fire_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Gas_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 12,
+      "raw": "GVL_INTENT_SAFETY.I_Gas_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Leak_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 13,
+      "raw": "GVL_INTENT_SAFETY.I_Leak_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Leak_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 42,
+      "raw": "GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Fire_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 57,
+      "raw": "GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Gas_Alarm_Active",
+      "path": "PRG_Safety.st",
+      "line": 58,
+      "raw": "GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Flood_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 17,
+      "raw": "L_Gateway_Flood_Alarm_Active : BOOL;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Gas_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 18,
+      "raw": "L_Gateway_Gas_Alarm_Active : BOOL;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Fire_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 19,
+      "raw": "L_Gateway_Fire_Alarm_Active : BOOL;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Flood_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 24,
+      "raw": "L_Gateway_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Gas_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 25,
+      "raw": "L_Gateway_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_STATE.G_Safety_Gas_Latched;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Gateway_Fire_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 26,
+      "raw": "L_Gateway_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Flood_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 40,
+      "raw": "VI_Flood_Alarm_Active := L_Gateway_Flood_Alarm_Active,",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SAFETY_TO_GATEWAY_BRIDGE",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Gas_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 41,
+      "raw": "VI_Gas_Alarm_Active := L_Gateway_Gas_Alarm_Active,",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SAFETY_TO_GATEWAY_BRIDGE",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Fire_Alarm_Active",
+      "path": "FB_System_Gateway_Intent.st",
+      "line": 42,
+      "raw": "VI_Fire_Alarm_Active := L_Gateway_Fire_Alarm_Active,",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SAFETY_TO_GATEWAY_BRIDGE",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "FB_Security_System_Manager.st",
+      "line": 23,
+      "raw": "VO_Alarm_Active : BOOL;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SECURITY_RUNTIME_ALARM_OUTPUT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "FB_Security_System_Manager.st",
+      "line": 47,
+      "raw": "VO_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SECURITY_RUNTIME_ALARM_OUTPUT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "FB_Security_System_Manager.st",
+      "line": 109,
+      "raw": "VO_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SECURITY_RUNTIME_ALARM_OUTPUT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "FB_Security_System_Manager.st",
+      "line": 129,
+      "raw": "VO_Alarm_Active := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SECURITY_RUNTIME_ALARM_OUTPUT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "FB_Security_System_Manager.st",
+      "line": 160,
+      "raw": "VO_Alarm_Active := TRUE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "SECURITY_RUNTIME_ALARM_OUTPUT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Flood_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 9,
+      "raw": "VI_Flood_Alarm_Active       : BOOL;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Gas_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 10,
+      "raw": "VI_Gas_Alarm_Active         : BOOL;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Fire_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 11,
+      "raw": "VI_Fire_Alarm_Active        : BOOL;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Fire_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 84,
+      "raw": "IF VI_Fire_Alarm_Active AND NOT L_Prev_Fire THEN",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Gas_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 88,
+      "raw": "IF VI_Gas_Alarm_Active AND NOT L_Prev_Gas THEN",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Flood_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 92,
+      "raw": "IF VI_Flood_Alarm_Active AND NOT L_Prev_Flood THEN",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Fire_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 104,
+      "raw": "L_Prev_Fire := VI_Fire_Alarm_Active;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Gas_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 105,
+      "raw": "L_Prev_Gas := VI_Gas_Alarm_Active;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Flood_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 106,
+      "raw": "L_Prev_Flood := VI_Flood_Alarm_Active;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Flood_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 114,
+      "raw": "IF VI_Flood_Alarm_Active THEN L_tmp_word := L_tmp_word OR 4; END_IF;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Gas_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 115,
+      "raw": "IF VI_Gas_Alarm_Active THEN L_tmp_word := L_tmp_word OR 8; END_IF;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VI_Fire_Alarm_Active",
+      "path": "FB_Gateway_Interface.st",
+      "line": 116,
+      "raw": "IF VI_Fire_Alarm_Active THEN L_tmp_word := L_tmp_word OR 16; END_IF;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "EXTERNAL_TELEMETRY_ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Fire_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 16,
+      "raw": "L_Fire_Alarm_Active : BOOL;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Flood_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 17,
+      "raw": "L_Flood_Alarm_Active : BOOL;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Fire_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 26,
+      "raw": "L_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Flood_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 27,
+      "raw": "L_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Fire_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 93,
+      "raw": "VI_Fire_Alarm := L_Fire_Alarm_Active,",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Flood_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 94,
+      "raw": "VI_Flood_Alarm := L_Flood_Alarm_Active,",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "L_Fire_Alarm_Active",
+      "path": "PRG_Lighting.st",
+      "line": 117,
+      "raw": "ELSIF L_Fire_Alarm_Active THEN",
+      "classification": "REVIEW_ALARM_SEMANTICS",
+      "role": "UNKNOWN_ALARM_CONTRACT",
+      "detail": "Alarm-active naming found outside known live contract files; review before cleanup."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "VO_Alarm_Active",
+      "path": "PRG_Security.st",
+      "line": 31,
+      "raw": "VO_Alarm_Active => GVL_ALARM.G_Security_Alarm,",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Fire_Alarm_Active",
+      "path": "PRG_Safety_Shutdown.st",
+      "line": 13,
+      "raw": "IF GVL_INTENT_SAFETY.I_Fire_Alarm_Active THEN",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "ALARM_CONTRACT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Fire_Alarm_Active",
+      "path": "GVL_INTENT_SAFETY.gvl",
+      "line": 8,
+      "raw": "I_Fire_Alarm_Active : BOOL := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Gas_Alarm_Active",
+      "path": "GVL_INTENT_SAFETY.gvl",
+      "line": 9,
+      "raw": "I_Gas_Alarm_Active : BOOL := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    },
+    {
+      "pattern": "_Alarm_Active",
+      "symbol": "I_Leak_Alarm_Active",
+      "path": "GVL_INTENT_SAFETY.gvl",
+      "line": 10,
+      "raw": "I_Leak_Alarm_Active : BOOL := FALSE;",
+      "classification": "LIVE_COMPATIBILITY_SEMANTICS",
+      "role": "AUTHORITATIVE_SAFETY_INTENT",
+      "detail": "Alarm-active naming is part of a live safety/security/gateway contract; do not delete solely as zombie pattern."
+    }
+  ]
+}

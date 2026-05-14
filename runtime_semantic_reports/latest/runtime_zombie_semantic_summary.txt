@@ -1,0 +1,29 @@
+Runtime zombie semantic audit summary
+=====================================
+FILES_SCANNED: 401
+TOTAL_ZOMBIE_PATTERN_HITS: 44
+
+BY_CLASSIFICATION:
+  LIVE_COMPATIBILITY_SEMANTICS: 31
+  REVIEW_ALARM_SEMANTICS: 13
+
+BY_PATTERN:
+  _Alarm_Active: 44
+
+BY_ROLE:
+  ALARM_CONTRACT: 2
+  AUTHORITATIVE_SAFETY_INTENT: 9
+  EXTERNAL_TELEMETRY_ALARM_CONTRACT: 12
+  SAFETY_TO_GATEWAY_BRIDGE: 3
+  SECURITY_RUNTIME_ALARM_OUTPUT: 5
+  UNKNOWN_ALARM_CONTRACT: 13
+
+BY_FILE:
+  FB_Gateway_Interface.st: 12
+  FB_Security_System_Manager.st: 5
+  FB_System_Gateway_Intent.st: 9
+  GVL_INTENT_SAFETY.gvl: 3
+  PRG_Lighting.st: 7
+  PRG_Safety.st: 6
+  PRG_Safety_Shutdown.st: 1
+  PRG_Security.st: 1

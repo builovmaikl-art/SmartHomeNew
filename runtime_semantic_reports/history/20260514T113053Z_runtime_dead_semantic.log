@@ -1,0 +1,271 @@
+Runtime dead semantic audit summary
+===================================
+FILES_SCANNED: 401
+GVL_FIELDS_SCANNED: 815
+DUT_FIELDS_SCANNED: 883
+DUT_TYPES_SCANNED: 122
+UNUSED_GVL_FIELDS: 17
+UNUSED_DUT_FIELDS: 168
+ORPHAN_DUT_TYPES: 29
+SEMANTIC_ZOMBIE_PATTERNS: 44
+TOTAL_FINDINGS: 258
+TRUNCATED: False
+
+[UNUSED_GVL_FIELD] G_Runtime_Integration_Bridge @ GVL_Heating_Runtime_Explainability.gvl:12 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Runtime_Predictive_State @ GVL_Heating_Runtime_Explainability.gvl:13 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Runtime_Execution_Timeline @ GVL_Heating_Runtime_Explainability.gvl:14 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Runtime_Phase_Transition @ GVL_Heating_Runtime_Explainability.gvl:15 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Water_Zone_Enable @ GVL_STATE.gvl:153 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Water_Zone_Exercise_Active @ GVL_STATE.gvl:156 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Heating_Sensor_Fault @ GVL_SIMULATION.gvl:34 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_IO_Fault @ GVL_SIMULATION.gvl:35 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Low_Pressure @ GVL_SIMULATION.gvl:36 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Predictive_Pump_Fault @ GVL_SIMULATION.gvl:37 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Gas_Alarm @ GVL_SIMULATION.gvl:40 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Leak_Alarm @ GVL_SIMULATION.gvl:41 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Smoke_Alarm @ GVL_SIMULATION.gvl:42 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Inject_Dual_PLC_Active @ GVL_SIMULATION.gvl:45 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Recovery_Exit_Allowed @ GVL_SAFETY_RECOVERY.gvl:20 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Scenario_Request @ GVL_COMMAND.gvl:33 - GVL field appears declared but not referenced.
+[UNUSED_GVL_FIELD] G_Stable_Time_Required_MS @ GVL_SAFETY_RECOVERY_CONFIG.gvl:4 - GVL field appears declared but not referenced.
+[UNUSED_DUT_FIELD] scenario_id @ ST_Scenario_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] lighting_level_accent @ ST_Scenario_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] floor_heating_adjust_celsius @ ST_Scenario_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] ventilation_speed_percent @ ST_Scenario_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sockets_enabled @ ST_Scenario_Config.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] enable_ventilation @ ST_Ventilation_Global_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] total_units @ ST_Ventilation_Global_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] default_supply_speed @ ST_Ventilation_Global_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] default_exhaust_speed @ ST_Ventilation_Global_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] pv3_exhaust_index @ ST_Ventilation_Global_Config.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Base_Register @ ST_OpenTherm_Register_Map.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Cmd_Seq_Lo_Offset @ ST_OpenTherm_Register_Map.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Cmd_Seq_Hi_Offset @ ST_OpenTherm_Register_Map.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Status_Heartbeat_Lo_Offset @ ST_OpenTherm_Register_Map.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Status_Heartbeat_Hi_Offset @ ST_OpenTherm_Register_Map.dut:12 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Status_Ack_Seq_Lo_Offset @ ST_OpenTherm_Register_Map.dut:13 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Status_Ack_Seq_Hi_Offset @ ST_OpenTherm_Register_Map.dut:14 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Error_Code_Offset @ ST_OpenTherm_Register_Map.dut:16 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Modulation_x10_Offset @ ST_OpenTherm_Register_Map.dut:17 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Boiler_Temp_x10_Offset @ ST_OpenTherm_Register_Map.dut:18 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sensor_type @ ST_Sensor_Calibration_Record.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] last_calibration_timestamp @ ST_Sensor_Calibration_Record.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] verification_passed @ ST_Sensor_Calibration_Record.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] scenario_id @ ST_State_Snapshot.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] lighting_levels @ ST_State_Snapshot.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] floor_heating_setpoints @ ST_State_Snapshot.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] alarm_active @ ST_State_Snapshot.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sunrise_ms @ ST_Astro_Time.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sunset_ms @ ST_Astro_Time.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] is_daylight @ ST_Astro_Time.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] uiCycleTime @ ST_Owen_Analog_Value.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] valve_id @ ST_Valve_Test_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] valve_id @ ST_Gas_Valve_Configuration.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] valve_type @ ST_Gas_Valve_Configuration.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] close_time_seconds @ ST_Gas_Valve_Configuration.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] open_time_seconds @ ST_Gas_Valve_Configuration.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] emergency_open_allowed @ ST_Gas_Valve_Configuration.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Valve_Gas_Status @ ST_BlackBox_Record.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Valve_Water_Status @ ST_BlackBox_Record.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Is_Faulty @ ST_Component_Maintenance.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Is_In_Maintenance @ ST_Component_Maintenance.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Fallback_Value @ ST_Component_Maintenance.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Use_Last_Good_Value @ ST_Component_Maintenance.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] PIN_Code @ ST_Security_Global_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Phones @ ST_Security_Global_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] alarm_duration_seconds @ ST_Security_Global_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] two_person_timeout_seconds @ ST_Security_Global_Config.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] max_access_attempts @ ST_Security_Global_Config.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Power_Percent @ ST_Boiler_Status.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Current_Power @ ST_Boiler_Status.dut:12 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Work_Seconds @ ST_Boiler_Status.dut:13 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Work_Hours @ ST_Boiler_Status.dut:14 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Resource_Percent @ ST_Boiler_Status.dut:15 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Last_Start @ ST_Boiler_Status.dut:16 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] AuthMethod @ ST_TwoFactor_Data.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] rfid_tag @ ST_TwoFactor_Data.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] totp_secret @ ST_TwoFactor_Data.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] last_modified @ ST_TwoFactor_Data.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Weather_Comp_Enabled @ ST_Heating_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Weather_Coef @ ST_Heating_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Night_Reduction @ ST_Heating_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Target_Room_Temp @ ST_Heating_Config.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Priority @ ST_User_Rule.dut:13 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Speed_Percent @ ST_Ventilation_Unit.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Filter_Dirty @ ST_Ventilation_Unit.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Mode @ ST_Ventilation_Unit.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] location @ ST_FloorHeating_Manifold_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] nominal_flow @ ST_FloorHeating_Manifold_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] enable_pump @ ST_FloorHeating_Manifold_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] circuits @ ST_FloorHeating_Manifold_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Avg_Result_Value @ ST_Scenario_Stats.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Stability_Counter @ ST_Scenario_Stats.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Last_Activation @ ST_Scenario_Stats.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Temp_Room @ ST_Zone_Sensors.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Temp_Floor @ ST_Zone_Sensors.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Motion_Active @ ST_Zone_Sensors.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Switch_Physical @ ST_Zone_Sensors.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Light_State @ ST_Zone_Sensors.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Maintenance @ ST_Zone_Sensors.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] enable_floor_heating @ ST_FloorHeating_Global_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] anti_freeze_temp @ ST_FloorHeating_Global_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] overheat_temp @ ST_FloorHeating_Global_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] weather_compensation_enabled @ ST_FloorHeating_Global_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] total_circuits @ ST_FloorHeating_Global_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Outdoor_Temp @ ST_System_State_Summary.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Indoor_Temp @ ST_System_State_Summary.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Floor_Temps @ ST_System_State_Summary.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Humidity @ ST_System_State_Summary.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] CO2 @ ST_System_State_Summary.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Gas_Alarm @ ST_System_State_Summary.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Flood_Alarm @ ST_System_State_Summary.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Fire_Alarm @ ST_System_State_Summary.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Security_Alarm @ ST_System_State_Summary.dut:12 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Emergency_Two_Stage_Enabled @ ST_Flood_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Valve_Test_Period_Days @ ST_Flood_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Current_Threshold_MA @ ST_Flood_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sensor_to_valve_map @ ST_Flood_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] maintenance_enabled @ ST_Maintenance_Access_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] max_duration_minutes @ ST_Maintenance_Access_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] requires_two_person @ ST_Maintenance_Access_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] access_level_required @ ST_Maintenance_Access_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] unit_id @ ST_Ventilation_Unit_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] unit_type @ ST_Ventilation_Unit_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] location @ ST_Ventilation_Unit_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] min_speed @ ST_Ventilation_Unit_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] max_speed @ ST_Ventilation_Unit_Config.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Threshold_Hum @ ST_Ventilation_Unit_Config.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] has_smoke_detector @ ST_Ventilation_Unit_Config.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] current_scenario @ ST_Scenario_Transition_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] min_duration_minutes @ ST_Scenario_Transition_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] transition_allowed @ ST_Scenario_Transition_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] CO2_Threshold @ ST_Ventilation_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Humidity_Threshold @ ST_Ventilation_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Night_Mode_Start @ ST_Ventilation_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Night_Mode_End @ ST_Ventilation_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] global_access_level @ ST_Operator_Zone_Rights.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] zone_masks @ ST_Operator_Zone_Rights.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] last_modified @ ST_Operator_Zone_Rights.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] lighting_circuit_id @ ST_Outdoor_Zone_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] auto_enabled @ ST_Outdoor_Zone_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] party_mode_enabled @ ST_Outdoor_Zone_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] value @ ST_Trend_History_Record.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] active @ ST_Calibration_Family_Summary.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] status @ ST_Calibration_Family_Summary.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sensor_count @ ST_Calibration_Family_Summary.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] verification_active_count @ ST_Calibration_Family_Summary.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] failed_count @ ST_Calibration_Family_Summary.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] max_deviation_percent @ ST_Calibration_Family_Summary.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] summary_text @ ST_Calibration_Family_Summary.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Avg_Result_Value @ ST_Zone_Adapt_State.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Armed @ ST_Security_Zone_State.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Alarm @ ST_Security_Zone_State.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Bypassed @ ST_Security_Zone_State.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Last_Trigger_Time @ ST_Security_Zone_State.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Trigger_Count @ ST_Security_Zone_State.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] active @ ST_Calibration_Sensor_Summary.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] status @ ST_Calibration_Sensor_Summary.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] calibrated_value @ ST_Calibration_Sensor_Summary.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] deviation_percent @ ST_Calibration_Sensor_Summary.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] verification_active @ ST_Calibration_Sensor_Summary.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] verification_failed @ ST_Calibration_Sensor_Summary.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] record_index @ ST_Calibration_Sensor_Summary.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] label @ ST_Calibration_Sensor_Summary.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] summary_text @ ST_Calibration_Sensor_Summary.dut:12 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] valve_types @ ST_Flood_Global_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] sensor_to_valve_map @ ST_Flood_Global_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Scenario_ID @ ST_Ventilation_Scenario_Mode.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Scenario_Priority @ ST_Ventilation_Scenario_Mode.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Fire_Alarm @ ST_Ventilation_Scenario_Mode.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Methane_Alarm @ ST_Ventilation_Scenario_Mode.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Smoke_Detected @ ST_Ventilation_Scenario_Mode.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Exhaust_Modes @ ST_Ventilation_Scenario_Mode.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Supply_Modes @ ST_Ventilation_Scenario_Mode.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] parameter_type @ ST_Trend_Header.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] records_count @ ST_Trend_Header.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] average_value @ ST_Trend_Header.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] min_value @ ST_Trend_Header.dut:8 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] max_value @ ST_Trend_Header.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Port_Name @ ST_Modbus_RTU_Config.dut:3 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Baudrate @ ST_Modbus_RTU_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Parity @ ST_Modbus_RTU_Config.dut:5 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Stop_Bits @ ST_Modbus_RTU_Config.dut:6 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Data_Bits @ ST_Modbus_RTU_Config.dut:7 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Poll_Interval_MS @ ST_Modbus_RTU_Config.dut:9 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Request_Timeout_MS @ ST_Modbus_RTU_Config.dut:10 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] Retry_Count @ ST_Modbus_RTU_Config.dut:11 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] circuit_id @ ST_FloorHeating_Circuit_Config.dut:4 - DUT field appears unused as a member access.
+[UNUSED_DUT_FIELD] valve_id @ ST_FloorHeating_Circuit_Config.dut:8 - DUT field appears unused as a member access.
+[ORPHAN_DUT_TYPE] E_Trend_Parameter_Type @ E_Trend_Parameter_Type.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_State_Snapshot @ ST_State_Snapshot.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Astro_Time @ ST_Astro_Time.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] E_Outdoor_Mode @ E_Outdoor_Mode.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Gas_Valve_Configuration @ ST_Gas_Valve_Configuration.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_TwoFactor_Data @ ST_TwoFactor_Data.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Ventilation_Unit @ ST_Ventilation_Unit.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] E_Zone_Access_Level @ E_Zone_Access_Level.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_FloorHeating_Manifold_Config @ ST_FloorHeating_Manifold_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Zone_Sensors @ ST_Zone_Sensors.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_FloorHeating_Global_Config @ ST_FloorHeating_Global_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_System_State_Summary @ ST_System_State_Summary.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Flood_Config @ ST_Flood_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Maintenance_Access_Config @ ST_Maintenance_Access_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Rule @ ST_Rule.dut:1 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Ventilation_Unit_Config @ ST_Ventilation_Unit_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Scenario_Transition_Config @ ST_Scenario_Transition_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Ventilation_Config @ ST_Ventilation_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Operator_Zone_Rights @ ST_Operator_Zone_Rights.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Outdoor_Zone_Config @ ST_Outdoor_Zone_Config.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Trend_History_Record @ ST_Trend_History_Record.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Calibration_Family_Summary @ ST_Calibration_Family_Summary.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Security_Zone_State @ ST_Security_Zone_State.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Calibration_Sensor_Summary @ ST_Calibration_Sensor_Summary.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] E_Lifetime_Device_Type @ E_Lifetime_Device_Type.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] E_Valve_Test_Result @ E_Valve_Test_Result.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] E_WEATHER_COMPENSATION_METHOD @ E_WEATHER_COMPENSATION_METHOD.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Trend_Header @ ST_Trend_Header.dut:2 - DUT type appears declared but never instantiated/referenced.
+[ORPHAN_DUT_TYPE] ST_Modbus_RTU_Config @ ST_Modbus_RTU_Config.dut:1 - DUT type appears declared but never instantiated/referenced.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:11 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:12 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:13 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:42 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:57 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety.st:58 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:17 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:18 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:19 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:24 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:25 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:26 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:40 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:41 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_System_Gateway_Intent.st:42 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Security_System_Manager.st:23 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Security_System_Manager.st:47 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Security_System_Manager.st:109 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Security_System_Manager.st:129 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Security_System_Manager.st:160 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:9 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:10 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:11 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:84 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:88 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:92 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:104 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:105 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:106 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:114 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:115 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ FB_Gateway_Interface.st:116 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:16 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:17 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:26 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:27 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:93 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:94 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Lighting.st:117 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Security.st:31 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ PRG_Safety_Shutdown.st:13 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ GVL_INTENT_SAFETY.gvl:8 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ GVL_INTENT_SAFETY.gvl:9 - Potential compatibility/legacy semantic pattern detected.
+[SEMANTIC_ZOMBIE_PATTERN] _Alarm_Active @ GVL_INTENT_SAFETY.gvl:10 - Potential compatibility/legacy semantic pattern detected.
