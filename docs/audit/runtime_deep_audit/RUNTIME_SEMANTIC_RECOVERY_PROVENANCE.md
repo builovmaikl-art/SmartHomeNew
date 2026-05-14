@@ -8,7 +8,7 @@ The goal is to recover useful integration paths before deleting DUT fields or en
 
 ## Current conclusion
 
-The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history, maintenance, safety-policy and access-governance models around existing runtime and diagnostics pipelines.
+The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history, maintenance, safety-policy, access-governance and physical-to-logical mapping models around existing runtime and diagnostics pipelines.
 
 Active code already contains working observer/diagnostics paths, and several reserve DUT families have now been recovered through passive publication surfaces instead of mechanical deletion.
 
@@ -72,6 +72,47 @@ It already sets status values such as:
 This confirms that `Status_Code` / `Status_Text` are not inherently garbage. They are an existing status-publication idiom.
 
 `FB_Heating_Runtime_Observer_Phase.st` owns governed observer authorization and finalized-state observer publication. It writes lifecycle/status fields into `GVL_Heating_Runtime_Observation` and uses `FB_Heating_Runtime_Observer` as the finalized observer.
+
+## Physical-to-logical mapping semantic reserve
+
+### Architectural hypothesis
+
+Several reserve DUT families appear to describe a common architecture:
+
+`physical installation -> configurable mapping -> logical zones -> runtime behaviour without recompilation`.
+
+This is not a single-domain DTO idea. It is a cross-domain configuration pattern intended to decouple physical wiring and actuator/sensor placement from program recompilation.
+
+### Evidence
+
+- `ST_FloorHeating_Circuit_Config` contains `zone`, `manifold_id`, `sensor_id`, `valve_id`, `control_type`, `design_temp`, `min_temp`, `max_temp`, `pid_kp` and `pwm_period_s`.
+- `ST_FloorHeating_Manifold_Config` groups circuits under a manifold with location, nominal flow and pump enable policy.
+- `ST_Flood_Config` and `ST_Flood_Global_Config` contain `sensor_to_valve_map` mappings.
+- `ST_Operator_Zone_Rights` contains `zone_masks`.
+- `ST_Gas_Valve_Configuration` contains generic actuator fields such as `valve_id` and `valve_type`, despite being unsafe/misleading as a gas-specific config.
+
+### Working hypothesis
+
+The original design intent likely allowed installation first and configuration later:
+
+- sensors and actuators could be physically connected without hardcoding final logical meaning;
+- logical zones could be mapped to sensors, valves, manifolds and circuits through configuration;
+- floor-heating circuits could be associated with room zones, floor/air sensors and valve outputs;
+- water/flood recovery could map leak sensors to shutoff valves;
+- operator permissions could be scoped to zone masks;
+- generic valve actuator type could support normally-open and normally-closed devices in water/heating/service contexts.
+
+### Gas-specific safety boundary
+
+`valve_type` may be valid in a generic actuator mapping layer, but not as an unrestricted gas safety policy. Gas runtime must enforce fail-safe assumptions such as normally-closed gas valves and must not allow generic emergency opening without a strict service interlock design.
+
+### Classification
+
+- `PHYSICAL_TO_LOGICAL_MAPPING_RESERVE`
+- `CONFIGURABLE_INSTALLATION_MAPPING_RESERVE`
+- `RECOVER_LATER_WITH_DOMAIN_SAFETY_BOUNDARIES`
+
+Do not delete these structures simply because individual fields are not currently read. Their value is architectural: they preserve the design direction toward configurable installation without recompilation.
 
 ## Trend/history semantic reserve
 
@@ -304,6 +345,45 @@ Classification:
 
 Do not delete during mechanical cleanup. Future recovery should likely be a passive/authoritative policy layer such as `FB_Access_Governance`, but it must be designed carefully because it may gate configuration, maintenance and dangerous actions.
 
+## Floor-heating semantic reserve
+
+Candidate DUTs:
+
+- `ST_FloorHeating_Global_Config`
+- `ST_FloorHeating_Manifold_Config`
+- `ST_FloorHeating_Circuit_Config`
+
+Working hypothesis:
+
+This family is a lost or incomplete floor-heating control/configuration layer. It is also part of the broader physical-to-logical mapping architecture.
+
+Observed intent:
+
+- enable/disable floor heating;
+- anti-freeze and overheat thresholds;
+- weather compensation flag;
+- manifold-level location, nominal flow and pump enable policy;
+- circuit-level zone mapping;
+- circuit-to-manifold mapping;
+- circuit-to-sensor mapping;
+- circuit-to-valve mapping;
+- control by floor temperature or air temperature;
+- design/min/max temperature limits;
+- simple control gain through `pid_kp`;
+- PWM valve/actuator period through `pwm_period_s`.
+
+Current evidence:
+
+Fields such as `pid_kp`, `pwm_period_s`, `design_temp`, `control_type`, `sensor_id` and `valve_id` are weak or absent in active runtime but recur across multiple snapshots. This suggests incomplete recovery rather than a fully migrated layer.
+
+Classification:
+
+- `FLOOR_HEATING_CONTROL_CONFIG_RESERVE`
+- `PHYSICAL_TO_LOGICAL_MAPPING_RESERVE`
+- `LOST_OR_INCOMPLETE_RUNTIME_LAYER`
+
+Do not delete during cleanup. Do not wire into the heating control path without a dedicated design pass, because it may affect actuator authority, zoning, heating comfort and safety limits.
+
 ## Replaced / lower-priority reserve families
 
 ### `ST_Astro_Time`
@@ -331,7 +411,6 @@ Do not delete until current calibration blocks are reviewed, but do not prioriti
 The following are not classified as garbage, but require domain-specific review before recovery or removal:
 
 - `ST_Ventilation_*`
-- `ST_FloorHeating_*`
 - `ST_State_Snapshot`
 - `ST_System_State_Summary`
 
@@ -339,4 +418,4 @@ These may represent old HMI/config surfaces, domain DTOs, or structures replaced
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning or access-governance structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping or actuator configuration structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
