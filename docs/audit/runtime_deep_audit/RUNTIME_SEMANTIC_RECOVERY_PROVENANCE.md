@@ -151,7 +151,7 @@ Do not delete these structures simply because individual fields are not currentl
 
 This family should not be treated as ordinary dead code.
 
-It likely represents one of two related unfinished ideas:
+It likely represents one of three related unfinished ideas:
 
 1. **Heating trend analytics**
    - historical room/floor temperature behaviour;
@@ -166,6 +166,12 @@ It likely represents one of two related unfinished ideas:
    - equipment degradation detection;
    - service interval calculation;
    - maintenance cycle estimation.
+
+3. **Zone sensor health and fallback support**
+   - detect noisy, missing or implausible zone sensors;
+   - compare current values against historical zone trends;
+   - use last-good or fallback values when a sensor is unreliable;
+   - mark the affected component for maintenance without breaking heating/scenario logic.
 
 The enum scope is wider than heating setpoints alone and includes pump current, pressure and gas sensors. That suggests a generic time-series analytics substrate rather than a single heating FB DTO.
 
@@ -187,6 +193,7 @@ A future recovery should introduce a passive trend publication/collector layer, 
 - `FB_Trend_Collector`
 - optionally `FB_Trend_Maintenance_Analyzer`
 - optionally `FB_Heating_Trend_Analyzer`
+- optionally `FB_Zone_Sensor_Health_Analyzer`
 
 The first integration should stay read-only and should only publish aggregated trend/history data. It must not directly control heating, maintenance decisions or safety actions.
 
@@ -204,7 +211,8 @@ Suggested derived outputs:
 - average/min/max by parameter and zone;
 - trend record count;
 - simple degradation indicator for maintenance review;
-- HMI/history visibility.
+- HMI/history visibility;
+- last-good/fallback sensor confidence hints.
 
 ## Flood / water-leak semantic reserve
 
@@ -383,6 +391,51 @@ Classification:
 - `LOST_OR_INCOMPLETE_RUNTIME_LAYER`
 
 Do not delete during cleanup. Do not wire into the heating control path without a dedicated design pass, because it may affect actuator authority, zoning, heating comfort and safety limits.
+
+## Zone sensor semantic reserve
+
+### Candidate DUT
+
+- `ST_Zone_Sensors`
+
+Observed fields:
+
+- `Temp_Room`;
+- `Temp_Floor`;
+- `Motion_Active`;
+- `Switch_Physical`;
+- `Light_State`;
+- `Maintenance : ST_Component_Maintenance`.
+
+Working hypothesis:
+
+This structure is a lost or incomplete zone-centric sensor aggregate. It combines climate, presence, manual input, lighting state and maintenance/fallback metadata into one logical-zone DTO.
+
+This fits the broader architecture:
+
+- physical sensors and actuators are mapped into logical zones;
+- scenario scoring and effects can reason over zones;
+- heating can use room/floor temperatures by zone;
+- lighting can use motion/manual switch/light state by zone;
+- maintenance can isolate faulty sensors without breaking zone-level logic;
+- trend/history can provide last-good/fallback or confidence hints for unreliable temperature sensors.
+
+Recovered design intent:
+
+- if a zone sensor becomes noisy, missing or implausible, compare it with historical zone trends;
+- use last-good or configured fallback values when necessary;
+- mark the affected component as faulty or in maintenance;
+- continue operating heating/scenarios from a degraded-but-safe zone model;
+- avoid letting one faulty sensor collapse the entire room-control path.
+
+Classification:
+
+- `ZONE_CENTRIC_SENSOR_AGGREGATE_RESERVE`
+- `ZONE_SENSOR_HEALTH_AND_FALLBACK_RESERVE`
+- `PHYSICAL_TO_LOGICAL_MAPPING_RESERVE`
+- `RECOVER_LATER_WITH_TREND_AND_MAINTENANCE_LINKS`
+
+Do not delete during cleanup. Future recovery should align this model with active input GVLs, trend/history collection, heating zones, lighting zones and maintenance diagnostics.
 
 ## Ventilation semantic reserve
 
@@ -595,4 +648,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
