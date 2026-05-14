@@ -8,7 +8,7 @@ The goal is to recover useful integration paths before deleting DUT fields or en
 
 ## Current conclusion
 
-The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history, maintenance, safety-policy, access-governance and physical-to-logical mapping models around existing runtime and diagnostics pipelines.
+The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history, maintenance, safety-policy, access-governance, physical-to-logical mapping and device/protocol runtime configuration models around existing runtime and diagnostics pipelines.
 
 Active code already contains working observer/diagnostics paths, and several reserve DUT families have now been recovered through passive publication surfaces instead of mechanical deletion.
 
@@ -113,6 +113,68 @@ The original design intent likely allowed installation first and configuration l
 - `RECOVER_LATER_WITH_DOMAIN_SAFETY_BOUNDARIES`
 
 Do not delete these structures simply because individual fields are not currently read. Their value is architectural: they preserve the design direction toward configurable installation without recompilation.
+
+## Device/protocol runtime configuration reserve
+
+### Candidate DUTs
+
+- `ST_OpenTherm_Register_Map`
+- `ST_Modbus_RTU_Config`
+
+### Observed intent
+
+`ST_OpenTherm_Register_Map` is a boiler-adapter register map. It contains:
+
+- base register;
+- command enable offset;
+- setpoint offset;
+- command sequence low/high offsets;
+- status heartbeat low/high offsets;
+- acknowledgement sequence low/high offsets;
+- status word offset;
+- error code offset;
+- modulation offset;
+- boiler temperature offset.
+
+`ST_Modbus_RTU_Config` is the transport configuration for Modbus RTU access. It contains:
+
+- port name;
+- baudrate;
+- parity;
+- stop bits;
+- data bits;
+- slave id;
+- poll interval;
+- request timeout;
+- retry count.
+
+### Recovered design intent
+
+This family appears to preserve a lost or incomplete boiler-adapter auto-poll / register-discovery workflow.
+
+The intended workflow was likely:
+
+- poll the boiler adapter over Modbus RTU;
+- discover, confirm or load the register map used by the OpenTherm adapter;
+- bind command/status/heartbeat/acknowledgement registers at runtime;
+- validate command sequence and acknowledgement sequence;
+- monitor adapter heartbeat and error code;
+- read boiler telemetry such as modulation and boiler temperature;
+- allow field configuration of adapter/register layout without recompilation.
+
+This is the device/protocol counterpart of the broader configurable installation architecture:
+
+`physical/device adapter -> runtime register discovery/mapping -> stable logical boiler interface -> no recompilation`.
+
+### Classification
+
+- `BOILER_ADAPTER_AUTO_DISCOVERY_RESERVE`
+- `AUTO_DISCOVERED_BOILER_ADAPTER_REGISTER_MAP_RESERVE`
+- `FIELD_BUS_RUNTIME_CONFIGURATION_RESERVE`
+- `DEVICE_PROTOCOL_MAPPING_RESERVE`
+- `RECOVER_LATER_WITH_COMMUNICATION_SAFETY_GUARDS`
+
+Do not delete during cleanup. Do not wire directly into boiler command authority without a dedicated design pass for register validation, heartbeat timeout, sequence/acknowledgement handling, retry policy and safe fallback behaviour.
 
 ## Trend/history semantic reserve
 
@@ -693,4 +755,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy, device/protocol mapping or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
