@@ -1,0 +1,14 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Passive runtime explainability publication surface.
+    // Observation-only: no command, output or runtime authority.
+    G_Runtime_Phase_Event : ST_Heating_Runtime_Phase_Event;
+    G_Runtime_Anomaly : ST_Heating_Runtime_Anomaly;
+    G_Runtime_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
+    G_Runtime_Adaptive_Intelligence : ST_Heating_Runtime_Adaptive_Intelligence;
+    G_Runtime_Causality_Graph : ST_Heating_Runtime_Causality_Graph;
+
+    G_Runtime_Explainability_Publication_Valid : BOOL := FALSE;
+    G_Runtime_Explainability_Status_Code : UINT := 0;
+    G_Runtime_Explainability_Status_Text : STRING(128) := 'Heating runtime explainability inactive';
+END_VAR
