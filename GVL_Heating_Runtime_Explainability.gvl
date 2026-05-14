@@ -7,6 +7,10 @@ VAR_GLOBAL
     G_Runtime_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
     G_Runtime_Adaptive_Intelligence : ST_Heating_Runtime_Adaptive_Intelligence;
     G_Runtime_Causality_Graph : ST_Heating_Runtime_Causality_Graph;
+    G_Runtime_Integration_Bridge : ST_Heating_Runtime_Integration_Bridge;
+    G_Runtime_Predictive_State : ST_Heating_Runtime_Predictive_State;
+    G_Runtime_Execution_Timeline : ST_Heating_Runtime_Execution_Timeline;
+    G_Runtime_Phase_Transition : ST_Heating_Runtime_Phase_Transition;
 
     G_Runtime_Explainability_Publication_Valid : BOOL := FALSE;
     G_Runtime_Explainability_Status_Code : UINT := 0;
