@@ -8,7 +8,7 @@ The goal is to recover useful integration paths before deleting DUT fields or en
 
 ## Current conclusion
 
-The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history and maintenance-related models around existing runtime and diagnostics pipelines.
+The suspicious runtime DUT families are not random residue. They form coherent observation, explainability, diagnostics, trend/history, maintenance, safety-policy and access-governance models around existing runtime and diagnostics pipelines.
 
 Active code already contains working observer/diagnostics paths, and several reserve DUT families have now been recovered through passive publication surfaces instead of mechanical deletion.
 
@@ -165,6 +165,80 @@ Suggested derived outputs:
 - simple degradation indicator for maintenance review;
 - HMI/history visibility.
 
+## Flood / water-leak semantic reserve
+
+### Active signal conditioning
+
+`ST_Flood_Global_Config` is not dead. It is actively used by `FB_Water_Leakage_Manager`.
+
+Current active behaviour:
+
+- `min_duration_ms` acts as anti-splash / debounce / short-spike suppression;
+- `warning_duration_ms` creates a pre-alarm warning window before leak latch;
+- `sensor_to_valve_map` maps leak sensors to water valves;
+- `valve_types` preserves water-valve policy metadata.
+
+Classification:
+
+- `ACTIVE_SIGNAL_CONDITIONING_CONFIG`
+
+Do not remove or downgrade this structure.
+
+### Policy reserve
+
+`ST_Flood_Config` appears to be an older or richer reserve policy DTO rather than active runtime configuration.
+
+Observed fields:
+
+- `Emergency_Two_Stage_Enabled`;
+- `Valve_Test_Period_Days`;
+- `Current_Threshold_MA`;
+- wider `sensor_to_valve_map` policy.
+
+Working hypothesis:
+
+- two-stage emergency handling;
+- valve exercise/test scheduling;
+- valve current diagnostics;
+- selective water shutoff / recovery policy;
+- extended sensor-to-valve localization.
+
+Classification:
+
+- `FLOOD_POLICY_RESERVE`
+- `PARTIALLY_REPLACED_BY_ST_Flood_Global_Config_AND_FB_Water_Leakage_Manager`
+
+Do not delete during cleanup. Do not wire into control without a dedicated design pass for water-valve diagnostics, selective recovery and safety authority boundaries.
+
+## Access governance semantic reserve
+
+Candidate DUTs:
+
+- `ST_Operator_Zone_Rights`
+- `ST_Maintenance_Access_Config`
+- parts of `ST_Security_Global_Config`
+- parts of `ST_Security_Zone_State`
+
+Working hypothesis:
+
+This family is a planned operator/maintenance access-governance layer:
+
+- operator identity;
+- global access level;
+- zone-scoped access masks;
+- last-modified audit metadata;
+- maintenance enable window;
+- maximum maintenance duration;
+- two-person rule;
+- minimum required access level;
+- security-zone trigger history.
+
+Classification:
+
+- `ACCESS_GOVERNANCE_RESERVE`
+
+Do not delete during mechanical cleanup. Future recovery should likely be a passive/authoritative policy layer such as `FB_Access_Governance`, but it must be designed carefully because it may gate configuration, maintenance and dangerous actions.
+
 ## Replaced / lower-priority reserve families
 
 ### `ST_Astro_Time`
@@ -192,12 +266,8 @@ Do not delete until current calibration blocks are reviewed, but do not prioriti
 The following are not classified as garbage, but require domain-specific review before recovery or removal:
 
 - `ST_Ventilation_*`
-- `ST_Security_*`
-- `ST_Flood_*`
 - `ST_FloorHeating_*`
 - `ST_Gas_Valve_Configuration`
-- `ST_Operator_Zone_Rights`
-- `ST_Maintenance_Access_Config`
 - `ST_State_Snapshot`
 - `ST_System_State_Summary`
 
@@ -205,4 +275,4 @@ These may represent old HMI/config surfaces, domain DTOs, or structures replaced
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history or trend structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning or access-governance structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
