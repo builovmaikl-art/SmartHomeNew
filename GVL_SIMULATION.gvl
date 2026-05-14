@@ -56,4 +56,6 @@ VAR_GLOBAL
 
     // Test status
     G_Test_Running : BOOL := FALSE;
+    G_Test_Result_OK : BOOL := FALSE;
+    G_Test_Last_Result_Text : STRING(128) := 'No test executed';
 END_VAR
