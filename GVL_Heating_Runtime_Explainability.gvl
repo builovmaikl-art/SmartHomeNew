@@ -5,6 +5,8 @@ VAR_GLOBAL
     G_Runtime_Phase_Event : ST_Heating_Runtime_Phase_Event;
     G_Runtime_Anomaly : ST_Heating_Runtime_Anomaly;
     G_Runtime_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
+    G_Runtime_Blackbox_Timeline : ST_Heating_Runtime_Blackbox_Timeline;
+    G_Runtime_Event_Buffer : ST_Heating_Runtime_Event_Buffer;
     G_Runtime_Adaptive_Intelligence : ST_Heating_Runtime_Adaptive_Intelligence;
     G_Runtime_Causality_Graph : ST_Heating_Runtime_Causality_Graph;
     G_Runtime_Integration_Bridge : ST_Heating_Runtime_Integration_Bridge;
