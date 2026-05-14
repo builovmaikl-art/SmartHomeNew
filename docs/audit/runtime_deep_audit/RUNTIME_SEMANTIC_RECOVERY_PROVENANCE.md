@@ -437,6 +437,51 @@ Classification:
 
 Do not delete during cleanup. Future recovery should align this model with active input GVLs, trend/history collection, heating zones, lighting zones and maintenance diagnostics.
 
+## Outdoor lighting semantic reserve
+
+Candidate DUTs:
+
+- `ST_Outdoor_Zone_Config`
+- `E_Outdoor_Mode`
+
+Observed intent:
+
+`ST_Outdoor_Zone_Config` describes outdoor lighting zones:
+
+- zone id;
+- lighting circuit id;
+- automatic enable flag;
+- party mode enable flag.
+
+`E_Outdoor_Mode` describes outdoor operation modes:
+
+- auto;
+- party;
+- security;
+- economy;
+- manual.
+
+Working hypothesis:
+
+This family is a small but coherent outdoor lighting policy/configuration reserve. It likely belongs to the same scenario and physical-to-logical mapping architecture:
+
+- outdoor zones mapped to lighting circuits;
+- automatic mode linked to astro/daylight or time-service logic;
+- party mode linked to scenario effects;
+- security mode linked to arming/security lighting behaviour;
+- economy/manual modes linked to user override or energy policy.
+
+This may also explain why `ST_Astro_Time` existed as a daylight/sunrise/sunset DTO even if the current time/astro logic was later replaced.
+
+Classification:
+
+- `OUTDOOR_LIGHTING_ZONE_CONFIG_RESERVE`
+- `OUTDOOR_SCENARIO_MODE_RESERVE`
+- `PHYSICAL_TO_LOGICAL_MAPPING_RESERVE`
+- `RECOVER_LATER_WITH_SCENARIO_AND_ASTRO_LINKS`
+
+Do not delete during cleanup. Future recovery should align outdoor lighting with lighting runtime, scenario effects, security state and time/astro/daylight policy.
+
 ## Ventilation semantic reserve
 
 ### Active ventilation policy
@@ -625,7 +670,7 @@ Classification:
 
 - `REMOVE_LATER / REPLACED`
 
-Do not prioritize recovery unless a specific missing sunrise/sunset contract is found.
+Do not prioritize recovery unless a specific missing sunrise/sunset contract is found. Note that outdoor lighting reserve may still need some astro/daylight policy, but not necessarily this exact DTO.
 
 ### `ST_Calibration_Family_Summary` / `ST_Calibration_Sensor_Summary`
 
@@ -648,4 +693,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
