@@ -664,6 +664,63 @@ Classification:
 
 Do not delete during cleanup. Future recovery should not directly mutate outputs from a hidden path; it should publish intents/effects through explicit command or intent layers with clear priority and safety boundaries.
 
+## User rule semantic reserve
+
+### Candidate DUTs
+
+- `ST_User_Rule`
+- `ST_Rule`
+
+### Decision
+
+Keep `ST_User_Rule` as the mature rule-engine contract. Treat `ST_Rule` as an older primitive predecessor and cleanup candidate.
+
+### Observed evolution
+
+`ST_Rule` contains an untyped generic condition/action model based on raw `INT` fields:
+
+- action type;
+- action target id;
+- action value;
+- condition type;
+- condition target id;
+- condition comparison op;
+- condition value;
+- condition maximum value.
+
+`ST_User_Rule` keeps the same conceptual condition/action model, but adds safer and more expressive structure:
+
+- enabled flag;
+- typed condition enum;
+- typed comparison enum;
+- typed action enum;
+- target ids;
+- scalar/range values;
+- priority.
+
+### Working hypothesis
+
+This family is a lost or incomplete user automation rule engine:
+
+`if condition on zone/sensor/device -> apply action to target with priority`.
+
+It likely belongs near scenario effects, zone aggregation, lighting, heating, ventilation, outdoor lighting and user overrides.
+
+### Classification
+
+`ST_User_Rule`:
+
+- `USER_RULE_ENGINE_RESERVE`
+- `CONDITION_ACTION_AUTOMATION_RESERVE`
+- `RECOVER_LATER_WITH_PRIORITY_AND_SAFETY_GUARDS`
+
+`ST_Rule`:
+
+- `PRIMITIVE_RULE_DTO_PREDECESSOR`
+- `REMOVE_LATER_CANDIDATE_REPLACED_BY_ST_User_Rule`
+
+Do not delete `ST_User_Rule`. `ST_Rule` may be removed in a cleanup pass after confirming no snapshot-only evidence requires it.
+
 ## State snapshot and short-arm restore reserve
 
 ### Candidate DUTs
@@ -755,4 +812,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy, device/protocol mapping or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, user rules, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy, device/protocol mapping or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
