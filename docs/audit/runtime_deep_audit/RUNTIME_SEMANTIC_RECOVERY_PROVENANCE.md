@@ -438,6 +438,72 @@ Classification:
 
 Do not delete during cleanup. Future recovery should align this model with the active `FB_Ventilation_System_Manager` and should stay explicit about safety overrides for fire, gas, smoke and degraded modes.
 
+## Scenario semantic reserve
+
+### Active scenario scoring engine
+
+`PRG_Scenario_Engine` is active. It currently performs scoring and intent generation for:
+
+- night mode;
+- comfort/preheat;
+- ventilation boost;
+- access secure mode;
+- adaptive behaviour weights;
+- best ventilation boost zone;
+- reason text and trace publication.
+
+This confirms that the scenario subsystem is not abandoned.
+
+### Lost / incomplete scenario effects and transition layer
+
+Candidate DUTs:
+
+- `ST_Scenario_Config`
+- `ST_Scenario_Transition_Config`
+- `ST_Scenario_Stats`
+
+Observed intent:
+
+`ST_Scenario_Config` describes cross-domain scenario effects:
+
+- base lighting level;
+- accent lighting level;
+- floor-heating adjustment;
+- ventilation speed;
+- socket enable state;
+- blinds position;
+- presence simulation.
+
+`ST_Scenario_Transition_Config` describes transition guards:
+
+- current scenario;
+- target scenario;
+- minimum duration;
+- transition allowed flag.
+
+`ST_Scenario_Stats` describes scenario telemetry and adaptation feedback:
+
+- activations;
+- success count;
+- failure count;
+- success rate;
+- average result value;
+- stability counter;
+- last activation.
+
+Working hypothesis:
+
+The active `PRG_Scenario_Engine` selects and scores scenario intents, but the reserve DUTs preserve a missing layer that should apply scenario effects across lighting, heating, ventilation, sockets and blinds, guard unsafe or too-frequent transitions, and feed scenario success/failure statistics back into adaptation.
+
+Classification:
+
+- `SCENARIO_EFFECTS_AND_TRANSITION_RESERVE`
+- `SCENARIO_TELEMETRY_RESERVE`
+- `PARTIALLY_REPLACED_BY_PRG_Scenario_Engine`
+- `RECOVER_LATER_WITH_ORCHESTRATION_GUARDS`
+
+Do not delete during cleanup. Future recovery should not directly mutate outputs from a hidden path; it should publish intents/effects through explicit command or intent layers with clear priority and safety boundaries.
+
 ## State snapshot and short-arm restore reserve
 
 ### Candidate DUTs
@@ -529,4 +595,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
