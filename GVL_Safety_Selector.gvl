@@ -1,4 +1,34 @@
 VAR_GLOBAL
+    // === CONFIG SWITCHES ===
+    G_Use_Shadow_CO : BOOL := FALSE;
+    G_Use_Shadow_Methane : BOOL := FALSE;
+    G_Use_Shadow_Smoke : BOOL := FALSE;
+
+    // === EFFECTIVE SIGNALS ===
+    G_CO_Effective : REAL;
+    G_Methane_Effective : REAL;
+    G_Smoke_Effective : BOOL;
+
+    // === SHADOW QUALITY THRESHOLDS / POLICY ===
+    G_CO_Shadow_Max_Diff : REAL := 5.0;
+    G_Methane_Shadow_Max_Diff : REAL := 5.0;
+    G_Block_Shadow_On_Mismatch : BOOL := TRUE;
+
+    // === DEBOUNCE POLICY ===
+    G_Shadow_Unstable_Cycles_Limit : INT := 5;
+
+    // === RECOVERY POLICY (HYSTERESIS) ===
+    G_CO_Shadow_Recovery_Diff : REAL := 2.0;
+    G_Methane_Shadow_Recovery_Diff : REAL := 2.0;
+
+    G_CO_Stable_Counter : INT := 0;
+    G_Methane_Stable_Counter : INT := 0;
+    G_Smoke_Stable_Counter : INT := 0;
+
+    G_CO_Unstable_Counter : INT := 0;
+    G_Methane_Unstable_Counter : INT := 0;
+    G_Smoke_Unstable_Counter : INT := 0;
+
     // === EFFECTIVE ARRAYS FOR SAFETY FB ===
     G_CO_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
     G_Methane_Effective_Array : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
