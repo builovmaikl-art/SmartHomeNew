@@ -210,6 +210,71 @@ Classification:
 
 Do not delete during cleanup. Do not wire into control without a dedicated design pass for water-valve diagnostics, selective recovery and safety authority boundaries.
 
+### Lost / incomplete water valve test and recovery workflow
+
+The current project contains `ST_Valve_Test_Config`, which preserves a water/service valve testing contract:
+
+- `valve_id`;
+- `test_interval_days`;
+- `Nominal_Current`;
+- `nominal_close_time_sec`;
+- `enabled`.
+
+This confirms that the intended valve workflow was not only leak detection, but also actuator verification.
+
+Working hypothesis from recovered design intent:
+
+- water inlet and riser shutoff valves should be configurable;
+- valve close/open operation should have bounded confirmation windows;
+- close confirmation should be validated against end-switch / limit-switch feedback;
+- valve current should be checked against nominal current or threshold;
+- valves should support scheduled exercise/test cycles;
+- after leak detection and repair, an operator should be able to request a short controlled test opening for visual confirmation that the leak is gone;
+- every test opening must be time-limited and must automatically return the valve to a safe closed state if conditions are not explicitly cleared.
+
+Current state:
+
+- leak signal conditioning is active;
+- complete valve actuator confirmation / end-switch workflow is not clearly present in active runtime;
+- test-opening / post-leak visual confirmation workflow appears lost or incomplete;
+- `ST_Valve_Test_Config` should be kept as the stronger semantic anchor for recovering this workflow.
+
+Classification:
+
+- `WATER_VALVE_TEST_AND_RECOVERY_RESERVE`
+- `LOST_OR_INCOMPLETE_RUNTIME_WORKFLOW`
+
+Do not delete `ST_Valve_Test_Config`. Future recovery should focus on water valve actuator diagnostics, close/open confirmation, test intervals, safe short test opening and operator-governed post-leak recovery.
+
+### `ST_Gas_Valve_Configuration` safety review
+
+`ST_Gas_Valve_Configuration` contains:
+
+- `valve_id`;
+- `valve_type`;
+- `close_time_seconds`;
+- `open_time_seconds`;
+- `emergency_open_allowed`.
+
+Despite the name, this structure does not represent gas sensor thresholds. It is an actuator/service valve policy DTO.
+
+Important safety conclusion:
+
+- a real gas valve should be normally closed by design;
+- gas close action should be immediate/fail-safe, not governed by a configurable slow-close policy;
+- automatic or emergency opening of a gas valve is unsafe unless protected by a strict service interlock and explicit safety design;
+- `valve_type`, `open_time_seconds` and `emergency_open_allowed` are suspicious in a gas-specific DTO.
+
+This structure may be a misnamed older generic valve configuration, overlapping with `ST_Valve_Test_Config` and/or the lost water-valve workflow.
+
+Classification:
+
+- `MISNAMED_GENERIC_VALVE_TEST_CONFIG`
+- `SAFETY_REVIEW_REQUIRED`
+- `REMOVE_LATER_CANDIDATE_AFTER_WATER_VALVE_RECOVERY_REVIEW`
+
+Do not integrate `ST_Gas_Valve_Configuration` into gas runtime. Keep temporarily only as provenance evidence until water/service valve recovery is reviewed.
+
 ## Access governance semantic reserve
 
 Candidate DUTs:
@@ -267,7 +332,6 @@ The following are not classified as garbage, but require domain-specific review 
 
 - `ST_Ventilation_*`
 - `ST_FloorHeating_*`
-- `ST_Gas_Valve_Configuration`
 - `ST_State_Snapshot`
 - `ST_System_State_Summary`
 
