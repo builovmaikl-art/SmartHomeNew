@@ -33,4 +33,9 @@ VAR_GLOBAL
     G_Cycle_Last_Overrun_Time_MS : UDINT := 0;
     G_Cycle_Overrun_Active : BOOL := FALSE;
     G_Cycle_Critical_Active : BOOL := FALSE;
+
+    // Compact degraded state mirrors.
+    G_Heating_State : INT := 0; // 0=OK,1=DEGRADED,2=CRITICAL
+    G_Safety_State : INT := 0;
+    G_IO_State : INT := 0;
 END_VAR
