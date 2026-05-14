@@ -93,6 +93,9 @@ VAR_GLOBAL
 
     // Safety state projections. Hard-stop authority must remain in
     // safety/runtime/output governors, not in hidden external writers.
+    G_Safety_Gas_Alarm : BOOL;
+    G_Safety_Leak_Alarm : BOOL;
+    G_Safety_Smoke_Alarm : BOOL;
     G_Safety_Emergency_Stop : BOOL;
     G_Safety_Gas_Latched : BOOL;
     G_Safety_Leak_Latched : BOOL;
