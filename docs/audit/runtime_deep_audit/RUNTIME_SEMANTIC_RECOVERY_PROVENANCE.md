@@ -384,6 +384,60 @@ Classification:
 
 Do not delete during cleanup. Do not wire into the heating control path without a dedicated design pass, because it may affect actuator authority, zoning, heating comfort and safety limits.
 
+## Ventilation semantic reserve
+
+### Active ventilation policy
+
+`ST_Ventilation_Global_Config` and `ST_Ventilation_Scenario_Mode` are active or near-active ventilation policy structures used by `FB_Ventilation_System_Manager`.
+
+Observed active concepts:
+
+- enable ventilation;
+- total unit count;
+- default supply/exhaust speed;
+- degraded exhaust limit;
+- scenario modes;
+- wet-zone to exhaust fan mapping;
+- PV3 index;
+- fire/gas/smoke scenario fields;
+- base fan speed;
+- target temperature.
+
+Classification:
+
+- `ACTIVE_VENTILATION_POLICY_CONFIG`
+- `ACTIVE_SCENARIO_VENTILATION_POLICY`
+
+Do not remove or downgrade these structures.
+
+### Per-unit ventilation reserve
+
+`ST_Ventilation_Config`, `ST_Ventilation_Unit_Config` and `ST_Ventilation_Unit` appear to preserve an older or parallel per-unit ventilation model.
+
+Observed intent:
+
+- global CO2 and humidity thresholds;
+- night mode start/end;
+- unit id;
+- unit type;
+- unit location;
+- min/max speed;
+- humidity threshold per unit;
+- smoke detector presence per unit;
+- enabled/speed/filter dirty/error/mode state.
+
+Working hypothesis:
+
+The current manager controls arrays of supply/exhaust fans and heaters, while these reserve structures describe ventilation equipment as configurable units with their own location, thresholds and diagnostics. This suggests a partially lost equipment-object model rather than random residue.
+
+Classification:
+
+- `VENTILATION_UNIT_CONFIG_RESERVE`
+- `PER_UNIT_VENTILATION_DIAGNOSTICS_RESERVE`
+- `RECOVER_LATER_AS_EQUIPMENT_MODEL`
+
+Do not delete during cleanup. Future recovery should align this model with the active `FB_Ventilation_System_Manager` and should stay explicit about safety overrides for fire, gas, smoke and degraded modes.
+
 ## Replaced / lower-priority reserve families
 
 ### `ST_Astro_Time`
@@ -410,7 +464,6 @@ Do not delete until current calibration blocks are reviewed, but do not prioriti
 
 The following are not classified as garbage, but require domain-specific review before recovery or removal:
 
-- `ST_Ventilation_*`
 - `ST_State_Snapshot`
 - `ST_System_State_Summary`
 
