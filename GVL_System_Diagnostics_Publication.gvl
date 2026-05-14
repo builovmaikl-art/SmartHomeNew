@@ -1,0 +1,9 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Passive system diagnostics publication surface.
+    // HMI/engineering diagnostics only: no command, output or runtime authority.
+    G_System_Diagnostics : ST_System_Diagnostics;
+    G_System_Diagnostics_Publication_Valid : BOOL := FALSE;
+    G_System_Diagnostics_Status_Code : UINT := 0;
+    G_System_Diagnostics_Status_Text : STRING(128) := 'System diagnostics publication inactive';
+END_VAR
