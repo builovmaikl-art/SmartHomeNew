@@ -5,6 +5,7 @@ VAR
     fbDiagnosticsPhase : FB_Heating_Runtime_Diagnostics_Phase;
     fbObserverPhase : FB_Heating_Runtime_Observer_Phase;
     fbMetaSupervisionPublisher : FB_Heating_Runtime_Meta_Supervision_Publisher;
+    fbExplainabilityPublisher : FB_Heating_Runtime_Explainability_Publisher;
     fbServiceGatingPhase : FB_Heating_Runtime_Service_Gating_Phase;
     fbStatePublicationPhase : FB_Heating_Runtime_State_Publication_Phase;
     fbOutputProjectionPhase : FB_Heating_Runtime_Output_Projection_Phase;
@@ -227,6 +228,40 @@ GVL_Heating_Runtime_Meta.G_Runtime_Meta_Status_Code :=
 
 GVL_Heating_Runtime_Meta.G_Runtime_Meta_Status_Text :=
     fbMetaSupervisionPublisher.VO_Meta.Status_Text;
+
+fbExplainabilityPublisher(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+    VI_Runtime_Context := L_Runtime_Context,
+    VI_Runtime_Observation_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Valid,
+    VI_Runtime_Observer_Fault := GVL_Heating_Runtime_Observation.G_Runtime_Observer_Fault,
+    VI_Runtime_Status_Code := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Code,
+    VI_Runtime_Status_Text := GVL_Heating_Runtime_Observation.G_Runtime_Observation_Status_Text
+);
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Phase_Event :=
+    fbExplainabilityPublisher.VO_Phase_Event;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Anomaly :=
+    fbExplainabilityPublisher.VO_Anomaly;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Blackbox_Event :=
+    fbExplainabilityPublisher.VO_Blackbox_Event;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Adaptive_Intelligence :=
+    fbExplainabilityPublisher.VO_Adaptive_Intelligence;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Causality_Graph :=
+    fbExplainabilityPublisher.VO_Causality_Graph;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Explainability_Publication_Valid :=
+    fbExplainabilityPublisher.VO_Publication_Valid;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Explainability_Status_Code :=
+    fbExplainabilityPublisher.VO_Phase_Event.Status_Code;
+
+GVL_Heating_Runtime_Explainability.G_Runtime_Explainability_Status_Text :=
+    fbExplainabilityPublisher.VO_Phase_Event.Status_Text;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
