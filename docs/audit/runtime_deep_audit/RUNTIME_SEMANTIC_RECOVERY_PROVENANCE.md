@@ -438,6 +438,64 @@ Classification:
 
 Do not delete during cleanup. Future recovery should align this model with the active `FB_Ventilation_System_Manager` and should stay explicit about safety overrides for fire, gas, smoke and degraded modes.
 
+## State snapshot and short-arm restore reserve
+
+### Candidate DUTs
+
+- `ST_State_Snapshot`
+- `ST_System_State_Summary`
+
+### `ST_State_Snapshot`
+
+`ST_State_Snapshot` is not merely an HMI summary. It likely preserves the lost short-arm state capture / restore workflow.
+
+Observed fields:
+
+- `timestamp_ms`;
+- `operator_id`;
+- `scenario_id`;
+- `lighting_levels`;
+- `floor_heating_setpoints`;
+- `alarm_active`;
+- `crc32`.
+
+Recovered design intent:
+
+- when the house is put into short-term armed mode, selected runtime state should be captured;
+- on return / disarm, the previous comfort state should be restored;
+- lighting levels and floor-heating setpoints should return to the pre-arm state;
+- scenario id and operator id provide context for the restore operation;
+- `crc32` protects against restoring a corrupted or stale snapshot;
+- `alarm_active` prevents unsafe or inappropriate restore after an alarm path.
+
+Classification:
+
+- `SHORT_ARM_STATE_SNAPSHOT_AND_RESTORE_RESERVE`
+- `LOST_OR_INCOMPLETE_RUNTIME_WORKFLOW`
+
+Do not delete during cleanup. Future recovery should integrate with security/arming logic and must avoid restoring unsafe states after alarm, leak, fire, gas or degraded conditions.
+
+### `ST_System_State_Summary`
+
+`ST_System_State_Summary` looks like a whole-house state summary for HMI, diagnostics, snapshots or publication surfaces.
+
+Observed fields:
+
+- outdoor temperature;
+- indoor temperatures;
+- floor temperatures;
+- humidity;
+- CO2;
+- gas/flood/fire/security alarms;
+- security armed state.
+
+Classification:
+
+- `WHOLE_HOUSE_STATE_SUMMARY_RESERVE`
+- `HMI_DIAGNOSTICS_OR_SNAPSHOT_PUBLICATION_RESERVE`
+
+Do not delete until current publication surfaces and HMI/debug views are reviewed. This may later become a compact global state publication DTO.
+
 ## Replaced / lower-priority reserve families
 
 ### `ST_Astro_Time`
@@ -462,13 +520,13 @@ Do not delete until current calibration blocks are reviewed, but do not prioriti
 
 ## Remaining domain-contract families
 
-The following are not classified as garbage, but require domain-specific review before recovery or removal:
+All major domain-contract families have now been classified at least once. Remaining audit findings should be treated as one of:
 
-- `ST_State_Snapshot`
-- `ST_System_State_Summary`
-
-These may represent old HMI/config surfaces, domain DTOs, or structures replaced by current GVL/FB runtime implementations.
+- active publication/config surfaces;
+- documented reserve contracts;
+- replaced presentation summaries;
+- explicit cleanup candidates after domain review.
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping or actuator configuration structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
