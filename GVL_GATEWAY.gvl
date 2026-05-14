@@ -2,10 +2,21 @@
 VAR_GLOBAL
     G_Gateway_Command : ST_Gateway_Command;
     G_Gateway_Command_Received : BOOL;
+    G_Gateway_Send_2FA : BOOL;
+    G_Gateway_2FA_Code : STRING(6);
     G_Gateway_Telegram_Msg : STRING(200);
     G_Gateway_Send_Telegram : BOOL;
     G_Gateway_HMI_Status_Message : STRING(200);
     G_Gateway_Ping_OK : BOOL;
     G_Gateway_Data_Ready : BOOL;
     G_Gateway_Modbus_Registers : ARRAY[0..GVL_CONSTANTS.C_MAX_MODBUS_REGISTERS-1] OF WORD;
+
+    // === SHADOW POLICY EXPORT ===
+    G_Shadow_Alert_Active : BOOL;
+    G_Shadow_Dominant_Channel : STRING(32);
+    G_Shadow_Policy_Summary_Text : STRING(160);
+    G_Shadow_Recent_Activity_Text : STRING(160);
+    G_Shadow_Rate_Summary_Text : STRING(160);
+    G_Shadow_Total_Fallback_Count : UDINT;
+    G_Shadow_Total_Recovery_Count : UDINT;
 END_VAR
