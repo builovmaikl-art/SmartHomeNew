@@ -200,7 +200,7 @@ drwxr-xr-x  3 runner runner   4096 May 14 16:23 .github
 -rw-r--r--  1 runner runner    302 May 14 16:23 GVL_HEALTH_BRIDGE.gvl
 -rw-r--r--  1 runner runner    604 May 14 16:23 GVL_HEATING_OUTPUT.gvl
 -rw-r--r--  1 runner runner   2744 May 14 16:23 GVL_HEATING_POLICY.gvl
--rw-r--r--  1 runner runner    202 May 14 16:23 GVL_HEATING_POLICY_CONFIG.gvl
+-rw-r--r--  1 runner runner    350 May 14 16:23 GVL_HEATING_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner    136 May 14 16:23 GVL_HEATING_REQUEST.gvl
 -rw-r--r--  1 runner runner   1785 May 14 16:23 GVL_HMI.gvl
 -rw-r--r--  1 runner runner   1141 May 14 16:23 GVL_Heating_Runtime_Explainability.gvl
