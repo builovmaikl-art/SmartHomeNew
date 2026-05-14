@@ -4,8 +4,13 @@ VAR_GLOBAL
 
     G_Apply_Request : BOOL := FALSE;
     G_Apply_Confirm : BOOL := FALSE;
+    G_Rollback_Request : BOOL := FALSE;
+    G_Rollback_Confirm : BOOL := FALSE;
+    G_Reset_Default_Request : BOOL := FALSE;
+    G_Reset_Default_Confirm : BOOL := FALSE;
 
     G_Config_Version : UDINT := 1;
+    G_Last_Good_Version : UDINT := 1;
     G_Backup_Valid : BOOL := FALSE;
     G_Apply_Done : BOOL := FALSE;
     G_Rollback_Done : BOOL := FALSE;
