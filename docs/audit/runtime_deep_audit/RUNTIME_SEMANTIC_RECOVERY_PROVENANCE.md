@@ -454,6 +454,66 @@ Classification:
 
 Do not delete during cleanup. Do not wire into the heating control path without a dedicated design pass, because it may affect actuator authority, zoning, heating comfort and safety limits.
 
+## Weather, lifetime and valve-diagnostics enum reserves
+
+### Candidate DUTs
+
+- `E_WEATHER_COMPENSATION_METHOD`
+- `E_Lifetime_Device_Type`
+- `E_Valve_Test_Result`
+
+### Weather compensation
+
+`E_WEATHER_COMPENSATION_METHOD` contains:
+
+- `WEATHER_COMP_NONE`;
+- `WEATHER_COMP_OUTDOOR_RESET`.
+
+This confirms a planned heating adaptation policy based on outdoor reset / weather compensation.
+
+Classification:
+
+- `WEATHER_COMPENSATION_POLICY_RESERVE`
+- `HEATING_ADAPTATION_RESERVE`
+- `RECOVER_LATER_WITH_HEATING_AND_FLOOR_HEATING_CONFIG`
+
+### Equipment lifetime
+
+`E_Lifetime_Device_Type` contains:
+
+- `LIFETIME_DEVICE_PUMP`;
+- `LIFETIME_DEVICE_FAN`.
+
+This confirms that the maintenance/trend reserve was intended to cover active equipment runtime/lifetime, at least pumps and fans.
+
+Classification:
+
+- `EQUIPMENT_LIFETIME_TRACKING_RESERVE`
+- `MAINTENANCE_RELATED_RESERVE`
+- `RECOVER_LATER_WITH_TREND_AND_RUNTIME_HOURS`
+
+### Valve diagnostics
+
+`E_Valve_Test_Result` contains:
+
+- `TEST_RESULT_NONE`;
+- `TEST_RESULT_PASSED`;
+- `TEST_RESULT_CURRENT_DEVIATION`;
+- `TEST_RESULT_TIME_DEVIATION`;
+- `TEST_RESULT_STALL`;
+- `TEST_RESULT_LIMIT_SWITCH_FAIL`;
+- `TEST_RESULT_ABORTED`.
+
+This strongly confirms the recovered water/service valve actuator diagnostics design. The intended test workflow checked current deviation, travel-time deviation, stall and limit-switch failure.
+
+Classification:
+
+- `VALVE_ACTUATOR_DIAGNOSTICS_RESERVE`
+- `WATER_VALVE_TEST_AND_RECOVERY_RESERVE`
+- `RECOVER_LATER_WITH_END_SWITCH_CURRENT_AND_TIMING_VALIDATION`
+
+Do not delete these enums during cleanup. They are small, but they anchor several larger recovered workflows: weather-adaptive heating, equipment lifetime tracking and actuator diagnostics.
+
 ## Zone sensor semantic reserve
 
 ### Candidate DUT
@@ -812,4 +872,4 @@ All major domain-contract families have now been classified at least once. Remai
 
 ## Cleanup guardrail
 
-Do not remove systematic runtime observability, diagnostics, history, trend, scenario, user rules, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, zone aggregation, outdoor lighting policy, device/protocol mapping or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
+Do not remove systematic runtime observability, diagnostics, history, trend, scenario, user rules, safety-policy, signal-conditioning, access-governance, physical-to-logical mapping, actuator configuration, weather compensation, equipment lifetime tracking, valve diagnostics, zone aggregation, outdoor lighting policy, device/protocol mapping or state-restore structures simply because the current code does not read their fields. For these families, lack of member access is a signal for integration review, not an automatic deletion decision.
