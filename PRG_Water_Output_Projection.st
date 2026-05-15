@@ -6,6 +6,8 @@ VAR
     fbWaterPhysicalRuntime : FB_Water_Physical_Runtime;
     fbWaterRuntimeHardening : FB_Water_Runtime_Hardening;
     fbWaterRecoveryRuntime : FB_Water_Recovery_Runtime;
+    fbPredictiveDiagnostics : FB_Predictive_Diagnostics_Runtime;
+    fbForensicJournal : FB_Forensic_Journal_Runtime;
 END_VAR
 
 // Deterministic output projection runtime boundary.
@@ -17,6 +19,8 @@ END_VAR
 //   -> physical convergence runtime
 //   -> runtime hardening
 //   -> recovery governance
+//   -> predictive diagnostics
+//   -> forensic journal
 //
 // No semantic/runtime authority.
 // Existing global safety path preserved.
@@ -47,6 +51,16 @@ fbWaterRuntimeHardening(
 );
 
 fbWaterRecoveryRuntime(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+fbPredictiveDiagnostics(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+fbForensicJournal(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
