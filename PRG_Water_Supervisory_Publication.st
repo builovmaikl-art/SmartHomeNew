@@ -1,6 +1,7 @@
 PROGRAM PRG_Water_Supervisory_Publication
 VAR
     fbWaterLeakProjection : FB_Water_Leak_Runtime_Projection;
+    fbWaterTopologyValidator : FB_Water_Hydraulic_Topology_Validator;
     fbWaterIsolationProjection : FB_Water_Isolation_Runtime_Projection;
     fbWaterIsolationIntentBuilder : FB_Water_Isolation_Intent_Builder;
     fbWaterAuthorityArbitrator : FB_Water_Isolation_Authority_Arbitrator;
@@ -16,27 +17,25 @@ VAR
     L_Global_Fallback_Required : BOOL;
 END_VAR
 
-// ==============================================================================
 // Water/Flood supervisory publication orchestration.
-//
 // Observe/publish-first orchestration.
 //
-// This layer:
-// - builds canonical leak semantics;
-// - builds canonical isolation semantics;
-// - publishes explicit isolation intent visibility;
-// - performs deterministic authority arbitration;
-// - builds valve governance/confirmation semantics;
-// - aggregates supervisory state.
-//
-// This layer does NOT:
-// - own valve outputs;
-// - bypass safety shutdown;
-// - override runtime arbitration.
-// ==============================================================================
+// Runtime chain:
+// leak semantics
+//   -> hydraulic topology validation
+//   -> isolation semantics
+//   -> authority arbitration
+//   -> valve governance
+//   -> supervisory publication
 
 // Canonical Water semantic projection.
 fbWaterLeakProjection(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+// Hydraulic topology validation.
+fbWaterTopologyValidator(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
@@ -119,15 +118,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Any_Warning := L_Any_Warning OR L_State.Leak_Warning_Active;
 
     L_Any_Degraded_Mapping :=
-        L_Any_Degraded_Mapping OR L_State.Mapping_Missing;
+        L_Any_Degraded_Mapping
+        OR L_State.Mapping_Missing
+        OR GVL_Water_Topology_Validation.G_Validation_State[L_i].Topology_Ambiguous;
 
     L_Selective_Isolation_Available :=
         L_Selective_Isolation_Available
-        OR L_State.Selective_Isolation_Possible;
+        OR GVL_Water_Topology_Validation.G_Validation_State[L_i].Selective_Isolation_Allowed;
 
     L_Global_Fallback_Required :=
         L_Global_Fallback_Required
-        OR L_State.Fallback_Global_Isolation_Required;
+        OR GVL_Water_Topology_Validation.G_Validation_State[L_i].Global_Fallback_Required;
 
     IF L_State.Leak_Confirmed THEN
         GVL_Water_Runtime_Supervisory_Publication.G_Affected_Hydraulic_Zone :=
@@ -144,7 +145,6 @@ GVL_Water_Leak_Explainability.G_Explainability_Status_Code := 0;
 GVL_Water_Leak_Explainability.G_Explainability_Status_Text :=
     'Water leak explainability publication active';
 
-// Canonical supervisory publication.
 GVL_Water_Runtime_Supervisory_Publication.G_Supervisory_Valid := TRUE;
 GVL_Water_Runtime_Supervisory_Publication.G_Last_Update_MS :=
     GVL_STATUS.G_System_Time_MS;
@@ -171,7 +171,11 @@ GVL_Water_Runtime_Supervisory_Publication.G_Active_Global_Close_Path :=
 GVL_Water_Runtime_Supervisory_Publication.G_Active_Safety_Latch :=
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
 
-IF GVL_Water_Valve_Runtime.G_Any_Valve_Degraded THEN
+IF GVL_Water_Topology_Validation.G_Any_Ambiguous THEN
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 5;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
+        'Topology ambiguity detected';
+ELSIF GVL_Water_Valve_Runtime.G_Any_Valve_Degraded THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 4;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Valve governance degraded';
