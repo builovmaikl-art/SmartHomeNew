@@ -5,6 +5,7 @@ VAR_INPUT
 END_VAR
 VAR
     L_i : INT;
+    L_Channel : UINT;
     L_Binding : ST_IO_Binding_Record;
     L_Any_Invalid : BOOL;
     L_Any_Missing : BOOL;
@@ -17,22 +18,79 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
-    // Flood sensor binding validation.
+    // Flood sensor runtime binding.
     L_Binding :=
         GVL_IO_Binding_Config.G_Flood_Sensor_Binding[L_i];
 
-    IF NOT L_Binding.Binding_Valid THEN
+    IF L_Binding.Binding_Valid THEN
+
+        L_Channel := L_Binding.Physical_Channel_Id;
+
+        IF (L_Channel >= 1)
+           AND (L_Channel <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS) THEN
+
+            GVL_IO_Binding_Runtime.G_Flood_Sensor_Value[L_i] :=
+                GVL_IO.DI_Flood_Sensors[L_Channel];
+
+            GVL_IO_Binding_Runtime.G_Flood_Sensor_Valid[L_i] := TRUE;
+
+        ELSE
+
+            L_Any_Invalid := TRUE;
+
+        END_IF;
+
+    ELSE
+
         L_Any_Missing := TRUE;
+
     END_IF;
 
-    // Valve feedback binding validation.
+    // Valve close feedback runtime binding.
     L_Binding :=
         GVL_IO_Binding_Config.G_Water_Valve_Close_FB_Binding[L_i];
 
-    IF L_Binding.Required
-       AND NOT L_Binding.Binding_Valid THEN
+    IF L_Binding.Binding_Valid THEN
 
-        L_Any_Invalid := TRUE;
+        L_Channel := L_Binding.Physical_Channel_Id;
+
+        IF (L_Channel >= 1)
+           AND (L_Channel <= GVL_CONSTANTS.C_MAX_WATER_ZONES) THEN
+
+            GVL_IO_Binding_Runtime.G_Water_Valve_Close_FB_Value[L_i] :=
+                GVL_IO.DI_Water_Zone_Close_FB[L_Channel];
+
+            GVL_IO_Binding_Runtime.G_Water_Valve_Close_FB_Valid[L_i] := TRUE;
+
+        ELSE
+
+            L_Any_Invalid := TRUE;
+
+        END_IF;
+
+    END_IF;
+
+    // Valve open feedback runtime binding.
+    L_Binding :=
+        GVL_IO_Binding_Config.G_Water_Valve_Open_FB_Binding[L_i];
+
+    IF L_Binding.Binding_Valid THEN
+
+        L_Channel := L_Binding.Physical_Channel_Id;
+
+        IF (L_Channel >= 1)
+           AND (L_Channel <= GVL_CONSTANTS.C_MAX_WATER_ZONES) THEN
+
+            GVL_IO_Binding_Runtime.G_Water_Valve_Open_FB_Value[L_i] :=
+                GVL_IO.DI_Water_Zone_Open_FB[L_Channel];
+
+            GVL_IO_Binding_Runtime.G_Water_Valve_Open_FB_Valid[L_i] := TRUE;
+
+        ELSE
+
+            L_Any_Invalid := TRUE;
+
+        END_IF;
 
     END_IF;
 
