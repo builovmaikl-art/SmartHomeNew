@@ -1,13 +1,13 @@
-DUT_FILES=153
+DUT_FILES=154
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=114
-STRUCT_FIELDS_TOTAL=1413
+STRUCT_INSERTED=115
+STRUCT_FIELDS_TOTAL=1434
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=1412
+XML_INITIALVALUE_TAGS=1414
 XML_ARRAYVALUE_TAGS=25
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
@@ -62,6 +62,7 @@ ST_DHW_Config.dut: STRUCT ST_DHW_Config fields=9
 ST_DHW_Status.dut: STRUCT ST_DHW_Status fields=7
 ST_Device_Health.dut: STRUCT ST_Device_Health fields=9
 ST_Diagnostic_Event.dut: STRUCT ST_Diagnostic_Event fields=5
+ST_Distributed_Authority_State.dut: STRUCT ST_Distributed_Authority_State fields=21
 ST_Distributed_Runtime_Message.dut: STRUCT ST_Distributed_Runtime_Message fields=18
 ST_Distributed_Runtime_Node_State.dut: STRUCT ST_Distributed_Runtime_Node_State fields=23
 ST_EVENT.dut: STRUCT ST_EVENT fields=5
@@ -177,6 +178,7 @@ STRUCT ST_DHW_Config: total=9 with_initializer=9 without_initializer=0 array_ini
 STRUCT ST_DHW_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Device_Health: total=9 with_initializer=1 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Diagnostic_Event: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Distributed_Authority_State: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Message: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Node_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
 STRUCT ST_EVENT: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
