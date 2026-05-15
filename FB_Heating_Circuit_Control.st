@@ -9,6 +9,10 @@
 // - range invalid still blocks that source;
 // - passive input-quality confidence can prefer a healthier fallback;
 // - degraded-but-range-valid sources remain operational if no better source exists.
+//
+// Per-circuit fallback/source-selection reasoning is published to
+// GVL_Heating_Circuit_Explainability. This publication is observation-only
+// and does not own valves, pumps, demand or runtime authority.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Circuit_Control
 VAR_INPUT
@@ -44,6 +48,16 @@ VAR
     L_Floor_Confidence : REAL;
     L_Room_Confidence : REAL;
     L_Min_Source_Confidence : REAL;
+    L_Primary_Source_Code : UINT;
+    L_Selected_Source_Code : UINT;
+    L_Primary_Confidence : REAL;
+    L_Fallback_Confidence : REAL;
+    L_Selected_Confidence : REAL;
+    L_Fallback_Active : BOOL;
+    L_Source_Degraded : BOOL;
+    L_Reason_Code : UINT;
+    L_Reason_Text : STRING(128);
+    L_Selected_Source_Text : STRING(64);
 
     L_Floor_Controllers : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_FloorHeating_Controller;
     L_Overheat_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_System_Timer;
@@ -111,36 +125,90 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
 
     L_Current_Temp := REAL#0.0;
     L_Sensor_Error := FALSE;
+    L_Selected_Source_Code := 0;
+    L_Selected_Source_Text := 'none';
+    L_Selected_Confidence := REAL#0.0;
+    L_Fallback_Active := FALSE;
+    L_Source_Degraded := FALSE;
+    L_Reason_Code := 0;
+    L_Reason_Text := 'OK';
 
     IF VI_Zone_Configs[L_i].control_type = 1 OR VI_Zone_Configs[L_i].control_type = 2 THEN
+        L_Primary_Source_Code := 1; // room
+        L_Primary_Confidence := L_Room_Confidence;
+        L_Fallback_Confidence := L_Floor_Confidence;
+
         // Primary: room air temperature. If room quality is degraded and floor
         // source is healthier, prefer floor fallback without declaring hard fault.
         IF L_Room_Source_Valid AND
            ((L_Room_Confidence >= L_Min_Source_Confidence) OR NOT L_Floor_Source_Valid OR (L_Room_Confidence >= L_Floor_Confidence)) THEN
             L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
+            L_Selected_Source_Code := 1;
+            L_Selected_Source_Text := 'room';
+            L_Selected_Confidence := L_Room_Confidence;
         ELSIF L_Floor_Source_Valid THEN
             L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
+            L_Selected_Source_Code := 2;
+            L_Selected_Source_Text := 'floor';
+            L_Selected_Confidence := L_Floor_Confidence;
+            L_Fallback_Active := TRUE;
         ELSIF L_Room_Source_Valid THEN
             L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
+            L_Selected_Source_Code := 1;
+            L_Selected_Source_Text := 'room';
+            L_Selected_Confidence := L_Room_Confidence;
+            L_Source_Degraded := TRUE;
+            L_Reason_Code := 2;
+            L_Reason_Text := 'Room source degraded but retained; floor source unavailable';
         ELSE
             L_Sensor_Error := TRUE;
         END_IF;
     ELSE
+        L_Primary_Source_Code := 2; // floor
+        L_Primary_Confidence := L_Floor_Confidence;
+        L_Fallback_Confidence := L_Room_Confidence;
+
         // Primary: floor temperature. If floor quality is degraded and room
         // source is healthier, prefer room fallback without declaring hard fault.
         IF L_Floor_Source_Valid AND
            ((L_Floor_Confidence >= L_Min_Source_Confidence) OR NOT L_Room_Source_Valid OR (L_Floor_Confidence >= L_Room_Confidence)) THEN
             L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
+            L_Selected_Source_Code := 2;
+            L_Selected_Source_Text := 'floor';
+            L_Selected_Confidence := L_Floor_Confidence;
         ELSIF L_Room_Source_Valid THEN
             L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
+            L_Selected_Source_Code := 1;
+            L_Selected_Source_Text := 'room';
+            L_Selected_Confidence := L_Room_Confidence;
+            L_Fallback_Active := TRUE;
         ELSIF L_Floor_Source_Valid THEN
             L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
+            L_Selected_Source_Code := 2;
+            L_Selected_Source_Text := 'floor';
+            L_Selected_Confidence := L_Floor_Confidence;
+            L_Source_Degraded := TRUE;
+            L_Reason_Code := 2;
+            L_Reason_Text := 'Floor source degraded but retained; room source unavailable';
         ELSE
             L_Sensor_Error := TRUE;
         END_IF;
     END_IF;
 
+    IF L_Fallback_Active THEN
+        L_Source_Degraded := TRUE;
+        L_Reason_Code := 1;
+        IF L_Primary_Source_Code = 1 THEN
+            L_Reason_Text := 'Room source degraded or unavailable; floor fallback selected';
+        ELSE
+            L_Reason_Text := 'Floor source degraded or unavailable; room fallback selected';
+        END_IF;
+    END_IF;
+
     IF L_Sensor_Error THEN
+        L_Source_Degraded := TRUE;
+        L_Reason_Code := 3;
+        L_Reason_Text := 'No valid temperature source available';
         VO_Heating_Sensor_Fault := TRUE;
         VO_Zone_Valves[L_i] := FALSE;
     ELSE
@@ -157,6 +225,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             VO_Valve_Bool => VO_Zone_Valves[L_i]
         );
     END_IF;
+
+    GVL_Heating_Circuit_Explainability.G_Source_Selection_Visible[L_i] := TRUE;
+    GVL_Heating_Circuit_Explainability.G_Selected_Source_Code[L_i] := L_Selected_Source_Code;
+    GVL_Heating_Circuit_Explainability.G_Selected_Source_Text[L_i] := L_Selected_Source_Text;
+    GVL_Heating_Circuit_Explainability.G_Fallback_Active[L_i] := L_Fallback_Active;
+    GVL_Heating_Circuit_Explainability.G_Source_Degraded[L_i] := L_Source_Degraded;
+    GVL_Heating_Circuit_Explainability.G_Selected_Source_Confidence[L_i] := L_Selected_Confidence;
+    GVL_Heating_Circuit_Explainability.G_Primary_Source_Confidence[L_i] := L_Primary_Confidence;
+    GVL_Heating_Circuit_Explainability.G_Fallback_Source_Confidence[L_i] := L_Fallback_Confidence;
+    GVL_Heating_Circuit_Explainability.G_Reason_Code[L_i] := L_Reason_Code;
+    GVL_Heating_Circuit_Explainability.G_Reason_Text[L_i] := L_Reason_Text;
 
     IF L_Overheat_Timer[L_i].Q THEN
         VO_Zone_Valves[L_i] := FALSE;
