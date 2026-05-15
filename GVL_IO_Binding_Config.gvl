@@ -1,0 +1,10 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Flood_Sensor_Binding : ARRAY[1..64] OF ST_IO_Binding_Record;
+    G_Water_Valve_Open_FB_Binding : ARRAY[1..64] OF ST_IO_Binding_Record;
+    G_Water_Valve_Close_FB_Binding : ARRAY[1..64] OF ST_IO_Binding_Record;
+    G_Water_Valve_Output_Binding : ARRAY[1..64] OF ST_IO_Binding_Record;
+
+    G_Binding_Config_Version : UDINT;
+    G_Binding_Config_Valid : BOOL;
+END_VAR
