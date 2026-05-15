@@ -1,8 +1,8 @@
-DUT_FILES=159
+DUT_FILES=160
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=120
-STRUCT_FIELDS_TOTAL=1524
+STRUCT_INSERTED=121
+STRUCT_FIELDS_TOTAL=1541
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -64,6 +64,7 @@ ST_Device_Health.dut: STRUCT ST_Device_Health fields=9
 ST_Diagnostic_Event.dut: STRUCT ST_Diagnostic_Event fields=5
 ST_Distributed_Authority_State.dut: STRUCT ST_Distributed_Authority_State fields=21
 ST_Distributed_Orchestration_State.dut: STRUCT ST_Distributed_Orchestration_State fields=19
+ST_Distributed_Projection_Ownership.dut: STRUCT ST_Distributed_Projection_Ownership fields=17
 ST_Distributed_Runtime_Message.dut: STRUCT ST_Distributed_Runtime_Message fields=18
 ST_Distributed_Runtime_Node_State.dut: STRUCT ST_Distributed_Runtime_Node_State fields=23
 ST_Distributed_Topology_Domain.dut: STRUCT ST_Distributed_Topology_Domain fields=17
@@ -185,6 +186,7 @@ STRUCT ST_Device_Health: total=9 with_initializer=1 without_initializer=8 array_
 STRUCT ST_Diagnostic_Event: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Authority_State: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Orchestration_State: total=19 with_initializer=0 without_initializer=19 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Distributed_Projection_Ownership: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Message: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Node_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Topology_Domain: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
