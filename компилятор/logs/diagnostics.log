@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3176
+total 3180
 -rw-r--r--  1 runner runner  13067 May 15 20:41 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  36864 May 15 20:41 .
 drwxr-xr-x  3 runner runner   4096 May 15 20:41 ..
@@ -437,6 +437,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 20:41 .github
 -rw-r--r--  1 runner runner    362 May 15 20:41 ST_Device_Health.dut
 -rw-r--r--  1 runner runner    271 May 15 20:41 ST_Diagnostic_Event.dut
 -rw-r--r--  1 runner runner    807 May 15 20:41 ST_Distributed_Authority_State.dut
+-rw-r--r--  1 runner runner    817 May 15 20:41 ST_Distributed_Orchestration_State.dut
 -rw-r--r--  1 runner runner    663 May 15 20:41 ST_Distributed_Runtime_Message.dut
 -rw-r--r--  1 runner runner    777 May 15 20:41 ST_Distributed_Runtime_Node_State.dut
 -rw-r--r--  1 runner runner    580 May 15 20:41 ST_Distributed_Topology_Domain.dut
@@ -574,8 +575,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 20:41 out
 -rw-r--r--  1 runner runner    177 May 15 20:41 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1936
+total 1940
 drwxr-xr-x 2 runner runner    4096 May 15 20:41 .
 drwxr-xr-x 5 runner runner    4096 May 15 20:41 ..
 -rw-r--r-- 1 runner runner       0 May 15 20:41 .gitkeep
--rw-r--r-- 1 runner runner 1972707 May 15 20:41 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1975583 May 15 20:41 RESULT_methods_clean.xml
