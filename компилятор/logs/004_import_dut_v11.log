@@ -1,8 +1,8 @@
-DUT_FILES=155
+DUT_FILES=156
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=116
-STRUCT_FIELDS_TOTAL=1455
+STRUCT_INSERTED=117
+STRUCT_FIELDS_TOTAL=1472
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -65,6 +65,7 @@ ST_Diagnostic_Event.dut: STRUCT ST_Diagnostic_Event fields=5
 ST_Distributed_Authority_State.dut: STRUCT ST_Distributed_Authority_State fields=21
 ST_Distributed_Runtime_Message.dut: STRUCT ST_Distributed_Runtime_Message fields=18
 ST_Distributed_Runtime_Node_State.dut: STRUCT ST_Distributed_Runtime_Node_State fields=23
+ST_Distributed_Topology_Domain.dut: STRUCT ST_Distributed_Topology_Domain fields=17
 ST_EVENT.dut: STRUCT ST_EVENT fields=5
 ST_Flood_Config.dut: STRUCT ST_Flood_Config fields=4
 ST_Flood_Global_Config.dut: STRUCT ST_Flood_Global_Config fields=4
@@ -182,6 +183,7 @@ STRUCT ST_Diagnostic_Event: total=5 with_initializer=0 without_initializer=5 arr
 STRUCT ST_Distributed_Authority_State: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Message: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Distributed_Runtime_Node_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Distributed_Topology_Domain: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_EVENT: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Flood_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=1 unsupported_initializer=0
 STRUCT ST_Flood_Global_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=2 unsupported_initializer=0
