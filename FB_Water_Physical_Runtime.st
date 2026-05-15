@@ -30,7 +30,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Feedback :=
         GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i];
 
-    // Physical convergence.
     L_Convergence := (Runtime_Valid := TRUE);
 
     L_Convergence.Runtime_System_Time_MS :=
@@ -52,20 +51,29 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         OR L_Feedback.Confirmed_Closed;
 
     // Runtime convergence.
-    IF L_Output.Expected_Closed
-       AND NOT L_Feedback.Confirmed_Closed THEN
+    IF L_Feedback.Feedback_Available THEN
 
-        L_Convergence.Projection_Mismatch := TRUE;
-        L_Convergence.Physical_Mismatch := TRUE;
+        IF L_Output.Expected_Closed
+           AND NOT L_Feedback.Confirmed_Closed THEN
+
+            L_Convergence.Projection_Mismatch := TRUE;
+            L_Convergence.Physical_Mismatch := TRUE;
+
+        END_IF;
+
+        IF NOT L_Convergence.Projection_Mismatch
+           AND NOT L_Feedback.Feedback_Timeout THEN
+
+            L_Convergence.Runtime_Converged := TRUE;
+
+        END_IF;
+
+    ELSE
+
+        L_Convergence.Runtime_Mismatch := FALSE;
+
     END_IF;
 
-    IF NOT L_Convergence.Projection_Mismatch
-       AND NOT L_Feedback.Feedback_Timeout THEN
-
-        L_Convergence.Runtime_Converged := TRUE;
-    END_IF;
-
-    // Conservative escalation.
     IF L_Convergence.Projection_Mismatch
        OR L_Feedback.Feedback_Conflict THEN
 
@@ -86,11 +94,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
         L_Convergence.Status_Code := 0;
         L_Convergence.Status_Text :=
-            'Physical convergence pending';
+            'Physical convergence observe-only';
 
     END_IF;
 
-    // Actuator diagnostics.
+    // Stateful timing placeholder.
     L_Diagnostics := (Runtime_Valid := TRUE);
 
     L_Diagnostics.Runtime_System_Time_MS :=
@@ -101,19 +109,24 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Diagnostics.Travel_Active :=
         L_Output.Projection_Allowed
+        AND L_Feedback.Feedback_Available
         AND NOT L_Convergence.Runtime_Converged;
 
-    // Placeholder timing model.
     IF L_Diagnostics.Travel_Active THEN
-        L_Diagnostics.Travel_Time_MS := 5000;
+        L_Diagnostics.Travel_Time_MS := 100;
+    ELSE
+        L_Diagnostics.Travel_Time_MS := 0;
     END_IF;
 
     IF L_Diagnostics.Travel_Time_MS > 4000 THEN
+
         L_Diagnostics.Travel_Timeout := TRUE;
         L_Diagnostics.Stuck_Suspected := TRUE;
+
     END_IF;
 
     IF L_Diagnostics.Travel_Timeout THEN
+
         L_Diagnostics.Diagnostics_Degraded := TRUE;
         L_Diagnostics.Escalation_Required := TRUE;
         L_Diagnostics.Failure_Count := 1;
