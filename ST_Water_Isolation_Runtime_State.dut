@@ -1,0 +1,43 @@
+TYPE ST_Water_Isolation_Runtime_State :
+STRUCT
+    // ==============================================================================
+    // Water/Flood isolation semantic runtime state.
+    // ==============================================================================
+    //
+    // Observe/publish-first governance contract.
+    // Does NOT directly own valve outputs.
+    // ==============================================================================
+
+    Projection_Valid : BOOL;
+    Projection_System_Time_MS : UDINT;
+
+    // Isolation semantics.
+    Isolation_Requested : BOOL;
+    Selective_Isolation_Requested : BOOL;
+    Global_Isolation_Requested : BOOL;
+
+    // Topology semantics.
+    Hydraulic_Zone_Id : UINT;
+    Isolation_Group_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    // Mapping validity.
+    Mapping_Valid : BOOL;
+    Fallback_To_Global_Required : BOOL;
+
+    // Runtime compatibility visibility.
+    Active_Global_Close_Path : BOOL;
+    Active_Safety_Latch : BOOL;
+
+    // Explainability.
+    Reason_Code : UINT;
+    Reason_Text : STRING(128);
+
+    // Lifecycle edges.
+    Isolation_Requested_Event : BOOL;
+    Fallback_To_Global_Event : BOOL;
+
+    // Governance identity.
+    Supervisory_Observation_Only : BOOL;
+END_STRUCT
+END_TYPE
