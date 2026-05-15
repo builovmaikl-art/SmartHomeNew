@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Convergence_State : ARRAY[1..64] OF ST_Water_Physical_Convergence_State;
+    G_Actuator_Diagnostics : ARRAY[1..64] OF ST_Water_Actuator_Diagnostics_State;
+
+    G_Any_Convergence_Degraded : BOOL;
+    G_Any_Diagnostics_Degraded : BOOL;
+    G_Any_Escalation_Required : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
