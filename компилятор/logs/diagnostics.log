@@ -374,7 +374,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 09:51 .github
 -rw-r--r--  1 runner runner   1605 May 15 09:51 PRG_User_Adapt_Control.st
 -rw-r--r--  1 runner runner   3028 May 15 09:51 PRG_Ventilation.st
 -rw-r--r--  1 runner runner    937 May 15 09:51 PRG_Water.st
--rw-r--r--  1 runner runner   4977 May 15 09:51 PRG_Water_Supervisory_Publication.st
+-rw-r--r--  1 runner runner   5515 May 15 09:51 PRG_Water_Supervisory_Publication.st
 -rw-r--r--  1 runner runner    711 May 15 09:51 ST_Alarm_Record.dut
 -rw-r--r--  1 runner runner    174 May 15 09:51 ST_Astro_Time.dut
 -rw-r--r--  1 runner runner    169 May 15 09:51 ST_Behavior_Weights.dut
@@ -497,8 +497,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 09:51 out
 -rw-r--r--  1 runner runner    177 May 15 09:51 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1700
+total 1708
 drwxr-xr-x 2 runner runner    4096 May 15 09:51 .
 drwxr-xr-x 5 runner runner    4096 May 15 09:51 ..
 -rw-r--r-- 1 runner runner       0 May 15 09:51 .gitkeep
--rw-r--r-- 1 runner runner 1732531 May 15 09:51 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1738909 May 15 09:51 RESULT_methods_clean.xml
