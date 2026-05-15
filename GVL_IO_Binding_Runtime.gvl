@@ -1,0 +1,11 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Invalid_Binding : BOOL;
+    G_Any_Missing_Binding : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
