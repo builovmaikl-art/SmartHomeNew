@@ -1,6 +1,7 @@
 PROGRAM PRG_Water_Supervisory_Publication
 VAR
     fbWaterLeakProjection : FB_Water_Leak_Runtime_Projection;
+    fbWaterIsolationProjection : FB_Water_Isolation_Runtime_Projection;
 
     L_i : INT;
     L_State : ST_Water_Leak_Runtime_State;
@@ -21,6 +22,12 @@ END_VAR
 
 // Canonical Water semantic projection.
 fbWaterLeakProjection(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+// Canonical Water isolation semantic projection.
+fbWaterIsolationProjection(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
@@ -132,12 +139,16 @@ GVL_Water_Runtime_Supervisory_Publication.G_Active_Global_Close_Path :=
 GVL_Water_Runtime_Supervisory_Publication.G_Active_Safety_Latch :=
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
 
-IF L_Any_Leak THEN
+IF L_Global_Fallback_Required THEN
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 2;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
+        'Global isolation fallback required';
+ELSIF L_Any_Leak THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 1;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
-        'Water leak active';
+        'Selective isolation topology visible';
 ELSIF L_Any_Warning THEN
-    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 2;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 3;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Water leak warning active';
 ELSE
@@ -145,3 +156,6 @@ ELSE
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Water runtime supervisory publication active';
 END_IF;
+
+// >>> BULK_SYNC_ANCHOR: PRG_Water_Supervisory_Publication <<<
+END_PROGRAM
