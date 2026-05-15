@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Local_Session : ST_Runtime_Node_Session;
+    G_Remote_Sessions : ARRAY[1..16] OF ST_Runtime_Node_Session;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Stale_Session : BOOL;
+    G_Any_Quarantined_Session : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
