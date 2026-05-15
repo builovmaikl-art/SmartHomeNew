@@ -12,4 +12,15 @@ VAR_GLOBAL
     G_Fallback_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     G_Reason_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 OK, 1 primary degraded fallback used, 2 degraded primary retained, 3 source loss
     G_Reason_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
+
+    // Passive edge/event publication for supervisory timeline pickup.
+    // These flags describe source-selection transitions only; they do not
+    // execute runtime action and do not own output authority.
+    G_Source_Switched_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Fallback_Activated_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Fallback_Recovered_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Source_Loss_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Last_Event_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UDINT;
+    G_Last_Event_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 none, 1 switched, 2 fallback activated, 3 fallback recovered, 4 source loss
+    G_Last_Event_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
 END_VAR
