@@ -1,0 +1,22 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_TX_Frames : ARRAY[1..128] OF ST_Runtime_Bus_Frame;
+    G_RX_Frames : ARRAY[1..128] OF ST_Runtime_Bus_Frame;
+
+    G_Last_Frame_Id : UDINT;
+    G_Last_Sequence_Id : UDINT;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_TX_Healthy : BOOL;
+    G_RX_Healthy : BOOL;
+
+    G_Any_Replication_Stale : BOOL;
+    G_Any_Replication_Rejected : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
