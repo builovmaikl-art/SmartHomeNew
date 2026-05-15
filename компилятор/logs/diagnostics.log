@@ -13,7 +13,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 === repo tree root ===
 total 2908
 -rw-r--r--  1 runner runner  13067 May 15 10:43 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 12 runner runner  32768 May 15 10:43 .
+drwxr-xr-x 12 runner runner  28672 May 15 10:43 .
 drwxr-xr-x  3 runner runner   4096 May 15 10:43 ..
 drwxr-xr-x  7 runner runner   4096 May 15 10:43 .git
 drwxr-xr-x  3 runner runner   4096 May 15 10:43 .github
@@ -190,6 +190,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 10:43 .github
 -rw-r--r--  1 runner runner   1692 May 15 10:43 FB_Water_Leakage_Manager.st
 -rw-r--r--  1 runner runner    496 May 15 10:43 FB_Water_Output_Projection.st
 -rw-r--r--  1 runner runner   3981 May 15 10:43 FB_Water_Output_Projector.st
+-rw-r--r--  1 runner runner   4311 May 15 10:43 FB_Water_Output_Reconciliation.st
 -rw-r--r--  1 runner runner   4633 May 15 10:43 FB_Water_Valve_Runtime_Governance.st
 -rw-r--r--  1 runner runner    234 May 15 10:43 GVL_ACCESS_OUTPUT.gvl
 -rw-r--r--  1 runner runner   1147 May 15 10:43 GVL_ALARM.gvl
@@ -492,9 +493,9 @@ drwxr-xr-x  5 runner runner   4096 May 15 10:43 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 10:43 ошибки компиляции.txt
 
 === compiler dir ===
-total 604
+total 596
 drwxr-xr-x  5 runner runner   4096 May 15 10:43 .
-drwxr-xr-x 12 runner runner  32768 May 15 10:43 ..
+drwxr-xr-x 12 runner runner  28672 May 15 10:43 ..
 -rw-r--r--  1 runner runner  21153 May 15 10:43 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May 15 10:43 __pycache__
 -rw-r--r--  1 runner runner  34293 May 15 10:43 import_codesys_FINAL.py
@@ -511,8 +512,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 10:43 out
 -rw-r--r--  1 runner runner    177 May 15 10:43 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1752
+total 1756
 drwxr-xr-x 2 runner runner    4096 May 15 10:43 .
 drwxr-xr-x 5 runner runner    4096 May 15 10:43 ..
 -rw-r--r-- 1 runner runner       0 May 15 10:43 .gitkeep
--rw-r--r-- 1 runner runner 1784035 May 15 10:43 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1787962 May 15 10:43 RESULT_methods_clean.xml
