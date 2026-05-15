@@ -1,5 +1,16 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
+    G_Flood_Sensor_Value : ARRAY[1..64] OF BOOL;
+    G_Flood_Sensor_Valid : ARRAY[1..64] OF BOOL;
+
+    G_Water_Valve_Open_FB_Value : ARRAY[1..64] OF BOOL;
+    G_Water_Valve_Open_FB_Valid : ARRAY[1..64] OF BOOL;
+
+    G_Water_Valve_Close_FB_Value : ARRAY[1..64] OF BOOL;
+    G_Water_Valve_Close_FB_Valid : ARRAY[1..64] OF BOOL;
+
+    G_Water_Valve_Output_Channel_Valid : ARRAY[1..64] OF BOOL;
+
     G_Runtime_Valid : BOOL;
     G_Last_Update_MS : UDINT;
 
