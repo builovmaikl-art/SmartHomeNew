@@ -1,0 +1,27 @@
+TYPE ST_Predictive_Diagnostics_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Device_Id : UINT;
+    Device_Class : UINT;
+    Valve_Group_Id : UINT;
+
+    Failure_Count : UINT;
+    Timeout_Count : UINT;
+    Conflict_Count : UINT;
+    Recovery_Denied_Count : UINT;
+
+    Wear_Score : REAL;
+    Reliability_Score : REAL;
+    Intermittent_Fault_Suspected : BOOL;
+    Degradation_Accumulating : BOOL;
+
+    Service_Recommended : BOOL;
+    Service_Urgent : BOOL;
+    Predictive_Quarantine_Recommended : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
