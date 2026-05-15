@@ -1,0 +1,44 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ==============================================================================
+    // Water/Flood explainability compatibility publication surface.
+    // ==============================================================================
+    //
+    // Compatibility/HMI/diagnostic publication layer.
+    //
+    // This GVL mirrors canonical Water runtime projection semantics for:
+    // - HMI visibility;
+    // - diagnostics continuity;
+    // - migration stability;
+    // - explainability publication.
+    //
+    // This GVL is NOT:
+    // - runtime authority;
+    // - valve authority;
+    // - canonical routing root;
+    // - supervisory aggregation owner.
+    // ==============================================================================
+
+    G_Leak_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Warning_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+
+    G_Mapping_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Selectively_Isolatable : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Global_Fallback_Required : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+
+    G_Leak_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF REAL;
+
+    G_Valve_Group_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Hydraulic_Zone_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+
+    G_Reason_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Reason_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF STRING(128);
+
+    G_Warning_Started_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Leak_Confirmed_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Leak_Cleared_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+
+    G_Explainability_Valid : BOOL;
+    G_Explainability_Status_Code : UINT;
+    G_Explainability_Status_Text : STRING(128);
+END_VAR
