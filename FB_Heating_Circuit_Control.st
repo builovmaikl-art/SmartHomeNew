@@ -59,6 +59,11 @@ VAR
     L_Reason_Text : STRING(128);
     L_Selected_Source_Text : STRING(64);
 
+    L_Prev_Selected_Source_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+    L_Prev_Fallback_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    L_Prev_Source_Loss : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    L_Source_Loss_Active : BOOL;
+
     L_Floor_Controllers : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_FloorHeating_Controller;
     L_Overheat_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_System_Timer;
     fbFloorTempValidator : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_Analog_Validator;
@@ -226,6 +231,43 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         );
     END_IF;
 
+    L_Source_Loss_Active := L_Sensor_Error;
+
+    GVL_Heating_Circuit_Explainability.G_Source_Switched_Event[L_i] :=
+        (L_Prev_Selected_Source_Code[L_i] <> 0) AND
+        (L_Selected_Source_Code <> 0) AND
+        (L_Selected_Source_Code <> L_Prev_Selected_Source_Code[L_i]);
+
+    GVL_Heating_Circuit_Explainability.G_Fallback_Activated_Event[L_i] :=
+        L_Fallback_Active AND NOT L_Prev_Fallback_Active[L_i];
+
+    GVL_Heating_Circuit_Explainability.G_Fallback_Recovered_Event[L_i] :=
+        (NOT L_Fallback_Active) AND L_Prev_Fallback_Active[L_i] AND NOT L_Source_Loss_Active;
+
+    GVL_Heating_Circuit_Explainability.G_Source_Loss_Event[L_i] :=
+        L_Source_Loss_Active AND NOT L_Prev_Source_Loss[L_i];
+
+    GVL_Heating_Circuit_Explainability.G_Last_Event_Code[L_i] := 0;
+    GVL_Heating_Circuit_Explainability.G_Last_Event_Text[L_i] := '';
+
+    IF GVL_Heating_Circuit_Explainability.G_Source_Loss_Event[L_i] THEN
+        GVL_Heating_Circuit_Explainability.G_Last_Event_MS[L_i] := VI_System_Time_MS;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Code[L_i] := 4;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Text[L_i] := 'Temperature source loss';
+    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Activated_Event[L_i] THEN
+        GVL_Heating_Circuit_Explainability.G_Last_Event_MS[L_i] := VI_System_Time_MS;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Code[L_i] := 2;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Text[L_i] := L_Reason_Text;
+    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Recovered_Event[L_i] THEN
+        GVL_Heating_Circuit_Explainability.G_Last_Event_MS[L_i] := VI_System_Time_MS;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Code[L_i] := 3;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Text[L_i] := 'Fallback recovered; primary source selected';
+    ELSIF GVL_Heating_Circuit_Explainability.G_Source_Switched_Event[L_i] THEN
+        GVL_Heating_Circuit_Explainability.G_Last_Event_MS[L_i] := VI_System_Time_MS;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Code[L_i] := 1;
+        GVL_Heating_Circuit_Explainability.G_Last_Event_Text[L_i] := 'Temperature source switched';
+    END_IF;
+
     GVL_Heating_Circuit_Explainability.G_Source_Selection_Visible[L_i] := TRUE;
     GVL_Heating_Circuit_Explainability.G_Selected_Source_Code[L_i] := L_Selected_Source_Code;
     GVL_Heating_Circuit_Explainability.G_Selected_Source_Text[L_i] := L_Selected_Source_Text;
@@ -236,6 +278,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_Heating_Circuit_Explainability.G_Fallback_Source_Confidence[L_i] := L_Fallback_Confidence;
     GVL_Heating_Circuit_Explainability.G_Reason_Code[L_i] := L_Reason_Code;
     GVL_Heating_Circuit_Explainability.G_Reason_Text[L_i] := L_Reason_Text;
+
+    L_Prev_Selected_Source_Code[L_i] := L_Selected_Source_Code;
+    L_Prev_Fallback_Active[L_i] := L_Fallback_Active;
+    L_Prev_Source_Loss[L_i] := L_Source_Loss_Active;
 
     IF L_Overheat_Timer[L_i].Q THEN
         VO_Zone_Valves[L_i] := FALSE;
