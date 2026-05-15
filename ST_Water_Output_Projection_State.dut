@@ -1,0 +1,44 @@
+TYPE ST_Water_Output_Projection_State :
+STRUCT
+    // Deterministic output projection contract.
+
+    Projection_Valid : BOOL;
+    Projection_System_Time_MS : UDINT;
+
+    // Ownership.
+    Output_Owner_Valid : BOOL;
+    Output_Owner_Id : UINT;
+
+    // Projection target.
+    Valve_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    // Authority source.
+    Selective_Authority_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+    Authority_Valid : BOOL;
+
+    // Physical projection.
+    Physical_Close_Project : BOOL;
+    Physical_Open_Project : BOOL;
+
+    // Reconciliation hooks.
+    Expected_Closed : BOOL;
+    Expected_Open : BOOL;
+    Confirmed_Closed : BOOL;
+    Confirmed_Open : BOOL;
+    Confirmation_Unknown : BOOL;
+
+    // Arbitration validity.
+    Projection_Allowed : BOOL;
+    Projection_Denied : BOOL;
+
+    // Explainability.
+    Projection_Code : UINT;
+    Projection_Text : STRING(128);
+
+    // Lifecycle.
+    Projection_Activated_Event : BOOL;
+    Projection_Denied_Event : BOOL;
+END_STRUCT
+END_TYPE
