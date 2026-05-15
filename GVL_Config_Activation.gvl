@@ -1,0 +1,22 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Requested_Config_Version : UDINT;
+    G_Staged_Config_Version : UDINT;
+    G_Last_Stable_Config_Version : UDINT;
+
+    G_Activation_Request : BOOL;
+    G_Rollback_Request : BOOL;
+
+    G_Staged_Topology_Config : ARRAY[1..64] OF ST_Water_Topology_Config_Record;
+END_VAR
+
+VAR_GLOBAL
+    G_Activation_State : ST_Config_Activation_State;
+
+    G_Config_Quarantine_Active : BOOL;
+    G_Activation_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
