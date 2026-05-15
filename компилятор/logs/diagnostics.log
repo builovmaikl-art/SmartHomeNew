@@ -13,7 +13,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 === repo tree root ===
 total 2808
 -rw-r--r--  1 runner runner  13067 May 15 09:45 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 12 runner runner  28672 May 15 09:45 .
+drwxr-xr-x 12 runner runner  24576 May 15 09:45 .
 drwxr-xr-x  3 runner runner   4096 May 15 09:45 ..
 drwxr-xr-x  7 runner runner   4096 May 15 09:45 .git
 drwxr-xr-x  3 runner runner   4096 May 15 09:45 .github
@@ -278,6 +278,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 09:45 .github
 -rw-r--r--  1 runner runner    186 May 15 09:45 GVL_WATER_OUTPUT.gvl
 -rw-r--r--  1 runner runner   1957 May 15 09:45 GVL_Water_Leak_Explainability.gvl
 -rw-r--r--  1 runner runner   1628 May 15 09:45 GVL_Water_Runtime_Projection.gvl
+-rw-r--r--  1 runner runner    737 May 15 09:45 GVL_Water_Runtime_Supervisory_Publication.gvl
 -rw-r--r--  1 runner runner   4495 May 15 09:45 HEATING_ACTIVE_FB_CALL_GRAPH_AUDIT.md
 -rw-r--r--  1 runner runner   9486 May 15 09:45 HEATING_ACTIVE_WRITE_PATH_VERIFICATION.md
 -rw-r--r--  1 runner runner   3039 May 15 09:45 HEATING_ALLOCATION_MIGRATION_PHASE.md
@@ -473,9 +474,9 @@ drwxr-xr-x  5 runner runner   4096 May 15 09:45 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 09:45 ошибки компиляции.txt
 
 === compiler dir ===
-total 596
+total 592
 drwxr-xr-x  5 runner runner   4096 May 15 09:45 .
-drwxr-xr-x 12 runner runner  28672 May 15 09:45 ..
+drwxr-xr-x 12 runner runner  24576 May 15 09:45 ..
 -rw-r--r--  1 runner runner  21153 May 15 09:45 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May 15 09:45 __pycache__
 -rw-r--r--  1 runner runner  34293 May 15 09:45 import_codesys_FINAL.py
@@ -496,4 +497,4 @@ total 1688
 drwxr-xr-x 2 runner runner    4096 May 15 09:45 .
 drwxr-xr-x 5 runner runner    4096 May 15 09:45 ..
 -rw-r--r-- 1 runner runner       0 May 15 09:45 .gitkeep
--rw-r--r-- 1 runner runner 1717182 May 15 09:45 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1720247 May 15 09:45 RESULT_methods_clean.xml
