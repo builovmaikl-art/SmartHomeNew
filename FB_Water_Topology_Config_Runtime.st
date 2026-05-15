@@ -6,7 +6,6 @@ END_VAR
 VAR
     L_i : INT;
     L_Config : ST_Water_Topology_Config_Record;
-
     L_Any_Invalid : BOOL;
     L_Any_Multi_Valve : BOOL;
 END_VAR
@@ -18,37 +17,45 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
-    L_Config := (Config_Valid := TRUE);
+    // Runtime topology source.
+    // Source priority:
+    // retained config -> fallback bootstrap.
+    L_Config := GVL_Water_Topology_Config_Source.G_Source_Record[L_i];
 
-    L_Config.Config_Version := 1;
-    L_Config.Sensor_Id := TO_UINT(L_i);
+    IF NOT L_Config.Config_Valid THEN
 
-    // Runtime remap-ready topology source.
-    // Future source:
-    //   persistent config / file / HMI / remote sync.
+        // Conservative bootstrap fallback.
+        L_Config := (Config_Valid := TRUE);
 
-    L_Config.Logical_Zone_Id := TO_UINT(L_i);
-    L_Config.Hydraulic_Segment_Id := TO_UINT(L_i);
-    L_Config.Isolation_Group_Id := TO_UINT(L_i);
-    L_Config.Primary_Valve_Group_Id := TO_UINT(L_i);
-    L_Config.Fallback_Domain_Id := 1;
-    L_Config.Recovery_Domain_Id := 1;
+        L_Config.Config_Version := 1;
+        L_Config.Sensor_Id := TO_UINT(L_i);
+        L_Config.Logical_Zone_Id := TO_UINT(L_i);
+        L_Config.Hydraulic_Segment_Id := TO_UINT(L_i);
+        L_Config.Isolation_Group_Id := TO_UINT(L_i);
+        L_Config.Primary_Valve_Group_Id := TO_UINT(L_i);
+        L_Config.Fallback_Domain_Id := 1;
+        L_Config.Recovery_Domain_Id := 1;
 
-    // Shared trunk example topology.
-    IF (L_i MOD 4) = 0 THEN
-        L_Config.Shared_Trunk := TRUE;
-        L_Config.Cross_Zone_Dependency := TRUE;
-        L_Config.Multi_Valve_Required := TRUE;
-        L_Config.Secondary_Valve_Group_Id := TO_UINT(L_i + 100);
+        IF (L_i MOD 4) = 0 THEN
+            L_Config.Shared_Trunk := TRUE;
+            L_Config.Cross_Zone_Dependency := TRUE;
+            L_Config.Multi_Valve_Required := TRUE;
+            L_Config.Secondary_Valve_Group_Id := TO_UINT(L_i + 100);
+        END_IF;
+
     END_IF;
 
     IF L_Config.Primary_Valve_Group_Id = 0 THEN
+
         L_Config.Config_Valid := FALSE;
         L_Config.Status_Code := 1;
         L_Config.Status_Text := 'Invalid topology config';
+
     ELSE
+
         L_Config.Status_Code := 0;
         L_Config.Status_Text := 'Topology config loaded';
+
     END_IF;
 
     GVL_Water_Topology_Config.G_Config_Record[L_i] := L_Config;
@@ -63,7 +70,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
 END_FOR;
 
-GVL_Water_Topology_Config.G_Active_Config_Version := 1;
+GVL_Water_Topology_Config.G_Active_Config_Version :=
+    GVL_Water_Topology_Config_Source.G_Source_Version;
+
 GVL_Water_Topology_Config.G_Config_Loaded := TRUE;
 GVL_Water_Topology_Config.G_Runtime_Remap_Ready := TRUE;
 
