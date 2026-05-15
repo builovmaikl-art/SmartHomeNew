@@ -1,0 +1,18 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Recovery_FSM : ARRAY[1..64] OF ST_Water_Recovery_FSM_State;
+    G_Event_Log : ARRAY[1..128] OF ST_Water_Event_Log_Record;
+
+    G_Runtime_Quarantine_Active : BOOL;
+    G_Service_Mode_Active : BOOL;
+    G_Maintenance_Mode_Active : BOOL;
+
+    G_Any_Rollback_Required : BOOL;
+    G_Any_Escalation_Required : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
