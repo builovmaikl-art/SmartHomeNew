@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3052
+total 3048
 -rw-r--r--  1 runner runner  13067 May 15 16:26 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  32768 May 15 16:26 .
 drwxr-xr-x  3 runner runner   4096 May 15 16:26 ..
@@ -187,7 +187,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 16:26 .github
 -rw-r--r--  1 runner runner   5456 May 15 16:26 FB_Water_Isolation_Authority_Arbitrator.st
 -rw-r--r--  1 runner runner   2056 May 15 16:26 FB_Water_Isolation_Intent_Builder.st
 -rw-r--r--  1 runner runner   4520 May 15 16:26 FB_Water_Isolation_Path_Resolver.st
--rw-r--r--  1 runner runner   4867 May 15 16:26 FB_Water_Isolation_Runtime_Projection.st
+-rw-r--r--  1 runner runner   3381 May 15 16:26 FB_Water_Isolation_Runtime_Projection.st
 -rw-r--r--  1 runner runner   5474 May 15 16:26 FB_Water_Leak_Runtime_Projection.st
 -rw-r--r--  1 runner runner   1692 May 15 16:26 FB_Water_Leakage_Manager.st
 -rw-r--r--  1 runner runner   4574 May 15 16:26 FB_Water_Orchestration_Runtime.st
@@ -547,4 +547,4 @@ total 1848
 drwxr-xr-x 2 runner runner    4096 May 15 16:26 .
 drwxr-xr-x 5 runner runner    4096 May 15 16:26 ..
 -rw-r--r-- 1 runner runner       0 May 15 16:26 .gitkeep
--rw-r--r-- 1 runner runner 1881364 May 15 16:26 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1880977 May 15 16:26 RESULT_methods_clean.xml
