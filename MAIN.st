@@ -124,6 +124,7 @@ PRG_Recovery_Cleanup_Governor();
 
 // 28. Domain execution and projection
 PRG_Heating();
+PRG_Heating_Supervisory_Publication();
 PRG_Ventilation();
 PRG_Water();
 PRG_Access();
