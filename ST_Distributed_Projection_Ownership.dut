@@ -1,0 +1,27 @@
+TYPE ST_Distributed_Projection_Ownership :
+STRUCT
+    Ownership_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Projection_Id : UINT;
+    Projection_Class : UINT;
+
+    Owner_Controller_Id : UINT;
+    Owner_Runtime_Node_Id : UINT;
+    Owner_Authority_Domain_Id : UINT;
+
+    Ownership_Granted : BOOL;
+    Ownership_Revoked : BOOL;
+    Ownership_Conflict : BOOL;
+    Ownership_Stale : BOOL;
+
+    Projection_Active : BOOL;
+    Projection_Blocked : BOOL;
+
+    Distributed_Execution_Allowed : BOOL;
+    Distributed_Recovery_Allowed : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
