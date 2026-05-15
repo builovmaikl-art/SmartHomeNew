@@ -10,12 +10,21 @@ VAR
 END_VAR
 
 IF NOT VI_Enable THEN
+    GVL_Cluster_Safety_Barrier.G_Runtime_Valid := FALSE;
     RETURN;
 END_IF;
 
 L_Block_Execution := FALSE;
 L_Status_Code := 0;
 L_Status_Text := 'Cluster safety barrier healthy';
+
+GVL_Cluster_Safety_Barrier.G_Remote_Authority_Degraded := FALSE;
+GVL_Cluster_Safety_Barrier.G_Runtime_Bus_Degraded := FALSE;
+GVL_Cluster_Safety_Barrier.G_Projection_Ownership_Invalid := FALSE;
+GVL_Cluster_Safety_Barrier.G_Recovery_Lock_Active := FALSE;
+GVL_Cluster_Safety_Barrier.G_Deployment_Invalid := FALSE;
+GVL_Cluster_Safety_Barrier.G_Authority_Downgraded := FALSE;
+GVL_Cluster_Safety_Barrier.G_Orchestration_Restricted := FALSE;
 
 // Remote authority staleness barrier.
 IF GVL_Distributed_Runtime.G_Any_Remote_Node_Offline
@@ -25,6 +34,8 @@ IF GVL_Distributed_Runtime.G_Any_Remote_Node_Offline
     L_Status_Code := 10;
     L_Status_Text :=
         'Cluster authority state degraded';
+
+    GVL_Cluster_Safety_Barrier.G_Remote_Authority_Degraded := TRUE;
 
 END_IF;
 
@@ -38,6 +49,8 @@ IF GVL_Runtime_Bus.G_Any_Replication_Rejected
     L_Status_Text :=
         'Runtime bus integrity degraded';
 
+    GVL_Cluster_Safety_Barrier.G_Runtime_Bus_Degraded := TRUE;
+
 END_IF;
 
 // Projection ownership barrier.
@@ -48,6 +61,8 @@ IF GVL_Distributed_Projection_Ownership.G_Any_Ownership_Conflict
     L_Status_Code := 12;
     L_Status_Text :=
         'Distributed projection ownership invalid';
+
+    GVL_Cluster_Safety_Barrier.G_Projection_Ownership_Invalid := TRUE;
 
 END_IF;
 
@@ -61,6 +76,8 @@ IF GVL_Distributed_Recovery_Lock.G_Recovery_Execution_Blocked
     L_Status_Text :=
         'Distributed recovery execution blocked';
 
+    GVL_Cluster_Safety_Barrier.G_Recovery_Lock_Active := TRUE;
+
 END_IF;
 
 // Discovery/deployment barrier.
@@ -72,6 +89,8 @@ IF GVL_Runtime_Discovery.G_Any_Discovery_Rejected
     L_Status_Text :=
         'Runtime deployment/discovery invalid';
 
+    GVL_Cluster_Safety_Barrier.G_Deployment_Invalid := TRUE;
+
 END_IF;
 
 // Cluster escalation semantics.
@@ -82,6 +101,17 @@ IF L_Block_Execution THEN
 
     GVL_Distributed_Orchestration.G_Distributed_Projection_Healthy := FALSE;
 
+    GVL_Cluster_Safety_Barrier.G_Authority_Downgraded := TRUE;
+    GVL_Cluster_Safety_Barrier.G_Orchestration_Restricted := TRUE;
+
 END_IF;
+
+GVL_Cluster_Safety_Barrier.G_Cluster_Execution_Blocked :=
+    L_Block_Execution;
+
+GVL_Cluster_Safety_Barrier.G_Runtime_Valid := TRUE;
+GVL_Cluster_Safety_Barrier.G_Last_Update_MS := VI_System_Time_MS;
+GVL_Cluster_Safety_Barrier.G_Status_Code := L_Status_Code;
+GVL_Cluster_Safety_Barrier.G_Status_Text := L_Status_Text;
 
 END_FUNCTION_BLOCK
