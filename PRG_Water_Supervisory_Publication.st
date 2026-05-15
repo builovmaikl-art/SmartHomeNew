@@ -1,5 +1,6 @@
 PROGRAM PRG_Water_Supervisory_Publication
 VAR
+    fbWaterTopologyConfig : FB_Water_Topology_Config_Runtime;
     fbWaterLeakProjection : FB_Water_Leak_Runtime_Projection;
     fbWaterTopologyValidator : FB_Water_Hydraulic_Topology_Validator;
     fbWaterIsolationPathResolver : FB_Water_Isolation_Path_Resolver;
@@ -22,14 +23,20 @@ END_VAR
 // Water/Flood supervisory publication orchestration.
 //
 // Runtime chain:
-// leak semantics
-//   -> hydraulic topology validation
-//   -> hydraulic graph/path resolution
+// runtime topology config
+//   -> leak semantics
+//   -> topology validation
+//   -> graph/path resolution
 //   -> orchestration/traversal governance
 //   -> isolation semantics
 //   -> authority arbitration
 //   -> valve governance
 //   -> supervisory publication
+
+fbWaterTopologyConfig(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
 
 fbWaterLeakProjection(
     VI_Enable := TRUE,
@@ -85,7 +92,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Any_Degraded_Mapping :=
         L_Any_Degraded_Mapping
-        OR GVL_Water_Orchestration.G_Traversal_State[L_i].Traversal_Conflict;
+        OR GVL_Water_Orchestration.G_Traversal_State[L_i].Traversal_Conflict
+        OR NOT GVL_Water_Topology_Config.G_Config_Record[L_i].Config_Valid;
 
     L_Selective_Isolation_Available :=
         L_Selective_Isolation_Available
@@ -116,7 +124,11 @@ GVL_Water_Runtime_Supervisory_Publication.G_Selective_Isolation_Available :=
 GVL_Water_Runtime_Supervisory_Publication.G_Global_Fallback_Active :=
     L_Global_Fallback_Required;
 
-IF GVL_Water_Orchestration.G_Any_Escalation_Required THEN
+IF GVL_Water_Topology_Config.G_Any_Invalid_Config THEN
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 8;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
+        'Runtime topology config invalid';
+ELSIF GVL_Water_Orchestration.G_Any_Escalation_Required THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 7;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Topology-aware orchestration escalation active';
@@ -127,7 +139,7 @@ ELSIF GVL_Water_Orchestration.G_Any_Traversal_Conflict THEN
 ELSE
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 0;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
-        'Water orchestration runtime active';
+        'Runtime topology orchestration active';
 END_IF;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Water_Supervisory_Publication <<<
