@@ -4,6 +4,11 @@
 // Internal refactoring helper for FB_Heating_System_Manager.
 // Owns per-circuit sensor validation, temperature source fallback,
 // floor-heating controller call, overheat shutdown, and rule action projection.
+//
+// Temperature source selection is confidence-aware:
+// - range invalid still blocks that source;
+// - passive input-quality confidence can prefer a healthier fallback;
+// - degraded-but-range-valid sources remain operational if no better source exists.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Circuit_Control
 VAR_INPUT
@@ -34,6 +39,11 @@ VAR
     L_Zone_Config : ST_FloorHeating_Circuit_Config;
     L_Current_Temp : REAL;
     L_Sensor_Error : BOOL;
+    L_Floor_Source_Valid : BOOL;
+    L_Room_Source_Valid : BOOL;
+    L_Floor_Confidence : REAL;
+    L_Room_Confidence : REAL;
+    L_Min_Source_Confidence : REAL;
 
     L_Floor_Controllers : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_FloorHeating_Controller;
     L_Overheat_Timer : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF FB_System_Timer;
@@ -42,6 +52,7 @@ VAR
 END_VAR
 
 VO_Heating_Sensor_Fault := FALSE;
+L_Min_Source_Confidence := GVL_INPUT_VALIDATION_CONFIG.G_Min_Sensor_Confidence;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     fbFloorTempValidator[L_i](
@@ -61,31 +72,69 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         );
     END_IF;
 
-    // Floor overheat protection
+    L_Floor_Source_Valid := NOT fbFloorTempValidator[L_i].VO_Error;
+    L_Room_Source_Valid :=
+        (L_Climate_Zone_ID >= 1) AND
+        (L_Climate_Zone_ID <= 16) AND
+        (NOT fbRoomTempValidator[L_Climate_Zone_ID].VO_Error);
+
+    L_Floor_Confidence := REAL#1.0;
+    IF GVL_INPUT_QUALITY.G_Floor_Temp_Quality[L_i].Quality_Visible THEN
+        L_Floor_Confidence := GVL_INPUT_QUALITY.G_Floor_Temp_Quality[L_i].Confidence;
+    END_IF;
+
+    L_Room_Confidence := REAL#1.0;
+    IF (L_Climate_Zone_ID >= 1) AND (L_Climate_Zone_ID <= 16) THEN
+        IF GVL_INPUT_QUALITY.G_Room_Temp_Quality[L_Climate_Zone_ID].Quality_Visible THEN
+            L_Room_Confidence := GVL_INPUT_QUALITY.G_Room_Temp_Quality[L_Climate_Zone_ID].Confidence;
+        END_IF;
+    END_IF;
+
+    IF L_Floor_Confidence < REAL#0.0 THEN
+        L_Floor_Confidence := REAL#0.0;
+    ELSIF L_Floor_Confidence > REAL#1.0 THEN
+        L_Floor_Confidence := REAL#1.0;
+    END_IF;
+
+    IF L_Room_Confidence < REAL#0.0 THEN
+        L_Room_Confidence := REAL#0.0;
+    ELSIF L_Room_Confidence > REAL#1.0 THEN
+        L_Room_Confidence := REAL#1.0;
+    END_IF;
+
+    // Floor overheat protection remains floor-bound and range-validity based.
     L_Overheat_Timer[L_i](
-        IN := fbFloorTempValidator[L_i].VO_Value > VI_Config.Overheat_Threshold,
+        IN := L_Floor_Source_Valid AND (fbFloorTempValidator[L_i].VO_Value > VI_Config.Overheat_Threshold),
         PT := T#60s,
         VI_System_Time_MS := VI_System_Time_MS
     );
 
-    L_Current_Temp := 0.0;
+    L_Current_Temp := REAL#0.0;
     L_Sensor_Error := FALSE;
 
     IF VI_Zone_Configs[L_i].control_type = 1 OR VI_Zone_Configs[L_i].control_type = 2 THEN
-        // Primary: room air temperature
-        IF (L_Climate_Zone_ID >= 1) AND (L_Climate_Zone_ID <= 16) AND (NOT fbRoomTempValidator[L_Climate_Zone_ID].VO_Error) THEN
+        // Primary: room air temperature. If room quality is degraded and floor
+        // source is healthier, prefer floor fallback without declaring hard fault.
+        IF L_Room_Source_Valid AND
+           ((L_Room_Confidence >= L_Min_Source_Confidence) OR NOT L_Floor_Source_Valid OR (L_Room_Confidence >= L_Floor_Confidence)) THEN
             L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
-        ELSIF NOT fbFloorTempValidator[L_i].VO_Error THEN
+        ELSIF L_Floor_Source_Valid THEN
             L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
+        ELSIF L_Room_Source_Valid THEN
+            L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
         ELSE
             L_Sensor_Error := TRUE;
         END_IF;
     ELSE
-        // Primary: floor temperature
-        IF NOT fbFloorTempValidator[L_i].VO_Error THEN
+        // Primary: floor temperature. If floor quality is degraded and room
+        // source is healthier, prefer room fallback without declaring hard fault.
+        IF L_Floor_Source_Valid AND
+           ((L_Floor_Confidence >= L_Min_Source_Confidence) OR NOT L_Room_Source_Valid OR (L_Floor_Confidence >= L_Room_Confidence)) THEN
             L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
-        ELSIF (L_Climate_Zone_ID >= 1) AND (L_Climate_Zone_ID <= 16) AND (NOT fbRoomTempValidator[L_Climate_Zone_ID].VO_Error) THEN
+        ELSIF L_Room_Source_Valid THEN
             L_Current_Temp := fbRoomTempValidator[L_Climate_Zone_ID].VO_Value;
+        ELSIF L_Floor_Source_Valid THEN
+            L_Current_Temp := fbFloorTempValidator[L_i].VO_Value;
         ELSE
             L_Sensor_Error := TRUE;
         END_IF;
@@ -116,7 +165,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
         IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
             IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_FLOOR_HEATING THEN
-                VO_Zone_Valves[L_i] := (VI_Rule_Actions[L_j].Value > 0.5);
+                VO_Zone_Valves[L_i] := (VI_Rule_Actions[L_j].Value > REAL#0.5);
             END_IF;
         END_IF;
     END_FOR;
