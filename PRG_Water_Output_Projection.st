@@ -3,11 +3,19 @@ VAR
     fbWaterOutputProjector : FB_Water_Output_Projector;
     fbWaterOutputReconciliation : FB_Water_Output_Reconciliation;
     fbWaterValveFeedback : FB_Water_Valve_Feedback_Runtime;
+    fbWaterPhysicalRuntime : FB_Water_Physical_Runtime;
     fbWaterRecoveryRuntime : FB_Water_Recovery_Runtime;
 END_VAR
 
 // Deterministic output projection runtime boundary.
-// Single projection owner.
+//
+// Runtime chain:
+// output projection
+//   -> reconciliation
+//   -> valve feedback
+//   -> physical convergence runtime
+//   -> recovery governance
+//
 // No semantic/runtime authority.
 // Existing global safety path preserved.
 
@@ -16,19 +24,21 @@ fbWaterOutputProjector(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
-// Projection/runtime/confirmation reconciliation.
 fbWaterOutputReconciliation(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
-// Valve feedback and diagnostics runtime.
 fbWaterValveFeedback(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
-// Recovery governance runtime.
+fbWaterPhysicalRuntime(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
 fbWaterRecoveryRuntime(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
