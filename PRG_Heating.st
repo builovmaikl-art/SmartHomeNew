@@ -54,13 +54,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    IF L_i <= GVL_CONSTANTS.C_MAX_ZONES THEN
-        L_Floor_Temps_Normalized[L_i] := GVL_INPUT.IN_Floor_Temps[L_i];
-    ELSE
-        // Transitional guard: GVL_INPUT currently exposes floor temps by zone bound,
-        // while heating runtime owns circuit-bound floor control.
-        L_Floor_Temps_Normalized[L_i] := GVL_STATE.G_Floor_Temps[L_i];
-    END_IF;
+    L_Floor_Temps_Normalized[L_i] := GVL_INPUT.IN_Floor_Temps[L_i];
 END_FOR;
 
 L_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
