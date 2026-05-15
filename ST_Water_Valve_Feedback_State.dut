@@ -1,0 +1,28 @@
+TYPE ST_Water_Valve_Feedback_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Valve_Group_Id : UINT;
+
+    Feedback_Available : BOOL;
+
+    Physical_Open_Feedback : BOOL;
+    Physical_Closed_Feedback : BOOL;
+
+    Confirmed_Open : BOOL;
+    Confirmed_Closed : BOOL;
+
+    Feedback_Invalid : BOOL;
+    Feedback_Conflict : BOOL;
+    Feedback_Timeout : BOOL;
+
+    Travel_Timeout_Active : BOOL;
+    Valve_Stuck_Suspected : BOOL;
+
+    Valve_Degraded : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
