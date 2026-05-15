@@ -4,6 +4,7 @@ VAR
     fbWaterOutputReconciliation : FB_Water_Output_Reconciliation;
     fbWaterValveFeedback : FB_Water_Valve_Feedback_Runtime;
     fbWaterPhysicalRuntime : FB_Water_Physical_Runtime;
+    fbWaterRuntimeHardening : FB_Water_Runtime_Hardening;
     fbWaterRecoveryRuntime : FB_Water_Recovery_Runtime;
 END_VAR
 
@@ -14,6 +15,7 @@ END_VAR
 //   -> reconciliation
 //   -> valve feedback
 //   -> physical convergence runtime
+//   -> runtime hardening
 //   -> recovery governance
 //
 // No semantic/runtime authority.
@@ -35,6 +37,11 @@ fbWaterValveFeedback(
 );
 
 fbWaterPhysicalRuntime(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+fbWaterRuntimeHardening(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
