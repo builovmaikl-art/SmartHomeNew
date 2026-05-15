@@ -1,8 +1,8 @@
-DUT_FILES=154
+DUT_FILES=155
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=115
-STRUCT_FIELDS_TOTAL=1434
+STRUCT_INSERTED=116
+STRUCT_FIELDS_TOTAL=1455
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -116,6 +116,7 @@ ST_Owen_Analog_Value.dut: STRUCT ST_Owen_Analog_Value fields=3
 ST_Predictive_Diagnostics_State.dut: STRUCT ST_Predictive_Diagnostics_State fields=18
 ST_Rule.dut: STRUCT ST_Rule fields=8
 ST_Rule_Action.dut: STRUCT ST_Rule_Action fields=5
+ST_Runtime_Bus_Frame.dut: STRUCT ST_Runtime_Bus_Frame fields=21
 ST_Runtime_Restart_Continuity_State.dut: STRUCT ST_Runtime_Restart_Continuity_State fields=23
 ST_Scenario_Config.dut: STRUCT ST_Scenario_Config fields=8
 ST_Scenario_Stats.dut: STRUCT ST_Scenario_Stats fields=7
@@ -232,6 +233,7 @@ STRUCT ST_Owen_Analog_Value: total=3 with_initializer=0 without_initializer=3 ar
 STRUCT ST_Predictive_Diagnostics_State: total=18 with_initializer=0 without_initializer=18 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Rule: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Rule_Action: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Runtime_Bus_Frame: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Runtime_Restart_Continuity_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Stats: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
