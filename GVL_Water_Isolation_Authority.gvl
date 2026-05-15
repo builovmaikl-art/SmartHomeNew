@@ -1,0 +1,31 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ==============================================================================
+    // Water/Flood authority arbitration publication.
+    // ==============================================================================
+    //
+    // Explicit deterministic authority decision layer.
+    //
+    // This layer:
+    // - evaluates selective isolation authority;
+    // - preserves conservative global fallback;
+    // - publishes explainable authority decisions.
+    //
+    // This layer does NOT directly own physical outputs.
+    // ==============================================================================
+
+    G_Authority_State : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF ST_Water_Isolation_Authority_State;
+
+    // Aggregated authority visibility.
+    G_Any_Selective_Authority_Allowed : BOOL;
+    G_Any_Global_Fallback_Required : BOOL;
+    G_Any_Authority_Denied : BOOL;
+
+    // Runtime lifecycle.
+    G_Authority_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    // Explainability.
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
