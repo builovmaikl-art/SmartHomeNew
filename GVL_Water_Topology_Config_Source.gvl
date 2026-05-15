@@ -1,0 +1,12 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Source_Record : ARRAY[1..64] OF ST_Water_Topology_Config_Record;
+    G_Source_Version : UDINT;
+    G_Source_Valid : BOOL;
+    G_Source_Activated_MS : UDINT;
+END_VAR
+
+VAR_GLOBAL
+    G_Source_Status_Code : UINT;
+    G_Source_Status_Text : STRING(128);
+END_VAR
