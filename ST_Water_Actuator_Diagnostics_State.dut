@@ -1,0 +1,22 @@
+TYPE ST_Water_Actuator_Diagnostics_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Valve_Group_Id : UINT;
+
+    Travel_Active : BOOL;
+    Travel_Timeout : BOOL;
+    Stuck_Suspected : BOOL;
+    Intermittent_Failure_Suspected : BOOL;
+
+    Travel_Time_MS : UDINT;
+    Failure_Count : UINT;
+
+    Diagnostics_Degraded : BOOL;
+    Escalation_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
