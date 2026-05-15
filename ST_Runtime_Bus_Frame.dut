@@ -1,0 +1,30 @@
+TYPE ST_Runtime_Bus_Frame :
+STRUCT
+    Frame_Valid : BOOL;
+    Frame_Time_MS : UDINT;
+    Frame_Id : UDINT;
+
+    Source_Controller_Id : UINT;
+    Source_Runtime_Node_Id : UINT;
+    Target_Runtime_Node_Id : UINT;
+
+    Frame_Class : UINT;
+    Frame_Sequence_Id : UDINT;
+    Frame_Ack_Required : BOOL;
+    Frame_Ack_Received : BOOL;
+
+    Authority_State_Frame : BOOL;
+    Recovery_State_Frame : BOOL;
+    Quarantine_State_Frame : BOOL;
+    Topology_State_Frame : BOOL;
+    Binding_State_Frame : BOOL;
+    Predictive_State_Frame : BOOL;
+
+    Replication_Consistent : BOOL;
+    Replication_Stale : BOOL;
+    Replication_Rejected : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
