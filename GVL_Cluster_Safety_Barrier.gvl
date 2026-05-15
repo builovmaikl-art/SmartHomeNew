@@ -1,0 +1,18 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Cluster_Execution_Blocked : BOOL;
+    G_Authority_Downgraded : BOOL;
+    G_Orchestration_Restricted : BOOL;
+
+    G_Remote_Authority_Degraded : BOOL;
+    G_Runtime_Bus_Degraded : BOOL;
+    G_Projection_Ownership_Invalid : BOOL;
+    G_Recovery_Lock_Active : BOOL;
+    G_Deployment_Invalid : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
