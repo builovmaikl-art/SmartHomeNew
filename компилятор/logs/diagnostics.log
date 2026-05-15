@@ -191,6 +191,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 10:46 .github
 -rw-r--r--  1 runner runner    496 May 15 10:46 FB_Water_Output_Projection.st
 -rw-r--r--  1 runner runner   3981 May 15 10:46 FB_Water_Output_Projector.st
 -rw-r--r--  1 runner runner   4311 May 15 10:46 FB_Water_Output_Reconciliation.st
+-rw-r--r--  1 runner runner   3694 May 15 10:46 FB_Water_Valve_Feedback_Runtime.st
 -rw-r--r--  1 runner runner   4633 May 15 10:46 FB_Water_Valve_Runtime_Governance.st
 -rw-r--r--  1 runner runner    234 May 15 10:46 GVL_ACCESS_OUTPUT.gvl
 -rw-r--r--  1 runner runner   1147 May 15 10:46 GVL_ALARM.gvl
@@ -495,7 +496,7 @@ drwxr-xr-x  5 runner runner   4096 May 15 10:46 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 10:46 ошибки компиляции.txt
 
 === compiler dir ===
-total 604
+total 600
 drwxr-xr-x  5 runner runner   4096 May 15 10:46 .
 drwxr-xr-x 12 runner runner  32768 May 15 10:46 ..
 -rw-r--r--  1 runner runner  21153 May 15 10:46 001_universal_pou_builder_METHODS_V2.py
@@ -514,8 +515,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 10:46 out
 -rw-r--r--  1 runner runner    177 May 15 10:46 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1764
+total 1768
 drwxr-xr-x 2 runner runner    4096 May 15 10:46 .
 drwxr-xr-x 5 runner runner    4096 May 15 10:46 ..
 -rw-r--r-- 1 runner runner       0 May 15 10:46 .gitkeep
--rw-r--r-- 1 runner runner 1794168 May 15 10:46 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1798148 May 15 10:46 RESULT_methods_clean.xml
