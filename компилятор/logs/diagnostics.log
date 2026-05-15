@@ -13,7 +13,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 === repo tree root ===
 total 2776
 -rw-r--r--  1 runner runner  13067 May 15 07:39 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 12 runner runner  28672 May 15 07:39 .
+drwxr-xr-x 12 runner runner  24576 May 15 07:39 .
 drwxr-xr-x  3 runner runner   4096 May 15 07:39 ..
 drwxr-xr-x  7 runner runner   4096 May 15 07:39 .git
 drwxr-xr-x  3 runner runner   4096 May 15 07:39 .github
@@ -113,6 +113,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 07:39 .github
 -rw-r--r--  1 runner runner   1320 May 15 07:39 FB_Heating_Runtime_Stability_Model.st
 -rw-r--r--  1 runner runner   2474 May 15 07:39 FB_Heating_Runtime_State_Publication_Phase.st
 -rw-r--r--  1 runner runner  15528 May 15 07:39 FB_Heating_Runtime_Supervisory_Enrichment.st
+-rw-r--r--  1 runner runner   3246 May 15 07:39 FB_Heating_Runtime_Supervisory_Publication_Adapter.st
 -rw-r--r--  1 runner runner   2035 May 15 07:39 FB_Heating_Runtime_Timeline_Observer.st
 -rw-r--r--  1 runner runner   3661 May 15 07:39 FB_Heating_Safe_State.st
 -rw-r--r--  1 runner runner   2082 May 15 07:39 FB_Heating_Safety_Gate.st
@@ -467,9 +468,9 @@ drwxr-xr-x  5 runner runner   4096 May 15 07:39 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 07:39 ошибки компиляции.txt
 
 === compiler dir ===
-total 596
+total 592
 drwxr-xr-x  5 runner runner   4096 May 15 07:39 .
-drwxr-xr-x 12 runner runner  28672 May 15 07:39 ..
+drwxr-xr-x 12 runner runner  24576 May 15 07:39 ..
 -rw-r--r--  1 runner runner  21153 May 15 07:39 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May 15 07:39 __pycache__
 -rw-r--r--  1 runner runner  34293 May 15 07:39 import_codesys_FINAL.py
@@ -490,4 +491,4 @@ total 1660
 drwxr-xr-x 2 runner runner    4096 May 15 07:39 .
 drwxr-xr-x 5 runner runner    4096 May 15 07:39 ..
 -rw-r--r-- 1 runner runner       0 May 15 07:39 .gitkeep
--rw-r--r-- 1 runner runner 1687553 May 15 07:39 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1690720 May 15 07:39 RESULT_methods_clean.xml
