@@ -1,25 +1,60 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
-    // Passive per-circuit heating source-selection explainability.
+    // ==============================================================================
+    // Heating circuit explainability compatibility publication surface
+    // ==============================================================================
+    //
+    // Passive compatibility/HMI/diagnostic publication layer.
     // Observation-only: no command, output or runtime authority.
+    //
+    // IMPORTANT ARCHITECTURAL ROLE:
+    //
+    // This GVL is NOT:
+    // - canonical runtime ingestion;
+    // - predictive routing root;
+    // - supervisory aggregation root;
+    // - runtime authority surface.
+    //
+    // Canonical routing model:
+    //
+    // runtime
+    //   -> GVL_Heating_Runtime_Projection
+    //   -> adapters/enrichment
+    //   -> GVL_Heating_Runtime_Supervisory_Publication
+    //   -> compatibility/HMI publication surfaces
+    //
+    // This GVL exists to preserve:
+    // - HMI compatibility;
+    // - diagnostics compatibility;
+    // - historical publication continuity;
+    // - migration stability.
+    // ==============================================================================
+
+    // Passive per-circuit heating source-selection explainability.
     G_Source_Selection_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Selected_Source_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 none, 1 room, 2 floor
     G_Selected_Source_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(64);
     G_Fallback_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Source_Degraded : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+
+    // Canonical source semantics live in runtime projection contracts.
     G_Selected_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+
+    // Compatibility mirrors only.
     G_Primary_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
     G_Fallback_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+
+    // Explainability publication.
     G_Reason_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 OK, 1 primary degraded fallback used, 2 degraded primary retained, 3 source loss
     G_Reason_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
 
-    // Passive edge/event publication for supervisory timeline pickup.
-    // These flags describe source-selection transitions only; they do not
-    // execute runtime action and do not own output authority.
+    // Passive edge/event publication for compatibility visibility.
+    // Canonical event semantics live in runtime projection contracts.
     G_Source_Switched_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Fallback_Activated_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Fallback_Recovered_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     G_Source_Loss_Event : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+
     G_Last_Event_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UDINT;
     G_Last_Event_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 none, 1 switched, 2 fallback activated, 3 fallback recovered, 4 source loss
     G_Last_Event_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
