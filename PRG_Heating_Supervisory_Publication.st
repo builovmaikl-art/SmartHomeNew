@@ -8,6 +8,7 @@ VAR
     L_i : INT;
     L_Cascade_Boiler_Count : UINT;
     L_OT_Command_Valid : BOOL;
+    L_Runtime_Context : ST_Heating_Runtime_Context;
     L_Causality_Node : ST_Heating_Runtime_Causality_Node;
     L_Causality_Edge : ST_Heating_Runtime_Causality_Edge;
     L_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
@@ -35,6 +36,40 @@ fbSourceStabilityObserver(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
+// Build a supervisory runtime context from the published runtime observation.
+// This is an observation projection only. It does not mutate runtime execution.
+L_Runtime_Context.Runtime_Enabled := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Active;
+L_Runtime_Context.Runtime_Ready := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Ready;
+L_Runtime_Context.Runtime_Fault := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Runtime_Fault;
+L_Runtime_Context.Current_Phase := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Current_Phase;
+
+L_Runtime_Context.Allow_DHW_Phase := TRUE;
+L_Runtime_Context.Allow_Heating_Phase := TRUE;
+L_Runtime_Context.Allow_Service_Gating_Phase := TRUE;
+L_Runtime_Context.Allow_State_Publication_Phase := TRUE;
+L_Runtime_Context.Allow_Diagnostics_Phase := TRUE;
+L_Runtime_Context.Allow_Output_Projection_Phase := TRUE;
+
+L_Runtime_Context.DHW_Executed := GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Heating_Active;
+L_Runtime_Context.Heating_Executed := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Runtime_Active;
+L_Runtime_Context.Service_Gating_Executed := TRUE;
+L_Runtime_Context.State_Publication_Executed := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Heating_Output_Active;
+L_Runtime_Context.Diagnostics_Executed := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Active;
+L_Runtime_Context.Output_Projection_Executed := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Output_Projection_Last_Observed;
+
+L_Runtime_Context.DHW_Before_Heating_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.DHW_Before_Heating_Observed;
+L_Runtime_Context.State_Publication_Before_Diagnostics_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_After_Publication_Observed;
+L_Runtime_Context.Output_Projection_Last_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Output_Projection_Last_Observed;
+
+L_Runtime_Context.Diagnostics_Isolation_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Diagnostics_Ownership_Valid;
+L_Runtime_Context.Explainability_Isolation_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Explainability_Active;
+L_Runtime_Context.Safety_Isolation_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Safety_Ownership_Valid;
+L_Runtime_Context.OpenTherm_Ownership_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.OpenTherm_Ownership_Valid;
+L_Runtime_Context.Cascade_Ownership_Valid := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Cascade_Ownership_Valid;
+
+L_Runtime_Context.Runtime_Status_Code := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Code;
+L_Runtime_Context.Runtime_Status_Text := GVL_Heating_Runtime_Observation.G_Runtime_Observation.Observation_Status_Text;
+
 // Lightweight OT/cascade observation for supervisory enrichment context.
 L_Cascade_Boiler_Count := 0;
 L_OT_Command_Valid := TRUE;
@@ -53,7 +88,7 @@ END_FOR;
 fbSupervisoryEnrichment(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Runtime_Context := GVL_Heating_Runtime_Observation.G_Runtime_Context,
+    VI_Runtime_Context := L_Runtime_Context,
     VI_Phase_Event := GVL_Heating_Runtime_Explainability.G_Runtime_Phase_Event,
     VI_Anomaly := GVL_Heating_Runtime_Explainability.G_Runtime_Anomaly,
     VI_Cascade_Boiler_Count := L_Cascade_Boiler_Count,
