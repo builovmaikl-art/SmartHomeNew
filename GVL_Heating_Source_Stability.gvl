@@ -1,0 +1,30 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Predictive source-stability observability layer.
+    // Observation-only: no runtime authority, no valve ownership,
+    // no direct influence on heating outputs.
+
+    G_Stability_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+
+    // Oscillation / switching observation
+    G_Source_Switch_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+    G_Fallback_Activation_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+    G_Fallback_Recovery_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+    G_Source_Loss_Count : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+
+    // Trend / persistence observation
+    G_Degraded_Trend_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Recovery_Trend_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Oscillation_Detected : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Instability_Attention : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+
+    // Predictive scoring
+    G_Instability_Score : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Confidence_Volatility : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Source_Trust_Trend : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+
+    // Explainability publication
+    G_Status_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
+    G_Status_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
+    G_Last_Observation_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UDINT;
+END_VAR
