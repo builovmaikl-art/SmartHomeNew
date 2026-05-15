@@ -11,9 +11,9 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3108
+total 3116
 -rw-r--r--  1 runner runner  13067 May 15 17:58 -files _ grep 'methods_v1_interface_check.txt'
-drwxr-xr-x 12 runner runner  32768 May 15 17:58 .
+drwxr-xr-x 12 runner runner  36864 May 15 17:58 .
 drwxr-xr-x  3 runner runner   4096 May 15 17:58 ..
 drwxr-xr-x  7 runner runner   4096 May 15 17:58 .git
 drwxr-xr-x  3 runner runner   4096 May 15 17:58 .github
@@ -78,6 +78,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 17:58 .github
 -rw-r--r--  1 runner runner  10178 May 15 17:58 FB_Diagnostics_RootCause.st
 -rw-r--r--  1 runner runner   2464 May 15 17:58 FB_Fault_Logger.st
 -rw-r--r--  1 runner runner   3487 May 15 17:58 FB_FloorHeating_Controller.st
+-rw-r--r--  1 runner runner   3774 May 15 17:58 FB_Forensic_Journal_Runtime.st
 -rw-r--r--  1 runner runner   3158 May 15 17:58 FB_Gas_Smoke_Manager.st
 -rw-r--r--  1 runner runner  13208 May 15 17:58 FB_Gateway_Interface.st
 -rw-r--r--  1 runner runner   1404 May 15 17:58 FB_HMAC_SHA1.st
@@ -540,9 +541,9 @@ drwxr-xr-x  5 runner runner   4096 May 15 17:58 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 17:58 ошибки компиляции.txt
 
 === compiler dir ===
-total 600
+total 604
 drwxr-xr-x  5 runner runner   4096 May 15 17:58 .
-drwxr-xr-x 12 runner runner  32768 May 15 17:58 ..
+drwxr-xr-x 12 runner runner  36864 May 15 17:58 ..
 -rw-r--r--  1 runner runner  21153 May 15 17:58 001_universal_pou_builder_METHODS_V2.py
 drwxr-xr-x  2 runner runner   4096 May 15 17:58 __pycache__
 -rw-r--r--  1 runner runner  34293 May 15 17:58 import_codesys_FINAL.py
@@ -563,4 +564,4 @@ total 1884
 drwxr-xr-x 2 runner runner    4096 May 15 17:58 .
 drwxr-xr-x 5 runner runner    4096 May 15 17:58 ..
 -rw-r--r-- 1 runner runner       0 May 15 17:58 .gitkeep
--rw-r--r-- 1 runner runner 1918789 May 15 17:58 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1920808 May 15 17:58 RESULT_methods_clean.xml
