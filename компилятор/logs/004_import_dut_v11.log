@@ -1,8 +1,8 @@
-DUT_FILES=128
+DUT_FILES=129
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=89
-STRUCT_FIELDS_TOTAL=1012
+STRUCT_INSERTED=90
+STRUCT_FIELDS_TOTAL=1041
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -136,6 +136,7 @@ ST_Ventilation_Unit_Config.dut: STRUCT ST_Ventilation_Unit_Config fields=7
 ST_Water_Isolation_Authority_State.dut: STRUCT ST_Water_Isolation_Authority_State fields=23
 ST_Water_Isolation_Runtime_State.dut: STRUCT ST_Water_Isolation_Runtime_State fields=17
 ST_Water_Leak_Runtime_State.dut: STRUCT ST_Water_Leak_Runtime_State fields=31
+ST_Water_Valve_Runtime_State.dut: STRUCT ST_Water_Valve_Runtime_State fields=29
 ST_Zone_Adapt_State.dut: STRUCT ST_Zone_Adapt_State fields=8
 ST_Zone_Sensors.dut: STRUCT ST_Zone_Sensors fields=6
 
@@ -226,5 +227,6 @@ STRUCT ST_Ventilation_Unit_Config: total=7 with_initializer=5 without_initialize
 STRUCT ST_Water_Isolation_Authority_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Isolation_Runtime_State: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Leak_Runtime_State: total=31 with_initializer=0 without_initializer=31 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Water_Valve_Runtime_State: total=29 with_initializer=0 without_initializer=29 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Adapt_State: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Sensors: total=6 with_initializer=0 without_initializer=6 array_initializer=0 unsupported_initializer=0
