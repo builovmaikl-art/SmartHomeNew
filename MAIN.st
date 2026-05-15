@@ -28,10 +28,10 @@ PRG_PLC_Arbitration();
 // 4. PLC ownership / fencing governance
 PRG_PLC_Fencing_Governor();
 
-// 5. IO read and normalized inputs
+// 5. IO read, passive quality observation and normalized inputs
 PRG_IO_Read();
-PRG_Input_Processing();
 PRG_Input_Quality_Read();
+PRG_Input_Processing();
 
 // 6. Base mode, presence and safety
 PRG_Mode_Manager();
