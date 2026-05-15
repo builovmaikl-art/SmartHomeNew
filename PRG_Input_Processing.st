@@ -32,10 +32,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     GVL_INPUT.IN_Room_Hum[L_i] := GVL_STATE.G_Room_Hum[L_i];
     GVL_INPUT.IN_Room_CO2[L_i] := GVL_STATE.G_Room_CO2[L_i];
 
-    IF L_i <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN
-        GVL_INPUT.IN_Floor_Temps[L_i] := GVL_STATE.G_Floor_Temps[L_i];
-    END_IF;
-
     // VALIDATION
     IF (GVL_INPUT.IN_Room_Temps[L_i] < GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Min) OR
        (GVL_INPUT.IN_Room_Temps[L_i] > GVL_INPUT_VALIDATION_CONFIG.G_Room_Temp_Max) THEN
@@ -113,6 +109,12 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
     GVL_INPUT.IN_Room_Temp_Prev[L_i] := GVL_INPUT.IN_Room_Temps[L_i];
     GVL_INPUT.IN_Room_Hum_Prev[L_i] := GVL_INPUT.IN_Room_Hum[L_i];
+END_FOR;
+
+// Floor temperatures are normalized on heating-circuit boundaries,
+// not generic zone boundaries.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    GVL_INPUT.IN_Floor_Temps[L_i] := GVL_STATE.G_Floor_Temps[L_i];
 END_FOR;
 
 // ======================================================
