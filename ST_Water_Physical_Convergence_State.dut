@@ -1,0 +1,25 @@
+TYPE ST_Water_Physical_Convergence_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Sensor_Id : UINT;
+
+    Projection_Active : BOOL;
+    Physical_State_Confirmed : BOOL;
+    Runtime_Converged : BOOL;
+
+    Physical_Open_Confirmed : BOOL;
+    Physical_Closed_Confirmed : BOOL;
+
+    Projection_Mismatch : BOOL;
+    Runtime_Mismatch : BOOL;
+    Physical_Mismatch : BOOL;
+
+    Convergence_Degraded : BOOL;
+    Escalation_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
