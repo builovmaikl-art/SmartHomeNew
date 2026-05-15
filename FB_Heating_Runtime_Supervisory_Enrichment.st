@@ -49,6 +49,13 @@ VAR
     L_Circuit_Event_Text : STRING(128);
     L_Phase_Event : ST_Heating_Runtime_Phase_Event;
     L_Anomaly : ST_Heating_Runtime_Anomaly;
+
+    L_Source_Instability_Max : REAL;
+    L_Source_Instability_UINT : UINT;
+    L_Source_Attention : BOOL;
+    L_Source_Oscillation_Trend : BOOL;
+    L_Source_Degraded_Trend : BOOL;
+    L_Source_Loss_Trend : BOOL;
 END_VAR
 
 // ======================================================
@@ -64,9 +71,10 @@ END_IF;
 // ======================================================
 // PASSIVE CIRCUIT EDGE INGESTION
 // ======================================================
-// Circuit control publishes edge flags only. This supervisory connector is the
-// integration boundary that raises those passive edges into the event/anomaly
-// stream used by timeline, reconstruction and causality observers.
+// Circuit control publishes canonical runtime projection only. This supervisory
+// connector is the integration boundary that raises those passive projection
+// edges into the event/anomaly stream used by timeline, reconstruction and
+// causality observers.
 L_Phase_Event := VI_Phase_Event;
 L_Anomaly := VI_Anomaly;
 L_Circuit_Event_Active := FALSE;
@@ -74,22 +82,22 @@ L_Circuit_Event_Code := 0;
 L_Circuit_Event_Text := '';
 
 FOR L_Circuit_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
-    IF GVL_Heating_Circuit_Explainability.G_Source_Loss_Event[L_Circuit_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_Circuit_i].Source_Loss_Event THEN
         L_Circuit_Event_Active := TRUE;
         L_Circuit_Event_Code := 804;
         L_Circuit_Event_Text := 'Heating circuit temperature source loss';
         EXIT;
-    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Activated_Event[L_Circuit_i] THEN
+    ELSIF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_Circuit_i].Fallback_Activated_Event THEN
         L_Circuit_Event_Active := TRUE;
         L_Circuit_Event_Code := 802;
         L_Circuit_Event_Text := 'Heating circuit fallback activated';
         EXIT;
-    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Recovered_Event[L_Circuit_i] THEN
+    ELSIF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_Circuit_i].Fallback_Recovered_Event THEN
         L_Circuit_Event_Active := TRUE;
         L_Circuit_Event_Code := 803;
         L_Circuit_Event_Text := 'Heating circuit fallback recovered';
         EXIT;
-    ELSIF GVL_Heating_Circuit_Explainability.G_Source_Switched_Event[L_Circuit_i] THEN
+    ELSIF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_Circuit_i].Source_Switched_Event THEN
         L_Circuit_Event_Active := TRUE;
         L_Circuit_Event_Code := 801;
         L_Circuit_Event_Text := 'Heating circuit temperature source switched';
@@ -139,6 +147,48 @@ IF L_Circuit_Event_Active THEN
         L_Anomaly.Status_Code := 801;
         L_Anomaly.Status_Text := 'Heating circuit source switch observed';
     END_IF;
+END_IF;
+
+// ======================================================
+// SOURCE INSTABILITY AGGREGATION
+// ======================================================
+// Per-circuit predictive details remain in GVL_Heating_Source_Stability.G_State.
+// This supervisory layer publishes only the aggregate source-instability view
+// into the canonical runtime predictive state.
+L_Source_Instability_Max := REAL#0.0;
+L_Source_Attention := FALSE;
+L_Source_Oscillation_Trend := FALSE;
+L_Source_Degraded_Trend := FALSE;
+L_Source_Loss_Trend := FALSE;
+
+FOR L_Circuit_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF GVL_Heating_Source_Stability.G_State[L_Circuit_i].Instability_Score > L_Source_Instability_Max THEN
+        L_Source_Instability_Max := GVL_Heating_Source_Stability.G_State[L_Circuit_i].Instability_Score;
+    END_IF;
+
+    L_Source_Attention :=
+        L_Source_Attention OR
+        GVL_Heating_Source_Stability.G_State[L_Circuit_i].Instability_Attention;
+
+    L_Source_Oscillation_Trend :=
+        L_Source_Oscillation_Trend OR
+        GVL_Heating_Source_Stability.G_State[L_Circuit_i].Oscillation_Detected;
+
+    L_Source_Degraded_Trend :=
+        L_Source_Degraded_Trend OR
+        GVL_Heating_Source_Stability.G_State[L_Circuit_i].Degraded_Trend_Visible;
+
+    L_Source_Loss_Trend :=
+        L_Source_Loss_Trend OR
+        (GVL_Heating_Source_Stability.G_State[L_Circuit_i].Source_Loss_Count > 0);
+END_FOR;
+
+IF L_Source_Instability_Max < REAL#0.0 THEN
+    L_Source_Instability_UINT := 0;
+ELSIF L_Source_Instability_Max > REAL#100.0 THEN
+    L_Source_Instability_UINT := 100;
+ELSE
+    L_Source_Instability_UINT := REAL_TO_UINT(L_Source_Instability_Max);
 END_IF;
 
 // ======================================================
@@ -287,12 +337,19 @@ fbPredictiveCorrelation(
 // PREDICTIVE PUBLICATION MODEL
 // ======================================================
 VO_Predictive_State.Predictive_Analytics_Visible := TRUE;
-VO_Predictive_State.Predictive_Analytics_Degraded := fbPredictiveCorrelation.VO_Correlation_Degraded;
-VO_Predictive_State.Predictive_Analytics_Attention := fbPredictiveCorrelation.VO_Correlation_Score > 40;
+VO_Predictive_State.Predictive_Analytics_Degraded :=
+    fbPredictiveCorrelation.VO_Correlation_Degraded OR L_Source_Attention;
+VO_Predictive_State.Predictive_Analytics_Attention :=
+    (fbPredictiveCorrelation.VO_Correlation_Score > 40) OR L_Source_Attention;
 VO_Predictive_State.Runtime_Stable := fbStabilityModel.VO_Runtime_Stable;
 VO_Predictive_State.Runtime_Stability_Score := fbStabilityModel.VO_Stability_Score;
 VO_Predictive_State.Runtime_Degradation_Observation := L_Runtime_Risk;
 VO_Predictive_State.Runtime_Failure_Observation := SEL(L_Anomaly.Critical_Anomaly, 0, 100);
+VO_Predictive_State.Source_Instability_Observation := L_Source_Instability_UINT;
+VO_Predictive_State.Source_Instability_Attention := L_Source_Attention;
+VO_Predictive_State.Source_Oscillation_Trend_Visible := L_Source_Oscillation_Trend;
+VO_Predictive_State.Source_Degraded_Trend_Visible := L_Source_Degraded_Trend;
+VO_Predictive_State.Source_Loss_Trend_Visible := L_Source_Loss_Trend;
 VO_Predictive_State.Cascade_Degradation_Observation := L_Cascade_Risk;
 VO_Predictive_State.Cascade_Degraded_Trend_Visible := fbOTCascadeCorrelator.VO_Correlation_Detected;
 VO_Predictive_State.OpenTherm_Instability_Observation := fbOTInstabilityPredictor.VO_OT_Instability_Risk;
@@ -301,10 +358,15 @@ VO_Predictive_State.Sequencing_Observation := SEL(VO_Causality_Node.Sequencing_I
 VO_Predictive_State.Ownership_Observation := SEL(VO_Causality_Node.Ownership_Invalid, 0, 100);
 VO_Predictive_State.Synchronization_Observation := SEL(VO_Causality_Node.Synchronization_Invalid, 0, 100);
 VO_Predictive_State.Status_Code := fbPredictiveCorrelation.VO_Status_Code;
-VO_Predictive_State.Status_Text := fbPredictiveCorrelation.VO_Status_Text;
 
-VO_Status_Code := fbPredictiveCorrelation.VO_Status_Code;
-VO_Status_Text := fbPredictiveCorrelation.VO_Status_Text;
+IF L_Source_Attention THEN
+    VO_Predictive_State.Status_Text := 'Predictive analytics attention: heating source instability observed';
+ELSE
+    VO_Predictive_State.Status_Text := fbPredictiveCorrelation.VO_Status_Text;
+END_IF;
+
+VO_Status_Code := VO_Predictive_State.Status_Code;
+VO_Status_Text := VO_Predictive_State.Status_Text;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Runtime_Supervisory_Enrichment <<<
