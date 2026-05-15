@@ -1,0 +1,33 @@
+TYPE ST_Runtime_Restart_Continuity_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Cold_Start_Detected : BOOL;
+    Warm_Restart_Detected : BOOL;
+    Restore_Requested : BOOL;
+    Restore_Allowed : BOOL;
+    Restore_Blocked : BOOL;
+    Restore_Completed : BOOL;
+
+    Retained_State_Valid : BOOL;
+    Topology_Restore_Valid : BOOL;
+    Config_Restore_Valid : BOOL;
+    Recovery_Restore_Valid : BOOL;
+    Quarantine_Restore_Valid : BOOL;
+
+    Active_Config_Version : UDINT;
+    Restored_Config_Version : UDINT;
+    Last_Stable_Config_Version : UDINT;
+
+    Post_Restart_Validation_Required : BOOL;
+    Post_Restart_Validation_OK : BOOL;
+    Post_Restart_Validation_Failed : BOOL;
+
+    Safe_Mode_Required : BOOL;
+    Operator_Ack_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
