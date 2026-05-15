@@ -15,6 +15,9 @@ VAR
     L_i : INT;
     L_Current_Hour : UINT;
     L_Boiler_Modulation_REAL : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF REAL;
+    L_Room_Temps_Normalized : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    L_Floor_Temps_Normalized : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    L_Outdoor_Temp_Normalized : REAL;
 
     L_Heating_Emergency_Stop : BOOL;
     L_Heating_Gas_Safety_Stop : BOOL;
@@ -39,6 +42,26 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
 END_FOR;
 
 L_Current_Hour := TO_UINT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
+
+// Heating runtime reads temperatures through the normalized INPUT read-model.
+// Local copies are intentionally used because FB_Heating_System_Manager still
+// exposes these signals as VAR_IN_OUT; GVL_INPUT must remain a read-model surface,
+// not a mutable domain-runtime surface.
+L_Outdoor_Temp_Normalized := GVL_INPUT.IN_Outdoor_Temp;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    L_Room_Temps_Normalized[L_i] := GVL_INPUT.IN_Room_Temps[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF L_i <= GVL_CONSTANTS.C_MAX_ZONES THEN
+        L_Floor_Temps_Normalized[L_i] := GVL_INPUT.IN_Floor_Temps[L_i];
+    ELSE
+        // Transitional guard: GVL_INPUT currently exposes floor temps by zone bound,
+        // while heating runtime owns circuit-bound floor control.
+        L_Floor_Temps_Normalized[L_i] := GVL_STATE.G_Floor_Temps[L_i];
+    END_IF;
+END_FOR;
 
 L_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 L_Heating_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_STATE.G_Safety_Gas_Latched;
@@ -116,7 +139,7 @@ fbHeatingManager(
     VI_System_Mode := GVL_STATE.G_System_Mode,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Outdoor_Temp := GVL_STATE.G_Outdoor_Temp,
+    VI_Outdoor_Temp := L_Outdoor_Temp_Normalized,
     VI_Config := GVL_CONFIG.G_Heating_Config,
     VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
     VI_Current_Hour := L_Current_Hour,
@@ -127,8 +150,8 @@ fbHeatingManager(
     VI_Boiler_Error_Status := GVL_STATE.G_Boiler_Error,
     VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
     VI_Boiler_Modulation := L_Boiler_Modulation_REAL,
-    VI_Floor_Temps := GVL_STATE.G_Floor_Temps,
-    VI_Room_Temps := GVL_STATE.G_Room_Temps,
+    VI_Floor_Temps := L_Floor_Temps_Normalized,
+    VI_Room_Temps := L_Room_Temps_Normalized,
     VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
     VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
     VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
