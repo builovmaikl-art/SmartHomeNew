@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3188
+total 3196
 -rw-r--r--  1 runner runner  13067 May 15 20:50 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  36864 May 15 20:50 .
 drwxr-xr-x  3 runner runner   4096 May 15 20:50 ..
@@ -288,6 +288,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 20:50 .github
 -rw-r--r--  1 runner runner   1908 May 15 20:50 GVL_Retain.gvl
 -rw-r--r--  1 runner runner    495 May 15 20:50 GVL_Runtime_Bus.gvl
 -rw-r--r--  1 runner runner    457 May 15 20:50 GVL_Runtime_Restart_Continuity.gvl
+-rw-r--r--  1 runner runner    375 May 15 20:50 GVL_Runtime_Sessions.gvl
 -rw-r--r--  1 runner runner    600 May 15 20:50 GVL_SAFETY_RECOVERY.gvl
 -rw-r--r--  1 runner runner    182 May 15 20:50 GVL_SAFETY_RECOVERY_CONFIG.gvl
 -rw-r--r--  1 runner runner    216 May 15 20:50 GVL_SAFETY_SHUTDOWN.gvl
@@ -559,7 +560,7 @@ drwxr-xr-x  5 runner runner   4096 May 15 20:50 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 20:50 ошибки компиляции.txt
 
 === compiler dir ===
-total 604
+total 608
 drwxr-xr-x  5 runner runner   4096 May 15 20:50 .
 drwxr-xr-x 12 runner runner  36864 May 15 20:50 ..
 -rw-r--r--  1 runner runner  21153 May 15 20:50 001_universal_pou_builder_METHODS_V2.py
@@ -578,8 +579,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 20:50 out
 -rw-r--r--  1 runner runner    177 May 15 20:50 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1948
+total 1952
 drwxr-xr-x 2 runner runner    4096 May 15 20:50 .
 drwxr-xr-x 5 runner runner    4096 May 15 20:50 ..
 -rw-r--r-- 1 runner runner       0 May 15 20:50 .gitkeep
--rw-r--r-- 1 runner runner 1984789 May 15 20:50 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1987507 May 15 20:50 RESULT_methods_clean.xml
