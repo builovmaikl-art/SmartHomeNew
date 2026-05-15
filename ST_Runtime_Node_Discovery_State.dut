@@ -1,0 +1,26 @@
+TYPE ST_Runtime_Node_Discovery_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Discovery_Active : BOOL;
+    Node_Discovered : BOOL;
+    Node_Validated : BOOL;
+    Node_Authorized : BOOL;
+    Node_Quarantined : BOOL;
+
+    Controller_Id : UINT;
+    Runtime_Node_Id : UINT;
+    Authority_Class : UINT;
+
+    Deployment_Assigned : BOOL;
+    Execution_Domain_Assigned : BOOL;
+    Capability_Validated : BOOL;
+
+    Discovery_Timeout : BOOL;
+    Discovery_Rejected : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
