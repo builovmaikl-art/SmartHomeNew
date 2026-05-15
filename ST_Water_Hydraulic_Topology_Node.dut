@@ -1,0 +1,22 @@
+TYPE ST_Water_Hydraulic_Topology_Node :
+STRUCT
+    Runtime_Valid : BOOL;
+
+    Sensor_Id : UINT;
+    Hydraulic_Zone_Id : UINT;
+    Hydraulic_Segment_Id : UINT;
+    Isolation_Group_Id : UINT;
+    Valve_Group_Id : UINT;
+    Fallback_Domain_Id : UINT;
+
+    Mapping_Valid : BOOL;
+    Mapping_Ambiguous : BOOL;
+    Shared_Valve_Group : BOOL;
+
+    Selective_Isolation_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
