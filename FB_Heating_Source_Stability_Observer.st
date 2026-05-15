@@ -17,6 +17,9 @@
 // - confidence volatility
 //
 // Publishes predictive instability semantics only.
+//
+// Reads only canonical runtime projection contracts.
+// Does not depend on explainability publication topology.
 // ==============================================================================
 FUNCTION_BLOCK FB_Heating_Source_Stability_Observer
 VAR_INPUT
@@ -44,12 +47,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     // ======================================================
     // VISIBILITY
     // ======================================================
-    GVL_Heating_Source_Stability.G_State[L_i].Visible := TRUE;
+    GVL_Heating_Source_Stability.G_State[L_i].Visible :=
+        GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Visible;
 
     // ======================================================
     // EDGE COUNTING
     // ======================================================
-    IF GVL_Heating_Circuit_Explainability.G_Source_Switched_Event[L_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Source_Switched_Event THEN
         IF GVL_Heating_Source_Stability.G_State[L_i].Source_Switch_Count < 65535 THEN
             GVL_Heating_Source_Stability.G_State[L_i].Source_Switch_Count :=
                 GVL_Heating_Source_Stability.G_State[L_i].Source_Switch_Count + 1;
@@ -59,7 +63,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             VI_System_Time_MS;
     END_IF;
 
-    IF GVL_Heating_Circuit_Explainability.G_Fallback_Activated_Event[L_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Fallback_Activated_Event THEN
         IF GVL_Heating_Source_Stability.G_State[L_i].Fallback_Activation_Count < 65535 THEN
             GVL_Heating_Source_Stability.G_State[L_i].Fallback_Activation_Count :=
                 GVL_Heating_Source_Stability.G_State[L_i].Fallback_Activation_Count + 1;
@@ -69,7 +73,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             VI_System_Time_MS;
     END_IF;
 
-    IF GVL_Heating_Circuit_Explainability.G_Fallback_Recovered_Event[L_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Fallback_Recovered_Event THEN
         IF GVL_Heating_Source_Stability.G_State[L_i].Fallback_Recovery_Count < 65535 THEN
             GVL_Heating_Source_Stability.G_State[L_i].Fallback_Recovery_Count :=
                 GVL_Heating_Source_Stability.G_State[L_i].Fallback_Recovery_Count + 1;
@@ -79,7 +83,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             VI_System_Time_MS;
     END_IF;
 
-    IF GVL_Heating_Circuit_Explainability.G_Source_Loss_Event[L_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Source_Loss_Event THEN
         IF GVL_Heating_Source_Stability.G_State[L_i].Source_Loss_Count < 65535 THEN
             GVL_Heating_Source_Stability.G_State[L_i].Source_Loss_Count :=
                 GVL_Heating_Source_Stability.G_State[L_i].Source_Loss_Count + 1;
@@ -93,7 +97,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     // CONFIDENCE VOLATILITY
     // ======================================================
     L_Confidence_Delta := ABS(
-        GVL_Heating_Circuit_Explainability.G_Selected_Source_Confidence[L_i] -
+        GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Selected_Source_Confidence -
         L_Last_Confidence[L_i]
     );
 
@@ -115,9 +119,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     // ======================================================
     L_Source_Trust_Trend :=
         GVL_Heating_Source_Stability.G_State[L_i].Source_Trust_Trend * REAL#0.95 +
-        GVL_Heating_Circuit_Explainability.G_Selected_Source_Confidence[L_i] * REAL#0.05;
+        GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Selected_Source_Confidence * REAL#0.05;
 
-    IF GVL_Heating_Circuit_Explainability.G_Source_Degraded[L_i] THEN
+    IF GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Source_Degraded THEN
         L_Source_Trust_Trend := L_Source_Trust_Trend * REAL#0.98;
     END_IF;
 
@@ -134,7 +138,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     // TREND OBSERVATION
     // ======================================================
     GVL_Heating_Source_Stability.G_State[L_i].Degraded_Trend_Visible :=
-        GVL_Heating_Circuit_Explainability.G_Source_Degraded[L_i] OR
+        GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Source_Degraded OR
         (GVL_Heating_Source_Stability.G_State[L_i].Fallback_Activation_Count >
          GVL_Heating_Source_Stability.G_State[L_i].Fallback_Recovery_Count);
 
@@ -150,9 +154,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
 
     // ======================================================
     // INSTABILITY SCORE
-    //
-    // Intentionally simplified.
-    // Predictive observability should remain explainable and deterministic.
     // ======================================================
     L_Instability_Score := REAL#0.0;
 
@@ -207,7 +208,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     END_IF;
 
     L_Last_Confidence[L_i] :=
-        GVL_Heating_Circuit_Explainability.G_Selected_Source_Confidence[L_i];
+        GVL_Heating_Runtime_Projection.G_Circuit_Projection[L_i].Selected_Source_Confidence;
 END_FOR;
 
 END_FUNCTION_BLOCK
