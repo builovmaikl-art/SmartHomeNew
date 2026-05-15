@@ -1,0 +1,25 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Local_Node_State : ST_Distributed_Runtime_Node_State;
+    G_Remote_Node_State : ARRAY[1..8] OF ST_Distributed_Runtime_Node_State;
+
+    G_Replication_TX : ARRAY[1..64] OF ST_Distributed_Runtime_Message;
+    G_Replication_RX : ARRAY[1..64] OF ST_Distributed_Runtime_Message;
+
+    G_Last_Replication_Sequence_Id : UDINT;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Remote_Node_Degraded : BOOL;
+    G_Any_Remote_Node_Offline : BOOL;
+    G_Split_Brain_Suspected : BOOL;
+
+    G_Distributed_Authority_Healthy : BOOL;
+    G_Distributed_Replication_Healthy : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
