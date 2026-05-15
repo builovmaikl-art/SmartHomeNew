@@ -1,8 +1,8 @@
-DUT_FILES=149
+DUT_FILES=150
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=110
-STRUCT_FIELDS_TOTAL=1337
+STRUCT_INSERTED=111
+STRUCT_FIELDS_TOTAL=1354
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -68,6 +68,7 @@ ST_Flood_Global_Config.dut: STRUCT ST_Flood_Global_Config fields=4
 ST_FloorHeating_Circuit_Config.dut: STRUCT ST_FloorHeating_Circuit_Config fields=11
 ST_FloorHeating_Global_Config.dut: STRUCT ST_FloorHeating_Global_Config fields=5
 ST_FloorHeating_Manifold_Config.dut: STRUCT ST_FloorHeating_Manifold_Config fields=5
+ST_Forensic_Journal_Record.dut: STRUCT ST_Forensic_Journal_Record fields=17
 ST_Gas_Valve_Configuration.dut: STRUCT ST_Gas_Valve_Configuration fields=5
 ST_Gateway_Command.dut: STRUCT ST_Gateway_Command fields=14
 ST_HMI_Config_Workflow_State.dut: STRUCT ST_HMI_Config_Workflow_State fields=21
@@ -179,6 +180,7 @@ STRUCT ST_Flood_Global_Config: total=4 with_initializer=4 without_initializer=0 
 STRUCT ST_FloorHeating_Circuit_Config: total=11 with_initializer=11 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_FloorHeating_Global_Config: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_FloorHeating_Manifold_Config: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Forensic_Journal_Record: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Gas_Valve_Configuration: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Gateway_Command: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
 STRUCT ST_HMI_Config_Workflow_State: total=21 with_initializer=0 without_initializer=21 array_initializer=0 unsupported_initializer=0
