@@ -1,0 +1,50 @@
+TYPE ST_Water_Isolation_Authority_State :
+STRUCT
+    // ==============================================================================
+    // Water/Flood isolation authority decision state.
+    // ==============================================================================
+    //
+    // Deterministic authority-candidate contract.
+    // This contract does NOT directly write physical outputs.
+    // Final output ownership remains in command arbitration/output projection.
+    // ==============================================================================
+
+    Decision_Valid : BOOL;
+    Decision_System_Time_MS : UDINT;
+
+    // Requested authority.
+    Isolation_Requested : BOOL;
+    Selective_Candidate : BOOL;
+    Global_Fallback_Candidate : BOOL;
+
+    // Authority decision.
+    Selective_Authority_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+    Authority_Denied : BOOL;
+
+    // Deterministic target.
+    Hydraulic_Zone_Id : UINT;
+    Isolation_Group_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    // Validation inputs.
+    Mapping_Valid : BOOL;
+    Deterministic_Target_Valid : BOOL;
+    Safety_Context_Allows_Selective : BOOL;
+    Valve_Diagnostics_Available : BOOL;
+    Valve_Confirmation_Required : BOOL;
+
+    // Runtime compatibility visibility.
+    Active_Global_Close_Path : BOOL;
+    Active_Safety_Latch : BOOL;
+
+    // Explainability.
+    Decision_Code : UINT;
+    Decision_Text : STRING(128);
+
+    // Lifecycle edges.
+    Authority_Selected_Event : BOOL;
+    Authority_Denied_Event : BOOL;
+    Fallback_Selected_Event : BOOL;
+END_STRUCT
+END_TYPE
