@@ -39,6 +39,9 @@ END_VAR
 //   -> authority arbitration
 //   -> valve governance
 //   -> supervisory publication
+//
+// Distributed execution gates are authoritative.
+// Water runtime orchestration must never bypass cluster execution policy.
 
 fbConfigActivationRuntime(
     VI_Enable := TRUE,
@@ -77,31 +80,31 @@ fbWaterTopologyValidator(
 );
 
 fbWaterIsolationPathResolver(
-    VI_Enable := TRUE,
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Orchestrate,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 fbWaterOrchestrationRuntime(
-    VI_Enable := TRUE,
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Orchestrate,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 fbWaterIsolationProjection(
-    VI_Enable := TRUE,
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Execute,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 fbWaterIsolationIntentBuilder(
-    VI_Enable := TRUE
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Execute
 );
 
 fbWaterAuthorityArbitrator(
-    VI_Enable := TRUE,
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Execute,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 fbWaterValveGovernance(
-    VI_Enable := TRUE,
+    VI_Enable := GVL_Distributed_Execution_Gates.G_Can_Own_Projection,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
@@ -153,7 +156,11 @@ GVL_Water_Runtime_Supervisory_Publication.G_Selective_Isolation_Available :=
 GVL_Water_Runtime_Supervisory_Publication.G_Global_Fallback_Active :=
     L_Global_Fallback_Required;
 
-IF GVL_Config_Activation.G_Config_Quarantine_Active THEN
+IF NOT GVL_Distributed_Execution_Gates.G_Can_Execute THEN
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 20;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
+        'Distributed execution gates restricted';
+ELSIF GVL_Config_Activation.G_Config_Quarantine_Active THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 11;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Runtime config quarantine active';
