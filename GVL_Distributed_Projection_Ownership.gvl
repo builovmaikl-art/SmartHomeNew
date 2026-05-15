@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Projection_Ownership : ARRAY[1..128] OF ST_Distributed_Projection_Ownership;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Ownership_Conflict : BOOL;
+    G_Any_Ownership_Stale : BOOL;
+    G_Any_Projection_Blocked : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
