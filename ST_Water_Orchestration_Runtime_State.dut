@@ -1,0 +1,24 @@
+TYPE ST_Water_Orchestration_Runtime_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Isolation_Sequence_Active : BOOL;
+    Recovery_Sequence_Active : BOOL;
+
+    Staged_Close_Required : BOOL;
+    Staged_Open_Required : BOOL;
+
+    Shared_Trunk_Sequencing : BOOL;
+
+    Rollback_Required : BOOL;
+    Escalation_Required : BOOL;
+
+    Observation_Window_Active : BOOL;
+
+    Sequencing_Valid : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
