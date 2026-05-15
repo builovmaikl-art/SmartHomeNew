@@ -4,6 +4,7 @@ VAR
     fbWaterIsolationProjection : FB_Water_Isolation_Runtime_Projection;
     fbWaterIsolationIntentBuilder : FB_Water_Isolation_Intent_Builder;
     fbWaterAuthorityArbitrator : FB_Water_Isolation_Authority_Arbitrator;
+    fbWaterValveGovernance : FB_Water_Valve_Runtime_Governance;
 
     L_i : INT;
     L_State : ST_Water_Leak_Runtime_State;
@@ -25,6 +26,7 @@ END_VAR
 // - builds canonical isolation semantics;
 // - publishes explicit isolation intent visibility;
 // - performs deterministic authority arbitration;
+// - builds valve governance/confirmation semantics;
 // - aggregates supervisory state.
 //
 // This layer does NOT:
@@ -52,6 +54,12 @@ fbWaterIsolationIntentBuilder(
 
 // Deterministic authority arbitration.
 fbWaterAuthorityArbitrator(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+// Valve governance and confirmation runtime.
+fbWaterValveGovernance(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
@@ -163,7 +171,11 @@ GVL_Water_Runtime_Supervisory_Publication.G_Active_Global_Close_Path :=
 GVL_Water_Runtime_Supervisory_Publication.G_Active_Safety_Latch :=
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
 
-IF GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required THEN
+IF GVL_Water_Valve_Runtime.G_Any_Valve_Degraded THEN
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 4;
+    GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
+        'Valve governance degraded';
+ELSIF GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 2;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
         'Conservative global fallback authority active';
