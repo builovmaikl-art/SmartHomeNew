@@ -19,6 +19,7 @@ VAR
     fbRecoveryLock : FB_Distributed_Recovery_Lock_Runtime;
 
     fbExecutionGates : FB_Distributed_Execution_Gates_Runtime;
+    fbClusterRuntimeFSM : FB_Cluster_Runtime_FSM;
 END_VAR
 
 // Root distributed runtime execution chain.
@@ -26,7 +27,7 @@ END_VAR
 // Execution order intentionally deterministic:
 // safety -> discovery -> sessions -> authority -> replication
 // -> transport -> ownership -> orchestration -> recovery locking
-// -> unified execution gates.
+// -> unified execution gates -> cluster runtime FSM.
 
 fbClusterSafetyBarrier(
     VI_Enable := TRUE,
@@ -89,6 +90,11 @@ fbRecoveryLock(
 );
 
 fbExecutionGates(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+fbClusterRuntimeFSM(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
