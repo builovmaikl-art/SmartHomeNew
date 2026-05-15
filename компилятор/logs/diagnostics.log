@@ -289,6 +289,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 20:54 .github
 -rw-r--r--  1 runner runner    928 May 15 20:54 GVL_RUNTIME_SNAPSHOT.gvl
 -rw-r--r--  1 runner runner   1908 May 15 20:54 GVL_Retain.gvl
 -rw-r--r--  1 runner runner    495 May 15 20:54 GVL_Runtime_Bus.gvl
+-rw-r--r--  1 runner runner    338 May 15 20:54 GVL_Runtime_Discovery.gvl
 -rw-r--r--  1 runner runner    457 May 15 20:54 GVL_Runtime_Restart_Continuity.gvl
 -rw-r--r--  1 runner runner    375 May 15 20:54 GVL_Runtime_Sessions.gvl
 -rw-r--r--  1 runner runner    600 May 15 20:54 GVL_SAFETY_RECOVERY.gvl
@@ -563,7 +564,7 @@ drwxr-xr-x  5 runner runner   4096 May 15 20:54 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 20:54 ошибки компиляции.txt
 
 === compiler dir ===
-total 608
+total 604
 drwxr-xr-x  5 runner runner   4096 May 15 20:54 .
 drwxr-xr-x 12 runner runner  36864 May 15 20:54 ..
 -rw-r--r--  1 runner runner  21153 May 15 20:54 001_universal_pou_builder_METHODS_V2.py
@@ -586,4 +587,4 @@ total 1960
 drwxr-xr-x 2 runner runner    4096 May 15 20:54 .
 drwxr-xr-x 5 runner runner    4096 May 15 20:54 ..
 -rw-r--r-- 1 runner runner       0 May 15 20:54 .gitkeep
--rw-r--r-- 1 runner runner 1994927 May 15 20:54 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1997798 May 15 20:54 RESULT_methods_clean.xml
