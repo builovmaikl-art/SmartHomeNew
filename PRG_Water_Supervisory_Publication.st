@@ -2,6 +2,7 @@ PROGRAM PRG_Water_Supervisory_Publication
 VAR
     fbWaterLeakProjection : FB_Water_Leak_Runtime_Projection;
     fbWaterIsolationProjection : FB_Water_Isolation_Runtime_Projection;
+    fbWaterIsolationIntentBuilder : FB_Water_Isolation_Intent_Builder;
 
     L_i : INT;
     L_State : ST_Water_Leak_Runtime_State;
@@ -16,8 +17,19 @@ END_VAR
 // ==============================================================================
 // Water/Flood supervisory publication orchestration.
 //
-// Observe/publish-only.
-// Does NOT mutate valve authority, runtime arbitration or safety shutdown.
+// Observe/publish-first orchestration.
+//
+// This layer:
+// - builds canonical leak semantics;
+// - builds canonical isolation semantics;
+// - publishes explainability;
+// - publishes explicit isolation intent visibility;
+// - aggregates supervisory state.
+//
+// This layer does NOT:
+// - own valve outputs;
+// - bypass safety shutdown;
+// - override runtime arbitration.
 // ==============================================================================
 
 // Canonical Water semantic projection.
@@ -30,6 +42,11 @@ fbWaterLeakProjection(
 fbWaterIsolationProjection(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+// Explicit localized/global isolation intent publication.
+fbWaterIsolationIntentBuilder(
+    VI_Enable := TRUE
 );
 
 L_Any_Leak := FALSE;
