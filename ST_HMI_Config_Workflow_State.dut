@@ -1,0 +1,32 @@
+TYPE ST_HMI_Config_Workflow_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Editor_Open : BOOL;
+    Edit_Session_Active : BOOL;
+    Draft_Dirty : BOOL;
+
+    Validation_Requested : BOOL;
+    Validation_OK : BOOL;
+    Validation_Failed : BOOL;
+
+    Activation_Requested : BOOL;
+    Activation_Allowed : BOOL;
+    Activation_Blocked : BOOL;
+
+    Rollback_Requested : BOOL;
+    Rollback_Allowed : BOOL;
+
+    Operator_Ack_Required : BOOL;
+    Service_Mode_Required : BOOL;
+    Quarantine_Visible : BOOL;
+
+    Active_Version : UDINT;
+    Draft_Version : UDINT;
+    Last_Stable_Version : UDINT;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
