@@ -1,0 +1,18 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Open_Editor_Request : BOOL;
+    G_Validate_Request : BOOL;
+    G_Activate_Request : BOOL;
+    G_Rollback_Request : BOOL;
+
+    G_Service_Mode_Active : BOOL;
+    G_Operator_Ack : BOOL;
+
+    G_Workflow_State : ST_HMI_Config_Workflow_State;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
