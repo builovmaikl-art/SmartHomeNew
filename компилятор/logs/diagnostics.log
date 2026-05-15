@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 2940
+total 2936
 -rw-r--r--  1 runner runner  13067 May 15 10:47 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  32768 May 15 10:47 .
 drwxr-xr-x  3 runner runner   4096 May 15 10:47 ..
@@ -388,7 +388,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 10:47 .github
 -rw-r--r--  1 runner runner   1605 May 15 10:47 PRG_User_Adapt_Control.st
 -rw-r--r--  1 runner runner   3028 May 15 10:47 PRG_Ventilation.st
 -rw-r--r--  1 runner runner   2910 May 15 10:47 PRG_Water.st
--rw-r--r--  1 runner runner    707 May 15 10:47 PRG_Water_Output_Projection.st
+-rw-r--r--  1 runner runner   1104 May 15 10:47 PRG_Water_Output_Projection.st
 -rw-r--r--  1 runner runner   6810 May 15 10:47 PRG_Water_Supervisory_Publication.st
 -rw-r--r--  1 runner runner    711 May 15 10:47 ST_Alarm_Record.dut
 -rw-r--r--  1 runner runner    174 May 15 10:47 ST_Astro_Time.dut
@@ -499,7 +499,7 @@ drwxr-xr-x  5 runner runner   4096 May 15 10:47 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 10:47 ошибки компиляции.txt
 
 === compiler dir ===
-total 604
+total 600
 drwxr-xr-x  5 runner runner   4096 May 15 10:47 .
 drwxr-xr-x 12 runner runner  32768 May 15 10:47 ..
 -rw-r--r--  1 runner runner  21153 May 15 10:47 001_universal_pou_builder_METHODS_V2.py
@@ -518,8 +518,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 10:47 out
 -rw-r--r--  1 runner runner    177 May 15 10:47 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1776
+total 1780
 drwxr-xr-x 2 runner runner    4096 May 15 10:47 .
 drwxr-xr-x 5 runner runner    4096 May 15 10:47 ..
 -rw-r--r-- 1 runner runner       0 May 15 10:47 .gitkeep
--rw-r--r-- 1 runner runner 1806729 May 15 10:47 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1811052 May 15 10:47 RESULT_methods_clean.xml
