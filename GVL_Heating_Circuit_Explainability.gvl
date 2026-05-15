@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Passive per-circuit heating source-selection explainability.
+    // Observation-only: no command, output or runtime authority.
+    G_Source_Selection_Visible : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Selected_Source_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 none, 1 room, 2 floor
+    G_Selected_Source_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(64);
+    G_Fallback_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Source_Degraded : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
+    G_Selected_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Primary_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Fallback_Source_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF REAL;
+    G_Reason_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT; // 0 OK, 1 primary degraded fallback used, 2 degraded primary retained, 3 source loss
+    G_Reason_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF STRING(128);
+END_VAR
