@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Discovery_State : ARRAY[1..32] OF ST_Runtime_Node_Discovery_State;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Node_Quarantined : BOOL;
+    G_Any_Discovery_Rejected : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
