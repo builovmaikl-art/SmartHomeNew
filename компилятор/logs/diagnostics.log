@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3044
+total 3052
 -rw-r--r--  1 runner runner  13067 May 15 11:58 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  32768 May 15 11:58 .
 drwxr-xr-x  3 runner runner   4096 May 15 11:58 ..
@@ -300,6 +300,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 11:58 .github
 -rw-r--r--  1 runner runner    361 May 15 11:58 GVL_Water_Output_Reconciliation.gvl
 -rw-r--r--  1 runner runner    444 May 15 11:58 GVL_Water_Physical_Runtime.gvl
 -rw-r--r--  1 runner runner    307 May 15 11:58 GVL_Water_Recovery_Runtime.gvl
+-rw-r--r--  1 runner runner    482 May 15 11:58 GVL_Water_Runtime_Hardening.gvl
 -rw-r--r--  1 runner runner   1628 May 15 11:58 GVL_Water_Runtime_Projection.gvl
 -rw-r--r--  1 runner runner    737 May 15 11:58 GVL_Water_Runtime_Supervisory_Publication.gvl
 -rw-r--r--  1 runner runner    410 May 15 11:58 GVL_Water_Topology_Config.gvl
@@ -486,6 +487,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 11:58 .github
 -rw-r--r--  1 runner runner    198 May 15 11:58 ST_Ventilation_Unit.dut
 -rw-r--r--  1 runner runner    337 May 15 11:58 ST_Ventilation_Unit_Config.dut
 -rw-r--r--  1 runner runner    461 May 15 11:58 ST_Water_Actuator_Diagnostics_State.dut
+-rw-r--r--  1 runner runner    146 May 15 11:58 ST_Water_Event_Log_Record.dut
 -rw-r--r--  1 runner runner    579 May 15 11:58 ST_Water_Graph_Traversal_State.dut
 -rw-r--r--  1 runner runner    445 May 15 11:58 ST_Water_Hydraulic_Isolation_Group.dut
 -rw-r--r--  1 runner runner    496 May 15 11:58 ST_Water_Hydraulic_Topology_Edge.dut
@@ -544,4 +546,4 @@ total 1840
 drwxr-xr-x 2 runner runner    4096 May 15 11:58 .
 drwxr-xr-x 5 runner runner    4096 May 15 11:58 ..
 -rw-r--r-- 1 runner runner       0 May 15 11:58 .gitkeep
--rw-r--r-- 1 runner runner 1872706 May 15 11:58 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1875178 May 15 11:58 RESULT_methods_clean.xml
