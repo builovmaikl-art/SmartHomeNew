@@ -13,6 +13,7 @@ VAR
     L_PreOutput_Block_IO : BOOL;
     L_Output_Freshness_Block : BOOL;
     L_Snapshot_Block : BOOL;
+    L_Distributed_Execution_Block : BOOL;
     L_Gas_Siren_Authority : BOOL;
     L_Fire_Siren_Authority : BOOL;
     fbTrace : FB_Trace_Write;
@@ -21,7 +22,18 @@ END_VAR
 L_PreOutput_Block_IO := GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 L_Snapshot_Block := (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid) OR GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
-L_Global_Hard_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop OR L_PreOutput_Block_IO OR L_Output_Freshness_Block OR L_Snapshot_Block;
+
+L_Distributed_Execution_Block :=
+    NOT GVL_Distributed_Execution_Gates.G_Can_Execute
+    OR NOT GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
+
+L_Global_Hard_Stop :=
+    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop
+    OR L_PreOutput_Block_IO
+    OR L_Output_Freshness_Block
+    OR L_Snapshot_Block
+    OR L_Distributed_Execution_Block;
+
 L_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_COMMAND_SHADOW.G_Boiler_Stop;
 L_Freeze_Active := GVL_STATE.G_Safety_Freeze_Risk;
 L_Gas_Fire_Siren_Enable := GVL_ALARM.G_Gas_Fire_Siren OR GVL_ALARM.G_Global_Siren OR GVL_ALARM.G_Global_Critical;
@@ -36,6 +48,7 @@ L_Fire_Siren_Authority := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safe
 // ======================================================
 // Physical IO publication must never continue when:
 //   - PLC authority is lost;
+//   - distributed execution gates restricted execution;
 //   - emergency stop is active;
 //   - pre-output barrier rejected current-cycle runtime projection;
 //   - output freshness governor invalidated publication;
@@ -92,6 +105,10 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
     GVL_IO.DO_Fire_Siren := L_Gas_Fire_Siren_Enable AND L_Fire_Siren_Authority;
     GVL_IO.DO_Security_Siren := GVL_ALARM.G_Security_Siren OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
     GVL_IO.DO_Gas_Valve_Close := TRUE;
+
+    IF L_Distributed_Execution_Block THEN
+        fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := 999.0,iText := 'IO blocked by distributed execution governance');
+    END_IF;
 
     IF L_PreOutput_Block_IO THEN
         fbTrace(iLayer := TRACE_IO,iSource := SRC_IO,iReason := REASON_SAFETY_BLOCK,iValueBool := TRUE,iValueReal := UDINT_TO_REAL(GVL_COMMAND_VERIFY.PreOutput_Last_Error_Code),iText := 'IO blocked by pre-output barrier');
