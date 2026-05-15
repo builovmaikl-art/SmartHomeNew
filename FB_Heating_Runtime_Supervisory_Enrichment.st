@@ -43,6 +43,12 @@ VAR
     L_Frame : ST_Heating_Runtime_Execution_Frame;
     L_Runtime_Risk : UINT;
     L_Cascade_Risk : UINT;
+    L_Circuit_i : INT;
+    L_Circuit_Event_Active : BOOL;
+    L_Circuit_Event_Code : UINT;
+    L_Circuit_Event_Text : STRING(128);
+    L_Phase_Event : ST_Heating_Runtime_Phase_Event;
+    L_Anomaly : ST_Heating_Runtime_Anomaly;
 END_VAR
 
 // ======================================================
@@ -53,6 +59,86 @@ VO_Status_Text := 'Heating runtime supervisory enrichment disabled';
 
 IF NOT VI_Enable THEN
     RETURN;
+END_IF;
+
+// ======================================================
+// PASSIVE CIRCUIT EDGE INGESTION
+// ======================================================
+// Circuit control publishes edge flags only. This supervisory connector is the
+// integration boundary that raises those passive edges into the event/anomaly
+// stream used by timeline, reconstruction and causality observers.
+L_Phase_Event := VI_Phase_Event;
+L_Anomaly := VI_Anomaly;
+L_Circuit_Event_Active := FALSE;
+L_Circuit_Event_Code := 0;
+L_Circuit_Event_Text := '';
+
+FOR L_Circuit_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    IF GVL_Heating_Circuit_Explainability.G_Source_Loss_Event[L_Circuit_i] THEN
+        L_Circuit_Event_Active := TRUE;
+        L_Circuit_Event_Code := 804;
+        L_Circuit_Event_Text := 'Heating circuit temperature source loss';
+        EXIT;
+    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Activated_Event[L_Circuit_i] THEN
+        L_Circuit_Event_Active := TRUE;
+        L_Circuit_Event_Code := 802;
+        L_Circuit_Event_Text := 'Heating circuit fallback activated';
+        EXIT;
+    ELSIF GVL_Heating_Circuit_Explainability.G_Fallback_Recovered_Event[L_Circuit_i] THEN
+        L_Circuit_Event_Active := TRUE;
+        L_Circuit_Event_Code := 803;
+        L_Circuit_Event_Text := 'Heating circuit fallback recovered';
+        EXIT;
+    ELSIF GVL_Heating_Circuit_Explainability.G_Source_Switched_Event[L_Circuit_i] THEN
+        L_Circuit_Event_Active := TRUE;
+        L_Circuit_Event_Code := 801;
+        L_Circuit_Event_Text := 'Heating circuit temperature source switched';
+        EXIT;
+    END_IF;
+END_FOR;
+
+IF L_Circuit_Event_Active THEN
+    L_Phase_Event.Phase := VI_Runtime_Context.Current_Phase;
+    L_Phase_Event.Event_Active := TRUE;
+    L_Phase_Event.Event_Completed := TRUE;
+    L_Phase_Event.Event_Failed := FALSE;
+    L_Phase_Event.Start_Time_MS := VI_System_Time_MS;
+    L_Phase_Event.End_Time_MS := VI_System_Time_MS;
+    L_Phase_Event.Duration_MS := 0;
+    L_Phase_Event.Ordering_Valid := TRUE;
+    L_Phase_Event.Isolation_Valid := TRUE;
+    L_Phase_Event.Status_Code := L_Circuit_Event_Code;
+    L_Phase_Event.Status_Text := L_Circuit_Event_Text;
+    L_Phase_Event.Diagnostics_Visible := TRUE;
+    L_Phase_Event.Explainability_Visible := TRUE;
+    L_Phase_Event.Safety_Integrity_Valid := TRUE;
+    L_Phase_Event.OpenTherm_Ownership_Valid := TRUE;
+    L_Phase_Event.Cascade_Ownership_Valid := TRUE;
+
+    L_Anomaly.Anomaly_Active := TRUE;
+    L_Anomaly.Runtime_Degraded := L_Anomaly.Runtime_Degraded OR (L_Circuit_Event_Code = 802) OR (L_Circuit_Event_Code = 804);
+    L_Anomaly.Diagnostics_Degraded := L_Anomaly.Diagnostics_Degraded OR (L_Circuit_Event_Code = 804);
+    L_Anomaly.Explainability_Degraded := L_Anomaly.Explainability_Degraded OR (L_Circuit_Event_Code = 804);
+
+    IF L_Circuit_Event_Code = 804 THEN
+        IF L_Anomaly.Severity_Level < 80 THEN
+            L_Anomaly.Severity_Level := 80;
+        END_IF;
+        L_Anomaly.Status_Code := 804;
+        L_Anomaly.Status_Text := 'Heating circuit source loss observed';
+    ELSIF L_Circuit_Event_Code = 802 THEN
+        IF L_Anomaly.Severity_Level < 40 THEN
+            L_Anomaly.Severity_Level := 40;
+        END_IF;
+        L_Anomaly.Status_Code := 802;
+        L_Anomaly.Status_Text := 'Heating circuit fallback activation observed';
+    ELSIF L_Circuit_Event_Code = 803 THEN
+        L_Anomaly.Status_Code := 803;
+        L_Anomaly.Status_Text := 'Heating circuit fallback recovery observed';
+    ELSE
+        L_Anomaly.Status_Code := 801;
+        L_Anomaly.Status_Text := 'Heating circuit source switch observed';
+    END_IF;
 END_IF;
 
 // ======================================================
@@ -80,9 +166,9 @@ L_Frame.Synchronization_Valid :=
     VI_Runtime_Context.Diagnostics_Isolation_Valid AND
     VI_Runtime_Context.Explainability_Isolation_Valid;
 
-L_Frame.Runtime_Jitter_Detected := VI_Anomaly.Runtime_Jitter_Detected;
-L_Frame.Runtime_Latency_Detected := VI_Anomaly.Runtime_Latency_Detected;
-L_Frame.Runtime_Degraded := VI_Anomaly.Runtime_Degraded;
+L_Frame.Runtime_Jitter_Detected := L_Anomaly.Runtime_Jitter_Detected;
+L_Frame.Runtime_Latency_Detected := L_Anomaly.Runtime_Latency_Detected;
+L_Frame.Runtime_Degraded := L_Anomaly.Runtime_Degraded;
 L_Frame.Status_Code := VI_Runtime_Context.Runtime_Status_Code;
 L_Frame.Status_Text := VI_Runtime_Context.Runtime_Status_Text;
 
@@ -97,7 +183,7 @@ fbTimelineObserver(
 // ======================================================
 fbEventManager(
     VI_Enable := TRUE,
-    VI_Event := VI_Phase_Event,
+    VI_Event := L_Phase_Event,
     VIO_Buffer := VIO_Event_Buffer
 );
 
@@ -106,7 +192,7 @@ fbEventManager(
 // ======================================================
 fbRootCauseCorrelator(
     VI_Enable := TRUE,
-    VI_Anomaly := VI_Anomaly
+    VI_Anomaly := L_Anomaly
 );
 
 VO_Causality_Node := fbRootCauseCorrelator.VO_Node;
@@ -156,35 +242,35 @@ VO_Blackbox_Event := fbReconstructionEngine.VO_Event;
 // ======================================================
 fbStabilityModel(
     VI_Enable := TRUE,
-    VI_Runtime_Degraded := VI_Anomaly.Runtime_Degraded,
-    VI_Runtime_Critical := VI_Anomaly.Critical_Anomaly
+    VI_Runtime_Degraded := L_Anomaly.Runtime_Degraded,
+    VI_Runtime_Critical := L_Anomaly.Critical_Anomaly
 );
 
 fbOTCascadeCorrelator(
     VI_Enable := TRUE,
-    VI_Cascade_Degraded := VI_Anomaly.Cascade_Degraded,
-    VI_OT_Degraded := VI_Anomaly.OpenTherm_Transport_Degraded,
+    VI_Cascade_Degraded := L_Anomaly.Cascade_Degraded,
+    VI_OT_Degraded := L_Anomaly.OpenTherm_Transport_Degraded,
     VI_OT_Command_Valid := VI_OT_Command_Valid,
     VI_Boiler_Count := VI_Cascade_Boiler_Count
 );
 
 fbOTInstabilityPredictor(
     VI_Enable := TRUE,
-    VI_OT_Degraded := VI_Anomaly.OpenTherm_Transport_Degraded,
+    VI_OT_Degraded := L_Anomaly.OpenTherm_Transport_Degraded,
     VI_OT_Command_Valid := VI_OT_Command_Valid
 );
 
-IF VI_Anomaly.Critical_Anomaly THEN
+IF L_Anomaly.Critical_Anomaly THEN
     L_Runtime_Risk := 100;
-ELSIF VI_Anomaly.Runtime_Degraded THEN
+ELSIF L_Anomaly.Runtime_Degraded THEN
     L_Runtime_Risk := 60;
 ELSE
     L_Runtime_Risk := 0;
 END_IF;
 
-IF VI_Anomaly.Cascade_Boiler_Loss_Detected THEN
+IF L_Anomaly.Cascade_Boiler_Loss_Detected THEN
     L_Cascade_Risk := 100;
-ELSIF VI_Anomaly.Cascade_Degraded THEN
+ELSIF L_Anomaly.Cascade_Degraded THEN
     L_Cascade_Risk := 60;
 ELSE
     L_Cascade_Risk := 0;
@@ -206,7 +292,7 @@ VO_Predictive_State.Predictive_Analytics_Attention := fbPredictiveCorrelation.VO
 VO_Predictive_State.Runtime_Stable := fbStabilityModel.VO_Runtime_Stable;
 VO_Predictive_State.Runtime_Stability_Score := fbStabilityModel.VO_Stability_Score;
 VO_Predictive_State.Runtime_Degradation_Observation := L_Runtime_Risk;
-VO_Predictive_State.Runtime_Failure_Observation := SEL(VI_Anomaly.Critical_Anomaly, 0, 100);
+VO_Predictive_State.Runtime_Failure_Observation := SEL(L_Anomaly.Critical_Anomaly, 0, 100);
 VO_Predictive_State.Cascade_Degradation_Observation := L_Cascade_Risk;
 VO_Predictive_State.Cascade_Degraded_Trend_Visible := fbOTCascadeCorrelator.VO_Correlation_Detected;
 VO_Predictive_State.OpenTherm_Instability_Observation := fbOTInstabilityPredictor.VO_OT_Instability_Risk;
