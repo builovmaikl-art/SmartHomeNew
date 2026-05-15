@@ -1,0 +1,22 @@
+TYPE ST_Water_Topology_Validation_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Sensor_Id : UINT;
+
+    Topology_Valid : BOOL;
+    Topology_Ambiguous : BOOL;
+    Isolation_Path_Valid : BOOL;
+
+    Shared_Valve_Group : BOOL;
+    Missing_Valve_Group : BOOL;
+    Invalid_Isolation_Group : BOOL;
+
+    Selective_Isolation_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE
