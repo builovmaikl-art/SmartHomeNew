@@ -3,6 +3,7 @@ VAR
     fbWaterLeakProjection : FB_Water_Leak_Runtime_Projection;
     fbWaterIsolationProjection : FB_Water_Isolation_Runtime_Projection;
     fbWaterIsolationIntentBuilder : FB_Water_Isolation_Intent_Builder;
+    fbWaterAuthorityArbitrator : FB_Water_Isolation_Authority_Arbitrator;
 
     L_i : INT;
     L_State : ST_Water_Leak_Runtime_State;
@@ -22,8 +23,8 @@ END_VAR
 // This layer:
 // - builds canonical leak semantics;
 // - builds canonical isolation semantics;
-// - publishes explainability;
 // - publishes explicit isolation intent visibility;
+// - performs deterministic authority arbitration;
 // - aggregates supervisory state.
 //
 // This layer does NOT:
@@ -47,6 +48,12 @@ fbWaterIsolationProjection(
 // Explicit localized/global isolation intent publication.
 fbWaterIsolationIntentBuilder(
     VI_Enable := TRUE
+);
+
+// Deterministic authority arbitration.
+fbWaterAuthorityArbitrator(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
 
 L_Any_Leak := FALSE;
@@ -156,14 +163,14 @@ GVL_Water_Runtime_Supervisory_Publication.G_Active_Global_Close_Path :=
 GVL_Water_Runtime_Supervisory_Publication.G_Active_Safety_Latch :=
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
 
-IF L_Global_Fallback_Required THEN
+IF GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 2;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
-        'Global isolation fallback required';
-ELSIF L_Any_Leak THEN
+        'Conservative global fallback authority active';
+ELSIF GVL_Water_Isolation_Authority.G_Any_Selective_Authority_Allowed THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 1;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
-        'Selective isolation topology visible';
+        'Deterministic selective authority available';
 ELSIF L_Any_Warning THEN
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Code := 3;
     GVL_Water_Runtime_Supervisory_Publication.G_Status_Text :=
