@@ -1,0 +1,30 @@
+TYPE ST_Heating_Runtime_Source_Instability_State :
+STRUCT
+    // Canonical predictive observability contract.
+    // Observation-only.
+
+    Visible : BOOL;
+
+    // Edge counters
+    Source_Switch_Count : UINT;
+    Fallback_Activation_Count : UINT;
+    Fallback_Recovery_Count : UINT;
+    Source_Loss_Count : UINT;
+
+    // Trend semantics
+    Degraded_Trend_Visible : BOOL;
+    Recovery_Trend_Visible : BOOL;
+    Oscillation_Detected : BOOL;
+    Instability_Attention : BOOL;
+
+    // Predictive semantics
+    Instability_Score : REAL;
+    Confidence_Volatility : REAL;
+    Source_Trust_Trend : REAL;
+
+    // Explainability
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+    Last_Observation_MS : UDINT;
+END_STRUCT
+END_TYPE
