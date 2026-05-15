@@ -1,8 +1,8 @@
-DUT_FILES=146
+DUT_FILES=147
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=107
-STRUCT_FIELDS_TOTAL=1276
+STRUCT_INSERTED=108
+STRUCT_FIELDS_TOTAL=1293
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -57,6 +57,7 @@ ST_Boiler_Status.dut: STRUCT ST_Boiler_Status fields=21
 ST_Calibration_Family_Summary.dut: STRUCT ST_Calibration_Family_Summary fields=7
 ST_Calibration_Sensor_Summary.dut: STRUCT ST_Calibration_Sensor_Summary fields=9
 ST_Component_Maintenance.dut: STRUCT ST_Component_Maintenance fields=4
+ST_Config_Activation_State.dut: STRUCT ST_Config_Activation_State fields=17
 ST_DHW_Config.dut: STRUCT ST_DHW_Config fields=9
 ST_DHW_Status.dut: STRUCT ST_DHW_Status fields=7
 ST_Device_Health.dut: STRUCT ST_Device_Health fields=9
@@ -165,6 +166,7 @@ STRUCT ST_Boiler_Status: total=21 with_initializer=1 without_initializer=20 arra
 STRUCT ST_Calibration_Family_Summary: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Calibration_Sensor_Summary: total=9 with_initializer=0 without_initializer=9 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Component_Maintenance: total=4 with_initializer=0 without_initializer=4 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Config_Activation_State: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Config: total=9 with_initializer=9 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_DHW_Status: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Device_Health: total=9 with_initializer=1 without_initializer=8 array_initializer=0 unsupported_initializer=0
