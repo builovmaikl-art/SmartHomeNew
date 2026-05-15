@@ -1,0 +1,31 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ==============================================================================
+    // Water/Flood isolation intent publication.
+    // ==============================================================================
+    //
+    // Explicit authority augmentation layer.
+    //
+    // This layer publishes:
+    // - selective isolation intent;
+    // - per-zone close requests;
+    // - fallback-to-global requirements.
+    //
+    // It does NOT directly own outputs.
+    // Final authority remains inside runtime arbitration/safety layers.
+    // ==============================================================================
+
+    // Per-zone isolation intent.
+    G_Zone_Close_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+
+    // Valve-group visibility.
+    G_Valve_Group_Close_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+
+    // Conservative fallback visibility.
+    G_Global_Isolation_Requested : BOOL;
+
+    // Explainability.
+    G_Intent_Valid : BOOL;
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
