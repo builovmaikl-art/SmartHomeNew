@@ -1,0 +1,32 @@
+TYPE ST_Distributed_Authority_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Controller_Id : UINT;
+    Runtime_Node_Id : UINT;
+    Authority_Domain_Id : UINT;
+
+    Authority_Election_Active : BOOL;
+    Authority_Master_Elected : BOOL;
+    Authority_Backup_Elected : BOOL;
+    Authority_Observer_Only : BOOL;
+
+    Authority_Lease_Valid : BOOL;
+    Authority_Lease_Expired : BOOL;
+    Authority_Lease_Timeout_MS : UDINT;
+
+    Replication_Consensus_Healthy : BOOL;
+    Replication_Consensus_Stale : BOOL;
+
+    Recovery_Authority_Allowed : BOOL;
+    Rollback_Authority_Allowed : BOOL;
+    Quarantine_Authority_Allowed : BOOL;
+
+    Split_Brain_Blocked : BOOL;
+    Distributed_Safety_Barrier_OK : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE
