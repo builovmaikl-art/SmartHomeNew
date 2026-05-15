@@ -1,0 +1,14 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Topology_Node : ARRAY[1..64] OF ST_Water_Hydraulic_Topology_Node;
+    G_Isolation_Group : ARRAY[1..64] OF ST_Water_Hydraulic_Isolation_Group;
+
+    G_Any_Ambiguous : BOOL;
+    G_Any_Global_Fallback_Required : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
