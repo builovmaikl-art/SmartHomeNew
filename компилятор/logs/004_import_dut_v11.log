@@ -1,8 +1,8 @@
-DUT_FILES=126
+DUT_FILES=127
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=87
-STRUCT_FIELDS_TOTAL=972
+STRUCT_INSERTED=88
+STRUCT_FIELDS_TOTAL=989
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -133,6 +133,7 @@ ST_Ventilation_Global_Config.dut: STRUCT ST_Ventilation_Global_Config fields=8
 ST_Ventilation_Scenario_Mode.dut: STRUCT ST_Ventilation_Scenario_Mode fields=9
 ST_Ventilation_Unit.dut: STRUCT ST_Ventilation_Unit fields=5
 ST_Ventilation_Unit_Config.dut: STRUCT ST_Ventilation_Unit_Config fields=7
+ST_Water_Isolation_Runtime_State.dut: STRUCT ST_Water_Isolation_Runtime_State fields=17
 ST_Water_Leak_Runtime_State.dut: STRUCT ST_Water_Leak_Runtime_State fields=31
 ST_Zone_Adapt_State.dut: STRUCT ST_Zone_Adapt_State fields=8
 ST_Zone_Sensors.dut: STRUCT ST_Zone_Sensors fields=6
@@ -221,6 +222,7 @@ STRUCT ST_Ventilation_Global_Config: total=8 with_initializer=7 without_initiali
 STRUCT ST_Ventilation_Scenario_Mode: total=9 with_initializer=2 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Ventilation_Unit: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Ventilation_Unit_Config: total=7 with_initializer=5 without_initializer=2 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Water_Isolation_Runtime_State: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Leak_Runtime_State: total=31 with_initializer=0 without_initializer=31 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Adapt_State: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Sensors: total=6 with_initializer=0 without_initializer=6 array_initializer=0 unsupported_initializer=0
