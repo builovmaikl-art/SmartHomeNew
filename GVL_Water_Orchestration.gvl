@@ -1,0 +1,17 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Traversal_State : ARRAY[1..64] OF ST_Water_Graph_Traversal_State;
+    G_Orchestration_State : ARRAY[1..64] OF ST_Water_Orchestration_Runtime_State;
+
+    G_Topology_Version : UDINT;
+    G_Config_Runtime_Ready : BOOL;
+
+    G_Any_Traversal_Conflict : BOOL;
+    G_Any_Escalation_Required : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
