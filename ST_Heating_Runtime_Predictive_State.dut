@@ -22,6 +22,17 @@ STRUCT
     Runtime_Failure_Observation : UINT;
 
     // ======================================================
+    // Source stability observation
+    // Passive aggregate only.
+    // Per-circuit details remain in GVL_Heating_Source_Stability.G_State.
+    // ======================================================
+    Source_Instability_Observation : UINT;
+    Source_Instability_Attention : BOOL;
+    Source_Oscillation_Trend_Visible : BOOL;
+    Source_Degraded_Trend_Visible : BOOL;
+    Source_Loss_Trend_Visible : BOOL;
+
+    // ======================================================
     // Cascade observational analytics
     // ======================================================
     Cascade_Degradation_Observation : UINT;
