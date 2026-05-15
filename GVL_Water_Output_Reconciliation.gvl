@@ -1,0 +1,14 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Reconciliation_State : ARRAY[1..64] OF ST_Water_Output_Reconciliation_State;
+
+    G_Any_Runtime_Mismatch : BOOL;
+    G_Any_Confirmation_Mismatch : BOOL;
+    G_Any_Conflict_Detected : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR
