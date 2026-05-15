@@ -1,0 +1,19 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Journal : ARRAY[1..256] OF ST_Forensic_Journal_Record;
+    G_Write_Index : UINT;
+    G_Last_Event_Id : UDINT;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Last_Activation_Event_Id : UDINT;
+    G_Last_Rollback_Event_Id : UDINT;
+    G_Last_Recovery_Event_Id : UDINT;
+    G_Last_Restart_Event_Id : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR
