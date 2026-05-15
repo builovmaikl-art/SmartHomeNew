@@ -126,7 +126,15 @@ PRG_Recovery_Cleanup_Governor();
 PRG_Heating();
 PRG_Heating_Supervisory_Publication();
 PRG_Ventilation();
+
+// Water/Flood pipeline:
+//   1. build semantic/supervisory/authority projections;
+//   2. build deterministic output projection and reconciliation;
+//   3. bridge final Water domain projection into GVL_WATER_OUTPUT.
+PRG_Water_Supervisory_Publication();
+PRG_Water_Output_Projection();
 PRG_Water();
+
 PRG_Access();
 PRG_Lighting();
 
