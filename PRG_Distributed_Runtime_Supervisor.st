@@ -17,13 +17,16 @@ VAR
     fbProjectionOwnership : FB_Distributed_Projection_Ownership_Runtime;
     fbDistributedOrchestration : FB_Distributed_Orchestration_Runtime;
     fbRecoveryLock : FB_Distributed_Recovery_Lock_Runtime;
+
+    fbExecutionGates : FB_Distributed_Execution_Gates_Runtime;
 END_VAR
 
 // Root distributed runtime execution chain.
 //
 // Execution order intentionally deterministic:
 // safety -> discovery -> sessions -> authority -> replication
-// -> transport -> ownership -> orchestration -> recovery locking.
+// -> transport -> ownership -> orchestration -> recovery locking
+// -> unified execution gates.
 
 fbClusterSafetyBarrier(
     VI_Enable := TRUE,
@@ -81,6 +84,11 @@ fbDistributedOrchestration(
 );
 
 fbRecoveryLock(
+    VI_Enable := TRUE,
+    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
+);
+
+fbExecutionGates(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS
 );
