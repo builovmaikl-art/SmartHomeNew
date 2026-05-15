@@ -1,8 +1,8 @@
-DUT_FILES=137
+DUT_FILES=138
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=39
-STRUCT_INSERTED=98
-STRUCT_FIELDS_TOTAL=1159
+STRUCT_INSERTED=99
+STRUCT_FIELDS_TOTAL=1174
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -137,6 +137,7 @@ ST_Water_Hydraulic_Isolation_Group.dut: STRUCT ST_Water_Hydraulic_Isolation_Grou
 ST_Water_Hydraulic_Topology_Edge.dut: STRUCT ST_Water_Hydraulic_Topology_Edge fields=14
 ST_Water_Hydraulic_Topology_Node.dut: STRUCT ST_Water_Hydraulic_Topology_Node fields=14
 ST_Water_Isolation_Authority_State.dut: STRUCT ST_Water_Isolation_Authority_State fields=23
+ST_Water_Isolation_Path_Runtime_State.dut: STRUCT ST_Water_Isolation_Path_Runtime_State fields=15
 ST_Water_Isolation_Runtime_State.dut: STRUCT ST_Water_Isolation_Runtime_State fields=17
 ST_Water_Leak_Runtime_State.dut: STRUCT ST_Water_Leak_Runtime_State fields=31
 ST_Water_Output_Projection_State.dut: STRUCT ST_Water_Output_Projection_State fields=22
@@ -236,6 +237,7 @@ STRUCT ST_Water_Hydraulic_Isolation_Group: total=12 with_initializer=0 without_i
 STRUCT ST_Water_Hydraulic_Topology_Edge: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Hydraulic_Topology_Node: total=14 with_initializer=0 without_initializer=14 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Isolation_Authority_State: total=23 with_initializer=0 without_initializer=23 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Water_Isolation_Path_Runtime_State: total=15 with_initializer=0 without_initializer=15 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Isolation_Runtime_State: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Leak_Runtime_State: total=31 with_initializer=0 without_initializer=31 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Output_Projection_State: total=22 with_initializer=0 without_initializer=22 array_initializer=0 unsupported_initializer=0
