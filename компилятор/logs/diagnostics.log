@@ -11,11 +11,11 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3056
+total 3064
 -rw-r--r--  1 runner runner  13067 May 15 17:19 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  32768 May 15 17:19 .
 drwxr-xr-x  3 runner runner   4096 May 15 17:19 ..
-drwxr-xr-x  7 runner runner   4096 May 15 17:19 .git
+drwxr-xr-x  7 runner runner   4096 May 15 17:20 .git
 drwxr-xr-x  3 runner runner   4096 May 15 17:19 .github
 -rw-r--r--  1 runner runner    241 May 15 17:19 ACCESS_SUMMARY.txt
 -rw-r--r--  1 runner runner  10609 May 15 17:19 AGENTS.md
@@ -183,6 +183,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 17:19 .github
 -rw-r--r--  1 runner runner    763 May 15 17:19 FB_Vent_Output_Projection.st
 -rw-r--r--  1 runner runner  10504 May 15 17:19 FB_Ventilation_System_Manager.st
 -rw-r--r--  1 runner runner   1048 May 15 17:19 FB_Watchdog.st
+-rw-r--r--  1 runner runner   1560 May 15 17:19 FB_Water_Hardware_Binding_Runtime.st
 -rw-r--r--  1 runner runner   4442 May 15 17:19 FB_Water_Hydraulic_Topology_Validator.st
 -rw-r--r--  1 runner runner   3611 May 15 17:19 FB_Water_Isolation_Authority_Arbitrator.st
 -rw-r--r--  1 runner runner   2056 May 15 17:19 FB_Water_Isolation_Intent_Builder.st
@@ -249,6 +250,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 17:19 .github
 -rw-r--r--  1 runner runner   1844 May 15 17:19 GVL_INTENT_USER.gvl
 -rw-r--r--  1 runner runner   4131 May 15 17:19 GVL_IO.gvl
 -rw-r--r--  1 runner runner    417 May 15 17:19 GVL_IO_Binding_Config.gvl
+-rw-r--r--  1 runner runner    234 May 15 17:19 GVL_IO_Binding_Runtime.gvl
 -rw-r--r--  1 runner runner    231 May 15 17:19 GVL_LIGHTING_OUTPUT.gvl
 -rw-r--r--  1 runner runner    943 May 15 17:19 GVL_MODBUS_MASTER.gvl
 -rw-r--r--  1 runner runner   1262 May 15 17:19 GVL_MODBUS_RTU_BRIDGE.gvl
@@ -546,8 +548,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 17:19 out
 -rw-r--r--  1 runner runner    177 May 15 17:19 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1848
+total 1852
 drwxr-xr-x 2 runner runner    4096 May 15 17:19 .
 drwxr-xr-x 5 runner runner    4096 May 15 17:19 ..
 -rw-r--r-- 1 runner runner       0 May 15 17:19 .gitkeep
--rw-r--r-- 1 runner runner 1882894 May 15 17:19 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1884357 May 15 17:19 RESULT_methods_clean.xml
