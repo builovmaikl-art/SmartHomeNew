@@ -70,6 +70,7 @@ drwxr-xr-x  3 runner runner   4096 May 15 17:33 .github
 -rw-r--r--  1 runner runner   2893 May 15 17:33 FB_Boiler_OpenTherm_Interface.st
 -rw-r--r--  1 runner runner    434 May 15 17:33 FB_CRC32_Calculator.st
 -rw-r--r--  1 runner runner   1675 May 15 17:33 FB_Command_Deduplication.st
+-rw-r--r--  1 runner runner   3091 May 15 17:33 FB_Config_Activation_Runtime.st
 -rw-r--r--  1 runner runner   2410 May 15 17:33 FB_Config_Simulation.st
 -rw-r--r--  1 runner runner   9861 May 15 17:33 FB_DHW_Manager.st
 -rw-r--r--  1 runner runner   4438 May 15 17:33 FB_Device_Predictive_Diag.st
@@ -531,7 +532,7 @@ drwxr-xr-x  5 runner runner   4096 May 15 17:33 компилятор
 -rw-r--r--  1 runner runner   4202 May 15 17:33 ошибки компиляции.txt
 
 === compiler dir ===
-total 604
+total 600
 drwxr-xr-x  5 runner runner   4096 May 15 17:33 .
 drwxr-xr-x 12 runner runner  32768 May 15 17:33 ..
 -rw-r--r--  1 runner runner  21153 May 15 17:33 001_universal_pou_builder_METHODS_V2.py
@@ -550,8 +551,8 @@ drwxr-xr-x  2 runner runner   4096 May 15 17:33 out
 -rw-r--r--  1 runner runner    177 May 15 17:33 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 1856
+total 1860
 drwxr-xr-x 2 runner runner    4096 May 15 17:33 .
 drwxr-xr-x 5 runner runner    4096 May 15 17:33 ..
 -rw-r--r-- 1 runner runner       0 May 15 17:33 .gitkeep
--rw-r--r-- 1 runner runner 1891061 May 15 17:33 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 1893491 May 15 17:33 RESULT_methods_clean.xml
