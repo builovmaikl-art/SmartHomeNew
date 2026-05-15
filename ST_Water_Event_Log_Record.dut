@@ -1,0 +1,1 @@
+TYPE ST_Water_Event_Log_Record : STRUCT Runtime_Valid : BOOL; Event_Time_MS : UDINT; Event_Id : UINT; Event_Text : STRING(80); END_STRUCT END_TYPE
