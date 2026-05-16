@@ -1,0 +1,32 @@
+VAR_GLOBAL
+    // Global observability authority.
+    Observability_Authority_Valid : BOOL := FALSE;
+    Observability_Quarantine_Active : BOOL := TRUE;
+    Observability_Publication_Allowed : BOOL := FALSE;
+
+    // Authority-aware observability.
+    HMI_Authority_Coherent : BOOL := FALSE;
+    Diagnostics_Authority_Coherent : BOOL := FALSE;
+    Blackbox_Authority_Coherent : BOOL := FALSE;
+    Trend_Authority_Coherent : BOOL := FALSE;
+    Alarm_Authority_Coherent : BOOL := FALSE;
+
+    // Stale observability detection.
+    Stale_HMI_State_Detected : BOOL := FALSE;
+    Diagnostic_Epoch_Skew_Detected : BOOL := FALSE;
+    Post_Revocation_Observability_Lag : BOOL := FALSE;
+    Nonauthoritative_Operator_State_Detected : BOOL := FALSE;
+
+    // Epoch coherence.
+    Observability_Epoch : UDINT := 0;
+    Observability_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Observability_Last_Update_MS : UDINT := 0;
+    Observability_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Observability_Last_Error_Code : UDINT := 0;
+    Observability_Last_Error_Text : STRING(160) := '';
+    Observability_Invalidation_Count : UDINT := 0;
+END_VAR
