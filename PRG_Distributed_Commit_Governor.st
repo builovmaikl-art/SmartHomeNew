@@ -6,6 +6,8 @@ VAR
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
     L_Peer_Session_Active : BOOL := FALSE;
+
+    L_Publication_Authority_Allowed : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -24,6 +26,12 @@ L_Error_Text := '';
 // Recovery/release is convergence-lease based:
 // distributed commit quarantine is not released on a
 // single healthy scan.
+//
+// Distributed execution/publication authority is upstream.
+// Observer-only nodes must never:
+//   - participate in publication commit ownership;
+//   - confirm publication authority;
+//   - reopen publication continuity.
 // ======================================================
 
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Expired := FALSE;
@@ -31,6 +39,11 @@ GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing := FALSE;
 GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired := FALSE;
+
+L_Publication_Authority_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Runtime_Valid
+    AND GVL_Distributed_Execution_Gates.G_Can_Replicate
+    AND GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
 
 // ------------------------------------------------------
 // Local publication projection.
@@ -44,22 +57,40 @@ GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch := GVL_DISTRIBUTED_SNAPSHO
 GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 
 // ------------------------------------------------------
+// Distributed execution/publication authority.
+// ------------------------------------------------------
+
+IF NOT L_Publication_Authority_Allowed THEN
+
+    L_Commit_Valid := FALSE;
+
+    L_Error_Code := 14999;
+    L_Error_Text :=
+        'Distributed publication authority restricted';
+
+END_IF;
+
+// ------------------------------------------------------
 // Immutable publication preparation validation.
 // ------------------------------------------------------
 
-IF GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
-AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
-AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
-THEN
-    GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Active := TRUE;
-    GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid := TRUE;
-ELSE
-    GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Active := FALSE;
-    GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid := FALSE;
+IF L_Commit_Valid THEN
 
-    L_Commit_Valid := FALSE;
-    L_Error_Code := 15000;
-    L_Error_Text := 'Distributed immutable publication prepare invalid';
+    IF GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    THEN
+        GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Active := TRUE;
+        GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid := TRUE;
+    ELSE
+        GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Active := FALSE;
+        GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid := FALSE;
+
+        L_Commit_Valid := FALSE;
+        L_Error_Code := 15000;
+        L_Error_Text := 'Distributed immutable publication prepare invalid';
+    END_IF;
+
 END_IF;
 
 // ------------------------------------------------------
