@@ -19,6 +19,11 @@ VAR
     L_Security_Alarm : BOOL;
     L_Evac_Blink_Phase : UDINT;
     L_Evac_Blink_On : BOOL;
+
+    L_Distributed_Execute_Allowed : BOOL;
+    L_Distributed_Projection_Allowed : BOOL;
+
+    L_Emergency_Lighting_Override : BOOL;
 END_VAR
 
 // Fire/flood lighting behavior must use authoritative safety truth and latches,
@@ -29,6 +34,18 @@ L_Security_Armed := GVL_ALARM.G_Security_Armed;
 L_Security_Alarm := GVL_ALARM.G_Security_Alarm;
 L_Evac_Blink_Phase := (GVL_STATUS.G_System_Time_MS / 500) MOD 2;
 L_Evac_Blink_On := (L_Evac_Blink_Phase = 0);
+
+// Distributed runtime governance.
+// Emergency evacuation/fire semantics remain authoritative.
+L_Distributed_Execute_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Execute;
+
+L_Distributed_Projection_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
+
+L_Emergency_Lighting_Override :=
+    GVL_STATE.G_Evacuation_Lighting_Active
+    OR L_Fire_Alarm_Active;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     IF GVL_INTENT_SYSTEM.I_Lighting_Overrides_Block OR GVL_SYSTEM_COORDINATION.G_Block_Lighting_Override THEN
@@ -61,41 +78,45 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
     L_Socket_Override[L_i] := L_Manual_Socket_Override[L_i];
 END_FOR;
 
-fbLightingManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
-    VI_Away_Level := 1,
-    VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
-    VI_Is_Night := GVL_STATUS.G_Is_Night,
-    VI_System_Mode := GVL_STATE.G_System_Mode,
-    VI_Manual_Light_Override := L_Manual_Light_Override,
-    VI_Manual_Blinds_Override := L_Blinds_Override,
-    VI_Simulation_Lights := L_Sim_Lights,
-    VI_Physical_Switches := L_Physical_Switches,
-    VI_Motion_Sensors := L_Motion_Sensors,
-    VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
-    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
-    VI_Wet_Zone_Map := GVL_CONFIG.G_Wet_Zone_Map,
-    VI_Scenario_Configs := GVL_CONFIG.G_HMI_Scenario_Configs,
-    VO_Lighting_Levels => GVL_STATE.G_Lighting_Levels,
-    VO_Blinds_Positions => GVL_STATE.G_Blinds_Positions,
-    VO_Wet_Zone_Light_Active => L_Wet_Zone_Light_Active
-);
+IF L_Distributed_Execute_Allowed THEN
 
-fbSocketManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Scenario := GVL_STATUS.G_Current_Scenario,
-    VI_Manual_Override := L_Socket_Override,
-    VI_Physical_Switches := GVL_STATE.G_Socket_Switches,
-    VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
-    VI_Fire_Alarm := L_Fire_Alarm_Active,
-    VI_Flood_Alarm := L_Flood_Alarm_Active,
-    VI_Security_Armed := GVL_ALARM.G_Security_Armed,
-    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
-    VO_Socket_States => GVL_STATE.G_Socket_States
-);
+    fbLightingManager(
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+        VI_Current_Scenario := GVL_STATUS.G_Current_Scenario,
+        VI_Away_Level := 1,
+        VI_Simulation_Active := GVL_STATUS.G_Sim_Active,
+        VI_Is_Night := GVL_STATUS.G_Is_Night,
+        VI_System_Mode := GVL_STATE.G_System_Mode,
+        VI_Manual_Light_Override := L_Manual_Light_Override,
+        VI_Manual_Blinds_Override := L_Blinds_Override,
+        VI_Simulation_Lights := L_Sim_Lights,
+        VI_Physical_Switches := L_Physical_Switches,
+        VI_Motion_Sensors := L_Motion_Sensors,
+        VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
+        VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+        VI_Wet_Zone_Map := GVL_CONFIG.G_Wet_Zone_Map,
+        VI_Scenario_Configs := GVL_CONFIG.G_HMI_Scenario_Configs,
+        VO_Lighting_Levels => GVL_STATE.G_Lighting_Levels,
+        VO_Blinds_Positions => GVL_STATE.G_Blinds_Positions,
+        VO_Wet_Zone_Light_Active => L_Wet_Zone_Light_Active
+    );
+
+    fbSocketManager(
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+        VI_Scenario := GVL_STATUS.G_Current_Scenario,
+        VI_Manual_Override := L_Socket_Override,
+        VI_Physical_Switches := GVL_STATE.G_Socket_Switches,
+        VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
+        VI_Fire_Alarm := L_Fire_Alarm_Active,
+        VI_Flood_Alarm := L_Flood_Alarm_Active,
+        VI_Security_Armed := GVL_ALARM.G_Security_Armed,
+        VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+        VO_Socket_States => GVL_STATE.G_Socket_States
+    );
+
+END_IF;
 
 // Priority overrides after normal manager calculation:
 // Evacuation > Fire > Security Alarm > Security Armed > Normal
@@ -129,6 +150,24 @@ ELSIF L_Security_Armed THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         GVL_STATE.G_Lighting_Levels[L_i] := 0;
     END_FOR;
+END_IF;
+
+// Distributed projection restriction.
+IF NOT L_Distributed_Projection_Allowed
+   AND NOT L_Emergency_Lighting_Override THEN
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_STATE.G_Lighting_Levels[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+        GVL_STATE.G_Blinds_Positions[L_i] := 100;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+        GVL_STATE.G_Socket_States[L_i] := FALSE;
+    END_FOR;
+
 END_IF;
 
 // Publish wet-zone activity from the final lighting state seen by IO_Write.
