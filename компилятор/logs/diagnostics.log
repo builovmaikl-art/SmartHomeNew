@@ -366,7 +366,7 @@ drwxr-xr-x  3 runner runner   4096 May 16 21:08 .github
 -rw-r--r--  1 runner runner   8376 May 16 21:08 HEATING_RUNTIME_OWNERSHIP_MATRIX.md
 -rw-r--r--  1 runner runner    164 May 16 21:08 IS_REAL_VALID.fun
 -rw-r--r--  1 runner runner    309 May 16 21:08 IValveController.st
--rw-r--r--  1 runner runner   6548 May 16 21:08 MAIN.st
+-rw-r--r--  1 runner runner   6738 May 16 21:08 MAIN.st
 -rw-r--r--  1 runner runner   9174 May 16 21:08 PRG_Access.st
 -rw-r--r--  1 runner runner   4579 May 16 21:08 PRG_Actuation_Authority_Governor.st
 -rw-r--r--  1 runner runner   3755 May 16 21:08 PRG_Authority_Lineage_Governor.st
@@ -618,8 +618,8 @@ drwxr-xr-x  2 runner runner   4096 May 16 21:08 out
 -rw-r--r--  1 runner runner    177 May 16 21:08 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2104
+total 2112
 drwxr-xr-x 2 runner runner    4096 May 16 21:08 .
 drwxr-xr-x 5 runner runner    4096 May 16 21:08 ..
 -rw-r--r-- 1 runner runner       0 May 16 21:08 .gitkeep
--rw-r--r-- 1 runner runner 2145105 May 16 21:08 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2152096 May 16 21:08 RESULT_methods_clean.xml
