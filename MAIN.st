@@ -145,16 +145,28 @@ PRG_Water();
 PRG_Access();
 PRG_Lighting();
 
-// 30. Pre-output safety barrier
-PRG_PreOutput_Safety_Barrier();
-
-// 31. Output freshness governance
+// 30. Output freshness governance
+// Must run before physical causality and pre-output proof barriers
+// because telemetry epoch binding consumes Output_Publication_Epoch.
 PRG_Output_Freshness_Governor();
 
-// 32. Final physical IO projection
+// 31. Physical sensor consensus governance
+// Must run before telemetry causality governance because telemetry
+// causality consumes physics-consistent sensor consensus authority.
+PRG_Sensor_Consensus_Governor();
+
+// 32. Telemetry causality governance
+// Must run before pre-output safety barrier because final IO release
+// consumes command->telemetry->physical causality proof.
+PRG_Telemetry_Causality_Governor();
+
+// 33. Pre-output safety barrier
+PRG_PreOutput_Safety_Barrier();
+
+// 34. Final physical IO projection
 PRG_IO_Write();
 
-// 33. Verification, diagnostics, history, HMI
+// 35. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
