@@ -6,6 +6,7 @@ VAR
     L_Publication_Authority_Valid : BOOL;
     L_Recovery_Authority_Valid : BOOL;
     L_Distributed_Authority_Valid : BOOL;
+    L_Final_Projection_Barrier_Valid : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -54,7 +55,6 @@ L_Runtime_Authority_Valid :=
     AND GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid
     AND NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
 
-// Finalized publication authority.
 L_Publication_Authority_Valid :=
     GVL_OUTPUT_EPOCH.Output_Publication_Allowed
     AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
@@ -75,11 +75,22 @@ L_Distributed_Authority_Valid :=
     AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
     AND GVL_Distributed_Execution_Gates.G_Runtime_Valid;
 
+// Final projection proof barrier.
+L_Final_Projection_Barrier_Valid :=
+    GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
+    AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
+
 GVL_OBSERVABILITY_AUTHORITY.Publication_Runtime_Valid :=
     L_Runtime_Authority_Valid
     AND L_Publication_Authority_Valid
     AND L_Recovery_Authority_Valid
-    AND L_Distributed_Authority_Valid;
+    AND L_Distributed_Authority_Valid
+    AND L_Final_Projection_Barrier_Valid;
+
+IF NOT L_Final_Projection_Barrier_Valid THEN
+    GVL_OBSERVABILITY_AUTHORITY.Unsafe_State_Published := TRUE;
+    GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
+END_IF;
 
 IF NOT L_Publication_Authority_Valid THEN
     GVL_OBSERVABILITY_AUTHORITY.Output_Decay_Visible := TRUE;
