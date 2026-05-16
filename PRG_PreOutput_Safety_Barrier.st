@@ -13,6 +13,7 @@ VAR
     L_Runtime_Projection_Healthy : BOOL;
 
     L_Finalized_Publication_Continuity : BOOL;
+    L_Physical_Causality_Healthy : BOOL;
 
     fbLog : FB_LogEvent;
 END_VAR
@@ -33,6 +34,19 @@ L_Global_Fallback_Active :=
 L_Runtime_Projection_Healthy :=
     GVL_Water_Output_Reconciliation.G_Runtime_Valid
     AND NOT GVL_Water_Output_Reconciliation.G_Any_Conflict_Detected;
+
+// Physical causality evidence.
+// Introduces mandatory telemetry acknowledgment layer.
+L_Physical_Causality_Healthy :=
+    GVL_TELEMETRY.Telemetry_Runtime_Valid
+    AND GVL_TELEMETRY.Telemetry_Freshness_Valid
+    AND NOT GVL_TELEMETRY.Telemetry_Lease_Expired
+    AND NOT GVL_TELEMETRY.Telemetry_Quarantine_Active
+    AND GVL_TELEMETRY.Command_Telemetry_Causality_Valid
+    AND NOT GVL_TELEMETRY.Command_Telemetry_Divergence_Detected
+    AND GVL_TELEMETRY.Actuator_Feedback_Valid
+    AND GVL_TELEMETRY.Actuator_Feedback_Fresh
+    AND GVL_TELEMETRY.Physical_Effect_Confirmed;
 
 // Finalized publication continuity proof chain.
 L_Finalized_Publication_Continuity :=
@@ -68,6 +82,13 @@ IF (NOT L_Block_IO)
     L_Block_IO := TRUE;
     L_Error_Code := 3999;
     L_Error_Text := 'PreOutput finalized publication continuity invalid';
+END_IF;
+
+IF (NOT L_Block_IO)
+   AND (NOT L_Physical_Causality_Healthy) THEN
+    L_Block_IO := TRUE;
+    L_Error_Code := 3998;
+    L_Error_Text := 'Physical causality evidence invalid';
 END_IF;
 
 IF (NOT L_Block_IO) AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
@@ -110,6 +131,9 @@ IF (NOT L_Block_IO)
     L_Error_Code := 4005;
     L_Error_Text := 'PreOutput valve 36 command mismatch';
 END_IF;
+
+GVL_COMMAND_VERIFY.PreOutput_Physical_Causality_Valid :=
+    L_Physical_Causality_Healthy;
 
 GVL_COMMAND_VERIFY.PreOutput_Barrier_OK := NOT L_Block_IO;
 GVL_COMMAND_VERIFY.PreOutput_Block_IO := L_Block_IO;
