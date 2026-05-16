@@ -4,6 +4,9 @@ VAR
     L_Healthy : BOOL := TRUE;
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
+
+    L_Recent_Invalidation : BOOL;
+    L_Epoch_Advancement_Healthy : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -45,7 +48,6 @@ GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active;
 
-// Finalized output publication continuity.
 GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
     GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK
     AND GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed
@@ -68,6 +70,21 @@ GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
     AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
     AND GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
     AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
+
+// Epoch advancement freshness.
+L_Epoch_Advancement_Healthy :=
+    (GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch -
+     GVL_SEMANTIC_PROGRESS.Semantic_Last_Runtime_Barrier_Epoch) <= 2
+    AND
+    (GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Epoch -
+     GVL_SEMANTIC_PROGRESS.Semantic_Last_Distributed_Commit_Epoch) <= 2
+    AND
+    (GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Epoch -
+     GVL_SEMANTIC_PROGRESS.Semantic_Last_Output_Publication_Epoch) <= 2;
+
+// Oscillation damping window.
+L_Recent_Invalidation :=
+    (L_Now_MS - GVL_CONVERGENCE.Convergence_Last_Invalidation_MS) < 30000;
 
 IF NOT GVL_CONVERGENCE.Convergence_Runtime_Barrier_OK THEN
     L_Healthy := FALSE;
@@ -105,6 +122,18 @@ IF L_Healthy AND NOT GVL_CONVERGENCE.Convergence_Output_Freshness_OK THEN
     L_Error_Text := 'Output freshness convergence invalid';
 END_IF;
 
+IF L_Healthy AND NOT L_Epoch_Advancement_Healthy THEN
+    L_Healthy := FALSE;
+    L_Error_Code := 18006;
+    L_Error_Text := 'Epoch advancement freshness invalid';
+END_IF;
+
+IF L_Healthy AND L_Recent_Invalidation THEN
+    L_Healthy := FALSE;
+    L_Error_Code := 18007;
+    L_Error_Text := 'Convergence oscillation damping active';
+END_IF;
+
 IF L_Healthy THEN
     GVL_CONVERGENCE.Convergence_Healthy_Observed := TRUE;
 
@@ -119,7 +148,8 @@ IF L_Healthy THEN
         L_Now_MS - GVL_CONVERGENCE.Convergence_Last_Healthy_MS;
 
     IF (GVL_CONVERGENCE.Recovery_Stable_Cycle_Count >= GVL_CONVERGENCE.Convergence_Min_Stable_Cycles)
-    AND (GVL_CONVERGENCE.Recovery_Stable_Time_MS >= GVL_CONVERGENCE.Convergence_Min_Stable_Time_MS) THEN
+    AND (GVL_CONVERGENCE.Recovery_Stable_Time_MS >= GVL_CONVERGENCE.Convergence_Min_Stable_Time_MS)
+    THEN
         GVL_CONVERGENCE.Convergence_Lease_OK := TRUE;
         GVL_CONVERGENCE.Convergence_Release_Allowed := TRUE;
     ELSE
@@ -143,6 +173,11 @@ ELSE
 
     GVL_CONVERGENCE.Convergence_Invalidation_Count :=
         GVL_CONVERGENCE.Convergence_Invalidation_Count + 1;
+
+    // Oscillation quarantine.
+    IF GVL_CONVERGENCE.Convergence_Invalidation_Count > 5 THEN
+        GVL_CONVERGENCE.Convergence_Oscillation_Quarantine_Active := TRUE;
+    END_IF;
 
     GVL_CONVERGENCE.Convergence_Last_Error_Code := L_Error_Code;
     GVL_CONVERGENCE.Convergence_Last_Error_Text := L_Error_Text;
