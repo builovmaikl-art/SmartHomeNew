@@ -1,0 +1,30 @@
+VAR_GLOBAL RETAIN
+    // Persistent authority lineage.
+    Authority_Lineage_Epoch : UDINT := 0;
+    Authority_Lineage_Valid : BOOL := FALSE;
+
+    // Persistence continuity proofs.
+    Warm_Restart_Continuity_Valid : BOOL := FALSE;
+    HA_Resume_Continuity_Valid : BOOL := FALSE;
+    Retained_State_Integrity_Valid : BOOL := FALSE;
+
+    // Replay/skew detection.
+    Authority_Replay_Suspected : BOOL := FALSE;
+    Retained_State_Skew_Detected : BOOL := FALSE;
+    Partial_Authority_Resurrection_Detected : BOOL := FALSE;
+    Epoch_Lineage_Discontinuity_Detected : BOOL := FALSE;
+
+    // Last authoritative epochs.
+    Last_Physical_Authority_Epoch : UDINT := 0;
+    Last_Runtime_Epoch : UDINT := 0;
+    Last_Output_Publication_Epoch : UDINT := 0;
+
+    // Persistence metadata.
+    Authority_Lineage_Boot_ID : UDINT := 0;
+    Authority_Lineage_Last_Update_MS : UDINT := 0;
+
+    // Diagnostics.
+    Authority_Lineage_Last_Error_Code : UDINT := 0;
+    Authority_Lineage_Last_Error_Text : STRING(160) := '';
+    Authority_Lineage_Invalidation_Count : UDINT := 0;
+END_VAR
