@@ -24,18 +24,17 @@ L_Error_Text := '';
 // - PLC fencing authoritative;
 // - transport freshness authoritative.
 //
-// Distributed finalized continuity now additionally
-// participates in primordial runtime authority.
+// Finalized distributed commit continuity is allowed
+// as upstream authority evidence.
+//
+// Semantic continuity intentionally remains downstream
+// to avoid primordial semantic/runtime recursion.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
 GVL_RUNTIME_EPOCH.Runtime_Snapshot_Published := FALSE;
 GVL_RUNTIME_EPOCH.Runtime_Impossible_State_Detected := FALSE;
 GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed := FALSE;
-
-// ------------------------------------------------------
-// Monotonic time authority validation.
-// ------------------------------------------------------
 
 IF NOT GVL_TIME_MONOTONIC.Monotonic_Time_Initialized THEN
     L_Runtime_OK := FALSE;
@@ -73,19 +72,11 @@ IF L_Runtime_OK AND (GVL_TIME_MONOTONIC.Boot_Generation_ID = 0) THEN
     L_Error_Text := 'Boot generation missing';
 END_IF;
 
-// ------------------------------------------------------
-// Base PLC/runtime authority validation.
-// ------------------------------------------------------
-
 IF L_Runtime_OK AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5000;
     L_Error_Text := 'Runtime barrier inactive PLC';
 END_IF;
-
-// ------------------------------------------------------
-// PLC fencing authority validation.
-// ------------------------------------------------------
 
 IF L_Runtime_OK AND (NOT GVL_PLC_FENCING.PLC_Ownership_Valid) THEN
     L_Runtime_OK := FALSE;
@@ -117,10 +108,6 @@ IF L_Runtime_OK AND (GVL_PLC_FENCING.PLC_Fencing_Token = 0) THEN
     L_Error_Text := 'PLC fencing token missing';
 END_IF;
 
-// ------------------------------------------------------
-// Transport freshness validation.
-// ------------------------------------------------------
-
 IF L_Runtime_OK AND (NOT GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid) THEN
     L_Runtime_OK := FALSE;
     L_Error_Code := 5200;
@@ -151,16 +138,11 @@ IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
     L_Error_Text := 'Transport snapshot invalid';
 END_IF;
 
-// ------------------------------------------------------
-// Finalized continuity linkage.
-// ------------------------------------------------------
-
+// Finalized distributed commit continuity.
+// Intentionally excludes semantic continuity
+// to avoid primordial semantic/runtime recursion.
 L_Finalized_Continuity_Healthy :=
-    GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
-    AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
-    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
-    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active
-    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
     AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
@@ -175,10 +157,6 @@ AND NOT L_Finalized_Continuity_Healthy THEN
     L_Error_Code := 5300;
     L_Error_Text := 'Finalized continuity invalid';
 END_IF;
-
-// ------------------------------------------------------
-// Impossible-state rejection.
-// ------------------------------------------------------
 
 IF L_Runtime_OK THEN
     IF (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
@@ -199,10 +177,6 @@ IF L_Runtime_OK THEN
         L_Error_Text := 'Impossible gas valve state';
     END_IF;
 END_IF;
-
-// ------------------------------------------------------
-// Authoritative runtime publication.
-// ------------------------------------------------------
 
 GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK := L_Runtime_OK;
 GVL_RUNTIME_EPOCH.Runtime_Snapshot_Valid := L_Runtime_OK;
