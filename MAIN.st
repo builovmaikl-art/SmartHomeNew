@@ -170,17 +170,22 @@ PRG_Telemetry_Causality_Governor();
 PRG_Physical_Authority_Epoch_Governor();
 
 // 35. Persistent authority lineage governance
-// Must run before pre-output barrier to guarantee deterministic
-// restart/failover continuity of the authority fabric.
+// Must run before authority revocation governance because
+// revocation consumes finalized lineage continuity state.
 PRG_Authority_Lineage_Governor();
 
-// 36. Pre-output safety barrier
+// 36. Global authority revocation governance
+// Must run before pre-output barrier to guarantee atomic fail-closed
+// downstream revocation of the physical authority fabric.
+PRG_Authority_Revocation_Governor();
+
+// 37. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 37. Final physical IO projection
+// 38. Final physical IO projection
 PRG_IO_Write();
 
-// 38. Verification, diagnostics, history, HMI
+// 39. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
