@@ -11,24 +11,6 @@ L_Healthy := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
 
-// ======================================================
-// SYSTEMIC CONVERGENCE GOVERNOR
-// ======================================================
-// Governs deterministic recovery/convergence semantics.
-//
-// Prevents one-cycle false recovery by requiring sustained
-// healthy evidence before quarantine/degraded release.
-//
-// Important: convergence lease is derived from underlying
-// healthy evidence, not from quarantine/forced-decay flags
-// that are themselves released by this lease. This prevents
-// circular dependency during recovery.
-// ======================================================
-
-// ------------------------------------------------------
-// Capture authoritative convergence evidence.
-// ------------------------------------------------------
-
 GVL_CONVERGENCE.Convergence_Runtime_Barrier_OK :=
     GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK
     AND GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed;
@@ -59,6 +41,7 @@ GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired;
 
+// Finalized output publication continuity.
 GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
     GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK
     AND GVL_RUNTIME_EPOCH.Runtime_IO_Publication_Allowed
@@ -71,11 +54,11 @@ GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
     AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
-    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
-
-// ------------------------------------------------------
-// Aggregate convergence health.
-// ------------------------------------------------------
+    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
+    AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
+    AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
+    AND NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired
+    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 
 IF NOT GVL_CONVERGENCE.Convergence_Runtime_Barrier_OK THEN
     L_Healthy := FALSE;
@@ -112,10 +95,6 @@ IF L_Healthy AND NOT GVL_CONVERGENCE.Convergence_Output_Freshness_OK THEN
     L_Error_Code := 18005;
     L_Error_Text := 'Output freshness convergence invalid';
 END_IF;
-
-// ------------------------------------------------------
-// Sustained convergence accumulation.
-// ------------------------------------------------------
 
 IF L_Healthy THEN
     GVL_CONVERGENCE.Convergence_Healthy_Observed := TRUE;
