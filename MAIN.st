@@ -160,17 +160,22 @@ PRG_Physical_Snapshot_Governor();
 PRG_Sensor_Consensus_Governor();
 
 // 33. Telemetry causality governance
-// Must run before pre-output safety barrier because final IO release
-// consumes command->telemetry->physical causality proof.
+// Must run before physical authority epoch governance because
+// global physical authority coherence consumes telemetry epochs.
 PRG_Telemetry_Causality_Governor();
 
-// 34. Pre-output safety barrier
+// 34. Global physical authority epoch governance
+// Must run before pre-output barrier to guarantee all physical
+// governors validated the same immutable physical world.
+PRG_Physical_Authority_Epoch_Governor();
+
+// 35. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 35. Final physical IO projection
+// 36. Final physical IO projection
 PRG_IO_Write();
 
-// 36. Verification, diagnostics, history, HMI
+// 37. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
