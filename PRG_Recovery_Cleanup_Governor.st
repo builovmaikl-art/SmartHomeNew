@@ -4,6 +4,10 @@ VAR
     L_Recovery_Valid : BOOL := TRUE;
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
+
+    L_Distributed_Recovery_Allowed : BOOL;
+    L_Cluster_Recovery_Lock : BOOL;
+    L_Cluster_Quarantine : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -24,11 +28,26 @@ L_Error_Text := '';
 // Cleanup completion/release is convergence-lease based:
 // recovery cleanup is not marked completed/verified on a
 // single valid scan.
+//
+// Distributed recovery governance is authoritative.
+// Cleanup/reopen must never bypass:
+//   - recovery lock runtime;
+//   - cluster quarantine;
+//   - centralized recovery execution gates.
 // ======================================================
 
 GVL_RECOVERY_GOVERNANCE.Recovery_Semantic_Residue_Detected := FALSE;
 GVL_RECOVERY_GOVERNANCE.Recovery_Degraded_State_Residual := FALSE;
 GVL_RECOVERY_GOVERNANCE.Recovery_Retained_State_Residual := FALSE;
+
+L_Distributed_Recovery_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Recover;
+
+L_Cluster_Recovery_Lock :=
+    GVL_Cluster_Runtime_FSM.G_State_Recovery_Lock;
+
+L_Cluster_Quarantine :=
+    GVL_Cluster_Runtime_FSM.G_State_Quarantine;
 
 // ------------------------------------------------------
 // Monotonic authority linkage.
@@ -38,6 +57,51 @@ IF NOT GVL_TIME_MONOTONIC.Monotonic_Time_Valid THEN
     L_Recovery_Valid := FALSE;
     L_Error_Code := 9001;
     L_Error_Text := 'Recovery monotonic authority invalid';
+END_IF;
+
+// ------------------------------------------------------
+// Distributed recovery governance.
+// ------------------------------------------------------
+
+IF L_Recovery_Valid
+   AND NOT L_Distributed_Recovery_Allowed THEN
+
+    L_Recovery_Valid := FALSE;
+
+    L_Error_Code := 9010;
+    L_Error_Text :=
+        'Distributed recovery governance restricted';
+
+END_IF;
+
+// ------------------------------------------------------
+// Cluster recovery-lock state.
+// ------------------------------------------------------
+
+IF L_Recovery_Valid
+   AND L_Cluster_Recovery_Lock THEN
+
+    L_Recovery_Valid := FALSE;
+
+    L_Error_Code := 9011;
+    L_Error_Text :=
+        'Cluster recovery-lock active';
+
+END_IF;
+
+// ------------------------------------------------------
+// Cluster quarantine state.
+// ------------------------------------------------------
+
+IF L_Recovery_Valid
+   AND L_Cluster_Quarantine THEN
+
+    L_Recovery_Valid := FALSE;
+
+    L_Error_Code := 9012;
+    L_Error_Text :=
+        'Cluster quarantine active';
+
 END_IF;
 
 // ------------------------------------------------------
