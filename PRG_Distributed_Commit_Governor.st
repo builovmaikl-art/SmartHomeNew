@@ -15,50 +15,24 @@ L_Commit_Valid := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
 
-// ======================================================
-// DISTRIBUTED PUBLICATION COMMIT GOVERNOR
-// ======================================================
-// Governs deterministic peer publication commit continuity.
-// Publication-authoritative only.
-// Does not invalidate runtime barrier,
-// PLC fencing or immutable snapshot authority.
-//
-// Recovery/release is convergence-lease based:
-// distributed commit quarantine is not released on a
-// single healthy scan.
-//
-// Distributed execution/publication authority is upstream.
-// Observer-only nodes must never:
-//   - participate in publication commit ownership;
-//   - confirm publication authority;
-//   - reopen publication continuity.
-// ======================================================
-
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Expired := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing := FALSE;
 GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired := FALSE;
 
+// Finalized publication/convergence authority.
 L_Publication_Authority_Allowed :=
     GVL_Distributed_Execution_Gates.G_Runtime_Valid
     AND GVL_Distributed_Execution_Gates.G_Can_Replicate
-    AND GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
-
-// ------------------------------------------------------
-// Local publication projection.
-// ------------------------------------------------------
-// Distributed commit is upstream of output freshness in MAIN.
-// Therefore local commit baseline must not read GVL_OUTPUT_EPOCH.
-// It uses the already-prepared distributed snapshot epoch instead.
-// ------------------------------------------------------
+    AND GVL_Distributed_Execution_Gates.G_Can_Own_Projection
+    AND GVL_CONVERGENCE.Convergence_Lease_OK
+    AND GVL_CONVERGENCE.Convergence_Release_Allowed
+    AND GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid
+    AND NOT GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active;
 
 GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
-
-// ------------------------------------------------------
-// Distributed execution/publication authority.
-// ------------------------------------------------------
 
 IF NOT L_Publication_Authority_Allowed THEN
 
@@ -69,10 +43,6 @@ IF NOT L_Publication_Authority_Allowed THEN
         'Distributed publication authority restricted';
 
 END_IF;
-
-// ------------------------------------------------------
-// Immutable publication preparation validation.
-// ------------------------------------------------------
 
 IF L_Commit_Valid THEN
 
@@ -93,10 +63,6 @@ IF L_Commit_Valid THEN
 
 END_IF;
 
-// ------------------------------------------------------
-// Peer session detection.
-// ------------------------------------------------------
-
 IF GVL_DISTRIBUTED_COMMIT.Peer_Publication_Commit_Epoch > 0 THEN
     L_Peer_Session_Active := TRUE;
 END_IF;
@@ -108,10 +74,6 @@ END_IF;
 IF GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Valid THEN
     L_Peer_Session_Active := TRUE;
 END_IF;
-
-// ------------------------------------------------------
-// Commit lease freshness validation.
-// ------------------------------------------------------
 
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     L_Delta_MS := L_Now_MS - GVL_DISTRIBUTED_COMMIT.Peer_Commit_Last_Refresh_MS;
@@ -127,10 +89,6 @@ IF L_Commit_Valid AND L_Peer_Session_Active THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------
-// Peer commit acknowledgement validation.
-// ------------------------------------------------------
-
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Valid THEN
         GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing := TRUE;
@@ -140,10 +98,6 @@ IF L_Commit_Valid AND L_Peer_Session_Active THEN
         L_Error_Text := 'Peer commit acknowledgement missing';
     END_IF;
 END_IF;
-
-// ------------------------------------------------------
-// Deterministic commit epoch continuity.
-// ------------------------------------------------------
 
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF GVL_DISTRIBUTED_COMMIT.Peer_Publication_Commit_Epoch < GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch THEN
@@ -155,10 +109,6 @@ IF L_Commit_Valid AND L_Peer_Session_Active THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------
-// Replay protection foundation.
-// ------------------------------------------------------
-
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF GVL_DISTRIBUTED_COMMIT.Peer_Prepare_Epoch < GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch THEN
         GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected := TRUE;
@@ -168,10 +118,6 @@ IF L_Commit_Valid AND L_Peer_Session_Active THEN
         L_Error_Text := 'Peer commit replay detected';
     END_IF;
 END_IF;
-
-// ------------------------------------------------------
-// Publish deterministic distributed commit state.
-// ------------------------------------------------------
 
 IF L_Commit_Valid THEN
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Epoch := GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Epoch + 1;
@@ -189,7 +135,6 @@ IF L_Commit_Valid THEN
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := TRUE;
 
-    // Lease-based recovery release.
     IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
         GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := FALSE;
     END_IF;
@@ -199,7 +144,6 @@ IF L_Commit_Valid THEN
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code := 0;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Text := '';
 ELSE
-    // Invalid distributed commit state escalates immediately.
     GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := FALSE;
 
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := FALSE;
