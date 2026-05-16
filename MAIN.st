@@ -165,17 +165,22 @@ PRG_Sensor_Consensus_Governor();
 PRG_Telemetry_Causality_Governor();
 
 // 34. Global physical authority epoch governance
-// Must run before pre-output barrier to guarantee all physical
-// governors validated the same immutable physical world.
+// Must run before authority lineage governance because lineage
+// continuity consumes finalized physical authority epochs.
 PRG_Physical_Authority_Epoch_Governor();
 
-// 35. Pre-output safety barrier
+// 35. Persistent authority lineage governance
+// Must run before pre-output barrier to guarantee deterministic
+// restart/failover continuity of the authority fabric.
+PRG_Authority_Lineage_Governor();
+
+// 36. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 36. Final physical IO projection
+// 37. Final physical IO projection
 PRG_IO_Write();
 
-// 37. Verification, diagnostics, history, HMI
+// 38. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
