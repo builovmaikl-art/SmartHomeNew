@@ -6,6 +6,8 @@ END_VAR
 VAR
     L_State : ST_Distributed_Authority_State;
     L_Lease_Expired : BOOL;
+
+    L_Finalized_Runtime_Continuity : BOOL;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -40,12 +42,39 @@ L_State.Replication_Consensus_Healthy :=
 L_State.Replication_Consensus_Stale :=
     NOT GVL_Distributed_Runtime.G_Distributed_Replication_Healthy;
 
+// Finalized runtime continuity proof chain.
+L_Finalized_Runtime_Continuity :=
+    GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
+    AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid
+    AND NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed
+    AND NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch
+    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
+    AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
+    AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
+    AND NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired
+    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
+    AND GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
+    AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
+
 // Distributed pre-authority safety barrier.
 L_State.Distributed_Safety_Barrier_OK :=
     GVL_Runtime_Restart_Continuity.G_Runtime_Valid
     AND NOT GVL_Config_Activation.G_Config_Quarantine_Active
     AND NOT GVL_Distributed_Runtime.G_Split_Brain_Suspected
-    AND GVL_IO_Binding_Runtime.G_Runtime_Valid;
+    AND GVL_IO_Binding_Runtime.G_Runtime_Valid
+    AND L_Finalized_Runtime_Continuity;
 
 IF NOT L_State.Distributed_Safety_Barrier_OK THEN
 
@@ -57,7 +86,8 @@ IF NOT L_State.Distributed_Safety_Barrier_OK THEN
         'Distributed authority blocked by safety barrier';
 
 ELSIF L_State.Replication_Consensus_Healthy
-   AND NOT L_Lease_Expired THEN
+   AND NOT L_Lease_Expired
+   AND L_Finalized_Runtime_Continuity THEN
 
     L_State.Authority_Master_Elected := TRUE;
 
