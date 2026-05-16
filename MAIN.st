@@ -191,16 +191,21 @@ PRG_PreOutput_Safety_Barrier();
 PRG_IO_Write();
 
 // 40. Deterministic field actuation governance
-// Must run after physical IO write and before observability
-// publication to guarantee field-confirmed physical execution.
+// Must run after physical IO write and before physical
+// transaction governance to guarantee field-confirmed execution.
 PRG_Actuation_Authority_Governor();
 
-// 41. Observability authority coherence governance
+// 41. Deterministic physical transaction governance
+// Must run before observability publication to guarantee
+// atomic cross-actuator plant convergence.
+PRG_Physical_Transaction_Governor();
+
+// 42. Observability authority coherence governance
 // Must run before diagnostics/HMI publication to guarantee
 // operator-visible state matches active authority fabric.
 PRG_Observability_Authority_Governor();
 
-// 42. Verification, diagnostics, history, HMI
+// 43. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
