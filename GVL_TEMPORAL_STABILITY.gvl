@@ -1,0 +1,41 @@
+VAR_GLOBAL
+    // Global temporal stability authority.
+    Temporal_Stability_Valid : BOOL := FALSE;
+    Temporal_Stability_Granted : BOOL := FALSE;
+    Temporal_Stability_Quarantine_Active : BOOL := TRUE;
+
+    // Deterministic observation windows.
+    Stability_Observation_Window_Active : BOOL := FALSE;
+    Stability_Window_Start_MS : UDINT := 0;
+    Stability_Window_Elapsed_MS : UDINT := 0;
+    Stability_Window_Target_MS : UDINT := 5000;
+
+    // Temporal convergence proofs.
+    Post_Convergence_Stable : BOOL := FALSE;
+    No_Oscillation_Detected : BOOL := FALSE;
+    No_Relay_Chatter_Detected : BOOL := FALSE;
+    Thermal_Slope_Stable : BOOL := FALSE;
+    Pressure_Stable : BOOL := FALSE;
+    Flow_Stable : BOOL := FALSE;
+
+    // Delayed instability detection.
+    Post_Convergence_Oscillation_Detected : BOOL := FALSE;
+    Thermal_Inertia_Rebound_Detected : BOOL := FALSE;
+    Pressure_Rebound_Detected : BOOL := FALSE;
+    Relay_Chatter_Detected : BOOL := FALSE;
+    Pump_Cavitation_Recovery_Detected : BOOL := FALSE;
+    Delayed_Actuator_Divergence_Detected : BOOL := FALSE;
+
+    // Temporal authority epochs.
+    Temporal_Stability_Epoch : UDINT := 0;
+    Temporal_Stability_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority metadata.
+    Temporal_Stability_Last_Update_MS : UDINT := 0;
+    Temporal_Stability_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Temporal_Stability_Last_Error_Code : UDINT := 0;
+    Temporal_Stability_Last_Error_Text : STRING(160) := '';
+    Temporal_Stability_Invalidation_Count : UDINT := 0;
+END_VAR
