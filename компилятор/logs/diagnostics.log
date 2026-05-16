@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3332
+total 3336
 -rw-r--r--  1 runner runner  13067 May 16 20:23 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  36864 May 16 20:23 .
 drwxr-xr-x  3 runner runner   4096 May 16 20:23 ..
@@ -363,6 +363,7 @@ drwxr-xr-x  3 runner runner   4096 May 16 20:23 .github
 -rw-r--r--  1 runner runner    309 May 16 20:23 IValveController.st
 -rw-r--r--  1 runner runner   5518 May 16 20:23 MAIN.st
 -rw-r--r--  1 runner runner   9174 May 16 20:23 PRG_Access.st
+-rw-r--r--  1 runner runner   3755 May 16 20:23 PRG_Authority_Lineage_Governor.st
 -rw-r--r--  1 runner runner   2014 May 16 20:23 PRG_Behavior_Adapt_Profile.st
 -rw-r--r--  1 runner runner  11987 May 16 20:23 PRG_Command_Arbitration.st
 -rw-r--r--  1 runner runner   7273 May 16 20:23 PRG_Command_Verifier.st
@@ -611,4 +612,4 @@ total 2064
 drwxr-xr-x 2 runner runner    4096 May 16 20:23 .
 drwxr-xr-x 5 runner runner    4096 May 16 20:23 ..
 -rw-r--r-- 1 runner runner       0 May 16 20:23 .gitkeep
--rw-r--r-- 1 runner runner 2101846 May 16 20:23 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2104599 May 16 20:23 RESULT_methods_clean.xml
