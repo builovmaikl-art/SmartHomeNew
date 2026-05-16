@@ -30,6 +30,9 @@ GVL_CONVERGENCE.Convergence_Distributed_Snapshot_OK :=
 
 GVL_CONVERGENCE.Convergence_Distributed_Commit_OK :=
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed
+    AND NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch
     AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
 GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
@@ -39,7 +42,8 @@ GVL_CONVERGENCE.Convergence_Semantic_Progress_OK :=
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Replay_Suspected
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected
     AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected
-    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired;
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active;
 
 // Finalized output publication continuity.
 GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
@@ -54,11 +58,16 @@ GVL_CONVERGENCE.Convergence_Output_Freshness_OK :=
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
     AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed
+    AND NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch
     AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
     AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
     AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
     AND NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired
-    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
+    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
+    AND GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
+    AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 
 IF NOT GVL_CONVERGENCE.Convergence_Runtime_Barrier_OK THEN
     L_Healthy := FALSE;
