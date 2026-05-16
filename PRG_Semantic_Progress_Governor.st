@@ -49,7 +49,6 @@ GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Snapshot_Evidence_OK :=
     GVL_RUNTIME_SNAPSHOT.Snapshot_Runtime_Authority_Valid AND
     NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
 
-// Finalized distributed publication continuity.
 GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK :=
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid AND
     GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid AND
@@ -58,15 +57,15 @@ GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK :=
     NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active AND
     NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
-// Final output projection continuity.
+// Final output publication evidence.
+// Intentionally does NOT depend on PreOutput_Barrier_OK
+// to avoid semantic/pre-output circular authority recursion.
 GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK :=
     GVL_OUTPUT_EPOCH.Output_Publication_Valid AND
     GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid AND
     NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired AND
     NOT GVL_OUTPUT_EPOCH.Output_Stale_Detected AND
-    NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay AND
-    GVL_COMMAND_VERIFY.PreOutput_Barrier_OK AND
-    NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
+    NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 
 L_Runtime_Epoch_Advanced :=
     GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch >
