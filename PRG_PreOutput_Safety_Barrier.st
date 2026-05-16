@@ -36,7 +36,15 @@ L_Runtime_Projection_Healthy :=
 
 // Finalized publication continuity proof chain.
 L_Finalized_Publication_Continuity :=
-    GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen
+    GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
+    AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Stagnation_Detected
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Replay_Suspected
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen
     AND GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed
     AND GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid
     AND GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid
@@ -45,6 +53,10 @@ L_Finalized_Publication_Continuity :=
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
     AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed
+    AND NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch
+    AND NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active
     AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
     AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
     AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
