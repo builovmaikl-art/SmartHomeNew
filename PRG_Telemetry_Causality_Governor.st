@@ -7,6 +7,7 @@ VAR
     L_Ack_Age_MS : UDINT;
     L_Convergence_Age_MS : UDINT;
     L_Stable_Dwell_MS : UDINT;
+    L_Consensus_Age_MS : UDINT;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -82,7 +83,6 @@ IF L_Causality_Valid AND (L_Convergence_Age_MS > 10000) THEN
     L_Error_Text := 'Physical convergence stale';
 END_IF;
 
-// Stable physical dwell window.
 L_Stable_Dwell_MS :=
     L_Now_MS - GVL_TELEMETRY.Last_Physical_Convergence_MS;
 
@@ -92,7 +92,6 @@ IF L_Causality_Valid AND (L_Stable_Dwell_MS < 3000) THEN
     L_Error_Text := 'Physical stabilization dwell window incomplete';
 END_IF;
 
-// Physical oscillation quarantine.
 IF L_Causality_Valid
 AND GVL_TELEMETRY.Physical_Oscillation_Detected THEN
     L_Causality_Valid := FALSE;
@@ -112,6 +111,60 @@ AND GVL_TELEMETRY.Physical_Convergence_Replay_Suspected THEN
     L_Causality_Valid := FALSE;
     L_Error_Code := 21033;
     L_Error_Text := 'Physical convergence replay suspected';
+END_IF;
+
+// Sensor consensus freshness.
+L_Consensus_Age_MS :=
+    L_Now_MS - GVL_SENSOR_CONSENSUS.Last_Consensus_Update_MS;
+
+IF L_Causality_Valid
+AND (L_Consensus_Age_MS > 5000) THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21040;
+    L_Error_Text := 'Sensor consensus stale';
+END_IF;
+
+// Physics-consistency gating.
+IF L_Causality_Valid
+AND NOT GVL_SENSOR_CONSENSUS.Sensor_Consensus_Valid THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21041;
+    L_Error_Text := 'Sensor consensus invalid';
+END_IF;
+
+IF L_Causality_Valid
+AND NOT GVL_SENSOR_CONSENSUS.Physics_Invariants_Satisfied THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21042;
+    L_Error_Text := 'Physics invariants violated';
+END_IF;
+
+IF L_Causality_Valid
+AND NOT GVL_SENSOR_CONSENSUS.Cross_Sensor_Correlation_Valid THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21043;
+    L_Error_Text := 'Cross sensor correlation invalid';
+END_IF;
+
+IF L_Causality_Valid
+AND NOT GVL_SENSOR_CONSENSUS.Telemetry_Plausibility_Valid THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21044;
+    L_Error_Text := 'Telemetry plausibility invalid';
+END_IF;
+
+IF L_Causality_Valid
+AND (GVL_SENSOR_CONSENSUS.Sensor_Drift_Detected
+     OR GVL_SENSOR_CONSENSUS.Sensor_Partition_Detected
+     OR GVL_SENSOR_CONSENSUS.Sensor_Hallucination_Suspected
+     OR GVL_SENSOR_CONSENSUS.Cross_Sensor_Divergence_Detected
+     OR GVL_SENSOR_CONSENSUS.Sensor_Oscillation_Detected
+     OR GVL_SENSOR_CONSENSUS.Sensor_Stuck_State_Detected
+     OR GVL_SENSOR_CONSENSUS.Sensor_Replay_Suspected) THEN
+
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21045;
+    L_Error_Text := 'Sensor consensus divergence detected';
 END_IF;
 
 IF L_Causality_Valid THEN
