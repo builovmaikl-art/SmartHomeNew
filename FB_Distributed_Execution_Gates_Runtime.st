@@ -5,6 +5,7 @@ VAR_INPUT
 END_VAR
 VAR
     L_Allow : BOOL;
+    L_Observer_Only : BOOL;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -12,16 +13,30 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+// Observer-only runtime semantics.
+// Observer nodes may:
+//   - observe runtime state;
+//   - receive publications;
+//   - participate in diagnostics.
+//
+// Observer nodes must NEVER:
+//   - execute orchestration;
+//   - own projections;
+//   - execute recovery;
+//   - publish physical outputs.
+L_Observer_Only :=
+    GVL_Distributed_Authority.G_Authority_State.Authority_Observer_Only;
+
 L_Allow :=
     NOT GVL_Cluster_Safety_Barrier.G_Cluster_Execution_Blocked
     AND GVL_Distributed_Authority.G_Authority_State.Authority_Master_Elected
     AND NOT GVL_Distributed_Runtime.G_Split_Brain_Suspected
     AND NOT GVL_Distributed_Projection_Ownership.G_Any_Ownership_Conflict
-    AND NOT GVL_Runtime_Sessions.G_Any_Stale_Session;
+    AND NOT GVL_Runtime_Sessions.G_Any_Stale_Session
+    AND NOT L_Observer_Only;
 
 GVL_Distributed_Execution_Gates.G_Can_Replicate :=
-    L_Allow
-    AND GVL_Runtime_Bus.G_TX_Healthy
+    GVL_Runtime_Bus.G_TX_Healthy
     AND GVL_Runtime_Bus.G_RX_Healthy;
 
 GVL_Distributed_Execution_Gates.G_Can_Execute :=
@@ -47,14 +62,24 @@ GVL_Distributed_Execution_Gates.G_Runtime_Valid := TRUE;
 GVL_Distributed_Execution_Gates.G_Last_Update_MS :=
     VI_System_Time_MS;
 
-IF L_Allow THEN
+IF L_Observer_Only THEN
+
+    GVL_Distributed_Execution_Gates.G_Status_Code := 2;
+    GVL_Distributed_Execution_Gates.G_Status_Text :=
+        'Distributed runtime observer-only';
+
+ELSIF L_Allow THEN
+
     GVL_Distributed_Execution_Gates.G_Status_Code := 0;
     GVL_Distributed_Execution_Gates.G_Status_Text :=
         'Distributed execution gates open';
+
 ELSE
+
     GVL_Distributed_Execution_Gates.G_Status_Code := 1;
     GVL_Distributed_Execution_Gates.G_Status_Text :=
         'Distributed execution gates restricted';
+
 END_IF;
 
 END_FUNCTION_BLOCK
