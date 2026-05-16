@@ -28,6 +28,18 @@ END_VAR
 // safety -> discovery -> sessions -> authority -> replication
 // -> transport -> ownership -> orchestration -> recovery locking
 // -> unified execution gates -> cluster runtime FSM.
+//
+// Important convergence contract:
+// execution gates must never reopen distributed execution authority
+// before finalized convergence/publication continuity is achieved.
+//
+// Required finalized authority chain:
+// immutable snapshot
+// -> distributed reconciliation
+// -> distributed commit continuity
+// -> finalized publication validity
+// -> convergence release
+// -> execution gates reopen.
 
 fbClusterSafetyBarrier(
     VI_Enable := TRUE,
