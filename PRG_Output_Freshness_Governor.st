@@ -132,6 +132,15 @@ GVL_OUTPUT_EPOCH.Output_Semantic_Continuity_Warning :=
     OR GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
     OR GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active;
 
+// Hard semantic continuity invalidation.
+IF L_Output_Valid
+AND GVL_OUTPUT_EPOCH.Output_Semantic_Continuity_Warning
+THEN
+    L_Output_Valid := FALSE;
+    L_Error_Code := 6500;
+    L_Error_Text := 'Semantic continuity invalid';
+END_IF;
+
 IF L_Output_Valid THEN
     IF GVL_OUTPUT_EPOCH.Output_Runtime_Epoch > GVL_RUNTIME_EPOCH.Runtime_Epoch THEN
         L_Output_Valid := FALSE;
