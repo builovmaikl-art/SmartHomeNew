@@ -190,7 +190,12 @@ PRG_PreOutput_Safety_Barrier();
 // 39. Final physical IO projection
 PRG_IO_Write();
 
-// 40. Verification, diagnostics, history, HMI
+// 40. Observability authority coherence governance
+// Must run before diagnostics/HMI publication to guarantee
+// operator-visible state matches active authority fabric.
+PRG_Observability_Authority_Governor();
+
+// 41. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
