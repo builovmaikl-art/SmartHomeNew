@@ -14,6 +14,8 @@ VAR
 
     L_Finalized_Publication_Continuity : BOOL;
     L_Physical_Causality_Healthy : BOOL;
+    L_Command_Telemetry_Epoch_Aligned : BOOL;
+    L_Physical_Ack_Fresh : BOOL;
 
     fbLog : FB_LogEvent;
 END_VAR
@@ -35,8 +37,18 @@ L_Runtime_Projection_Healthy :=
     GVL_Water_Output_Reconciliation.G_Runtime_Valid
     AND NOT GVL_Water_Output_Reconciliation.G_Any_Conflict_Detected;
 
+// Command ↔ telemetry epoch binding.
+L_Command_Telemetry_Epoch_Aligned :=
+    GVL_TELEMETRY.Command_Epoch = GVL_OUTPUT_EPOCH.Output_Publication_Epoch
+    AND GVL_TELEMETRY.Telemetry_Epoch = GVL_OUTPUT_EPOCH.Output_Publication_Epoch
+    AND GVL_TELEMETRY.Telemetry_Epoch >=
+        GVL_TELEMETRY.Last_Acknowledged_Command_Epoch;
+
+// Physical acknowledgment freshness.
+L_Physical_Ack_Fresh :=
+    (L_Now_MS - GVL_TELEMETRY.Last_Physical_Ack_Time_MS) <= 5000;
+
 // Physical causality evidence.
-// Introduces mandatory telemetry acknowledgment layer.
 L_Physical_Causality_Healthy :=
     GVL_TELEMETRY.Telemetry_Runtime_Valid
     AND GVL_TELEMETRY.Telemetry_Freshness_Valid
@@ -46,7 +58,10 @@ L_Physical_Causality_Healthy :=
     AND NOT GVL_TELEMETRY.Command_Telemetry_Divergence_Detected
     AND GVL_TELEMETRY.Actuator_Feedback_Valid
     AND GVL_TELEMETRY.Actuator_Feedback_Fresh
-    AND GVL_TELEMETRY.Physical_Effect_Confirmed;
+    AND GVL_TELEMETRY.Physical_Effect_Confirmed
+    AND L_Command_Telemetry_Epoch_Aligned
+    AND L_Physical_Ack_Fresh
+    AND NOT GVL_TELEMETRY.Telemetry_Replay_Suspected;
 
 // Finalized publication continuity proof chain.
 L_Finalized_Publication_Continuity :=
