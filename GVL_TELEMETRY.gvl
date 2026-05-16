@@ -1,0 +1,33 @@
+VAR_GLOBAL
+    // Telemetry runtime authority.
+    Telemetry_Runtime_Valid : BOOL := FALSE;
+    Telemetry_Freshness_Valid : BOOL := FALSE;
+    Telemetry_Lease_Expired : BOOL := TRUE;
+    Telemetry_Quarantine_Active : BOOL := TRUE;
+
+    // Command -> telemetry causality binding.
+    Command_Telemetry_Causality_Valid : BOOL := FALSE;
+    Command_Telemetry_Divergence_Detected : BOOL := TRUE;
+
+    Command_Epoch : UDINT := 0;
+    Telemetry_Epoch : UDINT := 0;
+    Last_Acknowledged_Command_Epoch : UDINT := 0;
+
+    // Physical actuator feedback authority.
+    Actuator_Feedback_Valid : BOOL := FALSE;
+    Actuator_Feedback_Fresh : BOOL := FALSE;
+    Physical_Effect_Confirmed : BOOL := FALSE;
+    Physical_Effect_Finalized : BOOL := FALSE;
+    Physical_Target_Converged : BOOL := FALSE;
+    Physical_Stable_Window_OK : BOOL := FALSE;
+
+    // Replay/staleness protection.
+    Telemetry_Replay_Suspected : BOOL := FALSE;
+    Last_Physical_Ack_Time_MS : UDINT := 0;
+    Last_Physical_Convergence_MS : UDINT := 0;
+
+    // Diagnostics.
+    Telemetry_Last_Error_Code : UDINT := 0;
+    Telemetry_Last_Error_Text : STRING(160) := '';
+    Telemetry_Invalidation_Count : UDINT := 0;
+END_VAR
