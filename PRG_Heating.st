@@ -22,6 +22,10 @@ VAR
     L_Heating_Emergency_Stop : BOOL;
     L_Heating_Gas_Safety_Stop : BOOL;
 
+    L_Distributed_Execute_Allowed : BOOL;
+    L_Distributed_Orchestrate_Allowed : BOOL;
+    L_Distributed_Projection_Allowed : BOOL;
+
     L_Zone_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
     L_Manifold_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Valves : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF REAL;
@@ -43,10 +47,6 @@ END_FOR;
 
 L_Current_Hour := TO_UINT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
 
-// Heating runtime reads temperatures through the normalized INPUT read-model.
-// Local copies are intentionally used because FB_Heating_System_Manager still
-// exposes these signals as VAR_IN_OUT; GVL_INPUT must remain a read-model surface,
-// not a mutable domain-runtime surface.
 L_Outdoor_Temp_Normalized := GVL_INPUT.IN_Outdoor_Temp;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
@@ -60,17 +60,34 @@ END_FOR;
 L_Heating_Emergency_Stop := GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 L_Heating_Gas_Safety_Stop := GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop OR GVL_STATE.G_Safety_Gas_Latched;
 
+// Centralized distributed runtime governance.
+// Freeze protection and gas safety semantics remain authoritative.
+L_Distributed_Execute_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Execute;
+
+L_Distributed_Orchestrate_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Orchestrate;
+
+L_Distributed_Projection_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
+
 L_Runtime_Context.Runtime_Enabled := TRUE;
 L_Runtime_Context.Runtime_Ready := TRUE;
 L_Runtime_Context.Runtime_Fault := FALSE;
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_IDLE;
 
-L_Runtime_Context.Allow_DHW_Phase := TRUE;
-L_Runtime_Context.Allow_Heating_Phase := TRUE;
+L_Runtime_Context.Allow_DHW_Phase :=
+    L_Distributed_Execute_Allowed;
+
+L_Runtime_Context.Allow_Heating_Phase :=
+    L_Distributed_Orchestrate_Allowed;
+
 L_Runtime_Context.Allow_Service_Gating_Phase := TRUE;
 L_Runtime_Context.Allow_State_Publication_Phase := TRUE;
 L_Runtime_Context.Allow_Diagnostics_Phase := TRUE;
-L_Runtime_Context.Allow_Output_Projection_Phase := TRUE;
+
+L_Runtime_Context.Allow_Output_Projection_Phase :=
+    L_Distributed_Projection_Allowed;
 
 L_Runtime_Context.DHW_Executed := FALSE;
 L_Runtime_Context.Heating_Executed := FALSE;
@@ -89,8 +106,15 @@ L_Runtime_Context.Safety_Isolation_Valid := TRUE;
 L_Runtime_Context.OpenTherm_Ownership_Valid := TRUE;
 L_Runtime_Context.Cascade_Ownership_Valid := TRUE;
 
-L_Runtime_Context.Runtime_Status_Code := 1;
-L_Runtime_Context.Runtime_Status_Text := 'Heating runtime nominal';
+IF NOT L_Distributed_Execute_Allowed THEN
+    L_Runtime_Context.Runtime_Status_Code := 20;
+    L_Runtime_Context.Runtime_Status_Text :=
+        'Heating runtime blocked by distributed governance';
+ELSE
+    L_Runtime_Context.Runtime_Status_Code := 1;
+    L_Runtime_Context.Runtime_Status_Text :=
+        'Heating runtime nominal';
+END_IF;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_IDLE;
 
@@ -101,74 +125,82 @@ fbObserverPhase(
     VI_Diagnostics_Valid := TRUE
 );
 
-L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
+IF L_Distributed_Execute_Allowed THEN
 
-fbDHWManager(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Current_TOD := GVL_STATUS.G_Current_TOD,
-    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Temp := GVL_STATE.G_DHW_Temp,
-    VI_Pressure := GVL_STATE.G_DHW_Pressure,
-    VI_Config := GVL_CONFIG.G_DHW_Config,
-    VI_Current_Day_Of_Week := GVL_STATUS.G_Current_Day,
-    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
-    VI_Reset_Errors := GVL_INTENT_USER.I_Reset_Errors,
-    VI_Emergency_Stop := L_Heating_Emergency_Stop,
-    VI_System_Mode := GVL_STATE.G_System_Mode,
-    VO_Status => L_DHW_Status,
-    VO_Heating_Pump => L_DHW_Heating_Pump,
-    VO_Circ_Pump => L_DHW_Circ_Pump
-);
+    L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_DHW;
 
-L_Runtime_Context.DHW_Executed := TRUE;
+    fbDHWManager(
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_Current_TOD := GVL_STATUS.G_Current_TOD,
+        VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+        VI_Temp := GVL_STATE.G_DHW_Temp,
+        VI_Pressure := GVL_STATE.G_DHW_Pressure,
+        VI_Config := GVL_CONFIG.G_DHW_Config,
+        VI_Current_Day_Of_Week := GVL_STATUS.G_Current_Day,
+        VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+        VI_Reset_Errors := GVL_INTENT_USER.I_Reset_Errors,
+        VI_Emergency_Stop := L_Heating_Emergency_Stop,
+        VI_System_Mode := GVL_STATE.G_System_Mode,
+        VO_Status => L_DHW_Status,
+        VO_Heating_Pump => L_DHW_Heating_Pump,
+        VO_Circ_Pump => L_DHW_Circ_Pump
+    );
+
+    L_Runtime_Context.DHW_Executed := TRUE;
+
+END_IF;
 
 IF L_Heating_Gas_Safety_Stop THEN
     L_DHW_Heating_Pump := FALSE;
     L_DHW_Status.Heating_Pump_On := FALSE;
 END_IF;
 
-L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_HEATING;
+IF L_Distributed_Orchestrate_Allowed THEN
 
-fbHeatingManager(
-    VI_System_Mode := GVL_STATE.G_System_Mode,
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
-    VI_Outdoor_Temp := L_Outdoor_Temp_Normalized,
-    VI_Config := GVL_CONFIG.G_Heating_Config,
-    VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
-    VI_Current_Hour := L_Current_Hour,
-    VI_DHW_Heating_Demand := L_DHW_Heating_Pump,
-    VI_DHW_Target_Temp := GVL_CONFIG.G_DHW_Config.Target_Temp,
-    VI_Emergency_Stop := L_Heating_Emergency_Stop,
-    VI_Gas_Safety_Stop := L_Heating_Gas_Safety_Stop,
-    VI_Boiler_Error_Status := GVL_STATE.G_Boiler_Error,
-    VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
-    VI_Boiler_Modulation := L_Boiler_Modulation_REAL,
-    VI_Floor_Temps := L_Floor_Temps_Normalized,
-    VI_Room_Temps := L_Room_Temps_Normalized,
-    VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
-    VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
-    VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
-    VI_Manifold_Temps_Return := GVL_STATE.G_Manifold_T_Return,
-    VI_Boiler_Flame_Status := GVL_STATE.G_Boiler_Flame,
-    VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
-    VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
-    VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
-    VI_Manifold_End_Switches := GVL_STATE.G_Manifold_End_Switches,
-    VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
-    VO_Manifold_Valves => L_Manifold_Valves,
-    VO_Manifold_Pumps => L_Manifold_Pumps,
-    VO_Zone_Valves => L_Zone_Valves,
-    VO_Boiler_OT_Enable => L_Boiler_OT_Enable,
-    VO_Boiler_OT_Setpoint => L_Boiler_OT_Setpoint,
-    VO_Backup_Circulation_Pump => L_Backup_Circulation_Pump,
-    VO_Electric_Heater_Enable => L_Electric_Heater_Enable,
-    VO_Freeze_Risk_Status => L_Freeze_Risk_Status,
-    VO_Status => L_Manifold_Status,
-    VO_Boiler_Status => L_Boiler_Status
-);
+    L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_HEATING;
 
-L_Runtime_Context.Heating_Executed := TRUE;
+    fbHeatingManager(
+        VI_System_Mode := GVL_STATE.G_System_Mode,
+        VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
+        VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
+        VI_Outdoor_Temp := L_Outdoor_Temp_Normalized,
+        VI_Config := GVL_CONFIG.G_Heating_Config,
+        VI_Tariff := GVL_CONFIG.G_HMI_Tariff_Settings,
+        VI_Current_Hour := L_Current_Hour,
+        VI_DHW_Heating_Demand := L_DHW_Heating_Pump,
+        VI_DHW_Target_Temp := GVL_CONFIG.G_DHW_Config.Target_Temp,
+        VI_Emergency_Stop := L_Heating_Emergency_Stop,
+        VI_Gas_Safety_Stop := L_Heating_Gas_Safety_Stop,
+        VI_Boiler_Error_Status := GVL_STATE.G_Boiler_Error,
+        VI_Boiler_OT_Online := GVL_STATE.G_Boiler_OT_Online,
+        VI_Boiler_Modulation := L_Boiler_Modulation_REAL,
+        VI_Floor_Temps := L_Floor_Temps_Normalized,
+        VI_Room_Temps := L_Room_Temps_Normalized,
+        VI_Manifold_Pressures := GVL_STATE.G_Manifold_Pressures,
+        VI_Manifold_Currents := GVL_STATE.G_Manifold_Currents,
+        VI_Manifold_Temps_Supply := GVL_STATE.G_Manifold_T_Supply,
+        VI_Manifold_Temps_Return := GVL_STATE.G_Manifold_T_Return,
+        VI_Boiler_Flame_Status := GVL_STATE.G_Boiler_Flame,
+        VI_Zone_Configs := GVL_CONFIG.G_HMI_FloorHeating_Configs,
+        VI_Rule_Actions := GVL_STATE.G_Rule_Actions,
+        VI_IO_Modules_Online := GVL_STATUS.G_IO_Modules_Online,
+        VI_Manifold_End_Switches := GVL_STATE.G_Manifold_End_Switches,
+        VI_Valve_Test_Config := GVL_CONFIG.G_Valve_Test_Config,
+        VO_Manifold_Valves => L_Manifold_Valves,
+        VO_Manifold_Pumps => L_Manifold_Pumps,
+        VO_Zone_Valves => L_Zone_Valves,
+        VO_Boiler_OT_Enable => L_Boiler_OT_Enable,
+        VO_Boiler_OT_Setpoint => L_Boiler_OT_Setpoint,
+        VO_Backup_Circulation_Pump => L_Backup_Circulation_Pump,
+        VO_Electric_Heater_Enable => L_Electric_Heater_Enable,
+        VO_Freeze_Risk_Status => L_Freeze_Risk_Status,
+        VO_Status => L_Manifold_Status,
+        VO_Boiler_Status => L_Boiler_Status
+    );
+
+    L_Runtime_Context.Heating_Executed := TRUE;
+
+END_IF;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_SERVICE_GATING;
 
@@ -286,21 +318,28 @@ GVL_Heating_Runtime_Explainability.G_Runtime_Explainability_Status_Code :=
 GVL_Heating_Runtime_Explainability.G_Runtime_Explainability_Status_Text :=
     fbExplainabilityPublisher.VO_Phase_Event.Status_Text;
 
-L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
+IF L_Distributed_Projection_Allowed THEN
 
-fbOutputProjectionPhase(
-    VI_Enable := TRUE,
-    VI_Zone_Valves := L_Zone_Valves,
-    VI_Manifold_Pumps := L_Manifold_Pumps,
-    VI_Manifold_Valves := L_Manifold_Valves,
-    VI_DHW_Heating_Pump := L_DHW_Heating_Pump,
-    VI_DHW_Circ_Pump := L_DHW_Circ_Pump,
-    VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
-    VI_Electric_Heater_Enable := L_Electric_Heater_Enable
-);
+    L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_OUTPUT_PROJECTION;
 
-L_Runtime_Context.Output_Projection_Executed := fbOutputProjectionPhase.VO_Executed;
-L_Runtime_Context.Output_Projection_Last_Valid := fbOutputProjectionPhase.VO_Valid;
+    fbOutputProjectionPhase(
+        VI_Enable := TRUE,
+        VI_Zone_Valves := L_Zone_Valves,
+        VI_Manifold_Pumps := L_Manifold_Pumps,
+        VI_Manifold_Valves := L_Manifold_Valves,
+        VI_DHW_Heating_Pump := L_DHW_Heating_Pump,
+        VI_DHW_Circ_Pump := L_DHW_Circ_Pump,
+        VI_Backup_Circulation_Pump := L_Backup_Circulation_Pump,
+        VI_Electric_Heater_Enable := L_Electric_Heater_Enable
+    );
+
+    L_Runtime_Context.Output_Projection_Executed :=
+        fbOutputProjectionPhase.VO_Executed;
+
+    L_Runtime_Context.Output_Projection_Last_Valid :=
+        fbOutputProjectionPhase.VO_Valid;
+
+END_IF;
 
 L_Runtime_Context.Current_Phase := E_Heating_Runtime_Phase.HRP_COMPLETE;
 
