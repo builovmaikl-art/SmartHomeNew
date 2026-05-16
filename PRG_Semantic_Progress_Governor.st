@@ -16,18 +16,6 @@ L_Semantic_Valid := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
 
-// ======================================================
-// SEMANTIC PROGRESS GOVERNOR
-// ======================================================
-// Governs semantic execution continuity foundation.
-// Uses real runtime phase evidence rather than self-generated
-// counter progress only.
-//
-// This layer remains advisory/escalation evidence only:
-// it does not directly invalidate runtime barrier,
-// PLC fencing, immutable snapshots or IO authority.
-// ======================================================
-
 GVL_SEMANTIC_PROGRESS.Semantic_Stagnation_Detected := FALSE;
 GVL_SEMANTIC_PROGRESS.Semantic_Replay_Suspected := FALSE;
 GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected := FALSE;
@@ -35,10 +23,6 @@ GVL_SEMANTIC_PROGRESS.Semantic_Deadlock_Suspected := FALSE;
 GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired := FALSE;
 GVL_SEMANTIC_PROGRESS.Semantic_Phase_Stall_Detected := FALSE;
 GVL_SEMANTIC_PROGRESS.Semantic_Output_Stall_Detected := FALSE;
-
-// ------------------------------------------------------
-// Capture real phase evidence from upstream runtime layers.
-// ------------------------------------------------------
 
 GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch :=
     GVL_RUNTIME_EPOCH.Runtime_Epoch;
@@ -65,17 +49,24 @@ GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Snapshot_Evidence_OK :=
     GVL_RUNTIME_SNAPSHOT.Snapshot_Runtime_Authority_Valid AND
     NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
 
+// Finalized distributed publication continuity.
 GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK :=
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid AND
+    GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid AND
+    GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed AND
+    NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch AND
     NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active AND
     NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
+// Final output projection continuity.
 GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK :=
     GVL_OUTPUT_EPOCH.Output_Publication_Valid AND
     GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid AND
     NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired AND
     NOT GVL_OUTPUT_EPOCH.Output_Stale_Detected AND
-    NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
+    NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay AND
+    GVL_COMMAND_VERIFY.PreOutput_Barrier_OK AND
+    NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 
 L_Runtime_Epoch_Advanced :=
     GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch >
@@ -98,10 +89,6 @@ GVL_SEMANTIC_PROGRESS.Semantic_Phase_Evidence_OK :=
     GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Snapshot_Evidence_OK AND
     GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK AND
     GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK;
-
-// ------------------------------------------------------
-// Replay / regression suspicion from real phase epochs.
-// ------------------------------------------------------
 
 IF GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch <
 GVL_SEMANTIC_PROGRESS.Semantic_Last_Runtime_Barrier_Epoch THEN
@@ -138,10 +125,6 @@ IF L_Semantic_Valid AND
     L_Error_Text := 'Output publication epoch replay suspected';
 END_IF;
 
-// ------------------------------------------------------
-// Required phase evidence validation.
-// ------------------------------------------------------
-
 IF L_Semantic_Valid AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Evidence_OK THEN
     L_Semantic_Valid := FALSE;
     L_Error_Code := 17100;
@@ -160,16 +143,9 @@ IF L_Semantic_Valid AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Ev
     L_Error_Text := 'Distributed commit evidence invalid';
 END_IF;
 
-// Output evidence is evaluated as warning only here because this governor
-// executes before PRG_Output_Freshness_Governor in MAIN. It is still tracked
-// for stale output visibility using the previous completed cycle.
 IF NOT GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK THEN
     GVL_SEMANTIC_PROGRESS.Semantic_Output_Stall_Detected := TRUE;
 END_IF;
-
-// ------------------------------------------------------
-// Semantic phase advancement validation.
-// ------------------------------------------------------
 
 IF L_Semantic_Valid THEN
     IF NOT (L_Runtime_Epoch_Advanced OR L_Snapshot_Epoch_Advanced OR L_Distributed_Commit_Epoch_Advanced) THEN
@@ -182,10 +158,6 @@ IF L_Semantic_Valid THEN
         L_Error_Text := 'Semantic phase evidence stalled';
     END_IF;
 END_IF;
-
-// ------------------------------------------------------
-// Legacy self-counter continuity remains as secondary evidence.
-// ------------------------------------------------------
 
 GVL_SEMANTIC_PROGRESS.Semantic_Execution_Counter :=
     GVL_SEMANTIC_PROGRESS.Semantic_Execution_Counter + 1;
@@ -201,10 +173,6 @@ IF L_Semantic_Valid THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------
-// Lease freshness validation.
-// ------------------------------------------------------
-
 L_Delta_MS :=
     L_Now_MS - GVL_SEMANTIC_PROGRESS.Semantic_Progress_Last_Update_MS;
 
@@ -219,10 +187,6 @@ AND GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Active THEN
         L_Error_Text := 'Semantic progress lease expired';
     END_IF;
 END_IF;
-
-// ------------------------------------------------------
-// Publish semantic continuity foundation.
-// ------------------------------------------------------
 
 IF L_Semantic_Valid THEN
     GVL_SEMANTIC_PROGRESS.Semantic_Progress_Epoch :=
