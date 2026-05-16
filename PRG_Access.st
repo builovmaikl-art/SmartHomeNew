@@ -7,6 +7,9 @@ VAR
     L_Elapsed_MS : UDINT;
     L_Pulse_MS : UDINT;
 
+    L_Distributed_Execute_Allowed : BOOL;
+    L_Distributed_Access_Allowed : BOOL;
+
     L_Lock_1_Open : BOOL;
     L_Lock_1_Close : BOOL;
     L_Lock_2_Open : BOOL;
@@ -38,6 +41,33 @@ END_VAR
 
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
+
+// Distributed runtime governance.
+// FIRE/GAS emergency semantics remain authoritative.
+L_Distributed_Execute_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Execute;
+
+L_Distributed_Access_Allowed :=
+    GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
+
+IF (L_Mode <> FIRE)
+   AND (L_Mode <> GAS)
+   AND (
+        NOT L_Distributed_Execute_Allowed
+        OR NOT L_Distributed_Access_Allowed
+       ) THEN
+
+    fbProjection(
+        VI_Lock_1_Open := FALSE,
+        VI_Lock_1_Close := FALSE,
+        VI_Lock_2_Open := FALSE,
+        VI_Lock_2_Close := FALSE,
+        VI_Gate_Open := FALSE,
+        VI_Wicket_Open := FALSE
+    );
+
+    RETURN;
+END_IF;
 
 // Load pulse duration from config with safety clamp
 L_Pulse_MS := GVL_CONFIG.G_Access_Pulse_MS;
