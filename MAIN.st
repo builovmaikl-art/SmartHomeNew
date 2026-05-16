@@ -196,16 +196,21 @@ PRG_IO_Write();
 PRG_Actuation_Authority_Governor();
 
 // 41. Deterministic physical transaction governance
-// Must run before observability publication to guarantee
+// Must run before temporal stability governance to guarantee
 // atomic cross-actuator plant convergence.
 PRG_Physical_Transaction_Governor();
 
-// 42. Observability authority coherence governance
+// 42. Deterministic temporal stability governance
+// Must run before observability publication to guarantee
+// stable post-convergence physical authority.
+PRG_Temporal_Stability_Governor();
+
+// 43. Observability authority coherence governance
 // Must run before diagnostics/HMI publication to guarantee
 // operator-visible state matches active authority fabric.
 PRG_Observability_Authority_Governor();
 
-// 43. Verification, diagnostics, history, HMI
+// 44. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
