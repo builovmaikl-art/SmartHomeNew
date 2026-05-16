@@ -98,20 +98,22 @@ PRG_Distributed_Snapshot_Ingestion();
 // 19. Distributed immutable snapshot reconciliation governance
 PRG_Distributed_Snapshot_Governor();
 
-// 20. Distributed commit publication
+// 20. Distributed runtime fabric supervisor
+// Must run before distributed commit governance because commit authority
+// consumes centralized distributed execution gates.
+PRG_Distributed_Runtime_Supervisor();
+
+// 21. Distributed commit publication
 PRG_Distributed_Commit_Publication();
 
-// 21. Distributed commit ingestion
+// 22. Distributed commit ingestion
 PRG_Distributed_Commit_Ingestion();
 
-// 22. Distributed deterministic publication commit governance
+// 23. Distributed deterministic publication commit governance
 PRG_Distributed_Commit_Governor();
 
-// 23. Distributed deterministic commit observability projection
+// 24. Distributed deterministic commit observability projection
 PRG_Distributed_Commit_Observability();
-
-// 24. Distributed runtime fabric supervisor
-PRG_Distributed_Runtime_Supervisor();
 
 // 25. Semantic execution continuity governance
 PRG_Semantic_Progress_Governor();
