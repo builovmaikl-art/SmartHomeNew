@@ -6,6 +6,7 @@ VAR
     L_Error_Text : STRING(160) := '';
     L_Ack_Age_MS : UDINT;
     L_Convergence_Age_MS : UDINT;
+    L_Stable_Dwell_MS : UDINT;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -25,7 +26,6 @@ GVL_TELEMETRY.Physical_Target_Converged := FALSE;
 GVL_TELEMETRY.Physical_Stable_Window_OK := FALSE;
 GVL_TELEMETRY.Command_Telemetry_Divergence_Detected := TRUE;
 
-// Bind command causality to the current output publication epoch.
 GVL_TELEMETRY.Command_Epoch := GVL_OUTPUT_EPOCH.Output_Publication_Epoch;
 
 IF NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid THEN
@@ -52,7 +52,6 @@ IF L_Causality_Valid AND GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay THEN
     L_Error_Text := 'Telemetry causality output forced safe decay';
 END_IF;
 
-// Telemetry epoch must acknowledge the exact command epoch.
 IF L_Causality_Valid AND (GVL_TELEMETRY.Telemetry_Epoch <> GVL_TELEMETRY.Command_Epoch) THEN
     L_Causality_Valid := FALSE;
     L_Error_Code := 21010;
@@ -81,6 +80,38 @@ IF L_Causality_Valid AND (L_Convergence_Age_MS > 10000) THEN
     L_Causality_Valid := FALSE;
     L_Error_Code := 21021;
     L_Error_Text := 'Physical convergence stale';
+END_IF;
+
+// Stable physical dwell window.
+L_Stable_Dwell_MS :=
+    L_Now_MS - GVL_TELEMETRY.Last_Physical_Convergence_MS;
+
+IF L_Causality_Valid AND (L_Stable_Dwell_MS < 3000) THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21030;
+    L_Error_Text := 'Physical stabilization dwell window incomplete';
+END_IF;
+
+// Physical oscillation quarantine.
+IF L_Causality_Valid
+AND GVL_TELEMETRY.Physical_Oscillation_Detected THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21031;
+    L_Error_Text := 'Physical oscillation detected';
+END_IF;
+
+IF L_Causality_Valid
+AND GVL_TELEMETRY.Physical_Transition_Active THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21032;
+    L_Error_Text := 'Physical transition still active';
+END_IF;
+
+IF L_Causality_Valid
+AND GVL_TELEMETRY.Physical_Convergence_Replay_Suspected THEN
+    L_Causality_Valid := FALSE;
+    L_Error_Code := 21033;
+    L_Error_Text := 'Physical convergence replay suspected';
 END_IF;
 
 IF L_Causality_Valid THEN
