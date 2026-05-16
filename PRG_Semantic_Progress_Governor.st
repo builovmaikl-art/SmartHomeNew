@@ -9,6 +9,10 @@ VAR
     L_Snapshot_Epoch_Advanced : BOOL := FALSE;
     L_Distributed_Commit_Epoch_Advanced : BOOL := FALSE;
     L_Output_Epoch_Advanced : BOOL := FALSE;
+
+    L_Runtime_Snapshot_Skew : UDINT;
+    L_Runtime_Commit_Skew : UDINT;
+    L_Runtime_Output_Skew : UDINT;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -57,9 +61,6 @@ GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK :=
     NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active AND
     NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
 
-// Final output publication evidence.
-// Intentionally does NOT depend on PreOutput_Barrier_OK
-// to avoid semantic/pre-output circular authority recursion.
 GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK :=
     GVL_OUTPUT_EPOCH.Output_Publication_Valid AND
     GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid AND
@@ -88,6 +89,46 @@ GVL_SEMANTIC_PROGRESS.Semantic_Phase_Evidence_OK :=
     GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Snapshot_Evidence_OK AND
     GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Evidence_OK AND
     GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Evidence_OK;
+
+// Cross-domain bounded epoch skew.
+L_Runtime_Snapshot_Skew :=
+    ABS(GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch -
+        GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Snapshot_Epoch);
+
+L_Runtime_Commit_Skew :=
+    ABS(GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch -
+        GVL_SEMANTIC_PROGRESS.Semantic_Distributed_Commit_Epoch);
+
+L_Runtime_Output_Skew :=
+    ABS(GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch -
+        GVL_SEMANTIC_PROGRESS.Semantic_Output_Publication_Epoch);
+
+IF L_Semantic_Valid
+AND ((L_Runtime_Snapshot_Skew > 4)
+ OR (L_Runtime_Commit_Skew > 4)
+ OR (L_Runtime_Output_Skew > 4)) THEN
+
+    GVL_SEMANTIC_PROGRESS.Semantic_Stagnation_Detected := TRUE;
+    GVL_SEMANTIC_PROGRESS.Semantic_Livelock_Suspected := TRUE;
+
+    L_Semantic_Valid := FALSE;
+    L_Error_Code := 17020;
+    L_Error_Text := 'Cross-domain epoch skew exceeded';
+END_IF;
+
+// Partial advancement asymmetry detection.
+IF L_Semantic_Valid
+AND L_Runtime_Epoch_Advanced
+AND NOT (L_Snapshot_Epoch_Advanced
+         OR L_Distributed_Commit_Epoch_Advanced
+         OR L_Output_Epoch_Advanced) THEN
+
+    GVL_SEMANTIC_PROGRESS.Semantic_Phase_Stall_Detected := TRUE;
+
+    L_Semantic_Valid := FALSE;
+    L_Error_Code := 17021;
+    L_Error_Text := 'Partial epoch advancement divergence';
+END_IF;
 
 IF GVL_SEMANTIC_PROGRESS.Semantic_Runtime_Barrier_Epoch <
 GVL_SEMANTIC_PROGRESS.Semantic_Last_Runtime_Barrier_Epoch THEN
