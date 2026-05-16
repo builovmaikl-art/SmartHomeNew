@@ -1,6 +1,11 @@
 PROGRAM PRG_Observability_Governor
 VAR
     L_Now_MS : UDINT;
+
+    L_Runtime_Authority_Valid : BOOL;
+    L_Publication_Authority_Valid : BOOL;
+    L_Recovery_Authority_Valid : BOOL;
+    L_Distributed_Authority_Valid : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -15,6 +20,14 @@ L_Now_MS := GVL_STATUS.G_System_Time_MS;
 // - arbitrate publication;
 // - maintain synchronization barriers;
 // - participate in quarantine governance.
+//
+// However:
+// observability is the authoritative aggregation boundary
+// for publication visibility state.
+//
+// Downstream publication/transport layers must consume:
+//   GVL_OBSERVABILITY_AUTHORITY
+// and must never independently reconstruct runtime validity.
 // ======================================================
 
 GVL_OBSERVABILITY_AUTHORITY.Runtime_Failure_Visible := FALSE;
@@ -54,12 +67,55 @@ GVL_OBSERVABILITY_AUTHORITY.Commit_Lease_Expired_Visible := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Unsafe_State_Published := FALSE;
 GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := FALSE;
 
-IF NOT GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK THEN
+// ======================================================
+// CENTRALIZED PUBLICATION AUTHORITY AGGREGATION
+// ======================================================
+// Downstream publication layers must consume only this
+// aggregated authority view.
+//
+// Prevents:
+//   - duplicated runtime validity reconstruction;
+//   - conflicting publication authority semantics;
+//   - stale downstream operational publication.
+// ======================================================
+
+L_Runtime_Authority_Valid :=
+    GVL_RUNTIME_EPOCH.Runtime_Runtime_Barrier_OK
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid
+    AND GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid
+    AND NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
+
+L_Publication_Authority_Valid :=
+    GVL_OUTPUT_EPOCH.Output_Publication_Allowed
+    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay
+    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid;
+
+L_Recovery_Authority_Valid :=
+    GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid
+    AND NOT GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active
+    AND GVL_CONVERGENCE.Convergence_Release_Allowed;
+
+L_Distributed_Authority_Valid :=
+    GVL_DISTRIBUTED_EPOCH.Distributed_Reconciliation_Valid
+    AND NOT GVL_DISTRIBUTED_EPOCH.Distributed_Quarantine_Active
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_Distributed_Execution_Gates.G_Runtime_Valid;
+
+GVL_OBSERVABILITY_AUTHORITY.Publication_Runtime_Valid :=
+    L_Runtime_Authority_Valid
+    AND L_Publication_Authority_Valid
+    AND L_Recovery_Authority_Valid
+    AND L_Distributed_Authority_Valid;
+
+IF NOT L_Runtime_Authority_Valid THEN
     GVL_OBSERVABILITY_AUTHORITY.Runtime_Failure_Visible := TRUE;
     GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
 END_IF;
 
-IF GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay THEN
+IF NOT GVL_OUTPUT_EPOCH.Output_Publication_Allowed
+   OR GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay THEN
     GVL_OBSERVABILITY_AUTHORITY.Output_Decay_Visible := TRUE;
     GVL_OBSERVABILITY_AUTHORITY.Emergency_Visibility_Required := TRUE;
 END_IF;
