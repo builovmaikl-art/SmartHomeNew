@@ -121,11 +121,13 @@ PRG_Semantic_Progress_Governor();
 // 26. Systemic convergence governance
 PRG_Convergence_Governor();
 
-// 27. Observability authority governance
-PRG_Observability_Governor();
-
-// 28. Recovery cleanup governance
+// 27. Recovery cleanup governance
+// Must run before observability publication because observability
+// must export final recovery/convergence authority state.
 PRG_Recovery_Cleanup_Governor();
+
+// 28. Observability authority governance
+PRG_Observability_Governor();
 
 // 29. Domain execution and projection
 PRG_Heating();
