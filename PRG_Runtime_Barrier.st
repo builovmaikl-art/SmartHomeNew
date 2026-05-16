@@ -4,6 +4,8 @@ VAR
     L_Runtime_OK : BOOL := TRUE;
     L_Error_Code : UDINT := 0;
     L_Error_Text : STRING(160) := '';
+
+    L_Finalized_Continuity_Healthy : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
@@ -22,9 +24,8 @@ L_Error_Text := '';
 // - PLC fencing authoritative;
 // - transport freshness authoritative.
 //
-// Recovery cleanup, command verification and observability
-// remain downstream-oriented. Diagnostics/explainability
-// synchronization must not become upstream runtime authority.
+// Distributed finalized continuity now additionally
+// participates in primordial runtime authority.
 // ======================================================
 
 GVL_RUNTIME_EPOCH.Runtime_Cycle_Start_MS := L_Now_MS;
@@ -151,6 +152,31 @@ IF L_Runtime_OK AND GVL_TRANSPORT_FRESHNESS.Transport_Snapshot_Invalid THEN
 END_IF;
 
 // ------------------------------------------------------
+// Finalized continuity linkage.
+// ------------------------------------------------------
+
+L_Finalized_Continuity_Healthy :=
+    GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
+    AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Lease_Expired
+    AND NOT GVL_SEMANTIC_PROGRESS.Semantic_Progress_Quarantine_Active
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid
+    AND GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed
+    AND NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch
+    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired;
+
+IF L_Runtime_OK
+AND NOT L_Finalized_Continuity_Healthy THEN
+    L_Runtime_OK := FALSE;
+    L_Error_Code := 5300;
+    L_Error_Text := 'Finalized continuity invalid';
+END_IF;
+
+// ------------------------------------------------------
 // Impossible-state rejection.
 // ------------------------------------------------------
 
@@ -185,7 +211,8 @@ GVL_RUNTIME_EPOCH.Runtime_PLC_Authority_Valid :=
     AND GVL_PLC_FENCING.PLC_Semantic_Authority_Valid
     AND GVL_PLC_FENCING.PLC_Ownership_Valid
     AND GVL_TIME_MONOTONIC.Monotonic_Time_Valid
-    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid;
+    AND GVL_TRANSPORT_FRESHNESS.Transport_Freshness_Valid
+    AND L_Finalized_Continuity_Healthy;
 
 GVL_RUNTIME_EPOCH.Runtime_Last_Validation_Time_MS := L_Now_MS;
 
