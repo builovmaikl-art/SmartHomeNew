@@ -175,17 +175,22 @@ PRG_Physical_Authority_Epoch_Governor();
 PRG_Authority_Lineage_Governor();
 
 // 36. Global authority revocation governance
-// Must run before pre-output barrier to guarantee atomic fail-closed
-// downstream revocation of the physical authority fabric.
+// Must run before authority restoration governance because
+// restoration consumes finalized revocation state.
 PRG_Authority_Revocation_Governor();
 
-// 37. Pre-output safety barrier
+// 37. Deterministic authority restoration governance
+// Must run before pre-output barrier to guarantee staged and
+// causally ordered reopening of the authority fabric.
+PRG_Authority_Restoration_Governor();
+
+// 38. Pre-output safety barrier
 PRG_PreOutput_Safety_Barrier();
 
-// 38. Final physical IO projection
+// 39. Final physical IO projection
 PRG_IO_Write();
 
-// 39. Verification, diagnostics, history, HMI
+// 40. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
