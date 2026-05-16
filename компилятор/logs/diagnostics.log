@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3360
+total 3368
 -rw-r--r--  1 runner runner  13067 May 16 21:05 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  36864 May 16 21:05 .
 drwxr-xr-x  3 runner runner   4096 May 16 21:05 ..
@@ -367,6 +367,7 @@ drwxr-xr-x  3 runner runner   4096 May 16 21:05 .github
 -rw-r--r--  1 runner runner    309 May 16 21:05 IValveController.st
 -rw-r--r--  1 runner runner   6338 May 16 21:05 MAIN.st
 -rw-r--r--  1 runner runner   9174 May 16 21:05 PRG_Access.st
+-rw-r--r--  1 runner runner   4579 May 16 21:05 PRG_Actuation_Authority_Governor.st
 -rw-r--r--  1 runner runner   3755 May 16 21:05 PRG_Authority_Lineage_Governor.st
 -rw-r--r--  1 runner runner   3443 May 16 21:05 PRG_Authority_Restoration_Governor.st
 -rw-r--r--  1 runner runner   2576 May 16 21:05 PRG_Authority_Revocation_Governor.st
@@ -615,8 +616,8 @@ drwxr-xr-x  2 runner runner   4096 May 16 21:05 out
 -rw-r--r--  1 runner runner    177 May 16 21:05 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2092
+total 2096
 drwxr-xr-x 2 runner runner    4096 May 16 21:05 .
 drwxr-xr-x 5 runner runner    4096 May 16 21:05 ..
 -rw-r--r-- 1 runner runner       0 May 16 21:05 .gitkeep
--rw-r--r-- 1 runner runner 2130952 May 16 21:05 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2134826 May 16 21:05 RESULT_methods_clean.xml
