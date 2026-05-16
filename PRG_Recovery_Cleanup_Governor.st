@@ -8,33 +8,14 @@ VAR
     L_Distributed_Recovery_Allowed : BOOL;
     L_Cluster_Recovery_Lock : BOOL;
     L_Cluster_Quarantine : BOOL;
+
+    L_Finalized_Publication_Continuity : BOOL;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
 L_Recovery_Valid := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
-
-// ======================================================
-// RECOVERY CLEANUP GOVERNOR
-// ======================================================
-// Governs cleanup and residue validation after recovery.
-//
-// Recovery governance is downstream cleanup-oriented.
-// It must not feed back into runtime barrier authority.
-// Runtime publication authority remains upstream and
-// recovery cleanup remains a post-publication residue layer.
-//
-// Cleanup completion/release is convergence-lease based:
-// recovery cleanup is not marked completed/verified on a
-// single valid scan.
-//
-// Distributed recovery governance is authoritative.
-// Cleanup/reopen must never bypass:
-//   - recovery lock runtime;
-//   - cluster quarantine;
-//   - centralized recovery execution gates.
-// ======================================================
 
 GVL_RECOVERY_GOVERNANCE.Recovery_Semantic_Residue_Detected := FALSE;
 GVL_RECOVERY_GOVERNANCE.Recovery_Degraded_State_Residual := FALSE;
@@ -49,19 +30,23 @@ L_Cluster_Recovery_Lock :=
 L_Cluster_Quarantine :=
     GVL_Cluster_Runtime_FSM.G_State_Quarantine;
 
-// ------------------------------------------------------
-// Monotonic authority linkage.
-// ------------------------------------------------------
+// Finalized publication continuity.
+L_Finalized_Publication_Continuity :=
+    GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
+    AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
+    AND GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid
+    AND NOT GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
+    AND GVL_OUTPUT_EPOCH.Output_Publication_Valid
+    AND GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid
+    AND NOT GVL_OUTPUT_EPOCH.Output_Lease_Expired
+    AND NOT GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 
 IF NOT GVL_TIME_MONOTONIC.Monotonic_Time_Valid THEN
     L_Recovery_Valid := FALSE;
     L_Error_Code := 9001;
     L_Error_Text := 'Recovery monotonic authority invalid';
 END_IF;
-
-// ------------------------------------------------------
-// Distributed recovery governance.
-// ------------------------------------------------------
 
 IF L_Recovery_Valid
    AND NOT L_Distributed_Recovery_Allowed THEN
@@ -74,10 +59,6 @@ IF L_Recovery_Valid
 
 END_IF;
 
-// ------------------------------------------------------
-// Cluster recovery-lock state.
-// ------------------------------------------------------
-
 IF L_Recovery_Valid
    AND L_Cluster_Recovery_Lock THEN
 
@@ -89,10 +70,6 @@ IF L_Recovery_Valid
 
 END_IF;
 
-// ------------------------------------------------------
-// Cluster quarantine state.
-// ------------------------------------------------------
-
 IF L_Recovery_Valid
    AND L_Cluster_Quarantine THEN
 
@@ -103,10 +80,6 @@ IF L_Recovery_Valid
         'Cluster quarantine active';
 
 END_IF;
-
-// ------------------------------------------------------
-// Recovery-active quarantine.
-// ------------------------------------------------------
 
 IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
     GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active := TRUE;
@@ -120,10 +93,6 @@ IF GVL_SAFETY_RECOVERY.G_Recovery_Active THEN
     END_IF;
 END_IF;
 
-// ------------------------------------------------------
-// Residual degraded-state detection.
-// ------------------------------------------------------
-
 IF L_Recovery_Valid AND GVL_DEGRADED.G_System_Degraded THEN
     L_Recovery_Valid := FALSE;
     L_Error_Code := 9003;
@@ -131,10 +100,6 @@ IF L_Recovery_Valid AND GVL_DEGRADED.G_System_Degraded THEN
 
     GVL_RECOVERY_GOVERNANCE.Recovery_Degraded_State_Residual := TRUE;
 END_IF;
-
-// ------------------------------------------------------
-// Retained-state residue detection.
-// ------------------------------------------------------
 
 IF L_Recovery_Valid AND GVL_TIME_MONOTONIC.Retained_Time_Invalid THEN
     L_Recovery_Valid := FALSE;
@@ -144,18 +109,16 @@ IF L_Recovery_Valid AND GVL_TIME_MONOTONIC.Retained_Time_Invalid THEN
     GVL_RECOVERY_GOVERNANCE.Recovery_Retained_State_Residual := TRUE;
 END_IF;
 
-// ------------------------------------------------------
-// Publish authoritative recovery governance state.
-// ------------------------------------------------------
-
 IF L_Recovery_Valid THEN
     GVL_RECOVERY_GOVERNANCE.Recovery_Epoch := GVL_RECOVERY_GOVERNANCE.Recovery_Epoch + 1;
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Epoch := GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Epoch + 1;
 
     GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid := TRUE;
 
-    // Lease-based cleanup release.
-    IF GVL_CONVERGENCE.Convergence_Release_Allowed THEN
+    // Cleanup release requires finalized publication continuity.
+    IF GVL_CONVERGENCE.Convergence_Release_Allowed
+       AND L_Finalized_Publication_Continuity THEN
+
         GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := TRUE;
         GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := TRUE;
         GVL_RECOVERY_GOVERNANCE.Recovery_Quarantine_Active := FALSE;
@@ -171,10 +134,9 @@ IF L_Recovery_Valid THEN
         GVL_RECOVERY_GOVERNANCE.Recovery_Forced_Safe_Mode := TRUE;
 
         GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Code := 9005;
-        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Text := 'Recovery cleanup waiting for convergence lease';
+        GVL_RECOVERY_GOVERNANCE.Recovery_Last_Error_Text := 'Recovery cleanup waiting for finalized publication continuity';
     END_IF;
 ELSE
-    // Invalid recovery cleanup state escalates immediately.
     GVL_RECOVERY_GOVERNANCE.Recovery_Governance_Valid := FALSE;
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Completed := FALSE;
     GVL_RECOVERY_GOVERNANCE.Recovery_Cleanup_Verified := FALSE;
