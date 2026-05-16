@@ -13,6 +13,7 @@ VAR
     L_PreOutput_Block_IO : BOOL;
     L_Output_Freshness_Block : BOOL;
     L_Output_Publication_Block : BOOL;
+    L_Distributed_Publication_Block : BOOL;
     L_Snapshot_Block : BOOL;
     L_Distributed_Execution_Block : BOOL;
     L_Gas_Siren_Authority : BOOL;
@@ -23,13 +24,26 @@ END_VAR
 L_PreOutput_Block_IO := GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 L_Output_Freshness_Block := GVL_OUTPUT_EPOCH.Output_Forced_Safe_Decay;
 
-// Finalized output publication authority.
 L_Output_Publication_Block :=
     (NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid)
     OR (NOT GVL_OUTPUT_EPOCH.Output_Runtime_Epoch_Valid)
     OR GVL_OUTPUT_EPOCH.Output_Lease_Expired;
 
-L_Snapshot_Block := (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid) OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid) OR GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
+// Final distributed publication continuity authority.
+L_Distributed_Publication_Block :=
+    (NOT GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid)
+    OR GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active
+    OR GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired
+    OR (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled)
+    OR (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid)
+    OR (NOT GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent);
+
+L_Snapshot_Block :=
+    (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Frozen)
+    OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Publication_Allowed)
+    OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Copy_Valid)
+    OR (NOT GVL_RUNTIME_SNAPSHOT.Snapshot_Isolation_Valid)
+    OR GVL_RUNTIME_SNAPSHOT.Snapshot_Mutation_Detected;
 
 L_Distributed_Execution_Block :=
     NOT GVL_Distributed_Execution_Gates.G_Can_Execute
@@ -40,6 +54,7 @@ L_Global_Hard_Stop :=
     OR L_PreOutput_Block_IO
     OR L_Output_Freshness_Block
     OR L_Output_Publication_Block
+    OR L_Distributed_Publication_Block
     OR L_Snapshot_Block
     OR L_Distributed_Execution_Block;
 
@@ -56,17 +71,17 @@ IF NOT GVL_STATUS.G_Is_Active_PLC OR L_Global_Hard_Stop THEN
         GVL_IO.DO_Zone_Valves[L_i] := FALSE;
     END_FOR;
 
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-        GVL_IO.DO_Manifold_Pumps[L_i] := FALSE;
-        GVL_IO.AO_Manifold_Valves[L_i] := 0;
-    END_FOR;
-
-    GVL_IO.DO_DHW_Heating_Pump := FALSE;
-    GVL_IO.DO_DHW_Circ_Pump := FALSE;
-    GVL_IO.DO_Backup_Circulation_Pump := FALSE;
-    GVL_IO.DO_Electric_Heater_Enable := FALSE;
-
     GVL_IO.DO_Gas_Valve_Close := TRUE;
+
+    IF L_Distributed_Publication_Block THEN
+        fbTrace(
+            iLayer := TRACE_IO,
+            iSource := SRC_IO,
+            iReason := REASON_SAFETY_BLOCK,
+            iValueBool := TRUE,
+            iValueReal := UDINT_TO_REAL(GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code),
+            iText := 'IO blocked by distributed publication continuity authority');
+    END_IF;
 
     IF L_Output_Publication_Block THEN
         fbTrace(
