@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Execution_Progress_Causality_Valid : BOOL := FALSE;
+    Execution_Progress_Causality_Granted : BOOL := FALSE;
+
+    Progress_Causality_Grounded : BOOL := FALSE;
+    Deterministic_Execution_Continuation_Valid : BOOL := FALSE;
+    Progress_Lineage_Coherent : BOOL := FALSE;
+
+    Distributed_Progress_Convergence_Valid : BOOL := FALSE;
+    Progress_Timeline_Monotonic : BOOL := FALSE;
+
+    Distributed_Execution_Stall_Detected : BOOL := FALSE;
+    Execution_Progress_Divergence_Detected : BOOL := FALSE;
+    Recovery_Progress_Oscillation_Detected : BOOL := FALSE;
+
+    Execution_Progress_Epoch : UDINT := 0;
+END_VAR
