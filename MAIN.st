@@ -214,14 +214,17 @@ PRG_Operator_Semantic_Alignment_Governor();
 PRG_Semantic_Federation_Governor();
 
 // 56. Deterministic compliance federation governance
-// Must run before observability authority publication to guarantee
-// cross-jurisdiction compliant operational semantics.
 PRG_Compliance_Federation_Governor();
 
-// 57. Observability authority coherence governance
+// 57. Deterministic forensic evidence governance
+// Must run before observability authority publication to guarantee
+// immutable reconstructability of all authority transitions.
+PRG_Forensic_Evidence_Governor();
+
+// 58. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 58. Verification, diagnostics, history, HMI
+// 59. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
