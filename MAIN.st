@@ -193,14 +193,17 @@ PRG_Historical_Truth_Governor();
 PRG_Global_Authority_Sync_Governor();
 
 // 49. Deterministic control temporal coherence governance
-// Must run before observability authority publication to guarantee
-// cross-loop temporal causality coherence.
 PRG_Control_Temporal_Coherence_Governor();
 
-// 50. Observability authority coherence governance
+// 50. Physical actuator semantic verification governance
+// Must run before observability publication to guarantee
+// semantic realization of approved physical commands.
+PRG_Actuator_Semantic_Verification_Governor();
+
+// 51. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 51. Verification, diagnostics, history, HMI
+// 52. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
