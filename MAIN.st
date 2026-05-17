@@ -221,15 +221,20 @@ PRG_Runtime_Resource_Authority_Governor();
 PRG_Semantic_Continuity_Authority_Governor();
 
 // 46. Authoritative observability truth governance
-// Must run before diagnostics/HMI publication to guarantee
+// Must run before historical truth governance to guarantee
 // operator-visible truth matches active authority state.
 PRG_Observability_Truth_Governor();
 
-// 47. Observability authority coherence governance
+// 47. Immutable historical truth governance
+// Must run before diagnostics/history publication to guarantee
+// immutable forensic chronology continuity.
+PRG_Historical_Truth_Governor();
+
+// 48. Observability authority coherence governance
 // Must run after authoritative observability truth governance.
 PRG_Observability_Authority_Governor();
 
-// 48. Verification, diagnostics, history, HMI
+// 49. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
