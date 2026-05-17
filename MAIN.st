@@ -216,16 +216,20 @@ PRG_Environmental_Authority_Governor();
 PRG_Runtime_Resource_Authority_Governor();
 
 // 45. Semantic continuity authority governance
-// Must run before observability publication to guarantee
+// Must run before observability truth governance to guarantee
 // deterministic alignment with declared system intent.
 PRG_Semantic_Continuity_Authority_Governor();
 
-// 46. Observability authority coherence governance
+// 46. Authoritative observability truth governance
 // Must run before diagnostics/HMI publication to guarantee
-// operator-visible state matches active authority fabric.
+// operator-visible truth matches active authority state.
+PRG_Observability_Truth_Governor();
+
+// 47. Observability authority coherence governance
+// Must run after authoritative observability truth governance.
 PRG_Observability_Authority_Governor();
 
-// 47. Verification, diagnostics, history, HMI
+// 48. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
