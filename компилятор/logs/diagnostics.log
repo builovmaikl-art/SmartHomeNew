@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3852
+total 3856
 -rw-r--r--  1 runner runner  13067 May 17 15:12 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  40960 May 17 15:12 .
 drwxr-xr-x  3 runner runner   4096 May 17 15:12 ..
@@ -255,6 +255,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 15:12 .github
 -rw-r--r--  1 runner runner   1641 May 17 15:12 GVL_DISTRIBUTED_COMMIT.gvl
 -rw-r--r--  1 runner runner   1908 May 17 15:12 GVL_DISTRIBUTED_EPOCH.gvl
 -rw-r--r--  1 runner runner    639 May 17 15:12 GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.gvl
+-rw-r--r--  1 runner runner    643 May 17 15:12 GVL_DISTRIBUTED_SAFETY_REALITY_CONSENSUS_FABRIC.gvl
 -rw-r--r--  1 runner runner   1655 May 17 15:12 GVL_DISTRIBUTED_SNAPSHOT.gvl
 -rw-r--r--  1 runner runner    491 May 17 15:12 GVL_Distributed_Authority.gvl
 -rw-r--r--  1 runner runner    336 May 17 15:12 GVL_Distributed_Execution_Gates.gvl
@@ -705,8 +706,8 @@ drwxr-xr-x  2 runner runner   4096 May 17 15:12 out
 -rw-r--r--  1 runner runner    177 May 17 15:12 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2456
+total 2460
 drwxr-xr-x 2 runner runner    4096 May 17 15:12 .
 drwxr-xr-x 5 runner runner    4096 May 17 15:12 ..
 -rw-r--r-- 1 runner runner       0 May 17 15:12 .gitkeep
--rw-r--r-- 1 runner runner 2506731 May 17 15:12 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2508727 May 17 15:12 RESULT_methods_clean.xml
