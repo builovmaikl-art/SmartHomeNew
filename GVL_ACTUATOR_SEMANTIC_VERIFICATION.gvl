@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global actuator semantic verification authority.
+    Actuator_Semantic_Verification_Valid : BOOL := FALSE;
+    Actuator_Semantic_Verification_Granted : BOOL := FALSE;
+    Actuator_Semantic_Verification_Quarantine_Active : BOOL := TRUE;
+
+    // Physical semantic realization proofs.
+    Valve_Semantic_Realization_Valid : BOOL := FALSE;
+    Relay_Semantic_Realization_Valid : BOOL := FALSE;
+    Pump_Semantic_Realization_Valid : BOOL := FALSE;
+    Fan_Semantic_Realization_Valid : BOOL := FALSE;
+    Hydraulic_Response_Valid : BOOL := FALSE;
+
+    // Closed-loop physical convergence.
+    Physical_Effect_Converged : BOOL := FALSE;
+    Actuation_Response_Temporal_Valid : BOOL := FALSE;
+    Sensor_Confirmed_Execution_Valid : BOOL := FALSE;
+    Semantic_Outcome_Aligned : BOOL := FALSE;
+
+    // Semantic realization failure detectors.
+    False_Positive_Actuation_Detected : BOOL := FALSE;
+    Mechanical_NonRealization_Detected : BOOL := FALSE;
+    Welded_Relay_Semantics_Detected : BOOL := FALSE;
+    Hydraulic_NoEffect_Execution_Detected : BOOL := FALSE;
+    Airflow_Realization_Mismatch_Detected : BOOL := FALSE;
+    Physical_Convergence_Divergence_Detected : BOOL := FALSE;
+
+    // Verification epochs.
+    Actuator_Verification_Epoch : UDINT := 0;
+    Actuator_Verification_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Actuator_Verification_Last_Update_MS : UDINT := 0;
+    Actuator_Verification_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Actuator_Verification_Last_Error_Code : UDINT := 0;
+    Actuator_Verification_Last_Error_Text : STRING(160) := '';
+    Actuator_Verification_Invalidation_Count : UDINT := 0;
+END_VAR
