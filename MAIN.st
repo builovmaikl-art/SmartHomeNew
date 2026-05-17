@@ -211,16 +211,21 @@ PRG_Temporal_Stability_Governor();
 PRG_Environmental_Authority_Governor();
 
 // 44. Runtime resource authority governance
-// Must run before observability publication to guarantee
+// Must run before semantic continuity governance to guarantee
 // deterministic runtime execution envelope stability.
 PRG_Runtime_Resource_Authority_Governor();
 
-// 45. Observability authority coherence governance
+// 45. Semantic continuity authority governance
+// Must run before observability publication to guarantee
+// deterministic alignment with declared system intent.
+PRG_Semantic_Continuity_Authority_Governor();
+
+// 46. Observability authority coherence governance
 // Must run before diagnostics/HMI publication to guarantee
 // operator-visible state matches active authority fabric.
 PRG_Observability_Authority_Governor();
 
-// 46. Verification, diagnostics, history, HMI
+// 47. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
