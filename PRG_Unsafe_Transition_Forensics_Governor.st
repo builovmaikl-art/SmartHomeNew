@@ -1,0 +1,13 @@
+PROGRAM PRG_Unsafe_Transition_Forensics_Governor
+IF GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Physical_Safety_Projection_Granted
+AND NOT GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Unsafe_Transition_Hidden
+AND NOT GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Forensic_Lineage_Break_Detected
+AND NOT GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Historical_Safety_Gap_Detected THEN
+
+    GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Unsafe_Transition_Forensics_Valid := TRUE;
+    GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Unsafe_Transition_Forensics_Granted := TRUE;
+    GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Unsafe_Transition_Lineage_Preserved := TRUE;
+    GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Forensic_Causality_Continuity_Valid := TRUE;
+    GVL_UNSAFE_TRANSITION_FORENSICS_FABRIC.Distributed_Unsafe_Event_Consensus := TRUE;
+END_IF;
+END_PROGRAM
