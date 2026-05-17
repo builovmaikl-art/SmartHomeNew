@@ -226,15 +226,20 @@ PRG_Semantic_Continuity_Authority_Governor();
 PRG_Observability_Truth_Governor();
 
 // 47. Immutable historical truth governance
-// Must run before diagnostics/history publication to guarantee
-// immutable forensic chronology continuity.
+// Must run before global authority synchronization governance
+// to guarantee immutable forensic chronology continuity.
 PRG_Historical_Truth_Governor();
 
-// 48. Observability authority coherence governance
+// 48. Global synchronized authority governance
+// Must run before observability coherence publication to guarantee
+// one coherent cross-domain authority generation.
+PRG_Global_Authority_Sync_Governor();
+
+// 49. Observability authority coherence governance
 // Must run after authoritative observability truth governance.
 PRG_Observability_Authority_Governor();
 
-// 49. Verification, diagnostics, history, HMI
+// 50. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
