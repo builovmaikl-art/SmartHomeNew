@@ -220,14 +220,17 @@ PRG_Compliance_Federation_Governor();
 PRG_Forensic_Evidence_Governor();
 
 // 58. Deterministic epistemic integrity governance
-// Must run before observability authority publication to guarantee
-// physical-reality anchored operational truth.
 PRG_Epistemic_Integrity_Governor();
 
-// 59. Observability authority coherence governance
+// 59. Deterministic meta-governance consistency governance
+// Must run before observability authority publication to guarantee
+// acyclic and independently grounded governance topology.
+PRG_Meta_Governance_Governor();
+
+// 60. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 60. Verification, diagnostics, history, HMI
+// 61. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
