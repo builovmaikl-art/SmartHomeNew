@@ -206,16 +206,21 @@ PRG_Physical_Transaction_Governor();
 PRG_Temporal_Stability_Governor();
 
 // 43. Environmental authority governance
-// Must run before observability publication to guarantee
+// Must run before runtime resource governance to guarantee
 // external environmental causality compatibility.
 PRG_Environmental_Authority_Governor();
 
-// 44. Observability authority coherence governance
+// 44. Runtime resource authority governance
+// Must run before observability publication to guarantee
+// deterministic runtime execution envelope stability.
+PRG_Runtime_Resource_Authority_Governor();
+
+// 45. Observability authority coherence governance
 // Must run before diagnostics/HMI publication to guarantee
 // operator-visible state matches active authority fabric.
 PRG_Observability_Authority_Governor();
 
-// 45. Verification, diagnostics, history, HMI
+// 46. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
