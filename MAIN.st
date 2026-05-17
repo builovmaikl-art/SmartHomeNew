@@ -23,6 +23,8 @@ PROGRAM MAIN
 //   PRG_Recovery_Domain
 //   PRG_Temporal_Domain
 //   PRG_Verification_Domain
+//   PRG_Runtime_Core_Domain
+//   PRG_Distributed_Domain
 
 // Explicit Runtime State Algebra:
 //   GVL_RUNTIME_STATE_ALGEBRA
@@ -48,6 +50,10 @@ PROGRAM MAIN
 // Runtime Compression & Consolidation:
 //   GVL_CANONICAL_RUNTIME_FABRIC_REGISTRY
 //   PRG_Runtime_Compression_Governor
+
+// Runtime Budget Enforcement:
+//   GVL_RUNTIME_BUDGET_ENFORCEMENT
+//   PRG_Runtime_Budget_Governor
 
 // ======================================================
 
@@ -373,6 +379,7 @@ PRG_Causal_Narrative_Engine();
 PRG_Physical_Reality_Validation_Governor();
 PRG_Survivability_Intelligence_Governor();
 PRG_Runtime_Compression_Governor();
+PRG_Runtime_Budget_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
