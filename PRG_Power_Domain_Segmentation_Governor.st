@@ -1,0 +1,13 @@
+PROGRAM PRG_Power_Domain_Segmentation_Governor
+IF GVL_RESIDUAL_ENERGY_STATE_FABRIC.Residual_Energy_State_Valid
+AND NOT GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Unsafe_Power_Resurrection_Detected
+AND NOT GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Partial_Power_Isolation_Asymmetry
+AND NOT GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Distributed_Power_Segmentation_Fork THEN
+
+    GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Power_Domain_Segmentation_Valid := TRUE;
+    GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Power_Domain_Segmentation_Granted := TRUE;
+    GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Power_Domain_Boundaries_Canonical := TRUE;
+    GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Distributed_Power_Segmentation_Stable := TRUE;
+    GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Power_Reactivation_Isolation_Valid := TRUE;
+END_IF;
+END_PROGRAM
