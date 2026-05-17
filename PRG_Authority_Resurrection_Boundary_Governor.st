@@ -1,0 +1,12 @@
+PROGRAM PRG_Authority_Resurrection_Boundary_Governor
+IF GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Recovery_Reactivation_Control_Granted
+AND NOT GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Partial_Recovery_Authority_Leak
+AND NOT GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Unsafe_Authority_Resurrection_Detected
+AND NOT GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Resurrection_Authority_Fork_Detected THEN
+
+    GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Authority_Resurrection_Boundary_Valid := TRUE;
+    GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Authority_Resurrection_Bounded := TRUE;
+    GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Authority_Recovery_Lineage_Stable := TRUE;
+    GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Distributed_Authority_Recovery_Consensus := TRUE;
+END_IF;
+END_PROGRAM
