@@ -1,0 +1,12 @@
+PROGRAM PRG_Execution_Progress_Causality_Governor
+IF GVL_PHYSICAL_DEADLOCK_RESOLUTION_FABRIC.Physical_Deadlock_Resolution_Granted
+AND NOT GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Distributed_Execution_Stall_Detected
+AND NOT GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Execution_Progress_Divergence_Detected
+AND NOT GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Recovery_Progress_Oscillation_Detected THEN
+
+    GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Execution_Progress_Causality_Valid := TRUE;
+    GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Execution_Progress_Causality_Granted := TRUE;
+    GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Progress_Causality_Grounded := TRUE;
+    GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Deterministic_Execution_Continuation_Valid := TRUE;
+END_IF;
+END_PROGRAM
