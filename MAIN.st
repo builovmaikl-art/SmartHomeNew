@@ -202,14 +202,17 @@ PRG_Actuator_Semantic_Verification_Governor();
 PRG_Energy_Causality_Governor();
 
 // 52. Deterministic runtime sustainability governance
-// Must run before observability publication to guarantee
-// long-term deterministic runtime survivability.
 PRG_Runtime_Sustainability_Governor();
 
-// 53. Observability authority coherence governance
+// 53. Deterministic semantic preservation governance
+// Must run before observability publication to guarantee
+// immutable preservation of declared system intent.
+PRG_Semantic_Preservation_Governor();
+
+// 54. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 54. Verification, diagnostics, history, HMI
+// 55. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
