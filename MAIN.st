@@ -273,10 +273,22 @@ PRG_Recovery_Reactivation_Control_Governor();
 // 75. Deterministic authority resurrection boundary governance
 PRG_Authority_Resurrection_Boundary_Governor();
 
-// 76. Observability authority coherence governance
+// 76. Deterministic energy isolation causality governance
+PRG_Energy_Isolation_Causality_Governor();
+
+// 77. Deterministic residual energy state governance
+PRG_Residual_Energy_State_Governor();
+
+// 78. Deterministic power domain segmentation governance
+PRG_Power_Domain_Segmentation_Governor();
+
+// 79. Deterministic energy resurrection boundary governance
+PRG_Energy_Resurrection_Boundary_Governor();
+
+// 80. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 77. Verification, diagnostics, history, HMI
+// 81. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
