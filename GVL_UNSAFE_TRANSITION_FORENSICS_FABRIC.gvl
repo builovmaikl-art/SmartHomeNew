@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Unsafe_Transition_Forensics_Valid : BOOL := FALSE;
+    Unsafe_Transition_Forensics_Granted : BOOL := FALSE;
+
+    Unsafe_Transition_Lineage_Preserved : BOOL := FALSE;
+    Forensic_Causality_Continuity_Valid : BOOL := FALSE;
+    Distributed_Unsafe_Event_Consensus : BOOL := FALSE;
+
+    Unsafe_Transition_Timeline_Stable : BOOL := FALSE;
+    Historical_Safety_Lineage_Coherent : BOOL := FALSE;
+
+    Unsafe_Transition_Hidden : BOOL := FALSE;
+    Forensic_Lineage_Break_Detected : BOOL := FALSE;
+    Historical_Safety_Gap_Detected : BOOL := FALSE;
+
+    Unsafe_Transition_Forensics_Epoch : UDINT := 0;
+END_VAR
