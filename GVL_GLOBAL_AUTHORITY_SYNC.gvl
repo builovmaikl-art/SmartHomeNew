@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global synchronized authority fabric.
+    Global_Authority_Sync_Valid : BOOL := FALSE;
+    Global_Authority_Sync_Granted : BOOL := FALSE;
+    Global_Authority_Sync_Quarantine_Active : BOOL := TRUE;
+
+    // Cross-domain authority coherence.
+    Heating_Authority_Coherent : BOOL := FALSE;
+    Ventilation_Authority_Coherent : BOOL := FALSE;
+    Water_Authority_Coherent : BOOL := FALSE;
+    Access_Authority_Coherent : BOOL := FALSE;
+    Lighting_Authority_Coherent : BOOL := FALSE;
+
+    // Global causality synchronization.
+    Cross_Domain_Epoch_Coherent : BOOL := FALSE;
+    Distributed_Authority_Generation_Coherent : BOOL := FALSE;
+    Global_Causality_Timeline_Stable : BOOL := FALSE;
+    Multi_Domain_Recovery_Coherent : BOOL := FALSE;
+
+    // Cross-domain split-brain detection.
+    Authority_Epoch_Fragmentation_Detected : BOOL := FALSE;
+    Partial_Recovery_SplitBrain_Detected : BOOL := FALSE;
+    Cross_Domain_Replay_Skew_Detected : BOOL := FALSE;
+    Distributed_Authority_Divergence_Detected : BOOL := FALSE;
+    Global_Causality_Desynchronization_Detected : BOOL := FALSE;
+    Multi_Domain_Chronology_Drift_Detected : BOOL := FALSE;
+
+    // Synchronized authority epochs.
+    Global_Authority_Epoch : UDINT := 0;
+    Global_Authority_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal synchronization authority.
+    Global_Authority_Last_Update_MS : UDINT := 0;
+    Global_Authority_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Global_Authority_Last_Error_Code : UDINT := 0;
+    Global_Authority_Last_Error_Text : STRING(160) := '';
+    Global_Authority_Invalidation_Count : UDINT := 0;
+END_VAR
