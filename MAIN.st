@@ -309,10 +309,22 @@ PRG_Unsafe_Transition_Forensics_Governor();
 // 87. Deterministic distributed safety reality consensus governance
 PRG_Distributed_Safety_Reality_Consensus_Governor();
 
-// 88. Observability authority coherence governance
+// 88. Deterministic temporal causality closure governance
+PRG_Temporal_Causality_Closure_Governor();
+
+// 89. Deterministic distributed epoch linearity governance
+PRG_Distributed_Epoch_Linearity_Governor();
+
+// 90. Deterministic historical ordering integrity governance
+PRG_Historical_Ordering_Integrity_Governor();
+
+// 91. Deterministic causality reversal prevention governance
+PRG_Causality_Reversal_Prevention_Governor();
+
+// 92. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 89. Verification, diagnostics, history, HMI
+// 93. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
