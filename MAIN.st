@@ -31,6 +31,12 @@ PROGRAM MAIN
 //   GVL_RUNTIME_TRANSITION_SYSTEM
 //   PRG_Runtime_Transition_Validator
 
+// Operational Intelligence Layer:
+//   GVL_OPERATIONAL_INTELLIGENCE_FABRIC
+//   GVL_CAUSAL_NARRATIVE_FABRIC
+//   PRG_Operational_Intelligence_Governor
+//   PRG_Causal_Narrative_Engine
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -350,6 +356,8 @@ PRG_Semantic_Drift_Observability_Governor();
 PRG_Proof_Continuity_Audit_Governor();
 PRG_Runtime_Assumption_Integrity_Governor();
 PRG_Runtime_Transition_Validator();
+PRG_Operational_Intelligence_Governor();
+PRG_Causal_Narrative_Engine();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
