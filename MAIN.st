@@ -10,6 +10,25 @@ PROGRAM MAIN
 //   - Recommended main control cycle: 100 ms.
 // ======================================================
 
+// ======================================================
+// SEMANTIC DOMAIN PROJECTIONS (NON-INVASIVE)
+// ======================================================
+// These wrappers DO NOT replace orchestration.
+// They provide semantic compression only.
+// Existing execution ordering remains canonical.
+// ======================================================
+
+// Semantic Domains:
+//   PRG_Safety_Domain
+//   PRG_Recovery_Domain
+//   PRG_Temporal_Domain
+//   PRG_Verification_Domain
+
+// Explicit Runtime State Algebra:
+//   GVL_RUNTIME_STATE_ALGEBRA
+
+// ======================================================
+
 // 1. Time / init / configuration
 PRG_Time_Service();
 PRG_Time_Monotonic_Governor();
