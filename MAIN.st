@@ -247,14 +247,17 @@ PRG_Execution_Projection_Integrity_Governor();
 PRG_Governance_Feedback_Integrity_Governor();
 
 // 67. Deterministic governance validator integrity governance
-// Must run before observability authority publication to guarantee
-// immutable and consensus-stable validation semantics.
 PRG_Governance_Validator_Integrity_Governor();
 
-// 68. Observability authority coherence governance
+// 68. Deterministic governance liveness integrity governance
+// Must run before observability authority publication to guarantee
+// that integrity governors execute without selective starvation.
+PRG_Governance_Liveness_Integrity_Governor();
+
+// 69. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 69. Verification, diagnostics, history, HMI
+// 70. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
