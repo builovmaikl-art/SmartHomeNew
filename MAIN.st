@@ -208,14 +208,17 @@ PRG_Runtime_Sustainability_Governor();
 PRG_Semantic_Preservation_Governor();
 
 // 54. Deterministic operator semantic alignment governance
-// Must run before observability authority publication to guarantee
-// human-visible semantic coherence with actual runtime authority.
 PRG_Operator_Semantic_Alignment_Governor();
 
-// 55. Observability authority coherence governance
+// 55. Deterministic ecosystem semantic federation governance
+// Must run before observability authority publication to guarantee
+// causally synchronized external operational semantics.
+PRG_Semantic_Federation_Governor();
+
+// 56. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 56. Verification, diagnostics, history, HMI
+// 57. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
