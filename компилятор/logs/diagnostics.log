@@ -328,6 +328,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 14:43 .github
 -rw-r--r--  1 runner runner   1727 May 17 14:43 GVL_PROVENANCE_CONTINUITY_FABRIC.gvl
 -rw-r--r--  1 runner runner    472 May 17 14:43 GVL_Predictive_Diagnostics.gvl
 -rw-r--r--  1 runner runner   1156 May 17 14:43 GVL_RECOVERY_GOVERNANCE.gvl
+-rw-r--r--  1 runner runner    627 May 17 14:43 GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.gvl
 -rw-r--r--  1 runner runner    957 May 17 14:43 GVL_RUNTIME_EPOCH.gvl
 -rw-r--r--  1 runner runner   1816 May 17 14:43 GVL_RUNTIME_RESOURCE_AUTHORITY.gvl
 -rw-r--r--  1 runner runner    928 May 17 14:43 GVL_RUNTIME_SNAPSHOT.gvl
@@ -660,7 +661,7 @@ drwxr-xr-x  5 runner runner   4096 May 17 14:43 компилятор
 -rw-r--r--  1 runner runner   4202 May 17 14:43 ошибки компиляции.txt
 
 === compiler dir ===
-total 608
+total 604
 drwxr-xr-x  5 runner runner   4096 May 17 14:43 .
 drwxr-xr-x 12 runner runner  36864 May 17 14:43 ..
 -rw-r--r--  1 runner runner  21153 May 17 14:43 001_universal_pou_builder_METHODS_V2.py
@@ -679,8 +680,8 @@ drwxr-xr-x  2 runner runner   4096 May 17 14:43 out
 -rw-r--r--  1 runner runner    177 May 17 14:43 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2412
+total 2416
 drwxr-xr-x 2 runner runner    4096 May 17 14:43 .
 drwxr-xr-x 5 runner runner    4096 May 17 14:43 ..
 -rw-r--r-- 1 runner runner       0 May 17 14:43 .gitkeep
--rw-r--r-- 1 runner runner 2459303 May 17 14:43 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2462020 May 17 14:43 RESULT_methods_clean.xml
