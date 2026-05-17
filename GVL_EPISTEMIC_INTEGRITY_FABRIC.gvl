@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic epistemic integrity authority.
+    Epistemic_Integrity_Valid : BOOL := FALSE;
+    Epistemic_Integrity_Granted : BOOL := FALSE;
+    Epistemic_Integrity_Quarantine_Active : BOOL := TRUE;
+
+    // Physical reality anchoring proofs.
+    Physical_Reality_Model_Coherent : BOOL := FALSE;
+    Sensor_Truth_Consensus_Valid : BOOL := FALSE;
+    Telemetry_Reality_Alignment_Stable : BOOL := FALSE;
+    Distributed_Reality_Model_Consistent : BOOL := FALSE;
+    Causal_Model_Physically_Valid : BOOL := FALSE;
+
+    // Long-term epistemic integrity.
+    Historical_Reality_Anchoring_Valid : BOOL := FALSE;
+    Physical_Truth_Lineage_Coherent : BOOL := FALSE;
+    Reality_Model_Drift_Bounded : BOOL := FALSE;
+    Semantic_To_Physical_Causality_Valid : BOOL := FALSE;
+
+    // Epistemic split-brain detectors.
+    Physically_False_Consensus_Detected : BOOL := FALSE;
+    Telemetry_Corruption_Coherent_Detected : BOOL := FALSE;
+    Historical_Reality_Divergence_Detected : BOOL := FALSE;
+    Sensor_Trust_Erosion_Detected : BOOL := FALSE;
+    Causal_Model_Poisoning_Detected : BOOL := FALSE;
+    LongTerm_Epistemic_Drift_Detected : BOOL := FALSE;
+
+    // Epistemic epochs.
+    Epistemic_Integrity_Epoch : UDINT := 0;
+    Epistemic_Integrity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Epistemic_Integrity_Last_Update_MS : UDINT := 0;
+    Epistemic_Integrity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Epistemic_Integrity_Last_Error_Code : UDINT := 0;
+    Epistemic_Integrity_Last_Error_Text : STRING(160) := '';
+    Epistemic_Integrity_Invalidation_Count : UDINT := 0;
+END_VAR
