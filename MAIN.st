@@ -37,6 +37,10 @@ PROGRAM MAIN
 //   PRG_Operational_Intelligence_Governor
 //   PRG_Causal_Narrative_Engine
 
+// Physics-backed Reality Verification:
+//   GVL_PHYSICAL_REALITY_VERIFICATION_FABRIC
+//   PRG_Physical_Reality_Validation_Governor
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -358,6 +362,7 @@ PRG_Runtime_Assumption_Integrity_Governor();
 PRG_Runtime_Transition_Validator();
 PRG_Operational_Intelligence_Governor();
 PRG_Causal_Narrative_Engine();
+PRG_Physical_Reality_Validation_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
