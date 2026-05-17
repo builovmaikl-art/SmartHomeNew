@@ -238,14 +238,17 @@ PRG_Trust_Epoch_Monotonicity_Governor();
 PRG_Semantic_Epoch_Invariance_Governor();
 
 // 64. Deterministic governance observer consensus governance
-// Must run before observability authority publication to guarantee
-// canonical distributed governance interpretation.
 PRG_Governance_Observer_Consensus_Governor();
 
-// 65. Observability authority coherence governance
+// 65. Deterministic execution projection integrity governance
+// Must run before observability authority publication to guarantee
+// canonical actuation enforcement equivalence.
+PRG_Execution_Projection_Integrity_Governor();
+
+// 66. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 66. Verification, diagnostics, history, HMI
+// 67. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
