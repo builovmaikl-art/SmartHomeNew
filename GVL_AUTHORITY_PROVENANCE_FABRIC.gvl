@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic authority provenance governance.
+    Authority_Provenance_Valid : BOOL := FALSE;
+    Authority_Provenance_Granted : BOOL := FALSE;
+    Authority_Provenance_Quarantine_Active : BOOL := TRUE;
+
+    // Root authority authenticity proofs.
+    Bootstrap_Authority_Authentic : BOOL := FALSE;
+    Commissioning_Lineage_Traceable : BOOL := FALSE;
+    Trust_Seed_Integrity_Valid : BOOL := FALSE;
+    Root_Authority_Attribution_Coherent : BOOL := FALSE;
+    Provenance_Causality_Grounded : BOOL := FALSE;
+
+    // Long-term provenance integrity.
+    Historical_Origin_Lineage_Valid : BOOL := FALSE;
+    Distributed_Trust_Chain_Coherent : BOOL := FALSE;
+    Authority_Origin_Continuity_Stable : BOOL := FALSE;
+    Root_Identity_Cryptographic_Validity : BOOL := FALSE;
+
+    // Authority-origin split-brain detectors.
+    Bootstrap_Identity_Corruption_Detected : BOOL := FALSE;
+    Forged_Authority_Root_Detected : BOOL := FALSE;
+    Commissioning_Provenance_Gap_Detected : BOOL := FALSE;
+    Trust_Seed_Impersonation_Detected : BOOL := FALSE;
+    Origin_Authenticity_Erosion_Detected : BOOL := FALSE;
+    Root_Lineage_Tampering_Detected : BOOL := FALSE;
+
+    // Provenance epochs.
+    Authority_Provenance_Epoch : UDINT := 0;
+    Authority_Provenance_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Authority_Provenance_Last_Update_MS : UDINT := 0;
+    Authority_Provenance_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Authority_Provenance_Last_Error_Code : UDINT := 0;
+    Authority_Provenance_Last_Error_Text : STRING(160) := '';
+    Authority_Provenance_Invalidation_Count : UDINT := 0;
+END_VAR
