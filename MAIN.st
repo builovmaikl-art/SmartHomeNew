@@ -261,10 +261,22 @@ PRG_Physical_SafeState_Lattice_Governor();
 // 71. Deterministic cross-domain fail-safe closure governance
 PRG_CrossDomain_FailSafe_Closure_Governor();
 
-// 72. Observability authority coherence governance
+// 72. Deterministic recovery path governance
+PRG_Deterministic_Recovery_Path_Governor();
+
+// 73. Deterministic recovery ordering integrity governance
+PRG_Recovery_Ordering_Integrity_Governor();
+
+// 74. Deterministic recovery reactivation control governance
+PRG_Recovery_Reactivation_Control_Governor();
+
+// 75. Deterministic authority resurrection boundary governance
+PRG_Authority_Resurrection_Boundary_Governor();
+
+// 76. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 73. Verification, diagnostics, history, HMI
+// 77. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
