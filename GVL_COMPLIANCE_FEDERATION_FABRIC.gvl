@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic compliance federation authority.
+    Compliance_Federation_Valid : BOOL := FALSE;
+    Compliance_Federation_Granted : BOOL := FALSE;
+    Compliance_Federation_Quarantine_Active : BOOL := TRUE;
+
+    // Cross-jurisdiction governance coherence proofs.
+    Regulatory_Semantics_Coherent : BOOL := FALSE;
+    Certification_Boundary_Valid : BOOL := FALSE;
+    Regional_Safety_Envelope_Aligned : BOOL := FALSE;
+    Governance_Trust_Boundary_Stable : BOOL := FALSE;
+    Policy_Compliance_Coherent : BOOL := FALSE;
+
+    // Federated compliance synchronization.
+    CrossJurisdiction_Authority_Aligned : BOOL := FALSE;
+    Compliance_Runtime_Projection_Stable : BOOL := FALSE;
+    External_Governance_Interpretation_Valid : BOOL := FALSE;
+    Certified_Operational_Semantics_Valid : BOOL := FALSE;
+
+    // Regulatory semantic split-brain detectors.
+    CrossJurisdiction_Semantic_Drift_Detected : BOOL := FALSE;
+    Certification_Boundary_Violation_Detected : BOOL := FALSE;
+    Policy_Compliance_Divergence_Detected : BOOL := FALSE;
+    Regional_Safety_Envelope_Mismatch_Detected : BOOL := FALSE;
+    Regulatory_Trust_Corruption_Detected : BOOL := FALSE;
+    Governance_Authority_Leakage_Detected : BOOL := FALSE;
+
+    // Federation epochs.
+    Compliance_Federation_Epoch : UDINT := 0;
+    Compliance_Federation_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Compliance_Federation_Last_Update_MS : UDINT := 0;
+    Compliance_Federation_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Compliance_Federation_Last_Error_Code : UDINT := 0;
+    Compliance_Federation_Last_Error_Text : STRING(160) := '';
+    Compliance_Federation_Invalidation_Count : UDINT := 0;
+END_VAR
