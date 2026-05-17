@@ -1,0 +1,36 @@
+VAR_GLOBAL
+    // Advisory/read-only survivability intelligence.
+    Survivability_Intelligence_Active : BOOL := TRUE;
+    Survivability_Intelligence_ReadOnly : BOOL := TRUE;
+    Survivability_Intelligence_NoActuation : BOOL := TRUE;
+    Survivability_Intelligence_NoAuthorityMutation : BOOL := TRUE;
+    Survivability_Intelligence_NoRecoveryMutation : BOOL := TRUE;
+
+    // Survivability continuum observations.
+    System_Survivable : BOOL := FALSE;
+    Degraded_But_Safe : BOOL := FALSE;
+    Isolated_But_Stable : BOOL := FALSE;
+    Partitioned_But_Survivable : BOOL := FALSE;
+    Resource_Starved_But_Recoverable : BOOL := FALSE;
+
+    // Essential function preservation advisories.
+    Essential_Functions_Preserved : BOOL := FALSE;
+    NonEssential_Shedding_Recommended : BOOL := FALSE;
+    Telemetry_Rate_Reduction_Recommended : BOOL := FALSE;
+    Heavy_Diagnostics_Defer_Recommended : BOOL := FALSE;
+    Trend_Analytics_Defer_Recommended : BOOL := FALSE;
+    Simulation_Defer_Recommended : BOOL := FALSE;
+
+    // Long-duration degradation observations.
+    LongDuration_Degradation_Observed : BOOL := FALSE;
+    Chronic_Degradation_Risk_Increasing : BOOL := FALSE;
+    Survivability_Pressure_Observed : BOOL := FALSE;
+    Governance_Saturation_Pressure_Observed : BOOL := FALSE;
+    Telemetry_Overload_Pressure_Observed : BOOL := FALSE;
+    Distributed_Instability_Pressure_Observed : BOOL := FALSE;
+
+    // Advisory diagnostics.
+    Survivability_Advisory_Available : BOOL := FALSE;
+    Survivability_Advisory_Code : STRING(255) := '';
+    Survivability_Intelligence_Epoch : UDINT := 0;
+END_VAR
