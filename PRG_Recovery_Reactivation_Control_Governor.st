@@ -1,0 +1,13 @@
+PROGRAM PRG_Recovery_Reactivation_Control_Governor
+IF GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Recovery_Ordering_Integrity_Valid
+AND NOT GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Unsafe_Reactivation_Ordering_Detected
+AND NOT GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Partial_Reactivation_Leak_Detected
+AND NOT GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.CrossSubsystem_Reactivation_Fork THEN
+
+    GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Recovery_Reactivation_Control_Valid := TRUE;
+    GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Recovery_Reactivation_Control_Granted := TRUE;
+    GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Recovery_Reactivation_Boundary_Stable := TRUE;
+    GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.CrossSubsystem_Reactivation_Consistent := TRUE;
+    GVL_RECOVERY_REACTIVATION_CONTROL_FABRIC.Reactivation_Energy_Boundary_Safe := TRUE;
+END_IF;
+END_PROGRAM
