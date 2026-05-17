@@ -484,6 +484,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 14:45 .github
 -rw-r--r--  1 runner runner    859 May 17 14:45 PRG_Presence_Manager.st
 -rw-r--r--  1 runner runner   5429 May 17 14:45 PRG_Provenance_Continuity_Governor.st
 -rw-r--r--  1 runner runner   5124 May 17 14:45 PRG_Recovery_Cleanup_Governor.st
+-rw-r--r--  1 runner runner    828 May 17 14:45 PRG_Recovery_Ordering_Integrity_Governor.st
 -rw-r--r--  1 runner runner   6880 May 17 14:45 PRG_Runtime_Barrier.st
 -rw-r--r--  1 runner runner   5586 May 17 14:45 PRG_Runtime_Resource_Authority_Governor.st
 -rw-r--r--  1 runner runner   3962 May 17 14:45 PRG_Runtime_Snapshot_Governor.st
@@ -664,7 +665,7 @@ drwxr-xr-x  5 runner runner   4096 May 17 14:45 компилятор
 -rw-r--r--  1 runner runner   4202 May 17 14:45 ошибки компиляции.txt
 
 === compiler dir ===
-total 608
+total 604
 drwxr-xr-x  5 runner runner   4096 May 17 14:45 .
 drwxr-xr-x 12 runner runner  36864 May 17 14:45 ..
 -rw-r--r--  1 runner runner  21153 May 17 14:45 001_universal_pou_builder_METHODS_V2.py
@@ -683,8 +684,8 @@ drwxr-xr-x  2 runner runner   4096 May 17 14:45 out
 -rw-r--r--  1 runner runner    177 May 17 14:45 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2420
+total 2424
 drwxr-xr-x 2 runner runner    4096 May 17 14:45 .
 drwxr-xr-x 5 runner runner    4096 May 17 14:45 ..
 -rw-r--r-- 1 runner runner       0 May 17 14:45 .gitkeep
--rw-r--r-- 1 runner runner 2467919 May 17 14:45 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2469939 May 17 14:45 RESULT_methods_clean.xml
