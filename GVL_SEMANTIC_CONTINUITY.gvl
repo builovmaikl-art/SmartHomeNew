@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global semantic continuity authority.
+    Semantic_Continuity_Valid : BOOL := FALSE;
+    Semantic_Continuity_Granted : BOOL := FALSE;
+    Semantic_Continuity_Quarantine_Active : BOOL := TRUE;
+
+    // Semantic authority proofs.
+    Operator_Intent_Coherent : BOOL := FALSE;
+    Policy_Intent_Coherent : BOOL := FALSE;
+    Adaptive_Behavior_Coherent : BOOL := FALSE;
+    Recovery_Intent_Coherent : BOOL := FALSE;
+    Distributed_Semantic_Coherent : BOOL := FALSE;
+
+    // Intent continuity.
+    Declared_System_Intent_Valid : BOOL := FALSE;
+    Runtime_Goal_Alignment_Valid : BOOL := FALSE;
+    Optimization_Boundary_Valid : BOOL := FALSE;
+    Autonomous_Adjustment_Valid : BOOL := FALSE;
+
+    // Semantic drift detection.
+    Goal_Drift_Detected : BOOL := FALSE;
+    Policy_Divergence_Detected : BOOL := FALSE;
+    Adaptive_Learning_Semantic_Skew : BOOL := FALSE;
+    Recovery_Intent_Mismatch_Detected : BOOL := FALSE;
+    Optimization_Authority_Corruption_Detected : BOOL := FALSE;
+    Distributed_Semantic_Fragmentation_Detected : BOOL := FALSE;
+
+    // Semantic epochs.
+    Semantic_Continuity_Epoch : UDINT := 0;
+    Semantic_Continuity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal semantic authority.
+    Semantic_Last_Update_MS : UDINT := 0;
+    Semantic_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Semantic_Last_Error_Code : UDINT := 0;
+    Semantic_Last_Error_Text : STRING(160) := '';
+    Semantic_Invalidation_Count : UDINT := 0;
+END_VAR
