@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic semantic epoch invariance governance.
+    Semantic_Epoch_Invariance_Valid : BOOL := FALSE;
+    Semantic_Epoch_Invariance_Granted : BOOL := FALSE;
+    Semantic_Epoch_Invariance_Quarantine_Active : BOOL := TRUE;
+
+    // Cross-epoch semantic preservation proofs.
+    Authority_Semantics_Invariant : BOOL := FALSE;
+    CrossEpoch_Permission_Mapping_Stable : BOOL := FALSE;
+    Semantic_Intent_Continuity_Valid : BOOL := FALSE;
+    Governance_Meaning_Preservation_Coherent : BOOL := FALSE;
+    Semantic_Evolution_Lineage_Traceable : BOOL := FALSE;
+
+    // Semantic migration integrity.
+    Explicit_Semantic_Migration_Governed : BOOL := FALSE;
+    CrossEpoch_Semantic_Equivalence_Valid : BOOL := FALSE;
+    Distributed_Semantic_Consensus_Stable : BOOL := FALSE;
+    Semantic_Interpretation_Integrity_Valid : BOOL := FALSE;
+
+    // Semantic epoch drift detectors.
+    Semantic_Authority_Drift_Detected : BOOL := FALSE;
+    CrossEpoch_Permission_Reinterpretation : BOOL := FALSE;
+    Intent_To_Authority_Mismatch_Detected : BOOL := FALSE;
+    Governance_Semantic_Fork_Detected : BOOL := FALSE;
+    Semantic_Migration_Lineage_Gap_Detected : BOOL := FALSE;
+    Distributed_Semantic_Divergence_Detected : BOOL := FALSE;
+
+    // Semantic epochs.
+    Semantic_Epoch_Invariance_Epoch : UDINT := 0;
+    Semantic_Epoch_Invariance_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Semantic_Epoch_Invariance_Last_Update_MS : UDINT := 0;
+    Semantic_Epoch_Invariance_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Semantic_Epoch_Invariance_Last_Error_Code : UDINT := 0;
+    Semantic_Epoch_Invariance_Last_Error_Text : STRING(160) := '';
+    Semantic_Epoch_Invariance_Invalidation_Count : UDINT := 0;
+END_VAR
