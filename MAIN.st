@@ -285,10 +285,22 @@ PRG_Power_Domain_Segmentation_Governor();
 // 79. Deterministic energy resurrection boundary governance
 PRG_Energy_Resurrection_Boundary_Governor();
 
-// 80. Observability authority coherence governance
+// 80. Deterministic physical deadlock resolution governance
+PRG_Physical_Deadlock_Resolution_Governor();
+
+// 81. Deterministic execution progress causality governance
+PRG_Execution_Progress_Causality_Governor();
+
+// 82. Deterministic resource starvation boundary governance
+PRG_Resource_Starvation_Boundary_Governor();
+
+// 83. Deterministic distributed forward progress governance
+PRG_Distributed_Forward_Progress_Governor();
+
+// 84. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 81. Verification, diagnostics, history, HMI
+// 85. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
