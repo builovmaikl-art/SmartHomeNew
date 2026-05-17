@@ -27,6 +27,10 @@ PROGRAM MAIN
 // Explicit Runtime State Algebra:
 //   GVL_RUNTIME_STATE_ALGEBRA
 
+// Formal Runtime Transition System:
+//   GVL_RUNTIME_TRANSITION_SYSTEM
+//   PRG_Runtime_Transition_Validator
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -345,6 +349,7 @@ PRG_Passive_Runtime_Verification_Governor();
 PRG_Semantic_Drift_Observability_Governor();
 PRG_Proof_Continuity_Audit_Governor();
 PRG_Runtime_Assumption_Integrity_Governor();
+PRG_Runtime_Transition_Validator();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
