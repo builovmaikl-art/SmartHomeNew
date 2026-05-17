@@ -1,0 +1,19 @@
+VAR_GLOBAL
+    Physical_Deadlock_Resolution_Valid : BOOL := FALSE;
+    Physical_Deadlock_Resolution_Granted : BOOL := FALSE;
+
+    Deadlock_Resolution_Canonical : BOOL := FALSE;
+    Physical_Forward_Progress_Valid : BOOL := FALSE;
+    CrossDomain_Execution_Progress_Stable : BOOL := FALSE;
+    Recovery_Progress_Stable : BOOL := FALSE;
+
+    Deadlock_Causality_Grounded : BOOL := FALSE;
+    Distributed_Deadlock_Consensus_Valid : BOOL := FALSE;
+
+    Physical_CircularWait_Detected : BOOL := FALSE;
+    CrossDomain_Progress_Deadlock : BOOL := FALSE;
+    Recovery_Livelock_Detected : BOOL := FALSE;
+    Physical_Progress_Stall_Detected : BOOL := FALSE;
+
+    Physical_Deadlock_Resolution_Epoch : UDINT := 0;
+END_VAR
