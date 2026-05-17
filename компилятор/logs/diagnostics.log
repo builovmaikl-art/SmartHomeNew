@@ -230,6 +230,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 15:24 .github
 -rw-r--r--  1 runner runner    580 May 17 15:24 GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.gvl
 -rw-r--r--  1 runner runner   1204 May 17 15:24 GVL_AUTHORITY_REVOCATION.gvl
 -rw-r--r--  1 runner runner   1390 May 17 15:24 GVL_BEHAVIOR_ADAPT.gvl
+-rw-r--r--  1 runner runner    611 May 17 15:24 GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.gvl
 -rw-r--r--  1 runner runner   2528 May 17 15:24 GVL_COMMAND.gvl
 -rw-r--r--  1 runner runner   1483 May 17 15:24 GVL_COMMAND_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner   1522 May 17 15:24 GVL_COMMAND_SHADOW.gvl
@@ -694,7 +695,7 @@ drwxr-xr-x  5 runner runner   4096 May 17 15:24 компилятор
 -rw-r--r--  1 runner runner   4202 May 17 15:24 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 608
 drwxr-xr-x  5 runner runner   4096 May 17 15:24 .
 drwxr-xr-x 12 runner runner  40960 May 17 15:24 ..
 -rw-r--r--  1 runner runner  21153 May 17 15:24 001_universal_pou_builder_METHODS_V2.py
@@ -717,4 +718,4 @@ total 2472
 drwxr-xr-x 2 runner runner    4096 May 17 15:24 .
 drwxr-xr-x 5 runner runner    4096 May 17 15:24 ..
 -rw-r--r-- 1 runner runner       0 May 17 15:24 .gitkeep
--rw-r--r-- 1 runner runner 2521091 May 17 15:24 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2523090 May 17 15:24 RESULT_methods_clean.xml
