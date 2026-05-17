@@ -229,14 +229,17 @@ PRG_Meta_Governance_Governor();
 PRG_Authority_Provenance_Governor();
 
 // 61. Deterministic provenance continuity governance
-// Must run before observability authority publication to guarantee
-// mandatory provenance re-attestation after recovery epochs.
 PRG_Provenance_Continuity_Governor();
 
-// 62. Observability authority coherence governance
+// 62. Deterministic trust epoch monotonicity governance
+// Must run before observability authority publication to guarantee
+// rollback-resistant irreversible trust progression.
+PRG_Trust_Epoch_Monotonicity_Governor();
+
+// 63. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 63. Verification, diagnostics, history, HMI
+// 64. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
