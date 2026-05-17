@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic execution projection integrity governance.
+    Execution_Projection_Integrity_Valid : BOOL := FALSE;
+    Execution_Projection_Integrity_Granted : BOOL := FALSE;
+    Execution_Projection_Integrity_Quarantine_Active : BOOL := TRUE;
+
+    // Governance-to-execution projection proofs.
+    Execution_Authority_Projection_Consistent : BOOL := FALSE;
+    CrossDomain_Actuation_Enforcement_Aligned : BOOL := FALSE;
+    Physical_Execution_Governance_Canonical : BOOL := FALSE;
+    Actuation_Surface_Consensus_Valid : BOOL := FALSE;
+    Execution_Projection_Lineage_Coherent : BOOL := FALSE;
+
+    // Execution enforcement integrity.
+    Runtime_Actuation_Projection_Stable : BOOL := FALSE;
+    Distributed_Execution_Equivalence_Valid : BOOL := FALSE;
+    Execution_Governance_Causality_Grounded : BOOL := FALSE;
+    Physical_Enforcement_Timeline_Monotonic : BOOL := FALSE;
+
+    // Execution projection split-brain detectors.
+    Execution_Projection_Divergence_Detected : BOOL := FALSE;
+    Actuation_Path_Authority_Bypass_Detected : BOOL := FALSE;
+    CrossDomain_Enforcement_Fork_Detected : BOOL := FALSE;
+    Canonical_Governance_Execution_Lost : BOOL := FALSE;
+    Runtime_Execution_Lineage_Drift_Detected : BOOL := FALSE;
+    Distributed_Actuation_Reality_Fork_Detected : BOOL := FALSE;
+
+    // Execution epochs.
+    Execution_Projection_Integrity_Epoch : UDINT := 0;
+    Execution_Projection_Integrity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Execution_Projection_Integrity_Last_Update_MS : UDINT := 0;
+    Execution_Projection_Integrity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Execution_Projection_Integrity_Last_Error_Code : UDINT := 0;
+    Execution_Projection_Integrity_Last_Error_Text : STRING(160) := '';
+    Execution_Projection_Integrity_Invalidation_Count : UDINT := 0;
+END_VAR
