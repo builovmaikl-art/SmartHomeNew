@@ -1,0 +1,21 @@
+VAR_GLOBAL
+    Causal_Narrative_Active : BOOL := TRUE;
+    Causal_Narrative_ReadOnly : BOOL := TRUE;
+
+    Runtime_Narrative_Available : BOOL := FALSE;
+    Recovery_Narrative_Available : BOOL := FALSE;
+    Authority_Narrative_Available : BOOL := FALSE;
+    Temporal_Narrative_Available : BOOL := FALSE;
+
+    Narrative_Causality_Coherent : BOOL := FALSE;
+    Narrative_Runtime_Alignment_Valid : BOOL := FALSE;
+
+    Narrative_Opacity_Observed : BOOL := FALSE;
+    Narrative_Gap_Observed : BOOL := FALSE;
+
+    Runtime_Narrative_Code : STRING(255) := '';
+    Recovery_Narrative_Code : STRING(255) := '';
+    Authority_Narrative_Code : STRING(255) := '';
+
+    Causal_Narrative_Epoch : UDINT := 0;
+END_VAR
