@@ -241,14 +241,17 @@ PRG_Semantic_Epoch_Invariance_Governor();
 PRG_Governance_Observer_Consensus_Governor();
 
 // 65. Deterministic execution projection integrity governance
-// Must run before observability authority publication to guarantee
-// canonical actuation enforcement equivalence.
 PRG_Execution_Projection_Integrity_Governor();
 
-// 66. Observability authority coherence governance
+// 66. Deterministic governance feedback integrity governance
+// Must run before observability authority publication to guarantee
+// causal isolation of governance derivation feedback.
+PRG_Governance_Feedback_Integrity_Governor();
+
+// 67. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 67. Verification, diagnostics, history, HMI
+// 68. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
