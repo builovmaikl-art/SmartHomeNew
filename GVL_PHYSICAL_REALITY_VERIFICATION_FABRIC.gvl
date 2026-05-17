@@ -1,0 +1,20 @@
+VAR_GLOBAL
+    Physical_Reality_Verification_Active : BOOL := TRUE;
+    Physical_Reality_Verification_ReadOnly : BOOL := TRUE;
+    Physical_Reality_Verification_NoMutation : BOOL := TRUE;
+
+    Commanded_State_Verified_Physically : BOOL := FALSE;
+    Physical_Response_Coherent : BOOL := FALSE;
+    Sensor_Physics_Coherent : BOOL := FALSE;
+    Physical_Runtime_Reality_Valid : BOOL := FALSE;
+
+    Physical_Reality_Divergence_Detected : BOOL := FALSE;
+    Commanded_State_Mismatch_Detected : BOOL := FALSE;
+    Impossible_Physical_Response_Detected : BOOL := FALSE;
+    Sensor_Physics_Contradiction_Detected : BOOL := FALSE;
+
+    Passive_Physics_Reasoning_Active : BOOL := TRUE;
+    Physical_Contradiction_Observed : BOOL := FALSE;
+
+    Physical_Reality_Verification_Epoch : UDINT := 0;
+END_VAR
