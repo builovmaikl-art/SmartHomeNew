@@ -1,0 +1,14 @@
+PROGRAM PRG_Safety_Observability_Truth_Governor
+IF GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Forward_Progress_Granted
+AND NOT GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.FakeSafe_Projection_Detected
+AND NOT GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Telemetry_Reality_Divergence_Detected
+AND NOT GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Stale_Safety_Projection_Detected
+AND NOT GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Safety_Observability_Fork_Detected THEN
+
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Safety_Observability_Truth_Valid := TRUE;
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Safety_Observability_Truth_Granted := TRUE;
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Safety_Reality_Projection_Valid := TRUE;
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Observability_Reality_Equivalence_Granted := TRUE;
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Physical_Safety_Projection_Canonical := TRUE;
+END_IF;
+END_PROGRAM
