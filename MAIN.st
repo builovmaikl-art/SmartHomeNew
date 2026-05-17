@@ -55,6 +55,10 @@ PROGRAM MAIN
 //   GVL_RUNTIME_BUDGET_ENFORCEMENT
 //   PRG_Runtime_Budget_Governor
 
+// Fabric Lifecycle & Capability Shedding:
+//   GVL_FABRIC_LIFECYCLE_REGISTRY
+//   PRG_Controlled_Capability_Shedding_Governor
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -380,6 +384,7 @@ PRG_Physical_Reality_Validation_Governor();
 PRG_Survivability_Intelligence_Governor();
 PRG_Runtime_Compression_Governor();
 PRG_Runtime_Budget_Governor();
+PRG_Controlled_Capability_Shedding_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
