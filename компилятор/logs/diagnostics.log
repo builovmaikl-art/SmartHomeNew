@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 3928
+total 3932
 -rw-r--r--  1 runner runner  13067 May 17 16:13 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  40960 May 17 16:13 .
 drwxr-xr-x  3 runner runner   4096 May 17 16:13 ..
@@ -522,6 +522,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 16:13 .github
 -rw-r--r--  1 runner runner    860 May 17 16:13 PRG_Recovery_Reactivation_Control_Governor.st
 -rw-r--r--  1 runner runner    670 May 17 16:13 PRG_Residual_Energy_State_Governor.st
 -rw-r--r--  1 runner runner    743 May 17 16:13 PRG_Resource_Starvation_Boundary_Governor.st
+-rw-r--r--  1 runner runner    423 May 17 16:13 PRG_Runtime_Assumption_Integrity_Governor.st
 -rw-r--r--  1 runner runner   6880 May 17 16:13 PRG_Runtime_Barrier.st
 -rw-r--r--  1 runner runner   5586 May 17 16:13 PRG_Runtime_Resource_Authority_Governor.st
 -rw-r--r--  1 runner runner   3962 May 17 16:13 PRG_Runtime_Snapshot_Governor.st
@@ -729,4 +730,4 @@ total 2492
 drwxr-xr-x 2 runner runner    4096 May 17 16:13 .
 drwxr-xr-x 5 runner runner    4096 May 17 16:13 ..
 -rw-r--r-- 1 runner runner       0 May 17 16:13 .gitkeep
--rw-r--r-- 1 runner runner 2540790 May 17 16:13 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2541688 May 17 16:13 RESULT_methods_clean.xml
