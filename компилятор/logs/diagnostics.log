@@ -442,6 +442,7 @@ drwxr-xr-x  3 runner runner   4096 May 17 15:25 .github
 -rw-r--r--  1 runner runner   2960 May 17 15:25 PRG_Distributed_Commit_Observability.st
 -rw-r--r--  1 runner runner   1531 May 17 15:25 PRG_Distributed_Commit_Publication.st
 -rw-r--r--  1 runner runner   7092 May 17 15:25 PRG_Distributed_Epoch_Governor.st
+-rw-r--r--  1 runner runner    806 May 17 15:25 PRG_Distributed_Epoch_Linearity_Governor.st
 -rw-r--r--  1 runner runner    846 May 17 15:25 PRG_Distributed_Forward_Progress_Governor.st
 -rw-r--r--  1 runner runner   2097 May 17 15:25 PRG_Distributed_Peer_Ingestion.st
 -rw-r--r--  1 runner runner   3030 May 17 15:25 PRG_Distributed_Runtime_Supervisor.st
@@ -696,7 +697,7 @@ drwxr-xr-x  5 runner runner   4096 May 17 15:25 компилятор
 -rw-r--r--  1 runner runner   4202 May 17 15:25 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 608
 drwxr-xr-x  5 runner runner   4096 May 17 15:25 .
 drwxr-xr-x 12 runner runner  40960 May 17 15:25 ..
 -rw-r--r--  1 runner runner  21153 May 17 15:25 001_universal_pou_builder_METHODS_V2.py
@@ -719,4 +720,4 @@ total 2476
 drwxr-xr-x 2 runner runner    4096 May 17 15:25 .
 drwxr-xr-x 5 runner runner    4096 May 17 15:25 ..
 -rw-r--r-- 1 runner runner       0 May 17 15:25 .gitkeep
--rw-r--r-- 1 runner runner 2525083 May 17 15:25 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2526522 May 17 15:25 RESULT_methods_clean.xml
