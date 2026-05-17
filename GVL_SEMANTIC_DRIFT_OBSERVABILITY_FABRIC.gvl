@@ -1,0 +1,16 @@
+VAR_GLOBAL
+    Semantic_Drift_Observability_Active : BOOL := TRUE;
+
+    Semantic_Continuity_Observed : BOOL := FALSE;
+    Semantic_Projection_Consistency_Observed : BOOL := FALSE;
+    Distributed_Semantic_Alignment_Observed : BOOL := FALSE;
+
+    Semantic_Drift_ReadOnly_Mode : BOOL := TRUE;
+    Semantic_Drift_NoExecutionMutation : BOOL := TRUE;
+
+    Semantic_Drift_Observed : BOOL := FALSE;
+    Semantic_Lineage_Drift_Observed : BOOL := FALSE;
+    Semantic_Projection_Decay_Observed : BOOL := FALSE;
+
+    Semantic_Drift_Observation_Epoch : UDINT := 0;
+END_VAR
