@@ -321,10 +321,16 @@ PRG_Historical_Ordering_Integrity_Governor();
 // 91. Deterministic causality reversal prevention governance
 PRG_Causality_Reversal_Prevention_Governor();
 
-// 92. Observability authority coherence governance
+// 92. Passive runtime verification envelope (READ-ONLY)
+PRG_Passive_Runtime_Verification_Governor();
+PRG_Semantic_Drift_Observability_Governor();
+PRG_Proof_Continuity_Audit_Governor();
+PRG_Runtime_Assumption_Integrity_Governor();
+
+// 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 93. Verification, diagnostics, history, HMI
+// 94. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
