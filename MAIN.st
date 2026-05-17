@@ -253,14 +253,18 @@ PRG_Governance_Validator_Integrity_Governor();
 PRG_Governance_Liveness_Integrity_Governor();
 
 // 69. Deterministic governance publication binding governance
-// Must run before observability authority publication to guarantee
-// that stale or quarantined governance cannot be published as healthy.
 PRG_Governance_Publication_Binding_Governor();
 
-// 70. Observability authority coherence governance
+// 70. Deterministic physical safe-state lattice governance
+PRG_Physical_SafeState_Lattice_Governor();
+
+// 71. Deterministic cross-domain fail-safe closure governance
+PRG_CrossDomain_FailSafe_Closure_Governor();
+
+// 72. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 71. Verification, diagnostics, history, HMI
+// 73. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
