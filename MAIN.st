@@ -45,6 +45,10 @@ PROGRAM MAIN
 //   GVL_SURVIVABILITY_INTELLIGENCE_FABRIC
 //   PRG_Survivability_Intelligence_Governor
 
+// Runtime Compression & Consolidation:
+//   GVL_CANONICAL_RUNTIME_FABRIC_REGISTRY
+//   PRG_Runtime_Compression_Governor
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -368,6 +372,7 @@ PRG_Operational_Intelligence_Governor();
 PRG_Causal_Narrative_Engine();
 PRG_Physical_Reality_Validation_Governor();
 PRG_Survivability_Intelligence_Governor();
+PRG_Runtime_Compression_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
