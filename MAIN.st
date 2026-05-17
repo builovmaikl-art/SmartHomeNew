@@ -297,10 +297,22 @@ PRG_Resource_Starvation_Boundary_Governor();
 // 83. Deterministic distributed forward progress governance
 PRG_Distributed_Forward_Progress_Governor();
 
-// 84. Observability authority coherence governance
+// 84. Deterministic safety observability truth governance
+PRG_Safety_Observability_Truth_Governor();
+
+// 85. Deterministic physical safety projection governance
+PRG_Physical_Safety_Projection_Governor();
+
+// 86. Deterministic unsafe transition forensics governance
+PRG_Unsafe_Transition_Forensics_Governor();
+
+// 87. Deterministic distributed safety reality consensus governance
+PRG_Distributed_Safety_Reality_Consensus_Governor();
+
+// 88. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 85. Verification, diagnostics, history, HMI
+// 89. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
