@@ -1,0 +1,19 @@
+VAR_GLOBAL
+    Energy_Isolation_Causality_Valid : BOOL := FALSE;
+    Energy_Isolation_Causality_Granted : BOOL := FALSE;
+
+    Physical_Energy_Isolation_Valid : BOOL := FALSE;
+    Unsafe_Energy_Propagation_Prevented : BOOL := FALSE;
+    CrossDomain_Power_Segmentation_Canonical : BOOL := FALSE;
+    Energy_Isolation_Lineage_Coherent : BOOL := FALSE;
+
+    Energy_Causality_Grounded : BOOL := FALSE;
+    Distributed_Energy_Isolation_Consensus : BOOL := FALSE;
+
+    Residual_Energy_Leakage_Detected : BOOL := FALSE;
+    CrossDomain_Power_Backfeed_Detected : BOOL := FALSE;
+    SplitEnergy_Topology_Detected : BOOL := FALSE;
+    Unsafe_Energy_Propagation_Detected : BOOL := FALSE;
+
+    Energy_Isolation_Epoch : UDINT := 0;
+END_VAR
