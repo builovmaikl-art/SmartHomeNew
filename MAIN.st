@@ -244,14 +244,17 @@ PRG_Governance_Observer_Consensus_Governor();
 PRG_Execution_Projection_Integrity_Governor();
 
 // 66. Deterministic governance feedback integrity governance
-// Must run before observability authority publication to guarantee
-// causal isolation of governance derivation feedback.
 PRG_Governance_Feedback_Integrity_Governor();
 
-// 67. Observability authority coherence governance
+// 67. Deterministic governance validator integrity governance
+// Must run before observability authority publication to guarantee
+// immutable and consensus-stable validation semantics.
+PRG_Governance_Validator_Integrity_Governor();
+
+// 68. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 68. Verification, diagnostics, history, HMI
+// 69. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
