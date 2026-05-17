@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Power_Domain_Segmentation_Valid : BOOL := FALSE;
+    Power_Domain_Segmentation_Granted : BOOL := FALSE;
+
+    Power_Domain_Boundaries_Canonical : BOOL := FALSE;
+    Distributed_Power_Segmentation_Stable : BOOL := FALSE;
+    Power_Reactivation_Isolation_Valid : BOOL := FALSE;
+
+    Power_Segmentation_Causality_Valid : BOOL := FALSE;
+    Power_Recovery_Ordering_Stable : BOOL := FALSE;
+
+    Unsafe_Power_Resurrection_Detected : BOOL := FALSE;
+    Partial_Power_Isolation_Asymmetry : BOOL := FALSE;
+    Distributed_Power_Segmentation_Fork : BOOL := FALSE;
+
+    Power_Domain_Segmentation_Epoch : UDINT := 0;
+END_VAR
