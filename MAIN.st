@@ -99,8 +99,6 @@ PRG_Distributed_Snapshot_Ingestion();
 PRG_Distributed_Snapshot_Governor();
 
 // 20. Distributed runtime fabric supervisor
-// Must run before distributed commit governance because commit authority
-// consumes centralized distributed execution gates.
 PRG_Distributed_Runtime_Supervisor();
 
 // 21. Distributed commit publication
@@ -122,8 +120,6 @@ PRG_Semantic_Progress_Governor();
 PRG_Convergence_Governor();
 
 // 27. Recovery cleanup governance
-// Must run before observability publication because observability
-// must export final recovery/convergence authority state.
 PRG_Recovery_Cleanup_Governor();
 
 // 28. Observability authority governance
@@ -133,55 +129,34 @@ PRG_Observability_Governor();
 PRG_Heating();
 PRG_Heating_Supervisory_Publication();
 PRG_Ventilation();
-
-// Water/Flood pipeline:
-//   1. build semantic/supervisory/authority projections;
-//   2. build deterministic output projection and reconciliation;
-//   3. bridge final Water domain projection into GVL_WATER_OUTPUT.
 PRG_Water_Supervisory_Publication();
 PRG_Water_Output_Projection();
 PRG_Water();
-
 PRG_Access();
 PRG_Lighting();
 
 // 30. Output freshness governance
-// Must run before immutable physical snapshot governance because
-// physical snapshot epoch coherence consumes Output_Publication_Epoch.
 PRG_Output_Freshness_Governor();
 
 // 31. Immutable physical snapshot governance
-// Must run before sensor consensus and telemetry causality governance
-// to prevent in-cycle physical telemetry mutation races.
 PRG_Physical_Snapshot_Governor();
 
 // 32. Physical sensor consensus governance
-// Must run after immutable physical snapshot freeze/publication.
 PRG_Sensor_Consensus_Governor();
 
 // 33. Telemetry causality governance
-// Must run before physical authority epoch governance because
-// global physical authority coherence consumes telemetry epochs.
 PRG_Telemetry_Causality_Governor();
 
 // 34. Global physical authority epoch governance
-// Must run before authority lineage governance because lineage
-// continuity consumes finalized physical authority epochs.
 PRG_Physical_Authority_Epoch_Governor();
 
 // 35. Persistent authority lineage governance
-// Must run before authority revocation governance because
-// revocation consumes finalized lineage continuity state.
 PRG_Authority_Lineage_Governor();
 
 // 36. Global authority revocation governance
-// Must run before authority restoration governance because
-// restoration consumes finalized revocation state.
 PRG_Authority_Revocation_Governor();
 
 // 37. Deterministic authority restoration governance
-// Must run before pre-output barrier to guarantee staged and
-// causally ordered reopening of the authority fabric.
 PRG_Authority_Restoration_Governor();
 
 // 38. Pre-output safety barrier
@@ -191,55 +166,41 @@ PRG_PreOutput_Safety_Barrier();
 PRG_IO_Write();
 
 // 40. Deterministic field actuation governance
-// Must run after physical IO write and before physical
-// transaction governance to guarantee field-confirmed execution.
 PRG_Actuation_Authority_Governor();
 
 // 41. Deterministic physical transaction governance
-// Must run before temporal stability governance to guarantee
-// atomic cross-actuator plant convergence.
 PRG_Physical_Transaction_Governor();
 
 // 42. Deterministic temporal stability governance
-// Must run before environmental authority governance to guarantee
-// stable post-convergence physical authority.
 PRG_Temporal_Stability_Governor();
 
 // 43. Environmental authority governance
-// Must run before runtime resource governance to guarantee
-// external environmental causality compatibility.
 PRG_Environmental_Authority_Governor();
 
 // 44. Runtime resource authority governance
-// Must run before semantic continuity governance to guarantee
-// deterministic runtime execution envelope stability.
 PRG_Runtime_Resource_Authority_Governor();
 
 // 45. Semantic continuity authority governance
-// Must run before observability truth governance to guarantee
-// deterministic alignment with declared system intent.
 PRG_Semantic_Continuity_Authority_Governor();
 
 // 46. Authoritative observability truth governance
-// Must run before historical truth governance to guarantee
-// operator-visible truth matches active authority state.
 PRG_Observability_Truth_Governor();
 
 // 47. Immutable historical truth governance
-// Must run before global authority synchronization governance
-// to guarantee immutable forensic chronology continuity.
 PRG_Historical_Truth_Governor();
 
 // 48. Global synchronized authority governance
-// Must run before observability coherence publication to guarantee
-// one coherent cross-domain authority generation.
 PRG_Global_Authority_Sync_Governor();
 
-// 49. Observability authority coherence governance
-// Must run after authoritative observability truth governance.
+// 49. Deterministic control temporal coherence governance
+// Must run before observability authority publication to guarantee
+// cross-loop temporal causality coherence.
+PRG_Control_Temporal_Coherence_Governor();
+
+// 50. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
 
-// 50. Verification, diagnostics, history, HMI
+// 51. Verification, diagnostics, history, HMI
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
