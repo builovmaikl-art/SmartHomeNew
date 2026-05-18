@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4064
+total 4068
 -rw-r--r--  1 runner runner  13067 May 18 08:36 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 18 08:36 .
 drwxr-xr-x  3 runner runner   4096 May 18 08:36 ..
@@ -242,7 +242,7 @@ drwxr-xr-x  3 runner runner   4096 May 18 08:36 .github
 -rw-r--r--  1 runner runner   2528 May 18 08:36 GVL_COMMAND.gvl
 -rw-r--r--  1 runner runner   1483 May 18 08:36 GVL_COMMAND_POLICY_CONFIG.gvl
 -rw-r--r--  1 runner runner   1522 May 18 08:36 GVL_COMMAND_SHADOW.gvl
--rw-r--r--  1 runner runner   1420 May 18 08:36 GVL_COMMAND_VERIFY.gvl
+-rw-r--r--  1 runner runner    679 May 18 08:36 GVL_COMMAND_VERIFY.gvl
 -rw-r--r--  1 runner runner   1720 May 18 08:36 GVL_COMPLIANCE_FEDERATION_FABRIC.gvl
 -rw-r--r--  1 runner runner   6554 May 18 08:36 GVL_CONFIG.gvl
 -rw-r--r--  1 runner runner    357 May 18 08:36 GVL_CONFIG_BACKUP.gvl
@@ -743,7 +743,7 @@ drwxr-xr-x  5 runner runner   4096 May 18 08:36 компилятор
 -rw-r--r--  1 runner runner  20459 May 18 08:36 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 616
 drwxr-xr-x  5 runner runner   4096 May 18 08:36 .
 drwxr-xr-x 12 runner runner  45056 May 18 08:36 ..
 -rw-r--r--  1 runner runner  21153 May 18 08:36 001_universal_pou_builder_METHODS_V2.py
@@ -766,4 +766,4 @@ total 2544
 drwxr-xr-x 2 runner runner    4096 May 18 08:36 .
 drwxr-xr-x 5 runner runner    4096 May 18 08:36 ..
 -rw-r--r-- 1 runner runner       0 May 18 08:36 .gitkeep
--rw-r--r-- 1 runner runner 2594614 May 18 08:36 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2594382 May 18 08:36 RESULT_methods_clean.xml
