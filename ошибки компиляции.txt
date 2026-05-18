@@ -1,15 +1,112 @@
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
-[ERROR]         Без имени5: GVL_Runtime_Bus(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_TX_Frames', 25600 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Runtime_Bus(Строка 3): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_RX_Frames', 25600 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Distributed_Projection_Ownership(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Projection_Ownership', 24576 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Distributed_Orchestration(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Topology_Domain', 5888 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Config_Activation(Строка 7): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Staged_Topology_Config', 10496 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Water_Topology_Config_Source(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Source_Record', 10496 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_IO_Binding_Config(Строка 3): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Flood_Sensor_Binding', 10240 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_IO_Binding_Config(Строка 4): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Water_Valve_Open_FB_Binding', 10240 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_IO_Binding_Config(Строка 5): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Water_Valve_Close_FB_Binding', 10240 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_IO_Binding_Config(Строка 6): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Water_Valve_Output_Binding', 10240 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Predictive_Diagnostics(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Diagnostics_State', 13056 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-[ERROR]         Без имени5: GVL_Forensic_Journal(Строка 2): C0102:  Недостаточно энергонезависимой памяти: Переменная 'G_Journal', 51200 байт (Инкрементная компиляция может привести к фрагментации памяти. Выполните команду "Компиляция, очистка" для принудительного распределения всех данных и кода.)
-                Компиляция завершена -- 12 ошибок, 0 предупреждений : загрузка невозможна
+                генерировать код...
+[ERROR]         Без имени5: PLC_PRG [Device: Plc Logic: Application](Строка 191, Столбец 1 (Реализ.)): C0046:  Идентификатор 'PRG_Industrial_Maintainability_Governor' не задан
+[ERROR]         Без имени5: PLC_PRG [Device: Plc Logic: Application](Строка 191, Столбец 1 (Реализ.)): C0035:  Вместо 'PRG_Industrial_Maintainability_Governor' требуется имя программы, функция или экземпляр функционального блока
+[ERROR]         Без имени5: FB_MQTT_Runtime_Adapter(Строка 5, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'UINT'
+[ERROR]         Без имени5: FB_OPCUA_Runtime_Adapter(Строка 5, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'UINT'
+[ERROR]         Без имени5: FB_ADS_Runtime_Adapter(Строка 5, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'UDINT' в тип 'UINT'
+[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Distributed_Orchestration_State'
+[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 77, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 81, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 85, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Convergence_Governor(Строка 168, Столбец 1 (Реализ.)): C0018:  'GVL_CONVERGENCE.Convergence_Oscillation_Quarantine_Active' не является корректным объектом присваивания
+[ERROR]         Без имени5: PRG_Convergence_Governor(Строка 168, Столбец 1 (Реализ.)): C0004:  'Convergence_Oscillation_Quarantine_Active' не является компонентом 'GVL_CONVERGENCE'
+[ERROR]         Без имени5: FB_Heating_Runtime_Supervisory_Publication_Adapter(Строка 61, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_Blackbox_Event.Event_Visible'' в тип 'BOOL'
+[ERROR]         Без имени5: FB_Heating_Runtime_Supervisory_Publication_Adapter(Строка 62, Столбец 1 (Реализ.)): C0004:  'Event_Visible' не является компонентом 'ST_Heating_Runtime_Blackbox_Event'
+[ERROR]         Без имени5: FB_Water_Topology_Config_Runtime(Строка 16, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Config_Valid := TRUE'' в тип 'ST_Water_Topology_Config_Record'
+[ERROR]         Без имени5: FB_Water_Topology_Config_Runtime(Строка 16, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Config_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Topology_Config_Runtime(Строка 16, Столбец 1 (Реализ.)): C0018:  'Config_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Leak_Runtime_Projection(Строка 32, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Projection_Valid := FALSE'' в тип 'ST_Water_Leak_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Leak_Runtime_Projection(Строка 32, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Projection_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Leak_Runtime_Projection(Строка 32, Столбец 1 (Реализ.)): C0018:  'Projection_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Hydraulic_Topology_Node'
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 45, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Hydraulic_Isolation_Group'
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 45, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 45, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 72, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Topology_Validation_State'
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 72, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 72, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 12, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Hydraulic_Topology_Edge'
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 12, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 12, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 47, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Isolation_Path_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 47, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Isolation_Path_Resolver(Строка 47, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 12, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Graph_Traversal_State'
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 12, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 12, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 56, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Orchestration_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 56, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Orchestration_Runtime(Строка 56, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Isolation_Runtime_Projection(Строка 11, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Projection_Valid := TRUE'' в тип 'ST_Water_Isolation_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Isolation_Runtime_Projection(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Projection_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Isolation_Runtime_Projection(Строка 11, Столбец 1 (Реализ.)): C0018:  'Projection_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Isolation_Authority_Arbitrator(Строка 11, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Decision_Valid := TRUE'' в тип 'ST_Water_Isolation_Authority_State'
+[ERROR]         Без имени5: FB_Water_Isolation_Authority_Arbitrator(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Decision_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Isolation_Authority_Arbitrator(Строка 11, Столбец 1 (Реализ.)): C0018:  'Decision_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Valve_Runtime_Governance(Строка 11, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Valve_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Valve_Runtime_Governance(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Valve_Runtime_Governance(Строка 11, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Output_Projector(Строка 23, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Projection_Valid := FALSE'' в тип 'ST_Water_Output_Projection_State'
+[ERROR]         Без имени5: FB_Water_Output_Projector(Строка 23, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Projection_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Output_Projector(Строка 23, Столбец 1 (Реализ.)): C0018:  'Projection_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Output_Reconciliation(Строка 11, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Output_Reconciliation_State'
+[ERROR]         Без имени5: FB_Water_Output_Reconciliation(Строка 11, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Output_Reconciliation(Строка 11, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 10, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Valve_Feedback_State'
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 10, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 10, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 40, Столбец 1 (Реализ.)): C0018:  'L_State.Confirmation_Unknown' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 40, Столбец 1 (Реализ.)): C0004:  'Confirmation_Unknown' не является компонентом 'ST_Water_Valve_Feedback_State'
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 52, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
+[ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 52, Столбец 1 (Реализ.)): C0004:  'Confirmation_Unknown' не является компонентом 'ST_Water_Valve_Feedback_State'
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Physical_Convergence_State'
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Actuator_Diagnostics_State'
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Recovery_FSM_State'
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Event_Log_Record'
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Recovery_Runtime_State'
+[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
+[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
+[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: PRG_Physical_Snapshot_Governor(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Physical_Snapshot_Governor(Строка 20, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Authority_Lineage_Governor(Строка 89, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Authority_Lineage_Governor(Строка 92, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_PreOutput_Safety_Barrier(Строка 128, Столбец 1 (Реализ.)): C0018:  'GVL_COMMAND_VERIFY.PreOutput_Physical_Causality_Valid' не является корректным объектом присваивания
+[ERROR]         Без имени5: PRG_PreOutput_Safety_Barrier(Строка 128, Столбец 1 (Реализ.)): C0004:  'PreOutput_Physical_Causality_Valid' не является компонентом 'GVL_COMMAND_VERIFY'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 57, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_SAFETY_BLOCK' не задан
+[ERROR]         Без имени5: PRG_IO_Write(Строка 57, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_SAFETY_BLOCK'' в тип 'E_SYSTEM_REASON_CODE'
+[ERROR]         Без имени5: PRG_IO_Write(Строка 67, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_SAFETY_BLOCK' не задан
+[ERROR]         Без имени5: PRG_IO_Write(Строка 67, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_SAFETY_BLOCK'' в тип 'E_SYSTEM_REASON_CODE'
+[ERROR]         Без имени5: PRG_Actuation_Authority_Governor(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
+[ERROR]         Без имени5: PRG_Runtime_Transition_Validator(Строка 24, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_AUTHORITY_LINEAGE_FABRIC.Authority_Lineage_Valid'' в тип 'BOOL'
+[ERROR]         Без имени5: PRG_Runtime_Transition_Validator(Строка 25, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_AUTHORITY_LINEAGE_FABRIC' не задан
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 62, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL' в тип 'ANY_BIT'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 71, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_HEATING_DIAGNOSTICS.G_Manifold_Pressure_Fault'' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 71, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_DIAGNOSTICS' не задан
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 72, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_HEATING_DIAGNOSTICS.G_Manifold_Current_Fault'' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 72, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_DIAGNOSTICS' не задан
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 73, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_HEATING_DIAGNOSTICS.G_Manifold_Return_Temp_Fault'' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 73, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_HEATING_DIAGNOSTICS' не задан
+                Компиляция завершена -- 108 ошибок, 0 предупреждений : загрузка невозможна
