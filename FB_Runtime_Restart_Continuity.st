@@ -13,7 +13,7 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-L_State := (Runtime_Valid := TRUE);
+L_State.Runtime_Valid := TRUE;
 L_State.Runtime_System_Time_MS := VI_System_Time_MS;
 
 L_State.Warm_Restart_Detected := VI_Warm_Restart;
