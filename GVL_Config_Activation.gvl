@@ -6,11 +6,11 @@ VAR_GLOBAL RETAIN
 
     G_Activation_Request : BOOL;
     G_Rollback_Request : BOOL;
-
-    G_Staged_Topology_Config : ARRAY[1..64] OF ST_Water_Topology_Config_Record;
 END_VAR
 
 VAR_GLOBAL
+    G_Staged_Topology_Config : ARRAY[1..64] OF ST_Water_Topology_Config_Record;
+
     G_Activation_State : ST_Config_Activation_State;
 
     G_Config_Quarantine_Active : BOOL;
