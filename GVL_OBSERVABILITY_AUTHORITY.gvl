@@ -2,12 +2,11 @@ VAR_GLOBAL
     // ======================================================
     // OBSERVABILITY VISIBILITY STATE
     // ======================================================
-    // Centralized downstream visibility aggregation only.
-    // Does not participate in runtime authority.
-    // ======================================================
 
     Observability_Epoch : ULINT := 0;
     Observability_Snapshot_Epoch : ULINT := 0;
+
+    Publication_Runtime_Valid : BOOL := FALSE;
 
     Unsafe_State_Published : BOOL := FALSE;
     Emergency_Visibility_Required : BOOL := FALSE;
@@ -19,10 +18,6 @@ VAR_GLOBAL
     Fencing_Failure_Visible : BOOL := FALSE;
     Monotonic_Failure_Visible : BOOL := FALSE;
 
-    // ======================================================
-    // DISTRIBUTED RECONCILIATION VISIBILITY
-    // ======================================================
-
     Distributed_Failure_Visible : BOOL := FALSE;
     Distributed_Quarantine_Visible : BOOL := FALSE;
     Peer_Runtime_Stale_Visible : BOOL := FALSE;
@@ -30,10 +25,6 @@ VAR_GLOBAL
     Peer_Boot_Mismatch_Visible : BOOL := FALSE;
     Peer_Fencing_Conflict_Visible : BOOL := FALSE;
     Peer_Semantic_Continuity_Lost_Visible : BOOL := FALSE;
-
-    // ======================================================
-    // DISTRIBUTED IMMUTABLE SNAPSHOT VISIBILITY
-    // ======================================================
 
     Distributed_Publication_Reconciliation_Visible : BOOL := FALSE;
     Distributed_Publication_Freeze_Visible : BOOL := FALSE;
@@ -45,10 +36,6 @@ VAR_GLOBAL
     Peer_Snapshot_Not_Immutable_Visible : BOOL := FALSE;
 
     Distributed_Immutable_Snapshot_Quarantine_Visible : BOOL := FALSE;
-
-    // ======================================================
-    // DISTRIBUTED COMMIT VISIBILITY
-    // ======================================================
 
     Distributed_Commit_Visible : BOOL := FALSE;
     Distributed_Commit_Quarantine_Visible : BOOL := FALSE;
