@@ -18,7 +18,8 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Feedback := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i];
-    L_State := (Runtime_Valid := TRUE);
+
+    L_State.Runtime_Valid := TRUE;
     L_State.Runtime_System_Time_MS := VI_System_Time_MS;
     L_State.Recovery_Requested := GVL_INTENT_SAFETY.I_Water_Selective_Recovery_Allowed;
     L_State.Valve_Degraded := L_Feedback.Valve_Degraded;
