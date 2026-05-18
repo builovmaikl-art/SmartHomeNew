@@ -1,8 +1,10 @@
 {attribute 'qualified_only'}
-VAR_GLOBAL RETAIN
+VAR_GLOBAL
     G_TX_Frames : ARRAY[1..128] OF ST_Runtime_Bus_Frame;
     G_RX_Frames : ARRAY[1..128] OF ST_Runtime_Bus_Frame;
+END_VAR
 
+VAR_GLOBAL RETAIN
     G_Last_Frame_Id : UDINT;
     G_Last_Sequence_Id : UDINT;
 END_VAR
