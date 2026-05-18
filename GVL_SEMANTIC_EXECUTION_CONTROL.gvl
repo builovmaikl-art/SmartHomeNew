@@ -1,0 +1,44 @@
+TYPE E_SEMANTIC_EXECUTION_PATH : (
+    FAST_PATH,
+    NORMAL_PATH,
+    DEFERRED_PATH,
+    BACKGROUND_PATH
+);
+END_TYPE
+
+VAR_GLOBAL
+    // Semantic execution governance.
+    Semantic_Execution_Control_Active : BOOL := TRUE;
+    Semantic_Execution_Control_ReadOnly : BOOL := TRUE;
+
+    // Canonical verification domains.
+    Temporal_Verification_Domain_Active : BOOL := TRUE;
+    Authority_Verification_Domain_Active : BOOL := TRUE;
+    Physical_Verification_Domain_Active : BOOL := TRUE;
+    Runtime_Verification_Domain_Active : BOOL := TRUE;
+    Survivability_Verification_Domain_Active : BOOL := TRUE;
+
+    // Deterministic semantic scheduling.
+    Safety_Execution_Path : E_SEMANTIC_EXECUTION_PATH := FAST_PATH;
+    Physical_Verification_Path : E_SEMANTIC_EXECUTION_PATH := FAST_PATH;
+    Runtime_Verification_Path : E_SEMANTIC_EXECUTION_PATH := NORMAL_PATH;
+    Diagnostics_Execution_Path : E_SEMANTIC_EXECUTION_PATH := DEFERRED_PATH;
+    Trend_Analytics_Execution_Path : E_SEMANTIC_EXECUTION_PATH := BACKGROUND_PATH;
+
+    // Semantic execution collapse prevention.
+    Semantic_Execution_Fragmentation_Risk : BOOL := FALSE;
+    Semantic_Cascade_Amplification_Risk : BOOL := FALSE;
+    Semantic_Complexity_Ceiling_Reached : BOOL := FALSE;
+
+    // Runtime semantic limits.
+    Semantic_Chain_Depth_Limit_Reached : BOOL := FALSE;
+    Verification_Fanout_Limit_Reached : BOOL := FALSE;
+    Observability_Fanout_Limit_Reached : BOOL := FALSE;
+    Lifecycle_Transition_Limit_Reached : BOOL := FALSE;
+
+    // Runtime-governed complexity ceiling.
+    Autonomous_Complexity_Ceiling_Enforced : BOOL := FALSE;
+    Semantic_Scheduler_Active : BOOL := TRUE;
+
+    Semantic_Execution_Control_Epoch : UDINT := 0;
+END_VAR
