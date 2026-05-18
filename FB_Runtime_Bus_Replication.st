@@ -15,7 +15,6 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-// Finalized runtime continuity proof chain.
 L_Finalized_Runtime_Continuity :=
     GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
     AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
@@ -41,14 +40,13 @@ L_Finalized_Runtime_Continuity :=
     AND GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
     AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 
-// Deterministic runtime replication frame publication.
-L_TX_Index := GVL_Runtime_Bus.G_Last_Sequence_Id + 1;
+L_TX_Index := UDINT_TO_UINT(GVL_Runtime_Bus.G_Last_Sequence_Id + 1);
 
 IF L_TX_Index > 128 THEN
     L_TX_Index := 1;
 END_IF;
 
-L_Frame := (Frame_Valid := TRUE);
+L_Frame.Frame_Valid := TRUE;
 
 L_Frame.Frame_Time_MS := VI_System_Time_MS;
 L_Frame.Frame_Id := GVL_Runtime_Bus.G_Last_Frame_Id + 1;
@@ -64,7 +62,6 @@ L_Frame.Frame_Sequence_Id :=
 
 L_Frame.Frame_Ack_Required := TRUE;
 
-// Replicated semantic domains.
 L_Frame.Authority_State_Frame := TRUE;
 L_Frame.Recovery_State_Frame := TRUE;
 L_Frame.Quarantine_State_Frame := TRUE;
@@ -72,7 +69,6 @@ L_Frame.Topology_State_Frame := TRUE;
 L_Frame.Binding_State_Frame := TRUE;
 L_Frame.Predictive_State_Frame := TRUE;
 
-// Deterministic replication safety.
 IF GVL_Distributed_Authority.G_Distributed_Safety_Barrier_OK
    AND NOT GVL_Distributed_Runtime.G_Split_Brain_Suspected
    AND L_Finalized_Runtime_Continuity THEN
