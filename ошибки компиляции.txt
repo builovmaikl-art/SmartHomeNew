@@ -1,6 +1,4 @@
-обновлен
-
------- Компиляция : Приложение: Device.Sim.Device.Application -------
+                ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
 [ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Hydraulic_Topology_Node'
