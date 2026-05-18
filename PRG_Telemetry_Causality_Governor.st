@@ -15,7 +15,6 @@ L_Causality_Valid := TRUE;
 L_Error_Code := 0;
 L_Error_Text := '';
 
-// Fail-safe defaults.
 GVL_TELEMETRY.Telemetry_Runtime_Valid := FALSE;
 GVL_TELEMETRY.Telemetry_Freshness_Valid := FALSE;
 GVL_TELEMETRY.Command_Telemetry_Causality_Valid := FALSE;
@@ -27,7 +26,7 @@ GVL_TELEMETRY.Physical_Target_Converged := FALSE;
 GVL_TELEMETRY.Physical_Stable_Window_OK := FALSE;
 GVL_TELEMETRY.Command_Telemetry_Divergence_Detected := TRUE;
 
-GVL_TELEMETRY.Command_Epoch := GVL_OUTPUT_EPOCH.Output_Publication_Epoch;
+GVL_TELEMETRY.Command_Epoch := ULINT_TO_UDINT(GVL_OUTPUT_EPOCH.Output_Publication_Epoch);
 
 IF NOT GVL_OUTPUT_EPOCH.Output_Publication_Valid THEN
     L_Causality_Valid := FALSE;
@@ -113,7 +112,6 @@ AND GVL_TELEMETRY.Physical_Convergence_Replay_Suspected THEN
     L_Error_Text := 'Physical convergence replay suspected';
 END_IF;
 
-// Sensor consensus freshness.
 L_Consensus_Age_MS :=
     L_Now_MS - GVL_SENSOR_CONSENSUS.Last_Consensus_Update_MS;
 
@@ -124,7 +122,6 @@ AND (L_Consensus_Age_MS > 5000) THEN
     L_Error_Text := 'Sensor consensus stale';
 END_IF;
 
-// Physics-consistency gating.
 IF L_Causality_Valid
 AND NOT GVL_SENSOR_CONSENSUS.Sensor_Consensus_Valid THEN
     L_Causality_Valid := FALSE;
