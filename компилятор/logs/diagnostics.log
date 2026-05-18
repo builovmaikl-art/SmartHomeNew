@@ -271,7 +271,7 @@ drwxr-xr-x  3 runner runner   4096 May 18 07:53 .github
 -rw-r--r--  1 runner runner    491 May 18 07:53 GVL_Distributed_Authority.gvl
 -rw-r--r--  1 runner runner    336 May 18 07:53 GVL_Distributed_Execution_Gates.gvl
 -rw-r--r--  1 runner runner    588 May 18 07:53 GVL_Distributed_Orchestration.gvl
--rw-r--r--  1 runner runner    384 May 18 07:53 GVL_Distributed_Projection_Ownership.gvl
+-rw-r--r--  1 runner runner    377 May 18 07:53 GVL_Distributed_Projection_Ownership.gvl
 -rw-r--r--  1 runner runner    361 May 18 07:53 GVL_Distributed_Recovery_Lock.gvl
 -rw-r--r--  1 runner runner    721 May 18 07:53 GVL_Distributed_Runtime.gvl
 -rw-r--r--  1 runner runner   1544 May 18 07:53 GVL_ENERGY_CAUSALITY_FABRIC.gvl
@@ -760,8 +760,8 @@ drwxr-xr-x  2 runner runner   4096 May 18 07:53 out
 -rw-r--r--  1 runner runner    177 May 18 07:53 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2556
+total 2552
 drwxr-xr-x 2 runner runner    4096 May 18 07:53 .
 drwxr-xr-x 5 runner runner    4096 May 18 07:53 ..
 -rw-r--r-- 1 runner runner       0 May 18 07:53 .gitkeep
--rw-r--r-- 1 runner runner 2605084 May 18 07:53 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2604997 May 18 07:53 RESULT_methods_clean.xml
