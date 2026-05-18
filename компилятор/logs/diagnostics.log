@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4068
+total 4064
 -rw-r--r--  1 runner runner  13067 May 18 08:34 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 18 08:34 .
 drwxr-xr-x  3 runner runner   4096 May 18 08:34 ..
@@ -535,7 +535,7 @@ drwxr-xr-x  3 runner runner   4096 May 18 08:34 .github
 -rw-r--r--  1 runner runner   1195 May 18 08:34 PRG_Physical_Reality_Validation_Governor.st
 -rw-r--r--  1 runner runner   2045 May 18 08:34 PRG_Physical_SafeState_Lattice_Governor.st
 -rw-r--r--  1 runner runner    842 May 18 08:34 PRG_Physical_Safety_Projection_Governor.st
--rw-r--r--  1 runner runner   3485 May 18 08:34 PRG_Physical_Snapshot_Governor.st
+-rw-r--r--  1 runner runner   3428 May 18 08:34 PRG_Physical_Snapshot_Governor.st
 -rw-r--r--  1 runner runner   5941 May 18 08:34 PRG_Physical_Transaction_Governor.st
 -rw-r--r--  1 runner runner   4233 May 18 08:34 PRG_Policy.st
 -rw-r--r--  1 runner runner    799 May 18 08:34 PRG_Power_Domain_Segmentation_Governor.st
@@ -743,7 +743,7 @@ drwxr-xr-x  5 runner runner   4096 May 18 08:34 компилятор
 -rw-r--r--  1 runner runner  20459 May 18 08:34 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 May 18 08:34 .
 drwxr-xr-x 12 runner runner  45056 May 18 08:34 ..
 -rw-r--r--  1 runner runner  21153 May 18 08:34 001_universal_pou_builder_METHODS_V2.py
@@ -766,4 +766,4 @@ total 2544
 drwxr-xr-x 2 runner runner    4096 May 18 08:34 .
 drwxr-xr-x 5 runner runner    4096 May 18 08:34 ..
 -rw-r--r-- 1 runner runner       0 May 18 08:34 .gitkeep
--rw-r--r-- 1 runner runner 2594971 May 18 08:34 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2594775 May 18 08:34 RESULT_methods_clean.xml
