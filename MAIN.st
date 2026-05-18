@@ -59,6 +59,10 @@ PROGRAM MAIN
 //   GVL_FABRIC_LIFECYCLE_REGISTRY
 //   PRG_Controlled_Capability_Shedding_Governor
 
+// Semantic Execution Control:
+//   GVL_SEMANTIC_EXECUTION_CONTROL
+//   PRG_Semantic_Execution_Control_Governor
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -385,6 +389,7 @@ PRG_Survivability_Intelligence_Governor();
 PRG_Runtime_Compression_Governor();
 PRG_Runtime_Budget_Governor();
 PRG_Controlled_Capability_Shedding_Governor();
+PRG_Semantic_Execution_Control_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
