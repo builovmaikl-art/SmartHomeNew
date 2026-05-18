@@ -5,6 +5,7 @@ VAR
     fbSystemDiagnosticsPublisher : FB_System_Diagnostics_Publisher;
 
     L_Pumps_4 : ARRAY[1..4] OF BOOL;
+    L_Manifold_Pump_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_i : INT;
     L_Last_State_Trace_MS : UDINT;
 
@@ -16,6 +17,10 @@ END_VAR
 
 FOR L_i := 1 TO 4 DO
     L_Pumps_4[L_i] := GVL_HEATING_OUTPUT.DO_Manifold_Pumps[L_i];
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service;
 END_FOR;
 
 fbStateTraceLog(
@@ -69,13 +74,12 @@ IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
     );
 END_IF;
 
-
 fbSystemDiagnosticsPublisher(
     VI_Enable := TRUE,
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_Backup_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Backup_Circulation_Pump_In_Service,
     VI_Electric_Heater_Out_Of_Service := NOT GVL_CONFIG.G_Electric_Heater_In_Service,
-    VI_Manifold_Pump_Out_Of_Service := NOT GVL_CONFIG.G_Manifold_Pump_In_Service,
+    VI_Manifold_Pump_Out_Of_Service := L_Manifold_Pump_Out_Of_Service,
     VI_DHW_Heating_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Heating_Pump_In_Service,
     VI_DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service,
     VI_User_Access_Level := GVL_COMMAND.CMD_User_Access_Level,
@@ -89,16 +93,9 @@ fbSystemDiagnosticsPublisher(
     VI_Manifold_Return_Temp_Fault := GVL_HEATING_DIAGNOSTICS.G_Manifold_Return_Temp_Fault
 );
 
-GVL_System_Diagnostics_Publication.G_System_Diagnostics :=
-    fbSystemDiagnosticsPublisher.VO_Diagnostics;
-
-GVL_System_Diagnostics_Publication.G_System_Diagnostics_Publication_Valid :=
-    fbSystemDiagnosticsPublisher.VO_Publication_Valid;
-
-GVL_System_Diagnostics_Publication.G_System_Diagnostics_Status_Code :=
-    fbSystemDiagnosticsPublisher.VO_Status_Code;
-
-GVL_System_Diagnostics_Publication.G_System_Diagnostics_Status_Text :=
-    fbSystemDiagnosticsPublisher.VO_Status_Text;
+GVL_System_Diagnostics_Publication.G_System_Diagnostics := fbSystemDiagnosticsPublisher.VO_Diagnostics;
+GVL_System_Diagnostics_Publication.G_System_Diagnostics_Publication_Valid := fbSystemDiagnosticsPublisher.VO_Publication_Valid;
+GVL_System_Diagnostics_Publication.G_System_Diagnostics_Status_Code := fbSystemDiagnosticsPublisher.VO_Status_Code;
+GVL_System_Diagnostics_Publication.G_System_Diagnostics_Status_Text := fbSystemDiagnosticsPublisher.VO_Status_Text;
 
 END_PROGRAM
