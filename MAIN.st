@@ -63,6 +63,10 @@ PROGRAM MAIN
 //   GVL_SEMANTIC_EXECUTION_CONTROL
 //   PRG_Semantic_Execution_Control_Governor
 
+// Industrial Maintainability Governance:
+//   GVL_INDUSTRIAL_MAINTAINABILITY_FABRIC
+//   PRG_Industrial_Maintainability_Governor
+
 // ======================================================
 
 // 1. Time / init / configuration
@@ -390,6 +394,7 @@ PRG_Runtime_Compression_Governor();
 PRG_Runtime_Budget_Governor();
 PRG_Controlled_Capability_Shedding_Governor();
 PRG_Semantic_Execution_Control_Governor();
+PRG_Industrial_Maintainability_Governor();
 
 // 93. Observability authority coherence governance
 PRG_Observability_Authority_Governor();
