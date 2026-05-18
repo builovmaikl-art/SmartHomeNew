@@ -23,7 +23,7 @@ CASE GVL_RUNTIME_STATE_ALGEBRA.Current_Runtime_State OF
             GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Observability_Reality_Equivalence_Granted;
 
         GVL_RUNTIME_TRANSITION_SYSTEM.Runtime_Transition_Lineage_Valid :=
-            GVL_AUTHORITY_LINEAGE_FABRIC.Authority_Lineage_Valid;
+            GVL_AUTHORITY_LINEAGE.Authority_Lineage_Valid;
 
         GVL_RUNTIME_TRANSITION_SYSTEM.Runtime_Transition_Temporal_Valid :=
             GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Epoch_Timeline_Monotonic;
