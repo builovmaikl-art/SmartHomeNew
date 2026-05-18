@@ -10,7 +10,7 @@ VAR
     L_Valve : ST_Water_Valve_Runtime_State;
 
     L_Any_Degraded : BOOL;
-    L_Any_Confirmation_Unknown : BOOL;
+    L_Any_Feedback_Invalid : BOOL;
     L_Any_Unsafe_Reopen : BOOL;
 END_VAR
 
@@ -24,7 +24,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Authority :=
         GVL_Water_Isolation_Authority.G_Authority_State[L_i];
 
-    L_Valve := (Runtime_Valid := TRUE);
+    L_Valve.Runtime_Valid := TRUE;
 
     L_Valve.Runtime_System_Time_MS := VI_System_Time_MS;
 
@@ -60,7 +60,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     ELSE
 
-        L_Valve.Confirmation_Unknown := TRUE;
+        L_Valve.Feedback_Invalid := TRUE;
 
     END_IF;
 
@@ -85,7 +85,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Valve.Status_Text :=
             'Recovery denied: valve degraded';
 
-    ELSIF L_Valve.Confirmation_Unknown THEN
+    ELSIF L_Valve.Feedback_Invalid THEN
 
         L_Valve.Status_Code := 1;
         L_Valve.Status_Text :=
@@ -106,9 +106,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Any_Degraded
         OR L_Valve.Valve_Degraded;
 
-    L_Any_Confirmation_Unknown :=
-        L_Any_Confirmation_Unknown
-        OR L_Valve.Confirmation_Unknown;
+    L_Any_Feedback_Invalid :=
+        L_Any_Feedback_Invalid
+        OR L_Valve.Feedback_Invalid;
 
     L_Any_Unsafe_Reopen :=
         L_Any_Unsafe_Reopen
@@ -119,8 +119,8 @@ END_FOR;
 GVL_Water_Valve_Runtime.G_Any_Valve_Degraded :=
     L_Any_Degraded;
 
-GVL_Water_Valve_Runtime.G_Any_Confirmation_Unknown :=
-    L_Any_Confirmation_Unknown;
+GVL_Water_Valve_Runtime.G_Any_Feedback_Invalid :=
+    L_Any_Feedback_Invalid;
 
 GVL_Water_Valve_Runtime.G_Any_Unsafe_Reopen_Denied :=
     L_Any_Unsafe_Reopen;
@@ -132,7 +132,7 @@ IF L_Any_Degraded THEN
     GVL_Water_Valve_Runtime.G_Status_Code := 2;
     GVL_Water_Valve_Runtime.G_Status_Text :=
         'Valve governance degraded';
-ELSIF L_Any_Confirmation_Unknown THEN
+ELSIF L_Any_Feedback_Invalid THEN
     GVL_Water_Valve_Runtime.G_Status_Code := 1;
     GVL_Water_Valve_Runtime.G_Status_Text :=
         'Valve confirmation unknown';

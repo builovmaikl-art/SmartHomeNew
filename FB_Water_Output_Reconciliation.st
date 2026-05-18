@@ -31,7 +31,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_State.Runtime_Output_Active := L_Valve.Physical_Output_Active;
     L_State.Expected_Closed := L_Output.Expected_Closed;
     L_State.Confirmed_Closed := L_Valve.Confirmed_Closed;
-    L_State.Confirmation_Unknown := L_Valve.Confirmation_Unknown;
+    L_State.Feedback_Invalid := L_Valve.Feedback_Invalid;
 
     IF L_Valve.Confirmation_Available THEN
 

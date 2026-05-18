@@ -23,7 +23,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Leak_State := GVL_Water_Runtime_Projection.G_Leak_Runtime_State[L_i];
     L_Traversal := GVL_Water_Orchestration.G_Traversal_State[L_i];
 
-    L_Isolation_State := (Projection_Valid := TRUE);
+    L_Isolation_State.Projection_Valid := TRUE;
     L_Isolation_State.Projection_System_Time_MS := VI_System_Time_MS;
 
     L_Isolation_State.Hydraulic_Zone_Id := L_Leak_State.Hydraulic_Zone_Id;

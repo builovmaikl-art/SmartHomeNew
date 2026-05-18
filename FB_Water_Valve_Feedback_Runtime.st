@@ -23,7 +23,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Output := GVL_Water_Output_Projection.G_Output_Projection_State[L_i];
 
-    L_State := (Runtime_Valid := TRUE);
+    L_State.Runtime_Valid := TRUE;
 
     L_State.Runtime_System_Time_MS := VI_System_Time_MS;
     L_State.Valve_Group_Id := L_Output.Valve_Group_Id;
@@ -53,7 +53,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     ELSE
 
-        L_State.Confirmation_Unknown := TRUE;
+        L_State.Feedback_Invalid := TRUE;
 
     END_IF;
 
@@ -65,7 +65,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_State.Status_Code := 2;
         L_State.Status_Text :=
             'Valve feedback timeout';
-    ELSIF L_State.Confirmation_Unknown THEN
+    ELSIF L_State.Feedback_Invalid THEN
         L_State.Status_Code := 1;
         L_State.Status_Text :=
             'Valve feedback unavailable';

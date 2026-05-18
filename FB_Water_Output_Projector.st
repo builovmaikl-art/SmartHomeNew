@@ -60,7 +60,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Output.Confirmed_Closed := L_Valve.Confirmed_Closed;
     L_Output.Confirmed_Open := L_Valve.Confirmed_Open;
-    L_Output.Confirmation_Unknown := L_Valve.Confirmation_Unknown;
+    L_Output.Feedback_Invalid := L_Valve.Feedback_Invalid;
     L_Output.Projection_Activated_Event := L_Output.Projection_Allowed;
     L_Output.Projection_Denied_Event := L_Output.Projection_Denied;
 

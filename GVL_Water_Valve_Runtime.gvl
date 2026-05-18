@@ -19,7 +19,7 @@ VAR_GLOBAL
 
     // Aggregated visibility.
     G_Any_Valve_Degraded : BOOL;
-    G_Any_Confirmation_Unknown : BOOL;
+    G_Any_Feedback_Invalid : BOOL;
     G_Any_Unsafe_Reopen_Denied : BOOL;
 
     // Lifecycle.

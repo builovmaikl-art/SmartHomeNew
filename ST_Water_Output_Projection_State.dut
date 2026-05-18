@@ -27,7 +27,7 @@ STRUCT
     Expected_Open : BOOL;
     Confirmed_Closed : BOOL;
     Confirmed_Open : BOOL;
-    Confirmation_Unknown : BOOL;
+    Feedback_Invalid : BOOL;
 
     // Arbitration validity.
     Projection_Allowed : BOOL;

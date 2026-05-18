@@ -3,7 +3,7 @@ VAR_INPUT
     VI_System_Time : UDINT;
     VI_Gas_Alarm : BOOL;
     VI_Leak_Alarm : BOOL;
-    VI_Pumps : ARRAY[1..4] OF BOOL;
+    VI_Pumps : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 VAR_OUTPUT
     VO_Last_Change_Time : UDINT;

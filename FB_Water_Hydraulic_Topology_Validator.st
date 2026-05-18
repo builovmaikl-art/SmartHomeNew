@@ -22,7 +22,7 @@ END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
-    L_Node := (Runtime_Valid := TRUE);
+    L_Node.Runtime_Valid := TRUE;
 
     L_Node.Sensor_Id := TO_UINT(L_i);
     L_Node.Hydraulic_Zone_Id :=
@@ -59,7 +59,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     END_IF;
 
     // Isolation group publication.
-    L_Group := (Runtime_Valid := TRUE);
+    L_Group.Runtime_Valid := TRUE;
 
     L_Group.Isolation_Group_Id :=
         L_Node.Isolation_Group_Id;
@@ -86,7 +86,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Node.Global_Fallback_Required;
 
     // Validation publication.
-    L_Validation := (Runtime_Valid := TRUE);
+    L_Validation.Runtime_Valid := TRUE;
 
     L_Validation.Runtime_System_Time_MS :=
         VI_System_Time_MS;

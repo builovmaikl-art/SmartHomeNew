@@ -25,7 +25,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         GVL_Water_Hydraulic_Graph.G_Isolation_Path[L_i];
 
     // Traversal runtime.
-    L_Traversal := (Runtime_Valid := TRUE);
+    L_Traversal.Runtime_Valid := TRUE;
 
     L_Traversal.Runtime_System_Time_MS :=
         VI_System_Time_MS;
@@ -69,7 +69,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Path.Global_Fallback_Required;
 
     // Orchestration runtime.
-    L_Orchestration := (Runtime_Valid := TRUE);
+    L_Orchestration.Runtime_Valid := TRUE;
 
     L_Orchestration.Runtime_System_Time_MS :=
         VI_System_Time_MS;

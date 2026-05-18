@@ -26,7 +26,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         GVL_Water_Topology_Validation.G_Validation_State[L_i];
 
     // Graph edge publication.
-    L_Edge := (Runtime_Valid := TRUE);
+    L_Edge.Runtime_Valid := TRUE;
 
     L_Edge.Edge_Id := TO_UINT(L_i);
 
@@ -61,7 +61,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Validation.Global_Fallback_Required;
 
     // Isolation path runtime.
-    L_Path := (Runtime_Valid := TRUE);
+    L_Path.Runtime_Valid := TRUE;
 
     L_Path.Runtime_System_Time_MS :=
         VI_System_Time_MS;

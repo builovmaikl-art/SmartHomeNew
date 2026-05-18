@@ -21,7 +21,7 @@ END_IF;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     // Recovery FSM.
-    L_FSM := (Runtime_Valid := TRUE);
+    L_FSM.Runtime_Valid := TRUE;
 
     L_FSM.Runtime_System_Time_MS :=
         VI_System_Time_MS;
@@ -76,7 +76,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     // Runtime event publication.
     IF L_i <= 128 THEN
 
-        L_Event := (Runtime_Valid := TRUE);
+        L_Event.Runtime_Valid := TRUE;
 
         L_Event.Event_Time_MS := VI_System_Time_MS;
         L_Event.Event_Id := TO_UINT(L_i);

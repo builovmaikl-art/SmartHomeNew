@@ -1,7 +1,7 @@
 PROGRAM PRG_Security
 VAR
     L_i : INT;
-    L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    L_Motion_Sensors_16 : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     fbSecurityManager : FB_Security_System_Manager;
     fbAccessControl : FB_Access_Control;
 END_VAR

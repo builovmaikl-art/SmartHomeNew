@@ -31,7 +31,7 @@ STRUCT
     Confirmed_Open : BOOL;
     Confirmed_Closed : BOOL;
     Confirmation_Timeout : BOOL;
-    Confirmation_Unknown : BOOL;
+    Feedback_Invalid : BOOL;
 
     // Diagnostics.
     Diagnostics_Available : BOOL;

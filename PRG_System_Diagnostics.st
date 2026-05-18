@@ -4,7 +4,7 @@ VAR
     fbAdapt : FB_Behavior_Adapt;
     fbSystemDiagnosticsPublisher : FB_System_Diagnostics_Publisher;
 
-    L_Pumps_4 : ARRAY[1..4] OF BOOL;
+    L_Pumps_4 : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_Manifold_Pump_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_i : INT;
     L_Last_State_Trace_MS : UDINT;

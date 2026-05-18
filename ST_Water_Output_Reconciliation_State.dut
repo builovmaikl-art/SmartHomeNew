@@ -10,7 +10,7 @@ STRUCT
 
     Expected_Closed : BOOL;
     Confirmed_Closed : BOOL;
-    Confirmation_Unknown : BOOL;
+    Feedback_Invalid : BOOL;
 
     Reconciliation_Healthy : BOOL;
     Projection_Runtime_Mismatch : BOOL;

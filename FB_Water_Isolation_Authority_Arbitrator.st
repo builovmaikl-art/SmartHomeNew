@@ -23,7 +23,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Runtime := GVL_Water_Isolation_Runtime.G_Isolation_Runtime_State[L_i];
     L_Traversal := GVL_Water_Orchestration.G_Traversal_State[L_i];
 
-    L_Authority := (Decision_Valid := TRUE);
+    L_Authority.Decision_Valid := TRUE;
     L_Authority.Decision_System_Time_MS := VI_System_Time_MS;
 
     L_Authority.Isolation_Requested := L_Runtime.Isolation_Requested;

@@ -11,7 +11,7 @@ VAR
     L_Scenario_Source       : E_SCENARIO_SOURCE;
 
     // adapters
-    L_Motion_16 : ARRAY[1..16] OF BOOL;
+    L_Motion_16 : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
 END_VAR
 
 // adapt motion sensors (32 → 16)

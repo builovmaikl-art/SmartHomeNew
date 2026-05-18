@@ -11,12 +11,12 @@ VAR_INPUT
     VI_Current_TOD : TOD; // Текущее время суток (от FB_Astro_Timer)
 END_VAR
 VAR_IN_OUT
-    VI_Motion_Sensors : ARRAY[1..16] OF BOOL; // Датчики движения
+    VI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Датчики движения
     VI_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Датчики открытия дверей (герконы)
-    VI_Window_Sensors : ARRAY[1..16] OF BOOL; // Датчики открытия окон (герконы)
-    VI_Bypass_Motion : ARRAY[1..16] OF BOOL; // Байпас датчиков движения
+    VI_Window_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Датчики открытия окон (герконы)
+    VI_Bypass_Motion : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Байпас датчиков движения
     VI_Bypass_Doors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL; // Байпас дверей
-    VI_Bypass_Windows : ARRAY[1..16] OF BOOL; // Байпас окон
+    VI_Bypass_Windows : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL; // Байпас окон
 END_VAR
 VAR_OUTPUT
     VO_Armed : BOOL; // Статус: Система под охраной
