@@ -1,14 +1,8 @@
+E_Runtime_Observer_Lifecycle_State.typ - должен быть E_Runtime_Observer_Lifecycle_State.dut
+
                 ------ Компиляция : Приложение: Device.Sim.Device.Application -------
                 типизировать код...
                 генерировать код...
-[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Distributed_Orchestration_State'
-[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
-[ERROR]         Без имени5: FB_Distributed_Orchestration_Runtime(Строка 6, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 77, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 81, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Semantic_Progress_Governor(Строка 85, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: FB_Heating_Runtime_Supervisory_Publication_Adapter(Строка 61, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'VI_Blackbox_Event.Event_Visible'' в тип 'BOOL'
-[ERROR]         Без имени5: FB_Heating_Runtime_Supervisory_Publication_Adapter(Строка 62, Столбец 1 (Реализ.)): C0004:  'Event_Visible' не является компонентом 'ST_Heating_Runtime_Blackbox_Event'
 [ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Hydraulic_Topology_Node'
 [ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
 [ERROR]         Без имени5: FB_Water_Hydraulic_Topology_Validator(Строка 8, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
@@ -46,45 +40,15 @@
 [ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 40, Столбец 1 (Реализ.)): C0004:  'Confirmation_Unknown' не является компонентом 'ST_Water_Valve_Feedback_State'
 [ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 52, Столбец 1 (Реализ.)): C0231:  Здесь требуется выражение типа 'BOOL'
 [ERROR]         Без имени5: FB_Water_Valve_Feedback_Runtime(Строка 52, Столбец 1 (Реализ.)): C0004:  'Confirmation_Unknown' не является компонентом 'ST_Water_Valve_Feedback_State'
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Physical_Convergence_State'
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 14, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Actuator_Diagnostics_State'
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
-[ERROR]         Без имени5: FB_Water_Physical_Runtime(Строка 83, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Recovery_FSM_State'
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 9, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Event_Log_Record'
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
 [ERROR]         Без имени5: FB_Water_Runtime_Hardening(Строка 64, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Runtime_Valid := TRUE'' в тип 'ST_Water_Recovery_Runtime_State'
-[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Runtime_Valid' не задан
-[ERROR]         Без имени5: FB_Water_Recovery_Runtime(Строка 8, Столбец 1 (Реализ.)): C0018:  'Runtime_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 16, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 64, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'Record_Valid := TRUE'' в тип 'ST_Forensic_Journal_Record'
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0046:  Идентификатор 'Record_Valid' не задан
-[ERROR]         Без имени5: FB_Forensic_Journal_Runtime(Строка 97, Столбец 1 (Реализ.)): C0018:  'Record_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_Physical_Snapshot_Governor(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Physical_Snapshot_Governor(Строка 20, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Authority_Lineage_Governor(Строка 89, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Authority_Lineage_Governor(Строка 92, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_PreOutput_Safety_Barrier(Строка 128, Столбец 1 (Реализ.)): C0018:  'GVL_COMMAND_VERIFY.PreOutput_Physical_Causality_Valid' не является корректным объектом присваивания
-[ERROR]         Без имени5: PRG_PreOutput_Safety_Barrier(Строка 128, Столбец 1 (Реализ.)): C0004:  'PreOutput_Physical_Causality_Valid' не является компонентом 'GVL_COMMAND_VERIFY'
-[ERROR]         Без имени5: PRG_IO_Write(Строка 57, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_SAFETY_BLOCK' не задан
-[ERROR]         Без имени5: PRG_IO_Write(Строка 57, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_SAFETY_BLOCK'' в тип 'E_SYSTEM_REASON_CODE'
-[ERROR]         Без имени5: PRG_IO_Write(Строка 67, Столбец 1 (Реализ.)): C0046:  Идентификатор 'REASON_SAFETY_BLOCK' не задан
-[ERROR]         Без имени5: PRG_IO_Write(Строка 67, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'REASON_SAFETY_BLOCK'' в тип 'E_SYSTEM_REASON_CODE'
-[ERROR]         Без имени5: PRG_Actuation_Authority_Governor(Строка 17, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ULINT' в тип 'UDINT'
-[ERROR]         Без имени5: PRG_Runtime_Transition_Validator(Строка 24, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'Неизвестный тип: 'GVL_AUTHORITY_LINEAGE_FABRIC.Authority_Lineage_Valid'' в тип 'BOOL'
-[ERROR]         Без имени5: PRG_Runtime_Transition_Validator(Строка 25, Столбец 1 (Реализ.)): C0046:  Идентификатор 'GVL_AUTHORITY_LINEAGE_FABRIC' не задан
-[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 62, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL' в тип 'ANY_BIT'
-[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 71, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
-[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 72, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
-[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 73, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
-                Компиляция завершена -- 86 ошибок, 0 предупреждений : загрузка невозможна
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL' в тип 'BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 6, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL' в тип 'ANY_BIT'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 74, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 75, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+[ERROR]         Без имени5: PRG_System_Diagnostics(Строка 76, Столбец 1 (Реализ.)): C0032:  Невозможно конвертировать тип 'ARRAY [1..16] OF BOOL' в тип 'ARRAY [1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL'
+                Компиляция завершена -- 48 ошибок, 0 предупреждений : загрузка невозможна
