@@ -15,7 +15,7 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
-L_State := (Runtime_Valid := TRUE);
+L_State.Runtime_Valid := TRUE;
 L_State.Runtime_System_Time_MS := VI_System_Time_MS;
 
 L_State.Controller_Id :=
@@ -42,7 +42,6 @@ L_State.Replication_Consensus_Healthy :=
 L_State.Replication_Consensus_Stale :=
     NOT GVL_Distributed_Runtime.G_Distributed_Replication_Healthy;
 
-// Finalized runtime continuity proof chain.
 L_Finalized_Runtime_Continuity :=
     GVL_SEMANTIC_PROGRESS.Semantic_Forward_Progress_Valid
     AND GVL_SEMANTIC_PROGRESS.Semantic_Execution_Continuity_OK
@@ -68,7 +67,6 @@ L_Finalized_Runtime_Continuity :=
     AND GVL_COMMAND_VERIFY.PreOutput_Barrier_OK
     AND NOT GVL_COMMAND_VERIFY.PreOutput_Block_IO;
 
-// Distributed pre-authority safety barrier.
 L_State.Distributed_Safety_Barrier_OK :=
     GVL_Runtime_Restart_Continuity.G_Runtime_Valid
     AND NOT GVL_Config_Activation.G_Config_Quarantine_Active
