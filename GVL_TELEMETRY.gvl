@@ -20,6 +20,9 @@ VAR_GLOBAL
     Physical_Effect_Finalized : BOOL := FALSE;
     Physical_Target_Converged : BOOL := FALSE;
     Physical_Stable_Window_OK : BOOL := FALSE;
+    Physical_Oscillation_Detected : BOOL := FALSE;
+    Physical_Transition_Active : BOOL := FALSE;
+    Physical_Convergence_Replay_Suspected : BOOL := FALSE;
 
     // Replay/staleness protection.
     Telemetry_Replay_Suspected : BOOL := FALSE;
