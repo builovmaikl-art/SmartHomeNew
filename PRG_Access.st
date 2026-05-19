@@ -2,9 +2,15 @@ PROGRAM PRG_Access
 VAR
     fbProjection : FB_Access_Output_Projection;
 
+    fbPulseLock1Open : FB_Access_Pulse_Channel;
+    fbPulseLock1Close : FB_Access_Pulse_Channel;
+    fbPulseLock2Open : FB_Access_Pulse_Channel;
+    fbPulseLock2Close : FB_Access_Pulse_Channel;
+    fbPulseGateOpen : FB_Access_Pulse_Channel;
+    fbPulseWicketOpen : FB_Access_Pulse_Channel;
+
     L_Mode : E_Safety_Mode;
     L_Now_MS : UDINT;
-    L_Elapsed_MS : UDINT;
     L_Pulse_MS : UDINT;
 
     L_Distributed_Execute_Allowed : BOOL;
@@ -16,27 +22,6 @@ VAR
     L_Lock_2_Close : BOOL;
     L_Gate_Open : BOOL;
     L_Wicket_Open : BOOL;
-
-    L_Prev_Lock_1_Open : BOOL;
-    L_Prev_Lock_1_Close : BOOL;
-    L_Prev_Lock_2_Open : BOOL;
-    L_Prev_Lock_2_Close : BOOL;
-    L_Prev_Gate_Open : BOOL;
-    L_Prev_Wicket_Open : BOOL;
-
-    L_Pulse_Lock_1_Open : BOOL;
-    L_Pulse_Lock_1_Close : BOOL;
-    L_Pulse_Lock_2_Open : BOOL;
-    L_Pulse_Lock_2_Close : BOOL;
-    L_Pulse_Gate_Open : BOOL;
-    L_Pulse_Wicket_Open : BOOL;
-
-    L_Start_Lock_1_Open_MS : UDINT;
-    L_Start_Lock_1_Close_MS : UDINT;
-    L_Start_Lock_2_Open_MS : UDINT;
-    L_Start_Lock_2_Close_MS : UDINT;
-    L_Start_Gate_Open_MS : UDINT;
-    L_Start_Wicket_Open_MS : UDINT;
 END_VAR
 
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
@@ -69,7 +54,7 @@ IF (L_Mode <> FIRE)
     RETURN;
 END_IF;
 
-// Load pulse duration from config with safety clamp
+// Load pulse duration from config with safety clamp.
 L_Pulse_MS := GVL_CONFIG.G_Access_Pulse_MS;
 IF L_Pulse_MS < 100 THEN
     L_Pulse_MS := 100;
@@ -86,161 +71,50 @@ L_Wicket_Open := FALSE;
 
 CASE L_Mode OF
     FIRE:
+        // Fire evacuation access commands are authoritative and continuous.
         L_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
         L_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
         L_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
         L_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
 
-        L_Pulse_Lock_1_Open := FALSE;
-        L_Pulse_Lock_1_Close := FALSE;
-        L_Pulse_Lock_2_Open := FALSE;
-        L_Pulse_Lock_2_Close := FALSE;
-        L_Pulse_Gate_Open := FALSE;
-        L_Pulse_Wicket_Open := FALSE;
-
-        L_Prev_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
-        L_Prev_Lock_1_Close := GVL_COMMAND_SHADOW.G_Lock_1_Close;
-        L_Prev_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
-        L_Prev_Lock_2_Close := GVL_COMMAND_SHADOW.G_Lock_2_Close;
-        L_Prev_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
-        L_Prev_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
+        // Synchronize pulse channels with current command state and clear active pulses.
+        fbPulseLock1Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Open, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock1Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Close, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Open, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Close, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseGateOpen(VI_Command := GVL_COMMAND_SHADOW.G_Gate_Open, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseWicketOpen(VI_Command := GVL_COMMAND_SHADOW.G_Wicket_Open, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
 
     GAS:
+        // Gas mode uses direct gate opening plus limited pulsed pedestrian/lock release.
         L_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
 
-        IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND NOT L_Prev_Lock_1_Open THEN
-            L_Pulse_Lock_1_Open := TRUE;
-            L_Start_Lock_1_Open_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND NOT L_Prev_Lock_2_Open THEN
-            L_Pulse_Lock_2_Open := TRUE;
-            L_Start_Lock_2_Open_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Wicket_Open AND NOT L_Prev_Wicket_Open THEN
-            L_Pulse_Wicket_Open := TRUE;
-            L_Start_Wicket_Open_MS := L_Now_MS;
-        END_IF;
+        fbPulseLock1Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseWicketOpen(VI_Command := GVL_COMMAND_SHADOW.G_Wicket_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
 
-        IF L_Pulse_Lock_1_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_1_Open_MS, L_Now_MS - L_Start_Lock_1_Open_MS, (4294967295 - L_Start_Lock_1_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_1_Open := TRUE;
-            ELSE
-                L_Pulse_Lock_1_Open := FALSE;
-            END_IF;
-        END_IF;
+        fbPulseLock1Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Close, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Close, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseGateOpen(VI_Command := GVL_COMMAND_SHADOW.G_Gate_Open, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
 
-        IF L_Pulse_Lock_2_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_2_Open_MS, L_Now_MS - L_Start_Lock_2_Open_MS, (4294967295 - L_Start_Lock_2_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_2_Open := TRUE;
-            ELSE
-                L_Pulse_Lock_2_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Wicket_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Wicket_Open_MS, L_Now_MS - L_Start_Wicket_Open_MS, (4294967295 - L_Start_Wicket_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Wicket_Open := TRUE;
-            ELSE
-                L_Pulse_Wicket_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        L_Prev_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
-        L_Prev_Lock_1_Close := GVL_COMMAND_SHADOW.G_Lock_1_Close;
-        L_Prev_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
-        L_Prev_Lock_2_Close := GVL_COMMAND_SHADOW.G_Lock_2_Close;
-        L_Prev_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
-        L_Prev_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
+        L_Lock_1_Open := fbPulseLock1Open.VO_Output;
+        L_Lock_2_Open := fbPulseLock2Open.VO_Output;
+        L_Wicket_Open := fbPulseWicketOpen.VO_Output;
 
 ELSE
-        IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND NOT L_Prev_Lock_1_Open THEN
-            L_Pulse_Lock_1_Open := TRUE;
-            L_Start_Lock_1_Open_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Lock_1_Close AND NOT L_Prev_Lock_1_Close THEN
-            L_Pulse_Lock_1_Close := TRUE;
-            L_Start_Lock_1_Close_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND NOT L_Prev_Lock_2_Open THEN
-            L_Pulse_Lock_2_Open := TRUE;
-            L_Start_Lock_2_Open_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Lock_2_Close AND NOT L_Prev_Lock_2_Close THEN
-            L_Pulse_Lock_2_Close := TRUE;
-            L_Start_Lock_2_Close_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Gate_Open AND NOT L_Prev_Gate_Open THEN
-            L_Pulse_Gate_Open := TRUE;
-            L_Start_Gate_Open_MS := L_Now_MS;
-        END_IF;
-        IF GVL_COMMAND_SHADOW.G_Wicket_Open AND NOT L_Prev_Wicket_Open THEN
-            L_Pulse_Wicket_Open := TRUE;
-            L_Start_Wicket_Open_MS := L_Now_MS;
-        END_IF;
+        fbPulseLock1Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock1Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_1_Close, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Open(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseLock2Close(VI_Command := GVL_COMMAND_SHADOW.G_Lock_2_Close, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseGateOpen(VI_Command := GVL_COMMAND_SHADOW.G_Gate_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
+        fbPulseWicketOpen(VI_Command := GVL_COMMAND_SHADOW.G_Wicket_Open, VI_Reset := FALSE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := L_Pulse_MS);
 
-        IF L_Pulse_Lock_1_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_1_Open_MS, L_Now_MS - L_Start_Lock_1_Open_MS, (4294967295 - L_Start_Lock_1_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_1_Open := TRUE;
-            ELSE
-                L_Pulse_Lock_1_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Lock_1_Close THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_1_Close_MS, L_Now_MS - L_Start_Lock_1_Close_MS, (4294967295 - L_Start_Lock_1_Close_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_1_Close := TRUE;
-            ELSE
-                L_Pulse_Lock_1_Close := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Lock_2_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_2_Open_MS, L_Now_MS - L_Start_Lock_2_Open_MS, (4294967295 - L_Start_Lock_2_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_2_Open := TRUE;
-            ELSE
-                L_Pulse_Lock_2_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Lock_2_Close THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Lock_2_Close_MS, L_Now_MS - L_Start_Lock_2_Close_MS, (4294967295 - L_Start_Lock_2_Close_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Lock_2_Close := TRUE;
-            ELSE
-                L_Pulse_Lock_2_Close := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Gate_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Gate_Open_MS, L_Now_MS - L_Start_Gate_Open_MS, (4294967295 - L_Start_Gate_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Gate_Open := TRUE;
-            ELSE
-                L_Pulse_Gate_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        IF L_Pulse_Wicket_Open THEN
-            L_Elapsed_MS := SEL(L_Now_MS >= L_Start_Wicket_Open_MS, L_Now_MS - L_Start_Wicket_Open_MS, (4294967295 - L_Start_Wicket_Open_MS) + L_Now_MS + 1);
-            IF L_Elapsed_MS < L_Pulse_MS THEN
-                L_Wicket_Open := TRUE;
-            ELSE
-                L_Pulse_Wicket_Open := FALSE;
-            END_IF;
-        END_IF;
-
-        L_Prev_Lock_1_Open := GVL_COMMAND_SHADOW.G_Lock_1_Open;
-        L_Prev_Lock_1_Close := GVL_COMMAND_SHADOW.G_Lock_1_Close;
-        L_Prev_Lock_2_Open := GVL_COMMAND_SHADOW.G_Lock_2_Open;
-        L_Prev_Lock_2_Close := GVL_COMMAND_SHADOW.G_Lock_2_Close;
-        L_Prev_Gate_Open := GVL_COMMAND_SHADOW.G_Gate_Open;
-        L_Prev_Wicket_Open := GVL_COMMAND_SHADOW.G_Wicket_Open;
+        L_Lock_1_Open := fbPulseLock1Open.VO_Output;
+        L_Lock_1_Close := fbPulseLock1Close.VO_Output;
+        L_Lock_2_Open := fbPulseLock2Open.VO_Output;
+        L_Lock_2_Close := fbPulseLock2Close.VO_Output;
+        L_Gate_Open := fbPulseGateOpen.VO_Output;
+        L_Wicket_Open := fbPulseWicketOpen.VO_Output;
 END_CASE;
 
 fbProjection(
