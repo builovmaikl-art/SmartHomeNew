@@ -46,26 +46,32 @@ VAR
     L_Wet_Zone_Timers : ARRAY[1..GVL_CONSTANTS.C_MAX_WET_ZONES] OF FB_System_Timer_TOF; // Таймеры выбега для вытяжек санузлов
 END_VAR
 
+// Reset retained outputs on every call before any early return.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    VO_Supply_Fans[L_i] := 0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    VO_Exhaust_Fans[L_i] := 0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    VO_Heater_Power[L_i] := 0.0;
+END_FOR;
+
+VO_Status_Msg := '';
+VO_Ventilation_IO_Fault := FALSE;
+VO_Ventilation_Subsystem_Degraded := FALSE;
+
 // ========================================
 // Ventilation policy layer
 // ========================================
-VO_Ventilation_IO_Fault := FALSE;
-VO_Ventilation_Subsystem_Degraded := FALSE;
 L_Policy_Normal := (VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL);
 L_Policy_Safe_Stop := (VI_System_Mode = E_System_Operating_Mode.MODE_SAFE_STOP);
 L_Policy_Degraded := (VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED);
 L_Policy_Freeze_Protection := (VI_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
 
 IF NOT VI_IsActivePLC THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        VO_Supply_Fans[L_i] := 0;
-        IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
-            VO_Heater_Power[L_i] := 0.0;
-        END_IF;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-        VO_Exhaust_Fans[L_i] := 0;
-    END_FOR;
     VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: РЕЗЕРВНЫЙ ПЛК';
     RETURN;
 END_IF;
@@ -74,15 +80,6 @@ END_IF;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
     IF NOT VI_IO_Modules_Online[L_i] THEN
         VO_Ventilation_IO_Fault := TRUE;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-            VO_Supply_Fans[L_j] := 0;
-        END_FOR;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-            VO_Exhaust_Fans[L_j] := 0;
-        END_FOR;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-            VO_Heater_Power[L_j] := 0.0;
-        END_FOR;
         VO_Status_Msg := 'ОШИБКА: Потеря связи с модулями ввода-вывода';
         RETURN;
     END_IF;
@@ -92,15 +89,6 @@ END_FOR;
 // SYSTEM MODE / HARD REQUEST OVERRIDES
 // =========================
 IF L_Policy_Safe_Stop OR VI_Vent_Stop THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        VO_Supply_Fans[L_i] := 0;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-        VO_Exhaust_Fans[L_i] := 0;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Heater_Power[L_i] := 0.0;
-    END_FOR;
     IF VI_Vent_Stop THEN
         VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: ОСТАНОВЛЕНА ПО КОМАНДЕ';
     ELSE
@@ -110,26 +98,11 @@ IF L_Policy_Safe_Stop OR VI_Vent_Stop THEN
 END_IF;
 
 IF L_Policy_Degraded THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        VO_Supply_Fans[L_i] := 0;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Heater_Power[L_i] := 0.0;
-    END_FOR;
     VO_Ventilation_Subsystem_Degraded := TRUE;
     VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: DEGRADED POLICY';
 END_IF;
 
 IF L_Policy_Freeze_Protection THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        VO_Supply_Fans[L_i] := 0;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-        VO_Exhaust_Fans[L_i] := 0;
-    END_FOR;
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
-        VO_Heater_Power[L_i] := 0.0;
-    END_FOR;
     VO_Status_Msg := 'ВЕНТИЛЯЦИЯ: FREEZE_PROTECTION POLICY (stop)';
     RETURN;
 END_IF;
@@ -148,27 +121,29 @@ CASE VI_Current_Scenario OF
 END_CASE;
 
 // 2. Логика управления приточными установками (П-1, П-2, П-3)
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-    IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
-        L_PID_Heaters[L_i](
-            VI_SetPoint := L_Target_Temp,
-            VI_ProcessValue := VI_Supply_Temps[L_i],
-            VI_Kp := 4.0, VI_Tn := 120.0, VI_Tv := 0.0,
-            VI_Y_Min := 0.0, VI_Y_Max := 100.0, VI_Cycle_Time_S := 1.0,
-            VO_Output => VO_Heater_Power[L_i]
-        );
-    END_IF;
-
-    VO_Supply_Fans[L_i] := L_Base_Speed;
-
-    FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
-        IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
-            IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_VENTILATION THEN
-                VO_Supply_Fans[L_i] := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
-            END_IF;
+IF NOT L_Policy_Degraded THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        IF L_i <= GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS THEN
+            L_PID_Heaters[L_i](
+                VI_SetPoint := L_Target_Temp,
+                VI_ProcessValue := VI_Supply_Temps[L_i],
+                VI_Kp := 4.0, VI_Tn := 120.0, VI_Tv := 0.0,
+                VI_Y_Min := 0.0, VI_Y_Max := 100.0, VI_Cycle_Time_S := 1.0,
+                VO_Output => VO_Heater_Power[L_i]
+            );
         END_IF;
+
+        VO_Supply_Fans[L_i] := L_Base_Speed;
+
+        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
+            IF VI_Rule_Actions[L_j].Active AND VI_Rule_Actions[L_j].Target_ID = L_i THEN
+                IF VI_Rule_Actions[L_j].Action_Type = E_Rule_Action_Type.ACTION_SET_VENTILATION THEN
+                    VO_Supply_Fans[L_i] := REAL_TO_BYTE(VI_Rule_Actions[L_j].Value);
+                END_IF;
+            END_IF;
+        END_FOR;
     END_FOR;
-END_FOR;
+END_IF;
 
 // 3. Логика управления вытяжными установками (В-1 .. В-5)
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
@@ -189,21 +164,23 @@ END_FOR;
 // ========================================
 // OPERATIONAL REQUEST OVERRIDES
 // ========================================
-IF VI_Supply_100_Req THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        VO_Supply_Fans[L_i] := 100;
-    END_FOR;
-ELSIF VI_Supply_80_Req THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
-        IF VO_Supply_Fans[L_i] < 80 THEN
-            VO_Supply_Fans[L_i] := 80;
-        END_IF;
-    END_FOR;
-END_IF;
+IF NOT L_Policy_Degraded THEN
+    IF VI_Supply_100_Req THEN
+        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+            VO_Supply_Fans[L_i] := 100;
+        END_FOR;
+    ELSIF VI_Supply_80_Req THEN
+        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+            IF VO_Supply_Fans[L_i] < 80 THEN
+                VO_Supply_Fans[L_i] := 80;
+            END_IF;
+        END_FOR;
+    END_IF;
 
-IF VI_PV3_Boost_Req THEN
-    IF GVL_CONSTANTS.C_MAX_SUPPLY_FANS >= 3 THEN
-        VO_Supply_Fans[3] := 100;
+    IF VI_PV3_Boost_Req THEN
+        IF GVL_CONSTANTS.C_MAX_SUPPLY_FANS >= 3 THEN
+            VO_Supply_Fans[3] := 100;
+        END_IF;
     END_IF;
 END_IF;
 
@@ -217,6 +194,12 @@ END_IF;
 // VENT_FINAL_CLAMP
 // ========================================
 IF L_Policy_Degraded THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        VO_Supply_Fans[L_i] := 0;
+    END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+        VO_Heater_Power[L_i] := 0.0;
+    END_FOR;
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         VO_Exhaust_Fans[L_i] := MIN(VO_Exhaust_Fans[L_i], VI_Config.Degraded_Exhaust_Limit);
     END_FOR;
