@@ -42,6 +42,7 @@ VAR_GLOBAL
     D_Main_Phase_Observability_Executed : BOOL := FALSE;
     D_Main_Phase_Observability_Valid : BOOL := FALSE;
     D_Main_Phase_Any_Invalid : BOOL := FALSE;
+    D_Main_Phase_Any_Skipped_By_Design : BOOL := FALSE;
     D_Main_Phase_Status_Code : UINT := 0;
     D_Main_Phase_Status_Text : STRING(160) := '';
 
