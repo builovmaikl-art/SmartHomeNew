@@ -89,6 +89,19 @@ VAR_GLOBAL
     D_Simulation_Periodic_Due : BOOL := FALSE;
     D_Simulation_Idle_By_Design : BOOL := FALSE;
 
+    // Domain execution validation summary.
+    D_Domain_Validation_Executed : BOOL := FALSE;
+    D_Domain_Validation_Valid : BOOL := FALSE;
+    D_Domain_Validation_Any_Stale_Output_Risk : BOOL := FALSE;
+    D_Domain_Validation_Any_Policy_Mismatch : BOOL := FALSE;
+    D_Access_Stale_Output_Risk : BOOL := FALSE;
+    D_Lighting_Stale_Output_Risk : BOOL := FALSE;
+    D_Water_Stale_Output_Risk : BOOL := FALSE;
+    D_Heating_Stale_Output_Risk : BOOL := FALSE;
+    D_Vent_Stale_Output_Risk : BOOL := FALSE;
+    D_Domain_Validation_Status_Code : UINT := 0;
+    D_Domain_Validation_Status_Text : STRING(160) := '';
+
     // HMI / dashboard sensor quality view.
     D_Input_Source_Valid : BOOL := FALSE;
     D_Input_Degraded : BOOL := FALSE;
