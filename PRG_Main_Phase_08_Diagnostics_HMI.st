@@ -1,25 +1,57 @@
 PROGRAM PRG_Main_Phase_08_Diagnostics_HMI
 // MAIN PHASE 13 — verification, explainability, diagnostics, history, simulation, HMI and debug.
-// Critical: mixed. Command verification and alarms are high priority; simulation/debug are later shedding candidates.
+// Critical: mixed. Command verification, health, alarm and debug summary remain active.
+// History/trend/blackbox/simulation are shed when runtime budget asks for reduced work.
+VAR
+    L_Run_Extended_Diagnostics : BOOL;
+    L_Run_Extended_Observability : BOOL;
+    L_Run_Simulation : BOOL;
+END_VAR
 
 GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 8;
 
+L_Run_Extended_Diagnostics :=
+    NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Diagnostics_Degradation_Recommended;
+
+L_Run_Extended_Observability :=
+    (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
+    AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Extended_Observability_Shedding_Recommended;
+
+L_Run_Simulation :=
+    (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
+    AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Simulation_Suspension_Recommended;
+
+// Always-active verification, explainability, health, alarms, basic diagnostics and HMI/debug summary.
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
 PRG_System_Alarm_Gateway();
 PRG_System_Diagnostics();
-PRG_System_Diagnostics_Ext();
-PRG_System_History();
-PRG_System_BlackBox();
-PRG_System_Trend();
-PRG_System_Simulation();
 PRG_HMI_Dashboard();
 PRG_Debug_View();
 
+IF L_Run_Extended_Diagnostics THEN
+    PRG_System_Diagnostics_Ext();
+END_IF;
+
+IF L_Run_Extended_Observability THEN
+    PRG_System_History();
+    PRG_System_BlackBox();
+    PRG_System_Trend();
+END_IF;
+
+IF L_Run_Simulation THEN
+    PRG_System_Simulation();
+END_IF;
+
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Executed := TRUE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Valid := TRUE;
-GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed';
+
+IF L_Run_Extended_Diagnostics AND L_Run_Extended_Observability AND L_Run_Simulation THEN
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed';
+ELSE
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed with shedding';
+END_IF;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Executed :=
     GVL_MAIN_PHASE_FEEDBACK.G_Phase_01_Bootstrap_Executed
