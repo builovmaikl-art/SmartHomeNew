@@ -93,6 +93,19 @@ GVL_DEBUG_VIEW.D_Simulation_Run_Allowed := GVL_DOMAIN_EXECUTION_POLICY.Simulatio
 GVL_DEBUG_VIEW.D_Simulation_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Periodic_Due;
 GVL_DEBUG_VIEW.D_Simulation_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Idle_By_Design;
 
+// DOMAIN EXECUTION VALIDATION SUMMARY -> DEBUG VIEW
+GVL_DEBUG_VIEW.D_Domain_Validation_Executed := GVL_DOMAIN_EXECUTION_VALIDATION.G_Validation_Executed;
+GVL_DEBUG_VIEW.D_Domain_Validation_Valid := GVL_DOMAIN_EXECUTION_VALIDATION.G_Validation_Valid;
+GVL_DEBUG_VIEW.D_Domain_Validation_Any_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Any_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Domain_Validation_Any_Policy_Mismatch := GVL_DOMAIN_EXECUTION_VALIDATION.Any_Policy_Mismatch;
+GVL_DEBUG_VIEW.D_Access_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Access_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Lighting_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Lighting_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Water_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Water_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Heating_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Heating_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Vent_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Vent_Stale_Output_Risk;
+GVL_DEBUG_VIEW.D_Domain_Validation_Status_Code := GVL_DOMAIN_EXECUTION_VALIDATION.Status_Code;
+GVL_DEBUG_VIEW.D_Domain_Validation_Status_Text := GVL_DOMAIN_EXECUTION_VALIDATION.Status_Text;
+
 // SENSOR QUALITY → HMI
 GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
 GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
