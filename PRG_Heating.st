@@ -39,7 +39,36 @@ VAR
     L_DHW_Heating_Pump : BOOL;
     L_DHW_Circ_Pump : BOOL;
     L_DHW_Status : ST_DHW_Status;
+
+    L_Empty_Manifold_Status : ST_Manifold_Status;
+    L_Empty_Boiler_Status : ST_Boiler_Status;
+    L_Empty_DHW_Status : ST_DHW_Status;
 END_VAR
+
+// Reset local output buffers at the beginning of every PRG call.
+// This prevents stale publication when manager phases are skipped by governance.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    L_Zone_Valves[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    L_Manifold_Pumps[L_i] := FALSE;
+    L_Manifold_Valves[L_i] := 0.0;
+    L_Manifold_Status[L_i] := L_Empty_Manifold_Status;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    L_Boiler_OT_Enable[L_i] := FALSE;
+    L_Boiler_OT_Setpoint[L_i] := 0.0;
+    L_Boiler_Status[L_i] := L_Empty_Boiler_Status;
+END_FOR;
+
+L_Backup_Circulation_Pump := FALSE;
+L_Electric_Heater_Enable := FALSE;
+L_Freeze_Risk_Status := FALSE;
+L_DHW_Heating_Pump := FALSE;
+L_DHW_Circ_Pump := FALSE;
+L_DHW_Status := L_Empty_DHW_Status;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     L_Boiler_Modulation_REAL[L_i] := TO_REAL(GVL_IO.AI_Boiler_Modulation[L_i]);
