@@ -12,6 +12,7 @@ STRUCT
 
     Confirmed_Open : BOOL;
     Confirmed_Closed : BOOL;
+    Confirmation_Unknown : BOOL;
 
     Feedback_Invalid : BOOL;
     Feedback_Conflict : BOOL;
