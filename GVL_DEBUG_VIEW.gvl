@@ -113,10 +113,12 @@ VAR_GLOBAL
     D_Runtime_Fire_Context_Active : BOOL := FALSE;
     D_Runtime_Gas_Context_Active : BOOL := FALSE;
     D_Runtime_Leak_Context_Active : BOOL := FALSE;
+    D_Runtime_Global_Stop_Context_Active : BOOL := FALSE;
     D_Runtime_Freeze_Context_Active : BOOL := FALSE;
     D_Runtime_Heating_Context_Valid : BOOL := FALSE;
     D_Runtime_Vent_Context_Valid : BOOL := FALSE;
     D_Runtime_Access_Context_Valid : BOOL := FALSE;
+    D_Runtime_Global_Stop_Context_Valid : BOOL := FALSE;
     D_Runtime_Scenario_Status_Code : UINT := 0;
     D_Runtime_Scenario_Status_Text : STRING(160) := '';
 
