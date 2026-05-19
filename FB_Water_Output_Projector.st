@@ -27,7 +27,30 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Authority := GVL_Water_Isolation_Authority.G_Authority_State[L_i];
     L_Valve := GVL_Water_Valve_Runtime.G_Valve_Runtime_State[L_i];
 
+    // Reset all projection fields per sensor to prevent state leakage across loop iterations.
     L_Output.Projection_Valid := FALSE;
+    L_Output.Projection_System_Time_MS := 0;
+    L_Output.Output_Owner_Valid := FALSE;
+    L_Output.Output_Owner_Id := 0;
+    L_Output.Valve_Id := 0;
+    L_Output.Valve_Group_Id := 0;
+    L_Output.Selective_Authority_Allowed := FALSE;
+    L_Output.Global_Fallback_Required := FALSE;
+    L_Output.Authority_Valid := FALSE;
+    L_Output.Physical_Close_Project := FALSE;
+    L_Output.Physical_Open_Project := FALSE;
+    L_Output.Expected_Closed := FALSE;
+    L_Output.Expected_Open := FALSE;
+    L_Output.Confirmed_Closed := FALSE;
+    L_Output.Confirmed_Open := FALSE;
+    L_Output.Confirmation_Unknown := FALSE;
+    L_Output.Projection_Allowed := FALSE;
+    L_Output.Projection_Denied := FALSE;
+    L_Output.Projection_Code := 0;
+    L_Output.Projection_Text := '';
+    L_Output.Projection_Activated_Event := FALSE;
+    L_Output.Projection_Denied_Event := FALSE;
+
     L_Output.Projection_Valid := TRUE;
     L_Output.Projection_System_Time_MS := VI_System_Time_MS;
     L_Output.Output_Owner_Valid := TRUE;
