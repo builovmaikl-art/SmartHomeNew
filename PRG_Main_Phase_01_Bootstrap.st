@@ -33,15 +33,36 @@ GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Executed := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Valid := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Status_Text := '';
 
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Skipped_By_Design := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Skipped_By_Design := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Skipped_By_Design := FALSE;
+
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Executed := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Valid := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := '';
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Skipped_By_Design := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Skipped_By_Design := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Requested := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Skipped_By_Design := FALSE;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Executed := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Valid := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Executed := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Valid := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Invalid := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Skipped_By_Design := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Status_Code := 0;
 GVL_MAIN_PHASE_FEEDBACK.G_Status_Text := 'MAIN phase feedback reset';
 
