@@ -19,9 +19,45 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Convergence_Degraded := FALSE;
+L_Any_Diagnostics_Degraded := FALSE;
+L_Any_Escalation := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Output := GVL_Water_Output_Projection.G_Output_Projection_State[L_i];
     L_Feedback := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i];
+
+    // Reset per sensor to prevent convergence state leakage across loop iterations.
+    L_Convergence.Runtime_Valid := FALSE;
+    L_Convergence.Runtime_System_Time_MS := 0;
+    L_Convergence.Sensor_Id := 0;
+    L_Convergence.Projection_Active := FALSE;
+    L_Convergence.Physical_State_Confirmed := FALSE;
+    L_Convergence.Runtime_Converged := FALSE;
+    L_Convergence.Physical_Open_Confirmed := FALSE;
+    L_Convergence.Physical_Closed_Confirmed := FALSE;
+    L_Convergence.Projection_Mismatch := FALSE;
+    L_Convergence.Runtime_Mismatch := FALSE;
+    L_Convergence.Physical_Mismatch := FALSE;
+    L_Convergence.Convergence_Degraded := FALSE;
+    L_Convergence.Escalation_Required := FALSE;
+    L_Convergence.Status_Code := 0;
+    L_Convergence.Status_Text := '';
+
+    // Reset per sensor to prevent actuator diagnostic state leakage across loop iterations.
+    L_Diagnostics.Runtime_Valid := FALSE;
+    L_Diagnostics.Runtime_System_Time_MS := 0;
+    L_Diagnostics.Valve_Group_Id := 0;
+    L_Diagnostics.Travel_Active := FALSE;
+    L_Diagnostics.Travel_Timeout := FALSE;
+    L_Diagnostics.Stuck_Suspected := FALSE;
+    L_Diagnostics.Intermittent_Failure_Suspected := FALSE;
+    L_Diagnostics.Travel_Time_MS := 0;
+    L_Diagnostics.Failure_Count := 0;
+    L_Diagnostics.Diagnostics_Degraded := FALSE;
+    L_Diagnostics.Escalation_Required := FALSE;
+    L_Diagnostics.Status_Code := 0;
+    L_Diagnostics.Status_Text := '';
 
     L_Convergence.Runtime_Valid := TRUE;
     L_Convergence.Runtime_System_Time_MS := VI_System_Time_MS;
