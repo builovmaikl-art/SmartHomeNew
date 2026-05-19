@@ -106,6 +106,24 @@ GVL_DEBUG_VIEW.D_Vent_Stale_Output_Risk := GVL_DOMAIN_EXECUTION_VALIDATION.Vent_
 GVL_DEBUG_VIEW.D_Domain_Validation_Status_Code := GVL_DOMAIN_EXECUTION_VALIDATION.Status_Code;
 GVL_DEBUG_VIEW.D_Domain_Validation_Status_Text := GVL_DOMAIN_EXECUTION_VALIDATION.Status_Text;
 
+// RUNTIME SCENARIO VALIDATION SUMMARY -> DEBUG VIEW
+GVL_DEBUG_VIEW.D_Runtime_Scenario_Validation_Executed := GVL_RUNTIME_SCENARIO_VALIDATION.G_Validation_Executed;
+GVL_DEBUG_VIEW.D_Runtime_Scenario_Validation_Valid := GVL_RUNTIME_SCENARIO_VALIDATION.G_Validation_Valid;
+GVL_DEBUG_VIEW.D_Runtime_Scenario_Any_Context_Invalid := GVL_RUNTIME_SCENARIO_VALIDATION.Any_Context_Invalid;
+GVL_DEBUG_VIEW.D_Runtime_Idle_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Idle_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Security_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Away_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Away_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Presence_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Presence_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Fire_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Gas_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Leak_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Freeze_Context_Active := GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Active;
+GVL_DEBUG_VIEW.D_Runtime_Heating_Context_Valid := GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Context_Valid;
+GVL_DEBUG_VIEW.D_Runtime_Vent_Context_Valid := GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Context_Valid;
+GVL_DEBUG_VIEW.D_Runtime_Access_Context_Valid := GVL_RUNTIME_SCENARIO_VALIDATION.Access_Context_Valid;
+GVL_DEBUG_VIEW.D_Runtime_Scenario_Status_Code := GVL_RUNTIME_SCENARIO_VALIDATION.Status_Code;
+GVL_DEBUG_VIEW.D_Runtime_Scenario_Status_Text := GVL_RUNTIME_SCENARIO_VALIDATION.Status_Text;
+
 // SENSOR QUALITY → HMI
 GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
 GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
