@@ -2,7 +2,7 @@ DUT_FILES=167
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=45
 STRUCT_INSERTED=122
-STRUCT_FIELDS_TOTAL=1556
+STRUCT_FIELDS_TOTAL=1557
 STRUCT_FIELDS_WITH_INITIALIZER=143
 INITIALIZERS_INSERTED=143
 ARRAY_INITIALIZERS_INSERTED=4
@@ -173,7 +173,7 @@ ST_Water_Recovery_FSM_State.dut: STRUCT ST_Water_Recovery_FSM_State fields=14
 ST_Water_Recovery_Runtime_State.dut: STRUCT ST_Water_Recovery_Runtime_State fields=12
 ST_Water_Topology_Config_Record.dut: STRUCT ST_Water_Topology_Config_Record fields=16
 ST_Water_Topology_Validation_State.dut: STRUCT ST_Water_Topology_Validation_State fields=13
-ST_Water_Valve_Feedback_State.dut: STRUCT ST_Water_Valve_Feedback_State fields=16
+ST_Water_Valve_Feedback_State.dut: STRUCT ST_Water_Valve_Feedback_State fields=17
 ST_Water_Valve_Runtime_State.dut: STRUCT ST_Water_Valve_Runtime_State fields=29
 ST_Zone_Adapt_State.dut: STRUCT ST_Zone_Adapt_State fields=8
 ST_Zone_Sensors.dut: STRUCT ST_Zone_Sensors fields=6
@@ -296,7 +296,7 @@ STRUCT ST_Water_Recovery_FSM_State: total=14 with_initializer=0 without_initiali
 STRUCT ST_Water_Recovery_Runtime_State: total=12 with_initializer=0 without_initializer=12 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Topology_Config_Record: total=16 with_initializer=0 without_initializer=16 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Topology_Validation_State: total=13 with_initializer=0 without_initializer=13 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Water_Valve_Feedback_State: total=16 with_initializer=0 without_initializer=16 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Water_Valve_Feedback_State: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Water_Valve_Runtime_State: total=29 with_initializer=0 without_initializer=29 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Adapt_State: total=8 with_initializer=0 without_initializer=8 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Zone_Sensors: total=6 with_initializer=0 without_initializer=6 array_initializer=0 unsupported_initializer=0
