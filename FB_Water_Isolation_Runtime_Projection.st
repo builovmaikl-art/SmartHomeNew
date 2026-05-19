@@ -8,6 +8,7 @@ VAR
     L_Leak_State : ST_Water_Leak_Runtime_State;
     L_Isolation_State : ST_Water_Isolation_Runtime_State;
     L_Traversal : ST_Water_Graph_Traversal_State;
+    L_Empty_Isolation_State : ST_Water_Isolation_Runtime_State;
     L_Any_Isolation : BOOL;
     L_Any_Selective : BOOL;
     L_Global_Fallback : BOOL;
@@ -18,12 +19,17 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Isolation := FALSE;
+L_Any_Selective := FALSE;
+L_Global_Fallback := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Leak_State := GVL_Water_Runtime_Projection.G_Leak_Runtime_State[L_i];
     L_Traversal := GVL_Water_Orchestration.G_Traversal_State[L_i];
 
-    L_Isolation_State := (Projection_Valid := TRUE);
+    L_Isolation_State := L_Empty_Isolation_State;
+    L_Isolation_State.Projection_Valid := TRUE;
     L_Isolation_State.Projection_System_Time_MS := VI_System_Time_MS;
 
     L_Isolation_State.Hydraulic_Zone_Id := L_Leak_State.Hydraulic_Zone_Id;
