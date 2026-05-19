@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4160
+total 4164
 -rw-r--r--  1 runner runner  13067 May 19 15:26 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 19 15:26 .
 drwxr-xr-x  3 runner runner   4096 May 19 15:26 ..
@@ -525,6 +525,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 15:26 .github
 -rw-r--r--  1 runner runner   7793 May 19 15:26 PRG_Input_Processing.st
 -rw-r--r--  1 runner runner   1319 May 19 15:26 PRG_Input_Quality_Read.st
 -rw-r--r--  1 runner runner   7718 May 19 15:26 PRG_Lighting.st
+-rw-r--r--  1 runner runner   2707 May 19 15:26 PRG_Lighting_Phase_01_Context.st
 -rw-r--r--  1 runner runner   3155 May 19 15:26 PRG_Main_Phase_01_Bootstrap.st
 -rw-r--r--  1 runner runner   2533 May 19 15:26 PRG_Main_Phase_02_Redundancy.st
 -rw-r--r--  1 runner runner   1201 May 19 15:26 PRG_Main_Phase_03_Input_Safety_Command.st
@@ -788,8 +789,8 @@ drwxr-xr-x  2 runner runner   4096 May 19 15:26 out
 -rw-r--r--  1 runner runner    177 May 19 15:26 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2588
+total 2592
 drwxr-xr-x 2 runner runner    4096 May 19 15:26 .
 drwxr-xr-x 5 runner runner    4096 May 19 15:26 ..
 -rw-r--r-- 1 runner runner       0 May 19 15:26 .gitkeep
--rw-r--r-- 1 runner runner 2641717 May 19 15:26 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2644859 May 19 15:26 RESULT_methods_clean.xml
