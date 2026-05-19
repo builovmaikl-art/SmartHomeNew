@@ -25,12 +25,32 @@ VAR
     L_i : INT;
     L_Min_Supply_Temp : REAL;
     L_Freeze_Circulation_Required : BOOL;
+    L_Empty_Boiler_Status : ST_Boiler_Status;
 END_VAR
 
-VO_Applied := VI_Block_Normal_Heating;
+// Reset all retained FB outputs on every call.
+// Safe-state FB instances keep VAR_OUTPUT values between scans unless overwritten.
+VO_Applied := FALSE;
 VO_Backup_Circulation_Pump := FALSE;
 VO_Electric_Heater_Enable := FALSE;
 VO_Freeze_Risk_Status := FALSE;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
+    VO_Zone_Valves[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
+    VO_Manifold_Pumps[L_i] := FALSE;
+    VO_Manifold_Valves[L_i] := REAL#0.0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    VO_Boiler_OT_Enable[L_i] := FALSE;
+    VO_Boiler_OT_Setpoint[L_i] := REAL#0.0;
+    VO_Boiler_Status[L_i] := L_Empty_Boiler_Status;
+END_FOR;
+
+VO_Applied := VI_Block_Normal_Heating;
 
 L_Freeze_Circulation_Required := VI_Freeze_Active AND (VI_IO_Failsafe_Active OR VI_Gas_Safety_Active);
 
