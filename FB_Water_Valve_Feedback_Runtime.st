@@ -8,6 +8,7 @@ VAR
 
     L_Output : ST_Water_Output_Projection_State;
     L_State : ST_Water_Valve_Feedback_State;
+    L_Empty_State : ST_Water_Valve_Feedback_State;
 
     L_Any_Degraded : BOOL;
     L_Any_Timeout : BOOL;
@@ -19,11 +20,16 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Degraded := FALSE;
+L_Any_Timeout := FALSE;
+L_Any_Conflict := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Output := GVL_Water_Output_Projection.G_Output_Projection_State[L_i];
 
-    L_State := (Runtime_Valid := TRUE);
+    L_State := L_Empty_State;
+    L_State.Runtime_Valid := TRUE;
 
     L_State.Runtime_System_Time_MS := VI_System_Time_MS;
     L_State.Valve_Group_Id := L_Output.Valve_Group_Id;
