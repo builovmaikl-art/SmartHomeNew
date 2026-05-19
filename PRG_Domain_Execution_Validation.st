@@ -39,9 +39,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
         OR GVL_LIGHTING_OUTPUT.DO_Sockets[L_i];
 END_FOR;
 
-L_Water_Output_Active :=
-    GVL_WATER_OUTPUT.DO_Water_Valve_35_Close
-    OR GVL_WATER_OUTPUT.DO_Water_Valve_36_Close;
+// Water close outputs are fail-safe holds, not stale activity by themselves.
+// Zone enable is the only water output treated as stale when policy says idle.
+L_Water_Output_Active := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     L_Water_Output_Active :=
         L_Water_Output_Active
