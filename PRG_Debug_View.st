@@ -46,6 +46,7 @@ GVL_DEBUG_VIEW.D_Main_Phase_Critical_Valid := GVL_MAIN_PHASE_FEEDBACK.G_Critical
 GVL_DEBUG_VIEW.D_Main_Phase_Observability_Executed := GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Executed;
 GVL_DEBUG_VIEW.D_Main_Phase_Observability_Valid := GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Valid;
 GVL_DEBUG_VIEW.D_Main_Phase_Any_Invalid := GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Invalid;
+GVL_DEBUG_VIEW.D_Main_Phase_Any_Skipped_By_Design := GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Skipped_By_Design;
 GVL_DEBUG_VIEW.D_Main_Phase_Status_Code := GVL_MAIN_PHASE_FEEDBACK.G_Status_Code;
 GVL_DEBUG_VIEW.D_Main_Phase_Status_Text := GVL_MAIN_PHASE_FEEDBACK.G_Status_Text;
 
