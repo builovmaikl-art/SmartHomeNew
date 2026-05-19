@@ -18,6 +18,8 @@ VAR
     L_Main_Max_RTT : UDINT;
 END_VAR
 
+GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 2;
+
 fbPLCHeartbeat(
     VI_Local_ID := GVL_STATUS.G_PLC_ID,
     VI_System_Time := GVL_STATUS.G_System_Time_MS,
@@ -60,6 +62,11 @@ fbSystemRedundancyOrchestrator(
 PRG_Peer_Heartbeat_Ingestion();
 PRG_PLC_Arbitration();
 PRG_PLC_Fencing_Governor();
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_02_Redundancy_Executed := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_02_Redundancy_Valid := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_02_Redundancy_Status_Text := 'Redundancy/heartbeat phase executed';
+GVL_MAIN_PHASE_FEEDBACK.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Main_Phase_02_Redundancy <<<
 END_PROGRAM
