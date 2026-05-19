@@ -527,6 +527,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 15:27 .github
 -rw-r--r--  1 runner runner   7718 May 19 15:27 PRG_Lighting.st
 -rw-r--r--  1 runner runner   2707 May 19 15:27 PRG_Lighting_Phase_01_Context.st
 -rw-r--r--  1 runner runner   2239 May 19 15:27 PRG_Lighting_Phase_02_Managers.st
+-rw-r--r--  1 runner runner   2011 May 19 15:27 PRG_Lighting_Phase_03_Priority_Restrictions.st
 -rw-r--r--  1 runner runner   3155 May 19 15:27 PRG_Main_Phase_01_Bootstrap.st
 -rw-r--r--  1 runner runner   2533 May 19 15:27 PRG_Main_Phase_02_Redundancy.st
 -rw-r--r--  1 runner runner   1201 May 19 15:27 PRG_Main_Phase_03_Input_Safety_Command.st
@@ -771,7 +772,7 @@ drwxr-xr-x  5 runner runner   4096 May 19 15:27 компилятор
 -rw-r--r--  1 runner runner  11783 May 19 15:27 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 May 19 15:27 .
 drwxr-xr-x 12 runner runner  45056 May 19 15:27 ..
 -rw-r--r--  1 runner runner  21153 May 19 15:27 001_universal_pou_builder_METHODS_V2.py
@@ -790,8 +791,8 @@ drwxr-xr-x  2 runner runner   4096 May 19 15:27 out
 -rw-r--r--  1 runner runner    177 May 19 15:27 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2596
+total 2600
 drwxr-xr-x 2 runner runner    4096 May 19 15:27 .
 drwxr-xr-x 5 runner runner    4096 May 19 15:27 ..
 -rw-r--r-- 1 runner runner       0 May 19 15:27 .gitkeep
--rw-r--r-- 1 runner runner 2648359 May 19 15:27 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2651434 May 19 15:27 RESULT_methods_clean.xml
