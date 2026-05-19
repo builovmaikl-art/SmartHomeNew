@@ -54,31 +54,37 @@ VAR_GLOBAL
     D_Domain_Policy_Status_Code : UINT := 0;
     D_Domain_Policy_Status_Text : STRING(160) := '';
 
+    D_Access_Mode : UINT := 0;
     D_Access_Critical_Run : BOOL := FALSE;
     D_Access_Periodic_Run : BOOL := FALSE;
     D_Access_Periodic_Due : BOOL := FALSE;
     D_Access_Idle_By_Design : BOOL := FALSE;
 
+    D_Lighting_Mode : UINT := 0;
     D_Lighting_Critical_Run : BOOL := FALSE;
     D_Lighting_Periodic_Run : BOOL := FALSE;
     D_Lighting_Periodic_Due : BOOL := FALSE;
     D_Lighting_Idle_By_Design : BOOL := FALSE;
 
+    D_Water_Mode : UINT := 0;
     D_Water_Critical_Run : BOOL := FALSE;
     D_Water_Periodic_Run : BOOL := FALSE;
     D_Water_Periodic_Due : BOOL := FALSE;
     D_Water_Idle_By_Design : BOOL := FALSE;
 
+    D_Heating_Mode : UINT := 0;
     D_Heating_Critical_Run : BOOL := FALSE;
     D_Heating_Periodic_Run : BOOL := FALSE;
     D_Heating_Periodic_Due : BOOL := FALSE;
     D_Heating_Idle_By_Design : BOOL := FALSE;
 
+    D_Vent_Mode : UINT := 0;
     D_Vent_Critical_Run : BOOL := FALSE;
     D_Vent_Periodic_Run : BOOL := FALSE;
     D_Vent_Periodic_Due : BOOL := FALSE;
     D_Vent_Idle_By_Design : BOOL := FALSE;
 
+    D_Simulation_Mode : UINT := 0;
     D_Simulation_Run_Allowed : BOOL := FALSE;
     D_Simulation_Periodic_Due : BOOL := FALSE;
     D_Simulation_Idle_By_Design : BOOL := FALSE;
