@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4144
+total 4156
 -rw-r--r--  1 runner runner  13067 May 19 15:16 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 19 15:16 .
 drwxr-xr-x  3 runner runner   4096 May 19 15:16 ..
@@ -456,6 +456,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 15:16 .github
 -rw-r--r--  1 runner runner    846 May 19 15:16 PRG_Causality_Reversal_Prevention_Governor.st
 -rw-r--r--  1 runner runner  11987 May 19 15:16 PRG_Command_Arbitration.st
 -rw-r--r--  1 runner runner   3809 May 19 15:16 PRG_Command_Arbitration_Phase_01_Reset_Role.st
+-rw-r--r--  1 runner runner   4727 May 19 15:16 PRG_Command_Arbitration_Phase_02_Safety_Mode.st
 -rw-r--r--  1 runner runner   7273 May 19 15:16 PRG_Command_Verifier.st
 -rw-r--r--  1 runner runner   5401 May 19 15:16 PRG_Compliance_Federation_Governor.st
 -rw-r--r--  1 runner runner   2554 May 19 15:16 PRG_Config_Manager.st
@@ -764,7 +765,7 @@ drwxr-xr-x  5 runner runner   4096 May 19 15:16 компилятор
 -rw-r--r--  1 runner runner  11783 May 19 15:16 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 616
 drwxr-xr-x  5 runner runner   4096 May 19 15:16 .
 drwxr-xr-x 12 runner runner  45056 May 19 15:16 ..
 -rw-r--r--  1 runner runner  21153 May 19 15:16 001_universal_pou_builder_METHODS_V2.py
@@ -783,8 +784,8 @@ drwxr-xr-x  2 runner runner   4096 May 19 15:16 out
 -rw-r--r--  1 runner runner    177 May 19 15:16 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2588
+total 2592
 drwxr-xr-x 2 runner runner    4096 May 19 15:16 .
 drwxr-xr-x 5 runner runner    4096 May 19 15:16 ..
 -rw-r--r-- 1 runner runner       0 May 19 15:16 .gitkeep
--rw-r--r-- 1 runner runner 2641105 May 19 15:16 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2645470 May 19 15:16 RESULT_methods_clean.xml
