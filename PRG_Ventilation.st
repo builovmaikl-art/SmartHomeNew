@@ -22,6 +22,16 @@ VAR
     L_Fire_Smoke_Override : BOOL;
 END_VAR
 
+// Reset local output buffers at the beginning of every PRG call.
+// This prevents stale projection when the execution manager is skipped by governance.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    L_Supply_Fans_Byte[L_i] := 0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    L_Exhaust_Fans_Byte[L_i] := 0;
+END_FOR;
+
 // Distributed runtime governance.
 // FIRE smoke extraction semantics remain authoritative.
 L_Distributed_Execute_Allowed :=
