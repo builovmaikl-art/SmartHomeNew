@@ -48,6 +48,7 @@ END_IF;
 // Post-domain refresh for debug/status surfaces after this scan's domain outputs.
 PRG_Domain_Execution_Policy();
 PRG_Domain_Execution_Policy_Periodic();
+PRG_Domain_Execution_Validation();
 
 PRG_Output_Freshness_Governor();
 PRG_Physical_Snapshot_Governor();
@@ -62,9 +63,11 @@ PRG_PreOutput_Safety_Barrier();
 PRG_IO_Write();
 
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Executed := TRUE;
-GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Valid := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Valid := NOT GVL_DOMAIN_EXECUTION_VALIDATION.Any_Policy_Mismatch;
 
-IF GVL_DOMAIN_EXECUTION_POLICY.Any_Idle_By_Design THEN
+IF GVL_DOMAIN_EXECUTION_VALIDATION.Any_Policy_Mismatch THEN
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Status_Text := 'Domain/output phase validation mismatch';
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Any_Idle_By_Design THEN
     GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Status_Text := 'Domain/output phase executed with policy gating';
 ELSE
     GVL_MAIN_PHASE_FEEDBACK.G_Phase_05_Domain_Output_Status_Text := 'Domain/output phase executed';
