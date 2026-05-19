@@ -6,6 +6,7 @@ VAR
     L_Run_Extended_Diagnostics : BOOL;
     L_Run_Extended_Observability : BOOL;
     L_Run_Simulation : BOOL;
+    L_Simulation_Context_Active : BOOL;
 END_VAR
 
 GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 8;
@@ -17,8 +18,16 @@ L_Run_Extended_Observability :=
     (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
     AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Extended_Observability_Shedding_Recommended;
 
+L_Simulation_Context_Active :=
+    GVL_SIMULATION.G_Test_Scenario_Active
+    OR GVL_SIMULATION.G_Test_Start
+    OR GVL_ALARM.G_Security_Armed
+    OR (GVL_STATUS.G_Current_Scenario = SCENARIO_AWAY)
+    OR (GVL_STATUS.G_Current_Scenario = SCENARIO_PRESENCE);
+
 L_Run_Simulation :=
-    (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
+    GVL_SIMULATION.G_Simulation_Enable
+    AND L_Simulation_Context_Active
     AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Simulation_Suspension_Recommended;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Requested := L_Run_Extended_Diagnostics;
