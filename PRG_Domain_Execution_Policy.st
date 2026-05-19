@@ -102,6 +102,7 @@ END_IF;
 // ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
     OR GVL_COMMAND_SHADOW.G_Water_Block
     OR GVL_COMMAND_SHADOW.G_Water_Emergency_Stop
     OR GVL_COMMAND_SHADOW.G_Close_Valve_35
@@ -133,7 +134,7 @@ END_IF;
 
 // ------------------------------------------------------------------------------
 // Heating policy.
-// Critical for emergency/freeze/gas/DHW/active outputs.
+// Critical for emergency/freeze/gas/DHW/block/active outputs.
 // Periodic for comfort scenarios or low-demand normal supervision.
 // ------------------------------------------------------------------------------
 L_Heating_Output_Active :=
@@ -156,7 +157,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
 END_FOR;
 
 GVL_DOMAIN_EXECUTION_POLICY.Heating_Critical_Run :=
-    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
+    OR GVL_COMMAND_SHADOW.G_Heating_Block
+    OR GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop
     OR GVL_COMMAND_SHADOW.G_Heating_Gas_Safety_Stop
     OR GVL_STATE.G_Safety_Gas_Latched
     OR GVL_STATE.G_Safety_Freeze_Risk
@@ -187,7 +190,7 @@ END_IF;
 
 // ------------------------------------------------------------------------------
 // Ventilation policy.
-// Critical for gas/fire/smoke/emergency boost or active outputs.
+// Critical for gas/fire/smoke/stop/block/emergency boost or active outputs.
 // Periodic for occupancy/away/presence/background air-quality supervision.
 // ------------------------------------------------------------------------------
 L_Vent_Output_Active := GVL_VENT_OUTPUT.DO_Vent_Enable;
@@ -207,6 +210,9 @@ END_FOR;
 GVL_DOMAIN_EXECUTION_POLICY.Vent_Critical_Run :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
+    OR GVL_COMMAND_SHADOW.G_Vent_Stop
+    OR GVL_COMMAND_SHADOW.G_Vent_Block
     OR GVL_COMMAND_SHADOW.G_Vent_PV3_Boost
     OR GVL_COMMAND_SHADOW.G_Exhaust_100_Req
     OR GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust
