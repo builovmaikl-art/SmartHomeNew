@@ -1,0 +1,51 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Domain execution policy. Observational first layer.
+    // This GVL classifies when a domain needs critical, periodic or idle execution.
+    // It does not directly control physical outputs.
+
+    G_Last_Update_MS : UDINT := 0;
+
+    // Scenario/context classification.
+    G_Security_Context_Active : BOOL := FALSE;
+    G_Away_Context_Active : BOOL := FALSE;
+    G_Presence_Context_Active : BOOL := FALSE;
+    G_Emergency_Context_Active : BOOL := FALSE;
+
+    // Access.
+    Access_Critical_Run : BOOL := FALSE;
+    Access_Periodic_Run : BOOL := FALSE;
+    Access_Idle_By_Design : BOOL := FALSE;
+
+    // Lighting.
+    Lighting_Critical_Run : BOOL := FALSE;
+    Lighting_Periodic_Run : BOOL := FALSE;
+    Lighting_Idle_By_Design : BOOL := FALSE;
+
+    // Water.
+    Water_Critical_Run : BOOL := FALSE;
+    Water_Periodic_Run : BOOL := FALSE;
+    Water_Idle_By_Design : BOOL := FALSE;
+
+    // Heating.
+    Heating_Critical_Run : BOOL := FALSE;
+    Heating_Periodic_Run : BOOL := FALSE;
+    Heating_Idle_By_Design : BOOL := FALSE;
+
+    // Ventilation.
+    Vent_Critical_Run : BOOL := FALSE;
+    Vent_Periodic_Run : BOOL := FALSE;
+    Vent_Idle_By_Design : BOOL := FALSE;
+
+    // Simulation.
+    Simulation_Context_Active : BOOL := FALSE;
+    Simulation_Run_Allowed : BOOL := FALSE;
+    Simulation_Idle_By_Design : BOOL := FALSE;
+
+    // Summary.
+    Any_Critical_Run : BOOL := FALSE;
+    Any_Periodic_Run : BOOL := FALSE;
+    Any_Idle_By_Design : BOOL := FALSE;
+    Status_Code : UINT := 0;
+    Status_Text : STRING(160) := '';
+END_VAR
