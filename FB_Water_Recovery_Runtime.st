@@ -16,8 +16,25 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Denied := FALSE;
+L_Any_Unsafe := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Feedback := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i];
+
+    // Reset all recovery runtime fields per sensor to prevent state leakage across loop iterations.
+    L_State.Runtime_Valid := FALSE;
+    L_State.Runtime_System_Time_MS := 0;
+    L_State.Recovery_Requested := FALSE;
+    L_State.Recovery_Allowed := FALSE;
+    L_State.Recovery_Denied := FALSE;
+    L_State.Observation_Window_Active := FALSE;
+    L_State.Unsafe_Recovery_Detected := FALSE;
+    L_State.Valve_Degraded := FALSE;
+    L_State.Confirmation_Healthy := FALSE;
+    L_State.Recovery_Target_Valid := FALSE;
+    L_State.Status_Code := 0;
+    L_State.Status_Text := '';
 
     L_State.Runtime_Valid := TRUE;
     L_State.Runtime_System_Time_MS := VI_System_Time_MS;
