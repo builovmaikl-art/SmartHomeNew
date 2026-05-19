@@ -8,6 +8,7 @@ VAR
 
     L_Authority : ST_Water_Isolation_Authority_State;
     L_Valve : ST_Water_Valve_Runtime_State;
+    L_Empty_Valve : ST_Water_Valve_Runtime_State;
 
     L_Any_Degraded : BOOL;
     L_Any_Confirmation_Unknown : BOOL;
@@ -19,12 +20,17 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Degraded := FALSE;
+L_Any_Confirmation_Unknown := FALSE;
+L_Any_Unsafe_Reopen := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Authority :=
         GVL_Water_Isolation_Authority.G_Authority_State[L_i];
 
-    L_Valve := (Runtime_Valid := TRUE);
+    L_Valve := L_Empty_Valve;
+    L_Valve.Runtime_Valid := TRUE;
 
     L_Valve.Runtime_System_Time_MS := VI_System_Time_MS;
 
