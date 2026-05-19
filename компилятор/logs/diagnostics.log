@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4128
+total 4132
 -rw-r--r--  1 runner runner  13067 May 19 15:09 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 19 15:09 .
 drwxr-xr-x  3 runner runner   4096 May 19 15:09 ..
@@ -507,7 +507,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 15:09 .github
 -rw-r--r--  1 runner runner   2019 May 19 15:09 PRG_IO_Read_Discrete_02_Security_Openings.st
 -rw-r--r--  1 runner runner    953 May 19 15:09 PRG_IO_Read_Discrete_03_Safety_Sensors.st
 -rw-r--r--  1 runner runner   1488 May 19 15:09 PRG_IO_Read_Phase_01_Module_Health.st
--rw-r--r--  1 runner runner   3547 May 19 15:09 PRG_IO_Read_Phase_02_Discrete_Debounce.st
+-rw-r--r--  1 runner runner    688 May 19 15:09 PRG_IO_Read_Phase_02_Discrete_Debounce.st
 -rw-r--r--  1 runner runner   4072 May 19 15:09 PRG_IO_Read_Phase_03_Environment_Sensors.st
 -rw-r--r--  1 runner runner   5508 May 19 15:09 PRG_IO_Read_Phase_04_Heating_Manifold_Sensors.st
 -rw-r--r--  1 runner runner   1617 May 19 15:09 PRG_IO_Read_Phase_05_Gas_DHW_Water_Feedback.st
@@ -760,7 +760,7 @@ drwxr-xr-x  5 runner runner   4096 May 19 15:09 компилятор
 -rw-r--r--  1 runner runner  11783 May 19 15:09 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 616
 drwxr-xr-x  5 runner runner   4096 May 19 15:09 .
 drwxr-xr-x 12 runner runner  45056 May 19 15:09 ..
 -rw-r--r--  1 runner runner  21153 May 19 15:09 001_universal_pou_builder_METHODS_V2.py
@@ -779,8 +779,8 @@ drwxr-xr-x  2 runner runner   4096 May 19 15:09 out
 -rw-r--r--  1 runner runner    177 May 19 15:09 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2584
+total 2588
 drwxr-xr-x 2 runner runner    4096 May 19 15:09 .
 drwxr-xr-x 5 runner runner    4096 May 19 15:09 ..
 -rw-r--r-- 1 runner runner       0 May 19 15:09 .gitkeep
--rw-r--r-- 1 runner runner 2637214 May 19 15:09 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2639233 May 19 15:09 RESULT_methods_clean.xml
