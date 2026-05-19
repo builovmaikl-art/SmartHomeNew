@@ -14,6 +14,7 @@ VAR_GLOBAL
     Fire_Context_Active : BOOL := FALSE;
     Gas_Context_Active : BOOL := FALSE;
     Leak_Context_Active : BOOL := FALSE;
+    Global_Stop_Context_Active : BOOL := FALSE;
     Freeze_Context_Active : BOOL := FALSE;
     Heating_Demand_Context_Active : BOOL := FALSE;
     Vent_Boost_Context_Active : BOOL := FALSE;
@@ -24,6 +25,7 @@ VAR_GLOBAL
     Fire_Context_Valid : BOOL := TRUE;
     Gas_Context_Valid : BOOL := TRUE;
     Leak_Context_Valid : BOOL := TRUE;
+    Global_Stop_Context_Valid : BOOL := TRUE;
     Freeze_Context_Valid : BOOL := TRUE;
     Heating_Context_Valid : BOOL := TRUE;
     Vent_Context_Valid : BOOL := TRUE;
