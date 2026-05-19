@@ -17,6 +17,7 @@ PRG_Lighting();
 // Reads the already calculated domain outputs/statuses from this scan.
 // Does not gate execution yet.
 PRG_Domain_Execution_Policy();
+PRG_Domain_Execution_Policy_Periodic();
 
 PRG_Output_Freshness_Governor();
 PRG_Physical_Snapshot_Governor();
