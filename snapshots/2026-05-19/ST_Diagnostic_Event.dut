@@ -1,0 +1,10 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Diagnostic_Event :
+STRUCT
+    Code : UDINT;
+    Severity : INT; // 1=info, 2=warning, 3=alarm, 4=critical
+    Active : BOOL;
+    Timestamp : UDINT;
+    Source : INT; // producer/subsystem/index encoded by caller
+END_STRUCT
+END_TYPE

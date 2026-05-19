@@ -1,0 +1,9 @@
+{attribute 'strict'}
+TYPE E_PLC_ROLE :
+(
+    ROLE_UNDEFINED := 0,
+    ROLE_ACTIVE := 1,
+    ROLE_STANDBY := 2,
+    ROLE_OFFLINE := 3
+) USINT;
+END_TYPE

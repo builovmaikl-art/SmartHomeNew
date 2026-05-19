@@ -1,0 +1,46 @@
+VAR_GLOBAL
+    // Global physical transaction authority.
+    Physical_Transaction_Valid : BOOL := FALSE;
+    Physical_Transaction_Granted : BOOL := FALSE;
+    Physical_Transaction_Quarantine_Active : BOOL := TRUE;
+
+    // Transaction epochs.
+    Physical_Transaction_Epoch : UDINT := 0;
+    Physical_Transaction_Command_Epoch : UDINT := 0;
+    Physical_Transaction_ACK_Epoch : UDINT := 0;
+
+    // Cross-actuator convergence.
+    All_Actuators_Converged : BOOL := FALSE;
+    Cross_Actuator_Epoch_Coherent : BOOL := FALSE;
+    Distributed_Actuation_Coherent : BOOL := FALSE;
+    Stable_Plant_State_Confirmed : BOOL := FALSE;
+
+    // Transaction sequencing.
+    Valve_Transition_Confirmed : BOOL := FALSE;
+    Pump_Transition_Confirmed : BOOL := FALSE;
+    Damper_Transition_Confirmed : BOOL := FALSE;
+    Relay_Bank_Transition_Confirmed : BOOL := FALSE;
+
+    // Physical convergence proofs.
+    Flow_Stabilization_Confirmed : BOOL := FALSE;
+    Pressure_Stabilization_Confirmed : BOOL := FALSE;
+    Thermal_Response_Confirmed : BOOL := FALSE;
+    Electrical_Load_Stabilized : BOOL := FALSE;
+
+    // Failure/skew detection.
+    Partial_Plant_Transition_Detected : BOOL := FALSE;
+    Cross_Actuator_Convergence_Skew : BOOL := FALSE;
+    Pump_Valve_Ordering_Race_Detected : BOOL := FALSE;
+    Distributed_Actuator_Rollback_Detected : BOOL := FALSE;
+    Transaction_Timeout_Detected : BOOL := FALSE;
+    Brownout_Partial_Switching_Detected : BOOL := FALSE;
+
+    // Temporal authority.
+    Physical_Transaction_Last_Update_MS : UDINT := 0;
+    Physical_Transaction_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Physical_Transaction_Last_Error_Code : UDINT := 0;
+    Physical_Transaction_Last_Error_Text : STRING(160) := '';
+    Physical_Transaction_Invalidation_Count : UDINT := 0;
+END_VAR

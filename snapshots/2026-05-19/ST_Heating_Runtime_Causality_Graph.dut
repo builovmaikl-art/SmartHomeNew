@@ -1,0 +1,36 @@
+TYPE ST_Heating_Runtime_Causality_Graph :
+STRUCT
+    // ======================================================
+    // Graph nodes
+    // ======================================================
+    Nodes : ARRAY[1..64] OF ST_Heating_Runtime_Causality_Node;
+
+    // ======================================================
+    // Graph edges
+    // ======================================================
+    Edges : ARRAY[1..128] OF ST_Heating_Runtime_Causality_Edge;
+
+    // ======================================================
+    // Graph state
+    // ======================================================
+    Node_Count : UINT;
+    Edge_Count : UINT;
+
+    Graph_Active : BOOL;
+    Graph_Degraded : BOOL;
+    Graph_Critical : BOOL;
+
+    // ======================================================
+    // Graph integrity
+    // ======================================================
+    Sequencing_Valid : BOOL;
+    Ownership_Valid : BOOL;
+    Synchronization_Valid : BOOL;
+
+    // ======================================================
+    // Graph status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

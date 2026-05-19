@@ -1,0 +1,9 @@
+TYPE E_OpenTherm_Adapter_State :
+(
+    OT_STATE_OFFLINE := 0,
+    OT_STATE_ONLINE := 1,
+    OT_STATE_HEARTBEAT_TIMEOUT := 2,
+    OT_STATE_ACK_TIMEOUT := 3,
+    OT_STATE_ADAPTER_ERROR := 4
+);
+END_TYPE

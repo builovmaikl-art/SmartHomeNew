@@ -1,0 +1,32 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ==============================================================================
+    // Water/Flood isolation semantic publication surface.
+    // ==============================================================================
+    //
+    // Observe/publish-first isolation governance.
+    //
+    // This layer publishes:
+    // - selective isolation intent;
+    // - fallback-to-global semantics;
+    // - topology visibility;
+    // - explainability.
+    //
+    // It does NOT directly own valve outputs.
+    // ==============================================================================
+
+    G_Isolation_Runtime_State : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF ST_Water_Isolation_Runtime_State;
+
+    // Aggregated visibility.
+    G_Any_Isolation_Requested : BOOL;
+    G_Any_Selective_Isolation : BOOL;
+    G_Global_Fallback_Required : BOOL;
+
+    // Projection lifecycle.
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    // Explainability.
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR

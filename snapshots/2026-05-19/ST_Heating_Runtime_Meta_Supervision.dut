@@ -1,0 +1,49 @@
+TYPE ST_Heating_Runtime_Meta_Supervision :
+STRUCT
+    // ======================================================
+    // Meta-analytics visibility
+    // Passive governance analytics only.
+    // No supervisory authority exists.
+    // ======================================================
+    Meta_Analytics_Visible : BOOL;
+    Meta_Analytics_Degraded : BOOL;
+    Meta_Analytics_Attention : BOOL;
+
+    // ======================================================
+    // Supervision integrity observation
+    // ======================================================
+    Supervision_Integrity_Visible : BOOL;
+    Supervision_Integrity_Observation : UINT;
+
+    // ======================================================
+    // Adaptive supervision drift observation
+    // ======================================================
+    Adaptive_Drift_Visible : BOOL;
+    Adaptive_Drift_Observation : UINT;
+
+    // ======================================================
+    // Predictive confidence observation
+    // ======================================================
+    Confidence_Degradation_Visible : BOOL;
+    Confidence_Degradation_Observation : UINT;
+
+    // ======================================================
+    // Analytics consistency observation
+    // ======================================================
+    Analytics_Consistency_Visible : BOOL;
+    Analytics_Consistency_Observation : UINT;
+
+    // ======================================================
+    // Meta integrity observation
+    // ======================================================
+    Sequencing_Meta_Observation : BOOL;
+    Ownership_Meta_Observation : BOOL;
+    Synchronization_Meta_Observation : BOOL;
+
+    // ======================================================
+    // Meta-analytics status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

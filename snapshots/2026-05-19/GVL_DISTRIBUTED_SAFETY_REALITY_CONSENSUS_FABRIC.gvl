@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Distributed_Safety_Reality_Consensus_Valid : BOOL := FALSE;
+    Distributed_Safety_Reality_Consensus_Granted : BOOL := FALSE;
+
+    Distributed_Safety_Consensus_Valid : BOOL := FALSE;
+    Cluster_Safety_Reality_Stable : BOOL := FALSE;
+    Distributed_Observability_Reality_Equivalence : BOOL := FALSE;
+
+    Distributed_Safety_Causality_Valid : BOOL := FALSE;
+    Cluster_Safety_Lineage_Coherent : BOOL := FALSE;
+
+    Distributed_Safety_State_Fork : BOOL := FALSE;
+    Cluster_Safety_Projection_Drift : BOOL := FALSE;
+    Distributed_Unsafe_State_Hidden : BOOL := FALSE;
+
+    Distributed_Safety_Reality_Epoch : UDINT := 0;
+END_VAR

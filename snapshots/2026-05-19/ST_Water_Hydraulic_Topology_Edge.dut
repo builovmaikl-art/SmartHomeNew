@@ -1,0 +1,25 @@
+TYPE ST_Water_Hydraulic_Topology_Edge :
+STRUCT
+    Runtime_Valid : BOOL;
+
+    Edge_Id : UINT;
+
+    Upstream_Segment_Id : UINT;
+    Downstream_Segment_Id : UINT;
+
+    Isolation_Group_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    Shared_Trunk : BOOL;
+    Cross_Zone_Dependency : BOOL;
+
+    Dependency_Valid : BOOL;
+    Dependency_Ambiguous : BOOL;
+
+    Selective_Isolation_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

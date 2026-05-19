@@ -1,0 +1,71 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+    // Размеры массивов (конфигурация системы)
+    C_MAX_ZONES            : INT := 16; 
+    C_MAX_LIGHTING_ZONES   : INT := 32; 
+    C_MAX_HEATING_CIRCUITS : INT := 16; 
+    C_MAX_CLIMATE_ZONES    : INT := 16; 
+    C_MAX_LIGHT_ZONES      : INT := 32; 
+    C_MAX_SOCKETS          : INT := 36; 
+    C_MAX_BLINDS           : INT := 20; 
+    C_MAX_ALARMS           : INT := 20; 
+    C_MAX_RULES            : INT := 20; 
+    C_MAX_MANIFOLDS        : INT := 5;  
+    C_MAX_BOILERS          : INT := 2;  
+    C_MAX_SUPPLY_FANS      : INT := 3;  
+    C_MAX_EXHAUST_FANS     : INT := 5;  
+    C_MAX_SECURITY_SENSORS : INT := 15; 
+    C_MAX_FLOOD_SENSORS    : INT := 12; 
+    C_MAX_DOOR_SENSORS     : INT := 8;  
+    C_MAX_CO_SENSORS       : INT := 8;  
+    C_MAX_METHANE_SENSORS  : INT := 2;  
+    C_PRIMARY_METHANE_SENSOR_INDEX : INT := 1;
+    C_PRIMARY_EFFECTIVE_GAS_INDEX : INT := 1;
+    C_MAX_VENT_UNITS       : INT := 8;  
+    C_MAX_SUPPLY_TEMPS     : INT := 2;  
+    C_MAX_SMOKE_SENSORS    : INT := 6;  
+    C_MAX_SCENARIOS        : INT := 6;  
+    C_MAX_OUTDOOR_ZONES    : INT := 4;  
+    C_MAX_ACCESS_CODES     : INT := 10; 
+    C_MAX_WET_ZONES        : INT := 4;  
+    C_MAX_CALIBRATIONS     : INT := 20; 
+    C_MAX_MODULES          : INT := 10; 
+    C_MAX_CLEANING_MODES   : INT := 3;  
+    C_MAX_ALLOWED_IPS      : INT := 5;  
+    C_MAX_VENT_SUPPLY_MODES: INT := 3;  
+    C_MAX_SECURITY_PHONES  : INT := 5;  
+    C_MAX_FLOOD_VALVES     : INT := 3;  
+    C_MAX_HUMIDITY_SENSORS : INT := 8;  
+    C_MAX_CO2_SENSORS      : INT := 8;  
+    C_MAX_CIRCUITS_PER_MANIFOLD : INT := 4; 
+    C_MAX_TREND_DATA_POINTS: INT := 100; 
+    C_MAX_HISTORY_RECORDS  : INT := 100; 
+    C_MAX_DEBUG_LOGS       : INT := 1000; 
+    C_MAX_GATEWAY_COMMANDS : INT := 10; 
+    C_MAX_STATE_SNAPSHOTS  : INT := 10; 
+    C_MAX_BLACKBOX_RECORDS : INT := 100; 
+    C_MAX_PRESENCE_HISTORY : INT := 1008; 
+    C_MAX_MODBUS_REGISTERS : INT := 201; 
+    C_MAX_DEDUPLICATION_HISTORY : INT := 100; 
+    C_MAX_NVRAM_RECORDS    : INT := 100; 
+    C_MAX_NVRAM_DATA       : INT := 128; 
+
+    C_MAX_WATER_ZONES      : INT := 32;
+
+    C_ANALOG_RAW_MAX       : WORD := 27648;
+    C_ANALOG_4MA_RAW       : WORD := 5529;  
+    C_ANALOG_3_6MA_RAW     : WORD := 4976;  
+    C_ANALOG_21MA_RAW      : WORD := 29030; 
+    C_ANALOG_10V_MAX_RAW   : WORD := 30000; 
+
+    C_MS_IN_SECOND         : UDINT := 1000;
+    C_MS_IN_MINUTE         : UDINT := 60000;
+    C_MS_IN_HOUR           : UDINT := 3600000;
+    C_MS_IN_DAY            : UDINT := 86400000;
+
+    C_BOILER_CASCADE_MIN_DEMAND : REAL := 25.0;
+    C_BOILER_CASCADE_HIGH_DEMAND : REAL := 250.0;
+    C_BOILER_SETPOINT_MIN : REAL := 35.0;
+    C_BOILER_SETPOINT_MAX : REAL := 55.0;
+    C_MIN_HEATING_MANIFOLD_PRESSURE : REAL := 0.8;
+END_VAR

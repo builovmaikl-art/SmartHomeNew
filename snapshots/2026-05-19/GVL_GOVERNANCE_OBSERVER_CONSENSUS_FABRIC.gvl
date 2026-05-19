@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic governance observer consensus governance.
+    Governance_Observer_Consensus_Valid : BOOL := FALSE;
+    Governance_Observer_Consensus_Granted : BOOL := FALSE;
+    Governance_Observer_Consensus_Quarantine_Active : BOOL := TRUE;
+
+    // Distributed governance projection proofs.
+    Distributed_Governance_Projection_Consistent : BOOL := FALSE;
+    Observer_Semantic_Consensus_Valid : BOOL := FALSE;
+    CrossNode_Authority_Interpretation_Aligned : BOOL := FALSE;
+    Governance_Reality_Canonical : BOOL := FALSE;
+    Observer_Projection_Lineage_Coherent : BOOL := FALSE;
+
+    // Observer consensus integrity.
+    Canonical_Projection_Vector_Stable : BOOL := FALSE;
+    Distributed_Interpretation_Equivalence_Valid : BOOL := FALSE;
+    Governance_Projection_Causality_Grounded : BOOL := FALSE;
+    Observer_Timeline_Consensus_Monotonic : BOOL := FALSE;
+
+    // Governance observer split-brain detectors.
+    Observer_Governance_Divergence_Detected : BOOL := FALSE;
+    CrossNode_Authority_Interpretation_Fork : BOOL := FALSE;
+    Semantic_Projection_Mismatch_Detected : BOOL := FALSE;
+    Canonical_Governance_Reality_Lost : BOOL := FALSE;
+    Observer_Projection_Lineage_Drift_Detected : BOOL := FALSE;
+    Distributed_Governance_Reality_Fork_Detected : BOOL := FALSE;
+
+    // Consensus epochs.
+    Governance_Observer_Consensus_Epoch : UDINT := 0;
+    Governance_Observer_Consensus_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Governance_Observer_Consensus_Last_Update_MS : UDINT := 0;
+    Governance_Observer_Consensus_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Governance_Observer_Consensus_Last_Error_Code : UDINT := 0;
+    Governance_Observer_Consensus_Last_Error_Text : STRING(160) := '';
+    Governance_Observer_Consensus_Invalidation_Count : UDINT := 0;
+END_VAR

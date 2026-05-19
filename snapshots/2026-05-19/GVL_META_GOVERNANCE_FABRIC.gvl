@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic meta-governance authority.
+    Meta_Governance_Valid : BOOL := FALSE;
+    Meta_Governance_Granted : BOOL := FALSE;
+    Meta_Governance_Quarantine_Active : BOOL := TRUE;
+
+    // Recursive governance consistency proofs.
+    Governance_Graph_Acyclic : BOOL := FALSE;
+    Authority_Rooting_Valid : BOOL := FALSE;
+    Independent_Validation_Preserved : BOOL := FALSE;
+    Meta_Consistency_Coherent : BOOL := FALSE;
+    Recursive_Trust_Boundaries_Stable : BOOL := FALSE;
+
+    // Governance graph integrity.
+    Validator_Independence_Valid : BOOL := FALSE;
+    CrossLayer_Causality_Grounded : BOOL := FALSE;
+    Bootstrap_Validation_Absent : BOOL := FALSE;
+    SelfReference_Elimination_Valid : BOOL := FALSE;
+
+    // Meta-governance recursion detectors.
+    Recursive_Authority_Dependency_Detected : BOOL := FALSE;
+    Circular_Validation_Chain_Detected : BOOL := FALSE;
+    SelfJustifying_Governance_State_Detected : BOOL := FALSE;
+    Epistemic_Recursion_Leakage_Detected : BOOL := FALSE;
+    Authority_Bootstrap_Paradox_Detected : BOOL := FALSE;
+    Meta_Consistency_Erosion_Detected : BOOL := FALSE;
+
+    // Governance epochs.
+    Meta_Governance_Epoch : UDINT := 0;
+    Meta_Governance_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Meta_Governance_Last_Update_MS : UDINT := 0;
+    Meta_Governance_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Meta_Governance_Last_Error_Code : UDINT := 0;
+    Meta_Governance_Last_Error_Text : STRING(160) := '';
+    Meta_Governance_Invalidation_Count : UDINT := 0;
+END_VAR

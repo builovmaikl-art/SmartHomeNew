@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Physical_Safety_Projection_Valid : BOOL := FALSE;
+    Physical_Safety_Projection_Granted : BOOL := FALSE;
+
+    Physical_Plant_Safety_Projection_Stable : BOOL := FALSE;
+    Energy_State_Safety_Projection_Valid : BOOL := FALSE;
+    Recovery_State_Safety_Projection_Valid : BOOL := FALSE;
+
+    Physical_Projection_Causality_Valid : BOOL := FALSE;
+    Projection_Reality_Alignment_Stable : BOOL := FALSE;
+
+    Physical_Safety_Projection_Drift_Detected : BOOL := FALSE;
+    Hidden_Unsafe_Physical_State_Detected : BOOL := FALSE;
+    Unsafe_Projection_Backfill_Detected : BOOL := FALSE;
+
+    Physical_Safety_Projection_Epoch : UDINT := 0;
+END_VAR

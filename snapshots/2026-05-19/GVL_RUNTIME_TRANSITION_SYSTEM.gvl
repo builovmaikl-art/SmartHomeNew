@@ -1,0 +1,28 @@
+TYPE E_RUNTIME_TRANSITION_RESULT : (
+    TRANSITION_VALID,
+    TRANSITION_FORBIDDEN,
+    TRANSITION_REQUIRES_PROOF,
+    TRANSITION_REQUIRES_RECOVERY,
+    TRANSITION_REQUIRES_TEMPORAL_ALIGNMENT
+);
+END_TYPE
+
+VAR_GLOBAL
+    Current_Transition_Result : E_RUNTIME_TRANSITION_RESULT := TRANSITION_VALID;
+
+    Runtime_Transition_Validation_Active : BOOL := TRUE;
+    Runtime_Transition_ReadOnly_Mode : BOOL := TRUE;
+    Runtime_Transition_NoMutation : BOOL := TRUE;
+
+    Runtime_Transition_Legal : BOOL := FALSE;
+    Runtime_Transition_Proofs_Valid : BOOL := FALSE;
+    Runtime_Transition_Lineage_Valid : BOOL := FALSE;
+    Runtime_Transition_Temporal_Valid : BOOL := FALSE;
+
+    Illegal_Runtime_Transition_Observed : BOOL := FALSE;
+    Unsafe_State_Promotion_Observed : BOOL := FALSE;
+    Recovery_Without_Lineage_Observed : BOOL := FALSE;
+    Unsafe_Trust_Escalation_Observed : BOOL := FALSE;
+
+    Runtime_Transition_Epoch : UDINT := 0;
+END_VAR

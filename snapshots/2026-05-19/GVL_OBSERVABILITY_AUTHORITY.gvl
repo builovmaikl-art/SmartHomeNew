@@ -1,0 +1,57 @@
+VAR_GLOBAL
+    // ======================================================
+    // OBSERVABILITY VISIBILITY STATE
+    // ======================================================
+
+    Observability_Epoch : ULINT := 0;
+    Observability_Snapshot_Epoch : ULINT := 0;
+
+    Publication_Runtime_Valid : BOOL := FALSE;
+
+    Unsafe_State_Published : BOOL := FALSE;
+    Emergency_Visibility_Required : BOOL := FALSE;
+
+    Runtime_Failure_Visible : BOOL := FALSE;
+    Output_Decay_Visible : BOOL := FALSE;
+    Transport_Failure_Visible : BOOL := FALSE;
+    Recovery_Failure_Visible : BOOL := FALSE;
+    Fencing_Failure_Visible : BOOL := FALSE;
+    Monotonic_Failure_Visible : BOOL := FALSE;
+
+    Distributed_Failure_Visible : BOOL := FALSE;
+    Distributed_Quarantine_Visible : BOOL := FALSE;
+    Peer_Runtime_Stale_Visible : BOOL := FALSE;
+    Peer_Snapshot_Stale_Visible : BOOL := FALSE;
+    Peer_Boot_Mismatch_Visible : BOOL := FALSE;
+    Peer_Fencing_Conflict_Visible : BOOL := FALSE;
+    Peer_Semantic_Continuity_Lost_Visible : BOOL := FALSE;
+
+    Distributed_Publication_Reconciliation_Visible : BOOL := FALSE;
+    Distributed_Publication_Freeze_Visible : BOOL := FALSE;
+    Distributed_Snapshot_Consistency_Visible : BOOL := FALSE;
+
+    Peer_Publication_Stale_Visible : BOOL := FALSE;
+    Peer_Publication_Divergence_Visible : BOOL := FALSE;
+    Peer_Publication_Reconciliation_Lost_Visible : BOOL := FALSE;
+    Peer_Snapshot_Not_Immutable_Visible : BOOL := FALSE;
+
+    Distributed_Immutable_Snapshot_Quarantine_Visible : BOOL := FALSE;
+
+    Distributed_Commit_Visible : BOOL := FALSE;
+    Distributed_Commit_Quarantine_Visible : BOOL := FALSE;
+
+    Publication_Prepare_Visible : BOOL := FALSE;
+    Publication_Commit_Visible : BOOL := FALSE;
+
+    Peer_Commit_Ack_Visible : BOOL := FALSE;
+    Peer_Commit_Mismatch_Visible : BOOL := FALSE;
+    Peer_Commit_Replay_Visible : BOOL := FALSE;
+    Peer_Commit_Missing_Visible : BOOL := FALSE;
+
+    Commit_Lease_Expired_Visible : BOOL := FALSE;
+
+    Observability_Last_Publication_MS : UDINT := 0;
+
+    Observability_Last_Error_Code : UDINT := 0;
+    Observability_Last_Error_Text : STRING(160) := '';
+END_VAR

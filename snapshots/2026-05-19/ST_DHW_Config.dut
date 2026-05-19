@@ -1,0 +1,14 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_DHW_Config :
+STRUCT
+    Target_Temp : REAL := 55.0;
+    Hysteresis : REAL := 2.0;
+    Circulation_Schedule_Enabled : BOOL := TRUE;
+    Circulation_Start : TOD := TOD#06:00;
+    Circulation_End : TOD := TOD#23:00;
+    Night_Mode_Enabled : BOOL := TRUE;
+    Anti_Legionella_Enabled : BOOL := TRUE;
+    Anti_Legionella_Day : UINT := 7;
+    Degraded_Target_Delta : REAL := 5.0; // Снижение целевой температуры ГВС в режиме DEGRADED
+END_STRUCT
+END_TYPE

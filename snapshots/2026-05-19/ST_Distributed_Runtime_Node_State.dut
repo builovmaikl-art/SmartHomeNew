@@ -1,0 +1,33 @@
+TYPE ST_Distributed_Runtime_Node_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Controller_Id : UINT;
+    Runtime_Node_Id : UINT;
+    Authority_Domain_Id : UINT;
+    Topology_Domain_Id : UINT;
+
+    Node_Online : BOOL;
+    Node_Degraded : BOOL;
+    Node_Quarantined : BOOL;
+    Node_Backup_Mode : BOOL;
+    Node_Observer_Mode : BOOL;
+
+    Authority_Allowed : BOOL;
+    Authority_Revoked : BOOL;
+    Authority_Master : BOOL;
+    Authority_Backup : BOOL;
+
+    Replication_Healthy : BOOL;
+    Replication_Timeout : BOOL;
+    Split_Brain_Suspected : BOOL;
+
+    Restart_Continuity_Valid : BOOL;
+    Quarantine_State_Replicated : BOOL;
+    Recovery_State_Replicated : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

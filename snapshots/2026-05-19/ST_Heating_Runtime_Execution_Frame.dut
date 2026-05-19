@@ -1,0 +1,42 @@
+TYPE ST_Heating_Runtime_Execution_Frame :
+STRUCT
+    // ======================================================
+    // Execution phase
+    // ======================================================
+    Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // Execution lifecycle
+    // ======================================================
+    Frame_Started : BOOL;
+    Frame_Completed : BOOL;
+    Frame_Failed : BOOL;
+
+    // ======================================================
+    // Execution timing
+    // ======================================================
+    Frame_Start_MS : UDINT;
+    Frame_End_MS : UDINT;
+    Frame_Duration_MS : UDINT;
+
+    // ======================================================
+    // Execution integrity
+    // ======================================================
+    Sequencing_Valid : BOOL;
+    Ownership_Valid : BOOL;
+    Synchronization_Valid : BOOL;
+
+    // ======================================================
+    // Execution telemetry
+    // ======================================================
+    Runtime_Jitter_Detected : BOOL;
+    Runtime_Latency_Detected : BOOL;
+    Runtime_Degraded : BOOL;
+
+    // ======================================================
+    // Execution status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

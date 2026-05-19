@@ -1,0 +1,21 @@
+TYPE ST_Water_Recovery_Runtime_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Recovery_Requested : BOOL;
+    Recovery_Allowed : BOOL;
+    Recovery_Denied : BOOL;
+
+    Observation_Window_Active : BOOL;
+    Unsafe_Recovery_Detected : BOOL;
+
+    Valve_Degraded : BOOL;
+    Confirmation_Healthy : BOOL;
+
+    Recovery_Target_Valid : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

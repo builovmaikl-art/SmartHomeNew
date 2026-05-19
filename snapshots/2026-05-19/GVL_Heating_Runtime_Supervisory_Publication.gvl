@@ -1,0 +1,7 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Canonical supervisory publication surface.
+    // Runtime-independent passive observability publication.
+
+    G_Publication : ST_Heating_Runtime_Supervisory_Publication;
+END_VAR

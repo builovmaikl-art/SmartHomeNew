@@ -1,0 +1,34 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Heating dashboard
+    G_HMI_Heating_Confidence : REAL := 1.0;
+    G_HMI_Heating_Confidence_Percent : INT := 100;
+    G_HMI_Heating_Reason_Code : INT := 0;
+    G_HMI_Heating_Status_Text : STRING(128) := 'OK';
+    G_HMI_Heating_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ALARM
+
+    // Heating cascade dashboard
+    G_HMI_Heating_Cascade_Available : BOOL;
+    G_HMI_Heating_Cascade_Degraded : BOOL;
+    G_HMI_Heating_Cascade_Partial_Capacity : BOOL;
+    G_HMI_Heating_Cascade_No_Flame : BOOL;
+    G_HMI_Heating_Cascade_Transport_Degraded : BOOL;
+    G_HMI_Heating_Cascade_Ignition_Timeout : BOOL;
+    G_HMI_Heating_Cascade_Active_Boilers : UINT;
+    G_HMI_Heating_Cascade_Available_Boilers : UINT;
+
+    // OpenTherm dashboard
+    G_HMI_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Command_Ack : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Command_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Heartbeat_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Adapter_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Heartbeat_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_HMI_Boiler_OT_Command_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_HMI_Boiler_OT_Adapter_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Adapter_State;
+    G_HMI_Boiler_OT_Error_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Error;
+
+    // Heating predictive dashboard
+    G_HMI_Heating_Predictive_Pressure_Drop : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_HMI_Heating_Predictive_Current_Rise : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+END_VAR

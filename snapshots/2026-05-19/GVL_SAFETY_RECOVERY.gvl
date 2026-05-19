@@ -1,0 +1,22 @@
+TYPE E_Recovery_Phase :
+(
+    IDLE,
+    STABILIZING,
+    WAIT_MANUAL_CONFIRM,
+    RECOVERING,
+    COOLDOWN,
+    ABORTED
+);
+END_TYPE
+
+VAR_GLOBAL
+    G_Recovery_Phase : E_Recovery_Phase := IDLE;
+    G_Recovery_Active : BOOL := FALSE;
+    G_Recovery_Requested : BOOL := FALSE;
+    G_Recovery_Manual_Confirm : BOOL := FALSE;
+    G_Recovery_Start_MS : UDINT := 0;
+    G_Recovery_Stable_Since_MS : UDINT := 0;
+    G_Recovery_Cooldown_Start_MS : UDINT := 0;
+    G_Recovery_Exit_Allowed : BOOL := FALSE;
+    G_Recovery_Abort_Reason : INT := 0; // 0=none, 1=safety active, 2=confidence low, 3=timeout
+END_VAR

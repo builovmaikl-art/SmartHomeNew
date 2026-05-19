@@ -1,0 +1,14 @@
+TYPE ST_Input_Quality_Record :
+STRUCT
+    Quality_Visible : BOOL;
+    Value_Valid : BOOL;
+    Value_Degraded : BOOL;
+    Spike_Detected : BOOL;
+    Stuck_Detected : BOOL;
+    Confidence : REAL;
+    Last_Value : REAL;
+    Last_Change_MS : UDINT;
+    Reason_Code : UINT;
+    Reason_Text : STRING(128);
+END_STRUCT
+END_TYPE

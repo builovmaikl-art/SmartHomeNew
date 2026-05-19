@@ -1,0 +1,10 @@
+TYPE E_SCENARIO_SOURCE :
+(
+    SRC_NONE := 0,
+    SRC_OPERATOR := 1,
+    SRC_GATEWAY := 2,
+    SRC_RULE := 3,
+    SRC_SAFETY := 4,
+    SRC_POLICY := 5
+);
+END_TYPE

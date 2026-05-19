@@ -1,0 +1,49 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ==============================================================================
+    // Canonical Water/Flood runtime projection publication surface.
+    // ==============================================================================
+    //
+    // Observe/publish-only semantic boundary.
+    //
+    // This GVL is intended to become the canonical semantic transfer layer
+    // between:
+    //
+    // - leak detection/runtime execution;
+    // - safety governance;
+    // - future selective isolation semantics;
+    // - observability/explainability;
+    // - supervisory publication.
+    //
+    // This GVL does NOT:
+    // - own outputs;
+    // - own valve authority;
+    // - directly close/open valves;
+    // - override runtime.
+    //
+    // Canonical topology direction:
+    //
+    // physical input
+    //   -> normalized leak semantics
+    //   -> logical leak sensor
+    //   -> hydraulic mapping
+    //   -> isolation semantics
+    //   -> governance/arbitration
+    //   -> output projection
+    //   -> observability/publication
+    // ==============================================================================
+
+    G_Leak_Runtime_State : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF ST_Water_Leak_Runtime_State;
+
+    // Projection lifecycle.
+    G_Projection_Valid : BOOL;
+    G_Last_Projection_MS : UDINT;
+
+    // Active runtime compatibility visibility.
+    G_Global_Leak_Active : BOOL;
+    G_Global_Warning_Active : BOOL;
+
+    // Observability contract.
+    G_Runtime_Projection_Status_Code : UINT;
+    G_Runtime_Projection_Status_Text : STRING(128);
+END_VAR

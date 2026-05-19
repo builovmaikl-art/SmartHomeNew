@@ -1,0 +1,25 @@
+TYPE ST_Water_Output_Reconciliation_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Valve_Group_Id : UINT;
+
+    Projection_Active : BOOL;
+    Runtime_Output_Active : BOOL;
+
+    Expected_Closed : BOOL;
+    Confirmed_Closed : BOOL;
+    Confirmation_Unknown : BOOL;
+
+    Reconciliation_Healthy : BOOL;
+    Projection_Runtime_Mismatch : BOOL;
+    Projection_Confirmation_Mismatch : BOOL;
+
+    Conflict_Detected : BOOL;
+    Topology_Invalid : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

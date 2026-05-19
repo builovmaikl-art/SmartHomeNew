@@ -1,0 +1,25 @@
+TYPE ST_Runtime_Node_Session :
+STRUCT
+    Session_Valid : BOOL;
+    Session_Id : UDINT;
+    Session_Start_MS : UDINT;
+    Last_Heartbeat_MS : UDINT;
+
+    Controller_Id : UINT;
+    Runtime_Node_Id : UINT;
+
+    Session_Connected : BOOL;
+    Session_Stale : BOOL;
+    Session_Reconnect_Required : BOOL;
+    Session_Quarantined : BOOL;
+
+    Transport_Healthy : BOOL;
+    Runtime_Replication_Healthy : BOOL;
+
+    Authority_Granted : BOOL;
+    Authority_Revoked : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

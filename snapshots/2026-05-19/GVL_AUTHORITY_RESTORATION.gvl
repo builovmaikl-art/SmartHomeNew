@@ -1,0 +1,33 @@
+VAR_GLOBAL
+    // Global authority restoration governance.
+    Authority_Restoration_Active : BOOL := FALSE;
+    Authority_Restoration_Allowed : BOOL := FALSE;
+    Authority_Restoration_Completed : BOOL := FALSE;
+
+    // Staged re-authorization.
+    Snapshot_Restoration_Valid : BOOL := FALSE;
+    Consensus_Restoration_Valid : BOOL := FALSE;
+    Causality_Restoration_Valid : BOOL := FALSE;
+    Epoch_Restoration_Valid : BOOL := FALSE;
+    Lineage_Restoration_Valid : BOOL := FALSE;
+
+    // Quarantine exit ordering.
+    Revocation_Clearance_Valid : BOOL := FALSE;
+    Stabilization_Window_Elapsed : BOOL := FALSE;
+    Reauthorization_Order_Valid : BOOL := FALSE;
+
+    // Restoration protection.
+    Premature_Restoration_Detected : BOOL := FALSE;
+    Partial_Restoration_Detected : BOOL := FALSE;
+    Restoration_Replay_Suspected : BOOL := FALSE;
+    Quarantine_Exit_Race_Detected : BOOL := FALSE;
+
+    // Temporal authority.
+    Restoration_Epoch : UDINT := 0;
+    Restoration_Last_Update_MS : UDINT := 0;
+
+    // Diagnostics.
+    Restoration_Last_Error_Code : UDINT := 0;
+    Restoration_Last_Error_Text : STRING(160) := '';
+    Restoration_Invalidation_Count : UDINT := 0;
+END_VAR

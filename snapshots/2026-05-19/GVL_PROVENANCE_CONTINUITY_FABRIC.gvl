@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic provenance continuity governance.
+    Provenance_Continuity_Valid : BOOL := FALSE;
+    Provenance_Continuity_Granted : BOOL := FALSE;
+    Provenance_Continuity_Quarantine_Active : BOOL := TRUE;
+
+    // Recovery provenance continuity proofs.
+    Recovery_Provenance_Reattested : BOOL := FALSE;
+    Authority_Resurrection_Authentic : BOOL := FALSE;
+    Federation_Rejoin_Provenance_Valid : BOOL := FALSE;
+    PostRecovery_TrustSeed_Coherent : BOOL := FALSE;
+    CrossEpoch_Provenance_Continuity_Stable : BOOL := FALSE;
+
+    // Recovery trust continuity integrity.
+    Recovery_Epoch_Authenticity_Valid : BOOL := FALSE;
+    Distributed_Rejoin_Attestation_Coherent : BOOL := FALSE;
+    Authority_Restoration_Provenance_Grounded : BOOL := FALSE;
+    Provenance_Lease_Continuity_Valid : BOOL := FALSE;
+
+    // Post-recovery provenance bypass detectors.
+    Stale_Provenance_Resurrection_Detected : BOOL := FALSE;
+    Recovered_Authority_Without_Reattestation_Detected : BOOL := FALSE;
+    Federation_Rejoin_Without_Provenance_Detected : BOOL := FALSE;
+    CrossEpoch_Trust_Continuity_Broken : BOOL := FALSE;
+    Recovery_Trust_Seed_Drift_Detected : BOOL := FALSE;
+    Provenance_Resurrection_Bypass_Detected : BOOL := FALSE;
+
+    // Continuity epochs.
+    Provenance_Continuity_Epoch : UDINT := 0;
+    Provenance_Continuity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Provenance_Continuity_Last_Update_MS : UDINT := 0;
+    Provenance_Continuity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Provenance_Continuity_Last_Error_Code : UDINT := 0;
+    Provenance_Continuity_Last_Error_Text : STRING(160) := '';
+    Provenance_Continuity_Invalidation_Count : UDINT := 0;
+END_VAR

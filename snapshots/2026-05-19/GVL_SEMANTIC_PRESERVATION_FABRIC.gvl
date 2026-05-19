@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic semantic preservation authority.
+    Semantic_Preservation_Valid : BOOL := FALSE;
+    Semantic_Preservation_Granted : BOOL := FALSE;
+    Semantic_Preservation_Quarantine_Active : BOOL := TRUE;
+
+    // Immutable intent preservation proofs.
+    Declared_System_Intent_Coherent : BOOL := FALSE;
+    Adaptive_Policy_Bounded : BOOL := FALSE;
+    Cross_Domain_Intent_Aligned : BOOL := FALSE;
+    Optimization_Goals_Coherent : BOOL := FALSE;
+    Behavioral_Evolution_Stable : BOOL := FALSE;
+
+    // Long-term semantic governance coherence.
+    Objective_Boundaries_Immutable : BOOL := FALSE;
+    Semantic_Governance_Coherent : BOOL := FALSE;
+    Adaptive_Runtime_Intent_Stable : BOOL := FALSE;
+    LongTerm_Semantic_Evolution_Valid : BOOL := FALSE;
+
+    // Semantic drift detectors.
+    Adaptive_Policy_Drift_Detected : BOOL := FALSE;
+    Optimization_Semantic_Erosion_Detected : BOOL := FALSE;
+    CrossDomain_Intent_Divergence_Detected : BOOL := FALSE;
+    LongTerm_Objective_Mutation_Detected : BOOL := FALSE;
+    Behavior_Learning_Instability_Detected : BOOL := FALSE;
+    Silent_Governance_Reinterpretation_Detected : BOOL := FALSE;
+
+    // Semantic preservation epochs.
+    Semantic_Preservation_Epoch : UDINT := 0;
+    Semantic_Preservation_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Semantic_Preservation_Last_Update_MS : UDINT := 0;
+    Semantic_Preservation_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Semantic_Preservation_Last_Error_Code : UDINT := 0;
+    Semantic_Preservation_Last_Error_Text : STRING(160) := '';
+    Semantic_Preservation_Invalidation_Count : UDINT := 0;
+END_VAR

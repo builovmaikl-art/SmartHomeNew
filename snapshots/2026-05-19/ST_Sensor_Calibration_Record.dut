@@ -1,0 +1,12 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Sensor_Calibration_Record :
+STRUCT
+    sensor_id : UDINT := 0;
+    sensor_type : E_SENSOR_TYPE;
+    zone_id : BYTE := 0;
+    offset : REAL := 0.0;
+    multiplier : REAL := 1.0;
+    last_calibration_timestamp : UDINT := 0;
+    verification_passed : BOOL := FALSE;
+END_STRUCT
+END_TYPE

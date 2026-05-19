@@ -1,0 +1,31 @@
+VAR_GLOBAL
+    // Immutable physical snapshot authority.
+    Physical_Snapshot_Valid : BOOL := FALSE;
+    Physical_Snapshot_Frozen : BOOL := FALSE;
+    Physical_Snapshot_Publication_Allowed : BOOL := FALSE;
+    Physical_Snapshot_Isolation_Valid : BOOL := FALSE;
+    Physical_Snapshot_Copy_Valid : BOOL := FALSE;
+
+    // Snapshot epoch coherence.
+    Physical_Snapshot_Epoch : UDINT := 0;
+    Physical_Snapshot_Runtime_Epoch : UDINT := 0;
+    Physical_Snapshot_Output_Epoch : UDINT := 0;
+
+    // Mutation protection.
+    Physical_Snapshot_Mutation_Detected : BOOL := FALSE;
+    Physical_Snapshot_Replay_Suspected : BOOL := FALSE;
+    Physical_Snapshot_Lease_Expired : BOOL := TRUE;
+
+    // Cross-governor coherence.
+    Physical_Snapshot_Consensus_Coherent : BOOL := FALSE;
+    Physical_Snapshot_Causality_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Physical_Snapshot_Last_Update_MS : UDINT := 0;
+    Physical_Snapshot_Freshness_Valid : BOOL := FALSE;
+
+    // Diagnostics.
+    Physical_Snapshot_Last_Error_Code : UDINT := 0;
+    Physical_Snapshot_Last_Error_Text : STRING(160) := '';
+    Physical_Snapshot_Invalidation_Count : UDINT := 0;
+END_VAR

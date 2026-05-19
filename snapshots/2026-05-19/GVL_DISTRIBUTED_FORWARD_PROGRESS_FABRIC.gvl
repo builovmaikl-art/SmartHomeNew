@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Distributed_Forward_Progress_Valid : BOOL := FALSE;
+    Distributed_Forward_Progress_Granted : BOOL := FALSE;
+
+    Distributed_Forward_Progress_Canonical : BOOL := FALSE;
+    Cluster_Progress_Consensus_Stable : BOOL := FALSE;
+    Distributed_Recovery_Progress_Valid : BOOL := FALSE;
+
+    Distributed_Progress_Causality_Valid : BOOL := FALSE;
+    Cluster_Execution_Lineage_Coherent : BOOL := FALSE;
+
+    Distributed_Livelock_Detected : BOOL := FALSE;
+    Cluster_Progress_Fork_Detected : BOOL := FALSE;
+    Distributed_Consensus_Progress_Deadlock : BOOL := FALSE;
+
+    Distributed_Forward_Progress_Epoch : UDINT := 0;
+END_VAR

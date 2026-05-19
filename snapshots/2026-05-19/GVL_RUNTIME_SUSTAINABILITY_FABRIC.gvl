@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic runtime sustainability authority.
+    Runtime_Sustainability_Valid : BOOL := FALSE;
+    Runtime_Sustainability_Granted : BOOL := FALSE;
+    Runtime_Sustainability_Quarantine_Active : BOOL := TRUE;
+
+    // Sustainable runtime execution proofs.
+    Deterministic_Cycle_Budget_Stable : BOOL := FALSE;
+    Runtime_Queue_Load_Stable : BOOL := FALSE;
+    Memory_Fragmentation_Stable : BOOL := FALSE;
+    Watchdog_Jitter_Stable : BOOL := FALSE;
+    HA_Synchronization_Load_Stable : BOOL := FALSE;
+
+    // Long-term operational sustainability.
+    Historical_Persistence_Load_Stable : BOOL := FALSE;
+    Snapshot_Publication_Stable : BOOL := FALSE;
+    Distributed_Runtime_Load_Coherent : BOOL := FALSE;
+    Runtime_Evolution_Sustainable : BOOL := FALSE;
+
+    // Resource-collapse detectors.
+    Memory_Fragmentation_Drift_Detected : BOOL := FALSE;
+    Queue_Saturation_Detected : BOOL := FALSE;
+    Historical_Persistence_Amplification_Detected : BOOL := FALSE;
+    Watchdog_Jitter_Escalation_Detected : BOOL := FALSE;
+    HASynchronization_Overload_Detected : BOOL := FALSE;
+    Deterministic_Cycle_Erosion_Detected : BOOL := FALSE;
+
+    // Sustainability epochs.
+    Runtime_Sustainability_Epoch : UDINT := 0;
+    Runtime_Sustainability_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Runtime_Sustainability_Last_Update_MS : UDINT := 0;
+    Runtime_Sustainability_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Runtime_Sustainability_Last_Error_Code : UDINT := 0;
+    Runtime_Sustainability_Last_Error_Text : STRING(160) := '';
+    Runtime_Sustainability_Invalidation_Count : UDINT := 0;
+END_VAR

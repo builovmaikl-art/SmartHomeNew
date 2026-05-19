@@ -1,0 +1,41 @@
+VAR_GLOBAL
+    // Deterministic cross-domain fail-safe closure governance.
+    CrossDomain_FailSafe_Closure_Valid : BOOL := FALSE;
+    CrossDomain_FailSafe_Closure_Granted : BOOL := FALSE;
+    CrossDomain_FailSafe_Closure_Quarantine_Active : BOOL := TRUE;
+
+    // Cross-domain fail-safe proofs.
+    CrossDomain_SafeState_Compatibility_Valid : BOOL := FALSE;
+    FailSafe_Topology_Closure_Canonical : BOOL := FALSE;
+    MultiDomain_SafeTransition_Stable : BOOL := FALSE;
+    SafeState_Recovery_Ordering_Bounded : BOOL := FALSE;
+    Physical_Domain_Isolation_Coherent : BOOL := FALSE;
+
+    // Cross-domain convergence validators.
+    Thermal_Hydraulic_Compatibility_Valid : BOOL := FALSE;
+    Ventilation_Heating_Compatibility_Valid : BOOL := FALSE;
+    Access_Evacuation_Compatibility_Valid : BOOL := FALSE;
+    Power_Recovery_Sequencing_Valid : BOOL := FALSE;
+    Distributed_FailSafe_Consensus_Valid : BOOL := FALSE;
+
+    // Fail-safe conflict detectors.
+    CrossDomain_FailSafe_Conflict_Detected : BOOL := FALSE;
+    Unsafe_Recovery_Topology_Detected : BOOL := FALSE;
+    CrossDomain_Recovery_Race_Detected : BOOL := FALSE;
+    Distributed_SafeState_Fork_Detected : BOOL := FALSE;
+    PowerDomain_Unsafe_Reactivation_Detected : BOOL := FALSE;
+    MultiDomain_Recovery_Deadlock_Detected : BOOL := FALSE;
+
+    // Fail-safe epochs.
+    CrossDomain_FailSafe_Closure_Epoch : UDINT := 0;
+    CrossDomain_FailSafe_Closure_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    CrossDomain_FailSafe_Closure_Last_Update_MS : UDINT := 0;
+    CrossDomain_FailSafe_Closure_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    CrossDomain_FailSafe_Closure_Last_Error_Code : UDINT := 0;
+    CrossDomain_FailSafe_Closure_Last_Error_Text : STRING(160) := '';
+    CrossDomain_FailSafe_Closure_Invalidation_Count : UDINT := 0;
+END_VAR

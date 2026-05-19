@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic forensic evidence authority.
+    Forensic_Evidence_Valid : BOOL := FALSE;
+    Forensic_Evidence_Granted : BOOL := FALSE;
+    Forensic_Evidence_Quarantine_Active : BOOL := TRUE;
+
+    // Immutable causality preservation proofs.
+    Authority_Lineage_Reconstructable : BOOL := FALSE;
+    Decision_Causality_Traceable : BOOL := FALSE;
+    Distributed_Evidence_Coherent : BOOL := FALSE;
+    Immutable_Audit_Continuity_Valid : BOOL := FALSE;
+    Recovery_Lineage_Preserved : BOOL := FALSE;
+
+    // Long-term forensic integrity.
+    Historical_Proof_Chain_Valid : BOOL := FALSE;
+    Governance_Event_Lineage_Coherent : BOOL := FALSE;
+    Semantic_Transition_Traceable : BOOL := FALSE;
+    Physical_Transition_Traceable : BOOL := FALSE;
+
+    // Forensic split-brain detectors.
+    Authority_Lineage_Gap_Detected : BOOL := FALSE;
+    NonReconstructable_Decision_Detected : BOOL := FALSE;
+    History_Evidence_Divergence_Detected : BOOL := FALSE;
+    Causal_Chain_Erosion_Detected : BOOL := FALSE;
+    Distributed_Forensic_Inconsistency_Detected : BOOL := FALSE;
+    Immutable_Audit_Discontinuity_Detected : BOOL := FALSE;
+
+    // Forensic epochs.
+    Forensic_Evidence_Epoch : UDINT := 0;
+    Forensic_Evidence_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Forensic_Evidence_Last_Update_MS : UDINT := 0;
+    Forensic_Evidence_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Forensic_Evidence_Last_Error_Code : UDINT := 0;
+    Forensic_Evidence_Last_Error_Text : STRING(160) := '';
+    Forensic_Evidence_Invalidation_Count : UDINT := 0;
+END_VAR

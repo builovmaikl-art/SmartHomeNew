@@ -1,0 +1,42 @@
+TYPE ST_Heating_Runtime_Event_Buffer :
+STRUCT
+    // ======================================================
+    // Runtime phase events
+    // ======================================================
+    Events : ARRAY[1..32] OF ST_Heating_Runtime_Phase_Event;
+
+    // ======================================================
+    // Runtime buffer state
+    // ======================================================
+    Write_Index : UINT;
+    Read_Index : UINT;
+    Event_Count : UINT;
+    Overflow : BOOL;
+
+    // ======================================================
+    // Runtime integrity
+    // ======================================================
+    Ordering_Integrity_Valid : BOOL;
+    Isolation_Integrity_Valid : BOOL;
+    Lifecycle_Integrity_Valid : BOOL;
+
+    // ======================================================
+    // Runtime visibility
+    // ======================================================
+    Diagnostics_Visibility_Valid : BOOL;
+    Explainability_Visibility_Valid : BOOL;
+
+    // ======================================================
+    // Runtime ownership integrity
+    // ======================================================
+    OpenTherm_Ownership_Valid : BOOL;
+    Cascade_Ownership_Valid : BOOL;
+    Safety_Ownership_Valid : BOOL;
+
+    // ======================================================
+    // Runtime status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

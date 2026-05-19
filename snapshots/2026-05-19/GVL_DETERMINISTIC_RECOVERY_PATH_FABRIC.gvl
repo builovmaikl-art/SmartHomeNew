@@ -1,0 +1,22 @@
+VAR_GLOBAL
+    Deterministic_Recovery_Path_Valid : BOOL := FALSE;
+    Deterministic_Recovery_Path_Granted : BOOL := FALSE;
+    Deterministic_Recovery_Path_Quarantine_Active : BOOL := TRUE;
+
+    Deterministic_Recovery_Path_Canonical : BOOL := FALSE;
+    Recovery_Lineage_Causality_Valid : BOOL := FALSE;
+    Recovery_Physical_Convergence_Stable : BOOL := FALSE;
+    Recovery_Timeline_Monotonic : BOOL := FALSE;
+
+    Recovery_Causality_Grounded : BOOL := FALSE;
+    Recovery_Path_Continuity_Valid : BOOL := FALSE;
+    Distributed_Recovery_Consensus_Valid : BOOL := FALSE;
+
+    Unsafe_Recovery_Path_Detected : BOOL := FALSE;
+    Recovery_Path_Divergence_Detected : BOOL := FALSE;
+    Recovery_Causality_Break_Detected : BOOL := FALSE;
+    Distributed_Recovery_Fork_Detected : BOOL := FALSE;
+
+    Deterministic_Recovery_Path_Epoch : UDINT := 0;
+    Deterministic_Recovery_Path_Last_Update_MS : UDINT := 0;
+END_VAR

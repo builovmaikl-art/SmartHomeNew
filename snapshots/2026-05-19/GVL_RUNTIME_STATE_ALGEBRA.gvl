@@ -1,0 +1,27 @@
+TYPE E_SYSTEM_RUNTIME_STATE : (
+    SYS_SAFE,
+    SYS_DEGRADED,
+    SYS_RECOVERING,
+    SYS_QUARANTINED,
+    SYS_ISOLATED,
+    SYS_PARTITIONED,
+    SYS_TRUSTLESS
+);
+END_TYPE
+
+VAR_GLOBAL
+    Current_Runtime_State : E_SYSTEM_RUNTIME_STATE := SYS_SAFE;
+    Previous_Runtime_State : E_SYSTEM_RUNTIME_STATE := SYS_SAFE;
+
+    Runtime_State_Transition_Valid : BOOL := FALSE;
+    Runtime_State_Lineage_Coherent : BOOL := FALSE;
+    Runtime_State_Monotonic : BOOL := FALSE;
+
+    Runtime_State_ReadOnly_Projection : BOOL := TRUE;
+    Runtime_State_NoExecutionMutation : BOOL := TRUE;
+
+    Runtime_State_Transition_Observed : BOOL := FALSE;
+    Runtime_State_Drift_Observed : BOOL := FALSE;
+
+    Runtime_State_Epoch : UDINT := 0;
+END_VAR

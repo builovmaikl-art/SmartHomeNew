@@ -1,0 +1,54 @@
+TYPE ST_Heating_Runtime_Anomaly :
+STRUCT
+    // ======================================================
+    // Anomaly lifecycle
+    // ======================================================
+    Anomaly_Active : BOOL;
+    Anomaly_Acknowledged : BOOL;
+    Anomaly_Cleared : BOOL;
+
+    // ======================================================
+    // Runtime anomaly sources
+    // ======================================================
+    Runtime_Jitter_Detected : BOOL;
+    Runtime_Latency_Detected : BOOL;
+    Runtime_Degraded : BOOL;
+
+    // ======================================================
+    // Cascade anomaly sources
+    // ======================================================
+    Cascade_Degraded : BOOL;
+    Cascade_Boiler_Loss_Detected : BOOL;
+
+    // ======================================================
+    // OpenTherm anomaly sources
+    // ======================================================
+    OpenTherm_Transport_Degraded : BOOL;
+    OpenTherm_Command_Invalid : BOOL;
+
+    // ======================================================
+    // Diagnostics anomaly sources
+    // ======================================================
+    Diagnostics_Degraded : BOOL;
+    Explainability_Degraded : BOOL;
+
+    // ======================================================
+    // Runtime integrity
+    // ======================================================
+    Sequencing_Invalid : BOOL;
+    Ownership_Invalid : BOOL;
+    Synchronization_Invalid : BOOL;
+
+    // ======================================================
+    // Anomaly severity
+    // ======================================================
+    Severity_Level : UINT;
+    Critical_Anomaly : BOOL;
+
+    // ======================================================
+    // Runtime status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

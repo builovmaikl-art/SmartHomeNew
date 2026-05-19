@@ -1,0 +1,39 @@
+VAR_GLOBAL
+    // Global environmental authority.
+    Environmental_Authority_Valid : BOOL := FALSE;
+    Environmental_Authority_Granted : BOOL := FALSE;
+    Environmental_Quarantine_Active : BOOL := TRUE;
+
+    // Environmental causality proofs.
+    External_Environment_Causally_Compatible : BOOL := FALSE;
+    Utility_Environment_Stable : BOOL := FALSE;
+    Hydraulic_Source_Stable : BOOL := FALSE;
+    Thermal_Environment_Stable : BOOL := FALSE;
+    Airflow_Environment_Stable : BOOL := FALSE;
+
+    // External environment monitoring.
+    Mains_Quality_Valid : BOOL := FALSE;
+    Supply_Water_Available : BOOL := FALSE;
+    Outdoor_Airflow_Valid : BOOL := FALSE;
+    Freeze_Protection_Valid : BOOL := FALSE;
+
+    // Environmental failure prediction.
+    Freeze_Front_Propagation_Detected : BOOL := FALSE;
+    Utility_Instability_Propagation_Detected : BOOL := FALSE;
+    External_Hydraulic_Collapse_Detected : BOOL := FALSE;
+    Airflow_Icing_Condition_Detected : BOOL := FALSE;
+    Environmental_Rebound_Race_Detected : BOOL := FALSE;
+
+    // Environmental authority epochs.
+    Environmental_Authority_Epoch : UDINT := 0;
+    Environmental_Authority_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal environmental authority.
+    Environmental_Last_Update_MS : UDINT := 0;
+    Environmental_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Environmental_Last_Error_Code : UDINT := 0;
+    Environmental_Last_Error_Text : STRING(160) := '';
+    Environmental_Invalidation_Count : UDINT := 0;
+END_VAR

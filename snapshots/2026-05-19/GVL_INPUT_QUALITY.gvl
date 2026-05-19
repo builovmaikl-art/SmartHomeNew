@@ -1,0 +1,4 @@
+VAR_GLOBAL
+    G_Room_Temp_Quality : ARRAY[1..16] OF ST_Input_Quality_Record;
+    G_Floor_Temp_Quality : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_Input_Quality_Record;
+END_VAR

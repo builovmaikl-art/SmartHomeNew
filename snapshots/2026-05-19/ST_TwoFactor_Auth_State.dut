@@ -1,0 +1,10 @@
+TYPE ST_TwoFactor_Auth_State :
+STRUCT
+    Auth_Method : E_TwoFactor_Method;
+    is_pending : BOOL;
+    Attempts_Left : UINT;
+    Time_Left_S : UINT;
+    Is_Success : BOOL;
+    Is_Locked : BOOL;
+END_STRUCT
+END_TYPE

@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Behavior / Scenario Engine intent layer.
+    // Scenario Engine writes here; Command Arbitration may consume it.
+
+    I_Request_Night_Mode : BOOL := FALSE;
+    I_Request_Away_Mode : BOOL := FALSE;
+    I_Request_Comfort_Mode : BOOL := FALSE;
+    I_Request_Energy_Save_Mode : BOOL := FALSE;
+    I_Request_Preheat : BOOL := FALSE;
+    I_Request_Ventilation_Boost : BOOL := FALSE;
+    I_Request_Access_Secure_Mode : BOOL := FALSE;
+
+    I_Target_Comfort_Temperature : REAL := 21.0;
+    I_Behavior_Priority : INT := 0;
+
+    // Candidate scenario scores for explainability / diagnostics
+    I_Score_Comfort : INT := 0;
+    I_Score_Night : INT := 0;
+    I_Score_Energy_Save : INT := 0;
+    I_Score_Preheat : INT := 0;
+    I_Score_Vent_Boost : INT := 0;
+    I_Score_Access_Secure : INT := 0;
+
+    // Multi-objective weights, normalized 0.0..1.0 for HMI / downstream blending.
+    I_Weight_Comfort : REAL := 0.0;
+    I_Weight_Night : REAL := 0.0;
+    I_Weight_Energy_Save : REAL := 0.0;
+    I_Weight_Preheat : REAL := 0.0;
+    I_Weight_Vent_Boost : REAL := 0.0;
+    I_Weight_Access_Secure : REAL := 0.0;
+
+    I_Best_VentBoost_Zone : INT := 0;
+
+    I_Selected_Scenario_Code : E_System_Reason_Code := REASON_NONE;
+    I_Selected_Scenario_Text : STRING(255) := 'No behavior scenario selected';
+
+    I_Reason_Code : E_System_Reason_Code := REASON_NONE;
+    I_Reason_Text : STRING(255) := 'No behavior scenario active';
+    I_Last_Update_MS : UDINT := 0;
+END_VAR

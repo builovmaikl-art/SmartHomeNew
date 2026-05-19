@@ -1,0 +1,12 @@
+PROGRAM PRG_Residual_Energy_State_Governor
+IF GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Energy_Isolation_Causality_Granted
+AND NOT GVL_RESIDUAL_ENERGY_STATE_FABRIC.Latent_Unsafe_Actuation_Detected
+AND NOT GVL_RESIDUAL_ENERGY_STATE_FABRIC.Residual_Energy_Persistence_Detected
+AND NOT GVL_RESIDUAL_ENERGY_STATE_FABRIC.Unsafe_Thermal_Energy_Retention THEN
+
+    GVL_RESIDUAL_ENERGY_STATE_FABRIC.Residual_Energy_State_Valid := TRUE;
+    GVL_RESIDUAL_ENERGY_STATE_FABRIC.Residual_Energy_Bounded := TRUE;
+    GVL_RESIDUAL_ENERGY_STATE_FABRIC.Residual_Actuation_Energy_Safe := TRUE;
+    GVL_RESIDUAL_ENERGY_STATE_FABRIC.Thermal_Energy_Dissipation_Stable := TRUE;
+END_IF;
+END_PROGRAM

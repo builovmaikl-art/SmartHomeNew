@@ -1,0 +1,52 @@
+TYPE E_FABRIC_LIFECYCLE_STATE : (
+    FABRIC_INITIALIZING,
+    FABRIC_ACTIVE,
+    FABRIC_DEGRADED,
+    FABRIC_PASSIVE,
+    FABRIC_QUARANTINED,
+    FABRIC_SUSPENDED
+);
+END_TYPE
+
+TYPE E_RUNTIME_ADAPTIVE_MODE : (
+    FULL_SEMANTIC_MODE,
+    REDUCED_ANALYTICS_MODE,
+    SURVIVABILITY_MODE,
+    MINIMAL_SAFE_MODE
+);
+END_TYPE
+
+VAR_GLOBAL
+    // Lifecycle governance.
+    Fabric_Lifecycle_Registry_Active : BOOL := TRUE;
+    Fabric_Lifecycle_Registry_ReadOnly : BOOL := TRUE;
+
+    Runtime_Adaptive_Mode : E_RUNTIME_ADAPTIVE_MODE := FULL_SEMANTIC_MODE;
+
+    // Major fabric lifecycle states.
+    Safety_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+    Authority_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+    Physical_Reality_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+    Survivability_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+    Observability_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+    Analytics_Fabric_State : E_FABRIC_LIFECYCLE_STATE := FABRIC_ACTIVE;
+
+    // Controlled capability shedding advisories.
+    Controlled_Capability_Shedding_Allowed : BOOL := FALSE;
+    NonEssential_Analytics_Shedding_Recommended : BOOL := FALSE;
+    Extended_Observability_Shedding_Recommended : BOOL := FALSE;
+    Simulation_Suspension_Recommended : BOOL := FALSE;
+    Diagnostics_Degradation_Recommended : BOOL := FALSE;
+
+    // Critical fabrics never shed.
+    Safety_Fabric_Protected : BOOL := TRUE;
+    Authority_Fabric_Protected : BOOL := TRUE;
+    Physical_Reality_Fabric_Protected : BOOL := TRUE;
+    Runtime_Barrier_Protected : BOOL := TRUE;
+
+    // Recovery-aware restoration.
+    Gradual_Reactivation_Allowed : BOOL := FALSE;
+    Stability_Validated_Reactivation_Required : BOOL := TRUE;
+
+    Fabric_Lifecycle_Registry_Epoch : UDINT := 0;
+END_VAR

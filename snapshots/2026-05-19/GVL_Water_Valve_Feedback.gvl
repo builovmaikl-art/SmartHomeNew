@@ -1,0 +1,14 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Valve_Feedback_State : ARRAY[1..64] OF ST_Water_Valve_Feedback_State;
+
+    G_Any_Degraded : BOOL;
+    G_Any_Timeout : BOOL;
+    G_Any_Conflict : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR

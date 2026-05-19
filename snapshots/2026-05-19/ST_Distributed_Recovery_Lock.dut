@@ -1,0 +1,25 @@
+TYPE ST_Distributed_Recovery_Lock :
+STRUCT
+    Lock_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Lock_Id : UDINT;
+    Lock_Sequence_Id : UDINT;
+
+    Owner_Controller_Id : UINT;
+    Owner_Runtime_Node_Id : UINT;
+
+    Recovery_Lock_Active : BOOL;
+    Rollback_Lock_Active : BOOL;
+    Reopen_Lock_Active : BOOL;
+
+    Lock_Conflict : BOOL;
+    Lock_Expired : BOOL;
+    Lock_Revoked : BOOL;
+
+    Distributed_Execution_Allowed : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

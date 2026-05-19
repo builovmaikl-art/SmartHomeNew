@@ -1,0 +1,21 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_BlackBox_Record :
+STRUCT
+    Timestamp : UDINT;
+    Gas_Methane_LEL : REAL;
+    Gas_CO_PPM : REAL;
+    Flood_Active : BOOL;
+    Fire_Active : BOOL;
+    Valve_Gas_Status : BYTE;
+    Valve_Water_Status : BYTE;
+    PLC_Active_ID : BYTE;
+    System_Mode : BYTE; // Encoded E_System_Operating_Mode for diagnostics
+    First_Fault_Type : BYTE; // 1=IO,2=Sensor,3=Comm,4=Subsystem
+    First_Fault_Source : BYTE; // 1=Heating,2=DHW,3=Ventilation,4=Lighting,5=Access
+    First_Fault_Active : BOOL;
+    System_Severity : BYTE;
+    Root_Cause      : BYTE;
+    Watchdog_Fault  : BOOL; // Latched root cause active
+
+END_STRUCT
+END_TYPE

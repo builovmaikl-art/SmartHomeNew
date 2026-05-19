@@ -1,0 +1,11 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Trend_Header :
+STRUCT
+    parameter_type : BYTE; // E_Trend_Parameter_Type
+    zone_id : BYTE := 0;
+    records_count : UDINT := 0;
+    average_value : REAL := 0.0;
+    min_value : REAL := 0.0;
+    max_value : REAL := 0.0;
+END_STRUCT
+END_TYPE

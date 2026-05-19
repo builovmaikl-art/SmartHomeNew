@@ -1,0 +1,20 @@
+VAR_GLOBAL
+    // Runtime budget observability.
+    Runtime_Budget_Enforcement_Active : BOOL := TRUE;
+    Runtime_Budget_Enforcement_ReadOnly : BOOL := TRUE;
+
+    Verification_Runtime_Budget_Observed : BOOL := FALSE;
+    Observability_Runtime_Budget_Observed : BOOL := FALSE;
+    Diagnostics_Runtime_Budget_Observed : BOOL := FALSE;
+    Governance_Runtime_Overhead_Observed : BOOL := FALSE;
+
+    Runtime_Budget_Pressure_Observed : BOOL := FALSE;
+    Verification_Time_Budget_Exceeded : BOOL := FALSE;
+    Observability_Amplification_Budget_Exceeded : BOOL := FALSE;
+    Diagnostics_Load_Budget_Exceeded : BOOL := FALSE;
+
+    Runtime_Stability_Budget_At_Risk : BOOL := FALSE;
+    Verification_Induced_Runtime_Risk : BOOL := FALSE;
+
+    Runtime_Budget_Enforcement_Epoch : UDINT := 0;
+END_VAR

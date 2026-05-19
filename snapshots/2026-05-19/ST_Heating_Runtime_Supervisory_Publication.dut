@@ -1,0 +1,35 @@
+TYPE ST_Heating_Runtime_Supervisory_Publication :
+STRUCT
+    // Canonical supervisory publication surface.
+    // Passive publication only.
+    // No runtime authority.
+
+    Supervisory_Visible : BOOL;
+
+    // Predictive aggregation
+    Predictive_State : ST_Heating_Runtime_Predictive_State;
+
+    // Runtime observation
+    Runtime_Degraded : BOOL;
+    Runtime_Fault : BOOL;
+
+    // Source instability aggregation
+    Source_Instability_Attention : BOOL;
+    Source_Oscillation_Trend_Visible : BOOL;
+
+    // Explainability aggregation
+    Explainability_Degraded : BOOL;
+    Diagnostics_Degraded : BOOL;
+
+    // Causality aggregation
+    Causality_Active : BOOL;
+    Propagation_Detected : BOOL;
+
+    // Reconstruction aggregation
+    Reconstruction_Visible : BOOL;
+
+    // Supervisory publication status
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

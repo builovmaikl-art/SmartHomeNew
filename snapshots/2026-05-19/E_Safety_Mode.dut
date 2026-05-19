@@ -1,0 +1,10 @@
+{attribute 'strict'}
+TYPE E_Safety_Mode :
+(
+    NORMAL := 0,
+    FIRE := 1,
+    GAS := 2,
+    WATER_LEAK := 3,
+    GLOBAL_STOP := 4
+) USINT;
+END_TYPE

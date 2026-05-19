@@ -1,0 +1,58 @@
+TYPE ST_Heating_Runtime_Blackbox_Event :
+STRUCT
+    // ======================================================
+    // Event identity
+    // ======================================================
+    Event_ID : UDINT;
+    Event_Active : BOOL;
+
+    // ======================================================
+    // Runtime phase
+    // ======================================================
+    Runtime_Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // Event timing
+    // ======================================================
+    Event_Start_MS : UDINT;
+    Event_End_MS : UDINT;
+    Event_Duration_MS : UDINT;
+
+    // ======================================================
+    // Runtime degradation state
+    // ======================================================
+    Runtime_Degraded : BOOL;
+    Runtime_Fault : BOOL;
+
+    // ======================================================
+    // Cascade state
+    // ======================================================
+    Cascade_Degraded : BOOL;
+    Cascade_Boiler_Loss : BOOL;
+
+    // ======================================================
+    // OpenTherm state
+    // ======================================================
+    OpenTherm_Degraded : BOOL;
+    OpenTherm_Command_Invalid : BOOL;
+
+    // ======================================================
+    // Integrity state
+    // ======================================================
+    Sequencing_Invalid : BOOL;
+    Ownership_Invalid : BOOL;
+    Synchronization_Invalid : BOOL;
+
+    // ======================================================
+    // Root-cause state
+    // ======================================================
+    Root_Cause_Candidate : BOOL;
+    Critical_Path : BOOL;
+
+    // ======================================================
+    // Event status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

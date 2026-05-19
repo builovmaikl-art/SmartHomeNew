@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Historical_Ordering_Integrity_Valid : BOOL := FALSE;
+    Historical_Ordering_Integrity_Granted : BOOL := FALSE;
+
+    Historical_Ordering_Integrity_Granted_Proof : BOOL := FALSE;
+    Historical_Timeline_Canonical : BOOL := FALSE;
+    Forensic_Ordering_Coherent : BOOL := FALSE;
+
+    Historical_Causality_Grounded : BOOL := FALSE;
+    Distributed_Historical_Consensus_Valid : BOOL := FALSE;
+
+    Historical_Order_Divergence : BOOL := FALSE;
+    Unsafe_Historical_Rewrite_Detected : BOOL := FALSE;
+    Historical_Causality_Gap_Detected : BOOL := FALSE;
+
+    Historical_Ordering_Epoch : UDINT := 0;
+END_VAR

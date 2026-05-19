@@ -1,0 +1,16 @@
+VAR_GLOBAL
+    Recovery_Ordering_Integrity_Valid : BOOL := FALSE;
+    CrossDomain_Recovery_Ordering_Stable : BOOL := FALSE;
+    Recovery_Authority_Sequencing_Canonical : BOOL := FALSE;
+    Physical_Reactivation_Topology_Safe : BOOL := FALSE;
+
+    Recovery_Ordering_Causality_Valid : BOOL := FALSE;
+    Distributed_Recovery_Ordering_Consensus : BOOL := FALSE;
+
+    Unsafe_Recovery_Reordering_Detected : BOOL := FALSE;
+    CrossDomain_Reactivation_Race : BOOL := FALSE;
+    Recovery_Topology_Divergence : BOOL := FALSE;
+    Residual_Unsafe_Reactivation_Detected : BOOL := FALSE;
+
+    Recovery_Ordering_Epoch : UDINT := 0;
+END_VAR

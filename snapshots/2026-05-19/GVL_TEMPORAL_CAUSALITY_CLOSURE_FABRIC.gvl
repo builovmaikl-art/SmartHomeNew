@@ -1,0 +1,19 @@
+VAR_GLOBAL
+    Temporal_Causality_Closure_Valid : BOOL := FALSE;
+    Temporal_Causality_Closure_Granted : BOOL := FALSE;
+
+    Temporal_Causality_Coherent : BOOL := FALSE;
+    Monotonic_Reality_Timeline_Valid : BOOL := FALSE;
+    Distributed_Temporal_Alignment_Stable : BOOL := FALSE;
+    Recovery_Revocation_Ordering_Valid : BOOL := FALSE;
+
+    Temporal_Causality_Lineage_Coherent : BOOL := FALSE;
+    Distributed_Temporal_Consensus_Valid : BOOL := FALSE;
+
+    Temporal_Fork_Detected : BOOL := FALSE;
+    Stale_Causality_Application_Detected : BOOL := FALSE;
+    Recovery_Before_Revocation_Detected : BOOL := FALSE;
+    Distributed_Timeline_Drift_Detected : BOOL := FALSE;
+
+    Temporal_Causality_Epoch : UDINT := 0;
+END_VAR

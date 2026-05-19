@@ -1,0 +1,19 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Deterministic water output projection publication.
+
+    G_Output_Projection_State : ARRAY[1..64] OF ST_Water_Output_Projection_State;
+
+    // Aggregated visibility.
+    G_Any_Output_Projected : BOOL;
+    G_Any_Projection_Denied : BOOL;
+    G_Global_Fallback_Projecting : BOOL;
+
+    // Runtime.
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    // Explainability.
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR

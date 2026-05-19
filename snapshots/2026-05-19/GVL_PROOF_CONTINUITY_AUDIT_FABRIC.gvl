@@ -1,0 +1,16 @@
+VAR_GLOBAL
+    Proof_Continuity_Audit_Active : BOOL := TRUE;
+
+    Proof_Continuity_Observed : BOOL := FALSE;
+    Proof_Lineage_Coherent : BOOL := FALSE;
+    Proof_Historical_Integrity_Observed : BOOL := FALSE;
+
+    Proof_Audit_ReadOnly_Mode : BOOL := TRUE;
+    Proof_Audit_NoTopologyMutation : BOOL := TRUE;
+
+    Proof_Gap_Observed : BOOL := FALSE;
+    Proof_Lineage_Drift_Observed : BOOL := FALSE;
+    Proof_Consistency_Decay_Observed : BOOL := FALSE;
+
+    Proof_Continuity_Audit_Epoch : UDINT := 0;
+END_VAR

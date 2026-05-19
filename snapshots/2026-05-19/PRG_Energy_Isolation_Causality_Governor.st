@@ -1,0 +1,14 @@
+PROGRAM PRG_Energy_Isolation_Causality_Governor
+IF GVL_AUTHORITY_RESURRECTION_BOUNDARY_FABRIC.Authority_Resurrection_Boundary_Valid
+AND NOT GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Residual_Energy_Leakage_Detected
+AND NOT GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.CrossDomain_Power_Backfeed_Detected
+AND NOT GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.SplitEnergy_Topology_Detected
+AND NOT GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Unsafe_Energy_Propagation_Detected THEN
+
+    GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Energy_Isolation_Causality_Valid := TRUE;
+    GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Energy_Isolation_Causality_Granted := TRUE;
+    GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Physical_Energy_Isolation_Valid := TRUE;
+    GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.Unsafe_Energy_Propagation_Prevented := TRUE;
+    GVL_ENERGY_ISOLATION_CAUSALITY_FABRIC.CrossDomain_Power_Segmentation_Canonical := TRUE;
+END_IF;
+END_PROGRAM

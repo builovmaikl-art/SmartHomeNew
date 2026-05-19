@@ -1,0 +1,21 @@
+VAR_GLOBAL
+    Recovery_Stable_Cycle_Count : UDINT := 0;
+    Recovery_Stable_Time_MS : UDINT := 0;
+    Convergence_Healthy_Observed : BOOL := FALSE;
+    Convergence_Lease_OK : BOOL := FALSE;
+    Convergence_Release_Allowed : BOOL := FALSE;
+    Convergence_Oscillation_Quarantine_Active : BOOL := FALSE;
+    Convergence_Last_Healthy_MS : UDINT := 0;
+    Convergence_Last_Invalidation_MS : UDINT := 0;
+    Convergence_Invalidation_Count : UDINT := 0;
+    Convergence_Min_Stable_Cycles : UDINT := 5;
+    Convergence_Min_Stable_Time_MS : UDINT := 500;
+    Convergence_Runtime_Barrier_OK : BOOL := FALSE;
+    Convergence_Runtime_Snapshot_OK : BOOL := FALSE;
+    Convergence_Distributed_Snapshot_OK : BOOL := FALSE;
+    Convergence_Distributed_Commit_OK : BOOL := FALSE;
+    Convergence_Semantic_Progress_OK : BOOL := FALSE;
+    Convergence_Output_Freshness_OK : BOOL := FALSE;
+    Convergence_Last_Error_Code : UDINT := 0;
+    Convergence_Last_Error_Text : STRING(160) := '';
+END_VAR

@@ -1,0 +1,35 @@
+PROGRAM PRG_Controlled_Capability_Shedding_Governor
+// CONTROLLED CAPABILITY SHEDDING
+// DETERMINISTIC / TIER-AWARE / NON-INVASIVE
+
+IF GVL_RUNTIME_BUDGET_ENFORCEMENT.Runtime_Budget_Pressure_Observed THEN
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Controlled_Capability_Shedding_Allowed := TRUE;
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode := REDUCED_ANALYTICS_MODE;
+END_IF;
+
+IF GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Chronic_Degradation_Risk_Increasing THEN
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode := SURVIVABILITY_MODE;
+    GVL_FABRIC_LIFECYCLE_REGISTRY.NonEssential_Analytics_Shedding_Recommended := TRUE;
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Diagnostics_Degradation_Recommended := TRUE;
+END_IF;
+
+IF GVL_RUNTIME_BUDGET_ENFORCEMENT.Verification_Induced_Runtime_Risk THEN
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Extended_Observability_Shedding_Recommended := TRUE;
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Simulation_Suspension_Recommended := TRUE;
+END_IF;
+
+IF GVL_RUNTIME_BUDGET_ENFORCEMENT.Runtime_Stability_Budget_At_Risk THEN
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Analytics_Fabric_State := FABRIC_DEGRADED;
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Observability_Fabric_State := FABRIC_PASSIVE;
+END_IF;
+
+// Critical fabrics remain protected.
+GVL_FABRIC_LIFECYCLE_REGISTRY.Safety_Fabric_State := FABRIC_ACTIVE;
+GVL_FABRIC_LIFECYCLE_REGISTRY.Authority_Fabric_State := FABRIC_ACTIVE;
+GVL_FABRIC_LIFECYCLE_REGISTRY.Physical_Reality_Fabric_State := FABRIC_ACTIVE;
+
+IF NOT GVL_RUNTIME_BUDGET_ENFORCEMENT.Runtime_Budget_Pressure_Observed THEN
+    GVL_FABRIC_LIFECYCLE_REGISTRY.Gradual_Reactivation_Allowed := TRUE;
+END_IF;
+
+END_PROGRAM

@@ -1,0 +1,13 @@
+PROGRAM PRG_Historical_Ordering_Integrity_Governor
+IF GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Distributed_Epoch_Linearity_Granted
+AND NOT GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Order_Divergence
+AND NOT GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Unsafe_Historical_Rewrite_Detected
+AND NOT GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Causality_Gap_Detected THEN
+
+    GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Ordering_Integrity_Valid := TRUE;
+    GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Ordering_Integrity_Granted := TRUE;
+    GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Ordering_Integrity_Granted_Proof := TRUE;
+    GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Timeline_Canonical := TRUE;
+    GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Forensic_Ordering_Coherent := TRUE;
+END_IF;
+END_PROGRAM

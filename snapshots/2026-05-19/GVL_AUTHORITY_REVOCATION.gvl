@@ -1,0 +1,33 @@
+VAR_GLOBAL
+    // Global revocation authority.
+    Authority_Revocation_Active : BOOL := FALSE;
+    Authority_Revocation_Propagated : BOOL := FALSE;
+    Authority_Fail_Closed_Valid : BOOL := FALSE;
+
+    // Upstream invalidation sources.
+    Snapshot_Authority_Revoked : BOOL := FALSE;
+    Sensor_Consensus_Authority_Revoked : BOOL := FALSE;
+    Telemetry_Causality_Authority_Revoked : BOOL := FALSE;
+    Physical_Authority_Epoch_Revoked : BOOL := FALSE;
+    Authority_Lineage_Revoked : BOOL := FALSE;
+
+    // Downstream revocation guarantees.
+    PreOutput_Authority_Revoked : BOOL := FALSE;
+    Physical_IO_Release_Denied : BOOL := FALSE;
+    Quarantine_Fabric_Active : BOOL := FALSE;
+
+    // Ordering/coherence protection.
+    Revocation_Order_Valid : BOOL := FALSE;
+    Revocation_Replay_Suspected : BOOL := FALSE;
+    Partial_Revocation_Detected : BOOL := FALSE;
+    Stale_Downstream_Authority_Detected : BOOL := FALSE;
+
+    // Temporal authority.
+    Revocation_Epoch : UDINT := 0;
+    Revocation_Last_Update_MS : UDINT := 0;
+
+    // Diagnostics.
+    Revocation_Last_Error_Code : UDINT := 0;
+    Revocation_Last_Error_Text : STRING(160) := '';
+    Revocation_Invalidation_Count : UDINT := 0;
+END_VAR

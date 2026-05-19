@@ -1,0 +1,19 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Last_Stable_Config_Version : UDINT;
+    G_Last_Known_Runtime_Healthy : BOOL;
+    G_Last_Known_Quarantine_State : BOOL;
+
+    G_Restore_Request : BOOL;
+    G_Post_Restart_Validation_Request : BOOL;
+END_VAR
+
+VAR_GLOBAL
+    G_Continuity_State : ST_Runtime_Restart_Continuity_State;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

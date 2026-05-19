@@ -1,0 +1,38 @@
+TYPE E_Heating_Runtime_Phase :
+(
+    HRP_DISABLED := 0,
+
+    // Runtime startup / idle
+    HRP_IDLE := 10,
+
+    // Phase 1
+    // DHW manager execution
+    HRP_DHW := 20,
+
+    // Phase 2
+    // Heating runtime execution
+    HRP_HEATING := 30,
+
+    // Phase 3
+    // Service and failsafe gating
+    HRP_SERVICE_GATING := 40,
+
+    // Phase 4
+    // Runtime state publication
+    HRP_STATE_PUBLICATION := 50,
+
+    // Phase 5
+    // Diagnostics / explainability
+    HRP_DIAGNOSTICS := 60,
+
+    // Phase 6
+    // Output projection
+    HRP_OUTPUT_PROJECTION := 70,
+
+    // Runtime finished
+    HRP_COMPLETE := 100,
+
+    // Runtime error/fault state
+    HRP_FAULT := 900
+);
+END_TYPE

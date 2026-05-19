@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic governance liveness integrity governance.
+    Governance_Liveness_Integrity_Valid : BOOL := FALSE;
+    Governance_Liveness_Integrity_Granted : BOOL := FALSE;
+    Governance_Liveness_Integrity_Quarantine_Active : BOOL := TRUE;
+
+    // Governance execution liveness proofs.
+    Governance_Execution_Liveness_Stable : BOOL := FALSE;
+    Integrity_Governor_Scheduling_Canonical : BOOL := FALSE;
+    CrossGovernor_Execution_Continuity_Valid : BOOL := FALSE;
+    Deterministic_Validation_Cycle_Integrity : BOOL := FALSE;
+    Governance_Runtime_Liveness_Coherent : BOOL := FALSE;
+
+    // Runtime scheduling integrity.
+    Validation_Cycle_Timing_Monotonic : BOOL := FALSE;
+    Distributed_Governor_Execution_Aligned : BOOL := FALSE;
+    Runtime_Integrity_Causality_Grounded : BOOL := FALSE;
+    Governance_Execution_Budget_Stable : BOOL := FALSE;
+
+    // Governance liveness degradation detectors.
+    Integrity_Governor_Starvation_Detected : BOOL := FALSE;
+    Validation_Cycle_Skip_Detected : BOOL := FALSE;
+    CrossGovernor_Execution_Jitter_Fork : BOOL := FALSE;
+    Selective_Governance_Degradation_Detected : BOOL := FALSE;
+    Runtime_Governor_Execution_Stall_Detected : BOOL := FALSE;
+    Distributed_Liveness_Reality_Fork_Detected : BOOL := FALSE;
+
+    // Liveness epochs.
+    Governance_Liveness_Integrity_Epoch : UDINT := 0;
+    Governance_Liveness_Integrity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Governance_Liveness_Integrity_Last_Update_MS : UDINT := 0;
+    Governance_Liveness_Integrity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Governance_Liveness_Integrity_Last_Error_Code : UDINT := 0;
+    Governance_Liveness_Integrity_Last_Error_Text : STRING(160) := '';
+    Governance_Liveness_Integrity_Invalidation_Count : UDINT := 0;
+END_VAR

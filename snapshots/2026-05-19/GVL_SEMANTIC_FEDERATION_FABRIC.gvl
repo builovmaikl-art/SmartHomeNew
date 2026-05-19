@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic semantic federation authority.
+    Semantic_Federation_Valid : BOOL := FALSE;
+    Semantic_Federation_Granted : BOOL := FALSE;
+    Semantic_Federation_Quarantine_Active : BOOL := TRUE;
+
+    // External ecosystem semantic coherence proofs.
+    External_SCADA_Semantics_Coherent : BOOL := FALSE;
+    Cloud_Authority_Projection_Aligned : BOOL := FALSE;
+    MQTT_Semantic_State_Fresh : BOOL := FALSE;
+    ThirdParty_Integration_Trust_Valid : BOOL := FALSE;
+    Federated_Observability_Coherent : BOOL := FALSE;
+
+    // Cross-ecosystem semantic synchronization.
+    Exported_Authority_State_Coherent : BOOL := FALSE;
+    Federation_Projection_Temporal_Stable : BOOL := FALSE;
+    External_Runtime_Interpretation_Aligned : BOOL := FALSE;
+    Federated_Trust_Boundary_Stable : BOOL := FALSE;
+
+    // Ecosystem semantic split-brain detectors.
+    External_Semantic_Lag_Detected : BOOL := FALSE;
+    SCADA_Projection_Skew_Detected : BOOL := FALSE;
+    Cloud_Authority_Desynchronization_Detected : BOOL := FALSE;
+    ThirdParty_Semantic_Drift_Detected : BOOL := FALSE;
+    Integration_Trust_Divergence_Detected : BOOL := FALSE;
+    Federated_Authority_Inconsistency_Detected : BOOL := FALSE;
+
+    // Federation epochs.
+    Semantic_Federation_Epoch : UDINT := 0;
+    Semantic_Federation_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Semantic_Federation_Last_Update_MS : UDINT := 0;
+    Semantic_Federation_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Semantic_Federation_Last_Error_Code : UDINT := 0;
+    Semantic_Federation_Last_Error_Text : STRING(160) := '';
+    Semantic_Federation_Invalidation_Count : UDINT := 0;
+END_VAR

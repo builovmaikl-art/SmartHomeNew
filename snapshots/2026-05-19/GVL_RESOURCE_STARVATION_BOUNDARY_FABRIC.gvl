@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Resource_Starvation_Boundary_Valid : BOOL := FALSE;
+    Resource_Starvation_Boundary_Granted : BOOL := FALSE;
+
+    Resource_Starvation_Bounded : BOOL := FALSE;
+    Fair_Execution_Scheduling_Valid : BOOL := FALSE;
+    Distributed_Resource_Allocation_Stable : BOOL := FALSE;
+
+    Resource_Causality_Grounded : BOOL := FALSE;
+    Starvation_Recovery_Stable : BOOL := FALSE;
+
+    Resource_Starvation_Detected : BOOL := FALSE;
+    Scheduler_Starvation_Detected : BOOL := FALSE;
+    Distributed_Allocation_Deadlock_Detected : BOOL := FALSE;
+
+    Resource_Starvation_Epoch : UDINT := 0;
+END_VAR

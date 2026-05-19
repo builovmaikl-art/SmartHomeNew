@@ -1,0 +1,48 @@
+VAR_GLOBAL
+    // Global runtime resource authority.
+    Runtime_Resource_Authority_Valid : BOOL := FALSE;
+    Runtime_Resource_Authority_Granted : BOOL := FALSE;
+    Runtime_Resource_Quarantine_Active : BOOL := TRUE;
+
+    // Deterministic runtime guarantees.
+    Deterministic_Cycle_Time_Valid : BOOL := FALSE;
+    Task_Jitter_Within_Bounds : BOOL := FALSE;
+    Watchdog_Margin_Stable : BOOL := FALSE;
+    Runtime_Latency_Stable : BOOL := FALSE;
+    Queue_Backlog_Stable : BOOL := FALSE;
+
+    // Runtime execution metrics.
+    Current_Task_Jitter_US : UDINT := 0;
+    Max_Allowed_Task_Jitter_US : UDINT := 10000;
+
+    Current_Runtime_Latency_US : UDINT := 0;
+    Max_Allowed_Runtime_Latency_US : UDINT := 20000;
+
+    Current_Fieldbus_Queue_Depth : UDINT := 0;
+    Max_Allowed_Fieldbus_Queue_Depth : UDINT := 100;
+
+    Current_Watchdog_Margin_MS : UDINT := 0;
+    Minimum_Watchdog_Margin_MS : UDINT := 50;
+
+    // Resource exhaustion detection.
+    Hidden_Jitter_Amplification_Detected : BOOL := FALSE;
+    Queue_Induced_Authority_Lag_Detected : BOOL := FALSE;
+    Watchdog_Near_Death_Oscillation_Detected : BOOL := FALSE;
+    Runtime_Starvation_Race_Detected : BOOL := FALSE;
+    Cycle_Collapse_SplitBrain_Detected : BOOL := FALSE;
+    Heap_Fragmentation_Critical : BOOL := FALSE;
+    Fieldbus_Backlog_Saturation_Detected : BOOL := FALSE;
+
+    // Runtime authority epochs.
+    Runtime_Resource_Authority_Epoch : UDINT := 0;
+    Runtime_Resource_Authority_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal runtime authority.
+    Runtime_Resource_Last_Update_MS : UDINT := 0;
+    Runtime_Resource_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Runtime_Resource_Last_Error_Code : UDINT := 0;
+    Runtime_Resource_Last_Error_Text : STRING(160) := '';
+    Runtime_Resource_Invalidation_Count : UDINT := 0;
+END_VAR

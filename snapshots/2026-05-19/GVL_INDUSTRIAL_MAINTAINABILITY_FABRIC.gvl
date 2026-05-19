@@ -1,0 +1,29 @@
+VAR_GLOBAL
+    // Industrial maintainability governance.
+    Industrial_Maintainability_Active : BOOL := TRUE;
+    Industrial_Maintainability_ReadOnly : BOOL := TRUE;
+
+    // Runtime heat mapping.
+    Verification_Runtime_Heat_Observed : BOOL := FALSE;
+    Diagnostics_Runtime_Heat_Observed : BOOL := FALSE;
+    Observability_Runtime_Heat_Observed : BOOL := FALSE;
+    Governance_Runtime_Heat_Observed : BOOL := FALSE;
+
+    // Semantic dead-code and fossilization observations.
+    Unused_Semantic_Pathways_Observed : BOOL := FALSE;
+    Inactive_Governance_Chains_Observed : BOOL := FALSE;
+    NonContributing_Verification_Layers_Observed : BOOL := FALSE;
+    Semantic_Fossilization_Risk : BOOL := FALSE;
+
+    // Semantic freeze boundary.
+    Semantic_Freeze_Boundary_Active : BOOL := TRUE;
+    New_Semantic_Layers_Restricted : BOOL := FALSE;
+    Survivability_Justification_Required : BOOL := TRUE;
+
+    // Maintainability pressure.
+    Merge_Conflict_Risk_Observed : BOOL := FALSE;
+    Audit_Complexity_Pressure_Observed : BOOL := FALSE;
+    Maintenance_Entropy_Observed : BOOL := FALSE;
+
+    Industrial_Maintainability_Epoch : UDINT := 0;
+END_VAR

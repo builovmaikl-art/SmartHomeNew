@@ -1,0 +1,27 @@
+TYPE ST_Distributed_Runtime_Message :
+STRUCT
+    Message_Valid : BOOL;
+    Message_Time_MS : UDINT;
+    Message_Id : UDINT;
+
+    Source_Controller_Id : UINT;
+    Source_Runtime_Node_Id : UINT;
+    Target_Runtime_Node_Id : UINT;
+
+    Message_Class : UINT;
+    Message_Version : UINT;
+
+    Authority_State_Replicated : BOOL;
+    Recovery_State_Replicated : BOOL;
+    Quarantine_State_Replicated : BOOL;
+    Topology_State_Replicated : BOOL;
+    Binding_State_Replicated : BOOL;
+
+    Replication_Sequence_Id : UDINT;
+    Replication_Ack_Required : BOOL;
+    Replication_Ack_Received : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

@@ -1,0 +1,9 @@
+{attribute 'strict'}
+TYPE E_TwoFactor_Method :
+(
+    TF_METHOD_NONE := 0,
+    TF_METHOD_RFID := 1,
+    TF_METHOD_TOTP := 2,
+    TF_METHOD_BOTH := 3
+) USINT;
+END_TYPE

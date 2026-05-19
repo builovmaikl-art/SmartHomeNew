@@ -1,0 +1,15 @@
+TYPE E_Safety_Mode :
+(
+    NORMAL,
+    FIRE,
+    GAS,
+    WATER_LEAK,
+    GLOBAL_STOP,
+    EVACUATION
+);
+END_TYPE
+
+VAR_GLOBAL
+    G_Safety_Mode : E_Safety_Mode := NORMAL;
+    G_Safety_Active : BOOL := FALSE;
+END_VAR

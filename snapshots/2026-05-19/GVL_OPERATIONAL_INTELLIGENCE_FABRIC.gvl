@@ -1,0 +1,20 @@
+VAR_GLOBAL
+    Operational_Intelligence_Active : BOOL := TRUE;
+    Operational_Intelligence_ReadOnly : BOOL := TRUE;
+    Operational_Intelligence_NoMutation : BOOL := TRUE;
+
+    Dominant_Instability_Source_Available : BOOL := FALSE;
+    Active_Degradation_Cause_Available : BOOL := FALSE;
+    Recovery_Blocker_Observed : BOOL := FALSE;
+    Governance_Pressure_Hotspot_Observed : BOOL := FALSE;
+
+    Operational_Reasoning_Consistency_Valid : BOOL := FALSE;
+    Runtime_Causal_Projection_Valid : BOOL := FALSE;
+    Distributed_Operational_Context_Valid : BOOL := FALSE;
+
+    Governance_Saturation_Observed : BOOL := FALSE;
+    Governance_Complexity_Pressure_Observed : BOOL := FALSE;
+    Operational_Opacity_Observed : BOOL := FALSE;
+
+    Operational_Intelligence_Epoch : UDINT := 0;
+END_VAR
