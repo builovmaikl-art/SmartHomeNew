@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4060
+total 4056
 -rw-r--r--  1 runner runner  13067 May 19 13:06 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 19 13:06 .
 drwxr-xr-x  3 runner runner   4096 May 19 13:06 ..
@@ -216,7 +216,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 13:06 .github
 -rw-r--r--  1 runner runner   3381 May 19 13:06 FB_Water_Isolation_Runtime_Projection.st
 -rw-r--r--  1 runner runner   4045 May 19 13:06 FB_Water_Leak_Runtime_Projection.st
 -rw-r--r--  1 runner runner   1692 May 19 13:06 FB_Water_Leakage_Manager.st
--rw-r--r--  1 runner runner   4574 May 19 13:06 FB_Water_Orchestration_Runtime.st
+-rw-r--r--  1 runner runner   4824 May 19 13:06 FB_Water_Orchestration_Runtime.st
 -rw-r--r--  1 runner runner    496 May 19 13:06 FB_Water_Output_Projection.st
 -rw-r--r--  1 runner runner   3486 May 19 13:06 FB_Water_Output_Projector.st
 -rw-r--r--  1 runner runner   2642 May 19 13:06 FB_Water_Output_Reconciliation.st
@@ -743,7 +743,7 @@ drwxr-xr-x  5 runner runner   4096 May 19 13:06 компилятор
 -rw-r--r--  1 runner runner  11783 May 19 13:06 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 May 19 13:06 .
 drwxr-xr-x 12 runner runner  45056 May 19 13:06 ..
 -rw-r--r--  1 runner runner  21153 May 19 13:06 001_universal_pou_builder_METHODS_V2.py
@@ -766,4 +766,4 @@ total 2544
 drwxr-xr-x 2 runner runner    4096 May 19 13:06 .
 drwxr-xr-x 5 runner runner    4096 May 19 13:06 ..
 -rw-r--r-- 1 runner runner       0 May 19 13:06 .gitkeep
--rw-r--r-- 1 runner runner 2593856 May 19 13:06 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2594343 May 19 13:06 RESULT_methods_clean.xml
