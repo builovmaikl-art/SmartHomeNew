@@ -10,6 +10,9 @@ VAR
     L_Traversal : ST_Water_Graph_Traversal_State;
     L_Orchestration : ST_Water_Orchestration_Runtime_State;
 
+    L_Empty_Traversal : ST_Water_Graph_Traversal_State;
+    L_Empty_Orchestration : ST_Water_Orchestration_Runtime_State;
+
     L_Any_Conflict : BOOL;
     L_Any_Escalation : BOOL;
 END_VAR
@@ -19,13 +22,17 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Conflict := FALSE;
+L_Any_Escalation := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Path :=
         GVL_Water_Hydraulic_Graph.G_Isolation_Path[L_i];
 
     // Traversal runtime.
-    L_Traversal := (Runtime_Valid := TRUE);
+    L_Traversal := L_Empty_Traversal;
+    L_Traversal.Runtime_Valid := TRUE;
 
     L_Traversal.Runtime_System_Time_MS :=
         VI_System_Time_MS;
@@ -69,7 +76,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Path.Global_Fallback_Required;
 
     // Orchestration runtime.
-    L_Orchestration := (Runtime_Valid := TRUE);
+    L_Orchestration := L_Empty_Orchestration;
+    L_Orchestration.Runtime_Valid := TRUE;
 
     L_Orchestration.Runtime_System_Time_MS :=
         VI_System_Time_MS;
