@@ -11,11 +11,11 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4144
+total 4140
 -rw-r--r--  1 runner runner  13067 May 19 15:11 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 19 15:11 .
 drwxr-xr-x  3 runner runner   4096 May 19 15:11 ..
-drwxr-xr-x  7 runner runner   4096 May 19 15:11 .git
+drwxr-xr-x  7 runner runner   4096 May 19 15:12 .git
 drwxr-xr-x  3 runner runner   4096 May 19 15:11 .github
 -rw-r--r--  1 runner runner    241 May 19 15:11 ACCESS_SUMMARY.txt
 -rw-r--r--  1 runner runner  10609 May 19 15:11 AGENTS.md
@@ -511,7 +511,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 15:11 .github
 -rw-r--r--  1 runner runner   1488 May 19 15:11 PRG_IO_Read_Phase_01_Module_Health.st
 -rw-r--r--  1 runner runner    688 May 19 15:11 PRG_IO_Read_Phase_02_Discrete_Debounce.st
 -rw-r--r--  1 runner runner   4072 May 19 15:11 PRG_IO_Read_Phase_03_Environment_Sensors.st
--rw-r--r--  1 runner runner   5508 May 19 15:11 PRG_IO_Read_Phase_04_Heating_Manifold_Sensors.st
+-rw-r--r--  1 runner runner    675 May 19 15:11 PRG_IO_Read_Phase_04_Heating_Manifold_Sensors.st
 -rw-r--r--  1 runner runner   1617 May 19 15:11 PRG_IO_Read_Phase_05_Gas_DHW_Water_Feedback.st
 -rw-r--r--  1 runner runner  10058 May 19 15:11 PRG_IO_Write.st
 -rw-r--r--  1 runner runner    273 May 19 15:11 PRG_Industrial_Maintainability_Governor.st
@@ -781,8 +781,8 @@ drwxr-xr-x  2 runner runner   4096 May 19 15:11 out
 -rw-r--r--  1 runner runner    177 May 19 15:11 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2588
+total 2592
 drwxr-xr-x 2 runner runner    4096 May 19 15:11 .
 drwxr-xr-x 5 runner runner    4096 May 19 15:11 ..
 -rw-r--r-- 1 runner runner       0 May 19 15:11 .gitkeep
--rw-r--r-- 1 runner runner 2640842 May 19 15:11 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2642955 May 19 15:11 RESULT_methods_clean.xml
