@@ -41,12 +41,14 @@ VAR
     L_Any_Transport_Degraded : BOOL;
     L_Any_Ignition_Timeout : BOOL;
     L_Any_Flame : BOOL;
+    L_Empty_Boiler_Status : ST_Boiler_Status;
     L_Boiler_Life : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF FB_Lifetime_Predictor;
     fbBoilerCascade : FB_Boiler_Cascade_Manager;
     fbBoilerOpenTherm : FB_Boiler_OpenTherm_Interface;
 END_VAR
 
 VO_Any_Subsystem_Degraded := FALSE;
+VO_Lead_Boiler := 0;
 VO_Demand_Power := 0.0;
 
 L_Available_Count := 0;
@@ -54,6 +56,15 @@ L_Active_Count := 0;
 L_Any_Transport_Degraded := FALSE;
 L_Any_Ignition_Timeout := FALSE;
 L_Any_Flame := FALSE;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    L_Boiler_Request_Enable[L_i] := FALSE;
+    L_Boiler_Request_Setpoint[L_i] := 0.0;
+    L_Boiler_OT_Command_Valid[L_i] := FALSE;
+    VO_Boiler_OT_Enable[L_i] := FALSE;
+    VO_Boiler_OT_Setpoint[L_i] := 0.0;
+    VO_Boiler_Status[L_i] := L_Empty_Boiler_Status;
+END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     IF VI_Manifold_Pumps[L_i] THEN
