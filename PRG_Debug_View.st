@@ -39,6 +39,16 @@ GVL_DEBUG_VIEW.D_Vent_Why_Stopped := GVL_EXPLAINABILITY.G_Vent_Why_Stopped;
 GVL_DEBUG_VIEW.D_Water_Why_Closed := GVL_EXPLAINABILITY.G_Water_Why_Closed;
 GVL_DEBUG_VIEW.D_Access_Why_Opened := GVL_EXPLAINABILITY.G_Access_Why_Opened;
 
+// MAIN PHASE FEEDBACK SUMMARY -> DEBUG VIEW
+GVL_DEBUG_VIEW.D_Main_Phase_Current := GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase;
+GVL_DEBUG_VIEW.D_Main_Phase_Critical_Executed := GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Executed;
+GVL_DEBUG_VIEW.D_Main_Phase_Critical_Valid := GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Valid;
+GVL_DEBUG_VIEW.D_Main_Phase_Observability_Executed := GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Executed;
+GVL_DEBUG_VIEW.D_Main_Phase_Observability_Valid := GVL_MAIN_PHASE_FEEDBACK.G_Observability_Path_Valid;
+GVL_DEBUG_VIEW.D_Main_Phase_Any_Invalid := GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Invalid;
+GVL_DEBUG_VIEW.D_Main_Phase_Status_Code := GVL_MAIN_PHASE_FEEDBACK.G_Status_Code;
+GVL_DEBUG_VIEW.D_Main_Phase_Status_Text := GVL_MAIN_PHASE_FEEDBACK.G_Status_Text;
+
 // SENSOR QUALITY → HMI
 GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
 GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
