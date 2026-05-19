@@ -1,0 +1,20 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Domain execution validation. Observational only.
+    // Detects policy/output mismatches before runtime gating is trusted.
+
+    G_Last_Update_MS : UDINT := 0;
+    G_Validation_Executed : BOOL := FALSE;
+    G_Validation_Valid : BOOL := TRUE;
+
+    Access_Stale_Output_Risk : BOOL := FALSE;
+    Lighting_Stale_Output_Risk : BOOL := FALSE;
+    Water_Stale_Output_Risk : BOOL := FALSE;
+    Heating_Stale_Output_Risk : BOOL := FALSE;
+    Vent_Stale_Output_Risk : BOOL := FALSE;
+
+    Any_Stale_Output_Risk : BOOL := FALSE;
+    Any_Policy_Mismatch : BOOL := FALSE;
+    Status_Code : UINT := 0;
+    Status_Text : STRING(160) := '';
+END_VAR
