@@ -8,6 +8,7 @@ VAR
     L_Runtime : ST_Water_Isolation_Runtime_State;
     L_Traversal : ST_Water_Graph_Traversal_State;
     L_Authority : ST_Water_Isolation_Authority_State;
+    L_Empty_Authority : ST_Water_Isolation_Authority_State;
     L_Any_Selective : BOOL;
     L_Any_Global : BOOL;
     L_Any_Denied : BOOL;
@@ -18,12 +19,17 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Selective := FALSE;
+L_Any_Global := FALSE;
+L_Any_Denied := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Runtime := GVL_Water_Isolation_Runtime.G_Isolation_Runtime_State[L_i];
     L_Traversal := GVL_Water_Orchestration.G_Traversal_State[L_i];
 
-    L_Authority := (Decision_Valid := TRUE);
+    L_Authority := L_Empty_Authority;
+    L_Authority.Decision_Valid := TRUE;
     L_Authority.Decision_System_Time_MS := VI_System_Time_MS;
 
     L_Authority.Isolation_Requested := L_Runtime.Isolation_Requested;
