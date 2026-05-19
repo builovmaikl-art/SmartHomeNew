@@ -441,7 +441,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 14:35 .github
 -rw-r--r--  1 runner runner   8376 May 19 14:35 HEATING_RUNTIME_OWNERSHIP_MATRIX.md
 -rw-r--r--  1 runner runner    164 May 19 14:35 IS_REAL_VALID.fun
 -rw-r--r--  1 runner runner    309 May 19 14:35 IValveController.st
--rw-r--r--  1 runner runner   1027 May 19 14:35 MAIN.st
+-rw-r--r--  1 runner runner    906 May 19 14:35 MAIN.st
 -rw-r--r--  1 runner runner   9174 May 19 14:35 PRG_Access.st
 -rw-r--r--  1 runner runner   4347 May 19 14:35 PRG_Actuation_Authority_Governor.st
 -rw-r--r--  1 runner runner   5434 May 19 14:35 PRG_Actuator_Semantic_Verification_Governor.st
@@ -779,4 +779,4 @@ total 2572
 drwxr-xr-x 2 runner runner    4096 May 19 14:35 .
 drwxr-xr-x 5 runner runner    4096 May 19 14:35 ..
 -rw-r--r-- 1 runner runner       0 May 19 14:35 .gitkeep
--rw-r--r-- 1 runner runner 2625040 May 19 14:35 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2625410 May 19 14:35 RESULT_methods_clean.xml
