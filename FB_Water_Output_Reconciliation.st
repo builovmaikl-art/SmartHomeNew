@@ -107,7 +107,7 @@ END_FOR;
 
 GVL_Water_Output_Reconciliation.G_Any_Runtime_Mismatch := L_Any_Runtime_Mismatch;
 GVL_Water_Output_Reconciliation.G_Any_Confirmation_Mismatch := L_Any_Confirmation_Mismatch;
-GVL_Water_Output_Reconciliation.G_Any_Conflict := L_Any_Conflict;
+GVL_Water_Output_Reconciliation.G_Any_Conflict_Detected := L_Any_Conflict;
 GVL_Water_Output_Reconciliation.G_Runtime_Valid := TRUE;
 GVL_Water_Output_Reconciliation.G_Last_Update_MS := VI_System_Time_MS;
 
