@@ -11,19 +11,10 @@ PROGRAM MAIN
 PRG_Main_Phase_01_Bootstrap();
 PRG_Main_Phase_02_Redundancy();
 PRG_Main_Phase_03_Input_Safety_Command();
-
 PRG_Main_Phase_04_Transport_Distributed();
-PRG_Main_Feedback_Mark_04();
-
 PRG_Main_Phase_05_Domain_Output();
-PRG_Main_Feedback_Mark_05();
-
 PRG_Main_Phase_06_PostOutput_Authority();
-PRG_Main_Feedback_Mark_06();
-
 PRG_Main_Phase_07_Semantic_Governance();
-PRG_Main_Feedback_Mark_07();
-
 PRG_Main_Phase_08_Diagnostics_HMI();
 
 // >>> BULK_SYNC_ANCHOR: MAIN <<<
