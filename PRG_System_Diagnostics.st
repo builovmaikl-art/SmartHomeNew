@@ -6,6 +6,9 @@ VAR
 
     L_Pumps_4 : ARRAY[1..4] OF BOOL;
     L_Manifold_Pump_Out_Of_Service : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Pressure_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Current_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    L_Manifold_Return_Temp_Fault : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     L_i : INT;
     L_Last_State_Trace_MS : UDINT;
 
@@ -20,7 +23,10 @@ FOR L_i := 1 TO 4 DO
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
-    L_Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service;
+    L_Manifold_Pump_Out_Of_Service[L_i] := NOT GVL_CONFIG.G_Manifold_Pump_In_Service[L_i];
+    L_Manifold_Pressure_Fault[L_i] := GVL_HEATING_DIAGNOSTICS.G_Manifold_Pressure_Fault[L_i];
+    L_Manifold_Current_Fault[L_i] := GVL_HEATING_DIAGNOSTICS.G_Manifold_Current_Fault[L_i];
+    L_Manifold_Return_Temp_Fault[L_i] := GVL_HEATING_DIAGNOSTICS.G_Manifold_Return_Temp_Fault[L_i];
 END_FOR;
 
 fbStateTraceLog(
@@ -88,9 +94,9 @@ fbSystemDiagnosticsPublisher(
     VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault,
     VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault,
     VI_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded,
-    VI_Manifold_Pressure_Fault := GVL_HEATING_DIAGNOSTICS.G_Manifold_Pressure_Fault,
-    VI_Manifold_Current_Fault := GVL_HEATING_DIAGNOSTICS.G_Manifold_Current_Fault,
-    VI_Manifold_Return_Temp_Fault := GVL_HEATING_DIAGNOSTICS.G_Manifold_Return_Temp_Fault
+    VI_Manifold_Pressure_Fault := L_Manifold_Pressure_Fault,
+    VI_Manifold_Current_Fault := L_Manifold_Current_Fault,
+    VI_Manifold_Return_Temp_Fault := L_Manifold_Return_Temp_Fault
 );
 
 GVL_System_Diagnostics_Publication.G_System_Diagnostics := fbSystemDiagnosticsPublisher.VO_Diagnostics;
