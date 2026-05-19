@@ -50,6 +50,36 @@ GVL_DEBUG_VIEW.D_Main_Phase_Any_Skipped_By_Design := GVL_MAIN_PHASE_FEEDBACK.G_A
 GVL_DEBUG_VIEW.D_Main_Phase_Status_Code := GVL_MAIN_PHASE_FEEDBACK.G_Status_Code;
 GVL_DEBUG_VIEW.D_Main_Phase_Status_Text := GVL_MAIN_PHASE_FEEDBACK.G_Status_Text;
 
+// DOMAIN EXECUTION POLICY SUMMARY -> DEBUG VIEW
+GVL_DEBUG_VIEW.D_Domain_Policy_Any_Critical := GVL_DOMAIN_EXECUTION_POLICY.Any_Critical_Run;
+GVL_DEBUG_VIEW.D_Domain_Policy_Any_Periodic := GVL_DOMAIN_EXECUTION_POLICY.Any_Periodic_Run;
+GVL_DEBUG_VIEW.D_Domain_Policy_Any_Idle := GVL_DOMAIN_EXECUTION_POLICY.Any_Idle_By_Design;
+GVL_DEBUG_VIEW.D_Domain_Policy_Status_Code := GVL_DOMAIN_EXECUTION_POLICY.Status_Code;
+GVL_DEBUG_VIEW.D_Domain_Policy_Status_Text := GVL_DOMAIN_EXECUTION_POLICY.Status_Text;
+
+GVL_DEBUG_VIEW.D_Access_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run;
+GVL_DEBUG_VIEW.D_Access_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Access_Periodic_Run;
+GVL_DEBUG_VIEW.D_Access_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Access_Idle_By_Design;
+
+GVL_DEBUG_VIEW.D_Lighting_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run;
+GVL_DEBUG_VIEW.D_Lighting_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Run;
+GVL_DEBUG_VIEW.D_Lighting_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Idle_By_Design;
+
+GVL_DEBUG_VIEW.D_Water_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run;
+GVL_DEBUG_VIEW.D_Water_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Run;
+GVL_DEBUG_VIEW.D_Water_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Water_Idle_By_Design;
+
+GVL_DEBUG_VIEW.D_Heating_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Heating_Critical_Run;
+GVL_DEBUG_VIEW.D_Heating_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Heating_Periodic_Run;
+GVL_DEBUG_VIEW.D_Heating_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Heating_Idle_By_Design;
+
+GVL_DEBUG_VIEW.D_Vent_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Vent_Critical_Run;
+GVL_DEBUG_VIEW.D_Vent_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Vent_Periodic_Run;
+GVL_DEBUG_VIEW.D_Vent_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Vent_Idle_By_Design;
+
+GVL_DEBUG_VIEW.D_Simulation_Run_Allowed := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed;
+GVL_DEBUG_VIEW.D_Simulation_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Idle_By_Design;
+
 // SENSOR QUALITY → HMI
 GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
 GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
