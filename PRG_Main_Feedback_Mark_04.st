@@ -1,0 +1,6 @@
+PROGRAM PRG_Main_Feedback_Mark_04
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_04_Transport_Distributed_Executed := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_04_Transport_Distributed_Valid := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_04_Transport_Distributed_Status_Text := 'Transport/distributed phase executed';
+GVL_MAIN_PHASE_FEEDBACK.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
+END_PROGRAM
