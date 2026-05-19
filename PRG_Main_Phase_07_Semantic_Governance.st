@@ -2,6 +2,8 @@ PROGRAM PRG_Main_Phase_07_Semantic_Governance
 // MAIN PHASE 12B — semantic, forensic, recovery, energy and governance integrity.
 // Critical: mixed. Mostly observability/governance; later candidate for controlled shedding review.
 
+GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 7;
+
 PRG_Semantic_Preservation_Governor();
 PRG_Operator_Semantic_Alignment_Governor();
 PRG_Semantic_Federation_Governor();
@@ -56,6 +58,11 @@ PRG_Controlled_Capability_Shedding_Governor();
 PRG_Semantic_Execution_Control_Governor();
 PRG_Industrial_Maintainability_Governor();
 PRG_Observability_Authority_Governor();
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Executed := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Valid := TRUE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Status_Text := 'Semantic/governance phase executed';
+GVL_MAIN_PHASE_FEEDBACK.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 // >>> BULK_SYNC_ANCHOR: PRG_Main_Phase_07_Semantic_Governance <<<
 END_PROGRAM
