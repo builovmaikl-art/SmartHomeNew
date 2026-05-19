@@ -10,6 +10,10 @@ VAR
     L_Group : ST_Water_Hydraulic_Isolation_Group;
     L_Validation : ST_Water_Topology_Validation_State;
 
+    L_Empty_Node : ST_Water_Hydraulic_Topology_Node;
+    L_Empty_Group : ST_Water_Hydraulic_Isolation_Group;
+    L_Empty_Validation : ST_Water_Topology_Validation_State;
+
     L_Any_Invalid : BOOL;
     L_Any_Ambiguous : BOOL;
     L_Any_Fallback : BOOL;
@@ -20,9 +24,14 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Invalid := FALSE;
+L_Any_Ambiguous := FALSE;
+L_Any_Fallback := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
-    L_Node := (Runtime_Valid := TRUE);
+    L_Node := L_Empty_Node;
+    L_Node.Runtime_Valid := TRUE;
 
     L_Node.Sensor_Id := TO_UINT(L_i);
     L_Node.Hydraulic_Zone_Id :=
@@ -59,7 +68,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     END_IF;
 
     // Isolation group publication.
-    L_Group := (Runtime_Valid := TRUE);
+    L_Group := L_Empty_Group;
+    L_Group.Runtime_Valid := TRUE;
 
     L_Group.Isolation_Group_Id :=
         L_Node.Isolation_Group_Id;
@@ -86,7 +96,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Node.Global_Fallback_Required;
 
     // Validation publication.
-    L_Validation := (Runtime_Valid := TRUE);
+    L_Validation := L_Empty_Validation;
+    L_Validation.Runtime_Valid := TRUE;
 
     L_Validation.Runtime_System_Time_MS :=
         VI_System_Time_MS;
