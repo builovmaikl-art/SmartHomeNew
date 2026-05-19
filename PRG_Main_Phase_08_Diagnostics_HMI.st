@@ -21,6 +21,18 @@ L_Run_Simulation :=
     (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
     AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.Simulation_Suspension_Recommended;
 
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Requested := L_Run_Extended_Diagnostics;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Skipped_By_Design := NOT L_Run_Extended_Diagnostics;
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Requested := L_Run_Extended_Observability;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Skipped_By_Design := NOT L_Run_Extended_Observability;
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Requested := L_Run_Simulation;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Skipped_By_Design := NOT L_Run_Simulation;
+
 // Always-active verification, explainability, health, alarms, basic diagnostics and HMI/debug summary.
 PRG_Command_Verifier();
 PRG_Explainability();
@@ -32,16 +44,19 @@ PRG_Debug_View();
 
 IF L_Run_Extended_Diagnostics THEN
     PRG_System_Diagnostics_Ext();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Executed := TRUE;
 END_IF;
 
 IF L_Run_Extended_Observability THEN
     PRG_System_History();
     PRG_System_BlackBox();
     PRG_System_Trend();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Executed := TRUE;
 END_IF;
 
 IF L_Run_Simulation THEN
     PRG_System_Simulation();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Executed := TRUE;
 END_IF;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Executed := TRUE;
@@ -50,7 +65,7 @@ GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Valid := TRUE;
 IF L_Run_Extended_Diagnostics AND L_Run_Extended_Observability AND L_Run_Simulation THEN
     GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed';
 ELSE
-    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed with shedding';
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Status_Text := 'Diagnostics/HMI phase executed with designed shedding';
 END_IF;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Critical_Path_Executed :=
@@ -83,9 +98,20 @@ GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Invalid :=
     OR NOT GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Valid
     OR NOT GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Diagnostics_HMI_Valid;
 
+GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Skipped_By_Design :=
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Skipped_By_Design
+    OR GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Skipped_By_Design
+    OR GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Skipped_By_Design
+    OR GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Diagnostics_Skipped_By_Design
+    OR GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Extended_Observability_Skipped_By_Design
+    OR GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Skipped_By_Design;
+
 IF GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Invalid THEN
     GVL_MAIN_PHASE_FEEDBACK.G_Status_Code := 1;
     GVL_MAIN_PHASE_FEEDBACK.G_Status_Text := 'MAIN phase feedback degraded';
+ELSIF GVL_MAIN_PHASE_FEEDBACK.G_Any_Phase_Skipped_By_Design THEN
+    GVL_MAIN_PHASE_FEEDBACK.G_Status_Code := 2;
+    GVL_MAIN_PHASE_FEEDBACK.G_Status_Text := 'MAIN phase feedback nominal with designed shedding';
 ELSE
     GVL_MAIN_PHASE_FEEDBACK.G_Status_Code := 0;
     GVL_MAIN_PHASE_FEEDBACK.G_Status_Text := 'MAIN phase feedback nominal';
