@@ -63,11 +63,13 @@ END_IF;
 
 // ------------------------------------------------------------------------------
 // Lighting policy.
-// Critical for emergency/security alarm/active outputs.
+// Critical for fire/evacuation/security alarm/active outputs.
 // Periodic for security armed / away / presence scenarios.
 // ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run :=
-    GVL_LIGHTING_RUNTIME.G_Emergency_Override_Active
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
+    OR GVL_STATE.G_Evacuation_Lighting_Active
+    OR GVL_LIGHTING_RUNTIME.G_Emergency_Override_Active
     OR GVL_LIGHTING_RUNTIME.G_Any_Light_Active
     OR GVL_LIGHTING_RUNTIME.G_Any_Blind_Not_Safe_Open
     OR GVL_LIGHTING_RUNTIME.G_Any_Socket_Active
