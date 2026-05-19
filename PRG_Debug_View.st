@@ -58,31 +58,37 @@ GVL_DEBUG_VIEW.D_Domain_Policy_Any_Idle := GVL_DOMAIN_EXECUTION_POLICY.Any_Idle_
 GVL_DEBUG_VIEW.D_Domain_Policy_Status_Code := GVL_DOMAIN_EXECUTION_POLICY.Status_Code;
 GVL_DEBUG_VIEW.D_Domain_Policy_Status_Text := GVL_DOMAIN_EXECUTION_POLICY.Status_Text;
 
+GVL_DEBUG_VIEW.D_Access_Mode := GVL_DOMAIN_EXECUTION_POLICY.Access_Mode;
 GVL_DEBUG_VIEW.D_Access_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run;
 GVL_DEBUG_VIEW.D_Access_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Access_Periodic_Run;
 GVL_DEBUG_VIEW.D_Access_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Access_Periodic_Due;
 GVL_DEBUG_VIEW.D_Access_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Access_Idle_By_Design;
 
+GVL_DEBUG_VIEW.D_Lighting_Mode := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode;
 GVL_DEBUG_VIEW.D_Lighting_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run;
 GVL_DEBUG_VIEW.D_Lighting_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Run;
 GVL_DEBUG_VIEW.D_Lighting_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Due;
 GVL_DEBUG_VIEW.D_Lighting_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Lighting_Idle_By_Design;
 
+GVL_DEBUG_VIEW.D_Water_Mode := GVL_DOMAIN_EXECUTION_POLICY.Water_Mode;
 GVL_DEBUG_VIEW.D_Water_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run;
 GVL_DEBUG_VIEW.D_Water_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Run;
 GVL_DEBUG_VIEW.D_Water_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Due;
 GVL_DEBUG_VIEW.D_Water_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Water_Idle_By_Design;
 
+GVL_DEBUG_VIEW.D_Heating_Mode := GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode;
 GVL_DEBUG_VIEW.D_Heating_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Heating_Critical_Run;
 GVL_DEBUG_VIEW.D_Heating_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Heating_Periodic_Run;
 GVL_DEBUG_VIEW.D_Heating_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Heating_Periodic_Due;
 GVL_DEBUG_VIEW.D_Heating_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Heating_Idle_By_Design;
 
+GVL_DEBUG_VIEW.D_Vent_Mode := GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode;
 GVL_DEBUG_VIEW.D_Vent_Critical_Run := GVL_DOMAIN_EXECUTION_POLICY.Vent_Critical_Run;
 GVL_DEBUG_VIEW.D_Vent_Periodic_Run := GVL_DOMAIN_EXECUTION_POLICY.Vent_Periodic_Run;
 GVL_DEBUG_VIEW.D_Vent_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Vent_Periodic_Due;
 GVL_DEBUG_VIEW.D_Vent_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Vent_Idle_By_Design;
 
+GVL_DEBUG_VIEW.D_Simulation_Mode := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Mode;
 GVL_DEBUG_VIEW.D_Simulation_Run_Allowed := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed;
 GVL_DEBUG_VIEW.D_Simulation_Periodic_Due := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Periodic_Due;
 GVL_DEBUG_VIEW.D_Simulation_Idle_By_Design := GVL_DOMAIN_EXECUTION_POLICY.Simulation_Idle_By_Design;
