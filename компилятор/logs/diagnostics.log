@@ -513,6 +513,7 @@ drwxr-xr-x  3 runner runner   4096 May 19 13:57 .github
 -rw-r--r--  1 runner runner   1219 May 19 13:57 PRG_Main_Phase_04_Transport_Distributed.st
 -rw-r--r--  1 runner runner    807 May 19 13:57 PRG_Main_Phase_05_Domain_Output.st
 -rw-r--r--  1 runner runner    811 May 19 13:57 PRG_Main_Phase_06_PostOutput_Authority.st
+-rw-r--r--  1 runner runner   2597 May 19 13:57 PRG_Main_Phase_07_Semantic_Governance.st
 -rw-r--r--  1 runner runner   4816 May 19 13:57 PRG_Meta_Governance_Governor.st
 -rw-r--r--  1 runner runner   4199 May 19 13:57 PRG_Modbus_Master.st
 -rw-r--r--  1 runner runner   3033 May 19 13:57 PRG_Modbus_RTU_Bridge.st
@@ -749,7 +750,7 @@ drwxr-xr-x  5 runner runner   4096 May 19 13:57 компилятор
 -rw-r--r--  1 runner runner  11783 May 19 13:57 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 May 19 13:57 .
 drwxr-xr-x 12 runner runner  45056 May 19 13:57 ..
 -rw-r--r--  1 runner runner  21153 May 19 13:57 001_universal_pou_builder_METHODS_V2.py
@@ -772,4 +773,4 @@ total 2564
 drwxr-xr-x 2 runner runner    4096 May 19 13:57 .
 drwxr-xr-x 5 runner runner    4096 May 19 13:57 ..
 -rw-r--r-- 1 runner runner       0 May 19 13:57 .gitkeep
--rw-r--r-- 1 runner runner 2613569 May 19 13:57 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2614931 May 19 13:57 RESULT_methods_clean.xml
