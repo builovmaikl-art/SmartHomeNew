@@ -53,6 +53,14 @@ GVL_DOMAIN_EXECUTION_POLICY.Access_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run
     AND NOT GVL_DOMAIN_EXECUTION_POLICY.Access_Periodic_Run;
 
+IF GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Access_Mode := 2;
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Access_Periodic_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Access_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Access_Mode := 0;
+END_IF;
+
 // ------------------------------------------------------------------------------
 // Lighting policy.
 // Critical for emergency/security alarm/active outputs.
@@ -76,6 +84,14 @@ GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Run :=
 GVL_DOMAIN_EXECUTION_POLICY.Lighting_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run
     AND NOT GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Run;
+
+IF GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode := 2;
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Lighting_Periodic_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode := 0;
+END_IF;
 
 // ------------------------------------------------------------------------------
 // Water policy.
@@ -104,6 +120,14 @@ GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Run :=
 GVL_DOMAIN_EXECUTION_POLICY.Water_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run
     AND NOT GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Run;
+
+IF GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Water_Mode := 2;
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Water_Periodic_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Water_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Water_Mode := 0;
+END_IF;
 
 // ------------------------------------------------------------------------------
 // Heating policy.
@@ -151,6 +175,14 @@ GVL_DOMAIN_EXECUTION_POLICY.Heating_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Heating_Critical_Run
     AND NOT GVL_DOMAIN_EXECUTION_POLICY.Heating_Periodic_Run;
 
+IF GVL_DOMAIN_EXECUTION_POLICY.Heating_Critical_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode := 2;
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Heating_Periodic_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode := 0;
+END_IF;
+
 // ------------------------------------------------------------------------------
 // Ventilation policy.
 // Critical for gas/fire/smoke/emergency boost or active outputs.
@@ -190,6 +222,14 @@ GVL_DOMAIN_EXECUTION_POLICY.Vent_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Vent_Critical_Run
     AND NOT GVL_DOMAIN_EXECUTION_POLICY.Vent_Periodic_Run;
 
+IF GVL_DOMAIN_EXECUTION_POLICY.Vent_Critical_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode := 2;
+ELSIF GVL_DOMAIN_EXECUTION_POLICY.Vent_Periodic_Run THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode := 0;
+END_IF;
+
 // ------------------------------------------------------------------------------
 // Simulation policy.
 // Runs only when enabled and there is test/security/away/presence context.
@@ -208,6 +248,12 @@ GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed :=
 
 GVL_DOMAIN_EXECUTION_POLICY.Simulation_Idle_By_Design :=
     NOT GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed;
+
+IF GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed THEN
+    GVL_DOMAIN_EXECUTION_POLICY.Simulation_Mode := 1;
+ELSE
+    GVL_DOMAIN_EXECUTION_POLICY.Simulation_Mode := 0;
+END_IF;
 
 // ------------------------------------------------------------------------------
 // Summary.
