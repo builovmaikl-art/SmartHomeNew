@@ -21,6 +21,18 @@ L_Run_Analytics :=
     (GVL_FABRIC_LIFECYCLE_REGISTRY.Runtime_Adaptive_Mode = FULL_SEMANTIC_MODE)
     AND NOT GVL_FABRIC_LIFECYCLE_REGISTRY.NonEssential_Analytics_Shedding_Recommended;
 
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Requested := L_Run_Full_Semantic;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Skipped_By_Design := NOT L_Run_Full_Semantic;
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Requested := L_Run_Extended_Observability;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Skipped_By_Design := NOT L_Run_Extended_Observability;
+
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Requested := L_Run_Analytics;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Executed := FALSE;
+GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Skipped_By_Design := NOT L_Run_Analytics;
+
 // Critical authority and physical-reality guards: never shed here.
 PRG_Authority_Provenance_Governor();
 PRG_Provenance_Continuity_Governor();
@@ -70,6 +82,7 @@ IF L_Run_Full_Semantic THEN
     PRG_Governance_Validator_Integrity_Governor();
     PRG_Governance_Liveness_Integrity_Governor();
     PRG_Runtime_Assumption_Integrity_Governor();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Full_Semantic_Executed := TRUE;
 END_IF;
 
 // Extended observability and forensic fabrics: shed when observability budget is constrained.
@@ -80,6 +93,7 @@ IF L_Run_Extended_Observability THEN
     PRG_Semantic_Drift_Observability_Governor();
     PRG_Proof_Continuity_Audit_Governor();
     PRG_Causal_Narrative_Engine();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Extended_Observability_Executed := TRUE;
 END_IF;
 
 // Non-essential analytics/intelligence fabrics: shed when analytics budget is constrained.
@@ -87,6 +101,7 @@ IF L_Run_Analytics THEN
     PRG_Execution_Projection_Integrity_Governor();
     PRG_Operational_Intelligence_Governor();
     PRG_Runtime_Compression_Governor();
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Analytics_Executed := TRUE;
 END_IF;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Executed := TRUE;
@@ -95,7 +110,7 @@ GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Valid := TRUE;
 IF L_Run_Full_Semantic AND L_Run_Extended_Observability AND L_Run_Analytics THEN
     GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Status_Text := 'Semantic/governance phase executed';
 ELSE
-    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Status_Text := 'Semantic/governance phase executed with shedding';
+    GVL_MAIN_PHASE_FEEDBACK.G_Phase_07_Semantic_Governance_Status_Text := 'Semantic/governance phase executed with designed shedding';
 END_IF;
 
 GVL_MAIN_PHASE_FEEDBACK.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
