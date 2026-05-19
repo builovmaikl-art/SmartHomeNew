@@ -9,6 +9,9 @@ VAR
     L_FSM : ST_Water_Recovery_FSM_State;
     L_Event : ST_Water_Event_Log_Record;
 
+    L_Empty_FSM : ST_Water_Recovery_FSM_State;
+    L_Empty_Event : ST_Water_Event_Log_Record;
+
     L_Any_Rollback : BOOL;
     L_Any_Escalation : BOOL;
 END_VAR
@@ -18,10 +21,14 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Rollback := FALSE;
+L_Any_Escalation := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     // Recovery FSM.
-    L_FSM := (Runtime_Valid := TRUE);
+    L_FSM := L_Empty_FSM;
+    L_FSM.Runtime_Valid := TRUE;
 
     L_FSM.Runtime_System_Time_MS :=
         VI_System_Time_MS;
@@ -76,7 +83,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     // Runtime event publication.
     IF L_i <= 128 THEN
 
-        L_Event := (Runtime_Valid := TRUE);
+        L_Event := L_Empty_Event;
+        L_Event.Runtime_Valid := TRUE;
 
         L_Event.Event_Time_MS := VI_System_Time_MS;
         L_Event.Event_Id := TO_UINT(L_i);
