@@ -1,0 +1,35 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime scenario validation. Observational only.
+    // Validates that current safety/scenario context matches domain execution policy.
+
+    G_Last_Update_MS : UDINT := 0;
+    G_Validation_Executed : BOOL := FALSE;
+    G_Validation_Valid : BOOL := TRUE;
+
+    Idle_Context_Active : BOOL := FALSE;
+    Security_Context_Active : BOOL := FALSE;
+    Away_Context_Active : BOOL := FALSE;
+    Presence_Context_Active : BOOL := FALSE;
+    Fire_Context_Active : BOOL := FALSE;
+    Gas_Context_Active : BOOL := FALSE;
+    Leak_Context_Active : BOOL := FALSE;
+    Freeze_Context_Active : BOOL := FALSE;
+    Heating_Demand_Context_Active : BOOL := FALSE;
+    Vent_Boost_Context_Active : BOOL := FALSE;
+    Access_Command_Context_Active : BOOL := FALSE;
+
+    Idle_Context_Valid : BOOL := TRUE;
+    Security_Context_Valid : BOOL := TRUE;
+    Fire_Context_Valid : BOOL := TRUE;
+    Gas_Context_Valid : BOOL := TRUE;
+    Leak_Context_Valid : BOOL := TRUE;
+    Freeze_Context_Valid : BOOL := TRUE;
+    Heating_Context_Valid : BOOL := TRUE;
+    Vent_Context_Valid : BOOL := TRUE;
+    Access_Context_Valid : BOOL := TRUE;
+
+    Any_Context_Invalid : BOOL := FALSE;
+    Status_Code : UINT := 0;
+    Status_Text : STRING(160) := '';
+END_VAR
