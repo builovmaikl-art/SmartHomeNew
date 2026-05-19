@@ -27,6 +27,13 @@ END_VAR
 L_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
 
+GVL_ACCESS_RUNTIME.G_Runtime_Required := FALSE;
+GVL_ACCESS_RUNTIME.G_Runtime_Executed := TRUE;
+GVL_ACCESS_RUNTIME.G_Runtime_Idle_By_Design := FALSE;
+GVL_ACCESS_RUNTIME.G_Runtime_Blocked_By_Distributed_Gates := FALSE;
+GVL_ACCESS_RUNTIME.G_Any_Pulse_Active := FALSE;
+GVL_ACCESS_RUNTIME.G_Last_Update_MS := L_Now_MS;
+
 // Distributed runtime governance.
 // FIRE/GAS emergency semantics remain authoritative.
 L_Distributed_Execute_Allowed :=
@@ -50,6 +57,10 @@ IF (L_Mode <> FIRE)
         VI_Gate_Open := FALSE,
         VI_Wicket_Open := FALSE
     );
+
+    GVL_ACCESS_RUNTIME.G_Runtime_Blocked_By_Distributed_Gates := TRUE;
+    GVL_ACCESS_RUNTIME.G_Status_Code := 2;
+    GVL_ACCESS_RUNTIME.G_Status_Text := 'Access runtime blocked by distributed gates';
 
     RETURN;
 END_IF;
@@ -116,6 +127,36 @@ ELSE
         L_Gate_Open := fbPulseGateOpen.VO_Output;
         L_Wicket_Open := fbPulseWicketOpen.VO_Output;
 END_CASE;
+
+GVL_ACCESS_RUNTIME.G_Any_Pulse_Active :=
+    fbPulseLock1Open.VO_Active
+    OR fbPulseLock1Close.VO_Active
+    OR fbPulseLock2Open.VO_Active
+    OR fbPulseLock2Close.VO_Active
+    OR fbPulseGateOpen.VO_Active
+    OR fbPulseWicketOpen.VO_Active;
+
+GVL_ACCESS_RUNTIME.G_Runtime_Required :=
+    (L_Mode = FIRE)
+    OR (L_Mode = GAS)
+    OR GVL_COMMAND_SHADOW.G_Lock_1_Open
+    OR GVL_COMMAND_SHADOW.G_Lock_1_Close
+    OR GVL_COMMAND_SHADOW.G_Lock_2_Open
+    OR GVL_COMMAND_SHADOW.G_Lock_2_Close
+    OR GVL_COMMAND_SHADOW.G_Gate_Open
+    OR GVL_COMMAND_SHADOW.G_Wicket_Open
+    OR GVL_ACCESS_RUNTIME.G_Any_Pulse_Active;
+
+GVL_ACCESS_RUNTIME.G_Runtime_Idle_By_Design :=
+    NOT GVL_ACCESS_RUNTIME.G_Runtime_Required;
+
+IF GVL_ACCESS_RUNTIME.G_Runtime_Idle_By_Design THEN
+    GVL_ACCESS_RUNTIME.G_Status_Code := 0;
+    GVL_ACCESS_RUNTIME.G_Status_Text := 'Access runtime idle by design';
+ELSE
+    GVL_ACCESS_RUNTIME.G_Status_Code := 1;
+    GVL_ACCESS_RUNTIME.G_Status_Text := 'Access runtime active';
+END_IF;
 
 fbProjection(
     VI_Lock_1_Open := L_Lock_1_Open,
