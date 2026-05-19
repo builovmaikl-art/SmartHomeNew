@@ -10,6 +10,9 @@ VAR
     L_Path : ST_Water_Isolation_Path_Runtime_State;
     L_Validation : ST_Water_Topology_Validation_State;
 
+    L_Empty_Edge : ST_Water_Hydraulic_Topology_Edge;
+    L_Empty_Path : ST_Water_Isolation_Path_Runtime_State;
+
     L_Any_Shared_Trunk : BOOL;
     L_Any_Conflict : BOOL;
     L_Any_Fallback : BOOL;
@@ -20,13 +23,18 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+L_Any_Shared_Trunk := FALSE;
+L_Any_Conflict := FALSE;
+L_Any_Fallback := FALSE;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_Validation :=
         GVL_Water_Topology_Validation.G_Validation_State[L_i];
 
     // Graph edge publication.
-    L_Edge := (Runtime_Valid := TRUE);
+    L_Edge := L_Empty_Edge;
+    L_Edge.Runtime_Valid := TRUE;
 
     L_Edge.Edge_Id := TO_UINT(L_i);
 
@@ -61,7 +69,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Validation.Global_Fallback_Required;
 
     // Isolation path runtime.
-    L_Path := (Runtime_Valid := TRUE);
+    L_Path := L_Empty_Path;
+    L_Path.Runtime_Valid := TRUE;
 
     L_Path.Runtime_System_Time_MS :=
         VI_System_Time_MS;
