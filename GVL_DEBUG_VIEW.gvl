@@ -102,6 +102,24 @@ VAR_GLOBAL
     D_Domain_Validation_Status_Code : UINT := 0;
     D_Domain_Validation_Status_Text : STRING(160) := '';
 
+    // Runtime scenario validation summary.
+    D_Runtime_Scenario_Validation_Executed : BOOL := FALSE;
+    D_Runtime_Scenario_Validation_Valid : BOOL := FALSE;
+    D_Runtime_Scenario_Any_Context_Invalid : BOOL := FALSE;
+    D_Runtime_Idle_Context_Active : BOOL := FALSE;
+    D_Runtime_Security_Context_Active : BOOL := FALSE;
+    D_Runtime_Away_Context_Active : BOOL := FALSE;
+    D_Runtime_Presence_Context_Active : BOOL := FALSE;
+    D_Runtime_Fire_Context_Active : BOOL := FALSE;
+    D_Runtime_Gas_Context_Active : BOOL := FALSE;
+    D_Runtime_Leak_Context_Active : BOOL := FALSE;
+    D_Runtime_Freeze_Context_Active : BOOL := FALSE;
+    D_Runtime_Heating_Context_Valid : BOOL := FALSE;
+    D_Runtime_Vent_Context_Valid : BOOL := FALSE;
+    D_Runtime_Access_Context_Valid : BOOL := FALSE;
+    D_Runtime_Scenario_Status_Code : UINT := 0;
+    D_Runtime_Scenario_Status_Text : STRING(160) := '';
+
     // HMI / dashboard sensor quality view.
     D_Input_Source_Valid : BOOL := FALSE;
     D_Input_Degraded : BOOL := FALSE;
