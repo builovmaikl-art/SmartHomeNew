@@ -15,6 +15,7 @@ CASE L_Phase OF
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := STABILIZING;
             GVL_SAFETY_RECOVERY.G_Recovery_Active := TRUE;
             GVL_SAFETY_RECOVERY.G_Recovery_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+            GVL_SAFETY_RECOVERY.G_Recovery_Abort_Reason := 0;
         END_IF;
 
     STABILIZING:
@@ -60,6 +61,8 @@ CASE L_Phase OF
 
     ABORTED:
         GVL_SAFETY_RECOVERY.G_Recovery_Active := FALSE;
+        GVL_SAFETY_RECOVERY.G_Recovery_Requested := FALSE;
+        GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm := FALSE;
         IF NOT L_Mode_Active THEN
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := IDLE;
         END_IF;
