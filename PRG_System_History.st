@@ -30,7 +30,8 @@ IF GVL_STATE.G_System_Mode <> L_Last_System_Mode THEN
     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
     L_Last_System_Mode := GVL_STATE.G_System_Mode;
 
-ELSIF GVL_SYSTEM_HEALTH.G_Root_Cause <> L_Last_Root_Cause THEN
+ELSIF GVL_SYSTEM_HEALTH.G_First_Fault_Active
+      AND (GVL_SYSTEM_HEALTH.G_Root_Cause <> L_Last_Root_Cause) THEN
     L_History_Write_Event := TRUE;
     L_History_Event.event_code := 1102;
     L_History_Event.event_value := TO_REAL(TO_INT(GVL_SYSTEM_HEALTH.G_Root_Cause));
@@ -39,7 +40,8 @@ ELSIF GVL_SYSTEM_HEALTH.G_Root_Cause <> L_Last_Root_Cause THEN
     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
     L_Last_Root_Cause := GVL_SYSTEM_HEALTH.G_Root_Cause;
 
-ELSIF GVL_SYSTEM_HEALTH.G_First_Fault_Source <> L_Last_First_Fault_Source THEN
+ELSIF GVL_SYSTEM_HEALTH.G_First_Fault_Active
+      AND (GVL_SYSTEM_HEALTH.G_First_Fault_Source <> L_Last_First_Fault_Source) THEN
     L_History_Write_Event := TRUE;
     L_History_Event.event_code := 1103;
     L_History_Event.event_value := TO_REAL(GVL_SYSTEM_HEALTH.G_First_Fault_Source);
@@ -59,7 +61,7 @@ ELSIF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
 
 ELSIF GVL_STATUS.G_Diagnostics.Alarm_Event_Pulse THEN
     L_History_Write_Event := TRUE;
-    L_History_Event.event_code := TO_WORD(GVL_STATUS.G_Diagnostics.Alarm_Event_Code);
+    L_History_Event.event_code := GVL_STATUS.G_Diagnostics.Alarm_Event_Code;
     L_History_Event.event_value := GVL_STATUS.G_Diagnostics.Alarm_Event_Value;
     L_History_Event.unit := 10;
     L_History_Event.zone_id := 0;
@@ -73,6 +75,11 @@ ELSIF GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq <> L_Last_Operator_Jou
     L_History_Event.zone_id := 0;
     L_History_Event.priority := E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH;
     L_Last_Operator_Journal_Seq := GVL_STATUS.G_Diagnostics.Operator_Journal_Event_Seq;
+END_IF;
+
+IF NOT GVL_SYSTEM_HEALTH.G_First_Fault_Active THEN
+    L_Last_Root_Cause := GVL_SYSTEM_HEALTH.G_Root_Cause;
+    L_Last_First_Fault_Source := GVL_SYSTEM_HEALTH.G_First_Fault_Source;
 END_IF;
 
 IF L_History_Write_Event THEN
