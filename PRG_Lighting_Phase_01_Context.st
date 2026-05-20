@@ -38,15 +38,15 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     GVL_LIGHTING_RUNTIME_BUFFER.B_Sim_Lights[L_i] := GVL_STATE.G_Sim_Lights[L_i];
     GVL_LIGHTING_RUNTIME_BUFFER.B_Physical_Switches[L_i] := GVL_STATE.G_Physical_Switches[L_i];
     GVL_LIGHTING_RUNTIME_BUFFER.B_Motion_Sensors[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
+END_FOR;
 
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
     IF GVL_INTENT_SYSTEM.I_Blinds_Overrides_Block THEN
         GVL_LIGHTING_RUNTIME_BUFFER.B_Manual_Blinds_Override[L_i] := 0;
     ELSE
         GVL_LIGHTING_RUNTIME_BUFFER.B_Manual_Blinds_Override[L_i] := GVL_INTENT_USER.I_Blinds_Override_32[L_i];
     END_IF;
-END_FOR;
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
     GVL_LIGHTING_RUNTIME_BUFFER.B_Blinds_Override[L_i] :=
         GVL_LIGHTING_RUNTIME_BUFFER.B_Manual_Blinds_Override[L_i];
 END_FOR;
