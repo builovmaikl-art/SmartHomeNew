@@ -39,7 +39,7 @@ fbStateTraceLog(
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
 
-    L_Hum := 0.0;
+    L_Hum := GVL_INPUT.IN_Room_Hum[L_i];
 
     IF GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] THEN
         L_PrevHum := GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i];
