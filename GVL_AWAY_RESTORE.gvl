@@ -13,4 +13,8 @@ VAR_GLOBAL
     G_Restore_Progress : REAL := 0.0;
     G_Restore_Started_MS : UDINT := 0;
     G_Restore_Done : BOOL := FALSE;
+
+    // One-cycle hold after progress reaches 1.0. Domain managers run later in
+    // the cycle and must still see Active+Snapshot_Valid for final output apply.
+    G_Restore_Finalize_Pending : BOOL := FALSE;
 END_VAR
