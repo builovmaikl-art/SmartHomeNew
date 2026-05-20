@@ -2,6 +2,8 @@ PROGRAM PRG_IO_Write_Phase_02_Hard_Stop_Safe_State
 // IO write phase 02: publish hard-stop safe physical outputs.
 VAR
     L_i : INT;
+    L_Prev_Distributed_Publication_Block : BOOL;
+    L_Prev_Output_Publication_Block : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
 
@@ -66,7 +68,8 @@ GVL_IO.DO_Security_Siren :=
     GVL_ALARM.G_Security_Siren
     OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
 
-IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Publication_Block THEN
+IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Publication_Block
+   AND NOT L_Prev_Distributed_Publication_Block THEN
     fbTrace(
         iLayer := TRACE_IO,
         iSource := SRC_IO,
@@ -77,7 +80,8 @@ IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Publication_Block THEN
     );
 END_IF;
 
-IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block THEN
+IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block
+   AND NOT L_Prev_Output_Publication_Block THEN
     fbTrace(
         iLayer := TRACE_IO,
         iSource := SRC_IO,
@@ -87,6 +91,9 @@ IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block THEN
         iText := 'IO blocked by finalized output publication authority'
     );
 END_IF;
+
+L_Prev_Distributed_Publication_Block := GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Publication_Block;
+L_Prev_Output_Publication_Block := GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write_Phase_02_Hard_Stop_Safe_State <<<
 END_PROGRAM
