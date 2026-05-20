@@ -6,6 +6,8 @@ PRG_IO_Read();
 PRG_Input_Quality_Read();
 PRG_Input_Processing();
 
+PRG_Heating_Config_Defaults();
+
 PRG_Mode_Manager();
 PRG_Presence_Manager();
 PRG_Safety_Selector();
