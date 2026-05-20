@@ -12,11 +12,6 @@ VAR_GLOBAL RETAIN
     G_BlackBox_LastIndex : INT;
     G_BlackBox_Frozen : BOOL;
     
-    // История событий
-    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
-    G_History_Write_Idx : INT := 1;
-    G_History_Total_Events : UDINT;
-    
     // Статистика котлов
     G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
     G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
@@ -36,4 +31,10 @@ VAR_GLOBAL
     // Presence playback history is non-safety behavioural data.
     // It is rebuilt during recording mode and must not consume RETAIN memory.
     G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD;
+
+    // Event history is an HMI/diagnostic runtime buffer.
+    // It is repopulated by FB_History_Manager and must not consume RETAIN memory.
+    G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
+    G_History_Write_Idx : INT := 1;
+    G_History_Total_Events : UDINT;
 END_VAR
