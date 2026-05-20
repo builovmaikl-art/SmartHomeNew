@@ -3,6 +3,7 @@ VAR
     L_i : INT;
     L_Filtered_Room_Temp : REAL;
     L_Filtered_Floor_Temp : REAL;
+    L_Any_Sensor_Fault : BOOL;
 
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
     fbCalib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF FB_Sensor_Calibration_Processor;
@@ -11,6 +12,8 @@ VAR
     fbCalib_Room_Hum : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_CO2 : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
 END_VAR
+
+L_Any_Sensor_Fault := FALSE;
 
 fbCalib_Outdoor_Temp(
     VI_Raw_Value := GVL_IO.AI_Temp_Outdoor.rValue,
@@ -25,6 +28,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
             VI_Record := GVL_CONFIG.G_Calib_Supply_Temps[L_i]
         );
         GVL_STATE.G_Supply_Temps[L_i] := fbCalib_Supply_Temps[L_i].VO_Calibrated_Value;
+    ELSE
+        L_Any_Sensor_Fault := TRUE;
     END_IF;
 END_FOR;
 
@@ -57,7 +62,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
     IF (L_Filtered_Room_Temp < -50.0) OR (L_Filtered_Room_Temp > 100.0) THEN
         GVL_STATE.G_Temp_Sensor_Fault[L_i] := TRUE;
         GVL_STATE.G_Room_Temps[L_i] := GVL_STATE.G_Last_Valid_Room_Temps[L_i];
-        GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+        L_Any_Sensor_Fault := TRUE;
     ELSE
         GVL_STATE.G_Temp_Sensor_Fault[L_i] := FALSE;
         GVL_STATE.G_Room_Temps[L_i] := L_Filtered_Room_Temp;
@@ -81,7 +86,7 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         IF (L_Filtered_Floor_Temp < -50.0) OR (L_Filtered_Floor_Temp > 100.0) THEN
             GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := TRUE;
             GVL_STATE.G_Floor_Temps[L_i] := GVL_STATE.G_Last_Valid_Floor_Temps[L_i];
-            GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+            L_Any_Sensor_Fault := TRUE;
         ELSE
             GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := FALSE;
             GVL_STATE.G_Floor_Temps[L_i] := L_Filtered_Floor_Temp;
@@ -90,8 +95,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     ELSE
         GVL_STATE.G_Floor_Temp_Sensor_Fault[L_i] := TRUE;
         GVL_STATE.G_Floor_Temps[L_i] := GVL_STATE.G_Last_Valid_Floor_Temps[L_i];
+        L_Any_Sensor_Fault := TRUE;
     END_IF;
 END_FOR;
+
+GVL_STATUS.G_Diagnostics.Sensor_Fault := L_Any_Sensor_Fault;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Read_Phase_03_Environment_Sensors <<<
 END_PROGRAM
