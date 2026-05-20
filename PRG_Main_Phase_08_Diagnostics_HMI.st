@@ -22,8 +22,7 @@ L_Simulation_Context_Active :=
     GVL_SIMULATION.G_Test_Scenario_Active
     OR GVL_SIMULATION.G_Test_Start
     OR GVL_ALARM.G_Security_Armed
-    OR (GVL_STATUS.G_Current_Scenario = SCENARIO_AWAY)
-    OR (GVL_STATUS.G_Current_Scenario = SCENARIO_PRESENCE);
+    OR (GVL_STATUS.G_Current_Scenario = SCENARIO_AWAY);
 
 L_Run_Simulation :=
     GVL_SIMULATION.G_Simulation_Enable
@@ -42,7 +41,6 @@ GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Requested := L_Run_Simulation;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Executed := FALSE;
 GVL_MAIN_PHASE_FEEDBACK.G_Phase_08_Simulation_Skipped_By_Design := NOT L_Run_Simulation;
 
-// Always-active verification, explainability, health, alarms, basic diagnostics and HMI/debug summary.
 PRG_Command_Verifier();
 PRG_Explainability();
 PRG_System_Health();
