@@ -1,5 +1,15 @@
 VAR_GLOBAL
+    // Legacy/global inlet valves.
+    // 35 = общий ввод ХВС, 36 = общий ввод ГВС.
     DO_Water_Valve_35_Close : BOOL := FALSE;
     DO_Water_Valve_36_Close : BOOL := FALSE;
+
+    // Local riser motorized ball valves with end switches.
+    // 1 = стояк 1 ХВС, 2 = стояк 1 ГВС,
+    // 3 = стояк 2 ХВС, 4 = стояк 2 ГВС,
+    // 5 = стояк 3 ХВС, 6 = стояк 3 ГВС.
+    DO_Water_Local_Valve_Open : ARRAY[1..6] OF BOOL;
+    DO_Water_Local_Valve_Close : ARRAY[1..6] OF BOOL;
+
     DO_Water_Zone_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
 END_VAR
