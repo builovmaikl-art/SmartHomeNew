@@ -26,11 +26,6 @@ GVL_DOMAIN_EXECUTION_POLICY.G_Emergency_Context_Active :=
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK)
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP);
 
-// ------------------------------------------------------------------------------
-// Access policy.
-// Critical when emergency semantics or an access command/pulse is active.
-// Periodic when security/away context is active, even without a current pulse.
-// ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS)
@@ -61,11 +56,6 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Access_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Lighting policy.
-// Critical for fire/evacuation/security alarm/active outputs.
-// Periodic for security armed / away / presence scenarios.
-// ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
     OR GVL_STATE.G_Evacuation_Lighting_Active
@@ -95,11 +85,6 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Water policy.
-// Critical when leak/global path/output close/recovery is active.
-// Periodic when water status has no demand but system is in security/away context.
-// ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Water_Critical_Run :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK)
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
@@ -132,11 +117,6 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Water_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Heating policy.
-// Critical for emergency/freeze/gas/DHW/block/active outputs.
-// Periodic for comfort scenarios or low-demand normal supervision.
-// ------------------------------------------------------------------------------
 L_Heating_Output_Active :=
     GVL_HEATING_OUTPUT.DO_DHW_Heating_Pump
     OR GVL_HEATING_OUTPUT.DO_DHW_Circ_Pump
@@ -189,11 +169,6 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Ventilation policy.
-// Critical for gas/fire/smoke/stop/block/emergency boost or active outputs.
-// Periodic for occupancy/away/presence/background air-quality supervision.
-// ------------------------------------------------------------------------------
 L_Vent_Output_Active := GVL_VENT_OUTPUT.DO_Vent_Enable;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
@@ -239,16 +214,11 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Simulation policy.
-// Runs only when enabled and there is test/security/away/presence context.
-// ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Simulation_Context_Active :=
     GVL_SIMULATION.G_Test_Scenario_Active
     OR GVL_SIMULATION.G_Test_Start
     OR GVL_DOMAIN_EXECUTION_POLICY.G_Security_Context_Active
-    OR GVL_DOMAIN_EXECUTION_POLICY.G_Away_Context_Active
-    OR GVL_DOMAIN_EXECUTION_POLICY.G_Presence_Context_Active;
+    OR GVL_DOMAIN_EXECUTION_POLICY.G_Away_Context_Active;
 
 GVL_DOMAIN_EXECUTION_POLICY.Simulation_Run_Allowed :=
     GVL_SIMULATION.G_Simulation_Enable
@@ -264,9 +234,6 @@ ELSE
     GVL_DOMAIN_EXECUTION_POLICY.Simulation_Mode := 0;
 END_IF;
 
-// ------------------------------------------------------------------------------
-// Summary.
-// ------------------------------------------------------------------------------
 GVL_DOMAIN_EXECUTION_POLICY.Any_Critical_Run :=
     GVL_DOMAIN_EXECUTION_POLICY.Access_Critical_Run
     OR GVL_DOMAIN_EXECUTION_POLICY.Lighting_Critical_Run
