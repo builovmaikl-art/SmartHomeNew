@@ -1,4 +1,12 @@
 PROGRAM PRG_Policy
+VAR
+    L_Away_Elapsed_MS : UDINT;
+    L_Restore_Elapsed_MS : UDINT;
+    L_Previous_Away_Active : BOOL := FALSE;
+    L_Previous_Away_Level : BYTE := 0;
+END_VAR
+
+GVL_POLICY.G_Away_Restore_Requested := FALSE;
 
 // ============================================================
 // CONFIGURATION SAFETY CLAMP
@@ -91,6 +99,91 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
         END_IF;
     END_IF;
 END_IF;
+
+// ============================================================
+// AWAY LEVEL POLICY
+// ============================================================
+// 0=none, 1=short, 2=medium, 3=long.
+// Short: light 100%, heating -1C, simulation off.
+// Medium: light/simulation medium, heating -3C, simulation 0.3.
+// Long: light/simulation long, heating -5C min 15C, simulation 0.2.
+IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
+    IF NOT GVL_POLICY.G_Away_Active THEN
+        GVL_POLICY.G_Away_Active := TRUE;
+        GVL_POLICY.G_Away_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+        GVL_POLICY.G_Away_Elapsed_MS := 0;
+        GVL_POLICY.G_Away_Level := 1;
+    ELSE
+        IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Away_Start_MS THEN
+            L_Away_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Away_Start_MS;
+        ELSE
+            L_Away_Elapsed_MS := (4294967295 - GVL_POLICY.G_Away_Start_MS) + GVL_TIME_SERVICE.G_Now_MS + 1;
+        END_IF;
+
+        GVL_POLICY.G_Away_Elapsed_MS := L_Away_Elapsed_MS;
+
+        IF L_Away_Elapsed_MS >= GVL_POLICY.G_Away_Medium_To_Long_MS THEN
+            GVL_POLICY.G_Away_Level := 3;
+        ELSIF L_Away_Elapsed_MS >= GVL_POLICY.G_Away_Short_To_Medium_MS THEN
+            GVL_POLICY.G_Away_Level := 2;
+        ELSE
+            GVL_POLICY.G_Away_Level := 1;
+        END_IF;
+    END_IF;
+
+    CASE GVL_POLICY.G_Away_Level OF
+        1:
+            GVL_POLICY.G_Away_Simulation_Active := FALSE;
+            GVL_POLICY.G_Away_Simulation_Intensity := 0.0;
+            GVL_POLICY.G_Away_Heating_Offset_C := -1.0;
+        2:
+            GVL_POLICY.G_Away_Simulation_Active := TRUE;
+            GVL_POLICY.G_Away_Simulation_Intensity := 0.3;
+            GVL_POLICY.G_Away_Heating_Offset_C := -3.0;
+        3:
+            GVL_POLICY.G_Away_Simulation_Active := TRUE;
+            GVL_POLICY.G_Away_Simulation_Intensity := 0.2;
+            GVL_POLICY.G_Away_Heating_Offset_C := -5.0;
+    ELSE
+            GVL_POLICY.G_Away_Simulation_Active := FALSE;
+            GVL_POLICY.G_Away_Simulation_Intensity := 0.0;
+            GVL_POLICY.G_Away_Heating_Offset_C := 0.0;
+    END_CASE;
+
+ELSE
+    IF GVL_POLICY.G_Away_Active AND (GVL_POLICY.G_Away_Level = 1) THEN
+        GVL_POLICY.G_Away_Restore_Requested := TRUE;
+        GVL_POLICY.G_Away_Restore_Active := TRUE;
+        GVL_POLICY.G_Away_Restore_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+    END_IF;
+
+    GVL_POLICY.G_Away_Active := FALSE;
+    GVL_POLICY.G_Away_Level := 0;
+    GVL_POLICY.G_Away_Elapsed_MS := 0;
+    GVL_POLICY.G_Away_Simulation_Active := FALSE;
+    GVL_POLICY.G_Away_Simulation_Intensity := 0.0;
+    GVL_POLICY.G_Away_Heating_Offset_C := 0.0;
+END_IF;
+
+IF GVL_POLICY.G_Away_Restore_Active THEN
+    IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Away_Restore_Start_MS THEN
+        L_Restore_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Away_Restore_Start_MS;
+    ELSE
+        L_Restore_Elapsed_MS := (4294967295 - GVL_POLICY.G_Away_Restore_Start_MS) + GVL_TIME_SERVICE.G_Now_MS + 1;
+    END_IF;
+
+    IF L_Restore_Elapsed_MS >= GVL_POLICY.G_Away_Restore_Duration_MS THEN
+        GVL_POLICY.G_Away_Restore_Progress := 1.0;
+        GVL_POLICY.G_Away_Restore_Active := FALSE;
+    ELSE
+        GVL_POLICY.G_Away_Restore_Progress := TO_REAL(L_Restore_Elapsed_MS) / TO_REAL(GVL_POLICY.G_Away_Restore_Duration_MS);
+    END_IF;
+ELSE
+    GVL_POLICY.G_Away_Restore_Progress := 0.0;
+END_IF;
+
+L_Previous_Away_Active := GVL_POLICY.G_Away_Active;
+L_Previous_Away_Level := GVL_POLICY.G_Away_Level;
 
 // 5. Heating bridge
 GVL_STATE.G_Preheat_Request := GVL_POLICY.G_Rule_Preheat_Request;
