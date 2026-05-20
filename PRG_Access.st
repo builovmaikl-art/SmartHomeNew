@@ -49,6 +49,14 @@ IF (L_Mode <> FIRE)
         OR NOT L_Distributed_Access_Allowed
        ) THEN
 
+    // Clear all pulse channels before blocking projection to avoid stale pulse-active state.
+    fbPulseLock1Open(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock1Close(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock2Open(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock2Close(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseGateOpen(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseWicketOpen(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+
     fbProjection(
         VI_Lock_1_Open := FALSE,
         VI_Lock_1_Close := FALSE,
@@ -59,6 +67,7 @@ IF (L_Mode <> FIRE)
     );
 
     GVL_ACCESS_RUNTIME.G_Runtime_Blocked_By_Distributed_Gates := TRUE;
+    GVL_ACCESS_RUNTIME.G_Any_Pulse_Active := FALSE;
     GVL_ACCESS_RUNTIME.G_Status_Code := 2;
     GVL_ACCESS_RUNTIME.G_Status_Text := 'Access runtime blocked by distributed gates';
 
