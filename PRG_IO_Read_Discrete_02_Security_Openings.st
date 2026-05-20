@@ -31,12 +31,14 @@ fbDebounce_Group_2F(
 );
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+    GVL_STATE.G_Door_Sensors[L_i] := FALSE;
     IF GVL_CONFIG.G_Door_Map[L_i] > 0 AND GVL_CONFIG.G_Door_Map[L_i] <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
         GVL_STATE.G_Door_Sensors[L_i] := fbDebounce_Security_Open[GVL_CONFIG.G_Door_Map[L_i]].Q;
     END_IF;
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+    GVL_STATE.G_Window_Sensors[L_i] := FALSE;
     L_Map_Index := GVL_CONFIG.G_Window_Map[L_i];
     IF L_Map_Index > 0 THEN
         IF L_Map_Index <= GVL_CONSTANTS.C_MAX_SECURITY_SENSORS THEN
