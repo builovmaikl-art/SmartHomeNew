@@ -6,4 +6,28 @@ VAR_GLOBAL
     G_Scenario_Request_Rule : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Scenario_Intent : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
     G_Scenario_Source : E_SCENARIO_SOURCE := SRC_NONE;
+
+    // Away-level policy state.
+    // 0=none, 1=short, 2=medium, 3=long.
+    G_Away_Active : BOOL := FALSE;
+    G_Away_Level : BYTE := 0;
+    G_Away_Start_MS : UDINT := 0;
+    G_Away_Elapsed_MS : UDINT := 0;
+
+    // Tuning defaults from ТЗ: short->medium after 2h, medium->long after 3d.
+    G_Away_Short_To_Medium_MS : UDINT := 7200000;
+    G_Away_Medium_To_Long_MS : UDINT := 259200000;
+
+    G_Away_Simulation_Active : BOOL := FALSE;
+    G_Away_Simulation_Intensity : REAL := 0.0;
+    G_Away_Heating_Offset_C : REAL := 0.0;
+    G_Away_Min_Heating_Setpoint_C : REAL := 15.0;
+
+    // Restore state after short away. Downstream restore application is handled
+    // by domain-specific code and should use this policy surface.
+    G_Away_Restore_Requested : BOOL := FALSE;
+    G_Away_Restore_Active : BOOL := FALSE;
+    G_Away_Restore_Start_MS : UDINT := 0;
+    G_Away_Restore_Duration_MS : UDINT := 60000;
+    G_Away_Restore_Progress : REAL := 0.0;
 END_VAR
