@@ -66,8 +66,6 @@ VAR
     L_Prev_Flood                : BOOL;
     L_Prev_Security             : BOOL;
     L_Deduplicator              : FB_Command_Deduplication;
-    L_CRC_Calc                  : FB_CRC32_Calculator;
-    L_Calculated_CRC            : DWORD;
     L_IP_Allowed                : BOOL;
     L_Process_Command           : ST_Gateway_Command;
     L_Has_Command_To_Process    : BOOL;
@@ -220,67 +218,72 @@ IF L_Has_Command_To_Process THEN
         RETURN;
     END_IF;
 
-    L_CRC_Calc();
-    L_Calculated_CRC := L_CRC_Calc.VO_CRC;
+    IF L_Process_Command.crc32 <> DWORD#0 THEN
+        VO_HMI_Status_Message := 'Gateway: CRC unsupported in legacy mode';
+        RETURN;
+    END_IF;
 
-    IF L_Calculated_CRC = L_Process_Command.crc32 THEN
-        L_Deduplicator(VI_Command_ID := L_Process_Command.command_id, VI_Command_Type := L_Process_Command.command_type, VI_Command_Value := L_Process_Command.target_value, VI_System_Time_MS := VI_System_Time_MS);
+    L_Deduplicator(
+        VI_Command_ID := L_Process_Command.command_id,
+        VI_Command_Type := L_Process_Command.command_type,
+        VI_Command_Value := L_Process_Command.target_value,
+        VI_System_Time_MS := VI_System_Time_MS
+    );
 
-        IF L_Deduplicator.VO_Is_New_Command THEN
-            CASE L_Process_Command.command_type OF
-                E_Gateway_Command_Type.CMD_SET_SCENARIO:
-                    VO_Set_Scenario_Req := TRUE;
-                    VO_Target_Scenario := L_Process_Command.target_scenario;
-                    VO_HMI_Status_Message := 'Gateway: Сценарий изменен';
-                E_Gateway_Command_Type.CMD_SET_LIGHT:
-                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_LIGHT_ZONES) THEN
-                        VO_Lighting_Override[L_Process_Command.target_zone] := TO_BYTE(L_Process_Command.target_value);
-                        VO_HMI_Status_Message := 'Gateway: Команда освещения принята';
-                    END_IF;
-                E_Gateway_Command_Type.CMD_SET_BLINDS:
-                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_BLINDS) THEN
-                        VO_Blinds_Override[L_Process_Command.target_zone] := TO_BYTE(L_Process_Command.target_value);
-                        VO_HMI_Status_Message := 'Gateway: Команда штор принята';
-                    END_IF;
-                E_Gateway_Command_Type.CMD_SET_SOCKET:
-                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
-                        VO_Socket_Override[L_Process_Command.target_zone] := L_Process_Command.target_on_off;
-                        VO_HMI_Status_Message := 'Gateway: Команда розетки принята';
-                    END_IF;
-                E_Gateway_Command_Type.CMD_SET_SECURITY:
-                    IF L_Process_Command.target_armed THEN VO_Arm_Req := TRUE; ELSE VO_Disarm_Req := TRUE; END_IF;
-                    VO_PIN_Code := L_Process_Command.target_pin;
-                    VO_2FA_Code_In := L_Process_Command.target_2fa_code;
-                    VO_HMI_Status_Message := 'Gateway: Запрос охраны принят';
-                E_Gateway_Command_Type.CMD_SET_TEMP:
-                    IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS) THEN
-                        VO_Set_Temp_Req := TRUE;
-                        VO_Target_Zone := L_Process_Command.target_zone;
-                        VO_Target_Temp := L_Process_Command.target_value;
-                        VO_HMI_Status_Message := 'Gateway: Уставка температуры изменена';
-                    END_IF;
-                E_Gateway_Command_Type.CMD_SET_VENT:
-                    VO_Set_Vent_Req := TRUE;
-                    VO_Target_Vent_Speed := TO_BYTE(L_Process_Command.target_value);
-                    VO_HMI_Status_Message := 'Gateway: Уставка вентиляции изменена';
-                E_Gateway_Command_Type.CMD_TELEGRAM_MSG:
-                    VO_Telegram_Msg := L_Process_Command.telegram_msg;
-                    VO_Send_Telegram := TRUE;
-                    VO_HMI_Status_Message := 'Gateway: Сообщение Telegram отправлено';
-                E_Gateway_Command_Type.CMD_SYNC_TIME:
-                    VO_Sync_Time_Req := TRUE;
-                    VO_New_Time_MS := REAL_TO_UDINT(L_Process_Command.target_value);
-                    VO_HMI_Status_Message := 'Gateway: Время синхронизировано';
-                E_Gateway_Command_Type.CMD_RESET_ERRORS:
-                    VO_Reset_Errors_Req := TRUE;
-                    VO_HMI_Status_Message := 'Gateway: Запрос на сброс ошибок принят';
-                E_Gateway_Command_Type.CMD_SET_CONFIG:
-                    VO_Set_Config_Req := TRUE;
-                    VO_HMI_Status_Message := 'Gateway: Запрос на применение конфигурации принят';
-            END_CASE;
-        END_IF;
+    IF L_Deduplicator.VO_Is_New_Command THEN
+        CASE L_Process_Command.command_type OF
+            E_Gateway_Command_Type.CMD_SET_SCENARIO:
+                VO_Set_Scenario_Req := TRUE;
+                VO_Target_Scenario := L_Process_Command.target_scenario;
+                VO_HMI_Status_Message := 'Gateway: Сценарий изменен';
+            E_Gateway_Command_Type.CMD_SET_LIGHT:
+                IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_LIGHT_ZONES) THEN
+                    VO_Lighting_Override[L_Process_Command.target_zone] := TO_BYTE(L_Process_Command.target_value);
+                    VO_HMI_Status_Message := 'Gateway: Команда освещения принята';
+                END_IF;
+            E_Gateway_Command_Type.CMD_SET_BLINDS:
+                IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_BLINDS) THEN
+                    VO_Blinds_Override[L_Process_Command.target_zone] := TO_BYTE(L_Process_Command.target_value);
+                    VO_HMI_Status_Message := 'Gateway: Команда штор принята';
+                END_IF;
+            E_Gateway_Command_Type.CMD_SET_SOCKET:
+                IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_SOCKETS) THEN
+                    VO_Socket_Override[L_Process_Command.target_zone] := L_Process_Command.target_on_off;
+                    VO_HMI_Status_Message := 'Gateway: Команда розетки принята';
+                END_IF;
+            E_Gateway_Command_Type.CMD_SET_SECURITY:
+                IF L_Process_Command.target_armed THEN VO_Arm_Req := TRUE; ELSE VO_Disarm_Req := TRUE; END_IF;
+                VO_PIN_Code := L_Process_Command.target_pin;
+                VO_2FA_Code_In := L_Process_Command.target_2fa_code;
+                VO_HMI_Status_Message := 'Gateway: Запрос охраны принят';
+            E_Gateway_Command_Type.CMD_SET_TEMP:
+                IF (L_Process_Command.target_zone >= 1) AND (L_Process_Command.target_zone <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS) THEN
+                    VO_Set_Temp_Req := TRUE;
+                    VO_Target_Zone := L_Process_Command.target_zone;
+                    VO_Target_Temp := L_Process_Command.target_value;
+                    VO_HMI_Status_Message := 'Gateway: Уставка температуры изменена';
+                END_IF;
+            E_Gateway_Command_Type.CMD_SET_VENT:
+                VO_Set_Vent_Req := TRUE;
+                VO_Target_Vent_Speed := TO_BYTE(L_Process_Command.target_value);
+                VO_HMI_Status_Message := 'Gateway: Уставка вентиляции изменена';
+            E_Gateway_Command_Type.CMD_TELEGRAM_MSG:
+                VO_Telegram_Msg := L_Process_Command.telegram_msg;
+                VO_Send_Telegram := TRUE;
+                VO_HMI_Status_Message := 'Gateway: Сообщение Telegram отправлено';
+            E_Gateway_Command_Type.CMD_SYNC_TIME:
+                VO_Sync_Time_Req := TRUE;
+                VO_New_Time_MS := REAL_TO_UDINT(L_Process_Command.target_value);
+                VO_HMI_Status_Message := 'Gateway: Время синхронизировано';
+            E_Gateway_Command_Type.CMD_RESET_ERRORS:
+                VO_Reset_Errors_Req := TRUE;
+                VO_HMI_Status_Message := 'Gateway: Запрос на сброс ошибок принят';
+            E_Gateway_Command_Type.CMD_SET_CONFIG:
+                VO_Set_Config_Req := TRUE;
+                VO_HMI_Status_Message := 'Gateway: Запрос на применение конфигурации принят';
+        END_CASE;
     ELSE
-        VO_HMI_Status_Message := 'Gateway: Ошибка CRC команды';
+        VO_HMI_Status_Message := 'Gateway: duplicate command ignored';
     END_IF;
 END_IF;
 
