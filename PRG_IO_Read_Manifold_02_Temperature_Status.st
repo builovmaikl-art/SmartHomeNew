@@ -13,6 +13,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
             VI_Record := GVL_CONFIG.G_Calib_Manifold_T_Supply[L_i]
         );
         GVL_STATE.G_Manifold_T_Supply[L_i] := fbCalib_Manifold_T_Supply[L_i].VO_Calibrated_Value;
+    ELSE
+        GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
     END_IF;
 
     fbCalib_Manifold_T_Return[L_i](
