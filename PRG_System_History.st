@@ -61,7 +61,7 @@ ELSIF GVL_STATUS.G_Current_Scenario <> GVL_STATUS.G_Previous_Scenario THEN
 
 ELSIF GVL_STATUS.G_Diagnostics.Alarm_Event_Pulse THEN
     L_History_Write_Event := TRUE;
-    L_History_Event.event_code := GVL_STATUS.G_Diagnostics.Alarm_Event_Code;
+    L_History_Event.event_code := TO_WORD(GVL_STATUS.G_Diagnostics.Alarm_Event_Code);
     L_History_Event.event_value := GVL_STATUS.G_Diagnostics.Alarm_Event_Value;
     L_History_Event.unit := 10;
     L_History_Event.zone_id := 0;
