@@ -2,6 +2,9 @@ PROGRAM PRG_Policy
 VAR
     L_Away_Elapsed_MS : UDINT;
     L_Restore_Elapsed_MS : UDINT;
+    L_Return_Delta_MS : UDINT;
+    L_Return_Grace_Elapsed_MS : UDINT;
+    L_Away_Return_Window_Reached : BOOL;
     L_Previous_Away_Active : BOOL := FALSE;
     L_Previous_Away_Level : BYTE := 0;
 END_VAR
@@ -106,13 +109,19 @@ END_IF;
 // 0=none, 1=short, 2=medium, 3=long.
 // Short: light 100%, heating -1C, simulation off.
 // Medium: light/simulation medium, heating -3C, simulation 0.3.
-// Long: light/simulation long, heating -5C min 15C, simulation 0.2.
+// Long: minimal reasonable heating economy; planned-return preheat may
+// temporarily raise target before the expected arrival.
+L_Away_Return_Window_Reached := FALSE;
+
 IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
     IF NOT GVL_POLICY.G_Away_Active THEN
         GVL_POLICY.G_Away_Active := TRUE;
         GVL_POLICY.G_Away_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
         GVL_POLICY.G_Away_Elapsed_MS := 0;
         GVL_POLICY.G_Away_Level := 1;
+        GVL_POLICY.G_Away_Return_Preheat_Active := FALSE;
+        GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
+        GVL_POLICY.G_Away_Return_Expired := FALSE;
     ELSE
         IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Away_Start_MS THEN
             L_Away_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Away_Start_MS;
@@ -131,6 +140,42 @@ IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
         END_IF;
     END_IF;
 
+    // Planned return preheat window.
+    IF GVL_POLICY.G_Away_Planned_Return_Enabled AND NOT GVL_POLICY.G_Away_Return_Expired THEN
+        IF GVL_POLICY.G_Away_Planned_Return_MS >= GVL_TIME_SERVICE.G_Now_MS THEN
+            L_Return_Delta_MS := GVL_POLICY.G_Away_Planned_Return_MS - GVL_TIME_SERVICE.G_Now_MS;
+            L_Away_Return_Window_Reached := (L_Return_Delta_MS <= GVL_POLICY.G_Away_Preheat_Lead_MS);
+        ELSE
+            L_Away_Return_Window_Reached := TRUE;
+        END_IF;
+
+        IF L_Away_Return_Window_Reached THEN
+            GVL_POLICY.G_Away_Return_Preheat_Active := TRUE;
+
+            IF NOT GVL_POLICY.G_Away_Return_Grace_Active THEN
+                GVL_POLICY.G_Away_Return_Grace_Active := TRUE;
+                GVL_POLICY.G_Away_Return_Grace_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+            END_IF;
+        END_IF;
+
+        IF GVL_POLICY.G_Away_Return_Grace_Active THEN
+            IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Away_Return_Grace_Start_MS THEN
+                L_Return_Grace_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Away_Return_Grace_Start_MS;
+            ELSE
+                L_Return_Grace_Elapsed_MS := (4294967295 - GVL_POLICY.G_Away_Return_Grace_Start_MS) + GVL_TIME_SERVICE.G_Now_MS + 1;
+            END_IF;
+
+            IF L_Return_Grace_Elapsed_MS >= GVL_POLICY.G_Away_Return_Grace_MS THEN
+                GVL_POLICY.G_Away_Return_Expired := TRUE;
+                GVL_POLICY.G_Away_Return_Preheat_Active := FALSE;
+                GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
+            END_IF;
+        END_IF;
+    ELSE
+        GVL_POLICY.G_Away_Return_Preheat_Active := FALSE;
+        GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
+    END_IF;
+
     CASE GVL_POLICY.G_Away_Level OF
         1:
             GVL_POLICY.G_Away_Simulation_Active := FALSE;
@@ -143,7 +188,12 @@ IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
         3:
             GVL_POLICY.G_Away_Simulation_Active := TRUE;
             GVL_POLICY.G_Away_Simulation_Intensity := 0.2;
-            GVL_POLICY.G_Away_Heating_Offset_C := -5.0;
+
+            IF GVL_POLICY.G_Away_Return_Preheat_Active THEN
+                GVL_POLICY.G_Away_Heating_Offset_C := 0.0;
+            ELSE
+                GVL_POLICY.G_Away_Heating_Offset_C := GVL_POLICY.G_Away_Long_Economy_Setpoint_C - 22.0;
+            END_IF;
     ELSE
             GVL_POLICY.G_Away_Simulation_Active := FALSE;
             GVL_POLICY.G_Away_Simulation_Intensity := 0.0;
@@ -163,6 +213,9 @@ ELSE
     GVL_POLICY.G_Away_Simulation_Active := FALSE;
     GVL_POLICY.G_Away_Simulation_Intensity := 0.0;
     GVL_POLICY.G_Away_Heating_Offset_C := 0.0;
+    GVL_POLICY.G_Away_Return_Preheat_Active := FALSE;
+    GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
+    GVL_POLICY.G_Away_Return_Expired := FALSE;
 END_IF;
 
 IF GVL_POLICY.G_Away_Restore_Active THEN
@@ -186,7 +239,14 @@ L_Previous_Away_Active := GVL_POLICY.G_Away_Active;
 L_Previous_Away_Level := GVL_POLICY.G_Away_Level;
 
 // 5. Heating bridge
-GVL_STATE.G_Preheat_Request := GVL_POLICY.G_Rule_Preheat_Request;
+GVL_STATE.G_Preheat_Request :=
+    GVL_POLICY.G_Rule_Preheat_Request OR GVL_POLICY.G_Away_Return_Preheat_Active;
+GVL_STATE.G_Target_Temperature :=
+    SEL(GVL_POLICY.G_Away_Return_Preheat_Active, GVL_STATE.G_Target_Temperature, GVL_POLICY.G_Away_Preheat_Target_C);
+GVL_HEATING_REQUEST.G_Preheat_Request := GVL_STATE.G_Preheat_Request;
+GVL_HEATING_REQUEST.G_Target_Temperature := GVL_STATE.G_Target_Temperature;
+
 GVL_STATE.G_Freeze_Request :=
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
+GVL_HEATING_REQUEST.G_Freeze_Request := GVL_STATE.G_Freeze_Request;
 END_PROGRAM
