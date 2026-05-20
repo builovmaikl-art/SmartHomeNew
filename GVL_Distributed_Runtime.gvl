@@ -1,15 +1,18 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL RETAIN
+    // Keep only compact continuity metadata in non-volatile memory.
+    // Runtime node/session/message state is rebuilt by the distributed
+    // supervisor chain during cyclic execution and must not consume RETAIN.
+    G_Last_Replication_Sequence_Id : UDINT;
+END_VAR
+
+VAR_GLOBAL
     G_Local_Node_State : ST_Distributed_Runtime_Node_State;
     G_Remote_Node_State : ARRAY[1..8] OF ST_Distributed_Runtime_Node_State;
 
     G_Replication_TX : ARRAY[1..64] OF ST_Distributed_Runtime_Message;
     G_Replication_RX : ARRAY[1..64] OF ST_Distributed_Runtime_Message;
 
-    G_Last_Replication_Sequence_Id : UDINT;
-END_VAR
-
-VAR_GLOBAL
     G_Runtime_Valid : BOOL;
     G_Last_Update_MS : UDINT;
 
