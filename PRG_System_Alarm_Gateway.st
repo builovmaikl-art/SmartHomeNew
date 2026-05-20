@@ -5,14 +5,16 @@ VAR
     L_Scenario_Req_Gateway : E_SCENARIO_TYPE;
 END_VAR
 
-// Alarm orchestration based on global health snapshot
+// Default to no gateway scenario request each scan.
+// The gateway FB may override it through the VIO parameter.
+L_Scenario_Req_Gateway := SCENARIO_NONE;
+
 fbSystemAlarmOrchestrator(
     VI_First_Fault_Active := GVL_SYSTEM_HEALTH.G_First_Fault_Active,
     VI_First_Fault_Type := GVL_SYSTEM_HEALTH.G_First_Fault_Type,
     VI_First_Fault_Source := GVL_SYSTEM_HEALTH.G_First_Fault_Source
 );
 
-// Gateway intent execution
 fbSystemGatewayIntent(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
