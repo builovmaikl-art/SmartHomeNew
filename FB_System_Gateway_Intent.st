@@ -66,28 +66,28 @@ fbGateway(
     VO_Reset_Errors_Req => GVL_COMMAND.G_Reset_Errors
 );
 
-IF VI_Gateway_Writes_Allowed AND fbGateway.VO_Set_Scenario_Req THEN
+IF L_Command_Received_Allowed AND fbGateway.VO_Set_Scenario_Req THEN
     VIO_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
 END_IF;
 
 GVL_INTENT_USER.I_Source_Valid := TRUE;
 GVL_INTENT_USER.I_Last_Update_MS := VI_System_Time_MS;
-GVL_INTENT_USER.I_Arm_Request := GVL_COMMAND.G_Arm_Req;
-GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req;
+GVL_INTENT_USER.I_Arm_Request := GVL_COMMAND.G_Arm_Req AND L_Command_Received_Allowed;
+GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req AND L_Command_Received_Allowed;
 GVL_INTENT_USER.I_PIN_Code := GVL_COMMAND.G_PIN_Code;
 GVL_INTENT_USER.I_RFID_Tag := GVL_COMMAND.G_RFID_Tag;
 GVL_INTENT_USER.I_2FA_Code_In := GVL_COMMAND.G_2FA_Code_In;
 GVL_INTENT_USER.I_Lighting_Override_32 := GVL_COMMAND.G_Lighting_Override;
 GVL_INTENT_USER.I_Blinds_Override_32 := GVL_COMMAND.G_Blinds_Override;
 GVL_INTENT_USER.I_Socket_Override_32 := GVL_COMMAND.G_Socket_Override;
-GVL_INTENT_USER.I_Reset_Errors := GVL_COMMAND.G_Reset_Errors;
-GVL_INTENT_USER.I_Set_Temp_Req := fbGateway.VO_Set_Temp_Req;
+GVL_INTENT_USER.I_Reset_Errors := GVL_COMMAND.G_Reset_Errors AND L_Command_Received_Allowed;
+GVL_INTENT_USER.I_Set_Temp_Req := fbGateway.VO_Set_Temp_Req AND L_Command_Received_Allowed;
 GVL_INTENT_USER.I_Target_Zone := fbGateway.VO_Target_Zone;
 GVL_INTENT_USER.I_Target_Temperature := fbGateway.VO_Target_Temp;
-GVL_INTENT_USER.I_Set_Vent_Req := fbGateway.VO_Set_Vent_Req;
+GVL_INTENT_USER.I_Set_Vent_Req := fbGateway.VO_Set_Vent_Req AND L_Command_Received_Allowed;
 GVL_INTENT_USER.I_Target_Vent_Speed := fbGateway.VO_Target_Vent_Speed;
-GVL_INTENT_USER.I_Set_Config_Req := fbGateway.VO_Set_Config_Req;
-GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req;
+GVL_INTENT_USER.I_Set_Config_Req := fbGateway.VO_Set_Config_Req AND L_Command_Received_Allowed;
+GVL_INTENT_USER.I_Time_Sync_Req := fbGateway.VO_Sync_Time_Req AND L_Command_Received_Allowed;
 GVL_INTENT_USER.I_New_Time_MS := fbGateway.VO_New_Time_MS;
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Gateway_Intent <<<
