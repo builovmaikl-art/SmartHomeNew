@@ -7,6 +7,7 @@ END_VAR
 
 L_Mode_Active := GVL_SAFETY_SHUTDOWN.G_Safety_Active;
 L_Phase := GVL_SAFETY_RECOVERY.G_Recovery_Phase;
+GVL_SAFETY_RECOVERY.G_Recovery_Exit_Allowed := FALSE;
 
 CASE L_Phase OF
 
@@ -31,8 +32,12 @@ CASE L_Phase OF
         IF L_Mode_Active THEN
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := ABORTED;
             GVL_SAFETY_RECOVERY.G_Recovery_Abort_Reason := 1;
-        ELSIF GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm THEN
-            GVL_SAFETY_RECOVERY.G_Recovery_Phase := RECOVERING;
+        ELSE
+            GVL_SAFETY_RECOVERY.G_Recovery_Exit_Allowed := TRUE;
+            IF GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm THEN
+                GVL_SAFETY_RECOVERY.G_Recovery_Phase := RECOVERING;
+                GVL_SAFETY_RECOVERY.G_Recovery_Exit_Allowed := FALSE;
+            END_IF;
         END_IF;
 
     RECOVERING:
@@ -63,6 +68,7 @@ CASE L_Phase OF
         GVL_SAFETY_RECOVERY.G_Recovery_Active := FALSE;
         GVL_SAFETY_RECOVERY.G_Recovery_Requested := FALSE;
         GVL_SAFETY_RECOVERY.G_Recovery_Manual_Confirm := FALSE;
+        GVL_SAFETY_RECOVERY.G_Recovery_Exit_Allowed := FALSE;
         IF NOT L_Mode_Active THEN
             GVL_SAFETY_RECOVERY.G_Recovery_Phase := IDLE;
         END_IF;
