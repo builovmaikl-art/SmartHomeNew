@@ -11,7 +11,6 @@ VAR_GLOBAL RETAIN
     G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
     G_BlackBox_LastIndex : INT;
     G_BlackBox_Frozen : BOOL;
-    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD; // 168 часов * 6 записей в час = 1008 записей (битовая маска 16 ламп)
     
     // История событий
     G_History_Buffer : ARRAY[1..GVL_CONSTANTS.C_MAX_HISTORY_RECORDS] OF ST_History_Record;
@@ -31,4 +30,10 @@ VAR_GLOBAL RETAIN
     
     // Зарегистрированные RFID/NFC метки (строковое представление UID)
     G_RFID_Tags : ARRAY[1..GVL_CONSTANTS.C_MAX_ACCESS_CODES] OF STRING(20) := ['A1B2C3D4', 'E5F67890', '', '', '', '', '', '', '', ''];
+END_VAR
+
+VAR_GLOBAL
+    // Presence playback history is non-safety behavioural data.
+    // It is rebuilt during recording mode and must not consume RETAIN memory.
+    G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD;
 END_VAR
