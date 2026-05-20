@@ -17,6 +17,12 @@ VAR
     L_Sum : REAL;
 END_VAR
 
+VO_Average := 0.0;
+VO_Max := 0.0;
+VO_Min := 0.0;
+VO_Trend_Up := FALSE;
+VO_Trend_Down := FALSE;
+
 IF VI_Count > 0 AND VI_Count <= GVL_CONSTANTS.C_MAX_TREND_DATA_POINTS THEN
     VO_Max := VI_Data[1];
     VO_Min := VI_Data[1];
