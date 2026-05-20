@@ -1,6 +1,6 @@
 PROGRAM PRG_Main_Phase_03_Input_Safety_Command
-// MAIN PHASE 04/05/06 — input, safety, intent, scenario, policy and command shadow.
-// Critical: yes. This is the main control-decision path and must run every PLC scan.
+VAR
+END_VAR
 
 GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 3;
 
@@ -10,6 +10,7 @@ PRG_Input_Processing();
 
 PRG_Mode_Manager();
 PRG_Presence_Manager();
+PRG_Safety_Selector();
 PRG_Safety();
 PRG_Safety_Operator();
 PRG_Safety_Shutdown();
