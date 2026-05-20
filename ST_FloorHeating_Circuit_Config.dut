@@ -7,7 +7,20 @@ STRUCT
     sensor_id : BYTE := 1; // ID датчика температуры
     valve_id : BYTE := 1; // ID клапана
     control_type : BYTE := 1; // 0: по полу, 1: по воздуху
+
+    // Legacy/default setpoint. Kept for backward compatibility.
+    // If comfort_temp <= 0.0, design_temp remains the comfort setpoint.
     design_temp : REAL := 35.0;
+
+    // Per-room/per-circuit comfort and economy policy.
+    // use_in_normal=FALSE keeps the circuit at economy_temp even in normal mode.
+    // use_in_away_preheat=TRUE allows planned-return preheat to comfort_temp.
+    use_in_normal : BOOL := TRUE;
+    use_in_away_preheat : BOOL := TRUE;
+    comfort_temp : REAL := 0.0; // 0.0 = use design_temp
+    economy_temp : REAL := 16.0;
+    long_away_temp : REAL := 12.0;
+
     min_temp : REAL := 20.0;
     max_temp : REAL := 45.0;
     pid_kp : REAL := 2.0;
