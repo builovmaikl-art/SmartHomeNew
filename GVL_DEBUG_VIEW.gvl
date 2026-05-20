@@ -122,6 +122,19 @@ VAR_GLOBAL
     D_Runtime_Scenario_Status_Code : UINT := 0;
     D_Runtime_Scenario_Status_Text : STRING(160) := '';
 
+    // Runtime physical IO validation summary.
+    D_Runtime_IO_Validation_Executed : BOOL := FALSE;
+    D_Runtime_IO_Validation_Valid : BOOL := FALSE;
+    D_Runtime_IO_Any_Invalid : BOOL := FALSE;
+    D_Runtime_IO_Fire_Valid : BOOL := FALSE;
+    D_Runtime_IO_Gas_Valid : BOOL := FALSE;
+    D_Runtime_IO_Leak_Valid : BOOL := FALSE;
+    D_Runtime_IO_Global_Stop_Valid : BOOL := FALSE;
+    D_Runtime_IO_Inactive_PLC_Valid : BOOL := FALSE;
+    D_Runtime_IO_Freeze_Valid : BOOL := FALSE;
+    D_Runtime_IO_Status_Code : UINT := 0;
+    D_Runtime_IO_Status_Text : STRING(160) := '';
+
     // HMI / dashboard sensor quality view.
     D_Input_Source_Valid : BOOL := FALSE;
     D_Input_Degraded : BOOL := FALSE;
