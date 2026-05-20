@@ -34,7 +34,8 @@ VAR_GLOBAL CONSTANT
     C_MAX_ALLOWED_IPS      : INT := 5;  
     C_MAX_VENT_SUPPLY_MODES: INT := 3;  
     C_MAX_SECURITY_PHONES  : INT := 5;  
-    C_MAX_FLOOD_VALVES     : INT := 3;  
+    // Flood isolation groups: 1-3 local risers, 4 common inlet 35/36.
+    C_MAX_FLOOD_VALVES     : INT := 4;  
     C_MAX_HUMIDITY_SENSORS : INT := 8;  
     C_MAX_CO2_SENSORS      : INT := 8;  
     C_MAX_CIRCUITS_PER_MANIFOLD : INT := 4; 
