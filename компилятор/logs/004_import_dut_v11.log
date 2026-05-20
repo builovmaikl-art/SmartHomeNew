@@ -2,12 +2,12 @@ DUT_FILES=167
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=45
 STRUCT_INSERTED=122
-STRUCT_FIELDS_TOTAL=1557
-STRUCT_FIELDS_WITH_INITIALIZER=143
-INITIALIZERS_INSERTED=143
+STRUCT_FIELDS_TOTAL=1560
+STRUCT_FIELDS_WITH_INITIALIZER=146
+INITIALIZERS_INSERTED=146
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=3135
+XML_INITIALVALUE_TAGS=3138
 XML_ARRAYVALUE_TAGS=27
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
@@ -133,7 +133,7 @@ ST_Runtime_Restart_Continuity_State.dut: STRUCT ST_Runtime_Restart_Continuity_St
 ST_Scenario_Config.dut: STRUCT ST_Scenario_Config fields=8
 ST_Scenario_Stats.dut: STRUCT ST_Scenario_Stats fields=7
 ST_Scenario_Transition_Config.dut: STRUCT ST_Scenario_Transition_Config fields=4
-ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=17
+ST_Security_Global_Config.dut: STRUCT ST_Security_Global_Config fields=20
 ST_Security_Zone_State.dut: STRUCT ST_Security_Zone_State fields=5
 ST_Sensor_Calibration_Record.dut: STRUCT ST_Sensor_Calibration_Record fields=7
 ST_State_Snapshot.dut: STRUCT ST_State_Snapshot fields=7
@@ -256,7 +256,7 @@ STRUCT ST_Runtime_Restart_Continuity_State: total=23 with_initializer=0 without_
 STRUCT ST_Scenario_Config: total=8 with_initializer=7 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Stats: total=7 with_initializer=0 without_initializer=7 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Scenario_Transition_Config: total=4 with_initializer=2 without_initializer=2 array_initializer=0 unsupported_initializer=0
-STRUCT ST_Security_Global_Config: total=17 with_initializer=13 without_initializer=4 array_initializer=0 unsupported_initializer=0
+STRUCT ST_Security_Global_Config: total=20 with_initializer=16 without_initializer=4 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Security_Zone_State: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Sensor_Calibration_Record: total=7 with_initializer=6 without_initializer=1 array_initializer=0 unsupported_initializer=0
 STRUCT ST_State_Snapshot: total=7 with_initializer=5 without_initializer=2 array_initializer=0 unsupported_initializer=0
