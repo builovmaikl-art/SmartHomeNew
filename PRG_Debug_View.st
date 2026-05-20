@@ -126,6 +126,19 @@ GVL_DEBUG_VIEW.D_Runtime_Global_Stop_Context_Valid := GVL_RUNTIME_SCENARIO_VALID
 GVL_DEBUG_VIEW.D_Runtime_Scenario_Status_Code := GVL_RUNTIME_SCENARIO_VALIDATION.Status_Code;
 GVL_DEBUG_VIEW.D_Runtime_Scenario_Status_Text := GVL_RUNTIME_SCENARIO_VALIDATION.Status_Text;
 
+// RUNTIME PHYSICAL IO VALIDATION SUMMARY -> DEBUG VIEW
+GVL_DEBUG_VIEW.D_Runtime_IO_Validation_Executed := GVL_RUNTIME_IO_VALIDATION.G_Validation_Executed;
+GVL_DEBUG_VIEW.D_Runtime_IO_Validation_Valid := GVL_RUNTIME_IO_VALIDATION.G_Validation_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Any_Invalid := GVL_RUNTIME_IO_VALIDATION.Any_IO_Invalid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Fire_Valid := GVL_RUNTIME_IO_VALIDATION.Fire_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Gas_Valid := GVL_RUNTIME_IO_VALIDATION.Gas_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Leak_Valid := GVL_RUNTIME_IO_VALIDATION.Leak_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Global_Stop_Valid := GVL_RUNTIME_IO_VALIDATION.Global_Stop_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Inactive_PLC_Valid := GVL_RUNTIME_IO_VALIDATION.Inactive_PLC_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Freeze_Valid := GVL_RUNTIME_IO_VALIDATION.Freeze_IO_Valid;
+GVL_DEBUG_VIEW.D_Runtime_IO_Status_Code := GVL_RUNTIME_IO_VALIDATION.Status_Code;
+GVL_DEBUG_VIEW.D_Runtime_IO_Status_Text := GVL_RUNTIME_IO_VALIDATION.Status_Text;
+
 // SENSOR QUALITY → HMI
 GVL_DEBUG_VIEW.D_Input_Source_Valid := GVL_INPUT.IN_Source_Valid;
 GVL_DEBUG_VIEW.D_Input_Degraded := GVL_INPUT.IN_Input_Degraded;
