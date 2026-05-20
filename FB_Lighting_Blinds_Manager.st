@@ -48,6 +48,19 @@ VAR
     L_Effective_Simulation_Active : BOOL;
 END_VAR
 
+// Reset retained outputs before any early return.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+    VO_Lighting_Levels[L_i] := 0;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+    VO_Blinds_Positions[L_i] := 100;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
+    VO_Wet_Zone_Light_Active[L_i] := FALSE;
+END_FOR;
+
 IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 
 GVL_STATE.G_Lighting_IO_Fault := FALSE;
@@ -58,15 +71,6 @@ L_Effective_Simulation_Active := VI_Simulation_Active;
 
 CASE VI_System_Mode OF
     E_System_Operating_Mode.MODE_SAFE_STOP:
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
-            VO_Lighting_Levels[L_j] := 0;
-        END_FOR;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
-            VO_Blinds_Positions[L_j] := 100;
-        END_FOR;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
-            VO_Wet_Zone_Light_Active[L_j] := FALSE;
-        END_FOR;
         RETURN;
     E_System_Operating_Mode.MODE_FREEZE_PROTECTION:
         L_Effective_Scenario := E_SCENARIO_TYPE.SCENARIO_NONE;
@@ -76,20 +80,11 @@ CASE VI_System_Mode OF
 END_CASE;
 
 L_Wet_Zone_Idx := 1;
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
-    VO_Wet_Zone_Light_Active[L_i] := FALSE;
-END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
     IF NOT VI_IO_Modules_Online[L_i] THEN
         GVL_STATE.G_Lighting_IO_Fault := TRUE;
         GVL_STATE.G_Lighting_Subsystem_Degraded := TRUE;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
-            VO_Lighting_Levels[L_j] := 0;
-        END_FOR;
-        FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
-            VO_Blinds_Positions[L_j] := 100;
-        END_FOR;
         RETURN;
     END_IF;
 END_FOR;
