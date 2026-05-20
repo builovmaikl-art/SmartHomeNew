@@ -13,9 +13,14 @@ VAR
     L_Last_State_Trace_MS : UDINT;
 
     L_Hum : REAL;
-    L_PrevHum : REAL;
+    L_StartHum : REAL;
     L_DeltaHum : REAL;
     L_Confidence : REAL;
+
+    L_VentBoost_Was_Active : BOOL := FALSE;
+    L_VentBoost_Start_Humidity : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    L_VentBoost_Start_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    L_Night_Was_Active : BOOL := FALSE;
 END_VAR
 
 FOR L_i := 1 TO 4 DO
@@ -37,25 +42,31 @@ fbStateTraceLog(
     VO_Last_Change_Time => L_Last_State_Trace_MS
 );
 
-FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+IF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost AND NOT L_VentBoost_Was_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+        L_VentBoost_Start_Humidity[L_i] := GVL_INPUT.IN_Room_Hum[L_i];
+        L_VentBoost_Start_Valid[L_i] := TRUE;
+    END_FOR;
+END_IF;
 
-    L_Hum := GVL_INPUT.IN_Room_Hum[L_i];
+IF (NOT GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost) AND L_VentBoost_Was_Active THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
+        L_Hum := GVL_INPUT.IN_Room_Hum[L_i];
 
-    IF GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] THEN
-        L_PrevHum := GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i];
-    ELSE
-        L_PrevHum := L_Hum;
-    END_IF;
+        IF L_VentBoost_Start_Valid[L_i] THEN
+            L_StartHum := L_VentBoost_Start_Humidity[L_i];
+        ELSE
+            L_StartHum := L_Hum;
+        END_IF;
 
-    L_DeltaHum := L_PrevHum - L_Hum;
+        L_DeltaHum := L_StartHum - L_Hum;
 
-    IF ABS(L_DeltaHum) < 0.5 THEN
-        L_Confidence := 0.2;
-    ELSE
-        L_Confidence := 1.0;
-    END_IF;
+        IF ABS(L_DeltaHum) < 0.5 THEN
+            L_Confidence := 0.2;
+        ELSE
+            L_Confidence := 1.0;
+        END_IF;
 
-    IF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
         fbAdapt(
             iScenario := REASON_SCENARIO_VENT_BOOST,
             iSuccess := (L_DeltaHum > 5.0),
@@ -63,14 +74,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
             iZone := L_i,
             iConfidence := L_Confidence
         );
-    END_IF;
 
-    GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i] := L_Hum;
-    GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] := TRUE;
+        GVL_BEHAVIOR_ADAPT.G_Prev_Humidity[L_i] := L_Hum;
+        GVL_BEHAVIOR_ADAPT.G_Prev_Valid[L_i] := TRUE;
+        L_VentBoost_Start_Valid[L_i] := FALSE;
+    END_FOR;
+END_IF;
 
-END_FOR;
+L_VentBoost_Was_Active := GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost;
 
-IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
+IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode AND NOT L_Night_Was_Active THEN
     fbAdapt(
         iScenario := REASON_SCENARIO_NIGHT,
         iSuccess := TRUE,
@@ -79,6 +92,8 @@ IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
         iConfidence := 1.0
     );
 END_IF;
+
+L_Night_Was_Active := GVL_INTENT_BEHAVIOR.I_Request_Night_Mode;
 
 fbSystemDiagnosticsPublisher(
     VI_Enable := TRUE,
@@ -90,7 +105,7 @@ fbSystemDiagnosticsPublisher(
     VI_DHW_Circ_Pump_Out_Of_Service := NOT GVL_CONFIG.G_DHW_Circ_Pump_In_Service,
     VI_User_Access_Level := GVL_COMMAND.CMD_User_Access_Level,
     VI_Dangerous_Action_Pending := GVL_COMMAND.CMD_Dangerous_Action_Request,
-    VI_Dangerous_Action_Text := 'Dangerous action confirmation requested',
+    VI_Dangerous_Action_Text := 'Confirmation requested',
     VI_Sensor_Fault := GVL_STATE.G_Heating_Sensor_Fault OR GVL_STATE.G_DHW_Sensor_Fault,
     VI_IO_Offline := GVL_STATE.G_Heating_IO_Fault OR GVL_STATE.G_DHW_IO_Fault,
     VI_Subsystem_Degraded := GVL_STATE.G_Heating_Subsystem_Degraded OR GVL_STATE.G_DHW_Subsystem_Degraded,
