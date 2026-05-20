@@ -2,8 +2,10 @@
 VAR_GLOBAL RETAIN
     G_Initialized : BOOL := FALSE; // Флаг инициализации retain-переменных
     
-    // Энергонезависимая память (NVRAM) для хранения настроек и логов
-    G_NVRAM_Data : ARRAY[0..12799] OF BYTE; // 100 * 128 = 12800 байт
+    // Компактное RETAIN-зеркало NVRAM для persistent snapshot / настроек.
+    // Активный persist pipeline сейчас пишет 5 байт через FB_System_Persist_Manager;
+    // 512 байт оставлены как безопасный запас под будущие компактные записи.
+    G_NVRAM_Data : ARRAY[0..511] OF BYTE;
     
     // Буфер черного ящика (100 записей)
     G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
