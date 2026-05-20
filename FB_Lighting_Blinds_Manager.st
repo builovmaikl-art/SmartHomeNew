@@ -46,6 +46,8 @@ VAR
     L_Wet_Zone_Idx : INT;
     L_Effective_Scenario : E_SCENARIO_TYPE;
     L_Effective_Simulation_Active : BOOL;
+    L_Restore_Progress : REAL;
+    L_Restore_Level : REAL;
 END_VAR
 
 // Reset retained outputs before any early return.
@@ -182,6 +184,28 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         VO_Lighting_Levels[L_i] := L_Rule_Light_Val;
     ELSE
         VO_Lighting_Levels[L_i] := SEL(L_Light_States[L_i], 0, L_Base_Light);
+    END_IF;
+
+    // Short-away restore is a domain-owned runtime restore, not a direct IO write.
+    IF GVL_AWAY_RESTORE.G_Restore_Active AND GVL_AWAY_RESTORE.G_Snapshot_Valid THEN
+        L_Restore_Progress := GVL_AWAY_RESTORE.G_Restore_Progress;
+        IF L_Restore_Progress < REAL#0.0 THEN
+            L_Restore_Progress := REAL#0.0;
+        ELSIF L_Restore_Progress > REAL#1.0 THEN
+            L_Restore_Progress := REAL#1.0;
+        END_IF;
+
+        L_Restore_Level :=
+            TO_REAL(VO_Lighting_Levels[L_i]) +
+            ((TO_REAL(GVL_AWAY_RESTORE.G_Lighting_Levels[L_i]) - TO_REAL(VO_Lighting_Levels[L_i])) * L_Restore_Progress);
+
+        IF L_Restore_Level < REAL#0.0 THEN
+            L_Restore_Level := REAL#0.0;
+        ELSIF L_Restore_Level > REAL#100.0 THEN
+            L_Restore_Level := REAL#100.0;
+        END_IF;
+
+        VO_Lighting_Levels[L_i] := REAL_TO_BYTE(L_Restore_Level);
     END_IF;
 
     IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx <= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
