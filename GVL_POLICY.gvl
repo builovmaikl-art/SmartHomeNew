@@ -13,6 +13,7 @@ VAR_GLOBAL
     G_Away_Level : BYTE := 0;
     G_Away_Start_MS : UDINT := 0;
     G_Away_Elapsed_MS : UDINT := 0;
+    G_Away_Previous_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_PRESENCE;
 
     // Tuning defaults from ТЗ: short->medium after 2h, medium->long after 3d.
     G_Away_Short_To_Medium_MS : UDINT := 7200000;
