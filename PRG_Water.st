@@ -14,13 +14,14 @@ END_VAR
 // GVL_COMMAND_SHADOW remains owned exclusively by PRG_Command_Arbitration.
 // This PRG is the water domain output projection bridge into GVL_WATER_OUTPUT.
 //
-// Priority:
-// 1. Existing global safety close command from command shadow.
-// 2. Deterministic water output projection if valid.
-//
-// This PRG does not perform leak classification, topology decisions,
-// diagnostics, or recovery governance.
+// Normally-open water valves policy:
+// - normal state is open;
+// - leak/fallback projects close command;
+// - HMI emergency-open is a timed, limited suppression of the close command,
+//   not a direct physical-output write.
 // ==============================================================================
+
+PRG_Water_Emergency_Open_Manager();
 
 GVL_WATER_DOMAIN_STATUS.G_Runtime_Required := FALSE;
 GVL_WATER_DOMAIN_STATUS.G_Runtime_Executed := TRUE;
@@ -81,6 +82,15 @@ IF GVL_Water_Output_Projection.G_Runtime_Valid THEN
     END_IF;
 END_IF;
 
+// Emergency open for normally-open valves: temporarily remove close projection.
+IF GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_35_Active THEN
+    L_Valve_35_Close := FALSE;
+END_IF;
+
+IF GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_36_Active THEN
+    L_Valve_36_Close := FALSE;
+END_IF;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     IF L_Zone_Enable[L_i] THEN
         GVL_WATER_DOMAIN_STATUS.G_Any_Zone_Active := TRUE;
@@ -106,6 +116,9 @@ IF GVL_WATER_DOMAIN_STATUS.G_Runtime_Idle_By_Design THEN
 ELSIF GVL_WATER_DOMAIN_STATUS.G_Global_Path_Active THEN
     GVL_WATER_DOMAIN_STATUS.G_Status_Code := 2;
     GVL_WATER_DOMAIN_STATUS.G_Status_Text := 'Water domain global path active';
+ELSIF GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_35_Active OR GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_36_Active THEN
+    GVL_WATER_DOMAIN_STATUS.G_Status_Code := 3;
+    GVL_WATER_DOMAIN_STATUS.G_Status_Text := 'Water emergency open active';
 ELSE
     GVL_WATER_DOMAIN_STATUS.G_Status_Code := 1;
     GVL_WATER_DOMAIN_STATUS.G_Status_Text := 'Water domain active';
