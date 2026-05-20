@@ -33,7 +33,8 @@ L_BB_Freeze := L_BB_Gas_Active OR L_BB_Fire_Active OR L_BB_Flood_Active OR GVL_S
 
 fbBlackBox(
     VI_Current_Data := L_BB_Record,
-    VI_Freeze := L_BB_Freeze
+    VI_Freeze := L_BB_Freeze,
+    VI_Reset := GVL_COMMAND.G_Reset_Errors
 );
 
 END_PROGRAM
