@@ -20,10 +20,9 @@ VAR
     L_Distributed_Projection_Allowed : BOOL;
 
     L_Fire_Smoke_Override : BOOL;
+    L_Gas_Vent_Override : BOOL;
 END_VAR
 
-// Reset local output buffers at the beginning of every PRG call.
-// This prevents stale projection when the execution manager is skipped by governance.
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
     L_Supply_Fans_Byte[L_i] := 0;
 END_FOR;
@@ -32,8 +31,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
     L_Exhaust_Fans_Byte[L_i] := 0;
 END_FOR;
 
-// Distributed runtime governance.
-// FIRE smoke extraction semantics remain authoritative.
 L_Distributed_Execute_Allowed :=
     GVL_Distributed_Execution_Gates.G_Can_Execute;
 
@@ -43,7 +40,10 @@ L_Distributed_Projection_Allowed :=
 L_Fire_Smoke_Override :=
     GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust;
 
-// Wet-zone adapter
+L_Gas_Vent_Override :=
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS)
+    OR GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
     L_Wet_Zone_Active[L_i] := FALSE;
 END_FOR;
@@ -52,7 +52,6 @@ IF GVL_STATUS.G_Wet_Zone_Light_Active THEN
     L_Wet_Zone_Active[1] := TRUE;
 END_IF;
 
-// === Ventilation Inputs (from arbitration only) ===
 L_Vent_PV3_Boost_Req := GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
 L_Supply_100_Req := GVL_COMMAND_SHADOW.G_Supply_100_Req;
 L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
@@ -60,8 +59,6 @@ L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
 L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
 
 IF L_Distributed_Execute_Allowed THEN
-
-    // Ventilation control (execution core)
     fbVentilationManager(
         VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
         VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
@@ -90,16 +87,9 @@ IF L_Distributed_Execute_Allowed THEN
         VO_Ventilation_IO_Fault => GVL_STATE.G_Ventilation_IO_Fault,
         VO_Ventilation_Subsystem_Degraded => GVL_STATE.G_Ventilation_Subsystem_Degraded
     );
-
 END_IF;
 
-// ==============================
-// SMOKE EXHAUST OVERRIDE
-// ==============================
-// FIRE smoke extraction must remain authoritative
-// even during distributed degradation.
 IF L_Fire_Smoke_Override THEN
-
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         L_Exhaust_Fans_Byte[L_i] := 100;
     END_FOR;
@@ -107,12 +97,17 @@ IF L_Fire_Smoke_Override THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
         L_Supply_Fans_Byte[L_i] := 0;
     END_FOR;
-
+ELSIF L_Gas_Vent_Override THEN
+    IF GVL_CONSTANTS.C_MAX_SUPPLY_FANS >= 3 THEN
+        L_Supply_Fans_Byte[3] := 100;
+    ELSE
+        L_Supply_Fans_Byte[1] := 100;
+    END_IF;
 END_IF;
 
-// Distributed projection restriction.
 IF NOT L_Distributed_Projection_Allowed
-   AND NOT L_Fire_Smoke_Override THEN
+   AND NOT L_Fire_Smoke_Override
+   AND NOT L_Gas_Vent_Override THEN
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         L_Exhaust_Fans_Byte[L_i] := 0;
@@ -121,10 +116,8 @@ IF NOT L_Distributed_Projection_Allowed
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
         L_Supply_Fans_Byte[L_i] := 0;
     END_FOR;
-
 END_IF;
 
-// === OUTPUT PROJECTION ===
 fbVentProjection(
     VI_Supply_Fans := L_Supply_Fans_Byte,
     VI_Exhaust_Fans := L_Exhaust_Fans_Byte
