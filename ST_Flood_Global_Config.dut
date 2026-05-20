@@ -1,8 +1,21 @@
 {attribute 'pack_mode' := '1'}
 TYPE ST_Flood_Global_Config :
 STRUCT
-    valve_types : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_VALVES] OF E_VALVE_TYPE := [GVL_CONSTANTS.C_MAX_FLOOD_VALVES(E_VALVE_TYPE.VALVE_NC)];
-    sensor_to_valve_map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BYTE := [1, 1, 1, 2, 2, 2, 2, 0, 0, 0]; // 1 -> Valve 35, 2 -> Valve 36
+    // Isolation groups:
+    // 1 = стояк 1 кухня, 2 = стояк 2 мастер-санузел,
+    // 3 = стояк 3 гостевые санузлы + постирочная,
+    // 4 = общий ввод ХВС/ГВС, legacy chains 35/36.
+    // Вода от скважины: при потере питания насос останавливается и давления нет,
+    // поэтому базовая эксплуатационная модель — нормально-открытые краны с
+    // электроприводом и концевиками, закрываемые при аварии.
+    valve_types : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_VALVES] OF E_VALVE_TYPE := [GVL_CONSTANTS.C_MAX_FLOOD_VALVES(E_VALVE_TYPE.VALVE_NO)];
+
+    // 1-2 кухня -> стояк 1;
+    // 3-4 мастер-санузел -> стояк 2;
+    // 5-9 гостевые санузлы + постирочная -> стояк 3;
+    // 10-12 котельная/ХВП/общий ввод -> общий ввод 35/36.
+    sensor_to_valve_map : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BYTE := [1, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4];
+
     min_duration_ms : UDINT := 5000; // Защита от брызг (5 сек)
     warning_duration_ms : UDINT := 30000; // Время предупреждения до перекрытия (30 сек)
 END_STRUCT
