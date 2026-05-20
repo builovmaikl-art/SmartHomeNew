@@ -25,6 +25,7 @@ END_VAR
 VAR
     fbLogEvent : FB_LogEvent;
     fbScenarioManager : FB_Scenario_Manager;
+    L_Restore_Target : E_SCENARIO_TYPE;
 END_VAR
 
 // === SCENARIO REQUEST VALIDATION ===
@@ -93,17 +94,45 @@ IF VI_System_Mode = E_System_Operating_Mode.MODE_NORMAL THEN
        (VIO_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) AND
        (VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
 
-        IF VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
-            VIO_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
-            VIO_Scenario_Source := SRC_POLICY;
-
-            fbLogEvent(
-                VI_Event_Type := 5,
-                VI_Timestamp := VI_System_Time_MS,
-                VI_Param1 := TO_UDINT(VIO_Scenario_Source),
-                VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
-            );
+        IF (VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_NONE) AND
+           (VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
+            GVL_POLICY.G_Away_Previous_Scenario := VIO_Scenario_Intent;
+        ELSIF (GVL_STATUS.G_Current_Scenario <> E_SCENARIO_TYPE.SCENARIO_NONE) AND
+              (GVL_STATUS.G_Current_Scenario <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
+            GVL_POLICY.G_Away_Previous_Scenario := GVL_STATUS.G_Current_Scenario;
+        ELSE
+            GVL_POLICY.G_Away_Previous_Scenario := E_SCENARIO_TYPE.SCENARIO_PRESENCE;
         END_IF;
+
+        VIO_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
+        VIO_Scenario_Source := SRC_POLICY;
+
+        fbLogEvent(
+            VI_Event_Type := 5,
+            VI_Timestamp := VI_System_Time_MS,
+            VI_Param1 := TO_UDINT(VIO_Scenario_Source),
+            VI_Param2 := TO_UDINT(E_SCENARIO_TYPE.SCENARIO_AWAY)
+        );
+    END_IF;
+
+    // When security is disarmed and no explicit source requests AWAY,
+    // leave AWAY and return to the scenario captured before short-away arming.
+    IF (NOT VI_Security_Armed) AND
+       (VIO_Scenario_Req_Operator = E_SCENARIO_TYPE.SCENARIO_NONE) AND
+       (VIO_Scenario_Req_Gateway = E_SCENARIO_TYPE.SCENARIO_NONE) AND
+       (VIO_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) AND
+       (VIO_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY) AND
+       GVL_POLICY.G_Away_Active THEN
+
+        L_Restore_Target := GVL_POLICY.G_Away_Previous_Scenario;
+
+        IF (L_Restore_Target = E_SCENARIO_TYPE.SCENARIO_NONE) OR
+           (L_Restore_Target = E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
+            L_Restore_Target := E_SCENARIO_TYPE.SCENARIO_PRESENCE;
+        END_IF;
+
+        VIO_Scenario_Intent := L_Restore_Target;
+        VIO_Scenario_Source := SRC_POLICY;
     END_IF;
 END_IF;
 
@@ -117,6 +146,13 @@ IF VI_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
 
         IF VI_Security_Armed THEN
             IF VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY THEN
+                IF (VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_NONE) AND
+                   (VIO_Scenario_Intent <> E_SCENARIO_TYPE.SCENARIO_AWAY) THEN
+                    GVL_POLICY.G_Away_Previous_Scenario := VIO_Scenario_Intent;
+                ELSE
+                    GVL_POLICY.G_Away_Previous_Scenario := E_SCENARIO_TYPE.SCENARIO_PRESENCE;
+                END_IF;
+
                 VIO_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
                 VIO_Scenario_Source := SRC_POLICY;
 
