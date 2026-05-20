@@ -10,7 +10,7 @@ END_VAR
 // Daily limit reset on monotonic 24h window.
 IF (GVL_WATER_EMERGENCY_OPEN.G_Daily_Reset_MS = 0) OR
    ((GVL_TIME_SERVICE.G_Now_MS - GVL_WATER_EMERGENCY_OPEN.G_Daily_Reset_MS) >= GVL_CONSTANTS.C_MS_IN_DAY) THEN
-    FOR L_i := 1 TO 2 DO
+    FOR L_i := 1 TO 4 DO
         GVL_WATER_EMERGENCY_OPEN.G_Open_Count_Today[L_i] := 0;
     END_FOR;
     GVL_WATER_EMERGENCY_OPEN.G_Daily_Reset_MS := GVL_TIME_SERVICE.G_Now_MS;
@@ -24,14 +24,14 @@ L_Leak_Active := GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Leak_Latche
 
 // HMI immediate close before timeout.
 IF GVL_WATER_EMERGENCY_OPEN.G_Request_Close_Now THEN
-    L_Group := GVL_WATER_EMERGENCY_OPEN.G_Target_Valve_Group;
+    L_Group := GVL_WATER_EMERGENCY_OPEN.G_Target_Isolation_Group;
 
-    IF (L_Group >= 1) AND (L_Group <= 2) THEN
+    IF (L_Group >= 1) AND (L_Group <= 4) THEN
         GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_Group] := FALSE;
         GVL_WATER_EMERGENCY_OPEN.G_Open_Duration_MS[L_Group] := 0;
         GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open cancelled by HMI';
     ELSE
-        FOR L_i := 1 TO 2 DO
+        FOR L_i := 1 TO 4 DO
             GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_i] := FALSE;
             GVL_WATER_EMERGENCY_OPEN.G_Open_Duration_MS[L_i] := 0;
         END_FOR;
@@ -41,9 +41,10 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Close_Now THEN
     GVL_WATER_EMERGENCY_OPEN.G_Request_Close_Now := FALSE;
 END_IF;
 
-// HMI emergency open request. Applies to normally-open valve chains only by design.
+// HMI emergency open request.
+// Groups 1..3 = local risers; group 4 = common inlet 35/36.
 IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
-    L_Group := GVL_WATER_EMERGENCY_OPEN.G_Target_Valve_Group;
+    L_Group := GVL_WATER_EMERGENCY_OPEN.G_Target_Isolation_Group;
     L_Duration_MS := 0;
 
     CASE GVL_WATER_EMERGENCY_OPEN.G_Duration_Minutes OF
@@ -65,10 +66,10 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 2;
         GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: access level < 2';
-    ELSIF (L_Group < 1) OR (L_Group > 2) THEN
+    ELSIF (L_Group < 1) OR (L_Group > 4) THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 3;
-        GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: invalid valve group';
+        GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: invalid isolation group';
     ELSIF L_Duration_MS = 0 THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 4;
@@ -90,7 +91,7 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
 END_IF;
 
 // Timeout management.
-FOR L_i := 1 TO 2 DO
+FOR L_i := 1 TO 4 DO
     IF GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_i] THEN
         IF GVL_TIME_SERVICE.G_Now_MS >= GVL_WATER_EMERGENCY_OPEN.G_Open_Start_MS[L_i] THEN
             L_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_WATER_EMERGENCY_OPEN.G_Open_Start_MS[L_i];
@@ -106,8 +107,10 @@ FOR L_i := 1 TO 2 DO
     END_IF;
 END_FOR;
 
-GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_35_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[1];
-GVL_WATER_EMERGENCY_OPEN.G_Open_Valve_36_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[2];
+GVL_WATER_EMERGENCY_OPEN.G_Open_Riser_1_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[1];
+GVL_WATER_EMERGENCY_OPEN.G_Open_Riser_2_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[2];
+GVL_WATER_EMERGENCY_OPEN.G_Open_Riser_3_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[3];
+GVL_WATER_EMERGENCY_OPEN.G_Open_Common_Inlet_Active := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[4];
 GVL_WATER_EMERGENCY_OPEN.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 END_PROGRAM
