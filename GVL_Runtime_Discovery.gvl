@@ -1,9 +1,9 @@
 {attribute 'qualified_only'}
-VAR_GLOBAL RETAIN
-    G_Discovery_State : ARRAY[1..32] OF ST_Runtime_Node_Discovery_State;
-END_VAR
-
 VAR_GLOBAL
+    // Runtime discovery state is rebuilt by FB_Runtime_Node_Discovery
+    // during cyclic execution. It must not consume RETAIN memory.
+    G_Discovery_State : ARRAY[1..32] OF ST_Runtime_Node_Discovery_State;
+
     G_Runtime_Valid : BOOL;
     G_Last_Update_MS : UDINT;
 
