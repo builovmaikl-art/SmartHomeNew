@@ -102,7 +102,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
 END_FOR;
 
 GVL_RUNTIME_IO_VALIDATION.Fire_IO_Valid :=
-    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> FIRE)
+    (NOT GVL_STATUS.G_Is_Active_PLC)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> FIRE)
     OR (
         L_Any_Exhaust_On
         AND NOT L_Any_Supply_On
@@ -110,7 +111,8 @@ GVL_RUNTIME_IO_VALIDATION.Fire_IO_Valid :=
     );
 
 GVL_RUNTIME_IO_VALIDATION.Gas_IO_Valid :=
-    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> GAS)
+    (NOT GVL_STATUS.G_Is_Active_PLC)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> GAS)
     OR (
         GVL_IO.DO_Gas_Valve_Close
         AND (L_Any_Exhaust_On OR L_Any_Supply_On)
@@ -155,7 +157,8 @@ GVL_RUNTIME_IO_VALIDATION.Inactive_PLC_IO_Valid :=
     );
 
 GVL_RUNTIME_IO_VALIDATION.Freeze_IO_Valid :=
-    (NOT GVL_STATE.G_Safety_Freeze_Risk)
+    (NOT GVL_STATUS.G_Is_Active_PLC)
+    OR (NOT GVL_STATE.G_Safety_Freeze_Risk)
     OR L_Any_Freeze_Circulation_On;
 
 GVL_RUNTIME_IO_VALIDATION.Any_IO_Invalid :=
