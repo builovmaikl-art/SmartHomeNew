@@ -20,15 +20,15 @@ IF NOT VI_Config.enabled THEN
 END_IF;
 
 L_Deviation := ABS(VI_Current_Value - L_Last_Value);
-L_Elapsed_Time := SEL(
-    VI_System_Time_MS >= L_Last_Log_Time,
-    VI_System_Time_MS - L_Last_Log_Time,
-    (4294967295 - L_Last_Log_Time) + VI_System_Time_MS + 1
-);
+
+IF VI_System_Time_MS >= L_Last_Log_Time THEN
+    L_Elapsed_Time := VI_System_Time_MS - L_Last_Log_Time;
+ELSE
+    L_Elapsed_Time := (4294967295 - L_Last_Log_Time) + VI_System_Time_MS + 1;
+END_IF;
 
 IF (L_Deviation >= (ABS(L_Last_Value) * VI_Config.deviation_threshold_percent / REAL#100.0)) OR
    (L_Elapsed_Time >= GVL_CONSTANTS.C_MS_IN_HOUR) THEN
-
     L_Write_Index := (VO_Data.record_count MOD 100) + 1;
     VO_Data.write_index := L_Write_Index;
     VO_Data.values[L_Write_Index] := VI_Current_Value;
@@ -36,7 +36,6 @@ IF (L_Deviation >= (ABS(L_Last_Value) * VI_Config.deviation_threshold_percent / 
     VO_Data.record_count := VO_Data.record_count + 1;
     VO_Data.sum_values := VO_Data.sum_values + VI_Current_Value;
     VO_Data.config := VI_Config;
-
     L_Last_Value := VI_Current_Value;
     L_Last_Log_Time := VI_System_Time_MS;
 END_IF;
