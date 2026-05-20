@@ -16,16 +16,22 @@ END_VAR
 
 L_Current_Slot := (VI_Time_Index / (GVL_CONSTANTS.C_MS_IN_MINUTE * 10)) MOD TO_UDINT(GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY);
 
+FOR L_i := 1 TO 32 DO
+    VO_Light_Outputs[L_i] := FALSE;
+END_FOR;
+
 IF VI_Mode_Record THEN
     GVL_Retain.G_Presence_History[L_Current_Slot] := 0;
-    FOR L_i := 1 TO 32 DO
+    FOR L_i := 1 TO 16 DO
         IF VI_Light_Inputs[L_i] THEN
-            GVL_Retain.G_Presence_History[L_Current_Slot] := GVL_Retain.G_Presence_History[L_Current_Slot] OR SHL(WORD#1, L_i-1);
+            GVL_Retain.G_Presence_History[L_Current_Slot] :=
+                GVL_Retain.G_Presence_History[L_Current_Slot] OR SHL(WORD#1, L_i - 1);
         END_IF;
     END_FOR;
 ELSE
-    FOR L_i := 1 TO 32 DO
-        VO_Light_Outputs[L_i] := (GVL_Retain.G_Presence_History[L_Current_Slot] AND SHL(WORD#1, L_i-1)) <> 0;
+    FOR L_i := 1 TO 16 DO
+        VO_Light_Outputs[L_i] :=
+            (GVL_Retain.G_Presence_History[L_Current_Slot] AND SHL(WORD#1, L_i - 1)) <> 0;
     END_FOR;
 END_IF;
 
