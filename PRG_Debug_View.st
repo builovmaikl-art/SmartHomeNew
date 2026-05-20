@@ -13,6 +13,10 @@ GVL_DEBUG_VIEW.D_Safety_Mode := GVL_SAFETY_SHUTDOWN.G_Safety_Mode;
 GVL_DEBUG_VIEW.D_Safety_Active := (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> NORMAL);
 GVL_DEBUG_VIEW.D_Recovery_Phase := GVL_SAFETY_RECOVERY.G_Recovery_Phase;
 GVL_DEBUG_VIEW.D_Recovery_Active := GVL_SAFETY_RECOVERY.G_Recovery_Active;
+GVL_DEBUG_VIEW.D_Recovery_Exit_Allowed := GVL_SAFETY_RECOVERY.G_Recovery_Exit_Allowed;
+GVL_DEBUG_VIEW.D_Authority_Revocation_Active := GVL_AUTHORITY_REVOCATION.Authority_Revocation_Active;
+GVL_DEBUG_VIEW.D_Authority_Restoration_Allowed := GVL_AUTHORITY_RESTORATION.Authority_Restoration_Allowed;
+GVL_DEBUG_VIEW.D_Authority_Restoration_Completed := GVL_AUTHORITY_RESTORATION.Authority_Restoration_Completed;
 
 GVL_DEBUG_VIEW.D_Current_Scenario := GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text;
 GVL_DEBUG_VIEW.D_Behavior_Reason := GVL_INTENT_BEHAVIOR.I_Reason_Text;
