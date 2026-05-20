@@ -22,7 +22,6 @@ L_Any_Unsafe := FALSE;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Feedback := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i];
 
-    // Reset all recovery runtime fields per sensor to prevent state leakage across loop iterations.
     L_State.Runtime_Valid := FALSE;
     L_State.Runtime_System_Time_MS := 0;
     L_State.Recovery_Requested := FALSE;
@@ -43,7 +42,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_State.Confirmation_Healthy := NOT L_Feedback.Feedback_Conflict;
     L_State.Recovery_Target_Valid := L_Feedback.Valve_Group_Id <> 0;
 
-    IF NOT L_State.Recovery_Target_Valid THEN
+    IF NOT L_State.Recovery_Requested THEN
+        L_State.Status_Code := 0;
+        L_State.Status_Text := 'Recovery observe only';
+    ELSIF NOT L_State.Recovery_Target_Valid THEN
         L_State.Recovery_Denied := TRUE;
         L_State.Status_Code := 1;
         L_State.Status_Text := 'Recovery target invalid';
@@ -79,9 +81,12 @@ IF L_Any_Unsafe THEN
 ELSIF L_Any_Denied THEN
     GVL_Water_Recovery_Runtime.G_Status_Code := 1;
     GVL_Water_Recovery_Runtime.G_Status_Text := 'Recovery governance denied';
-ELSE
+ELSIF GVL_INTENT_SAFETY.I_Water_Selective_Recovery_Allowed THEN
     GVL_Water_Recovery_Runtime.G_Status_Code := 0;
     GVL_Water_Recovery_Runtime.G_Status_Text := 'Recovery governance healthy';
+ELSE
+    GVL_Water_Recovery_Runtime.G_Status_Code := 0;
+    GVL_Water_Recovery_Runtime.G_Status_Text := 'Recovery observe only';
 END_IF;
 
 END_FUNCTION_BLOCK
