@@ -28,7 +28,38 @@ VAR
     L_Synchronization_Valid : BOOL;
     L_Runtime_Degraded : BOOL;
     L_Status_Code : UINT;
+
+    L_Empty_Phase_Event : ST_Heating_Runtime_Phase_Event;
+    L_Empty_Anomaly : ST_Heating_Runtime_Anomaly;
+    L_Empty_Blackbox_Event : ST_Heating_Runtime_Blackbox_Event;
+    L_Empty_Blackbox_Timeline : ST_Heating_Runtime_Blackbox_Timeline;
+    L_Empty_Event_Buffer : ST_Heating_Runtime_Event_Buffer;
+    L_Empty_Adaptive_Intelligence : ST_Heating_Runtime_Adaptive_Intelligence;
+    L_Empty_Causality_Graph : ST_Heating_Runtime_Causality_Graph;
+    L_Empty_Integration_Bridge : ST_Heating_Runtime_Integration_Bridge;
+    L_Empty_Predictive_State : ST_Heating_Runtime_Predictive_State;
+    L_Empty_Execution_Timeline : ST_Heating_Runtime_Execution_Timeline;
+    L_Empty_Phase_Transition : ST_Heating_Runtime_Phase_Transition;
 END_VAR
+
+// Clear complete retained output snapshots before writing current frame.
+// This prevents stale array entries in timeline/event/causality structures.
+VO_Phase_Event := L_Empty_Phase_Event;
+VO_Anomaly := L_Empty_Anomaly;
+VO_Blackbox_Event := L_Empty_Blackbox_Event;
+VO_Blackbox_Timeline := L_Empty_Blackbox_Timeline;
+VO_Event_Buffer := L_Empty_Event_Buffer;
+VO_Adaptive_Intelligence := L_Empty_Adaptive_Intelligence;
+VO_Causality_Graph := L_Empty_Causality_Graph;
+VO_Integration_Bridge := L_Empty_Integration_Bridge;
+VO_Predictive_State := L_Empty_Predictive_State;
+VO_Execution_Timeline := L_Empty_Execution_Timeline;
+VO_Phase_Transition := L_Empty_Phase_Transition;
+VO_Publication_Valid := FALSE;
+
+IF NOT VI_Enable THEN
+    RETURN;
+END_IF;
 
 L_Sequencing_Valid := VI_Runtime_Context.DHW_Before_Heating_Valid AND VI_Runtime_Context.State_Publication_Before_Diagnostics_Valid;
 L_Ownership_Valid := VI_Runtime_Context.OpenTherm_Ownership_Valid AND VI_Runtime_Context.Cascade_Ownership_Valid AND VI_Runtime_Context.Safety_Isolation_Valid;
@@ -38,7 +69,7 @@ L_Status_Code := VI_Runtime_Status_Code;
 
 // Phase event
 VO_Phase_Event.Phase := VI_Runtime_Context.Current_Phase;
-VO_Phase_Event.Event_Active := VI_Enable;
+VO_Phase_Event.Event_Active := TRUE;
 VO_Phase_Event.Event_Completed := VI_Runtime_Observation_Valid;
 VO_Phase_Event.Event_Failed := VI_Runtime_Observer_Fault;
 VO_Phase_Event.Start_Time_MS := VI_System_Time_MS;
@@ -58,7 +89,7 @@ VO_Phase_Event.Cascade_Ownership_Valid := VI_Runtime_Context.Cascade_Ownership_V
 VO_Phase_Transition.Previous_Phase := VI_Runtime_Context.Current_Phase;
 VO_Phase_Transition.Current_Phase := VI_Runtime_Context.Current_Phase;
 VO_Phase_Transition.Next_Phase := VI_Runtime_Context.Current_Phase;
-VO_Phase_Transition.Transition_Active := VI_Enable;
+VO_Phase_Transition.Transition_Active := TRUE;
 VO_Phase_Transition.Transition_Completed := VI_Runtime_Observation_Valid;
 VO_Phase_Transition.Transition_Failed := VI_Runtime_Observer_Fault;
 VO_Phase_Transition.Transition_Start_MS := VI_System_Time_MS;
@@ -93,7 +124,7 @@ VO_Anomaly.Status_Text := VI_Runtime_Status_Text;
 
 // Blackbox event
 VO_Blackbox_Event.Event_ID := VI_System_Time_MS;
-VO_Blackbox_Event.Event_Active := VI_Enable;
+VO_Blackbox_Event.Event_Active := TRUE;
 VO_Blackbox_Event.Runtime_Phase := VI_Runtime_Context.Current_Phase;
 VO_Blackbox_Event.Event_Start_MS := VI_System_Time_MS;
 VO_Blackbox_Event.Event_End_MS := VI_System_Time_MS;
@@ -146,7 +177,7 @@ VO_Event_Buffer.Status_Text := VI_Runtime_Status_Text;
 // Passive integration bridge
 VO_Integration_Bridge.Shell_Ready := VI_Runtime_Observation_Valid;
 VO_Integration_Bridge.Shell_Fault := VI_Runtime_Observer_Fault;
-VO_Integration_Bridge.Shell_Contract_Valid := VI_Enable AND VI_Runtime_Observation_Valid;
+VO_Integration_Bridge.Shell_Contract_Valid := VI_Runtime_Observation_Valid;
 VO_Integration_Bridge.Allow_DHW_Integration := VI_Runtime_Context.Allow_DHW_Phase;
 VO_Integration_Bridge.Allow_Heating_Integration := VI_Runtime_Context.Allow_Heating_Phase;
 VO_Integration_Bridge.Allow_Diagnostics_Integration := VI_Runtime_Context.Allow_Diagnostics_Phase;
@@ -199,7 +230,7 @@ VO_Execution_Timeline.Runtime_Jitter_Detected := FALSE;
 VO_Execution_Timeline.Runtime_Latency_Detected := FALSE;
 VO_Execution_Timeline.Runtime_Degraded := L_Runtime_Degraded;
 VO_Execution_Timeline.Frames[1].Phase := VI_Runtime_Context.Current_Phase;
-VO_Execution_Timeline.Frames[1].Frame_Started := VI_Enable;
+VO_Execution_Timeline.Frames[1].Frame_Started := TRUE;
 VO_Execution_Timeline.Frames[1].Frame_Completed := VI_Runtime_Observation_Valid;
 VO_Execution_Timeline.Frames[1].Frame_Failed := VI_Runtime_Observer_Fault;
 VO_Execution_Timeline.Frames[1].Frame_Start_MS := VI_System_Time_MS;
@@ -274,7 +305,7 @@ VO_Causality_Graph.Edges[1].Synchronization_Propagation := NOT L_Synchronization
 VO_Causality_Graph.Status_Code := L_Status_Code;
 VO_Causality_Graph.Status_Text := VI_Runtime_Status_Text;
 
-VO_Publication_Valid := VI_Enable;
+VO_Publication_Valid := TRUE;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_Heating_Runtime_Explainability_Publisher <<<
