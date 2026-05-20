@@ -97,6 +97,27 @@ ELSE
     L_Target_Base_Blinds := 100;
 END_IF;
 
+// Three-level away behavior from policy/TЗ.
+// 1 short: light 100%, simulation off.
+// 2 medium: base light 10%, simulation active.
+// 3 long: base light 5%, simulation active.
+IF L_Effective_Scenario = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
+    CASE VI_Away_Level OF
+        1:
+            L_Target_Base_Light := 100;
+            L_Effective_Simulation_Active := FALSE;
+        2:
+            L_Target_Base_Light := 10;
+            L_Effective_Simulation_Active := TRUE;
+        3:
+            L_Target_Base_Light := 5;
+            L_Effective_Simulation_Active := TRUE;
+    ELSE
+            L_Target_Base_Light := 100;
+            L_Effective_Simulation_Active := FALSE;
+    END_CASE;
+END_IF;
+
 IF VI_Is_Night AND L_Effective_Scenario <> E_SCENARIO_TYPE.SCENARIO_AWAY AND L_Effective_Scenario <> E_SCENARIO_TYPE.SCENARIO_SLEEP THEN
     L_Target_Base_Blinds := 0;
 END_IF;
