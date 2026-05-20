@@ -21,7 +21,6 @@ GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected := FALSE;
 GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing := FALSE;
 GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired := FALSE;
 
-// Finalized publication/convergence authority.
 L_Publication_Authority_Allowed :=
     GVL_Distributed_Execution_Gates.G_Runtime_Valid
     AND GVL_Distributed_Execution_Gates.G_Can_Replicate
@@ -35,17 +34,12 @@ GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch := GVL_DISTRIBUTED_SNAPSHO
 GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch := GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Epoch;
 
 IF NOT L_Publication_Authority_Allowed THEN
-
     L_Commit_Valid := FALSE;
-
     L_Error_Code := 14999;
-    L_Error_Text :=
-        'Distributed publication authority restricted';
-
+    L_Error_Text := 'Distributed publication authority restricted';
 END_IF;
 
 IF L_Commit_Valid THEN
-
     IF GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Reconciled
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Publication_Freeze_Valid
     AND GVL_DISTRIBUTED_SNAPSHOT.Distributed_Snapshot_Consistent
@@ -55,12 +49,10 @@ IF L_Commit_Valid THEN
     ELSE
         GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Active := FALSE;
         GVL_DISTRIBUTED_COMMIT.Publication_Prepare_Valid := FALSE;
-
         L_Commit_Valid := FALSE;
         L_Error_Code := 15000;
         L_Error_Text := 'Distributed immutable publication prepare invalid';
     END_IF;
-
 END_IF;
 
 IF GVL_DISTRIBUTED_COMMIT.Peer_Publication_Commit_Epoch > 0 THEN
@@ -81,7 +73,6 @@ IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF GVL_DISTRIBUTED_COMMIT.Commit_Lease_Active THEN
         IF L_Delta_MS > GVL_DISTRIBUTED_COMMIT.Commit_Timeout_MS THEN
             GVL_DISTRIBUTED_COMMIT.Commit_Lease_Expired := TRUE;
-
             L_Commit_Valid := FALSE;
             L_Error_Code := 15001;
             L_Error_Text := 'Distributed commit lease expired';
@@ -92,7 +83,6 @@ END_IF;
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF NOT GVL_DISTRIBUTED_COMMIT.Peer_Commit_Ack_Valid THEN
         GVL_DISTRIBUTED_COMMIT.Peer_Commit_Missing := TRUE;
-
         L_Commit_Valid := FALSE;
         L_Error_Code := 15002;
         L_Error_Text := 'Peer commit acknowledgement missing';
@@ -102,7 +92,6 @@ END_IF;
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF GVL_DISTRIBUTED_COMMIT.Peer_Publication_Commit_Epoch < GVL_DISTRIBUTED_COMMIT.Local_Publication_Commit_Epoch THEN
         GVL_DISTRIBUTED_COMMIT.Peer_Commit_Mismatch := TRUE;
-
         L_Commit_Valid := FALSE;
         L_Error_Code := 15003;
         L_Error_Text := 'Peer commit epoch mismatch';
@@ -112,7 +101,6 @@ END_IF;
 IF L_Commit_Valid AND L_Peer_Session_Active THEN
     IF GVL_DISTRIBUTED_COMMIT.Peer_Prepare_Epoch < GVL_DISTRIBUTED_COMMIT.Local_Prepare_Epoch THEN
         GVL_DISTRIBUTED_COMMIT.Peer_Commit_Replay_Detected := TRUE;
-
         L_Commit_Valid := FALSE;
         L_Error_Code := 15004;
         L_Error_Text := 'Peer commit replay detected';
@@ -124,12 +112,11 @@ IF L_Commit_Valid THEN
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Reconciliation_Epoch := GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Reconciliation_Epoch + 1;
 
     GVL_DISTRIBUTED_COMMIT.Publication_Commit_Requested := TRUE;
+    GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := TRUE;
 
     IF L_Peer_Session_Active THEN
-        GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := TRUE;
         GVL_DISTRIBUTED_COMMIT.Commit_Lease_Active := TRUE;
     ELSE
-        GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := FALSE;
         GVL_DISTRIBUTED_COMMIT.Commit_Lease_Active := FALSE;
     END_IF;
 
@@ -140,15 +127,12 @@ IF L_Commit_Valid THEN
     END_IF;
 
     GVL_DISTRIBUTED_COMMIT.Commit_Last_Reconciliation_MS := L_Now_MS;
-
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code := 0;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Text := '';
 ELSE
     GVL_DISTRIBUTED_COMMIT.Publication_Commit_Confirmed := FALSE;
-
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Valid := FALSE;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Quarantine_Active := TRUE;
-
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Code := L_Error_Code;
     GVL_DISTRIBUTED_COMMIT.Distributed_Commit_Last_Error_Text := L_Error_Text;
 END_IF;
