@@ -10,39 +10,43 @@ VAR_OUTPUT
     VO_Processed_ID : UDINT;
 END_VAR
 VAR
-    L_Processed_History : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT; // Ring buffer of last processed IDs
-    L_Processed_Times   : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT; // Timestamps for processed IDs
+    L_Processed_History : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT;
+    L_Processed_Times   : ARRAY[0..GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1] OF UDINT;
     L_History_Index : INT := 0;
     L_i : INT;
     L_Found : BOOL;
+    L_Age_MS : UDINT;
 END_VAR
 
-// Check if command ID is already in history
 L_Found := FALSE;
-FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1 DO
-    IF L_Processed_History[L_i] = VI_Command_ID AND VI_Command_ID <> 0 THEN
-        // Check if the command is not too old (e.g., 1 hour = 3600000 ms)
-        IF (VI_System_Time_MS - L_Processed_Times[L_i]) < 3600000 THEN
+
+FOR L_i := 0 TO GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY - 1 DO
+    IF (L_Processed_History[L_i] = VI_Command_ID) AND (VI_Command_ID <> 0) THEN
+        IF VI_System_Time_MS >= L_Processed_Times[L_i] THEN
+            L_Age_MS := VI_System_Time_MS - L_Processed_Times[L_i];
+        ELSE
+            L_Age_MS := (4294967295 - L_Processed_Times[L_i]) + VI_System_Time_MS + 1;
+        END_IF;
+
+        IF L_Age_MS < 3600000 THEN
             L_Found := TRUE;
             EXIT;
         END_IF;
     END_IF;
 END_FOR;
 
-IF NOT L_Found AND VI_Command_ID <> 0 THEN
-    // New command detected
+IF (NOT L_Found) AND (VI_Command_ID <> 0) THEN
     VO_Is_New_Command := TRUE;
     VO_Processed_ID := VI_Command_ID;
-    
-    // Add to history
+
     L_Processed_History[L_History_Index] := VI_Command_ID;
     L_Processed_Times[L_History_Index] := VI_System_Time_MS;
+
     L_History_Index := L_History_Index + 1;
-    IF L_History_Index > GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY-1 THEN
+    IF L_History_Index > GVL_CONSTANTS.C_MAX_DEDUPLICATION_HISTORY - 1 THEN
         L_History_Index := 0;
     END_IF;
 ELSE
-    // Duplicate or empty command
     VO_Is_New_Command := FALSE;
     VO_Processed_ID := 0;
 END_IF;
