@@ -1,6 +1,6 @@
 FUNCTION_BLOCK FB_Water_Output_Projection
 VAR_INPUT
-    VI_Zone_Enable : ARRAY[1..32] OF BOOL;
+    VI_Zone_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_WATER_ZONES] OF BOOL;
     VI_Valve_35_Close : BOOL;
     VI_Valve_36_Close : BOOL;
 END_VAR
@@ -8,7 +8,7 @@ VAR
     L_i : INT;
 END_VAR
 
-FOR L_i := 1 TO 32 DO
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     GVL_WATER_OUTPUT.DO_Water_Zone_Enable[L_i] := VI_Zone_Enable[L_i];
 END_FOR;
 
