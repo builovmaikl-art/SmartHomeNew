@@ -1,6 +1,4 @@
 PROGRAM PRG_Main_Phase_03_Input_Safety_Command
-VAR
-END_VAR
 
 GVL_MAIN_PHASE_FEEDBACK.G_Current_Phase := 3;
 
