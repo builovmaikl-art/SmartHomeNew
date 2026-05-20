@@ -37,8 +37,13 @@ ELSIF GVL_LIGHTING_RUNTIME_BUFFER.B_Security_Armed THEN
     END_FOR;
 END_IF;
 
-// Distributed projection restriction.
-IF NOT GVL_LIGHTING_RUNTIME_BUFFER.B_Distributed_Projection_Allowed
+// Distributed execution/projection restriction.
+// If manager execution or output projection is blocked, clear non-emergency lighting state
+// so publication cannot reuse stale values from a previous scan.
+IF (
+        NOT GVL_LIGHTING_RUNTIME_BUFFER.B_Distributed_Execute_Allowed
+        OR NOT GVL_LIGHTING_RUNTIME_BUFFER.B_Distributed_Projection_Allowed
+   )
    AND NOT GVL_LIGHTING_RUNTIME_BUFFER.B_Emergency_Lighting_Override THEN
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
