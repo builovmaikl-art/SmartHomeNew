@@ -5,6 +5,10 @@ VAR_GLOBAL
     D_Safety_Active : BOOL := FALSE;
     D_Recovery_Phase : E_Recovery_Phase := IDLE;
     D_Recovery_Active : BOOL := FALSE;
+    D_Recovery_Exit_Allowed : BOOL := FALSE;
+    D_Authority_Revocation_Active : BOOL := FALSE;
+    D_Authority_Restoration_Allowed : BOOL := FALSE;
+    D_Authority_Restoration_Completed : BOOL := FALSE;
 
     D_Current_Scenario : STRING(255) := '';
     D_Behavior_Reason : STRING(255) := '';
