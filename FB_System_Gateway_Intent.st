@@ -14,6 +14,7 @@ END_VAR
 
 VAR
     fbGateway : FB_Gateway_Interface;
+    L_i : INT;
     L_Gateway_Flood_Alarm_Active : BOOL;
     L_Gateway_Gas_Alarm_Active : BOOL;
     L_Gateway_Fire_Alarm_Active : BOOL;
@@ -68,6 +69,27 @@ fbGateway(
 
 IF L_Command_Received_Allowed AND fbGateway.VO_Set_Scenario_Req THEN
     VIO_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
+END_IF;
+
+IF NOT L_Command_Received_Allowed THEN
+    GVL_COMMAND.G_Arm_Req := FALSE;
+    GVL_COMMAND.G_Disarm_Req := FALSE;
+    GVL_COMMAND.G_PIN_Code := '';
+    GVL_COMMAND.G_RFID_Tag := '';
+    GVL_COMMAND.G_2FA_Code_In := '';
+    GVL_COMMAND.G_Reset_Errors := FALSE;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
+        GVL_COMMAND.G_Lighting_Override[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BLINDS DO
+        GVL_COMMAND.G_Blinds_Override[L_i] := 0;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+        GVL_COMMAND.G_Socket_Override[L_i] := FALSE;
+    END_FOR;
 END_IF;
 
 GVL_INTENT_USER.I_Source_Valid := TRUE;
