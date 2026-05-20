@@ -23,6 +23,20 @@ VAR_GLOBAL
     G_Away_Simulation_Intensity : REAL := 0.0;
     G_Away_Heating_Offset_C : REAL := 0.0;
     G_Away_Min_Heating_Setpoint_C : REAL := 15.0;
+    G_Away_Long_Economy_Setpoint_C : REAL := 12.0;
+
+    // Planned return / preheat policy.
+    // Return time uses the current monotonic system-time domain. HMI/gateway may
+    // set it as an absolute monotonic timestamp in the same domain.
+    G_Away_Planned_Return_Enabled : BOOL := FALSE;
+    G_Away_Planned_Return_MS : UDINT := 0;
+    G_Away_Preheat_Lead_MS : UDINT := 10800000; // 3 hours
+    G_Away_Return_Grace_MS : UDINT := 86400000; // 24 hours
+    G_Away_Preheat_Target_C : REAL := 22.0;
+    G_Away_Return_Preheat_Active : BOOL := FALSE;
+    G_Away_Return_Grace_Active : BOOL := FALSE;
+    G_Away_Return_Grace_Start_MS : UDINT := 0;
+    G_Away_Return_Expired : BOOL := FALSE;
 
     // Restore state after short away. Downstream restore application is handled
     // by domain-specific code and should use this policy surface.
