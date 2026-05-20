@@ -9,6 +9,7 @@ VAR
     L_Any_Lighting_Output_On : BOOL;
     L_Any_Socket_On : BOOL;
     L_Any_Freeze_Circulation_On : BOOL;
+    L_Fire_Access_Valid : BOOL;
 END_VAR
 
 GVL_RUNTIME_IO_VALIDATION.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
@@ -23,6 +24,7 @@ L_Any_Access_Output_On := FALSE;
 L_Any_Lighting_Output_On := FALSE;
 L_Any_Socket_On := FALSE;
 L_Any_Freeze_Circulation_On := FALSE;
+L_Fire_Access_Valid := TRUE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
     IF GVL_IO.AO_Exhaust_Fans[L_i] > 0 THEN
@@ -74,6 +76,19 @@ L_Any_Access_Output_On :=
     OR GVL_IO.DO_Lock_2_Open
     OR GVL_IO.DO_Lock_2_Close;
 
+IF GVL_COMMAND_SHADOW.G_Lock_1_Open AND NOT GVL_IO.DO_Lock_1_Open THEN
+    L_Fire_Access_Valid := FALSE;
+END_IF;
+IF GVL_COMMAND_SHADOW.G_Lock_2_Open AND NOT GVL_IO.DO_Lock_2_Open THEN
+    L_Fire_Access_Valid := FALSE;
+END_IF;
+IF GVL_COMMAND_SHADOW.G_Gate_Open AND NOT GVL_IO.DO_Gate_Open THEN
+    L_Fire_Access_Valid := FALSE;
+END_IF;
+IF GVL_COMMAND_SHADOW.G_Wicket_Open AND NOT GVL_IO.DO_Wicket_Open THEN
+    L_Fire_Access_Valid := FALSE;
+END_IF;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
     IF GVL_IO.AO_Lighting_Levels[L_i] > 0 THEN
         L_Any_Lighting_Output_On := TRUE;
@@ -91,6 +106,7 @@ GVL_RUNTIME_IO_VALIDATION.Fire_IO_Valid :=
     OR (
         L_Any_Exhaust_On
         AND NOT L_Any_Supply_On
+        AND L_Fire_Access_Valid
     );
 
 GVL_RUNTIME_IO_VALIDATION.Gas_IO_Valid :=
