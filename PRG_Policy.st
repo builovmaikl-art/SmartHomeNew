@@ -110,7 +110,7 @@ END_IF;
 // Short: light 100%, heating -1C, simulation off.
 // Medium: light/simulation medium, heating -3C, simulation 0.3.
 // Long: minimal reasonable heating economy; planned-return preheat may
-// temporarily raise target before the expected arrival.
+// temporarily raise selected rooms before the expected arrival.
 L_Away_Return_Window_Reached := FALSE;
 
 IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
@@ -239,10 +239,11 @@ L_Previous_Away_Active := GVL_POLICY.G_Away_Active;
 L_Previous_Away_Level := GVL_POLICY.G_Away_Level;
 
 // 5. Heating bridge
+// Policy publishes preheat intent only. Actual per-circuit comfort/economy
+// target selection is owned by FB_Heating_Circuit_Control through
+// ST_FloorHeating_Circuit_Config.
 GVL_STATE.G_Preheat_Request :=
     GVL_POLICY.G_Rule_Preheat_Request OR GVL_POLICY.G_Away_Return_Preheat_Active;
-GVL_STATE.G_Target_Temperature :=
-    SEL(GVL_POLICY.G_Away_Return_Preheat_Active, GVL_STATE.G_Target_Temperature, GVL_POLICY.G_Away_Preheat_Target_C);
 GVL_HEATING_REQUEST.G_Preheat_Request := GVL_STATE.G_Preheat_Request;
 GVL_HEATING_REQUEST.G_Target_Temperature := GVL_STATE.G_Target_Temperature;
 
