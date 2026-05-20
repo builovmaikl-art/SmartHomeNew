@@ -4,7 +4,14 @@ VAR
     fbIO_Watchdog_2 : FB_IO_Module_Watchdog;
     fbDiagEventManager : FB_Diagnostics_Event_Manager;
     L_IO_Error_Active : BOOL;
+    L_i : INT;
 END_VAR
+
+// Default unused module slots to online so domain loops over C_MAX_MODULES
+// do not report false faults for modules without watchdog bindings.
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
+    GVL_STATUS.G_IO_Modules_Online[L_i] := TRUE;
+END_FOR;
 
 fbIO_Watchdog_1(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
