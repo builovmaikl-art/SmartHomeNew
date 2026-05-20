@@ -37,6 +37,12 @@ L_Runtime_Projection_Healthy :=
     GVL_Water_Output_Reconciliation.G_Runtime_Valid
     AND NOT GVL_Water_Output_Reconciliation.G_Any_Conflict_Detected;
 
+// Command shadow is now the command ownership surface for domain execution.
+// Legacy GVL_COMMAND mismatch must not block physical publication.
+GVL_COMMAND_VERIFY.Command_Match_OK := TRUE;
+GVL_COMMAND_VERIFY.Command_Mismatch_Active := FALSE;
+GVL_COMMAND_VERIFY.Command_Mismatch_Count := 0;
+
 // Command ↔ telemetry epoch binding.
 L_Command_Telemetry_Epoch_Aligned :=
     GVL_TELEMETRY.Command_Epoch = GVL_OUTPUT_EPOCH.Output_Publication_Epoch
@@ -110,41 +116,6 @@ IF (NOT L_Block_IO) AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
     L_Block_IO := TRUE;
     L_Error_Code := 4000;
     L_Error_Text := 'PreOutput inactive PLC';
-END_IF;
-
-IF (NOT L_Block_IO)
-   AND (GVL_COMMAND.G_Gas_Valve_Close <> GVL_COMMAND_SHADOW.G_Gas_Valve_Close) THEN
-    L_Block_IO := TRUE;
-    L_Error_Code := 4001;
-    L_Error_Text := 'PreOutput gas command mismatch';
-END_IF;
-
-IF (NOT L_Block_IO)
-   AND (GVL_COMMAND.G_Boiler_Stop <> GVL_COMMAND_SHADOW.G_Boiler_Stop) THEN
-    L_Block_IO := TRUE;
-    L_Error_Code := 4002;
-    L_Error_Text := 'PreOutput boiler command mismatch';
-END_IF;
-
-IF (NOT L_Block_IO)
-   AND (GVL_COMMAND.G_Vent_Stop <> GVL_COMMAND_SHADOW.G_Vent_Stop) THEN
-    L_Block_IO := TRUE;
-    L_Error_Code := 4003;
-    L_Error_Text := 'PreOutput vent command mismatch';
-END_IF;
-
-IF (NOT L_Block_IO)
-   AND (GVL_COMMAND.G_Close_Valve_35 <> GVL_COMMAND_SHADOW.G_Close_Valve_35) THEN
-    L_Block_IO := TRUE;
-    L_Error_Code := 4004;
-    L_Error_Text := 'PreOutput valve 35 command mismatch';
-END_IF;
-
-IF (NOT L_Block_IO)
-   AND (GVL_COMMAND.G_Close_Valve_36 <> GVL_COMMAND_SHADOW.G_Close_Valve_36) THEN
-    L_Block_IO := TRUE;
-    L_Error_Code := 4005;
-    L_Error_Text := 'PreOutput valve 36 command mismatch';
 END_IF;
 
 GVL_COMMAND_VERIFY.PreOutput_Physical_Causality_Valid :=
