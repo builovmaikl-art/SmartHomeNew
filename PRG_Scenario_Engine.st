@@ -12,9 +12,12 @@ VAR
     L_i : INT;
     fbTrace : FB_Trace_Write;
     L_Weights : ST_Behavior_Weights;
+    L_Last_Selected_Scenario_Text : STRING(255) := '';
+    L_Last_Vent_Boost_Request : BOOL := FALSE;
+    L_Last_Vent_Boost_Score : INT := -1;
+    L_Trace_Changed : BOOL;
 END_VAR
 
-// Build weights from compile-safe scalar GVL fields
 L_Weights.W_Comfort := GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Comfort;
 L_Weights.W_Night := GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Night;
 L_Weights.W_Preheat := GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_Preheat;
@@ -23,7 +26,6 @@ L_Weights.W_AccessSecure := GVL_BEHAVIOR_ADAPT.G_Behavior_Weight_AccessSecure;
 
 L_Hour := TO_INT(GVL_TIME_SERVICE.G_Time_Of_Day_MS / 3600000);
 
-// Reset
 GVL_INTENT_BEHAVIOR.I_Request_Night_Mode := FALSE;
 GVL_INTENT_BEHAVIOR.I_Request_Comfort_Mode := FALSE;
 GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost := FALSE;
@@ -35,17 +37,14 @@ GVL_INTENT_BEHAVIOR.I_Score_Preheat := 0;
 GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost := 0;
 GVL_INTENT_BEHAVIOR.I_Score_Access_Secure := 0;
 
-// Night
 IF (L_Hour >= GVL_SCENARIO_CONFIG.G_Night_Start_Hour) OR (L_Hour < GVL_SCENARIO_CONFIG.G_Night_End_Hour) THEN
     GVL_INTENT_BEHAVIOR.I_Score_Night := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_Night_Base_Score * L_Weights.W_Night);
 END_IF;
 
-// Preheat
 IF GVL_INPUT.IN_Preheat_Request THEN
     GVL_INTENT_BEHAVIOR.I_Score_Preheat := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_Preheat_Base_Score * L_Weights.W_Preheat);
 END_IF;
 
-// Vent boost
 L_BestVentScore := 0.0;
 L_BestVentZone := 0;
 
@@ -83,12 +82,10 @@ END_FOR;
 GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost := REAL_TO_INT(L_BestVentScore);
 GVL_INTENT_BEHAVIOR.I_Best_VentBoost_Zone := L_BestVentZone;
 
-// Access secure
 IF (L_Hour >= GVL_SCENARIO_CONFIG.G_Access_Secure_Start_Hour) OR (L_Hour < GVL_SCENARIO_CONFIG.G_Access_Secure_End_Hour) THEN
     GVL_INTENT_BEHAVIOR.I_Score_Access_Secure := REAL_TO_INT(GVL_SCENARIO_CONFIG.G_AccessSecure_Base_Score * L_Weights.W_AccessSecure);
 END_IF;
 
-// Activate flags
 IF GVL_INTENT_BEHAVIOR.I_Score_Night >= GVL_SCENARIO_CONFIG.G_Night_Activation_Threshold THEN
     GVL_INTENT_BEHAVIOR.I_Request_Night_Mode := TRUE;
 END_IF;
@@ -105,13 +102,11 @@ IF GVL_INTENT_BEHAVIOR.I_Score_Access_Secure >= GVL_SCENARIO_CONFIG.G_AccessSecu
     GVL_INTENT_BEHAVIOR.I_Request_Access_Secure_Mode := TRUE;
 END_IF;
 
-// Multi-objective weights
 GVL_INTENT_BEHAVIOR.I_Weight_Night := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Night) / 100.0;
 GVL_INTENT_BEHAVIOR.I_Weight_Comfort := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Comfort) / 100.0;
 GVL_INTENT_BEHAVIOR.I_Weight_Vent_Boost := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost) / 100.0;
 GVL_INTENT_BEHAVIOR.I_Weight_Access_Secure := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Access_Secure) / 100.0;
 
-// Scenario text
 IF GVL_INTENT_BEHAVIOR.I_Request_Night_Mode THEN
     GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text := 'Night mode';
 ELSIF GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost THEN
@@ -127,6 +122,24 @@ END_IF;
 GVL_INTENT_BEHAVIOR.I_Reason_Text := GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text;
 GVL_INTENT_BEHAVIOR.I_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
-fbTrace(iLayer:=TRACE_SCENARIO,iSource:=SRC_SCENARIO,iReason:=REASON_SCENARIO_VENT_BOOST,iValueBool:=GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost,iValueReal:=TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost),iText:=GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text);
+L_Trace_Changed :=
+    (GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text <> L_Last_Selected_Scenario_Text)
+    OR (GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost <> L_Last_Vent_Boost_Request)
+    OR (GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost <> L_Last_Vent_Boost_Score);
+
+IF L_Trace_Changed THEN
+    fbTrace(
+        iLayer := TRACE_SCENARIO,
+        iSource := SRC_SCENARIO,
+        iReason := REASON_SCENARIO_VENT_BOOST,
+        iValueBool := GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost,
+        iValueReal := TO_REAL(GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost),
+        iText := GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text
+    );
+
+    L_Last_Selected_Scenario_Text := GVL_INTENT_BEHAVIOR.I_Selected_Scenario_Text;
+    L_Last_Vent_Boost_Request := GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost;
+    L_Last_Vent_Boost_Score := GVL_INTENT_BEHAVIOR.I_Score_Vent_Boost;
+END_IF;
 
 END_PROGRAM
