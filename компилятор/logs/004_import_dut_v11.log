@@ -2,12 +2,12 @@ DUT_FILES=167
 REMOVED_OLD_DUT_DATATYPES=66
 ENUM_INSERTED=45
 STRUCT_INSERTED=122
-STRUCT_FIELDS_TOTAL=1560
-STRUCT_FIELDS_WITH_INITIALIZER=146
-INITIALIZERS_INSERTED=146
+STRUCT_FIELDS_TOTAL=1565
+STRUCT_FIELDS_WITH_INITIALIZER=151
+INITIALIZERS_INSERTED=151
 ARRAY_INITIALIZERS_INSERTED=4
 UNSUPPORTED_INITIALIZERS=0
-XML_INITIALVALUE_TAGS=3164
+XML_INITIALVALUE_TAGS=3169
 XML_ARRAYVALUE_TAGS=27
 
 E_ALERT_PRIORITY.dut: ENUM E_ALERT_PRIORITY values=5
@@ -78,7 +78,7 @@ ST_Distributed_Topology_Domain.dut: STRUCT ST_Distributed_Topology_Domain fields
 ST_EVENT.dut: STRUCT ST_EVENT fields=5
 ST_Flood_Config.dut: STRUCT ST_Flood_Config fields=4
 ST_Flood_Global_Config.dut: STRUCT ST_Flood_Global_Config fields=4
-ST_FloorHeating_Circuit_Config.dut: STRUCT ST_FloorHeating_Circuit_Config fields=11
+ST_FloorHeating_Circuit_Config.dut: STRUCT ST_FloorHeating_Circuit_Config fields=16
 ST_FloorHeating_Global_Config.dut: STRUCT ST_FloorHeating_Global_Config fields=5
 ST_FloorHeating_Manifold_Config.dut: STRUCT ST_FloorHeating_Manifold_Config fields=5
 ST_Forensic_Journal_Record.dut: STRUCT ST_Forensic_Journal_Record fields=17
@@ -201,7 +201,7 @@ STRUCT ST_Distributed_Topology_Domain: total=17 with_initializer=0 without_initi
 STRUCT ST_EVENT: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Flood_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=1 unsupported_initializer=0
 STRUCT ST_Flood_Global_Config: total=4 with_initializer=4 without_initializer=0 array_initializer=2 unsupported_initializer=0
-STRUCT ST_FloorHeating_Circuit_Config: total=11 with_initializer=11 without_initializer=0 array_initializer=0 unsupported_initializer=0
+STRUCT ST_FloorHeating_Circuit_Config: total=16 with_initializer=16 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_FloorHeating_Global_Config: total=5 with_initializer=5 without_initializer=0 array_initializer=0 unsupported_initializer=0
 STRUCT ST_FloorHeating_Manifold_Config: total=5 with_initializer=0 without_initializer=5 array_initializer=0 unsupported_initializer=0
 STRUCT ST_Forensic_Journal_Record: total=17 with_initializer=0 without_initializer=17 array_initializer=0 unsupported_initializer=0
