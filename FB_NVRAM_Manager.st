@@ -21,10 +21,13 @@ VAR
     L_cmd_rising                : BOOL;
     L_i                         : UDINT;
     L_Data_Changed              : BOOL; // Флаг изменения данных
-    L_pData                      : POINTER TO BYTE;
+    L_pData                     : POINTER TO BYTE;
 END_VAR
 VAR CONSTANT
-    C_MAX_NVRAM_SIZE            : UDINT := 12800;
+    // Must match GVL_Retain.G_NVRAM_Data upper bound + 1.
+    // Active persistent snapshot currently writes 5 bytes; 512 bytes are kept
+    // as conservative compact reserve for future settings records.
+    C_MAX_NVRAM_SIZE            : UDINT := 512;
 END_VAR
 
 // Детекция фронта команды
@@ -66,14 +69,14 @@ IF L_cmd_rising THEN
     END_IF;
 
     IF VI_Command = 2 THEN
-    VO_Error := TRUE;
-    VO_ErrorID := 16#150D;
-    VO_HMI_Status_Message := 'NVRAM: READ not implemented';
-    VO_Done := TRUE;
-    RETURN;
-END_IF;
+        VO_Error := TRUE;
+        VO_ErrorID := 16#150D;
+        VO_HMI_Status_Message := 'NVRAM: READ not implemented';
+        VO_Done := TRUE;
+        RETURN;
+    END_IF;
 
-IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
+    IF VI_Command = 1 THEN // ЗАПИСЬ (WRITE)
         IF NOT VI_IsActivePLC THEN
             VO_Error := TRUE;
             VO_ErrorID := 16#1509;
