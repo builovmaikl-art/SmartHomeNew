@@ -250,4 +250,6 @@ GVL_HEATING_REQUEST.G_Target_Temperature := GVL_STATE.G_Target_Temperature;
 GVL_STATE.G_Freeze_Request :=
     (GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_FREEZE_PROTECTION);
 GVL_HEATING_REQUEST.G_Freeze_Request := GVL_STATE.G_Freeze_Request;
+
+PRG_Away_Restore_Manager();
 END_PROGRAM
