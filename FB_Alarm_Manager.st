@@ -169,8 +169,6 @@ FOR L_j := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
     END_IF;
 END_FOR;
 
-
-
 // Обработка очереди новых тревог с учетом приоритетов
 FOR L_i := 1 TO L_Pending_Count DO
 
@@ -279,7 +277,6 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
     END_IF;
 END_FOR;
 
-
 // 6. Подсчет статистики и формирование глобальных флагов
 VO_Global_Critical := FALSE;
 VO_Global_Warning := FALSE;
@@ -298,8 +295,8 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ALARMS DO
             
             IF VO_Alarm_List[L_i].Severity = E_ALERT_PRIORITY.ALERT_PRIORITY_CRITICAL THEN
                 VO_Global_Critical := TRUE;
-                // Сирена работает только для неквитированных критических тревог, если не включен Mute
-                IF NOT VI_Mute_Siren THEN
+                // Сирена работает только для активных неквитированных критических тревог, если не включен Mute
+                IF VO_Alarm_List[L_i].Is_Active AND NOT VI_Mute_Siren THEN
                     VO_Siren_Active := TRUE;
                 END_IF;
             ELSIF VO_Alarm_List[L_i].Severity = E_ALERT_PRIORITY.ALERT_PRIORITY_HIGH THEN
