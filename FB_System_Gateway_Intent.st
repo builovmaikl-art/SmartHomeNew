@@ -17,13 +17,13 @@ VAR
     L_Gateway_Flood_Alarm_Active : BOOL;
     L_Gateway_Gas_Alarm_Active : BOOL;
     L_Gateway_Fire_Alarm_Active : BOOL;
+    L_Command_Received_Allowed : BOOL;
 END_VAR
 
-// Gateway telemetry must expose authoritative safety truth and latches,
-// not stale alarm projection fields.
 L_Gateway_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;
 L_Gateway_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_STATE.G_Safety_Gas_Latched;
 L_Gateway_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;
+L_Command_Received_Allowed := GVL_GATEWAY.G_Gateway_Command_Received AND VI_Gateway_Writes_Allowed;
 
 VIO_Scenario_Req_Gateway := SCENARIO_NONE;
 
@@ -31,7 +31,7 @@ fbGateway(
     VI_System_Time_MS := VI_System_Time_MS,
     VI_Local_PLC_Role := SEL(VI_IsActivePLC, E_PLC_ROLE.ROLE_STANDBY, E_PLC_ROLE.ROLE_ACTIVE),
     VI_Incoming_Command := GVL_GATEWAY.G_Gateway_Command,
-    VI_Command_Received := GVL_GATEWAY.G_Gateway_Command_Received,
+    VI_Command_Received := L_Command_Received_Allowed,
     VI_FloorHeating_Temps := VIO_FloorHeating_Temps,
     VI_Room_Temps := GVL_STATE.G_Room_Temps,
     VI_Zone_Valve_States := VIO_Zone_Valve_States,
@@ -66,7 +66,7 @@ fbGateway(
     VO_Reset_Errors_Req => GVL_COMMAND.G_Reset_Errors
 );
 
-IF fbGateway.VO_Set_Scenario_Req THEN
+IF VI_Gateway_Writes_Allowed AND fbGateway.VO_Set_Scenario_Req THEN
     VIO_Scenario_Req_Gateway := fbGateway.VO_Target_Scenario;
 END_IF;
 
