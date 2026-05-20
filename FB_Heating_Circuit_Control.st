@@ -58,6 +58,11 @@ VAR
     L_Reason_Code : UINT;
     L_Reason_Text : STRING(128);
     L_Selected_Source_Text : STRING(64);
+    L_Comfort_Target : REAL;
+    L_Economy_Target : REAL;
+    L_Long_Away_Target : REAL;
+    L_Effective_Target : REAL;
+    L_Max_Target : REAL;
 
     L_Prev_Selected_Source_Code : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF UINT;
     L_Prev_Fallback_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF BOOL;
@@ -225,7 +230,72 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
         VO_Zone_Valves[L_i] := FALSE;
     ELSE
         L_Zone_Config := VI_Zone_Configs[L_i];
-        L_Zone_Config.design_temp := L_Zone_Config.design_temp + VI_Scenario_Adjust;
+
+        IF L_Zone_Config.comfort_temp > REAL#0.0 THEN
+            L_Comfort_Target := L_Zone_Config.comfort_temp;
+        ELSE
+            L_Comfort_Target := L_Zone_Config.design_temp;
+        END_IF;
+
+        IF L_Zone_Config.economy_temp > REAL#0.0 THEN
+            L_Economy_Target := L_Zone_Config.economy_temp;
+        ELSE
+            L_Economy_Target := L_Comfort_Target - REAL#3.0;
+        END_IF;
+
+        IF L_Zone_Config.long_away_temp > REAL#0.0 THEN
+            L_Long_Away_Target := L_Zone_Config.long_away_temp;
+        ELSE
+            L_Long_Away_Target := GVL_POLICY.G_Away_Long_Economy_Setpoint_C;
+        END_IF;
+
+        L_Effective_Target := L_Comfort_Target;
+
+        // Unused rooms may stay in economy even in normal mode.
+        IF NOT L_Zone_Config.use_in_normal THEN
+            L_Effective_Target := L_Economy_Target;
+        END_IF;
+
+        IF GVL_POLICY.G_Away_Active THEN
+            CASE GVL_POLICY.G_Away_Level OF
+                1:
+                    IF L_Zone_Config.use_in_normal THEN
+                        L_Effective_Target := L_Comfort_Target + GVL_POLICY.G_Away_Heating_Offset_C;
+                    ELSE
+                        L_Effective_Target := L_Economy_Target;
+                    END_IF;
+                2:
+                    L_Effective_Target := L_Economy_Target;
+                3:
+                    L_Effective_Target := L_Long_Away_Target;
+            ELSE
+                    ;
+            END_CASE;
+
+            // Planned return preheat warms only rooms selected in configuration.
+            IF GVL_POLICY.G_Away_Return_Preheat_Active AND L_Zone_Config.use_in_away_preheat THEN
+                L_Effective_Target := L_Comfort_Target;
+            END_IF;
+        END_IF;
+
+        IF (L_Climate_Zone_ID >= 1) AND (L_Climate_Zone_ID <= GVL_CONSTANTS.C_MAX_ZONES) THEN
+            L_Effective_Target := L_Effective_Target + GVL_HEATING_POLICY.G_Zone_Target_Adjustment[L_Climate_Zone_ID];
+        END_IF;
+
+        L_Effective_Target := L_Effective_Target + VI_Scenario_Adjust;
+
+        L_Max_Target := L_Zone_Config.max_temp;
+        IF L_Max_Target <= REAL#0.0 THEN
+            L_Max_Target := REAL#45.0;
+        END_IF;
+
+        IF L_Effective_Target < REAL#5.0 THEN
+            L_Effective_Target := REAL#5.0;
+        ELSIF L_Effective_Target > L_Max_Target THEN
+            L_Effective_Target := L_Max_Target;
+        END_IF;
+
+        L_Zone_Config.design_temp := L_Effective_Target;
 
         L_Floor_Controllers[L_i](
             VI_Current_Temp := L_Current_Temp,
