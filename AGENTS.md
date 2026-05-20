@@ -64,7 +64,105 @@ If terminal/full-repository execution is unavailable, use Analytical Verificatio
 
 ---
 
-## 4. File integrity rule
+## 4. GitHub agent tools and fallbacks
+
+The connected GitHub agent can normally provide these tool groups. Always use the actual tool names exposed in the current session.
+
+### 4.1 Available tool groups
+
+```text
+Access / permissions:
+- get_user_login
+- get_profile
+- get_repo
+- get_repo_collaborator_permission
+- check_repo_initialized
+
+Repository read / inspection:
+- fetch_file
+- fetch
+- fetch_blob
+- fetch_commit
+- compare_commits
+- search
+- search_commits
+- search_branches
+
+Normal file mutation:
+- create_file
+- update_file
+- delete_file
+
+Low-level git mutation:
+- create_blob
+- create_tree
+- create_commit
+- update_ref
+- create_branch
+
+Pull request / issue workflow:
+- create_pull_request
+- fetch_pr
+- fetch_pr_patch
+- get_pr_diff
+- get_pr_info
+- add_review_to_pr
+- create_issue
+- update_issue
+- add_comment_to_issue
+
+GitHub Actions inspection:
+- fetch_commit_workflow_runs
+- fetch_workflow_run_jobs
+- fetch_workflow_job_logs
+- fetch_workflow_job_steps
+- fetch_workflow_run_artifacts
+- get_commit_combined_status
+```
+
+Use contents API operations (`create_file`, `update_file`, `delete_file`) for ordinary file changes. Use low-level git operations only when contents API operations are insufficient or blocked.
+
+### 4.2 Known connector difficulties
+
+Known issues:
+
+```text
+- fetch_file works on files, not directories
+- repository search may miss files or return incomplete discovery results
+- delete_file may fail or be blocked even when repository permissions are valid
+- main may move while work is in progress because GitHub Actions or another actor pushed new commits
+- large diffs or large files may be truncated in tool output
+- local clone / terminal / compiler access may be unavailable
+```
+
+Safe fallbacks:
+
+```text
+- for directory discovery, combine search with direct fetch_file checks for known paths
+- for directory removal, use a low-level tree commit and verify the path returns 404 afterward
+- for file removal when delete_file fails, use a low-level tree commit that removes only the intended path
+- before update_ref, inspect the prepared commit with fetch_commit
+- update main only as fast-forward unless the user explicitly requests otherwise
+- if update_ref reports a non-fast-forward update, fetch current main again and recreate the commit on top of the new head
+- after automation pushes, re-check current main before continuing
+- for large diffs, verify by changed file list and targeted fetch_file calls
+- if build execution is unavailable, report only repository file-state or analytical verification
+```
+
+Low-level safe mutation sequence:
+
+```text
+1. fetch current main
+2. prepare a tree from current main
+3. create a commit with current main as parent
+4. inspect the new commit diff
+5. update main with a fast-forward ref update
+6. verify changed files by fetch_file or expected 404
+```
+
+---
+
+## 5. File integrity rule
 
 After every repository modification:
 
@@ -94,7 +192,7 @@ fetch full file → prepare complete replacement → update file → fetch again
 
 ---
 
-## 5. Runtime authority boundaries
+## 6. Runtime authority boundaries
 
 Preserve deterministic runtime authority separation.
 
@@ -114,7 +212,7 @@ Observability, explainability, trace, diagnostics, debug views, dashboards, and 
 
 ---
 
-## 6. Ownership rules
+## 7. Ownership rules
 
 ### Input
 
@@ -156,7 +254,7 @@ They must not control runtime outputs.
 
 ---
 
-## 7. HMI / dashboard rule
+## 8. HMI / dashboard rule
 
 HMI and dashboard surfaces are read-only by default.
 
@@ -183,7 +281,7 @@ HMI → hidden safety bypass
 
 ---
 
-## 8. Editing discipline
+## 9. Editing discipline
 
 Use deterministic anchors when they already exist:
 
@@ -201,7 +299,7 @@ Do not add runtime layers unless they are connected into the actual execution fl
 
 ---
 
-## 9. Cleanup discipline
+## 10. Cleanup discipline
 
 Cleanup is allowed only when it follows the user's current instruction and current repository state.
 
@@ -223,7 +321,7 @@ They may be removed when requested and must not override current code or `AGENTS
 
 ---
 
-## 10. Mandatory runtime checks after code changes
+## 11. Mandatory runtime checks after code changes
 
 For runtime-affecting changes, check at minimum:
 
@@ -241,7 +339,7 @@ If these checks are analytical only, state that clearly.
 
 ---
 
-## 11. Forbidden patterns
+## 12. Forbidden patterns
 
 ```text
 - using chat memory as repository truth
