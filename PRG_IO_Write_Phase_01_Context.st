@@ -32,6 +32,7 @@ GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Execution_Block :=
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_Global_Hard_Stop :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
+    OR (GVL_SAFETY_RECOVERY.G_Recovery_Phase <> IDLE)
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_PreOutput_Block_IO
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Freshness_Block
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block
@@ -85,7 +86,7 @@ GVL_IO_WRITE_RUNTIME_BUFFER.B_Access_Safety_Override :=
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS);
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_Access_Forced_Off :=
-    GVL_SAFETY_RECOVERY.G_Recovery_Active
+    (GVL_SAFETY_RECOVERY.G_Recovery_Phase <> IDLE)
     AND NOT GVL_IO_WRITE_RUNTIME_BUFFER.B_Access_Safety_Override;
 
 // >>> BULK_SYNC_ANCHOR: PRG_IO_Write_Phase_01_Context <<<
