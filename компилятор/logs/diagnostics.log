@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4268
+total 4264
 -rw-r--r--  1 runner runner  13067 May 20 10:54 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 12 runner runner  45056 May 20 10:54 .
 drwxr-xr-x  3 runner runner   4096 May 20 10:54 ..
@@ -788,7 +788,7 @@ drwxr-xr-x  5 runner runner   4096 May 20 10:54 компилятор
 -rw-r--r--  1 runner runner  11783 May 20 10:54 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 May 20 10:54 .
 drwxr-xr-x 12 runner runner  45056 May 20 10:54 ..
 -rw-r--r--  1 runner runner  21153 May 20 10:54 001_universal_pou_builder_METHODS_V2.py
