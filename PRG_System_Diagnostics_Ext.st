@@ -12,6 +12,9 @@ VAR
     L_Cycle_MS : UDINT;
     L_Prev_Overrun : BOOL;
     L_Prev_Critical : BOOL;
+    L_Prev_Error_Heating : BOOL;
+    L_Prev_Error_Safety : BOOL;
+    L_Prev_Error_IO : BOOL;
     fbLog : FB_LogEvent;
 END_VAR
 
@@ -113,7 +116,9 @@ L_Error_Safety :=
 L_Error_IO := GVL_STATE.G_Heating_IO_Fault;
 
 IF L_Error_Heating THEN
-    GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating := GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating + 1;
+    IF NOT L_Prev_Error_Heating THEN
+        GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating := GVL_DIAGNOSTICS_EXT.G_Error_Count_Heating + 1;
+    END_IF;
     GVL_DIAGNOSTICS_EXT.G_Last_Error_Time_Heating := L_Now;
     GVL_DIAGNOSTICS_EXT.G_Health_Heating := GVL_DIAGNOSTICS_EXT.G_Health_Heating - (0.5 * L_Delta_Time);
 ELSE
@@ -121,7 +126,9 @@ ELSE
 END_IF;
 
 IF L_Error_Safety THEN
-    GVL_DIAGNOSTICS_EXT.G_Error_Count_Safety := GVL_DIAGNOSTICS_EXT.G_Error_Count_Safety + 1;
+    IF NOT L_Prev_Error_Safety THEN
+        GVL_DIAGNOSTICS_EXT.G_Error_Count_Safety := GVL_DIAGNOSTICS_EXT.G_Error_Count_Safety + 1;
+    END_IF;
     GVL_DIAGNOSTICS_EXT.G_Last_Error_Time_Safety := L_Now;
     GVL_DIAGNOSTICS_EXT.G_Health_Safety := GVL_DIAGNOSTICS_EXT.G_Health_Safety - (1.0 * L_Delta_Time);
 ELSE
@@ -129,12 +136,18 @@ ELSE
 END_IF;
 
 IF L_Error_IO THEN
-    GVL_DIAGNOSTICS_EXT.G_Error_Count_IO := GVL_DIAGNOSTICS_EXT.G_Error_Count_IO + 1;
+    IF NOT L_Prev_Error_IO THEN
+        GVL_DIAGNOSTICS_EXT.G_Error_Count_IO := GVL_DIAGNOSTICS_EXT.G_Error_Count_IO + 1;
+    END_IF;
     GVL_DIAGNOSTICS_EXT.G_Last_Error_Time_IO := L_Now;
     GVL_DIAGNOSTICS_EXT.G_Health_IO := GVL_DIAGNOSTICS_EXT.G_Health_IO - (0.5 * L_Delta_Time);
 ELSE
     GVL_DIAGNOSTICS_EXT.G_Health_IO := GVL_DIAGNOSTICS_EXT.G_Health_IO + (0.1 * L_Delta_Time);
 END_IF;
+
+L_Prev_Error_Heating := L_Error_Heating;
+L_Prev_Error_Safety := L_Error_Safety;
+L_Prev_Error_IO := L_Error_IO;
 
 // clamp
 IF GVL_DIAGNOSTICS_EXT.G_Health_Heating < 0.0 THEN GVL_DIAGNOSTICS_EXT.G_Health_Heating := 0.0; END_IF;
