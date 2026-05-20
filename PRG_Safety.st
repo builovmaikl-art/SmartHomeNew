@@ -40,6 +40,7 @@ fbWaterLeakageManager(
     VO_Leak_Warning_Level => GVL_HEALTH_BRIDGE.G_Leak_Warning_Level
 );
 GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
+GVL_INTENT_SAFETY.I_Water_Main_Close_Required := GVL_HEALTH_BRIDGE.G_Leak_Detected;
 
 fbGasSmokeManager(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
@@ -57,6 +58,9 @@ fbGasSmokeManager(
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
 GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
+GVL_INTENT_SAFETY.I_Gas_Close_Required := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
+GVL_INTENT_SAFETY.I_Boiler_Stop_Required := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
+GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
 
 // Ownership watchdog must observe authoritative safety truth, not stale
 // projected GVL_STATE.G_Safety_*_Alarm compatibility fields.
