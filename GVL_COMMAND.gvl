@@ -3,15 +3,17 @@ VAR_GLOBAL
     // ======================================================
     // LEGACY / OPERATOR COMMAND REQUEST SURFACE
     // ======================================================
-    // This GVL is retained as legacy/operator command request
-    // surface and comparison source for command verification.
-    //
+    // This GVL is retained as a legacy/operator request surface.
     // Runtime operational command ownership lives in
     // GVL_COMMAND_SHADOW and is published by PRG_Command_Arbitration.
     //
-    // PreOutput and Command_Verifier may compare this surface against
-    // GVL_COMMAND_SHADOW, but must not treat GVL_COMMAND as final
-    // physical output authority.
+    // Physical publication must not use GVL_COMMAND as final
+    // output authority. Final actuator intent flows through:
+    //   operator/safety/rules -> command arbitration -> GVL_COMMAND_SHADOW
+    //   -> domain output GVLs -> PRG_IO_Write -> GVL_IO.
+    //
+    // Remaining direct GVL_COMMAND reads are limited to operator/service
+    // functions such as reset, access level, confirmation and valve tests.
     // ======================================================
 
     G_Gas_Valve_Close : BOOL := FALSE;
