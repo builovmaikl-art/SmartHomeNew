@@ -7,13 +7,12 @@ VAR
     L_Now_MS : UDINT;
     L_Prev_Runtime_Error : BOOL;
     L_Any_Manifold_Pump_On : BOOL;
+    L_Any_Vent_Fan_On : BOOL;
     fbLog : FB_LogEvent;
 END_VAR
 
 L_Now_MS := GVL_STATUS.G_System_Time_MS;
 
-// Command shadow is the current command ownership surface.
-// Legacy GVL_COMMAND mismatch is intentionally not treated as a verifier fault.
 GVL_COMMAND_VERIFY.Command_Mismatch_Count := 0;
 GVL_COMMAND_VERIFY.Command_Match_OK := TRUE;
 GVL_COMMAND_VERIFY.Command_Mismatch_Active := FALSE;
@@ -22,6 +21,7 @@ L_Runtime_Error := FALSE;
 L_Runtime_Error_Code := 0;
 L_Runtime_Error_Text := '';
 L_Any_Manifold_Pump_On := FALSE;
+L_Any_Vent_Fan_On := FALSE;
 
 IF (NOT L_Runtime_Error) AND (NOT GVL_STATUS.G_Is_Active_PLC) THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
@@ -50,7 +50,19 @@ IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) AND (NOT 
 END_IF;
 
 IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) THEN
-    IF (GVL_IO.AO_Supply_Fans[1] = 0) AND (GVL_IO.AO_Exhaust_Fans[1] = 0) THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        IF GVL_IO.AO_Supply_Fans[L_i] <> 0 THEN
+            L_Any_Vent_Fan_On := TRUE;
+        END_IF;
+    END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        IF GVL_IO.AO_Exhaust_Fans[L_i] <> 0 THEN
+            L_Any_Vent_Fan_On := TRUE;
+        END_IF;
+    END_FOR;
+
+    IF NOT L_Any_Vent_Fan_On THEN
         L_Runtime_Error := TRUE;
         L_Runtime_Error_Code := 3;
         L_Runtime_Error_Text := 'Gas ventilation inactive';
