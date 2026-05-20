@@ -109,8 +109,10 @@ IF GVL_AWAY_HEATING_HMI.G_Clear_Planned_Return_Req THEN
     GVL_AWAY_HEATING_HMI.G_Clear_Planned_Return_Req := FALSE;
 END_IF;
 
-// Gateway compatibility: CMD_SET_CONFIG with zone 0 configures/clears planned return.
-IF GVL_INTENT_USER.I_Set_Config_Req AND (GVL_INTENT_USER.I_Target_Zone = 0) THEN
+// Gateway compatibility: CMD_SET_CONFIG with target_zone=0 configures/clears planned return.
+IF GVL_INTENT_USER.I_Set_Config_Req AND
+   (GVL_GATEWAY.G_Gateway_Command.command_type = E_Gateway_Command_Type.CMD_SET_CONFIG) AND
+   (GVL_GATEWAY.G_Gateway_Command.target_zone = 0) THEN
     IF GVL_GATEWAY.G_Gateway_Command.target_on_off AND (GVL_GATEWAY.G_Gateway_Command.target_value > REAL#0.0) THEN
         L_Delay_MS := REAL_TO_UDINT(GVL_GATEWAY.G_Gateway_Command.target_value * REAL#3600000.0);
         GVL_POLICY.G_Away_Planned_Return_Enabled := TRUE;
