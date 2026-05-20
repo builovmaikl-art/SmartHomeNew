@@ -196,8 +196,13 @@ VO_Diagnostics.Manifold_Sensor_First_OOS_Index := SEL(L_Pressure_First > 0, SEL(
 VO_Diagnostics.Manifold_Sensor_OOS_Text := SEL(L_Any_Manifold_Fault, '', 'Manifold sensor out of service');
 
 VO_Publication_Valid := VI_Enable;
-VO_Status_Code := SEL(VI_Subsystem_Degraded OR VI_IO_Offline OR VI_Sensor_Fault OR L_Any_Manifold_Fault, 1, 900);
-VO_Status_Text := SEL(VO_Status_Code = 1, 'System diagnostics nominal', 'System diagnostics degraded');
+IF VI_Subsystem_Degraded OR VI_IO_Offline OR VI_Sensor_Fault OR L_Any_Manifold_Fault THEN
+    VO_Status_Code := 1;
+    VO_Status_Text := 'System diagnostics degraded';
+ELSE
+    VO_Status_Code := 0;
+    VO_Status_Text := 'System diagnostics nominal';
+END_IF;
 
 END_FUNCTION_BLOCK
 // >>> BULK_SYNC_ANCHOR: FB_System_Diagnostics_Publisher <<<
