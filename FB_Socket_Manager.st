@@ -24,6 +24,7 @@ VAR
     L_Rule_Active : BOOL;
     L_Internal_State : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     L_Manual_Trig : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF R_TRIG;
+    L_Restore_Trig : R_TRIG;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
@@ -40,6 +41,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MODULES DO
         RETURN;
     END_IF;
 END_FOR;
+
+L_Restore_Trig(CLK := GVL_AWAY_RESTORE.G_Restore_Active AND GVL_AWAY_RESTORE.G_Snapshot_Valid);
+IF L_Restore_Trig.Q AND NOT VI_Fire_Alarm AND NOT VI_Flood_Alarm THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
+        L_Internal_State[L_i] := GVL_AWAY_RESTORE.G_Socket_States[L_i];
+    END_FOR;
+END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
     L_Rule_Active := FALSE;
