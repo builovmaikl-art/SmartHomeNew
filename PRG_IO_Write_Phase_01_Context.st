@@ -1,5 +1,4 @@
 PROGRAM PRG_IO_Write_Phase_01_Context
-// IO write phase 01: derive output publication guards and domain forced-off flags.
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_PreOutput_Block_IO :=
     GVL_COMMAND_VERIFY.PreOutput_Block_IO;
@@ -32,7 +31,7 @@ GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Execution_Block :=
     OR NOT GVL_Distributed_Execution_Gates.G_Can_Own_Projection;
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_Global_Hard_Stop :=
-    GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP)
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_PreOutput_Block_IO
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Freshness_Block
     OR GVL_IO_WRITE_RUNTIME_BUFFER.B_Output_Publication_Block
@@ -62,7 +61,8 @@ GVL_IO_WRITE_RUNTIME_BUFFER.B_Fire_Siren_Authority :=
     OR GVL_STATE.G_Safety_Smoke_Latched;
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_Heating_Forced_Off :=
-    GVL_COMMAND_SHADOW.G_Heating_Block;
+    GVL_COMMAND_SHADOW.G_Heating_Block
+    OR GVL_COMMAND_SHADOW.G_Heating_Emergency_Stop;
 
 GVL_IO_WRITE_RUNTIME_BUFFER.B_Vent_Forced_Off :=
     GVL_COMMAND_SHADOW.G_Vent_Stop
