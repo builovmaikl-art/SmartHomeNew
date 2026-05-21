@@ -208,6 +208,15 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         VO_Lighting_Levels[L_i] := REAL_TO_BYTE(L_Restore_Level);
     END_IF;
 
+    // Entrance assist affects only configured corridor/stairs zones.
+    IF GVL_POLICY.G_Entrance_Light_Assist_Active THEN
+        IF L_i = GVL_CONFIG.G_Entrance_Corridor_Light_Zone THEN
+            VO_Lighting_Levels[L_i] := GVL_CONFIG.G_Entrance_Corridor_Light_Level;
+        ELSIF L_i = GVL_CONFIG.G_Entrance_Stairs_Light_Zone THEN
+            VO_Lighting_Levels[L_i] := GVL_CONFIG.G_Entrance_Stairs_Light_Level;
+        END_IF;
+    END_IF;
+
     // Security alarm boost: all lighting zones to 100% for the configured
     // five-minute window. This is intentionally applied inside the lighting
     // domain manager and after normal/restore calculations, not as direct IO.
