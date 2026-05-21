@@ -51,22 +51,46 @@ fbGasSmokeManager(
     VI_Mute_Request := GVL_CONFIG.G_HMI_Mute_Alarm,
     VO_Smoke_Detected => GVL_HEALTH_BRIDGE.G_Smoke_Detected,
     VO_Gas_Detected => GVL_HEALTH_BRIDGE.G_Gas_Detected,
+    VO_Methane_Warning_Level => GVL_HEALTH_BRIDGE.G_Methane_Warning_Level,
+    VO_Methane_Alarm_Level => GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level,
+    VO_Methane_Critical_Level => GVL_HEALTH_BRIDGE.G_Methane_Critical_Level,
     VO_CO_Warning_Level => GVL_HEALTH_BRIDGE.G_CO_Warning_Level,
     VO_CO_Alarm_Level => GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
     VO_Status_Msg => GVL_STATUS.G_Gas_Status_Msg
 );
+
 GVL_INTENT_SAFETY.I_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected;
-GVL_INTENT_SAFETY.I_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
+GVL_INTENT_SAFETY.I_Gas_Alarm_Active :=
+    GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level
+    OR GVL_HEALTH_BRIDGE.G_Methane_Critical_Level
+    OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level;
 GVL_INTENT_SAFETY.I_CO_Warning_Active := GVL_HEALTH_BRIDGE.G_CO_Warning_Level;
-GVL_INTENT_SAFETY.I_Gas_Close_Required := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
-GVL_INTENT_SAFETY.I_Boiler_Stop_Required := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
-GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := GVL_INTENT_SAFETY.I_Gas_Alarm_Active;
+
+// Methane 10% LEL warning: ventilation boost only.
+IF GVL_HEALTH_BRIDGE.G_Methane_Warning_Level THEN
+    GVL_INTENT_SAFETY.I_Vent_Force_PV3_Boost := TRUE;
+END_IF;
+
+// Methane 20% LEL alarm or CO alarm: close gas and stop boilers.
+IF GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level OR
+   GVL_HEALTH_BRIDGE.G_Methane_Critical_Level OR
+   GVL_HEALTH_BRIDGE.G_CO_Alarm_Level THEN
+    GVL_INTENT_SAFETY.I_Gas_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Boiler_Stop_Required := TRUE;
+END_IF;
+
+// Methane 40% LEL critical: full escalation.
+IF GVL_HEALTH_BRIDGE.G_Methane_Critical_Level THEN
+    GVL_INTENT_SAFETY.I_System_Safe_Stop_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Evacuation_Mode_Active := TRUE;
+    GVL_INTENT_SAFETY.I_Vent_Force_Supply_100 := TRUE;
+END_IF;
 
 // Ownership watchdog must observe authoritative safety truth, not stale
 // projected GVL_STATE.G_Safety_*_Alarm compatibility fields.
 fbOwnership(
     VI_Gas_Level := GVL_Safety_Selector.G_Methane_Effective_Array[GVL_CONSTANTS.C_PRIMARY_EFFECTIVE_GAS_INDEX],
-    VI_Gas_Alarm := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level,
+    VI_Gas_Alarm := GVL_INTENT_SAFETY.I_Gas_Alarm_Active,
     VI_Leak_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
     VI_Smoke_Alarm := GVL_HEALTH_BRIDGE.G_Smoke_Detected
 );
