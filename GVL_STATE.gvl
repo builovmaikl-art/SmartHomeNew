@@ -50,6 +50,9 @@ VAR_GLOBAL
     G_Physical_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     G_Socket_Switches : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     G_Outdoor_Temp : REAL;
+    G_Ambient_Lux : REAL;
+    G_Ambient_Lux_Valid : BOOL := FALSE;
+    G_Ambient_Lux_Sensor_Fault : BOOL := FALSE;
     G_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF REAL;
     G_DHW_Temp : REAL;
     G_DHW_Pressure : REAL;
