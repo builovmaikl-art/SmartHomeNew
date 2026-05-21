@@ -73,23 +73,52 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
         
         IF VI_Rules[L_i].Condition_Target_ID > 0 THEN
             CASE VI_Rules[L_i].Condition_Type OF
-                E_Rule_Condition_Type.COND_AIR_TEMP: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_FLOOR_TEMP: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_HUMIDITY: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_CO2: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_MOTION: IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
-                E_Rule_Condition_Type.COND_DOOR_WINDOW: 
+                E_Rule_Condition_Type.COND_AIR_TEMP:
+                    IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
+                        L_Current_Value := VI_Indoor_Temps[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_FLOOR_TEMP:
+                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS THEN
+                        L_Current_Value := VI_Floor_Temps[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_HUMIDITY:
+                    IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
+                        L_Current_Value := VI_Humidities[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_CO2:
+                    IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
+                        L_Current_Value := VI_CO2_Levels[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_MOTION:
+                    IF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
+                        L_Current_Value := SEL(VI_Motion_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
+                    END_IF;
+                E_Rule_Condition_Type.COND_DOOR_WINDOW:
                     IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_DOOR_SENSORS THEN
                         L_Current_Value := SEL(VI_Door_Sensors[VI_Rules[L_i].Condition_Target_ID] OR VI_Window_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
                     ELSIF VI_Rules[L_i].Condition_Target_ID <= 16 THEN
                         L_Current_Value := SEL(VI_Window_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
                     END_IF;
-                E_Rule_Condition_Type.COND_FLOOD: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
-                E_Rule_Condition_Type.COND_SMOKE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0); END_IF;
-                E_Rule_Condition_Type.COND_METHANE: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_CO: IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID]; END_IF;
-                E_Rule_Condition_Type.COND_TIME_OF_DAY: L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE);
-                E_Rule_Condition_Type.COND_DAY_OF_WEEK: L_Current_Value := TO_REAL(VI_Day_Of_Week);
+                E_Rule_Condition_Type.COND_FLOOD:
+                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS THEN
+                        L_Current_Value := SEL(VI_Water_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
+                    END_IF;
+                E_Rule_Condition_Type.COND_SMOKE:
+                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS THEN
+                        L_Current_Value := SEL(VI_Smoke_Sensors[VI_Rules[L_i].Condition_Target_ID], 0.0, 1.0);
+                    END_IF;
+                E_Rule_Condition_Type.COND_METHANE:
+                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_METHANE_SENSORS THEN
+                        L_Current_Value := VI_Methane_Sensors[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_CO:
+                    IF VI_Rules[L_i].Condition_Target_ID <= GVL_CONSTANTS.C_MAX_CO_SENSORS THEN
+                        L_Current_Value := VI_CO_Sensors[VI_Rules[L_i].Condition_Target_ID];
+                    END_IF;
+                E_Rule_Condition_Type.COND_TIME_OF_DAY:
+                    L_Current_Value := TO_REAL(TOD_TO_UDINT(VI_Current_Time) / GVL_CONSTANTS.C_MS_IN_MINUTE);
+                E_Rule_Condition_Type.COND_DAY_OF_WEEK:
+                    L_Current_Value := TO_REAL(VI_Day_Of_Week);
             END_CASE;
         ELSE
             IF VI_Rules[L_i].Condition_Type = E_Rule_Condition_Type.COND_TIME_OF_DAY THEN
@@ -100,14 +129,22 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
         END_IF;
         
         CASE VI_Rules[L_i].Condition_Op OF
-            E_Rule_Comparison.COMP_GT: L_Condition_Met := (L_Current_Value > VI_Rules[L_i].Condition_Value);
-            E_Rule_Comparison.COMP_LT: L_Condition_Met := (L_Current_Value < VI_Rules[L_i].Condition_Value);
-            E_Rule_Comparison.COMP_EQ: L_Condition_Met := (ABS(L_Current_Value - VI_Rules[L_i].Condition_Value) < 0.1);
-            E_Rule_Comparison.COMP_GE: L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value);
-            E_Rule_Comparison.COMP_LE: L_Condition_Met := (L_Current_Value <= VI_Rules[L_i].Condition_Value);
-            E_Rule_Comparison.COMP_IN_RANGE: L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value) AND (L_Current_Value <= VI_Rules[L_i].Condition_Value_Max);
-            E_Rule_Comparison.COMP_TRUE: L_Condition_Met := (L_Current_Value > 0.5);
-            E_Rule_Comparison.COMP_FALSE: L_Condition_Met := (L_Current_Value < 0.5);
+            E_Rule_Comparison.COMP_GT:
+                L_Condition_Met := (L_Current_Value > VI_Rules[L_i].Condition_Value);
+            E_Rule_Comparison.COMP_LT:
+                L_Condition_Met := (L_Current_Value < VI_Rules[L_i].Condition_Value);
+            E_Rule_Comparison.COMP_EQ:
+                L_Condition_Met := (ABS(L_Current_Value - VI_Rules[L_i].Condition_Value) < 0.1);
+            E_Rule_Comparison.COMP_GE:
+                L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value);
+            E_Rule_Comparison.COMP_LE:
+                L_Condition_Met := (L_Current_Value <= VI_Rules[L_i].Condition_Value);
+            E_Rule_Comparison.COMP_IN_RANGE:
+                L_Condition_Met := (L_Current_Value >= VI_Rules[L_i].Condition_Value) AND (L_Current_Value <= VI_Rules[L_i].Condition_Value_Max);
+            E_Rule_Comparison.COMP_TRUE:
+                L_Condition_Met := (L_Current_Value > 0.5);
+            E_Rule_Comparison.COMP_FALSE:
+                L_Condition_Met := (L_Current_Value < 0.5);
         END_CASE;
         
         L_Triggers[L_i](CLK := L_Condition_Met);
@@ -125,6 +162,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
             VO_Actions[L_i].Action_Type := VI_Rules[L_i].Action_Type;
             VO_Actions[L_i].Target_ID := VI_Rules[L_i].Action_Target_ID;
             VO_Actions[L_i].Value := VI_Rules[L_i].Action_Value;
+
+            // Bridge rule-driven heating intent to policy. Per-circuit valve
+            // projection remains owned by FB_Heating_Circuit_Control.
+            IF (VI_Rules[L_i].Action_Type = E_Rule_Action_Type.ACTION_SET_FLOOR_HEATING) AND
+               (VI_Rules[L_i].Action_Value > REAL#0.5) THEN
+                VO_Preheat_Request := TRUE;
+            END_IF;
         END_IF;
     END_IF;
 END_FOR;
