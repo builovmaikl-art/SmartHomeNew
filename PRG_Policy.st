@@ -5,10 +5,15 @@ VAR
     L_Return_Delta_MS : UDINT;
     L_Return_Grace_Elapsed_MS : UDINT;
     L_Security_Boost_Elapsed_MS : UDINT;
+    L_Entrance_Assist_Elapsed_MS : UDINT;
     L_Away_Return_Window_Reached : BOOL;
+    L_Entrance_Door_Open : BOOL;
+    L_Entrance_Dark_Active : BOOL;
+    L_Entrance_Motion_Active : BOOL;
     L_Previous_Away_Active : BOOL := FALSE;
     L_Previous_Away_Level : BYTE := 0;
     L_Security_Alarm_Prev : BOOL := FALSE;
+    L_Entrance_Door_Open_Prev : BOOL := FALSE;
 END_VAR
 
 GVL_POLICY.G_Away_Restore_Requested := FALSE;
@@ -133,6 +138,60 @@ IF GVL_POLICY.G_Security_Alarm_Light_Boost_Active THEN
 
     IF L_Security_Boost_Elapsed_MS >= GVL_POLICY.G_Security_Alarm_Light_Boost_Duration_MS THEN
         GVL_POLICY.G_Security_Alarm_Light_Boost_Active := FALSE;
+    END_IF;
+END_IF;
+
+// 6. Entrance lighting assist.
+// Trigger: entrance door rising edge while dark by configured source.
+L_Entrance_Door_Open := FALSE;
+IF (GVL_CONFIG.G_Entrance_Door_1_Index >= 1) AND (GVL_CONFIG.G_Entrance_Door_1_Index <= GVL_CONSTANTS.C_MAX_DOOR_SENSORS) THEN
+    L_Entrance_Door_Open := L_Entrance_Door_Open OR GVL_STATE.G_Door_Sensors[GVL_CONFIG.G_Entrance_Door_1_Index];
+END_IF;
+IF (GVL_CONFIG.G_Entrance_Door_2_Index >= 1) AND (GVL_CONFIG.G_Entrance_Door_2_Index <= GVL_CONSTANTS.C_MAX_DOOR_SENSORS) THEN
+    L_Entrance_Door_Open := L_Entrance_Door_Open OR GVL_STATE.G_Door_Sensors[GVL_CONFIG.G_Entrance_Door_2_Index];
+END_IF;
+
+L_Entrance_Dark_Active := FALSE;
+IF GVL_CONFIG.G_Entrance_Light_Assist_Fallback_To_Night THEN
+    L_Entrance_Dark_Active := GVL_STATUS.G_Is_Night;
+END_IF;
+IF GVL_CONFIG.G_Entrance_Light_Assist_Use_Lux_Sensor AND GVL_STATE.G_Ambient_Lux_Valid THEN
+    L_Entrance_Dark_Active := L_Entrance_Dark_Active OR (GVL_STATE.G_Ambient_Lux < GVL_CONFIG.G_Entrance_Light_Assist_Lux_Threshold);
+END_IF;
+GVL_POLICY.G_Entrance_Light_Assist_Dark_Active := L_Entrance_Dark_Active;
+
+IF GVL_CONFIG.G_Entrance_Light_Assist_Duration_MS = 0 THEN
+    GVL_CONFIG.G_Entrance_Light_Assist_Duration_MS := 300000;
+END_IF;
+
+IF GVL_CONFIG.G_Entrance_Light_Assist_Enabled AND
+   L_Entrance_Door_Open AND (NOT L_Entrance_Door_Open_Prev) AND
+   L_Entrance_Dark_Active THEN
+    GVL_POLICY.G_Entrance_Light_Assist_Active := TRUE;
+    GVL_POLICY.G_Entrance_Light_Assist_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+END_IF;
+
+L_Entrance_Motion_Active := FALSE;
+IF (GVL_CONFIG.G_Entrance_Corridor_Light_Zone >= 1) AND (GVL_CONFIG.G_Entrance_Corridor_Light_Zone <= GVL_CONSTANTS.C_MAX_LIGHT_ZONES) THEN
+    L_Entrance_Motion_Active := L_Entrance_Motion_Active OR GVL_STATE.G_Motion_Sensors[GVL_CONFIG.G_Entrance_Corridor_Light_Zone];
+END_IF;
+IF (GVL_CONFIG.G_Entrance_Stairs_Light_Zone >= 1) AND (GVL_CONFIG.G_Entrance_Stairs_Light_Zone <= GVL_CONSTANTS.C_MAX_LIGHT_ZONES) THEN
+    L_Entrance_Motion_Active := L_Entrance_Motion_Active OR GVL_STATE.G_Motion_Sensors[GVL_CONFIG.G_Entrance_Stairs_Light_Zone];
+END_IF;
+
+IF GVL_POLICY.G_Entrance_Light_Assist_Active THEN
+    IF L_Entrance_Motion_Active THEN
+        GVL_POLICY.G_Entrance_Light_Assist_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+    END_IF;
+
+    IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Entrance_Light_Assist_Start_MS THEN
+        L_Entrance_Assist_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Entrance_Light_Assist_Start_MS;
+    ELSE
+        L_Entrance_Assist_Elapsed_MS := (4294967295 - GVL_POLICY.G_Entrance_Light_Assist_Start_MS) + GVL_TIME_SERVICE.G_Now_MS + 1;
+    END_IF;
+
+    IF L_Entrance_Assist_Elapsed_MS >= GVL_CONFIG.G_Entrance_Light_Assist_Duration_MS THEN
+        GVL_POLICY.G_Entrance_Light_Assist_Active := FALSE;
     END_IF;
 END_IF;
 
@@ -279,6 +338,7 @@ END_IF;
 L_Previous_Away_Active := GVL_POLICY.G_Away_Active;
 L_Previous_Away_Level := GVL_POLICY.G_Away_Level;
 L_Security_Alarm_Prev := GVL_ALARM.G_Security_Alarm;
+L_Entrance_Door_Open_Prev := L_Entrance_Door_Open;
 
 // 5. Heating bridge
 // Policy publishes preheat intent only. Actual per-circuit comfort/economy
