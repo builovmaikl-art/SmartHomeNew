@@ -18,6 +18,7 @@ VAR_GLOBAL
 
     // Sensor calibration pipeline
     G_Calib_Outdoor_Temp : ST_Sensor_Calibration_Record;
+    G_Calib_Ambient_Lux : ST_Sensor_Calibration_Record;
     G_Calib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF ST_Sensor_Calibration_Record;
     G_Calib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
     G_Calib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF ST_Sensor_Calibration_Record;
