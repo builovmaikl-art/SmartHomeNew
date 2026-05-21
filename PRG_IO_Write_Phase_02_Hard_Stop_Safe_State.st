@@ -52,8 +52,18 @@ GVL_IO.DO_Lock_1_Close := FALSE;
 GVL_IO.DO_Lock_2_Open := FALSE;
 GVL_IO.DO_Lock_2_Close := FALSE;
 
+// Water hard-stop safe state: cancel all open commands and command closing for
+// all local riser valves plus common inlet 35/36.
+GVL_IO.DO_Water_Valve_35_Open := FALSE;
 GVL_IO.DO_Water_Valve_35_Close := TRUE;
+GVL_IO.DO_Water_Valve_36_Open := FALSE;
 GVL_IO.DO_Water_Valve_36_Close := TRUE;
+
+FOR L_i := 1 TO 6 DO
+    GVL_IO.DO_Water_Local_Valve_Open[L_i] := FALSE;
+    GVL_IO.DO_Water_Local_Valve_Close[L_i] := TRUE;
+END_FOR;
+
 GVL_IO.DO_Gas_Valve_Close := TRUE;
 
 GVL_IO.DO_Gas_Siren :=
