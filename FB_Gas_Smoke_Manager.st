@@ -13,11 +13,14 @@ END_VAR
 
 VAR_OUTPUT
     // Health signals
-    VO_Smoke_Detected   : BOOL;
-    VO_Gas_Detected     : BOOL;
-    VO_CO_Warning_Level : BOOL;
-    VO_CO_Alarm_Level   : BOOL;
-    VO_Status_Msg       : STRING(200);
+    VO_Smoke_Detected           : BOOL;
+    VO_Gas_Detected             : BOOL; // Compatible methane alarm/critical summary.
+    VO_Methane_Warning_Level    : BOOL;
+    VO_Methane_Alarm_Level      : BOOL;
+    VO_Methane_Critical_Level   : BOOL;
+    VO_CO_Warning_Level         : BOOL;
+    VO_CO_Alarm_Level           : BOOL;
+    VO_Status_Msg               : STRING(200);
 END_VAR
 
 VAR
@@ -43,6 +46,9 @@ IF NOT VI_IsActivePLC THEN RETURN; END_IF;
 // Reset outputs
 VO_Smoke_Detected := FALSE;
 VO_Gas_Detected := FALSE;
+VO_Methane_Warning_Level := FALSE;
+VO_Methane_Alarm_Level := FALSE;
+VO_Methane_Critical_Level := FALSE;
 VO_CO_Warning_Level := FALSE;
 VO_CO_Alarm_Level := FALSE;
 VO_Status_Msg := 'ОК';
@@ -55,9 +61,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
     END_IF;
 END_FOR;
 
-IF L_Methane_Max >= 20.0 THEN
-    VO_Gas_Detected := TRUE;
-END_IF;
+VO_Methane_Warning_Level := (L_Methane_Max >= 10.0);
+VO_Methane_Alarm_Level := (L_Methane_Max >= 20.0);
+VO_Methane_Critical_Level := (L_Methane_Max >= 40.0);
+VO_Gas_Detected := VO_Methane_Alarm_Level OR VO_Methane_Critical_Level;
 
 // --- CO ---
 L_CO_Max := 0.0;
@@ -106,8 +113,12 @@ END_IF;
 // Status
 IF VO_Smoke_Detected THEN
     VO_Status_Msg := 'ПОЖАР';
-ELSIF VO_Gas_Detected THEN
+ELSIF VO_Methane_Critical_Level THEN
+    VO_Status_Msg := 'КРИТИЧЕСКИЙ МЕТАН';
+ELSIF VO_Methane_Alarm_Level THEN
     VO_Status_Msg := 'УТЕЧКА ГАЗА';
+ELSIF VO_Methane_Warning_Level THEN
+    VO_Status_Msg := 'ПРЕДУПРЕЖДЕНИЕ МЕТАН';
 ELSIF VO_CO_Alarm_Level THEN
     VO_Status_Msg := 'КРИТИЧЕСКИЙ CO';
 ELSIF VO_CO_Warning_Level THEN
