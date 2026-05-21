@@ -51,8 +51,17 @@ VAR_GLOBAL
     DI_Motion_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BOOL;
     DO_Sockets : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
     DO_Gas_Valve_Close : BOOL;
+
+    // Water common inlet valves: 35 = ХВС, 36 = ГВС.
+    DO_Water_Valve_35_Open : BOOL;
     DO_Water_Valve_35_Close : BOOL;
+    DO_Water_Valve_36_Open : BOOL;
     DO_Water_Valve_36_Close : BOOL;
+
+    // Water local riser valves: 1/2 riser 1, 3/4 riser 2, 5/6 riser 3.
+    DO_Water_Local_Valve_Open : ARRAY[1..6] OF BOOL;
+    DO_Water_Local_Valve_Close : ARRAY[1..6] OF BOOL;
+
     AI_Water_Valve_35_Current : REAL;
     AI_Water_Valve_36_Current : REAL;
     DI_Power_OK : BOOL;
