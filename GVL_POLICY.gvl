@@ -25,6 +25,15 @@ VAR_GLOBAL
     G_Away_Min_Heating_Setpoint_C : REAL := 15.0;
     G_Away_Long_Economy_Setpoint_C : REAL := 12.0;
 
+    // Security alarm escalation policy.
+    // On alarm: force long-away and publish a 5-minute lighting boost for
+    // FB_Lighting_Blinds_Manager. This is a domain-level output override, not
+    // a direct physical IO write.
+    G_Security_Alarm_Force_Long_Away : BOOL := FALSE;
+    G_Security_Alarm_Light_Boost_Active : BOOL := FALSE;
+    G_Security_Alarm_Light_Boost_Start_MS : UDINT := 0;
+    G_Security_Alarm_Light_Boost_Duration_MS : UDINT := 300000;
+
     // Planned return / preheat policy.
     // Return time uses the current monotonic system-time domain. HMI/gateway may
     // set it as an absolute monotonic timestamp in the same domain.
