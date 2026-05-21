@@ -4,9 +4,11 @@ VAR
     L_Restore_Elapsed_MS : UDINT;
     L_Return_Delta_MS : UDINT;
     L_Return_Grace_Elapsed_MS : UDINT;
+    L_Security_Boost_Elapsed_MS : UDINT;
     L_Away_Return_Window_Reached : BOOL;
     L_Previous_Away_Active : BOOL := FALSE;
     L_Previous_Away_Level : BYTE := 0;
+    L_Security_Alarm_Prev : BOOL := FALSE;
 END_VAR
 
 GVL_POLICY.G_Away_Restore_Requested := FALSE;
@@ -103,6 +105,37 @@ IF GVL_STATE.G_System_Mode = E_System_Operating_Mode.MODE_DEGRADED THEN
     END_IF;
 END_IF;
 
+// 5. Security alarm escalation.
+// On security alarm, force long-away and publish a 5-minute lighting boost.
+IF GVL_ALARM.G_Security_Alarm THEN
+    GVL_POLICY.G_Scenario_Intent := E_SCENARIO_TYPE.SCENARIO_AWAY;
+    GVL_POLICY.G_Scenario_Source := SRC_POLICY;
+    GVL_POLICY.G_Security_Alarm_Force_Long_Away := TRUE;
+
+    IF (NOT L_Security_Alarm_Prev) AND (NOT GVL_POLICY.G_Security_Alarm_Light_Boost_Active) THEN
+        GVL_POLICY.G_Security_Alarm_Light_Boost_Active := TRUE;
+        GVL_POLICY.G_Security_Alarm_Light_Boost_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
+    END_IF;
+ELSIF NOT GVL_ALARM.G_Security_Armed THEN
+    GVL_POLICY.G_Security_Alarm_Force_Long_Away := FALSE;
+END_IF;
+
+IF GVL_POLICY.G_Security_Alarm_Light_Boost_Duration_MS = 0 THEN
+    GVL_POLICY.G_Security_Alarm_Light_Boost_Duration_MS := 300000;
+END_IF;
+
+IF GVL_POLICY.G_Security_Alarm_Light_Boost_Active THEN
+    IF GVL_TIME_SERVICE.G_Now_MS >= GVL_POLICY.G_Security_Alarm_Light_Boost_Start_MS THEN
+        L_Security_Boost_Elapsed_MS := GVL_TIME_SERVICE.G_Now_MS - GVL_POLICY.G_Security_Alarm_Light_Boost_Start_MS;
+    ELSE
+        L_Security_Boost_Elapsed_MS := (4294967295 - GVL_POLICY.G_Security_Alarm_Light_Boost_Start_MS) + GVL_TIME_SERVICE.G_Now_MS + 1;
+    END_IF;
+
+    IF L_Security_Boost_Elapsed_MS >= GVL_POLICY.G_Security_Alarm_Light_Boost_Duration_MS THEN
+        GVL_POLICY.G_Security_Alarm_Light_Boost_Active := FALSE;
+    END_IF;
+END_IF;
+
 // ============================================================
 // AWAY LEVEL POLICY
 // ============================================================
@@ -176,6 +209,14 @@ IF GVL_POLICY.G_Scenario_Intent = E_SCENARIO_TYPE.SCENARIO_AWAY THEN
         GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
     END_IF;
 
+    IF GVL_POLICY.G_Security_Alarm_Force_Long_Away THEN
+        GVL_POLICY.G_Away_Active := TRUE;
+        GVL_POLICY.G_Away_Level := 3;
+        GVL_POLICY.G_Away_Elapsed_MS := GVL_POLICY.G_Away_Medium_To_Long_MS;
+        GVL_POLICY.G_Away_Return_Preheat_Active := FALSE;
+        GVL_POLICY.G_Away_Return_Grace_Active := FALSE;
+    END_IF;
+
     CASE GVL_POLICY.G_Away_Level OF
         1:
             GVL_POLICY.G_Away_Simulation_Active := FALSE;
@@ -237,6 +278,7 @@ END_IF;
 
 L_Previous_Away_Active := GVL_POLICY.G_Away_Active;
 L_Previous_Away_Level := GVL_POLICY.G_Away_Level;
+L_Security_Alarm_Prev := GVL_ALARM.G_Security_Alarm;
 
 // 5. Heating bridge
 // Policy publishes preheat intent only. Actual per-circuit comfort/economy
