@@ -44,13 +44,14 @@ VAR_GLOBAL CONSTANT
     C_MAX_DEBUG_LOGS       : INT := 1000; 
     C_MAX_GATEWAY_COMMANDS : INT := 10; 
     C_MAX_STATE_SNAPSHOTS  : INT := 10; 
-    // Retained blackbox depth is intentionally compact to reduce NVRAM pressure.
+    // Runtime blackbox depth. The buffer is RAM-only; CSV/file archive is
+    // connected later during porting/module selection.
     C_MAX_BLACKBOX_RECORDS : INT := 32; 
     C_MAX_PRESENCE_HISTORY : INT := 1008; 
     C_MAX_MODBUS_REGISTERS : INT := 201; 
     C_MAX_DEDUPLICATION_HISTORY : INT := 100; 
-    C_MAX_NVRAM_RECORDS    : INT := 100; 
-    C_MAX_NVRAM_DATA       : INT := 128; 
+    // Compact retained operational mirror. Legacy 100x128 NVRAM reservation is removed.
+    C_NVRAM_COMPACT_BYTES  : INT := 512; 
 
     C_MAX_WATER_ZONES      : INT := 32;
 
