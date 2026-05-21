@@ -36,6 +36,20 @@ VAR_GLOBAL
     G_HMI_Mute_Alarm : BOOL;
     G_HMI_Ack_Alarms : BOOL;
 
+    // Entrance lighting assist configuration.
+    // Physical lux connection is optional and can be enabled later from HMI/config.
+    G_Entrance_Light_Assist_Enabled : BOOL := TRUE;
+    G_Entrance_Light_Assist_Use_Lux_Sensor : BOOL := FALSE;
+    G_Entrance_Light_Assist_Fallback_To_Night : BOOL := TRUE;
+    G_Entrance_Light_Assist_Lux_Threshold : REAL := 50.0;
+    G_Entrance_Light_Assist_Duration_MS : UDINT := 300000;
+    G_Entrance_Door_1_Index : INT := 1;
+    G_Entrance_Door_2_Index : INT := 2;
+    G_Entrance_Corridor_Light_Zone : INT := 1;
+    G_Entrance_Stairs_Light_Zone : INT := 2;
+    G_Entrance_Corridor_Light_Level : BYTE := 100;
+    G_Entrance_Stairs_Light_Level : BYTE := 30;
+
     // Access Control Commands
     G_HMI_Gate_Open_Req : BOOL;
     G_HMI_Wicket_Open_Req : BOOL;
