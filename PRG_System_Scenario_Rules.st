@@ -10,7 +10,7 @@ VAR
     L_Scenario_Intent       : E_SCENARIO_TYPE;
     L_Scenario_Source       : E_SCENARIO_SOURCE;
     L_Best_Rule_Priority    : BYTE;
-    L_Rule_Scenario_Code    : USINT;
+    L_Rule_Scenario_Code    : INT;
 
     // adapters
     L_Motion_16 : ARRAY[1..16] OF BOOL;
@@ -62,9 +62,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_RULES DO
     IF GVL_STATE.G_Rule_Actions[L_i].Active AND
        (GVL_STATE.G_Rule_Actions[L_i].Action_Type = E_Rule_Action_Type.ACTION_ACTIVATE_SCENARIO) THEN
 
-        L_Rule_Scenario_Code := REAL_TO_USINT(GVL_STATE.G_Rule_Actions[L_i].Value);
+        L_Rule_Scenario_Code := REAL_TO_INT(GVL_STATE.G_Rule_Actions[L_i].Value);
 
-        IF (L_Rule_Scenario_Code <= 7) AND
+        IF (L_Rule_Scenario_Code >= 0) AND (L_Rule_Scenario_Code <= 7) AND
            ((L_Scenario_Req_Rule = E_SCENARIO_TYPE.SCENARIO_NONE) OR
             (GVL_CONFIG.G_HMI_User_Rules[L_i].Priority >= L_Best_Rule_Priority)) THEN
 
