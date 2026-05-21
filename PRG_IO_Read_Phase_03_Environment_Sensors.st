@@ -3,9 +3,11 @@ VAR
     L_i : INT;
     L_Filtered_Room_Temp : REAL;
     L_Filtered_Floor_Temp : REAL;
+    L_Ambient_Lux : REAL;
     L_Any_Sensor_Fault : BOOL;
 
     fbCalib_Outdoor_Temp : FB_Sensor_Calibration_Processor;
+    fbCalib_Ambient_Lux : FB_Sensor_Calibration_Processor;
     fbCalib_Supply_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS] OF FB_Sensor_Calibration_Processor;
     fbCalib_Room_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
     fbCalib_Floor_Temps : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF FB_Sensor_Calibration_Processor;
@@ -20,6 +22,33 @@ fbCalib_Outdoor_Temp(
     VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
 );
 GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
+
+IF GVL_CONFIG.G_Entrance_Light_Assist_Use_Lux_Sensor THEN
+    IF GVL_IO.AI_Ambient_Lux.wStatus = 0 THEN
+        fbCalib_Ambient_Lux(
+            VI_Raw_Value := GVL_IO.AI_Ambient_Lux.rValue,
+            VI_Record := GVL_CONFIG.G_Calib_Ambient_Lux
+        );
+        L_Ambient_Lux := fbCalib_Ambient_Lux.VO_Calibrated_Value;
+
+        IF (L_Ambient_Lux < 0.0) OR (L_Ambient_Lux > 200000.0) THEN
+            GVL_STATE.G_Ambient_Lux_Sensor_Fault := TRUE;
+            GVL_STATE.G_Ambient_Lux_Valid := FALSE;
+            L_Any_Sensor_Fault := TRUE;
+        ELSE
+            GVL_STATE.G_Ambient_Lux := L_Ambient_Lux;
+            GVL_STATE.G_Ambient_Lux_Valid := TRUE;
+            GVL_STATE.G_Ambient_Lux_Sensor_Fault := FALSE;
+        END_IF;
+    ELSE
+        GVL_STATE.G_Ambient_Lux_Valid := FALSE;
+        GVL_STATE.G_Ambient_Lux_Sensor_Fault := TRUE;
+        L_Any_Sensor_Fault := TRUE;
+    END_IF;
+ELSE
+    GVL_STATE.G_Ambient_Lux_Valid := FALSE;
+    GVL_STATE.G_Ambient_Lux_Sensor_Fault := FALSE;
+END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
     IF GVL_IO.AI_Supply_Temps[L_i].wStatus = 0 THEN
