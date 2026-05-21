@@ -2,21 +2,15 @@
 VAR_GLOBAL RETAIN
     G_Initialized : BOOL := FALSE; // Флаг инициализации retain-переменных
     
-    // Компактное RETAIN-зеркало NVRAM для persistent snapshot / настроек.
-    // Активный persist pipeline сейчас пишет 5 байт через FB_System_Persist_Manager;
-    // 512 байт оставлены как безопасный запас под будущие компактные записи.
-    G_NVRAM_Data : ARRAY[0..511] OF BYTE;
+    // Compact RETAIN/NVRAM mirror for operational data only.
+    // Logs, history, trends and blackbox archives must not consume RETAIN.
+    G_NVRAM_Data : ARRAY[0..GVL_CONSTANTS.C_NVRAM_COMPACT_BYTES-1] OF BYTE;
     
-    // Буфер черного ящика (100 записей)
-    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
-    G_BlackBox_LastIndex : INT;
-    G_BlackBox_Frozen : BOOL;
-    
-    // Статистика котлов
+    // Статистика котлов: оперативные счётчики наработки, нужны после рестарта.
     G_Boiler_Accumulated_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
     G_Boiler_Work_Seconds : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
     
-    // Результаты тестирования клапанов
+    // Результаты тестирования клапанов: компактное последнее состояние.
     G_Valve_Test_Results : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     
     // ПИН-коды доступа (храним хэши CRC32 для безопасности)
@@ -28,6 +22,12 @@ VAR_GLOBAL RETAIN
 END_VAR
 
 VAR_GLOBAL
+    // Runtime blackbox buffer.
+    // Kept in RAM only; CSV/file archive connection is a porting/module-stage task.
+    G_BlackBox_Buffer : ARRAY[0..GVL_CONSTANTS.C_MAX_BLACKBOX_RECORDS-1] OF ST_BlackBox_Record;
+    G_BlackBox_LastIndex : INT;
+    G_BlackBox_Frozen : BOOL;
+
     // Presence playback history is non-safety behavioural data.
     // It is rebuilt during recording mode and must not consume RETAIN memory.
     G_Presence_History : ARRAY[0..GVL_CONSTANTS.C_MAX_PRESENCE_HISTORY-1] OF WORD;
