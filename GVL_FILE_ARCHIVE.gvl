@@ -1,0 +1,26 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime interface for future file/CSV archive integration.
+    // No direct file/USB write is implemented here. Concrete CODESYS file
+    // libraries, USB/flash paths, CSV formatting and buffering are connected
+    // during the porting/module-selection stage.
+
+    G_Archive_Interface_Enabled : BOOL := FALSE;
+    G_File_Archive_Target_Code : BYTE := 0; // 0=none, 1=PLC file/flash, 2=USB, 3=gateway
+    G_USB_Target_Available : BOOL := FALSE;
+    G_PLC_File_Target_Available : BOOL := FALSE;
+    G_Gateway_Target_Available : BOOL := FALSE;
+
+    G_CSV_Write_Enabled : BOOL := FALSE;
+    G_Write_Event_CSV_Request : BOOL := FALSE;
+    G_Write_Trend_CSV_Request : BOOL := FALSE;
+    G_Write_BlackBox_CSV_Request : BOOL := FALSE;
+    G_Write_Config_Backup_Request : BOOL := FALSE;
+
+    G_Write_Busy : BOOL := FALSE;
+    G_Write_Done : BOOL := FALSE;
+    G_Write_Error : BOOL := FALSE;
+    G_Last_Error_Code : UDINT := 0;
+    G_Last_Status_Text : STRING(200) := '';
+    G_Last_Write_MS : UDINT := 0;
+END_VAR
