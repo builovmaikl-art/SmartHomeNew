@@ -208,6 +208,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_LIGHT_ZONES DO
         VO_Lighting_Levels[L_i] := REAL_TO_BYTE(L_Restore_Level);
     END_IF;
 
+    // Security alarm boost: all lighting zones to 100% for the configured
+    // five-minute window. This is intentionally applied inside the lighting
+    // domain manager and after normal/restore calculations, not as direct IO.
+    IF GVL_POLICY.G_Security_Alarm_Light_Boost_Active THEN
+        VO_Lighting_Levels[L_i] := 100;
+    END_IF;
+
     IF VI_Wet_Zone_Map[L_i] AND L_Wet_Zone_Idx <= GVL_CONSTANTS.C_MAX_WET_ZONES THEN
         VO_Wet_Zone_Light_Active[L_Wet_Zone_Idx] := (VO_Lighting_Levels[L_i] > 10);
         L_Wet_Zone_Idx := L_Wet_Zone_Idx + 1;
