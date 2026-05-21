@@ -55,13 +55,29 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
     END_IF;
 END_FOR;
 
-GVL_IO.DO_Water_Valve_35_Close :=
-    GVL_WATER_OUTPUT.DO_Water_Valve_35_Close
-    OR GVL_COMMAND_SHADOW.G_Close_Valve_35;
+// Water outputs. PRG_Water owns the domain projection in GVL_WATER_OUTPUT;
+// command shadow remains the common-inlet emergency fallback.
+IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Water_Forced_Off THEN
+    GVL_IO.DO_Water_Valve_35_Open := FALSE;
+    GVL_IO.DO_Water_Valve_35_Close := FALSE;
+    GVL_IO.DO_Water_Valve_36_Open := FALSE;
+    GVL_IO.DO_Water_Valve_36_Close := FALSE;
 
-GVL_IO.DO_Water_Valve_36_Close :=
-    GVL_WATER_OUTPUT.DO_Water_Valve_36_Close
-    OR GVL_COMMAND_SHADOW.G_Close_Valve_36;
+    FOR L_i := 1 TO 6 DO
+        GVL_IO.DO_Water_Local_Valve_Open[L_i] := FALSE;
+        GVL_IO.DO_Water_Local_Valve_Close[L_i] := FALSE;
+    END_FOR;
+ELSE
+    GVL_IO.DO_Water_Valve_35_Open := GVL_WATER_OUTPUT.DO_Water_Valve_35_Open;
+    GVL_IO.DO_Water_Valve_35_Close := GVL_WATER_OUTPUT.DO_Water_Valve_35_Close OR GVL_COMMAND_SHADOW.G_Close_Valve_35;
+    GVL_IO.DO_Water_Valve_36_Open := GVL_WATER_OUTPUT.DO_Water_Valve_36_Open;
+    GVL_IO.DO_Water_Valve_36_Close := GVL_WATER_OUTPUT.DO_Water_Valve_36_Close OR GVL_COMMAND_SHADOW.G_Close_Valve_36;
+
+    FOR L_i := 1 TO 6 DO
+        GVL_IO.DO_Water_Local_Valve_Open[L_i] := GVL_WATER_OUTPUT.DO_Water_Local_Valve_Open[L_i];
+        GVL_IO.DO_Water_Local_Valve_Close[L_i] := GVL_WATER_OUTPUT.DO_Water_Local_Valve_Close[L_i];
+    END_FOR;
+END_IF;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     IF (L_i > GVL_SYSTEM_SIZE_CONFIG.G_Active_Water_Zones)
