@@ -34,6 +34,13 @@ VAR_GLOBAL
     G_Security_Alarm_Light_Boost_Start_MS : UDINT := 0;
     G_Security_Alarm_Light_Boost_Duration_MS : UDINT := 300000;
 
+    // Entrance lighting assist policy.
+    // Triggered by entrance door opening while dark. Darkness is configurable:
+    // validated lux sensor below threshold and/or fallback to night flag.
+    G_Entrance_Light_Assist_Active : BOOL := FALSE;
+    G_Entrance_Light_Assist_Start_MS : UDINT := 0;
+    G_Entrance_Light_Assist_Dark_Active : BOOL := FALSE;
+
     // Planned return / preheat policy.
     // Return time uses the current monotonic system-time domain. HMI/gateway may
     // set it as an absolute monotonic timestamp in the same domain.
