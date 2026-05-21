@@ -2,6 +2,9 @@
 VAR_GLOBAL
     G_Smoke_Detected : BOOL;
     G_Gas_Detected : BOOL;
+    G_Methane_Warning_Level : BOOL;
+    G_Methane_Alarm_Level : BOOL;
+    G_Methane_Critical_Level : BOOL;
     G_Leak_Detected : BOOL;
     G_Leak_Warning_Level : BOOL;
     G_CO_Warning_Level : BOOL;
