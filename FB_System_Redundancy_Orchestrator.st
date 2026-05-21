@@ -1,8 +1,10 @@
 // ==============================================================================
 // System redundancy orchestrator helper
 //
-// Internal helper for PRG_System.
-// Owns PLC role calculation, heartbeat output projection, and synced-state apply.
+// Cold-spare architecture helper. The active runtime is local-only; a second PLC
+// is not allowed to hot-apply replicated state or arbitrate the same physical
+// outputs. This block only builds the local snapshot for diagnostics/future
+// backup use and publishes local service status.
 // ==============================================================================
 FUNCTION_BLOCK FB_System_Redundancy_Orchestrator
 VAR_IN_OUT
@@ -10,11 +12,7 @@ VAR_IN_OUT
     VIO_Remote_State : ST_System_State_Snapshot;
 END_VAR
 
-VAR
-    fbRedundancy : FB_Redundancy_Manager;
-END_VAR
-
-// Build local state snapshot for replication.
+// Build local state snapshot for diagnostics / future backup export.
 VIO_Local_State.System_Time_MS := GVL_STATUS.G_System_Time_MS;
 VIO_Local_State.Current_Scenario := GVL_STATUS.G_Current_Scenario;
 VIO_Local_State.Security_Armed := GVL_ALARM.G_Security_Armed;
@@ -28,32 +26,13 @@ VIO_Local_State.Gas_Valve_Closed := GVL_COMMAND.G_Gas_Valve_Close;
 VIO_Local_State.Water_Valves_Closed := GVL_COMMAND.G_Close_Valve_36;
 VIO_Local_State.Version := VIO_Local_State.Version + 1;
 
-fbRedundancy(
-    VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
-    VI_Local_PLC_ID := GVL_STATUS.G_PLC_ID,
-    VI_Remote_Pulse := GVL_IO.DI_Partner_Pulse,
-    VI_Remote_Is_Active := GVL_IO.DI_Partner_Active,
-    VI_Gateway_Ping_OK := GVL_GATEWAY.G_Gateway_Ping_OK,
-    VI_Local_State := VIO_Local_State,
-    VI_Remote_State := VIO_Remote_State
-);
+// Local-only role projection. No remote-state apply is permitted here.
+GVL_STATUS.G_Is_Active_PLC := TRUE;
+GVL_STATUS.G_Other_PLC_Is_Active := FALSE;
+GVL_IO.DO_Active_Status := TRUE;
 
-GVL_STATUS.G_Is_Active_PLC := (fbRedundancy.VO_Local_Role = E_PLC_ROLE.ROLE_ACTIVE);
-GVL_IO.DO_Heartbeat_Pulse := fbRedundancy.VO_Local_Pulse;
-GVL_IO.DO_Active_Status := GVL_STATUS.G_Is_Active_PLC;
-
-IF fbRedundancy.VO_State_Updated THEN
-    GVL_STATUS.G_Current_Scenario := fbRedundancy.VO_Synced_State.Current_Scenario;
-    GVL_ALARM.G_Security_Armed := fbRedundancy.VO_Synced_State.Security_Armed;
-    GVL_STATE.G_Zone_Valves := fbRedundancy.VO_Synced_State.Zone_Valves;
-    GVL_STATE.G_Manifold_Pumps := fbRedundancy.VO_Synced_State.Manifold_Pumps;
-    GVL_STATE.G_Lighting_Levels := fbRedundancy.VO_Synced_State.Lighting_States;
-    GVL_STATE.G_Blinds_Positions := fbRedundancy.VO_Synced_State.Blinds_Positions;
-    GVL_STATE.G_Socket_States := fbRedundancy.VO_Synced_State.Socket_States;
-    GVL_COMMAND.G_Gas_Valve_Close := fbRedundancy.VO_Synced_State.Gas_Valve_Closed;
-    GVL_COMMAND.G_Close_Valve_36 := fbRedundancy.VO_Synced_State.Water_Valves_Closed;
-    VIO_Local_State.Version := fbRedundancy.VO_Synced_State.Version;
-END_IF;
+// Keep the remote snapshot untouched; it is intentionally not applied to any
+// status/alarm/state/command GVL in cold-spare mode.
 
 // >>> BULK_SYNC_ANCHOR: FB_System_Redundancy_Orchestrator <<<
 END_FUNCTION_BLOCK
