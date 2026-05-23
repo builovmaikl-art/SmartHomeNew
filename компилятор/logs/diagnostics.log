@@ -534,7 +534,7 @@ drwxr-xr-x  3 runner runner   4096 May 23 09:33 .github
 -rw-r--r--  1 runner runner    688 May 23 09:33 PRG_IO_Read_Phase_02_Discrete_Debounce.st
 -rw-r--r--  1 runner runner   6042 May 23 09:33 PRG_IO_Read_Phase_03_Environment_Sensors.st
 -rw-r--r--  1 runner runner    675 May 23 09:33 PRG_IO_Read_Phase_04_Heating_Manifold_Sensors.st
--rw-r--r--  1 runner runner   1617 May 23 09:33 PRG_IO_Read_Phase_05_Gas_DHW_Water_Feedback.st
+-rw-r--r--  1 runner runner   1856 May 23 09:33 PRG_IO_Read_Phase_05_Gas_DHW_Water_Feedback.st
 -rw-r--r--  1 runner runner    926 May 23 09:33 PRG_IO_Write.st
 -rw-r--r--  1 runner runner   3680 May 23 09:33 PRG_IO_Write_Phase_01_Context.st
 -rw-r--r--  1 runner runner   3466 May 23 09:33 PRG_IO_Write_Phase_02_Hard_Stop_Safe_State.st
@@ -820,4 +820,4 @@ total 2804
 drwxr-xr-x 2 runner runner    4096 May 23 09:33 .
 drwxr-xr-x 5 runner runner    4096 May 23 09:33 ..
 -rw-r--r-- 1 runner runner       0 May 23 09:33 .gitkeep
--rw-r--r-- 1 runner runner 2862001 May 23 09:33 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2862266 May 23 09:33 RESULT_methods_clean.xml
