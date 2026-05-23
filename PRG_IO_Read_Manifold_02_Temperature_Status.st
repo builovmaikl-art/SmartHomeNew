@@ -13,6 +13,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
             VI_Record := GVL_CONFIG.G_Calib_Manifold_T_Supply[L_i]
         );
         GVL_STATE.G_Manifold_T_Supply[L_i] := fbCalib_Manifold_T_Supply[L_i].VO_Calibrated_Value;
+        IF fbCalib_Manifold_T_Supply[L_i].VO_Record_Fault THEN
+            GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+        END_IF;
     ELSE
         GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
     END_IF;
@@ -22,6 +25,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
         VI_Record := GVL_CONFIG.G_Calib_Manifold_T_Return[L_i]
     );
     GVL_STATE.G_Manifold_T_Return[L_i] := fbCalib_Manifold_T_Return[L_i].VO_Calibrated_Value;
+    IF fbCalib_Manifold_T_Return[L_i].VO_Record_Fault THEN
+        GVL_STATUS.G_Diagnostics.Sensor_Fault := TRUE;
+    END_IF;
+
     GVL_STATE.G_Manifold_End_Switches[L_i] := GVL_IO.DI_Manifold_End_Switches[L_i];
 END_FOR;
 
