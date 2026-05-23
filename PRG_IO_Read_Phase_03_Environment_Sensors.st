@@ -22,6 +22,9 @@ fbCalib_Outdoor_Temp(
     VI_Record := GVL_CONFIG.G_Calib_Outdoor_Temp
 );
 GVL_STATE.G_Outdoor_Temp := fbCalib_Outdoor_Temp.VO_Calibrated_Value;
+IF fbCalib_Outdoor_Temp.VO_Record_Fault THEN
+    L_Any_Sensor_Fault := TRUE;
+END_IF;
 
 IF GVL_CONFIG.G_Entrance_Light_Assist_Use_Lux_Sensor THEN
     IF GVL_IO.AI_Ambient_Lux.wStatus = 0 THEN
@@ -30,6 +33,9 @@ IF GVL_CONFIG.G_Entrance_Light_Assist_Use_Lux_Sensor THEN
             VI_Record := GVL_CONFIG.G_Calib_Ambient_Lux
         );
         L_Ambient_Lux := fbCalib_Ambient_Lux.VO_Calibrated_Value;
+        IF fbCalib_Ambient_Lux.VO_Record_Fault THEN
+            L_Any_Sensor_Fault := TRUE;
+        END_IF;
 
         IF (L_Ambient_Lux < 0.0) OR (L_Ambient_Lux > 200000.0) THEN
             GVL_STATE.G_Ambient_Lux_Sensor_Fault := TRUE;
@@ -57,6 +63,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_TEMPS DO
             VI_Record := GVL_CONFIG.G_Calib_Supply_Temps[L_i]
         );
         GVL_STATE.G_Supply_Temps[L_i] := fbCalib_Supply_Temps[L_i].VO_Calibrated_Value;
+        IF fbCalib_Supply_Temps[L_i].VO_Record_Fault THEN
+            L_Any_Sensor_Fault := TRUE;
+        END_IF;
     ELSE
         L_Any_Sensor_Fault := TRUE;
     END_IF;
@@ -68,12 +77,18 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         VI_Record := GVL_CONFIG.G_Calib_Humidity[L_i]
     );
     GVL_STATE.G_Room_Hum[L_i] := fbCalib_Room_Hum[L_i].VO_Calibrated_Value;
+    IF fbCalib_Room_Hum[L_i].VO_Record_Fault THEN
+        L_Any_Sensor_Fault := TRUE;
+    END_IF;
 
     fbCalib_Room_CO2[L_i](
         VI_Raw_Value := GVL_IO.AI_Room_CO2[L_i],
         VI_Record := GVL_CONFIG.G_Calib_CO2[L_i]
     );
     GVL_STATE.G_Room_CO2[L_i] := fbCalib_Room_CO2[L_i].VO_Calibrated_Value;
+    IF fbCalib_Room_CO2[L_i].VO_Record_Fault THEN
+        L_Any_Sensor_Fault := TRUE;
+    END_IF;
 END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
@@ -81,6 +96,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_ZONES DO
         VI_Raw_Value := GVL_IO.AI_Room_Temps[L_i],
         VI_Record := GVL_CONFIG.G_Calib_Room_Temps[L_i]
     );
+    IF fbCalib_Room_Temps[L_i].VO_Record_Fault THEN
+        L_Any_Sensor_Fault := TRUE;
+    END_IF;
 
     IF GVL_STATE.G_Last_Valid_Room_Temps[L_i] = 0.0 THEN
         L_Filtered_Room_Temp := fbCalib_Room_Temps[L_i].VO_Calibrated_Value;
@@ -105,6 +123,9 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
             VI_Raw_Value := GVL_IO.AI_Floor_Temps[L_i],
             VI_Record := GVL_CONFIG.G_Calib_Floor_Temps[L_i]
         );
+        IF fbCalib_Floor_Temps[L_i].VO_Record_Fault THEN
+            L_Any_Sensor_Fault := TRUE;
+        END_IF;
 
         IF GVL_STATE.G_Last_Valid_Floor_Temps[L_i] = 0.0 THEN
             L_Filtered_Floor_Temp := fbCalib_Floor_Temps[L_i].VO_Calibrated_Value;
