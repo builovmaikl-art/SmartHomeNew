@@ -157,6 +157,20 @@ GVL_HMI.G_HMI_Config_Control_Last_Action_Text := GVL_CONFIG_HISTORY.G_Last_Actio
 GVL_HMI.G_HMI_Config_Control_Last_Error_Text := GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text;
 GVL_HMI.G_HMI_Config_Control_Last_Update_MS := GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS;
 
+GVL_HMI.G_HMI_Config_Simulation_Request_Pending :=
+    GVL_CONFIG_SIMULATION.G_Simulation_Request OR GVL_CONFIG_SIMULATION.G_Simulation_Confirm;
+GVL_HMI.G_HMI_Config_Simulation_Result_OK := GVL_CONFIG_SIMULATION.G_Simulation_Result_OK;
+GVL_HMI.G_HMI_Config_Simulation_Error_Text := GVL_CONFIG_SIMULATION.G_Simulation_Error_Text;
+GVL_HMI.G_HMI_Config_Simulation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
+
+IF GVL_HMI.G_HMI_Config_Simulation_Request_Pending THEN
+    GVL_HMI.G_HMI_Config_Simulation_Status_Level := 1;
+ELSIF NOT GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
+    GVL_HMI.G_HMI_Config_Simulation_Status_Level := 2;
+ELSE
+    GVL_HMI.G_HMI_Config_Simulation_Status_Level := 0;
+END_IF;
+
 IF NOT GVL_CONFIG_VALIDATION.G_Config_Valid THEN
     GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
 ELSIF (GVL_CONFIG_HISTORY.G_Last_Action_Text = 'CONFIG APPLY REJECTED') OR
