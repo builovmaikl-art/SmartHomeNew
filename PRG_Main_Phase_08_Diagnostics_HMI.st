@@ -46,6 +46,7 @@ PRG_Explainability();
 PRG_System_Health();
 PRG_System_Alarm_Gateway();
 PRG_System_Diagnostics();
+PRG_HMI_Config_Workflow_Manager();
 PRG_File_Archive_HMI_Applicator();
 PRG_File_Archive_Manager();
 PRG_HMI_Dashboard();
