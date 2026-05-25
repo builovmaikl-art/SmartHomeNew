@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4372
+total 4376
 -rw-r--r--  1 runner runner  13067 May 25 08:57 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 10 runner runner  45056 May 25 08:57 .
 drwxr-xr-x  3 runner runner   4096 May 25 08:57 ..
@@ -556,7 +556,7 @@ drwxr-xr-x  3 runner runner   4096 May 25 08:57 .github
 -rw-r--r--  1 runner runner   2717 May 25 08:57 PRG_Main_Phase_05_Domain_Output.st
 -rw-r--r--  1 runner runner   1186 May 25 08:57 PRG_Main_Phase_06_PostOutput_Authority.st
 -rw-r--r--  1 runner runner   5360 May 25 08:57 PRG_Main_Phase_07_Semantic_Governance.st
--rw-r--r--  1 runner runner   5962 May 25 08:57 PRG_Main_Phase_08_Diagnostics_HMI.st
+-rw-r--r--  1 runner runner   5990 May 25 08:57 PRG_Main_Phase_08_Diagnostics_HMI.st
 -rw-r--r--  1 runner runner   4816 May 25 08:57 PRG_Meta_Governance_Governor.st
 -rw-r--r--  1 runner runner   4199 May 25 08:57 PRG_Modbus_Master.st
 -rw-r--r--  1 runner runner   3033 May 25 08:57 PRG_Modbus_RTU_Bridge.st
@@ -798,7 +798,7 @@ drwxr-xr-x  5 runner runner   4096 May 25 08:57 компилятор
 -rw-r--r--  1 runner runner  11783 May 25 08:57 ошибки компиляции.txt
 
 === compiler dir ===
-total 612
+total 616
 drwxr-xr-x  5 runner runner   4096 May 25 08:57 .
 drwxr-xr-x 10 runner runner  45056 May 25 08:57 ..
 -rw-r--r--  1 runner runner  21153 May 25 08:57 001_universal_pou_builder_METHODS_V2.py
@@ -817,8 +817,8 @@ drwxr-xr-x  2 runner runner   4096 May 25 08:57 out
 -rw-r--r--  1 runner runner    177 May 25 08:57 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2812
+total 2816
 drwxr-xr-x 2 runner runner    4096 May 25 08:57 .
 drwxr-xr-x 5 runner runner    4096 May 25 08:57 ..
 -rw-r--r-- 1 runner runner       0 May 25 08:57 .gitkeep
--rw-r--r-- 1 runner runner 2867598 May 25 08:57 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2871635 May 25 08:57 RESULT_methods_clean.xml
