@@ -48,6 +48,7 @@ PRG_System_Alarm_Gateway();
 PRG_System_Diagnostics();
 PRG_HMI_Dashboard();
 PRG_Debug_View();
+PRG_File_Archive_Manager();
 
 IF L_Run_Extended_Diagnostics THEN
     PRG_System_Diagnostics_Ext();
