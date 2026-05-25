@@ -12,6 +12,10 @@ IF NOT VI_Enable THEN
     RETURN;
 END_IF;
 
+// Preserve workflow memory from the previous scan. Validation is a state of the
+// current draft and must remain visible until a new validation request changes it.
+L_State := GVL_HMI_Config_Workflow.G_Workflow_State;
+
 L_State.Runtime_Valid := TRUE;
 L_State.Runtime_System_Time_MS := VI_System_Time_MS;
 
@@ -41,6 +45,9 @@ L_State.Quarantine_Visible :=
 
 L_State.Service_Mode_Required := TRUE;
 L_State.Operator_Ack_Required := TRUE;
+L_State.Activation_Allowed := FALSE;
+L_State.Activation_Blocked := FALSE;
+L_State.Rollback_Allowed := FALSE;
 
 IF L_State.Editor_Open THEN
     L_State.Edit_Session_Active := TRUE;
@@ -51,9 +58,11 @@ IF L_State.Validation_Requested THEN
     IF GVL_Config_Activation.G_Activation_State.Staged_Config_Valid THEN
 
         L_State.Validation_OK := TRUE;
+        L_State.Validation_Failed := FALSE;
 
     ELSE
 
+        L_State.Validation_OK := FALSE;
         L_State.Validation_Failed := TRUE;
 
     END_IF;
@@ -111,6 +120,11 @@ ELSIF L_State.Rollback_Allowed THEN
 
     L_State.Status_Code := 0;
     L_State.Status_Text := 'HMI config rollback requested';
+
+ELSIF L_State.Validation_OK THEN
+
+    L_State.Status_Code := 0;
+    L_State.Status_Text := 'HMI validation passed';
 
 ELSE
 
