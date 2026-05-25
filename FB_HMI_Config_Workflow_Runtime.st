@@ -37,16 +37,21 @@ L_State.Reset_Default_Requested :=
 L_State.Active_Version :=
     GVL_Water_Topology_Config.G_Active_Config_Version;
 
-// Draft identity follows the generic staged config version. The staged change
-// monitor increments it when any GVL_CONFIG_CONTROL.STG_* value changes.
+// Generic draft identity follows the generic staged config version. The staged
+// change monitor increments it when any GVL_CONFIG_CONTROL.STG_* value changes.
 L_State.Draft_Version :=
     GVL_CONFIG_CONTROL.G_Staged_Config_Version;
+
+// Topology draft identity is tracked separately so topology-only edits cannot
+// reuse a validation result from an older staged topology version.
+L_State.Topology_Draft_Version :=
+    GVL_Config_Activation.G_Staged_Config_Version;
 
 L_State.Last_Stable_Version :=
     GVL_Config_Activation.G_Last_Stable_Config_Version;
 
 L_State.Topology_Activation_Required :=
-    GVL_Config_Activation.G_Staged_Config_Version <> GVL_Water_Topology_Config.G_Active_Config_Version;
+    L_State.Topology_Draft_Version <> GVL_Water_Topology_Config.G_Active_Config_Version;
 
 L_State.Topology_Validation_OK :=
     (NOT L_State.Topology_Activation_Required) OR GVL_Config_Activation.G_Activation_State.Staged_Config_Valid;
@@ -61,7 +66,8 @@ L_State.Activation_Blocked := FALSE;
 L_State.Rollback_Allowed := FALSE;
 L_State.Reset_Default_Allowed := FALSE;
 
-IF L_State.Validated_Draft_Version <> L_State.Draft_Version THEN
+IF (L_State.Validated_Draft_Version <> L_State.Draft_Version) OR
+   (L_State.Validated_Topology_Version <> L_State.Topology_Draft_Version) THEN
     L_State.Validation_OK := FALSE;
     L_State.Validation_Failed := FALSE;
     L_State.Draft_Dirty := TRUE;
@@ -89,6 +95,7 @@ IF (GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq <> 0) AND
         L_State.Validation_OK := TRUE;
         L_State.Validation_Failed := FALSE;
         L_State.Validated_Draft_Version := L_State.Draft_Version;
+        L_State.Validated_Topology_Version := L_State.Topology_Draft_Version;
         L_State.Validation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
         L_State.Validation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq;
         L_State.Draft_Dirty := FALSE;
@@ -110,6 +117,7 @@ IF L_State.Activation_Requested THEN
        AND GVL_HMI_Config_Workflow.G_Operator_Ack
        AND L_State.Validation_OK
        AND (L_State.Validated_Draft_Version = L_State.Draft_Version)
+       AND (L_State.Validated_Topology_Version = L_State.Topology_Draft_Version)
        AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
 
         L_State.Activation_Allowed := TRUE;
