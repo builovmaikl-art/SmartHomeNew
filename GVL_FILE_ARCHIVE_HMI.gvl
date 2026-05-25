@@ -11,7 +11,7 @@ VAR_GLOBAL
     G_File_Archive_Target_Code : BYTE := 0; // 0=none, 1=PLC file/flash, 2=USB, 3=gateway
 
     // Automatic configuration backup schedule request.
-    // Time is milliseconds from start of effective day; default 03:00.
+    // Time is milliseconds from start of effective day, default 03h00.
     G_Set_Auto_Config_Backup_Req : BOOL := FALSE;
     G_Auto_Config_Backup_Enabled : BOOL := FALSE;
     G_Auto_Config_Backup_Time_Of_Day_MS : UDINT := 10800000;
