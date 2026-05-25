@@ -111,6 +111,7 @@ IF VI_Request AND VI_Confirm THEN
     GVL_CONFIG_SIMULATION.G_Simulation_Result_OK := NOT L_Error;
     GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := VO_Error_Text;
     GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS := GVL_TIME_SERVICE.G_Now_MS;
+    GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq + 1;
     VO_Executed := TRUE;
 
     // One-shot request consumption. HMI/service callers get the result from
