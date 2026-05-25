@@ -4,6 +4,7 @@ VAR_GLOBAL
     G_Validate_Request : BOOL;
     G_Activate_Request : BOOL;
     G_Rollback_Request : BOOL;
+    G_Reset_Default_Request : BOOL;
 
     G_Service_Mode_Active : BOOL;
     G_Operator_Ack : BOOL;
