@@ -46,9 +46,10 @@ PRG_Explainability();
 PRG_System_Health();
 PRG_System_Alarm_Gateway();
 PRG_System_Diagnostics();
+PRG_File_Archive_HMI_Applicator();
+PRG_File_Archive_Manager();
 PRG_HMI_Dashboard();
 PRG_Debug_View();
-PRG_File_Archive_Manager();
 
 IF L_Run_Extended_Diagnostics THEN
     PRG_System_Diagnostics_Ext();
