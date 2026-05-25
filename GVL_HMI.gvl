@@ -61,6 +61,7 @@ VAR_GLOBAL
     G_HMI_Config_Control_Rollback_Pending : BOOL;
     G_HMI_Config_Control_Apply_Done : BOOL;
     G_HMI_Config_Control_Rollback_Done : BOOL;
+    G_HMI_Config_Control_Reset_Default_Done : BOOL;
     G_HMI_Config_Control_Config_Valid : BOOL;
     G_HMI_Config_Control_Last_Action_Text : STRING(128);
     G_HMI_Config_Control_Last_Error_Text : STRING(200);
