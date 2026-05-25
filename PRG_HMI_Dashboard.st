@@ -151,6 +151,7 @@ GVL_HMI.G_HMI_Config_Control_Apply_Pending := GVL_CONFIG_CONTROL.G_Apply_Request
 GVL_HMI.G_HMI_Config_Control_Rollback_Pending := GVL_CONFIG_CONTROL.G_Rollback_Request;
 GVL_HMI.G_HMI_Config_Control_Apply_Done := GVL_CONFIG_CONTROL.G_Apply_Done;
 GVL_HMI.G_HMI_Config_Control_Rollback_Done := GVL_CONFIG_CONTROL.G_Rollback_Done;
+GVL_HMI.G_HMI_Config_Control_Reset_Default_Done := GVL_CONFIG_VALIDATION.G_Config_Reset_To_Default_Done;
 GVL_HMI.G_HMI_Config_Control_Config_Valid := GVL_CONFIG_VALIDATION.G_Config_Valid;
 GVL_HMI.G_HMI_Config_Control_Last_Action_Text := GVL_CONFIG_HISTORY.G_Last_Action_Text;
 GVL_HMI.G_HMI_Config_Control_Last_Error_Text := GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text;
@@ -163,7 +164,7 @@ ELSIF (GVL_CONFIG_HISTORY.G_Last_Action_Text = 'CONFIG APPLY REJECTED') OR
     GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
 ELSIF GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text <> '' THEN
     GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
-ELSIF GVL_CONFIG_CONTROL.G_Apply_Request OR GVL_CONFIG_CONTROL.G_Rollback_Request THEN
+ELSIF GVL_CONFIG_CONTROL.G_Apply_Request OR GVL_CONFIG_CONTROL.G_Rollback_Request OR GVL_CONFIG_CONTROL.G_Reset_Default_Request THEN
     GVL_HMI.G_HMI_Config_Control_Status_Level := 1;
 ELSE
     GVL_HMI.G_HMI_Config_Control_Status_Level := 0;
