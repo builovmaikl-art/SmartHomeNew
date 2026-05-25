@@ -56,6 +56,8 @@ VAR_GLOBAL
     // Config control dashboard. Read-only projection of staged apply and rollback state.
     G_HMI_Config_Control_Version : UDINT;
     G_HMI_Config_Control_Last_Good_Version : UDINT;
+    G_HMI_Config_Control_Staged_Config_Version : UDINT;
+    G_HMI_Config_Control_Staged_Last_Changed_MS : UDINT;
     G_HMI_Config_Control_Backup_Valid : BOOL;
     G_HMI_Config_Control_Apply_Pending : BOOL;
     G_HMI_Config_Control_Rollback_Pending : BOOL;
