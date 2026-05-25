@@ -17,6 +17,15 @@ VAR_GLOBAL
     G_Write_BlackBox_CSV_Request : BOOL := FALSE;
     G_Write_Config_Backup_Request : BOOL := FALSE;
 
+    // Automatic configuration backup scheduler.
+    // Default trigger is 03:00 local/effective time. The scheduler publishes
+    // the same one-shot config backup request as HMI/gateway paths.
+    G_Auto_Config_Backup_Enabled : BOOL := FALSE;
+    G_Auto_Config_Backup_Time_Of_Day_MS : UDINT := 10800000;
+    G_Auto_Config_Backup_Last_Day_Of_Week : INT := 0;
+    G_Auto_Config_Backup_Last_Request_MS : UDINT := 0;
+    G_Auto_Config_Backup_Last_Status_Text : STRING(200) := '';
+
     G_Write_Busy : BOOL := FALSE;
     G_Write_Done : BOOL := FALSE;
     G_Write_Error : BOOL := FALSE;
