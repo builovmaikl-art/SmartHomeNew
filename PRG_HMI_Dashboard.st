@@ -146,6 +146,8 @@ END_IF;
 // ======================================================
 GVL_HMI.G_HMI_Config_Control_Version := GVL_CONFIG_CONTROL.G_Config_Version;
 GVL_HMI.G_HMI_Config_Control_Last_Good_Version := GVL_CONFIG_CONTROL.G_Last_Good_Version;
+GVL_HMI.G_HMI_Config_Control_Staged_Config_Version := GVL_CONFIG_CONTROL.G_Staged_Config_Version;
+GVL_HMI.G_HMI_Config_Control_Staged_Last_Changed_MS := GVL_CONFIG_CONTROL.G_Staged_Last_Changed_MS;
 GVL_HMI.G_HMI_Config_Control_Backup_Valid := GVL_CONFIG_CONTROL.G_Backup_Valid;
 GVL_HMI.G_HMI_Config_Control_Apply_Pending := GVL_CONFIG_CONTROL.G_Apply_Request;
 GVL_HMI.G_HMI_Config_Control_Rollback_Pending := GVL_CONFIG_CONTROL.G_Rollback_Request;
