@@ -31,4 +31,18 @@ VAR_GLOBAL
     // Heating predictive dashboard
     G_HMI_Heating_Predictive_Pressure_Drop : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
     G_HMI_Heating_Predictive_Current_Rise : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+
+    // File/archive dashboard. Read-only projection of GVL_FILE_ARCHIVE status.
+    // HMI requests still go through GVL_FILE_ARCHIVE one-shot request fields.
+    G_HMI_File_Archive_Interface_Enabled : BOOL;
+    G_HMI_File_Archive_CSV_Enabled : BOOL;
+    G_HMI_File_Archive_Target_Code : BYTE;
+    G_HMI_File_Archive_Target_Available : BOOL;
+    G_HMI_File_Archive_Write_Busy : BOOL;
+    G_HMI_File_Archive_Write_Done : BOOL;
+    G_HMI_File_Archive_Write_Error : BOOL;
+    G_HMI_File_Archive_Last_Error_Code : UDINT;
+    G_HMI_File_Archive_Last_Status_Text : STRING(200);
+    G_HMI_File_Archive_Last_Write_MS : UDINT;
+    G_HMI_File_Archive_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ERROR
 END_VAR
