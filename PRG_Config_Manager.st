@@ -8,6 +8,7 @@ END_VAR
 L_Error := FALSE;
 L_Staged_Error := FALSE;
 GVL_CONFIG_VALIDATION.G_Config_Auto_Corrected := FALSE;
+GVL_CONFIG_VALIDATION.G_Config_Reset_To_Default_Done := FALSE;
 GVL_CONFIG_CONTROL.G_Apply_Done := FALSE;
 GVL_CONFIG_CONTROL.G_Rollback_Done := FALSE;
 
@@ -149,6 +150,83 @@ IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THE
 
     GVL_CONFIG_CONTROL.G_Apply_Request := FALSE;
     GVL_CONFIG_CONTROL.G_Apply_Confirm := FALSE;
+END_IF;
+
+// ===== RESET CONTROLLED CONFIG TO DEFAULTS =====
+IF GVL_CONFIG_CONTROL.G_Reset_Default_Request AND GVL_CONFIG_CONTROL.G_Reset_Default_Confirm THEN
+    // Backup current active values before resetting controlled config defaults.
+    GVL_CONFIG_CONTROL.BCK_Reputation_Learning_Rate := GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate;
+    GVL_CONFIG_CONTROL.BCK_Reputation_Recovery_Decay := GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Recovery_Decay;
+    GVL_CONFIG_CONTROL.BCK_Min_Sensor_Confidence := GVL_INPUT_VALIDATION_CONFIG.G_Min_Sensor_Confidence;
+    GVL_CONFIG_CONTROL.BCK_Bad_Spike_Confidence := GVL_INPUT_VALIDATION_CONFIG.G_Bad_Spike_Confidence;
+    GVL_CONFIG_CONTROL.BCK_Default_Confidence := GVL_INPUT_VALIDATION_CONFIG.G_Default_Confidence;
+
+    GVL_CONFIG_CONTROL.BCK_Night_Start_Hour := GVL_SCENARIO_CONFIG.G_Night_Start_Hour;
+    GVL_CONFIG_CONTROL.BCK_Night_End_Hour := GVL_SCENARIO_CONFIG.G_Night_End_Hour;
+    GVL_CONFIG_CONTROL.BCK_VentBoost_Humidity_Threshold := GVL_SCENARIO_CONFIG.G_VentBoost_Humidity_Threshold;
+
+    GVL_CONFIG_CONTROL.BCK_Stabilization_Delay_MS := GVL_SAFETY_RECOVERY_CONFIG.G_Stabilization_Delay_MS;
+
+    GVL_CONFIG_CONTROL.BCK_PLC_Inactive_Close_Gas := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Close_Gas;
+    GVL_CONFIG_CONTROL.BCK_PLC_Inactive_Stop_Boiler := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Boiler;
+    GVL_CONFIG_CONTROL.BCK_PLC_Inactive_Block_Heating := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Heating;
+    GVL_CONFIG_CONTROL.BCK_PLC_Inactive_Stop_Vent := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Vent;
+    GVL_CONFIG_CONTROL.BCK_PLC_Inactive_Block_Water := GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Water;
+
+    // Reset staged and active controlled config values to conservative defaults.
+    GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate := 0.05;
+    GVL_CONFIG_CONTROL.STG_Reputation_Recovery_Decay := 0.01;
+    GVL_CONFIG_CONTROL.STG_Min_Sensor_Confidence := 0.1;
+    GVL_CONFIG_CONTROL.STG_Bad_Spike_Confidence := 0.3;
+    GVL_CONFIG_CONTROL.STG_Default_Confidence := 1.0;
+
+    GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate := 0.05;
+    GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Recovery_Decay := 0.01;
+    GVL_INPUT_VALIDATION_CONFIG.G_Min_Sensor_Confidence := 0.1;
+    GVL_INPUT_VALIDATION_CONFIG.G_Bad_Spike_Confidence := 0.3;
+    GVL_INPUT_VALIDATION_CONFIG.G_Default_Confidence := 1.0;
+
+    GVL_CONFIG_CONTROL.STG_Night_Start_Hour := 22;
+    GVL_CONFIG_CONTROL.STG_Night_End_Hour := 6;
+    GVL_CONFIG_CONTROL.STG_VentBoost_Humidity_Threshold := 65.0;
+
+    GVL_SCENARIO_CONFIG.G_Night_Start_Hour := 22;
+    GVL_SCENARIO_CONFIG.G_Night_End_Hour := 6;
+    GVL_SCENARIO_CONFIG.G_VentBoost_Humidity_Threshold := 65.0;
+
+    GVL_CONFIG_CONTROL.STG_Stabilization_Delay_MS := 5000;
+    GVL_SAFETY_RECOVERY_CONFIG.G_Stabilization_Delay_MS := 5000;
+
+    GVL_CONFIG_CONTROL.STG_PLC_Inactive_Close_Gas := TRUE;
+    GVL_CONFIG_CONTROL.STG_PLC_Inactive_Stop_Boiler := TRUE;
+    GVL_CONFIG_CONTROL.STG_PLC_Inactive_Block_Heating := TRUE;
+    GVL_CONFIG_CONTROL.STG_PLC_Inactive_Stop_Vent := TRUE;
+    GVL_CONFIG_CONTROL.STG_PLC_Inactive_Block_Water := TRUE;
+
+    GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Close_Gas := TRUE;
+    GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Boiler := TRUE;
+    GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Heating := TRUE;
+    GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Stop_Vent := TRUE;
+    GVL_COMMAND_POLICY_CONFIG.G_PLC_Inactive_Block_Water := TRUE;
+
+    GVL_CONFIG_CONTROL.G_Config_Version := GVL_CONFIG_CONTROL.G_Config_Version + 1;
+    GVL_CONFIG_CONTROL.G_Last_Good_Version := GVL_CONFIG_CONTROL.G_Config_Version;
+    GVL_CONFIG_CONTROL.G_Backup_Valid := TRUE;
+    GVL_CONFIG_VALIDATION.G_Config_Reset_To_Default_Done := TRUE;
+    GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := '';
+
+    L_Index := GVL_CONFIG_HISTORY.G_History_Index;
+    GVL_CONFIG_HISTORY.G_History_Version[L_Index] := GVL_CONFIG_CONTROL.G_Config_Version;
+    GVL_CONFIG_HISTORY.G_History_Time_MS[L_Index] := GVL_TIME_SERVICE.G_Now_MS;
+    GVL_CONFIG_HISTORY.G_History_Action[L_Index] := 'RESET_DEFAULT';
+    GVL_CONFIG_HISTORY.G_Last_Action_Text := 'CONFIG RESET DEFAULT';
+
+    L_Index := L_Index + 1;
+    IF L_Index > 5 THEN L_Index := 1; END_IF;
+    GVL_CONFIG_HISTORY.G_History_Index := L_Index;
+
+    GVL_CONFIG_CONTROL.G_Reset_Default_Request := FALSE;
+    GVL_CONFIG_CONTROL.G_Reset_Default_Confirm := FALSE;
 END_IF;
 
 // ===== ROLLBACK TO LAST BACKUP =====
