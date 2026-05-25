@@ -12,6 +12,21 @@ VAR
     L_Target_Available : BOOL;
 END_VAR
 
+// Daily automatic configuration backup scheduler. It publishes the same
+// one-shot request as HMI/gateway paths and never writes files directly.
+IF GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Enabled THEN
+    IF (GVL_TIME_SERVICE.G_Day_Of_Week >= 1) AND
+       (GVL_TIME_SERVICE.G_Day_Of_Week <= 7) AND
+       (GVL_TIME_SERVICE.G_Time_Of_Day_MS >= GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Time_Of_Day_MS) THEN
+        IF GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Day_Of_Week <> GVL_TIME_SERVICE.G_Day_Of_Week THEN
+            GVL_FILE_ARCHIVE.G_Write_Config_Backup_Request := TRUE;
+            GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Day_Of_Week := GVL_TIME_SERVICE.G_Day_Of_Week;
+            GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Request_MS := GVL_TIME_SERVICE.G_Now_MS;
+            GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Status_Text := 'Auto config backup request published';
+        END_IF;
+    END_IF;
+END_IF;
+
 L_Request_Active :=
     GVL_FILE_ARCHIVE.G_Write_Event_CSV_Request
     OR GVL_FILE_ARCHIVE.G_Write_Trend_CSV_Request
