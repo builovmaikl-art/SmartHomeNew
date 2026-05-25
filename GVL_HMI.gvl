@@ -68,6 +68,18 @@ VAR_GLOBAL
     G_HMI_Config_Control_Last_Update_MS : UDINT;
     G_HMI_Config_Control_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ERROR
 
+    // Config workflow dashboard.
+    G_HMI_Config_Workflow_Runtime_Valid : BOOL;
+    G_HMI_Config_Workflow_Draft_Dirty : BOOL;
+    G_HMI_Config_Workflow_Validation_OK : BOOL;
+    G_HMI_Config_Workflow_Validation_Failed : BOOL;
+    G_HMI_Config_Workflow_Draft_Version : UDINT;
+    G_HMI_Config_Workflow_Validated_Draft_Version : UDINT;
+    G_HMI_Config_Workflow_Validation_Last_Run_MS : UDINT;
+    G_HMI_Config_Workflow_Status_Code : UINT;
+    G_HMI_Config_Workflow_Status_Text : STRING(160);
+    G_HMI_Config_Workflow_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ERROR
+
     // Config simulation dashboard.
     G_HMI_Config_Simulation_Request_Pending : BOOL;
     G_HMI_Config_Simulation_Result_OK : BOOL;
