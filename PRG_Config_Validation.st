@@ -265,8 +265,16 @@ GVL_CONFIG_VALIDATION.G_Config_Critical_Error := L_Config_Error;
 GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS := GVL_STATUS.G_System_Time_MS;
 
 IF L_Config_Error THEN
-    GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := 'CONFIG VALIDATION ERROR';
+    GVL_CONFIG_VALIDATION.G_Config_Active_Error_Text := 'CONFIG VALIDATION ERROR';
     GVL_STATUS.G_System_Mode_Text := 'CONFIG ERROR';
+ELSE
+    GVL_CONFIG_VALIDATION.G_Config_Active_Error_Text := '';
+END_IF;
+
+IF GVL_CONFIG_VALIDATION.G_Config_Active_Error_Text <> '' THEN
+    GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := GVL_CONFIG_VALIDATION.G_Config_Active_Error_Text;
+ELSIF GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text <> '' THEN
+    GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text;
 ELSE
     GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := '';
 END_IF;
