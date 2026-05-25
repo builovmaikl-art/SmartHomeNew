@@ -72,7 +72,10 @@ IF L_State.Validation_Requested THEN
     GVL_CONFIG_SIMULATION.G_Simulation_Confirm := TRUE;
 END_IF;
 
-IF GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0 THEN
+// Consume only a new simulation result. Reusing the previous Last_Run_MS after
+// a draft change would incorrectly validate a new draft with an old result.
+IF (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0) AND
+   (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> L_State.Validation_Last_Run_MS) THEN
 
     IF GVL_Config_Activation.G_Activation_State.Staged_Config_Valid
        AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
