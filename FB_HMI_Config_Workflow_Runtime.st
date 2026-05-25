@@ -31,6 +31,9 @@ L_State.Activation_Requested :=
 L_State.Rollback_Requested :=
     GVL_HMI_Config_Workflow.G_Rollback_Request;
 
+L_State.Reset_Default_Requested :=
+    GVL_HMI_Config_Workflow.G_Reset_Default_Request;
+
 L_State.Active_Version :=
     GVL_Water_Topology_Config.G_Active_Config_Version;
 
@@ -48,6 +51,7 @@ L_State.Operator_Ack_Required := TRUE;
 L_State.Activation_Allowed := FALSE;
 L_State.Activation_Blocked := FALSE;
 L_State.Rollback_Allowed := FALSE;
+L_State.Reset_Default_Allowed := FALSE;
 
 IF L_State.Editor_Open THEN
     L_State.Edit_Session_Active := TRUE;
@@ -101,6 +105,19 @@ IF L_State.Rollback_Requested THEN
 
 END_IF;
 
+IF L_State.Reset_Default_Requested THEN
+
+    IF GVL_HMI_Config_Workflow.G_Service_Mode_Active
+       AND GVL_HMI_Config_Workflow.G_Operator_Ack THEN
+
+        L_State.Reset_Default_Allowed := TRUE;
+        GVL_CONFIG_CONTROL.G_Reset_Default_Request := TRUE;
+        GVL_CONFIG_CONTROL.G_Reset_Default_Confirm := TRUE;
+
+    END_IF;
+
+END_IF;
+
 IF L_State.Activation_Blocked THEN
 
     L_State.Status_Code := 2;
@@ -120,6 +137,11 @@ ELSIF L_State.Rollback_Allowed THEN
 
     L_State.Status_Code := 0;
     L_State.Status_Text := 'HMI config rollback requested';
+
+ELSIF L_State.Reset_Default_Allowed THEN
+
+    L_State.Status_Code := 0;
+    L_State.Status_Text := 'HMI config reset default requested';
 
 ELSIF L_State.Validation_OK THEN
 
@@ -150,6 +172,10 @@ END_IF;
 
 IF GVL_HMI_Config_Workflow.G_Rollback_Request THEN
     GVL_HMI_Config_Workflow.G_Rollback_Request := FALSE;
+END_IF;
+
+IF GVL_HMI_Config_Workflow.G_Reset_Default_Request THEN
+    GVL_HMI_Config_Workflow.G_Reset_Default_Request := FALSE;
 END_IF;
 
 END_FUNCTION_BLOCK
