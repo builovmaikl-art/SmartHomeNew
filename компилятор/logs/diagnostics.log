@@ -509,7 +509,7 @@ drwxr-xr-x  3 runner runner   4096 May 25 09:11 .github
 -rw-r--r--  1 runner runner    769 May 25 09:11 PRG_Execution_Progress_Causality_Governor.st
 -rw-r--r--  1 runner runner   6077 May 25 09:11 PRG_Execution_Projection_Integrity_Governor.st
 -rw-r--r--  1 runner runner   2758 May 25 09:11 PRG_Explainability.st
--rw-r--r--  1 runner runner   5195 May 25 09:11 PRG_File_Archive_HMI_Applicator.st
+-rw-r--r--  1 runner runner   6968 May 25 09:11 PRG_File_Archive_HMI_Applicator.st
 -rw-r--r--  1 runner runner   3247 May 25 09:11 PRG_File_Archive_Manager.st
 -rw-r--r--  1 runner runner   5040 May 25 09:11 PRG_Forensic_Evidence_Governor.st
 -rw-r--r--  1 runner runner   4899 May 25 09:11 PRG_Global_Authority_Sync_Governor.st
@@ -819,8 +819,7 @@ drwxr-xr-x  2 runner runner   4096 May 25 09:11 out
 -rw-r--r--  1 runner runner    177 May 25 09:11 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2824
-drwxr-xr-x 2 runner runner    4096 May 25 09:11 .
-drwxr-xr-x 5 runner runner    4096 May 25 09:11 ..
--rw-r--r-- 1 runner runner       0 May 25 09:11 .gitkeep
--rw-r--r-- 1 runner runner 2883481 May 25 09:11 RESULT_methods_clean.xml
+total 8
+drwxr-xr-x 2 runner runner 4096 May 25 09:11 .
+drwxr-xr-x 5 runner runner 4096 May 25 09:11 ..
+-rw-r--r-- 1 runner runner    0 May 25 09:11 .gitkeep
