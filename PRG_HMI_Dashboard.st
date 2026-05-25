@@ -158,6 +158,9 @@ GVL_HMI.G_HMI_Config_Control_Last_Update_MS := GVL_CONFIG_VALIDATION.G_Config_La
 
 IF NOT GVL_CONFIG_VALIDATION.G_Config_Valid THEN
     GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
+ELSIF (GVL_CONFIG_HISTORY.G_Last_Action_Text = 'CONFIG APPLY REJECTED') OR
+      (GVL_CONFIG_HISTORY.G_Last_Action_Text = 'CONFIG ROLLBACK REJECTED - NO BACKUP') THEN
+    GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
 ELSIF GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text <> '' THEN
     GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
 ELSIF GVL_CONFIG_CONTROL.G_Apply_Request OR GVL_CONFIG_CONTROL.G_Rollback_Request THEN
