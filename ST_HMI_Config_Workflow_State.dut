@@ -18,6 +18,9 @@ STRUCT
     Rollback_Requested : BOOL;
     Rollback_Allowed : BOOL;
 
+    Reset_Default_Requested : BOOL;
+    Reset_Default_Allowed : BOOL;
+
     Operator_Ack_Required : BOOL;
     Service_Mode_Required : BOOL;
     Quarantine_Visible : BOOL;
