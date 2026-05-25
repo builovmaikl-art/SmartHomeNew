@@ -72,10 +72,10 @@ IF L_State.Validation_Requested THEN
     GVL_CONFIG_SIMULATION.G_Simulation_Confirm := TRUE;
 END_IF;
 
-// Consume only a new simulation result. Reusing the previous Last_Run_MS after
-// a draft change would incorrectly validate a new draft with an old result.
-IF (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0) AND
-   (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> L_State.Validation_Last_Run_MS) THEN
+// Consume only a new simulation result. Sequence is used instead of timestamp so
+// repeated simulation runs in the same millisecond are still detected.
+IF (GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq <> 0) AND
+   (GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq <> L_State.Validation_Result_Seq) THEN
 
     IF GVL_Config_Activation.G_Activation_State.Staged_Config_Valid
        AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
@@ -84,6 +84,7 @@ IF (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0) AND
         L_State.Validation_Failed := FALSE;
         L_State.Validated_Draft_Version := L_State.Draft_Version;
         L_State.Validation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
+        L_State.Validation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq;
         L_State.Draft_Dirty := FALSE;
 
     ELSE
@@ -91,6 +92,7 @@ IF (GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0) AND
         L_State.Validation_OK := FALSE;
         L_State.Validation_Failed := TRUE;
         L_State.Validation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
+        L_State.Validation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq;
 
     END_IF;
 
