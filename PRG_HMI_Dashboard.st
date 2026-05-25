@@ -157,6 +157,31 @@ GVL_HMI.G_HMI_Config_Control_Last_Action_Text := GVL_CONFIG_HISTORY.G_Last_Actio
 GVL_HMI.G_HMI_Config_Control_Last_Error_Text := GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text;
 GVL_HMI.G_HMI_Config_Control_Last_Update_MS := GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS;
 
+// ======================================================
+// CONFIG WORKFLOW STATUS (READ-ONLY DASHBOARD)
+// ======================================================
+GVL_HMI.G_HMI_Config_Workflow_Runtime_Valid := GVL_HMI_Config_Workflow.G_Runtime_Valid;
+GVL_HMI.G_HMI_Config_Workflow_Draft_Dirty := GVL_HMI_Config_Workflow.G_Workflow_State.Draft_Dirty;
+GVL_HMI.G_HMI_Config_Workflow_Validation_OK := GVL_HMI_Config_Workflow.G_Workflow_State.Validation_OK;
+GVL_HMI.G_HMI_Config_Workflow_Validation_Failed := GVL_HMI_Config_Workflow.G_Workflow_State.Validation_Failed;
+GVL_HMI.G_HMI_Config_Workflow_Draft_Version := GVL_HMI_Config_Workflow.G_Workflow_State.Draft_Version;
+GVL_HMI.G_HMI_Config_Workflow_Validated_Draft_Version := GVL_HMI_Config_Workflow.G_Workflow_State.Validated_Draft_Version;
+GVL_HMI.G_HMI_Config_Workflow_Validation_Last_Run_MS := GVL_HMI_Config_Workflow.G_Workflow_State.Validation_Last_Run_MS;
+GVL_HMI.G_HMI_Config_Workflow_Status_Code := GVL_HMI_Config_Workflow.G_Status_Code;
+GVL_HMI.G_HMI_Config_Workflow_Status_Text := GVL_HMI_Config_Workflow.G_Status_Text;
+
+IF NOT GVL_HMI_Config_Workflow.G_Runtime_Valid THEN
+    GVL_HMI.G_HMI_Config_Workflow_Status_Level := 2;
+ELSIF GVL_HMI_Config_Workflow.G_Workflow_State.Validation_Failed THEN
+    GVL_HMI.G_HMI_Config_Workflow_Status_Level := 2;
+ELSIF GVL_HMI_Config_Workflow.G_Workflow_State.Draft_Dirty THEN
+    GVL_HMI.G_HMI_Config_Workflow_Status_Level := 1;
+ELSIF GVL_HMI_Config_Workflow.G_Status_Code > 0 THEN
+    GVL_HMI.G_HMI_Config_Workflow_Status_Level := 1;
+ELSE
+    GVL_HMI.G_HMI_Config_Workflow_Status_Level := 0;
+END_IF;
+
 GVL_HMI.G_HMI_Config_Simulation_Request_Pending :=
     GVL_CONFIG_SIMULATION.G_Simulation_Request OR GVL_CONFIG_SIMULATION.G_Simulation_Confirm;
 GVL_HMI.G_HMI_Config_Simulation_Result_OK := GVL_CONFIG_SIMULATION.G_Simulation_Result_OK;
