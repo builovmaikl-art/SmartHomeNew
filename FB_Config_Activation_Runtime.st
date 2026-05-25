@@ -48,16 +48,29 @@ END_FOR;
 L_State.Staged_Config_Valid := L_Staged_Valid;
 L_State.Migration_Compatible := TRUE;
 
-IF L_State.Rollback_Requested
-   AND L_State.Rollback_Available THEN
+IF L_State.Rollback_Requested THEN
 
-    L_State.Rollback_Active := TRUE;
-    L_State.Activation_Blocked := TRUE;
+    IF L_State.Rollback_Available THEN
 
-    GVL_Config_Activation.G_Config_Quarantine_Active := FALSE;
+        L_State.Rollback_Active := TRUE;
+        L_State.Activation_Blocked := TRUE;
 
-    L_State.Status_Code := 3;
-    L_State.Status_Text := 'Rollback activation active';
+        GVL_Config_Activation.G_Config_Quarantine_Active := FALSE;
+
+        L_State.Status_Code := 3;
+        L_State.Status_Text := 'Rollback activation active';
+
+    ELSE
+
+        L_State.Rollback_Active := FALSE;
+        L_State.Activation_Blocked := TRUE;
+
+        L_State.Status_Code := 4;
+        L_State.Status_Text := 'Rollback rejected: no stable version';
+
+    END_IF;
+
+    GVL_Config_Activation.G_Rollback_Request := FALSE;
 
 ELSIF L_State.Activation_Requested THEN
 
@@ -97,6 +110,8 @@ ELSIF L_State.Activation_Requested THEN
         L_State.Status_Text := 'Config activation completed';
 
     END_IF;
+
+    GVL_Config_Activation.G_Activation_Request := FALSE;
 
 ELSE
 
