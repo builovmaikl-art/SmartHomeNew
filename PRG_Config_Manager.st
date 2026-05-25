@@ -89,7 +89,7 @@ IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THE
         IF L_Index > 5 THEN L_Index := 1; END_IF;
         GVL_CONFIG_HISTORY.G_History_Index := L_Index;
 
-        GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := 'STAGED CONFIG INVALID';
+        GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'STAGED CONFIG INVALID';
     ELSE
         // Backup current active values before applying staged values.
         GVL_CONFIG_CONTROL.BCK_Reputation_Learning_Rate := GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate;
@@ -136,6 +136,7 @@ IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THE
         GVL_CONFIG_CONTROL.G_Last_Good_Version := GVL_CONFIG_CONTROL.G_Config_Version;
         GVL_CONFIG_CONTROL.G_Backup_Valid := TRUE;
         GVL_CONFIG_CONTROL.G_Apply_Done := TRUE;
+        GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := '';
 
         L_Index := GVL_CONFIG_HISTORY.G_History_Index;
         GVL_CONFIG_HISTORY.G_History_Version[L_Index] := GVL_CONFIG_CONTROL.G_Config_Version;
@@ -213,7 +214,7 @@ IF GVL_CONFIG_CONTROL.G_Reset_Default_Request AND GVL_CONFIG_CONTROL.G_Reset_Def
     GVL_CONFIG_CONTROL.G_Last_Good_Version := GVL_CONFIG_CONTROL.G_Config_Version;
     GVL_CONFIG_CONTROL.G_Backup_Valid := TRUE;
     GVL_CONFIG_VALIDATION.G_Config_Reset_To_Default_Done := TRUE;
-    GVL_CONFIG_VALIDATION.G_Config_Last_Error_Text := '';
+    GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := '';
 
     L_Index := GVL_CONFIG_HISTORY.G_History_Index;
     GVL_CONFIG_HISTORY.G_History_Version[L_Index] := GVL_CONFIG_CONTROL.G_Config_Version;
@@ -252,6 +253,7 @@ IF GVL_CONFIG_CONTROL.G_Rollback_Request AND GVL_CONFIG_CONTROL.G_Rollback_Confi
 
         GVL_CONFIG_CONTROL.G_Config_Version := GVL_CONFIG_CONTROL.G_Config_Version + 1;
         GVL_CONFIG_CONTROL.G_Rollback_Done := TRUE;
+        GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := '';
 
         L_Index := GVL_CONFIG_HISTORY.G_History_Index;
         GVL_CONFIG_HISTORY.G_History_Version[L_Index] := GVL_CONFIG_CONTROL.G_Config_Version;
@@ -264,6 +266,7 @@ IF GVL_CONFIG_CONTROL.G_Rollback_Request AND GVL_CONFIG_CONTROL.G_Rollback_Confi
         GVL_CONFIG_HISTORY.G_History_Index := L_Index;
     ELSE
         GVL_CONFIG_HISTORY.G_Last_Action_Text := 'CONFIG ROLLBACK REJECTED - NO BACKUP';
+        GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'ROLLBACK REJECTED - NO BACKUP';
     END_IF;
 
     GVL_CONFIG_CONTROL.G_Rollback_Request := FALSE;
