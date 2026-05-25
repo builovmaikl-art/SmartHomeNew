@@ -89,5 +89,6 @@ VAR_GLOBAL
     G_HMI_Config_Simulation_Error_Text : STRING(200);
     G_HMI_Config_Simulation_Last_Run_MS : UDINT;
     G_HMI_Config_Simulation_Result_Seq : UDINT;
+    G_HMI_Config_Simulation_Staged_Config_Version : UDINT;
     G_HMI_Config_Simulation_Status_Level : INT := 0; // 0=OK, 1=PENDING, 2=ERROR
 END_VAR
