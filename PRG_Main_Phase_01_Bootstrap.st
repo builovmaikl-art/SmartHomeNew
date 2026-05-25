@@ -72,6 +72,7 @@ PRG_Time_Monotonic_Governor();
 GVL_MAIN_PHASE_FEEDBACK.G_Cycle_Start_MS := GVL_TIME_SERVICE.G_Now_MS;
 
 PRG_System_Init();
+PRG_Config_Staged_Change_Monitor();
 PRG_Config_Manager();
 PRG_Config_Validation();
 PRG_Config_Versioning();
