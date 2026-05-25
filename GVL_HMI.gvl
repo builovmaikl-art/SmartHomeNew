@@ -77,6 +77,8 @@ VAR_GLOBAL
     G_HMI_Config_Workflow_Validation_Failed : BOOL;
     G_HMI_Config_Workflow_Draft_Version : UDINT;
     G_HMI_Config_Workflow_Validated_Draft_Version : UDINT;
+    G_HMI_Config_Workflow_Topology_Draft_Version : UDINT;
+    G_HMI_Config_Workflow_Validated_Topology_Version : UDINT;
     G_HMI_Config_Workflow_Validation_Last_Run_MS : UDINT;
     G_HMI_Config_Workflow_Validation_Result_Seq : UDINT;
     G_HMI_Config_Workflow_Topology_Activation_Required : BOOL;
