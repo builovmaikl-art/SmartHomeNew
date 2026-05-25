@@ -31,6 +31,8 @@ STRUCT
     Active_Version : UDINT;
     Draft_Version : UDINT;
     Last_Stable_Version : UDINT;
+    Topology_Draft_Version : UDINT;
+    Validated_Topology_Version : UDINT;
     Topology_Activation_Required : BOOL;
     Topology_Validation_OK : BOOL;
 
