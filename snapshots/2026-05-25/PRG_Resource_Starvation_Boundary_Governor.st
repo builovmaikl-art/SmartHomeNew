@@ -1,0 +1,12 @@
+PROGRAM PRG_Resource_Starvation_Boundary_Governor
+IF GVL_EXECUTION_PROGRESS_CAUSALITY_FABRIC.Execution_Progress_Causality_Granted
+AND NOT GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Resource_Starvation_Detected
+AND NOT GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Scheduler_Starvation_Detected
+AND NOT GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Distributed_Allocation_Deadlock_Detected THEN
+
+    GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Resource_Starvation_Boundary_Valid := TRUE;
+    GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Resource_Starvation_Boundary_Granted := TRUE;
+    GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Resource_Starvation_Bounded := TRUE;
+    GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Fair_Execution_Scheduling_Valid := TRUE;
+END_IF;
+END_PROGRAM

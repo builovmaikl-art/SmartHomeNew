@@ -1,0 +1,11 @@
+{attribute 'strict'}
+TYPE E_Recovery_Phase :
+(
+    IDLE := 0,
+    STABILIZING := 1,
+    WAIT_MANUAL_CONFIRM := 2,
+    RECOVERING := 3,
+    COOLDOWN := 4,
+    ABORTED := 5
+) USINT;
+END_TYPE

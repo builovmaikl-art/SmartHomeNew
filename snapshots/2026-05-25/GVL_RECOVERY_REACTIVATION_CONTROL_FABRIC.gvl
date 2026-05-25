@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Recovery_Reactivation_Control_Valid : BOOL := FALSE;
+    Recovery_Reactivation_Control_Granted : BOOL := FALSE;
+
+    Recovery_Reactivation_Boundary_Stable : BOOL := FALSE;
+    CrossSubsystem_Reactivation_Consistent : BOOL := FALSE;
+    Reactivation_Energy_Boundary_Safe : BOOL := FALSE;
+
+    Reactivation_Causality_Grounded : BOOL := FALSE;
+    Reactivation_Ordering_Stable : BOOL := FALSE;
+
+    Unsafe_Reactivation_Ordering_Detected : BOOL := FALSE;
+    Partial_Reactivation_Leak_Detected : BOOL := FALSE;
+    CrossSubsystem_Reactivation_Fork : BOOL := FALSE;
+
+    Recovery_Reactivation_Epoch : UDINT := 0;
+END_VAR

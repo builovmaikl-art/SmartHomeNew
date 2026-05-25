@@ -1,0 +1,27 @@
+VAR_GLOBAL
+    // Global physical authority epoch.
+    Physical_Authority_Epoch : UDINT := 0;
+    Physical_Authority_Epoch_Valid : BOOL := FALSE;
+
+    // Cross-governor epoch coherence.
+    Snapshot_Epoch_Coherent : BOOL := FALSE;
+    Consensus_Epoch_Coherent : BOOL := FALSE;
+    Causality_Epoch_Coherent : BOOL := FALSE;
+    PreOutput_Epoch_Coherent : BOOL := FALSE;
+
+    // Epoch divergence detection.
+    Physical_Epoch_Drift_Detected : BOOL := FALSE;
+    Physical_Epoch_Replay_Suspected : BOOL := FALSE;
+    Partial_Epoch_Advancement_Detected : BOOL := FALSE;
+    Cross_Cycle_Epoch_Skew_Detected : BOOL := FALSE;
+
+    // Temporal authority.
+    Physical_Authority_Lease_Expired : BOOL := TRUE;
+    Physical_Authority_Quarantine_Active : BOOL := TRUE;
+    Physical_Authority_Last_Update_MS : UDINT := 0;
+
+    // Diagnostics.
+    Physical_Authority_Last_Error_Code : UDINT := 0;
+    Physical_Authority_Last_Error_Text : STRING(160) := '';
+    Physical_Authority_Invalidation_Count : UDINT := 0;
+END_VAR

@@ -1,0 +1,21 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL RETAIN
+    G_Authority_State : ST_Distributed_Authority_State;
+
+    G_Master_Controller_Id : UINT;
+    G_Backup_Controller_Id : UINT;
+
+    G_Authority_Lease_Start_MS : UDINT;
+    G_Authority_Lease_Duration_MS : UDINT := 30000;
+END_VAR
+
+VAR_GLOBAL
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Split_Brain_Blocked : BOOL;
+    G_Distributed_Safety_Barrier_OK : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

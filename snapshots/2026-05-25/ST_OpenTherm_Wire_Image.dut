@@ -1,0 +1,19 @@
+TYPE ST_OpenTherm_Wire_Image :
+STRUCT
+    // Command image to be written to the physical adapter.
+    Cmd_Enable : WORD;
+    Cmd_Setpoint_x10 : WORD;
+    Cmd_Seq_Lo : WORD;
+    Cmd_Seq_Hi : WORD;
+
+    // Status image read from the physical adapter.
+    Status_Heartbeat_Lo : WORD;
+    Status_Heartbeat_Hi : WORD;
+    Status_Ack_Seq_Lo : WORD;
+    Status_Ack_Seq_Hi : WORD;
+    Status_Word : WORD;
+    Error_Code : WORD;
+    Modulation_x10 : WORD;
+    Boiler_Temp_x10 : WORD;
+END_STRUCT
+END_TYPE

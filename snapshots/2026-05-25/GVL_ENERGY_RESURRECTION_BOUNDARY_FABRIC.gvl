@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Energy_Resurrection_Boundary_Valid : BOOL := FALSE;
+    Energy_Resurrection_Boundary_Granted : BOOL := FALSE;
+
+    Energy_Resurrection_Causality_Valid : BOOL := FALSE;
+    Energy_Authority_Recovery_Bounded : BOOL := FALSE;
+    CrossDomain_Energy_Recovery_Stable : BOOL := FALSE;
+
+    Energy_Resurrection_Ordering_Valid : BOOL := FALSE;
+    Distributed_Energy_Recovery_Consensus : BOOL := FALSE;
+
+    Unsafe_Energy_Resurrection_Detected : BOOL := FALSE;
+    CrossDomain_Energy_Recovery_Race : BOOL := FALSE;
+    Energy_Recovery_Fork_Detected : BOOL := FALSE;
+
+    Energy_Resurrection_Epoch : UDINT := 0;
+END_VAR

@@ -1,0 +1,9 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Predictive source-stability observability layer.
+    // Observation-only: no runtime authority, no valve ownership,
+    // no direct influence on heating outputs.
+
+    // Canonical predictive observability contract.
+    G_State : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_Heating_Runtime_Source_Instability_State;
+END_VAR

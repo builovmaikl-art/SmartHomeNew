@@ -1,0 +1,72 @@
+TYPE ST_Heating_Runtime_Observation :
+STRUCT
+    // ======================================================
+    // Runtime execution state
+    // ======================================================
+    Runtime_Active : BOOL;
+    Runtime_Ready : BOOL;
+    Runtime_Fault : BOOL;
+
+    // ======================================================
+    // Runtime phase observation
+    // ======================================================
+    Current_Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // DHW runtime observation
+    // ======================================================
+    DHW_Demand_Active : BOOL;
+    DHW_Heating_Active : BOOL;
+    DHW_Circulation_Active : BOOL;
+
+    // ======================================================
+    // Heating runtime observation
+    // ======================================================
+    Heating_Demand_Active : BOOL;
+    Heating_Runtime_Active : BOOL;
+    Heating_Output_Active : BOOL;
+
+    // ======================================================
+    // Cascade runtime observation
+    // ======================================================
+    Cascade_Available : BOOL;
+    Cascade_Degraded : BOOL;
+    Cascade_Active_Boilers : UINT;
+    Cascade_Available_Boilers : UINT;
+
+    // ======================================================
+    // OpenTherm runtime observation
+    // ======================================================
+    OpenTherm_Online : BOOL;
+    OpenTherm_Command_Valid : BOOL;
+    OpenTherm_Transport_Degraded : BOOL;
+
+    // ======================================================
+    // Diagnostics observation
+    // ======================================================
+    Diagnostics_Active : BOOL;
+    Explainability_Active : BOOL;
+
+    // ======================================================
+    // Runtime sequencing observation
+    // ======================================================
+    DHW_Before_Heating_Observed : BOOL;
+    Diagnostics_After_Publication_Observed : BOOL;
+    Output_Projection_Last_Observed : BOOL;
+
+    // ======================================================
+    // Runtime ownership observation
+    // ======================================================
+    Runtime_Ownership_Valid : BOOL;
+    Diagnostics_Ownership_Valid : BOOL;
+    OpenTherm_Ownership_Valid : BOOL;
+    Cascade_Ownership_Valid : BOOL;
+    Safety_Ownership_Valid : BOOL;
+
+    // ======================================================
+    // Runtime observation status
+    // ======================================================
+    Observation_Status_Code : UINT;
+    Observation_Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

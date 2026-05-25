@@ -1,0 +1,33 @@
+VAR_GLOBAL
+    // ======================================================
+    // DISTRIBUTED PLC OWNERSHIP / FENCING STATE
+    // ======================================================
+    // Centralized ownership epoch governance.
+    // Used to prevent split-brain and stale-owner resurrection.
+    // ======================================================
+
+    PLC_Ownership_Epoch : ULINT := 0;
+    PLC_Fencing_Token : ULINT := 0;
+
+    PLC_Ownership_Valid : BOOL := FALSE;
+    PLC_Semantic_Authority_Valid : BOOL := FALSE;
+    PLC_Heartbeat_Only_Mode : BOOL := FALSE;
+
+    PLC_Lease_Active : BOOL := FALSE;
+    PLC_Lease_Expired : BOOL := FALSE;
+    PLC_Lease_Timeout_MS : UDINT := 5000;
+
+    PLC_Last_Lease_Refresh_MS : UDINT := 0;
+    PLC_Last_Authority_Validation_MS : UDINT := 0;
+
+    PLC_Split_Brain_Detected : BOOL := FALSE;
+    PLC_Stale_Owner_Detected : BOOL := FALSE;
+    PLC_Asymmetric_Partition_Detected : BOOL := FALSE;
+
+    PLC_Forced_Safe_Quarantine : BOOL := FALSE;
+
+    PLC_Last_Error_Code : UDINT := 0;
+    PLC_Last_Error_Text : STRING(160) := '';
+
+    PLC_Fencing_Invalidation_Count : UDINT := 0;
+END_VAR

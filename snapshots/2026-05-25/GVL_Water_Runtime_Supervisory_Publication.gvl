@@ -1,0 +1,27 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Water/Flood passive supervisory publication.
+    // Observe/publish-only. No runtime or valve authority.
+
+    G_Supervisory_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    // Aggregated domain state.
+    G_Any_Leak_Active : BOOL;
+    G_Any_Warning_Active : BOOL;
+    G_Any_Degraded_Mapping : BOOL;
+    G_Selective_Isolation_Available : BOOL;
+    G_Global_Fallback_Active : BOOL;
+
+    // Current runtime visibility.
+    G_Active_Global_Close_Path : BOOL;
+    G_Active_Safety_Latch : BOOL;
+
+    // Topology anchors.
+    G_Affected_Hydraulic_Zone : UINT;
+    G_Affected_Valve_Group : UINT;
+
+    // Explainability aggregation.
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR

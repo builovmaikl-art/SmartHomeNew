@@ -1,0 +1,74 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // MAIN phase feedback is observational only.
+    // It does not gate execution and does not control physical outputs.
+
+    G_Cycle_Start_MS : UDINT;
+    G_Last_Update_MS : UDINT;
+    G_Current_Phase : UINT;
+
+    G_Phase_01_Bootstrap_Executed : BOOL;
+    G_Phase_01_Bootstrap_Valid : BOOL;
+    G_Phase_01_Bootstrap_Status_Text : STRING(128);
+
+    G_Phase_02_Redundancy_Executed : BOOL;
+    G_Phase_02_Redundancy_Valid : BOOL;
+    G_Phase_02_Redundancy_Status_Text : STRING(128);
+
+    G_Phase_03_Input_Safety_Command_Executed : BOOL;
+    G_Phase_03_Input_Safety_Command_Valid : BOOL;
+    G_Phase_03_Input_Safety_Command_Status_Text : STRING(128);
+
+    G_Phase_04_Transport_Distributed_Executed : BOOL;
+    G_Phase_04_Transport_Distributed_Valid : BOOL;
+    G_Phase_04_Transport_Distributed_Status_Text : STRING(128);
+
+    G_Phase_05_Domain_Output_Executed : BOOL;
+    G_Phase_05_Domain_Output_Valid : BOOL;
+    G_Phase_05_Domain_Output_Status_Text : STRING(128);
+
+    G_Phase_06_PostOutput_Authority_Executed : BOOL;
+    G_Phase_06_PostOutput_Authority_Valid : BOOL;
+    G_Phase_06_PostOutput_Authority_Status_Text : STRING(128);
+
+    G_Phase_07_Semantic_Governance_Executed : BOOL;
+    G_Phase_07_Semantic_Governance_Valid : BOOL;
+    G_Phase_07_Semantic_Governance_Status_Text : STRING(128);
+
+    G_Phase_07_Full_Semantic_Requested : BOOL;
+    G_Phase_07_Full_Semantic_Executed : BOOL;
+    G_Phase_07_Full_Semantic_Skipped_By_Design : BOOL;
+
+    G_Phase_07_Extended_Observability_Requested : BOOL;
+    G_Phase_07_Extended_Observability_Executed : BOOL;
+    G_Phase_07_Extended_Observability_Skipped_By_Design : BOOL;
+
+    G_Phase_07_Analytics_Requested : BOOL;
+    G_Phase_07_Analytics_Executed : BOOL;
+    G_Phase_07_Analytics_Skipped_By_Design : BOOL;
+
+    G_Phase_08_Diagnostics_HMI_Executed : BOOL;
+    G_Phase_08_Diagnostics_HMI_Valid : BOOL;
+    G_Phase_08_Diagnostics_HMI_Status_Text : STRING(128);
+
+    G_Phase_08_Extended_Diagnostics_Requested : BOOL;
+    G_Phase_08_Extended_Diagnostics_Executed : BOOL;
+    G_Phase_08_Extended_Diagnostics_Skipped_By_Design : BOOL;
+
+    G_Phase_08_Extended_Observability_Requested : BOOL;
+    G_Phase_08_Extended_Observability_Executed : BOOL;
+    G_Phase_08_Extended_Observability_Skipped_By_Design : BOOL;
+
+    G_Phase_08_Simulation_Requested : BOOL;
+    G_Phase_08_Simulation_Executed : BOOL;
+    G_Phase_08_Simulation_Skipped_By_Design : BOOL;
+
+    G_Critical_Path_Executed : BOOL;
+    G_Critical_Path_Valid : BOOL;
+    G_Observability_Path_Executed : BOOL;
+    G_Observability_Path_Valid : BOOL;
+    G_Any_Phase_Invalid : BOOL;
+    G_Any_Phase_Skipped_By_Design : BOOL;
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

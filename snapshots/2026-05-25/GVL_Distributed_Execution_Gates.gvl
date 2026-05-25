@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Can_Replicate : BOOL;
+    G_Can_Execute : BOOL;
+    G_Can_Orchestrate : BOOL;
+    G_Can_Recover : BOOL;
+    G_Can_Rollback : BOOL;
+    G_Can_Own_Projection : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Causality_Reversal_Prevention_Valid : BOOL := FALSE;
+    Causality_Reversal_Prevention_Granted : BOOL := FALSE;
+
+    Causality_Reversal_Prevented : BOOL := FALSE;
+    Authority_Ordering_Canonical : BOOL := FALSE;
+    Revocation_Resurrection_Boundary_Stable : BOOL := FALSE;
+
+    Reversal_Causality_Grounded : BOOL := FALSE;
+    Distributed_Reversal_Consensus_Valid : BOOL := FALSE;
+
+    Causality_Reversal_Detected : BOOL := FALSE;
+    Resurrection_After_Revocation_Detected : BOOL := FALSE;
+    Unsafe_Temporal_Replay_Detected : BOOL := FALSE;
+
+    Causality_Reversal_Epoch : UDINT := 0;
+END_VAR

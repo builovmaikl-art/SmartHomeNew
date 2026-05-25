@@ -1,0 +1,10 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Current_Behavior_Mode : E_Behavior_Mode := BEHAVIOR_HOME;
+    G_Mode_Last_Change_TS : UDINT := 0;
+    G_Mode_Code : UDINT := 0;
+
+    // Explicit behavior-mode requests
+    G_Away_Request : BOOL := FALSE;
+    G_Maintenance_Request : BOOL := FALSE;
+END_VAR

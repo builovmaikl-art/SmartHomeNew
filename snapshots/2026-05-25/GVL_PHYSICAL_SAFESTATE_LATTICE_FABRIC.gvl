@@ -1,0 +1,48 @@
+VAR_GLOBAL
+    // Deterministic physical safe-state lattice governance.
+    Physical_SafeState_Lattice_Valid : BOOL := FALSE;
+    Physical_SafeState_Lattice_Granted : BOOL := FALSE;
+    Physical_SafeState_Lattice_Quarantine_Active : BOOL := TRUE;
+
+    // Canonical safe-state topology proofs.
+    Canonical_SafeState_Topology_Valid : BOOL := FALSE;
+    Physical_SafeState_Lattice_Coherent : BOOL := FALSE;
+    Deterministic_FailSafe_Convergence_Granted : BOOL := FALSE;
+    SafeState_Energy_Boundary_Stable : BOOL := FALSE;
+    SafeState_Physical_Risk_Bounded : BOOL := FALSE;
+
+    // Domain safe-state compatibility.
+    Heating_SafeState_Compatible : BOOL := FALSE;
+    Water_SafeState_Compatible : BOOL := FALSE;
+    Ventilation_SafeState_Compatible : BOOL := FALSE;
+    Access_SafeState_Compatible : BOOL := FALSE;
+    Lighting_SafeState_Compatible : BOOL := FALSE;
+
+    // Physical safe-state convergence validators.
+    Thermal_SafeState_Stable : BOOL := FALSE;
+    Hydraulic_SafeState_Stable : BOOL := FALSE;
+    Airflow_SafeState_Stable : BOOL := FALSE;
+    Occupancy_SafeState_Stable : BOOL := FALSE;
+    Residual_Actuation_Safe : BOOL := FALSE;
+
+    // Safe-state ambiguity detectors.
+    SafeState_Ambiguity_Detected : BOOL := FALSE;
+    Partial_SafeState_Asymmetry_Detected : BOOL := FALSE;
+    Physical_SafeState_Deadlock_Detected : BOOL := FALSE;
+    Unsafe_SafeState_Topology_Detected : BOOL := FALSE;
+    Residual_Unsafe_Actuation_Detected : BOOL := FALSE;
+    SafeState_Energy_Leakage_Detected : BOOL := FALSE;
+
+    // Safe-state epochs.
+    Physical_SafeState_Lattice_Epoch : UDINT := 0;
+    Physical_SafeState_Lattice_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Physical_SafeState_Lattice_Last_Update_MS : UDINT := 0;
+    Physical_SafeState_Lattice_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Physical_SafeState_Lattice_Last_Error_Code : UDINT := 0;
+    Physical_SafeState_Lattice_Last_Error_Text : STRING(160) := '';
+    Physical_SafeState_Lattice_Invalidation_Count : UDINT := 0;
+END_VAR

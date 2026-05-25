@@ -1,0 +1,17 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_State_Startup : BOOL;
+    G_State_Discovery : BOOL;
+    G_State_Synchronization : BOOL;
+    G_State_Operational : BOOL;
+    G_State_Degraded : BOOL;
+    G_State_Observer_Only : BOOL;
+    G_State_Recovery_Lock : BOOL;
+    G_State_Quarantine : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic operator semantic alignment authority.
+    Operator_Semantic_Alignment_Valid : BOOL := FALSE;
+    Operator_Semantic_Alignment_Granted : BOOL := FALSE;
+    Operator_Semantic_Alignment_Quarantine_Active : BOOL := TRUE;
+
+    // Human-machine semantic coherence proofs.
+    HMI_Semantic_State_Coherent : BOOL := FALSE;
+    Operator_Recovery_Intent_Aligned : BOOL := FALSE;
+    Alarm_Semantic_Priority_Coherent : BOOL := FALSE;
+    Runtime_Explanation_Coherent : BOOL := FALSE;
+    Authority_State_Human_Visible : BOOL := FALSE;
+
+    // Operator cognition synchronization.
+    Human_Interpretation_Coherent : BOOL := FALSE;
+    Adaptive_Runtime_Visibility_Valid : BOOL := FALSE;
+    Semantic_Explanation_Fresh : BOOL := FALSE;
+    Operator_Action_Context_Aligned : BOOL := FALSE;
+
+    // Human-machine semantic split-brain detectors.
+    HMI_Semantic_Lag_Detected : BOOL := FALSE;
+    Operator_Interpretation_Skew_Detected : BOOL := FALSE;
+    Alarm_Cognition_Mismatch_Detected : BOOL := FALSE;
+    Hidden_Authority_State_Detected : BOOL := FALSE;
+    Semantic_Explanation_Divergence_Detected : BOOL := FALSE;
+    Human_Recovery_Misunderstanding_Detected : BOOL := FALSE;
+
+    // Alignment epochs.
+    Operator_Alignment_Epoch : UDINT := 0;
+    Operator_Alignment_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Operator_Alignment_Last_Update_MS : UDINT := 0;
+    Operator_Alignment_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Operator_Alignment_Last_Error_Code : UDINT := 0;
+    Operator_Alignment_Last_Error_Text : STRING(160) := '';
+    Operator_Alignment_Invalidation_Count : UDINT := 0;
+END_VAR

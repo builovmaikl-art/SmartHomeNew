@@ -1,0 +1,26 @@
+TYPE ST_Distributed_Topology_Domain :
+STRUCT
+    Domain_Valid : BOOL;
+    Domain_Id : UINT;
+    Controller_Id : UINT;
+    Runtime_Node_Id : UINT;
+
+    Authority_Owner : BOOL;
+    Backup_Owner : BOOL;
+    Observer_Only : BOOL;
+
+    Domain_Online : BOOL;
+    Domain_Degraded : BOOL;
+    Domain_Quarantined : BOOL;
+
+    Cross_Node_Dependencies : BOOL;
+    Remote_Valve_Group_Required : BOOL;
+    Remote_Recovery_Required : BOOL;
+
+    Distributed_Path_Valid : BOOL;
+    Distributed_Projection_Allowed : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

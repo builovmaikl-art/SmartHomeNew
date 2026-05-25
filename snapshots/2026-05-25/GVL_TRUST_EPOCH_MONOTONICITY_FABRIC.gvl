@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic trust epoch monotonicity governance.
+    Trust_Epoch_Monotonicity_Valid : BOOL := FALSE;
+    Trust_Epoch_Monotonicity_Granted : BOOL := FALSE;
+    Trust_Epoch_Monotonicity_Quarantine_Active : BOOL := TRUE;
+
+    // Monotonic trust continuity proofs.
+    Global_Trust_Epoch_Monotonic : BOOL := FALSE;
+    Rollback_Resistant_Authority_Valid : BOOL := FALSE;
+    Recovery_Epoch_Strictly_Newer : BOOL := FALSE;
+    Distributed_Trust_Vector_Coherent : BOOL := FALSE;
+    Irreversible_Trust_Progression_Stable : BOOL := FALSE;
+
+    // Distributed temporal trust integrity.
+    CrossNode_Trust_Epoch_Aligned : BOOL := FALSE;
+    Recovery_Timeline_Dominance_Valid : BOOL := FALSE;
+    Federation_Epoch_Progression_Coherent : BOOL := FALSE;
+    Trust_Revocation_History_Monotonic : BOOL := FALSE;
+
+    // Temporal trust rollback detectors.
+    Temporal_Trust_Rollback_Detected : BOOL := FALSE;
+    Replay_Authority_Epoch_Detected : BOOL := FALSE;
+    CrossNode_Trust_Vector_Regression : BOOL := FALSE;
+    Stale_Federation_Epoch_Rejoin : BOOL := FALSE;
+    Recovery_Timeline_Fork_Detected : BOOL := FALSE;
+    Revoked_Epoch_Resurrection_Detected : BOOL := FALSE;
+
+    // Monotonicity epochs.
+    Trust_Epoch_Monotonicity_Epoch : UDINT := 0;
+    Trust_Epoch_Monotonicity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Trust_Epoch_Monotonicity_Last_Update_MS : UDINT := 0;
+    Trust_Epoch_Monotonicity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Trust_Epoch_Monotonicity_Last_Error_Code : UDINT := 0;
+    Trust_Epoch_Monotonicity_Last_Error_Text : STRING(160) := '';
+    Trust_Epoch_Monotonicity_Invalidation_Count : UDINT := 0;
+END_VAR

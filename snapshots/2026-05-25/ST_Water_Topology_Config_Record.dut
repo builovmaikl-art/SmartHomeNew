@@ -1,0 +1,24 @@
+TYPE ST_Water_Topology_Config_Record :
+STRUCT
+    Config_Valid : BOOL;
+    Config_Version : UDINT;
+
+    Sensor_Id : UINT;
+    Logical_Zone_Id : UINT;
+    Hydraulic_Segment_Id : UINT;
+    Isolation_Group_Id : UINT;
+    Primary_Valve_Group_Id : UINT;
+    Secondary_Valve_Group_Id : UINT;
+    Fallback_Domain_Id : UINT;
+
+    Shared_Trunk : BOOL;
+    Cross_Zone_Dependency : BOOL;
+    Multi_Valve_Required : BOOL;
+
+    Recovery_Domain_Id : UINT;
+    Recovery_Requires_Manual_Ack : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

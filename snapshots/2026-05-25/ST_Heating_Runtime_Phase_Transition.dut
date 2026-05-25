@@ -1,0 +1,37 @@
+TYPE ST_Heating_Runtime_Phase_Transition :
+STRUCT
+    // ======================================================
+    // Phase transition state
+    // ======================================================
+    Previous_Phase : E_Heating_Runtime_Phase;
+    Current_Phase : E_Heating_Runtime_Phase;
+    Next_Phase : E_Heating_Runtime_Phase;
+
+    // ======================================================
+    // Transition lifecycle
+    // ======================================================
+    Transition_Active : BOOL;
+    Transition_Completed : BOOL;
+    Transition_Failed : BOOL;
+
+    // ======================================================
+    // Transition timing
+    // ======================================================
+    Transition_Start_MS : UDINT;
+    Transition_End_MS : UDINT;
+    Transition_Duration_MS : UDINT;
+
+    // ======================================================
+    // Transition integrity
+    // ======================================================
+    Sequencing_Valid : BOOL;
+    Ownership_Valid : BOOL;
+    Synchronization_Valid : BOOL;
+
+    // ======================================================
+    // Transition status
+    // ======================================================
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

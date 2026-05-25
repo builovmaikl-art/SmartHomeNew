@@ -1,0 +1,19 @@
+VAR_GLOBAL
+    Safety_Observability_Truth_Valid : BOOL := FALSE;
+    Safety_Observability_Truth_Granted : BOOL := FALSE;
+
+    Safety_Reality_Projection_Valid : BOOL := FALSE;
+    Observability_Reality_Equivalence_Granted : BOOL := FALSE;
+    Safety_Projection_Causality_Grounded : BOOL := FALSE;
+    Physical_Safety_Projection_Canonical : BOOL := FALSE;
+
+    Distributed_Safety_Projection_Consensus : BOOL := FALSE;
+    Safety_Observability_Lineage_Coherent : BOOL := FALSE;
+
+    FakeSafe_Projection_Detected : BOOL := FALSE;
+    Telemetry_Reality_Divergence_Detected : BOOL := FALSE;
+    Stale_Safety_Projection_Detected : BOOL := FALSE;
+    Safety_Observability_Fork_Detected : BOOL := FALSE;
+
+    Safety_Observability_Epoch : UDINT := 0;
+END_VAR

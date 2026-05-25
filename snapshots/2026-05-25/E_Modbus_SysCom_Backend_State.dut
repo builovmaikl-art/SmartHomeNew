@@ -1,0 +1,9 @@
+TYPE E_Modbus_SysCom_Backend_State :
+(
+    MB_SYSCOM_CLOSED := 0,
+    MB_SYSCOM_OPENING := 1,
+    MB_SYSCOM_ONLINE := 2,
+    MB_SYSCOM_ERROR := 3,
+    MB_SYSCOM_RECONNECT_WAIT := 4
+);
+END_TYPE

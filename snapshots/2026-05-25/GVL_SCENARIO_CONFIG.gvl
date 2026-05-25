@@ -1,0 +1,26 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Scenario Engine configuration.
+    // Used by PRG_Scenario_Engine only.
+
+    G_Night_Start_Hour : INT := 22;
+    G_Night_End_Hour : INT := 6;
+    G_Access_Secure_Start_Hour : INT := 23;
+    G_Access_Secure_End_Hour : INT := 5;
+
+    G_Comfort_Base_Score : REAL := 10.0;
+    G_Night_Base_Score : REAL := 40.0;
+    G_Preheat_Base_Score : REAL := 50.0;
+    G_VentBoost_Base_Score : REAL := 45.0;
+    G_AccessSecure_Base_Score : REAL := 30.0;
+
+    G_VentBoost_Humidity_Threshold : REAL := 65.0;
+
+    G_Night_Activation_Threshold : INT := 30;
+    G_Comfort_Activation_Threshold : INT := 40;
+    G_VentBoost_Activation_Threshold : INT := 40;
+    G_AccessSecure_Activation_Threshold : INT := 25;
+
+    G_Fallback_Adapt_Confidence : REAL := 0.5;
+    G_Fallback_Input_Confidence : REAL := 0.5;
+END_VAR

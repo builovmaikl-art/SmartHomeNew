@@ -1,0 +1,26 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // MODBUS MASTER RUNTIME CONTRACT
+    // ======================================================
+    // This layer is intentionally library-independent.
+    // Concrete CODESYS Modbus RTU implementation consumes Request[]
+    // via GVL_MODBUS_RTU_BRIDGE and publishes confirmed Response[].
+
+    G_Request : ARRAY[1..16] OF ST_Modbus_Request;
+    G_Response : ARRAY[1..16] OF ST_Modbus_Response;
+
+    G_Master_Online : BOOL := FALSE;
+    G_Master_Error : BOOL := FALSE;
+    G_Last_Transaction_MS : UDINT := 0;
+
+    // Active transaction scheduler state
+    G_Active : BOOL := FALSE;
+    G_Active_Index : INT := 0;
+    G_Active_Sequence : UDINT := 0;
+    G_Active_Start_MS : UDINT := 0;
+    G_Active_Retry_Count : INT := 0;
+    G_Total_Transactions : UDINT := 0;
+    G_Total_Errors : UDINT := 0;
+    G_Total_Timeouts : UDINT := 0;
+END_VAR

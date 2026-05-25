@@ -1,0 +1,15 @@
+VAR_GLOBAL
+    Residual_Energy_State_Valid : BOOL := FALSE;
+    Residual_Energy_Bounded : BOOL := FALSE;
+    Residual_Actuation_Energy_Safe : BOOL := FALSE;
+    Thermal_Energy_Dissipation_Stable : BOOL := FALSE;
+
+    Residual_Energy_Causality_Valid : BOOL := FALSE;
+    Distributed_Residual_Energy_Consensus : BOOL := FALSE;
+
+    Latent_Unsafe_Actuation_Detected : BOOL := FALSE;
+    Residual_Energy_Persistence_Detected : BOOL := FALSE;
+    Unsafe_Thermal_Energy_Retention : BOOL := FALSE;
+
+    Residual_Energy_Epoch : UDINT := 0;
+END_VAR

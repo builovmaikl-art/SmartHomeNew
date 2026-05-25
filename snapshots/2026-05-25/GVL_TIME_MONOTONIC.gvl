@@ -1,0 +1,31 @@
+VAR_GLOBAL
+    // ======================================================
+    // MONOTONIC TIME GOVERNANCE STATE
+    // ======================================================
+    // Centralized monotonic authority layer.
+    // Prevents rollback/reboot resurrection.
+    // ======================================================
+
+    Monotonic_Epoch : ULINT := 0;
+    Boot_Generation_ID : ULINT := 0;
+
+    Monotonic_Time_Valid : BOOL := FALSE;
+    Monotonic_Time_Initialized : BOOL := FALSE;
+
+    Startup_Quarantine_Active : BOOL := TRUE;
+    Startup_Quarantine_Release_Allowed : BOOL := FALSE;
+    Startup_Quarantine_Start_MS : UDINT := 0;
+    Startup_Quarantine_Timeout_MS : UDINT := 10000;
+
+    Time_Rollback_Detected : BOOL := FALSE;
+    Retained_Time_Invalid : BOOL := FALSE;
+    Time_Overflow_Detected : BOOL := FALSE;
+
+    Last_Monotonic_Time_MS : UDINT := 0;
+    Last_Validated_Time_MS : UDINT := 0;
+
+    Monotonic_Last_Error_Code : UDINT := 0;
+    Monotonic_Last_Error_Text : STRING(160) := '';
+
+    Monotonic_Invalidation_Count : UDINT := 0;
+END_VAR

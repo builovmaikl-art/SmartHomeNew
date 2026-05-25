@@ -1,0 +1,58 @@
+TYPE ST_Water_Valve_Runtime_State :
+STRUCT
+    // ==============================================================================
+    // Water/Flood valve runtime semantic state.
+    // ==============================================================================
+    //
+    // Observe-first valve governance contract.
+    //
+    // This contract does NOT directly own physical outputs.
+    // ==============================================================================
+
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    // Valve identity.
+    Valve_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    // Authority/runtime semantics.
+    Close_Requested : BOOL;
+    Open_Requested : BOOL;
+    Global_Fallback_Request : BOOL;
+    Selective_Authority_Allowed : BOOL;
+
+    // Output/runtime visibility.
+    Physical_Output_Active : BOOL;
+    Output_Command_Projected : BOOL;
+
+    // Confirmation semantics.
+    Confirmation_Available : BOOL;
+    Confirmed_Open : BOOL;
+    Confirmed_Closed : BOOL;
+    Confirmation_Timeout : BOOL;
+    Confirmation_Unknown : BOOL;
+
+    // Diagnostics.
+    Diagnostics_Available : BOOL;
+    Valve_Healthy : BOOL;
+    Valve_Stuck_Suspected : BOOL;
+    Travel_Time_Degraded : BOOL;
+    Current_Deviation_Detected : BOOL;
+
+    // Governance/degraded semantics.
+    Valve_Degraded : BOOL;
+    Unsafe_Reopen_Denied : BOOL;
+    Recovery_Allowed : BOOL;
+
+    // Explainability.
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+
+    // Lifecycle edges.
+    Close_Command_Event : BOOL;
+    Open_Command_Event : BOOL;
+    Confirmation_Lost_Event : BOOL;
+    Valve_Degraded_Event : BOOL;
+END_STRUCT
+END_TYPE

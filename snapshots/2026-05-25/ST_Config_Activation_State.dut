@@ -1,0 +1,25 @@
+TYPE ST_Config_Activation_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Active_Version : UDINT;
+    Staged_Version : UDINT;
+    Previous_Stable_Version : UDINT;
+
+    Staged_Config_Valid : BOOL;
+    Activation_Requested : BOOL;
+    Activation_Allowed : BOOL;
+    Activation_Blocked : BOOL;
+    Rollback_Requested : BOOL;
+    Rollback_Available : BOOL;
+    Rollback_Active : BOOL;
+
+    Config_Quarantine_Active : BOOL;
+    Migration_Required : BOOL;
+    Migration_Compatible : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

@@ -1,0 +1,5 @@
+VAR_GLOBAL
+    G_System_Degraded : BOOL := FALSE;
+    G_Degraded_Mode_Active : BOOL := FALSE;
+    G_Degraded_Recovery_Required : BOOL := FALSE;
+END_VAR

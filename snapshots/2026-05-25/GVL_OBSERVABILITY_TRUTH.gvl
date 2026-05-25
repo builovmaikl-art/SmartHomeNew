@@ -1,0 +1,41 @@
+VAR_GLOBAL
+    // Global observability truth authority.
+    Observability_Truth_Valid : BOOL := FALSE;
+    Observability_Truth_Granted : BOOL := FALSE;
+    Observability_Truth_Quarantine_Active : BOOL := TRUE;
+
+    // Authoritative operator visibility.
+    HMI_Authority_Coherent : BOOL := FALSE;
+    Alarm_Authority_Coherent : BOOL := FALSE;
+    Trend_Authority_Coherent : BOOL := FALSE;
+    Diagnostics_Authority_Coherent : BOOL := FALSE;
+    History_Authority_Coherent : BOOL := FALSE;
+
+    // Projection causality.
+    HMI_Epoch_Coherent : BOOL := FALSE;
+    Alarm_Publication_Coherent : BOOL := FALSE;
+    Trend_Causality_Coherent : BOOL := FALSE;
+    Diagnostics_Causality_Coherent : BOOL := FALSE;
+    Operator_Visibility_Consistent : BOOL := FALSE;
+
+    // Observability split-brain detection.
+    Stale_HMI_Epoch_Detected : BOOL := FALSE;
+    Alarm_Publication_Lag_Detected : BOOL := FALSE;
+    Trend_Causality_Skew_Detected : BOOL := FALSE;
+    Diagnostic_Truth_Race_Detected : BOOL := FALSE;
+    Operator_Visibility_Fragmentation_Detected : BOOL := FALSE;
+    Authority_UI_Divergence_Detected : BOOL := FALSE;
+
+    // Observability authority epochs.
+    Observability_Truth_Epoch : UDINT := 0;
+    Observability_Truth_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal observability authority.
+    Observability_Last_Update_MS : UDINT := 0;
+    Observability_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Observability_Last_Error_Code : UDINT := 0;
+    Observability_Last_Error_Text : STRING(160) := '';
+    Observability_Invalidation_Count : UDINT := 0;
+END_VAR

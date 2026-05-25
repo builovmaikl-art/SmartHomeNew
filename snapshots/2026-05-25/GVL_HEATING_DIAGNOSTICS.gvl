@@ -1,0 +1,5 @@
+VAR_GLOBAL
+    G_Manifold_Pressure_Fault : ARRAY[1..16] OF BOOL;
+    G_Manifold_Current_Fault : ARRAY[1..16] OF BOOL;
+    G_Manifold_Return_Temp_Fault : ARRAY[1..16] OF BOOL;
+END_VAR

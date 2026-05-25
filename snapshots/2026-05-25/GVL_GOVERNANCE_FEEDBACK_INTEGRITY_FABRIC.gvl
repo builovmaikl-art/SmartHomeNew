@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic governance feedback integrity governance.
+    Governance_Feedback_Integrity_Valid : BOOL := FALSE;
+    Governance_Feedback_Integrity_Granted : BOOL := FALSE;
+    Governance_Feedback_Integrity_Quarantine_Active : BOOL := TRUE;
+
+    // Governance feedback causality proofs.
+    Execution_Feedback_Causality_Isolated : BOOL := FALSE;
+    Governance_Derivation_Inputs_Canonical : BOOL := FALSE;
+    Telemetry_To_Authority_Lineage_Valid : BOOL := FALSE;
+    Feedback_Epoch_Integrity_Stable : BOOL := FALSE;
+    Governance_Feedback_Lineage_Coherent : BOOL := FALSE;
+
+    // Feedback integrity validation.
+    Authenticated_Execution_Observation_Valid : BOOL := FALSE;
+    CrossEpoch_Feedback_Continuity_Stable : BOOL := FALSE;
+    Governance_Input_Causality_Grounded : BOOL := FALSE;
+    Distributed_Feedback_Consensus_Valid : BOOL := FALSE;
+
+    // Governance feedback poisoning detectors.
+    Governance_Feedback_Poisoning_Detected : BOOL := FALSE;
+    Execution_Telemetry_Authority_Corruption : BOOL := FALSE;
+    CrossEpoch_Feedback_Lineage_Drift : BOOL := FALSE;
+    Retroactive_Governance_Mutation_Detected : BOOL := FALSE;
+    Distributed_Feedback_Fork_Detected : BOOL := FALSE;
+    Untrusted_Execution_Observation_Injected : BOOL := FALSE;
+
+    // Feedback epochs.
+    Governance_Feedback_Integrity_Epoch : UDINT := 0;
+    Governance_Feedback_Integrity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Governance_Feedback_Integrity_Last_Update_MS : UDINT := 0;
+    Governance_Feedback_Integrity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Governance_Feedback_Integrity_Last_Error_Code : UDINT := 0;
+    Governance_Feedback_Integrity_Last_Error_Text : STRING(160) := '';
+    Governance_Feedback_Integrity_Invalidation_Count : UDINT := 0;
+END_VAR

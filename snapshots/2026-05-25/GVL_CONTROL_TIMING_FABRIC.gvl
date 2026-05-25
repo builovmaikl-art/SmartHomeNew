@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic control-loop timing authority.
+    Control_Temporal_Coherence_Valid : BOOL := FALSE;
+    Control_Temporal_Coherence_Granted : BOOL := FALSE;
+    Control_Temporal_Coherence_Quarantine_Active : BOOL := TRUE;
+
+    // Deterministic temporal coherence proofs.
+    Loop_Sampling_Coherent : BOOL := FALSE;
+    Feedback_Freshness_Valid : BOOL := FALSE;
+    PID_Phase_Alignment_Valid : BOOL := FALSE;
+    Cross_Loop_Temporal_Stable : BOOL := FALSE;
+    Multi_Rate_Causality_Coherent : BOOL := FALSE;
+
+    // Timing-window validators.
+    Control_Snapshot_Epoch_Coherent : BOOL := FALSE;
+    Feedback_Window_Stable : BOOL := FALSE;
+    Loop_Execution_Phase_Stable : BOOL := FALSE;
+    Temporal_Observation_Aligned : BOOL := FALSE;
+
+    // Temporal aliasing / oscillation detectors.
+    PID_Phase_Skew_Detected : BOOL := FALSE;
+    Sampling_Window_Divergence_Detected : BOOL := FALSE;
+    Feedback_Freshness_Aliasing_Detected : BOOL := FALSE;
+    Cross_Loop_Stabilization_Lag_Detected : BOOL := FALSE;
+    Multi_Rate_Oscillation_Risk_Detected : BOOL := FALSE;
+    Distributed_Control_Ringing_Detected : BOOL := FALSE;
+
+    // Control timing epochs.
+    Control_Timing_Epoch : UDINT := 0;
+    Control_Timing_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Control_Timing_Last_Update_MS : UDINT := 0;
+    Control_Timing_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Control_Timing_Last_Error_Code : UDINT := 0;
+    Control_Timing_Last_Error_Text : STRING(160) := '';
+    Control_Timing_Invalidation_Count : UDINT := 0;
+END_VAR

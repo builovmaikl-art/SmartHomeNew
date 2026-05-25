@@ -1,0 +1,13 @@
+PROGRAM PRG_Physical_Safety_Projection_Governor
+IF GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Safety_Observability_Truth_Granted
+AND NOT GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Physical_Safety_Projection_Drift_Detected
+AND NOT GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Hidden_Unsafe_Physical_State_Detected
+AND NOT GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Unsafe_Projection_Backfill_Detected THEN
+
+    GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Physical_Safety_Projection_Valid := TRUE;
+    GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Physical_Safety_Projection_Granted := TRUE;
+    GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Physical_Plant_Safety_Projection_Stable := TRUE;
+    GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Energy_State_Safety_Projection_Valid := TRUE;
+    GVL_PHYSICAL_SAFETY_PROJECTION_FABRIC.Recovery_State_Safety_Projection_Valid := TRUE;
+END_IF;
+END_PROGRAM

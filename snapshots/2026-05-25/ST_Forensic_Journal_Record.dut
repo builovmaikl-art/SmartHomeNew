@@ -1,0 +1,24 @@
+TYPE ST_Forensic_Journal_Record :
+STRUCT
+    Record_Valid : BOOL;
+    Event_Time_MS : UDINT;
+    Event_Id : UDINT;
+    Event_Class : UINT;
+    Event_Severity : UINT;
+
+    Config_Version : UDINT;
+    Topology_Version : UDINT;
+    Recovery_Domain_Id : UINT;
+    Valve_Group_Id : UINT;
+    Sensor_Id : UINT;
+
+    Activation_Event : BOOL;
+    Rollback_Event : BOOL;
+    Quarantine_Event : BOOL;
+    Recovery_Event : BOOL;
+    Restart_Event : BOOL;
+
+    Status_Code : UINT;
+    Event_Text : STRING(160);
+END_STRUCT
+END_TYPE

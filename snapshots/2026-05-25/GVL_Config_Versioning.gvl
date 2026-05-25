@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Versioning
+    G_Config_Current_Version : UDINT := 1;
+    G_Config_Last_Good_Version : UDINT := 1;
+
+    // Checksums (simple placeholder, can be replaced with CRC)
+    G_Config_Current_Checksum : UDINT := 0;
+    G_Config_Last_Good_Checksum : UDINT := 0;
+
+    // Rollback flags
+    G_Config_Rollback_Requested : BOOL := FALSE;
+    G_Config_Rollback_Active : BOOL := FALSE;
+    G_Config_Invalid_Detected : BOOL := FALSE;
+END_VAR

@@ -1,0 +1,61 @@
+TYPE ST_Water_Leak_Runtime_State :
+STRUCT
+    // ==============================================================================
+    // Canonical Water/Flood runtime semantic projection.
+    //
+    // Observe/publish-only contract.
+    // Does NOT own valve authority or runtime arbitration.
+    // ==============================================================================
+
+    // Projection lifecycle.
+    Projection_Valid : BOOL;
+    Projection_System_Time_MS : UDINT;
+
+    // Physical input source.
+    Physical_Sensor_Index : UINT;
+    Physical_Input_Valid : BOOL;
+
+    // Logical leak semantics.
+    Logical_Sensor_Valid : BOOL;
+    Leak_Warning_Active : BOOL;
+    Leak_Confirmed : BOOL;
+    Leak_Cleared : BOOL;
+    Leak_Degraded : BOOL;
+
+    // Runtime-configurable topology semantics.
+    Hydraulic_Zone_Id : UINT;
+    Hydraulic_Segment_Id : UINT;
+    Isolation_Group_Id : UINT;
+    Valve_Group_Id : UINT;
+
+    // Mapping semantics.
+    Mapping_Valid : BOOL;
+    Mapping_Missing : BOOL;
+    Selective_Isolation_Possible : BOOL;
+    Fallback_Global_Isolation_Required : BOOL;
+
+    // Confidence / degradation.
+    Leak_Confidence : REAL;
+    Sensor_Quality_Valid : BOOL;
+    Sensor_Stuck_Suspected : BOOL;
+    Sensor_Noise_Suspected : BOOL;
+
+    // Explainability.
+    Reason_Code : UINT;
+    Reason_Text : STRING(128);
+
+    // Runtime lifecycle edges.
+    Warning_Started_Event : BOOL;
+    Leak_Confirmed_Event : BOOL;
+    Leak_Cleared_Event : BOOL;
+    Isolation_Requested_Event : BOOL;
+    Mapping_Invalid_Event : BOOL;
+
+    // Active runtime compatibility.
+    Active_Safety_Leak_Latched : BOOL;
+    Active_Global_Close_Path : BOOL;
+
+    // Observability only.
+    Supervisory_Observation_Only : BOOL;
+END_STRUCT
+END_TYPE

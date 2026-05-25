@@ -1,0 +1,31 @@
+TYPE ST_Distributed_Orchestration_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Orchestration_Sequence_Id : UDINT;
+    Distributed_Execution_Active : BOOL;
+
+    Cross_Node_Isolation_Required : BOOL;
+    Cross_Node_Recovery_Required : BOOL;
+    Cross_Node_Rollback_Required : BOOL;
+
+    Distributed_Projection_Granted : BOOL;
+    Distributed_Projection_Blocked : BOOL;
+
+    Distributed_Rollback_Allowed : BOOL;
+    Distributed_Recovery_Allowed : BOOL;
+
+    Distributed_Scheduler_Healthy : BOOL;
+    Distributed_Timing_Window_Valid : BOOL;
+
+    Remote_Node_Ack_Required : BOOL;
+    Remote_Node_Ack_Received : BOOL;
+
+    Distributed_Conflict_Detected : BOOL;
+    Distributed_Split_Execution_Suspected : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(160);
+END_STRUCT
+END_TYPE

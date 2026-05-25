@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Lighting domain execution feedback. Observational only.
+
+    G_Runtime_Required : BOOL := FALSE;
+    G_Runtime_Executed : BOOL := FALSE;
+    G_Runtime_Idle_By_Design : BOOL := FALSE;
+    G_Runtime_Blocked_By_Distributed_Gates : BOOL := FALSE;
+    G_Emergency_Override_Active : BOOL := FALSE;
+    G_Any_Light_Active : BOOL := FALSE;
+    G_Any_Blind_Not_Safe_Open : BOOL := FALSE;
+    G_Any_Socket_Active : BOOL := FALSE;
+    G_Last_Update_MS : UDINT := 0;
+    G_Status_Code : UINT := 0;
+    G_Status_Text : STRING(128) := '';
+END_VAR

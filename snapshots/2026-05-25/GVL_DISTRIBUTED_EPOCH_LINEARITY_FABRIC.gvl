@@ -1,0 +1,17 @@
+VAR_GLOBAL
+    Distributed_Epoch_Linearity_Valid : BOOL := FALSE;
+    Distributed_Epoch_Linearity_Granted : BOOL := FALSE;
+
+    Distributed_Epoch_Linearity_Valid_Proof : BOOL := FALSE;
+    Epoch_Timeline_Monotonic : BOOL := FALSE;
+    Cluster_Epoch_Consensus_Stable : BOOL := FALSE;
+
+    Epoch_Causality_Grounded : BOOL := FALSE;
+    Distributed_Epoch_Lineage_Coherent : BOOL := FALSE;
+
+    Epoch_Rollback_Detected : BOOL := FALSE;
+    Distributed_Epoch_Fork_Detected : BOOL := FALSE;
+    Stale_Epoch_Application_Detected : BOOL := FALSE;
+
+    Distributed_Epoch_Linearity_Epoch : UDINT := 0;
+END_VAR

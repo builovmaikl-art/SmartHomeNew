@@ -1,0 +1,18 @@
+VAR_GLOBAL
+    Passive_Runtime_Verification_Active : BOOL := TRUE;
+
+    Runtime_Verification_Consistency_Valid : BOOL := FALSE;
+    Runtime_Verification_Lineage_Coherent : BOOL := FALSE;
+    Runtime_Verification_Timeline_Monotonic : BOOL := FALSE;
+
+    Passive_Runtime_Verification_ReadOnly : BOOL := TRUE;
+    Passive_Runtime_Verification_NoMutation : BOOL := TRUE;
+    Passive_Runtime_Verification_NoAuthority : BOOL := TRUE;
+    Passive_Runtime_Verification_NoBlocking : BOOL := TRUE;
+
+    Runtime_Semantic_Drift_Observed : BOOL := FALSE;
+    Runtime_Consistency_Decay_Observed : BOOL := FALSE;
+    Runtime_Verification_Anomaly_Observed : BOOL := FALSE;
+
+    Passive_Runtime_Verification_Epoch : UDINT := 0;
+END_VAR

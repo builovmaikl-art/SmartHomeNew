@@ -1,0 +1,52 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // OUTDOOR LIGHTING / LANDSCAPE CONFIG + RUNTIME SURFACE
+    // ======================================================
+    // Logical outdoor zones are mapped to existing lighting/socket domains.
+    // No direct physical IO writes are performed here.
+    // Physical module/channel mapping is a porting-stage task.
+    // ======================================================
+
+    // Global enable and darkness source.
+    G_Outdoor_Enabled : BOOL := TRUE;
+    G_Outdoor_Use_Lux_Sensor : BOOL := FALSE;
+    G_Outdoor_Fallback_To_Night : BOOL := TRUE;
+    G_Outdoor_Lux_Threshold : REAL := 50.0;
+
+    // Logical mappings. Defaults reserve the tail of lighting/socket arrays.
+    // 1=paths, 2=facade, 3=trees/shrubs, 4=architectural/perimeter.
+    G_Outdoor_Light_Zone_Index : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF INT := [29, 30, 31, 32];
+    G_Outdoor_Motion_Zone_Index : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF INT := [29, 30, 31, 32];
+    G_Outdoor_Socket_Index : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF INT := [33, 34, 35, 36];
+
+    // Light levels by mode.
+    G_Outdoor_Auto_Level : BYTE := 40;
+    G_Outdoor_Economy_Level : BYTE := 10;
+    G_Outdoor_Party_Level : BYTE := 100;
+    G_Outdoor_Security_Level : BYTE := 80;
+
+    // Economy window, default 23:00-06:00.
+    G_Outdoor_Economy_Start_MS : UDINT := 82800000;
+    G_Outdoor_Economy_End_MS : UDINT := 21600000;
+
+    // Landscape socket policy.
+    G_Outdoor_Sockets_Enabled : BOOL := TRUE;
+    G_Outdoor_Sockets_On_In_Party : BOOL := TRUE;
+    G_Outdoor_Sockets_On_In_Auto : BOOL := FALSE;
+    G_Outdoor_Sockets_Off_In_Security : BOOL := TRUE;
+
+    // Per-zone manual override from HMI/gateway.
+    G_Outdoor_Manual_Mode : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF BOOL;
+    G_Outdoor_Manual_Light_Level : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF BYTE;
+    G_Outdoor_Manual_Socket_State : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF BOOL;
+
+    // Runtime status.
+    G_Outdoor_Dark_Active : BOOL;
+    G_Outdoor_Economy_Active : BOOL;
+    G_Outdoor_Party_Active : BOOL;
+    G_Outdoor_Security_Active : BOOL;
+    G_Outdoor_Light_Level : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF BYTE;
+    G_Outdoor_Socket_State : ARRAY[1..GVL_CONSTANTS.C_MAX_OUTDOOR_ZONES] OF BOOL;
+    G_Outdoor_Status_Text : STRING(200) := 'OUTDOOR DISABLED';
+END_VAR

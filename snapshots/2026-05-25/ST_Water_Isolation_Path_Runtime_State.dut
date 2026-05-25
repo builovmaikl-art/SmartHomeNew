@@ -1,0 +1,26 @@
+TYPE ST_Water_Isolation_Path_Runtime_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Sensor_Id : UINT;
+
+    Isolation_Path_Valid : BOOL;
+    Isolation_Path_Ambiguous : BOOL;
+    Multi_Valve_Path : BOOL;
+
+    Active_Isolation_Group_Id : UINT;
+    Active_Valve_Group_Id : UINT;
+
+    Shared_Trunk_Impact : BOOL;
+    Cross_Zone_Impact : BOOL;
+
+    Selective_Isolation_Allowed : BOOL;
+    Global_Fallback_Required : BOOL;
+
+    Conflict_Detected : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

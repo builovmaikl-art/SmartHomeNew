@@ -1,0 +1,73 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Domain execution policy. Observational first layer.
+    // This GVL classifies when a domain needs critical, periodic or idle execution.
+    // It does not directly control physical outputs.
+    // Mode convention: 0 = idle, 1 = periodic, 2 = critical.
+
+    G_Last_Update_MS : UDINT := 0;
+
+    // Scenario/context classification.
+    G_Security_Context_Active : BOOL := FALSE;
+    G_Away_Context_Active : BOOL := FALSE;
+    G_Presence_Context_Active : BOOL := FALSE;
+    G_Emergency_Context_Active : BOOL := FALSE;
+
+    // Periodic observation intervals.
+    Access_Periodic_Interval_MS : UDINT := 1000;
+    Lighting_Periodic_Interval_MS : UDINT := 1000;
+    Water_Periodic_Interval_MS : UDINT := 1000;
+    Heating_Periodic_Interval_MS : UDINT := 5000;
+    Vent_Periodic_Interval_MS : UDINT := 3000;
+    Simulation_Periodic_Interval_MS : UDINT := 1000;
+
+    // Access.
+    Access_Mode : UINT := 0;
+    Access_Critical_Run : BOOL := FALSE;
+    Access_Periodic_Run : BOOL := FALSE;
+    Access_Periodic_Due : BOOL := FALSE;
+    Access_Idle_By_Design : BOOL := FALSE;
+
+    // Lighting.
+    Lighting_Mode : UINT := 0;
+    Lighting_Critical_Run : BOOL := FALSE;
+    Lighting_Periodic_Run : BOOL := FALSE;
+    Lighting_Periodic_Due : BOOL := FALSE;
+    Lighting_Idle_By_Design : BOOL := FALSE;
+
+    // Water.
+    Water_Mode : UINT := 0;
+    Water_Critical_Run : BOOL := FALSE;
+    Water_Periodic_Run : BOOL := FALSE;
+    Water_Periodic_Due : BOOL := FALSE;
+    Water_Idle_By_Design : BOOL := FALSE;
+
+    // Heating.
+    Heating_Mode : UINT := 0;
+    Heating_Critical_Run : BOOL := FALSE;
+    Heating_Periodic_Run : BOOL := FALSE;
+    Heating_Periodic_Due : BOOL := FALSE;
+    Heating_Idle_By_Design : BOOL := FALSE;
+
+    // Ventilation.
+    Vent_Mode : UINT := 0;
+    Vent_Critical_Run : BOOL := FALSE;
+    Vent_Periodic_Run : BOOL := FALSE;
+    Vent_Periodic_Due : BOOL := FALSE;
+    Vent_Idle_By_Design : BOOL := FALSE;
+
+    // Simulation.
+    Simulation_Mode : UINT := 0;
+    Simulation_Context_Active : BOOL := FALSE;
+    Simulation_Run_Allowed : BOOL := FALSE;
+    Simulation_Periodic_Due : BOOL := FALSE;
+    Simulation_Idle_By_Design : BOOL := FALSE;
+
+    // Summary.
+    Any_Critical_Run : BOOL := FALSE;
+    Any_Periodic_Run : BOOL := FALSE;
+    Any_Periodic_Due : BOOL := FALSE;
+    Any_Idle_By_Design : BOOL := FALSE;
+    Status_Code : UINT := 0;
+    Status_Text : STRING(160) := '';
+END_VAR

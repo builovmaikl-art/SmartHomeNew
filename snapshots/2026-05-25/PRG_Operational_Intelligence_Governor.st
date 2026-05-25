@@ -1,0 +1,23 @@
+PROGRAM PRG_Operational_Intelligence_Governor
+// PASSIVE OPERATIONAL INTELLIGENCE
+// NO EXECUTION MUTATION
+// NO AUTHORITY MUTATION
+
+GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Operational_Reasoning_Consistency_Valid :=
+    GVL_RUNTIME_TRANSITION_SYSTEM.Runtime_Transition_Legal;
+
+GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Runtime_Causal_Projection_Valid :=
+    GVL_TEMPORAL_CAUSALITY_CLOSURE_FABRIC.Temporal_Causality_Coherent;
+
+GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Distributed_Operational_Context_Valid :=
+    GVL_DISTRIBUTED_SAFETY_REALITY_CONSENSUS_FABRIC.Distributed_Safety_Consensus_Valid;
+
+IF GVL_RUNTIME_TRANSITION_SYSTEM.Illegal_Runtime_Transition_Observed THEN
+    GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Active_Degradation_Cause_Available := TRUE;
+END_IF;
+
+IF GVL_RUNTIME_TRANSITION_SYSTEM.Recovery_Without_Lineage_Observed THEN
+    GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Recovery_Blocker_Observed := TRUE;
+END_IF;
+
+END_PROGRAM

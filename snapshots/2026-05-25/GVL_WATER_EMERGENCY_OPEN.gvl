@@ -1,0 +1,31 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // HMI/runtime surface for emergency temporary opening during active leak alarm.
+    // Targets:
+    // 1 = стояк 1 (локальные краны 1 ХВС + 2 ГВС),
+    // 2 = стояк 2 (локальные краны 3 ХВС + 4 ГВС),
+    // 3 = стояк 3 (локальные краны 5 ХВС + 6 ГВС),
+    // 4 = общий ввод (35 ХВС + 36 ГВС).
+    G_Request_Open : BOOL := FALSE;
+    G_Request_Close_Now : BOOL := FALSE;
+    G_Target_Isolation_Group : INT := 0;
+    G_Duration_Minutes : INT := 1; // allowed values: 1, 3, 5
+
+    G_Open_Active : ARRAY[1..4] OF BOOL;
+    G_Open_Start_MS : ARRAY[1..4] OF UDINT;
+    G_Open_Duration_MS : ARRAY[1..4] OF UDINT;
+    G_Open_Count_Today : ARRAY[1..4] OF INT;
+
+    // Derived commands consumed by PRG_Water.
+    G_Open_Riser_1_Active : BOOL := FALSE;
+    G_Open_Riser_2_Active : BOOL := FALSE;
+    G_Open_Riser_3_Active : BOOL := FALSE;
+    G_Open_Common_Inlet_Active : BOOL := FALSE;
+
+    G_Daily_Reset_MS : UDINT := 0;
+    G_Last_Request_Accepted : BOOL := FALSE;
+    G_Last_Request_Denied : BOOL := FALSE;
+    G_Last_Denial_Code : UINT := 0;
+    G_Status_Text : STRING(200) := '';
+    G_Last_Update_MS : UDINT := 0;
+END_VAR

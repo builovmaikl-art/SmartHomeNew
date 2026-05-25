@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global immutable historical truth authority.
+    Historical_Truth_Valid : BOOL := FALSE;
+    Historical_Truth_Granted : BOOL := FALSE;
+    Historical_Truth_Quarantine_Active : BOOL := TRUE;
+
+    // Immutable causality proofs.
+    Trend_History_Causally_Immutable : BOOL := FALSE;
+    Alarm_Chronology_Immutable : BOOL := FALSE;
+    Blackbox_Snapshot_Immutable : BOOL := FALSE;
+    Diagnostics_History_Coherent : BOOL := FALSE;
+    Failover_Chronology_Coherent : BOOL := FALSE;
+
+    // Historical persistence integrity.
+    Persisted_Epochs_Coherent : BOOL := FALSE;
+    Recovery_Replay_Coherent : BOOL := FALSE;
+    Historical_Snapshot_Coherent : BOOL := FALSE;
+    Mixed_Authority_Persistence_Absent : BOOL := FALSE;
+
+    // Historical corruption detectors.
+    History_Epoch_Skew_Detected : BOOL := FALSE;
+    Failover_Chronology_Corruption_Detected : BOOL := FALSE;
+    Trend_Replay_Race_Detected : BOOL := FALSE;
+    Blackbox_Causality_Drift_Detected : BOOL := FALSE;
+    Alarm_Order_Reconstruction_Error : BOOL := FALSE;
+    Mixed_Authority_Persistence_Detected : BOOL := FALSE;
+
+    // Historical authority epochs.
+    Historical_Truth_Epoch : UDINT := 0;
+    Historical_Truth_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal historical authority.
+    Historical_Last_Update_MS : UDINT := 0;
+    Historical_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Historical_Last_Error_Code : UDINT := 0;
+    Historical_Last_Error_Text : STRING(160) := '';
+    Historical_Invalidation_Count : UDINT := 0;
+END_VAR

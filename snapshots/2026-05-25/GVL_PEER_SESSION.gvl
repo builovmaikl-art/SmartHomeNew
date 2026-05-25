@@ -1,0 +1,32 @@
+VAR_GLOBAL
+    // ======================================================
+    // PEER SESSION TRANSPORT CONTRACT
+    // ======================================================
+    // Transport-neutral remote PLC session exchange surface.
+    //
+    // Purpose:
+    // provide explicit remote runtime/session state for
+    // distributed peer ingestion and reconciliation.
+    //
+    // Ownership:
+    // - transport/replication layer publishes Remote_* fields
+    // - PRG_Distributed_Peer_Ingestion consumes them
+    // - distributed governors must not publish transport state
+    //
+    // Current state:
+    // foundation contract only.
+    // explicit network/session replication transport is not yet
+    // implemented.
+    // ======================================================
+
+    Remote_Session_Valid : BOOL := FALSE;
+    Remote_Last_Refresh_MS : UDINT := 0;
+
+    Remote_Runtime_Epoch : ULINT := 0;
+    Remote_Snapshot_Epoch : ULINT := 0;
+    Remote_Boot_Generation : ULINT := 0;
+    Remote_Fencing_Token : ULINT := 0;
+
+    Remote_Publication_Allowed : BOOL := FALSE;
+    Remote_Runtime_Healthy : BOOL := FALSE;
+END_VAR

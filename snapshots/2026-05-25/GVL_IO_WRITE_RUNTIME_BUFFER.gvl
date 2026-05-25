@@ -1,0 +1,25 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime buffer owned by PRG_IO_Write and its phase programs only.
+
+    B_Heating_Forced_Off : BOOL := FALSE;
+    B_Vent_Forced_Off : BOOL := FALSE;
+    B_Water_Forced_Off : BOOL := FALSE;
+    B_Access_Forced_Off : BOOL := FALSE;
+    B_Access_Safety_Override : BOOL := FALSE;
+
+    B_Global_Hard_Stop : BOOL := FALSE;
+    B_Gas_Safety_Stop : BOOL := FALSE;
+    B_Freeze_Active : BOOL := FALSE;
+
+    B_PreOutput_Block_IO : BOOL := FALSE;
+    B_Output_Freshness_Block : BOOL := FALSE;
+    B_Output_Publication_Block : BOOL := FALSE;
+    B_Distributed_Publication_Block : BOOL := FALSE;
+    B_Snapshot_Block : BOOL := FALSE;
+    B_Distributed_Execution_Block : BOOL := FALSE;
+
+    B_Gas_Fire_Siren_Enable : BOOL := FALSE;
+    B_Gas_Siren_Authority : BOOL := FALSE;
+    B_Fire_Siren_Authority : BOOL := FALSE;
+END_VAR

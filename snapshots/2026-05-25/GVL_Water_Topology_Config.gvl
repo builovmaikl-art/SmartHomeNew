@@ -1,0 +1,17 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Config_Record : ARRAY[1..64] OF ST_Water_Topology_Config_Record;
+
+    G_Active_Config_Version : UDINT;
+    G_Config_Loaded : BOOL;
+    G_Runtime_Remap_Ready : BOOL;
+
+    G_Any_Invalid_Config : BOOL;
+    G_Any_Multi_Valve_Required : BOOL;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+END_VAR

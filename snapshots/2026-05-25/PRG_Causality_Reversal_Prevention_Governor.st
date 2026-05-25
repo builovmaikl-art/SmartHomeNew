@@ -1,0 +1,13 @@
+PROGRAM PRG_Causality_Reversal_Prevention_Governor
+IF GVL_HISTORICAL_ORDERING_INTEGRITY_FABRIC.Historical_Ordering_Integrity_Granted
+AND NOT GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Causality_Reversal_Detected
+AND NOT GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Resurrection_After_Revocation_Detected
+AND NOT GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Unsafe_Temporal_Replay_Detected THEN
+
+    GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Causality_Reversal_Prevention_Valid := TRUE;
+    GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Causality_Reversal_Prevention_Granted := TRUE;
+    GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Causality_Reversal_Prevented := TRUE;
+    GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Authority_Ordering_Canonical := TRUE;
+    GVL_CAUSALITY_REVERSAL_PREVENTION_FABRIC.Revocation_Resurrection_Boundary_Stable := TRUE;
+END_IF;
+END_PROGRAM

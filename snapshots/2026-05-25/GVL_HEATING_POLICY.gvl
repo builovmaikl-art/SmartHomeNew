@@ -1,0 +1,51 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Zone_Empty_Duration_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+    G_Zone_Permanent_Use : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Guest_Preheat_Request : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Policy_Class : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
+    G_Zone_Target_Adjustment : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Priority_Bias : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
+    G_Policy_Mode : E_Heating_Policy_Mode := E_Heating_Policy_Mode.HPM_NORMAL;
+    G_Policy_Block_Heating_Request : BOOL;
+    G_Policy_Target_Adjustment : REAL;
+    G_Policy_Priority_Multiplier : REAL := 1.0;
+    G_Policy_Self_Tune_Active : BOOL;
+    G_Policy_Self_Tune_Level : INT;
+    G_Policy_Feedback_Stable : BOOL;
+    G_Policy_Feedback_Improving : BOOL;
+    G_Policy_Feedback_Quality : REAL;
+    G_Policy_Predictive_Active : BOOL;
+    G_Policy_Predictive_Adjustment : REAL;
+
+    // zone intelligence
+    G_Zone_Quality : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Improving : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Stable : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Self_Level : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
+
+    // thermal model: 1.0 = normal inertia, >1 slower/heavier, <1 faster/lighter
+    G_Zone_Thermal_Inertia : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+    G_Zone_Thermal_Response : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Thermal_Demand : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Time_To_Heat_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+    G_Zone_Preheat_Needed : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+
+    // thermal model v2 diagnostics
+    G_Zone_Heat_Loss_Rate : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Heat_Gain_Rate : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Predicted_Temp_30m : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Zone_Thermal_Model_Confidence : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+
+    // optimization diagnostics
+    G_Zone_Optimization_Score : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF REAL;
+    G_Optimization_Load_Index : REAL;
+    G_Optimization_Energy_Saving_Active : BOOL;
+
+    // schedule-aware preheat. Comfort time is milliseconds from midnight.
+    G_Zone_Schedule_Enabled : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Comfort_Time_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF UDINT;
+    G_Zone_Schedule_Preheat_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Zone_Schedule_Learned_Offset_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES, 1..3] OF UDINT;
+END_VAR

@@ -1,0 +1,20 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime-only snapshot for short-away restore.
+    // Not RETAIN: this surface is intended for short departures within the
+    // current runtime session. Safety layers still override restore outputs.
+    G_Snapshot_Valid : BOOL := FALSE;
+    G_Snapshot_Taken_MS : UDINT := 0;
+
+    G_Lighting_Levels : ARRAY[1..GVL_CONSTANTS.C_MAX_LIGHT_ZONES] OF BYTE;
+    G_Socket_States : ARRAY[1..GVL_CONSTANTS.C_MAX_SOCKETS] OF BOOL;
+
+    G_Restore_Active : BOOL := FALSE;
+    G_Restore_Progress : REAL := 0.0;
+    G_Restore_Started_MS : UDINT := 0;
+    G_Restore_Done : BOOL := FALSE;
+
+    // One-cycle hold after progress reaches 1.0. Domain managers run later in
+    // the cycle and must still see Active+Snapshot_Valid for final output apply.
+    G_Restore_Finalize_Pending : BOOL := FALSE;
+END_VAR

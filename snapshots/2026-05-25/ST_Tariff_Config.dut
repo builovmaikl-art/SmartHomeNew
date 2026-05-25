@@ -1,0 +1,9 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Tariff_Config :
+STRUCT
+    Enabled : BOOL := FALSE;
+    Night_Start_Hour : UINT := 23;
+    Night_End_Hour : UINT := 7;
+    Boost_Delta : REAL := 2.0;
+END_STRUCT
+END_TYPE

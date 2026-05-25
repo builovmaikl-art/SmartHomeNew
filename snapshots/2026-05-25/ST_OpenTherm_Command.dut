@@ -1,0 +1,8 @@
+TYPE ST_OpenTherm_Command :
+STRUCT
+    Enable : BOOL;
+    Setpoint_x10 : UINT;
+    Sequence : UDINT;
+    Last_Write_MS : UDINT;
+END_STRUCT
+END_TYPE

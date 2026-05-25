@@ -1,0 +1,38 @@
+VAR_GLOBAL
+    // Global sensor consensus authority.
+    Sensor_Consensus_Valid : BOOL := FALSE;
+    Sensor_Consensus_Quarantine_Active : BOOL := TRUE;
+    Sensor_Consensus_Lease_Expired : BOOL := TRUE;
+
+    // Physics-consistency proofs.
+    Physics_Invariants_Satisfied : BOOL := FALSE;
+    Cross_Sensor_Correlation_Valid : BOOL := FALSE;
+    Telemetry_Plausibility_Valid : BOOL := FALSE;
+
+    // Divergence detection.
+    Sensor_Drift_Detected : BOOL := FALSE;
+    Sensor_Partition_Detected : BOOL := FALSE;
+    Sensor_Hallucination_Suspected : BOOL := FALSE;
+    Cross_Sensor_Divergence_Detected : BOOL := FALSE;
+
+    // Physical causality consistency.
+    Flow_Response_Valid : BOOL := FALSE;
+    Pressure_Response_Valid : BOOL := FALSE;
+    Airflow_Response_Valid : BOOL := FALSE;
+    Current_Signature_Valid : BOOL := FALSE;
+
+    // Consensus temporal authority.
+    Sensor_Consensus_Epoch : UDINT := 0;
+    Last_Consensus_Update_MS : UDINT := 0;
+    Sensor_Consensus_Freshness_Valid : BOOL := FALSE;
+
+    // Oscillation/drift containment.
+    Sensor_Oscillation_Detected : BOOL := FALSE;
+    Sensor_Stuck_State_Detected : BOOL := FALSE;
+    Sensor_Replay_Suspected : BOOL := FALSE;
+
+    // Diagnostics.
+    Sensor_Consensus_Last_Error_Code : UDINT := 0;
+    Sensor_Consensus_Last_Error_Text : STRING(160) := '';
+    Sensor_Consensus_Invalidation_Count : UDINT := 0;
+END_VAR

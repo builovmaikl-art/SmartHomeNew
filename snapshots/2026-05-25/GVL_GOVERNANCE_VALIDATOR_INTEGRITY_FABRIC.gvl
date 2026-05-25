@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic governance validator integrity governance.
+    Governance_Validator_Integrity_Valid : BOOL := FALSE;
+    Governance_Validator_Integrity_Granted : BOOL := FALSE;
+    Governance_Validator_Integrity_Quarantine_Active : BOOL := TRUE;
+
+    // Validator immutability proofs.
+    Validator_Semantics_Immutable : BOOL := FALSE;
+    CrossEpoch_Validation_Equivalence_Stable : BOOL := FALSE;
+    Distributed_Validator_Consensus_Valid : BOOL := FALSE;
+    Governance_Rule_Integrity_Canonical : BOOL := FALSE;
+    Validator_Lineage_Coherent : BOOL := FALSE;
+
+    // Validator integrity validation.
+    Validator_Causality_Grounded : BOOL := FALSE;
+    Governance_Rule_Evolution_Governed : BOOL := FALSE;
+    Distributed_Validation_Timeline_Monotonic : BOOL := FALSE;
+    Validator_Interpretation_Equivalence_Valid : BOOL := FALSE;
+
+    // Validator self-corruption detectors.
+    Validator_Semantic_Drift_Detected : BOOL := FALSE;
+    CrossNode_Validation_Fork : BOOL := FALSE;
+    Governance_Rule_Mutation_Detected : BOOL := FALSE;
+    SelfReferential_Validator_Corruption : BOOL := FALSE;
+    Validator_Lineage_Drift_Detected : BOOL := FALSE;
+    Distributed_Validator_Reality_Fork_Detected : BOOL := FALSE;
+
+    // Validator epochs.
+    Governance_Validator_Integrity_Epoch : UDINT := 0;
+    Governance_Validator_Integrity_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Governance_Validator_Integrity_Last_Update_MS : UDINT := 0;
+    Governance_Validator_Integrity_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Governance_Validator_Integrity_Last_Error_Code : UDINT := 0;
+    Governance_Validator_Integrity_Last_Error_Text : STRING(160) := '';
+    Governance_Validator_Integrity_Invalidation_Count : UDINT := 0;
+END_VAR

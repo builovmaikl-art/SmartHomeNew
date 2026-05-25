@@ -1,0 +1,16 @@
+VAR_GLOBAL
+    Runtime_Assumption_Integrity_Active : BOOL := TRUE;
+
+    Runtime_Assumption_Integrity_Observed : BOOL := FALSE;
+    Runtime_Assumption_Lineage_Coherent : BOOL := FALSE;
+    Runtime_Assumption_Stability_Observed : BOOL := FALSE;
+
+    Runtime_Assumption_ReadOnly_Mode : BOOL := TRUE;
+    Runtime_Assumption_NoAuthorityMutation : BOOL := TRUE;
+
+    Runtime_Assumption_Decay_Observed : BOOL := FALSE;
+    Runtime_Assumption_Violation_Observed : BOOL := FALSE;
+    Runtime_Assumption_Drift_Observed : BOOL := FALSE;
+
+    Runtime_Assumption_Integrity_Epoch : UDINT := 0;
+END_VAR

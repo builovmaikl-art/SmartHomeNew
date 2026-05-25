@@ -1,0 +1,14 @@
+{attribute 'pack_mode' := '1'}
+TYPE ST_Calibration_Sensor_Summary :
+STRUCT
+    active : BOOL;
+    status : INT; // 0=OK,1=IN_PROGRESS,2=WARNING,3=ERROR
+    calibrated_value : REAL;
+    deviation_percent : REAL;
+    verification_active : BOOL;
+    verification_failed : BOOL;
+    record_index : INT;
+    label : STRING(64);
+    summary_text : STRING(160);
+END_STRUCT
+END_TYPE

@@ -1,0 +1,77 @@
+VAR_GLOBAL
+    // ======================================================
+    // SEMANTIC PUBLICATION COMMIT STATE
+    // ======================================================
+    // Isolated semantic publication checkpoint coherence.
+    // Downstream/publication continuity only.
+    // Does not invalidate runtime barrier, PLC fencing,
+    // immutable snapshots, distributed commit or IO authority.
+    // ======================================================
+
+    Semantic_Commit_Epoch : ULINT := 0;
+    Semantic_Checkpoint_Epoch : ULINT := 0;
+    Semantic_Publication_Commit_Epoch : ULINT := 0;
+
+    Local_Semantic_Checkpoint_Epoch : ULINT := 0;
+    Peer_Semantic_Checkpoint_Epoch : ULINT := 0;
+
+    Local_Semantic_Commit_Epoch : ULINT := 0;
+    Peer_Semantic_Commit_Epoch : ULINT := 0;
+
+    Semantic_Checkpoint_Prepare_Active : BOOL := FALSE;
+    Semantic_Checkpoint_Prepare_Valid : BOOL := FALSE;
+    Semantic_Checkpoint_Ack_Valid : BOOL := FALSE;
+
+    Semantic_Publication_Commit_Requested : BOOL := FALSE;
+    Semantic_Publication_Commit_Confirmed : BOOL := FALSE;
+
+    Semantic_Checkpoint_Mismatch : BOOL := FALSE;
+    Semantic_Commit_Mismatch : BOOL := FALSE;
+    Semantic_Rollback_Detected : BOOL := FALSE;
+    Semantic_Replay_Fenced : BOOL := FALSE;
+    Semantic_Checkpoint_Missing : BOOL := FALSE;
+
+    // ======================================================
+    // SEMANTIC COMMIT STABILIZATION FOUNDATION
+    // ======================================================
+
+    Semantic_Checkpoint_Drift_Suspected : BOOL := FALSE;
+    Semantic_Checkpoint_Jitter_Suspected : BOOL := FALSE;
+    Semantic_Commit_Replay_Storm_Suspected : BOOL := FALSE;
+
+    Semantic_Commit_Stabilization_Required : BOOL := FALSE;
+    Semantic_Commit_Stabilized : BOOL := FALSE;
+
+    Semantic_Commit_Stabilization_Window_MS : UDINT := 3000;
+    Semantic_Commit_Last_Stable_MS : UDINT := 0;
+
+    // ======================================================
+    // PASSIVE SEMANTIC TELEMETRY FOUNDATION
+    // ======================================================
+
+    Semantic_Drift_Event_Count : ULINT := 0;
+    Semantic_Jitter_Event_Count : ULINT := 0;
+    Semantic_Replay_Storm_Event_Count : ULINT := 0;
+
+    Semantic_Last_Drift_MS : UDINT := 0;
+    Semantic_Last_Jitter_MS : UDINT := 0;
+    Semantic_Last_Replay_Storm_MS : UDINT := 0;
+
+    Semantic_Stabilization_Telemetry_Valid : BOOL := FALSE;
+
+    Semantic_Commit_Lease_Active : BOOL := FALSE;
+    Semantic_Commit_Lease_Expired : BOOL := FALSE;
+    Semantic_Commit_Timeout_MS : UDINT := 5000;
+
+    Semantic_Commit_Last_Refresh_MS : UDINT := 0;
+    Peer_Semantic_Commit_Last_Refresh_MS : UDINT := 0;
+
+    Semantic_Commit_Valid : BOOL := FALSE;
+    Semantic_Commit_Quarantine_Active : BOOL := FALSE;
+    Semantic_Commit_Forced_Safe_Mode : BOOL := FALSE;
+
+    Semantic_Commit_Last_Error_Code : UDINT := 0;
+    Semantic_Commit_Last_Error_Text : STRING(160) := '';
+
+    Semantic_Commit_Invalidation_Count : UDINT := 0;
+END_VAR

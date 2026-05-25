@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Water domain status. Observational only.
+
+    G_Runtime_Required : BOOL := FALSE;
+    G_Runtime_Executed : BOOL := FALSE;
+    G_Runtime_Idle_By_Design : BOOL := FALSE;
+    G_Recovery_Requested : BOOL := FALSE;
+    G_Global_Path_Active : BOOL := FALSE;
+    G_Output_35_Active : BOOL := FALSE;
+    G_Output_36_Active : BOOL := FALSE;
+    G_Any_Zone_Active : BOOL := FALSE;
+    G_Last_Update_MS : UDINT := 0;
+    G_Status_Code : UINT := 0;
+    G_Status_Text : STRING(128) := '';
+END_VAR

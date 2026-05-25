@@ -1,0 +1,32 @@
+TYPE ST_Heating_Circuit_Runtime_Projection :
+STRUCT
+    // Passive runtime-to-observability projection contract.
+    // Contains semantic runtime state only.
+    // No runtime authority.
+
+    Visible : BOOL;
+
+    // Selected operational source
+    Selected_Source_Code : UINT; // 0 none, 1 room, 2 floor
+    Selected_Source_Confidence : REAL;
+
+    // Runtime degraded semantics
+    Fallback_Active : BOOL;
+    Source_Degraded : BOOL;
+    Sensor_Error_Active : BOOL;
+
+    // Explainability semantics
+    Reason_Code : UINT;
+    Reason_Text : STRING(128);
+
+    // Runtime semantic edge publication
+    Source_Switched_Event : BOOL;
+    Fallback_Activated_Event : BOOL;
+    Fallback_Recovered_Event : BOOL;
+    Source_Loss_Event : BOOL;
+
+    Last_Event_Code : UINT;
+    Last_Event_Text : STRING(128);
+    Last_Event_MS : UDINT;
+END_STRUCT
+END_TYPE

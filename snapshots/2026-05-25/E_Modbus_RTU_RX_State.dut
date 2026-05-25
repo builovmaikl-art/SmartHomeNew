@@ -1,0 +1,10 @@
+TYPE E_Modbus_RTU_RX_State :
+(
+    MB_RTU_RX_IDLE := 0,
+    MB_RTU_RX_RECEIVING := 1,
+    MB_RTU_RX_FRAME_READY := 2,
+    MB_RTU_RX_CRC_ERROR := 3,
+    MB_RTU_RX_OVERFLOW := 4,
+    MB_RTU_RX_SHORT_FRAME := 5
+);
+END_TYPE

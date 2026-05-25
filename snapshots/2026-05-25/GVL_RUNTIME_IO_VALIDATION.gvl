@@ -1,0 +1,17 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Last_Update_MS : UDINT := 0;
+    G_Validation_Executed : BOOL := FALSE;
+    G_Validation_Valid : BOOL := TRUE;
+
+    Fire_IO_Valid : BOOL := TRUE;
+    Gas_IO_Valid : BOOL := TRUE;
+    Leak_IO_Valid : BOOL := TRUE;
+    Global_Stop_IO_Valid : BOOL := TRUE;
+    Inactive_PLC_IO_Valid : BOOL := TRUE;
+    Freeze_IO_Valid : BOOL := TRUE;
+
+    Any_IO_Invalid : BOOL := FALSE;
+    Status_Code : UINT := 0;
+    Status_Text : STRING(160) := '';
+END_VAR

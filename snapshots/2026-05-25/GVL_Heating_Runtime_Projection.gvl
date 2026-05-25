@@ -1,0 +1,8 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Canonical passive runtime projection surface.
+    // Runtime publishes semantic state only.
+    // Supervisory layers may observe but never control through this surface.
+
+    G_Circuit_Projection : ARRAY[1..GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS] OF ST_Heating_Circuit_Runtime_Projection;
+END_VAR

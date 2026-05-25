@@ -1,0 +1,15 @@
+VAR_GLOBAL
+    Authority_Resurrection_Boundary_Valid : BOOL := FALSE;
+    Authority_Resurrection_Bounded : BOOL := FALSE;
+    Authority_Recovery_Lineage_Stable : BOOL := FALSE;
+    Distributed_Authority_Recovery_Consensus : BOOL := FALSE;
+
+    Authority_Resurrection_Causality_Valid : BOOL := FALSE;
+    Resurrection_Timeline_Monotonic : BOOL := FALSE;
+
+    Partial_Recovery_Authority_Leak : BOOL := FALSE;
+    Unsafe_Authority_Resurrection_Detected : BOOL := FALSE;
+    Resurrection_Authority_Fork_Detected : BOOL := FALSE;
+
+    Authority_Resurrection_Epoch : UDINT := 0;
+END_VAR

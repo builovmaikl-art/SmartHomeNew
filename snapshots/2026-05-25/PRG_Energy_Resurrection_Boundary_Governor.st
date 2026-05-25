@@ -1,0 +1,13 @@
+PROGRAM PRG_Energy_Resurrection_Boundary_Governor
+IF GVL_POWER_DOMAIN_SEGMENTATION_FABRIC.Power_Domain_Segmentation_Granted
+AND NOT GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Unsafe_Energy_Resurrection_Detected
+AND NOT GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.CrossDomain_Energy_Recovery_Race
+AND NOT GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Energy_Recovery_Fork_Detected THEN
+
+    GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Energy_Resurrection_Boundary_Valid := TRUE;
+    GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Energy_Resurrection_Boundary_Granted := TRUE;
+    GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Energy_Resurrection_Causality_Valid := TRUE;
+    GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.Energy_Authority_Recovery_Bounded := TRUE;
+    GVL_ENERGY_RESURRECTION_BOUNDARY_FABRIC.CrossDomain_Energy_Recovery_Stable := TRUE;
+END_IF;
+END_PROGRAM

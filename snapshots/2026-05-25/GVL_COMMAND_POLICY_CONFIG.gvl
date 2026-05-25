@@ -1,0 +1,44 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Command Arbitration safety policy configuration.
+    // Used by PRG_Command_Arbitration only.
+
+    // PLC inactive fail-safe policy.
+    G_PLC_Inactive_Close_Gas : BOOL := TRUE;
+    G_PLC_Inactive_Stop_Boiler : BOOL := TRUE;
+    G_PLC_Inactive_Block_Heating : BOOL := TRUE;
+    G_PLC_Inactive_Stop_Vent : BOOL := TRUE;
+    G_PLC_Inactive_Block_Water : BOOL := TRUE;
+
+    // FIRE policy.
+    G_Fire_Block_Heating : BOOL := TRUE;
+    G_Fire_Stop_Boiler : BOOL := TRUE;
+    G_Fire_Stop_Vent : BOOL := TRUE;
+    G_Fire_Open_Lock_1 : BOOL := TRUE;
+    G_Fire_Open_Lock_2 : BOOL := TRUE;
+    G_Fire_Open_Gate : BOOL := TRUE;
+    G_Fire_Open_Wicket : BOOL := TRUE;
+    G_Fire_Block_Lock_Close : BOOL := TRUE;
+
+    // GAS policy.
+    G_Gas_Close_Gas : BOOL := TRUE;
+    G_Gas_Stop_Boiler : BOOL := TRUE;
+    G_Gas_Block_Heating : BOOL := TRUE;
+    G_Gas_Open_Gate : BOOL := TRUE;
+    G_Gas_Open_Wicket : BOOL := TRUE;
+    // Intentionally FALSE by project decision: Lock 1/2 are not evacuation contour for GAS.
+    G_Gas_Open_Lock_1 : BOOL := FALSE;
+    G_Gas_Open_Lock_2 : BOOL := FALSE;
+
+    // WATER policy.
+    G_Water_Block_Water : BOOL := TRUE;
+
+    // GLOBAL_STOP policy.
+    G_GlobalStop_Block_Heating : BOOL := TRUE;
+    G_GlobalStop_Stop_Boiler : BOOL := TRUE;
+    G_GlobalStop_Stop_Vent : BOOL := TRUE;
+    G_GlobalStop_Block_Water : BOOL := TRUE;
+
+    // Sanity policy.
+    G_Block_Close_When_Open_Commanded : BOOL := TRUE;
+END_VAR

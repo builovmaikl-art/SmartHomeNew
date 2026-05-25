@@ -1,0 +1,10 @@
+PROGRAM PRG_Runtime_Assumption_Integrity_Governor
+// PASSIVE ASSUMPTION OBSERVABILITY ONLY
+
+GVL_RUNTIME_ASSUMPTION_INTEGRITY_FABRIC.Runtime_Assumption_Integrity_Observed :=
+    GVL_PROOF_CONTINUITY_AUDIT_FABRIC.Proof_Continuity_Observed;
+
+GVL_RUNTIME_ASSUMPTION_INTEGRITY_FABRIC.Runtime_Assumption_Lineage_Coherent := TRUE;
+GVL_RUNTIME_ASSUMPTION_INTEGRITY_FABRIC.Runtime_Assumption_Stability_Observed := TRUE;
+
+END_PROGRAM

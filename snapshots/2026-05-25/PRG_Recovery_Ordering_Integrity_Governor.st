@@ -1,0 +1,13 @@
+PROGRAM PRG_Recovery_Ordering_Integrity_Governor
+IF GVL_DETERMINISTIC_RECOVERY_PATH_FABRIC.Deterministic_Recovery_Path_Granted
+AND NOT GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Unsafe_Recovery_Reordering_Detected
+AND NOT GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.CrossDomain_Reactivation_Race
+AND NOT GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Recovery_Topology_Divergence
+AND NOT GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Residual_Unsafe_Reactivation_Detected THEN
+
+    GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Recovery_Ordering_Integrity_Valid := TRUE;
+    GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.CrossDomain_Recovery_Ordering_Stable := TRUE;
+    GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Recovery_Authority_Sequencing_Canonical := TRUE;
+    GVL_RECOVERY_ORDERING_INTEGRITY_FABRIC.Physical_Reactivation_Topology_Safe := TRUE;
+END_IF;
+END_PROGRAM

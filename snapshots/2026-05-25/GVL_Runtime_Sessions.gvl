@@ -1,0 +1,16 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Runtime session state is rebuilt by FB_Runtime_Session_Governance
+    // during cyclic execution. It must not consume RETAIN memory.
+    G_Local_Session : ST_Runtime_Node_Session;
+    G_Remote_Sessions : ARRAY[1..16] OF ST_Runtime_Node_Session;
+
+    G_Runtime_Valid : BOOL;
+    G_Last_Update_MS : UDINT;
+
+    G_Any_Stale_Session : BOOL;
+    G_Any_Quarantined_Session : BOOL;
+
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(160);
+END_VAR

@@ -1,0 +1,19 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // ======================================================
+    // PHYSICAL OPENTHERM ADAPTER RUNTIME STATE
+    // ======================================================
+    // Static transport configuration lives in GVL_CONFIG.
+    // This GVL contains runtime command/status/wire image only.
+
+    G_Command : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Command;
+    G_Status : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Status;
+
+    // Raw wire image exchanged with transport layer
+    G_Wire_Image : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF ST_OpenTherm_Wire_Image;
+
+    // Transport diagnostics
+    G_Transport_Online : BOOL := FALSE;
+    G_Transport_Error : BOOL := FALSE;
+    G_Last_Transport_Update_MS : UDINT := 0;
+END_VAR

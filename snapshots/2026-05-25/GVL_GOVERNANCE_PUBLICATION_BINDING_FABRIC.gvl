@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Deterministic governance publication binding governance.
+    Governance_Publication_Binding_Valid : BOOL := FALSE;
+    Governance_Publication_Binding_Granted : BOOL := FALSE;
+    Governance_Publication_Binding_Quarantine_Active : BOOL := TRUE;
+
+    // Observability publication binding proofs.
+    Observability_Publication_Causality_Valid : BOOL := FALSE;
+    Upstream_Governance_Lease_Fresh : BOOL := FALSE;
+    Governance_Publication_Epoch_Coherent : BOOL := FALSE;
+    Publication_Quarantine_Propagation_Valid : BOOL := FALSE;
+    Canonical_Observability_Reality_Consistent : BOOL := FALSE;
+
+    // Publication integrity validation.
+    Diagnostics_Publication_Consistency_Valid : BOOL := FALSE;
+    HMI_Publication_State_Aligned : BOOL := FALSE;
+    Blackbox_Invalidation_Lineage_Valid : BOOL := FALSE;
+    Distributed_Publication_Consensus_Valid : BOOL := FALSE;
+
+    // Stale-valid publication detectors.
+    Stale_Valid_Publication_Detected : BOOL := FALSE;
+    LeaseExpired_Governance_Published_As_Healthy : BOOL := FALSE;
+    Quarantine_State_Publication_Bypass : BOOL := FALSE;
+    Governance_Invalidation_Hidden_From_Observability : BOOL := FALSE;
+    Distributed_Publication_State_Fork_Detected : BOOL := FALSE;
+    Historical_Invalidation_Causality_Lost : BOOL := FALSE;
+
+    // Publication epochs.
+    Governance_Publication_Binding_Epoch : UDINT := 0;
+    Governance_Publication_Binding_Epoch_Coherent_Runtime : BOOL := FALSE;
+
+    // Temporal authority.
+    Governance_Publication_Binding_Last_Update_MS : UDINT := 0;
+    Governance_Publication_Binding_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Governance_Publication_Binding_Last_Error_Code : UDINT := 0;
+    Governance_Publication_Binding_Last_Error_Text : STRING(160) := '';
+    Governance_Publication_Binding_Invalidation_Count : UDINT := 0;
+END_VAR

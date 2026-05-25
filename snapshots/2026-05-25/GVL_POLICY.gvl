@@ -1,0 +1,64 @@
+VAR_GLOBAL
+    // Policy bridges and centralized scenario ownership.
+    G_Rule_Preheat_Request : BOOL := FALSE;
+    G_Scenario_Request_Operator : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    G_Scenario_Request_Gateway : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    G_Scenario_Request_Rule : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    G_Scenario_Intent : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_NONE;
+    G_Scenario_Source : E_SCENARIO_SOURCE := SRC_NONE;
+
+    // Away-level policy state.
+    // 0=none, 1=short, 2=medium, 3=long.
+    G_Away_Active : BOOL := FALSE;
+    G_Away_Level : BYTE := 0;
+    G_Away_Start_MS : UDINT := 0;
+    G_Away_Elapsed_MS : UDINT := 0;
+    G_Away_Previous_Scenario : E_SCENARIO_TYPE := E_SCENARIO_TYPE.SCENARIO_PRESENCE;
+
+    // Tuning defaults from ТЗ: short->medium after 2h, medium->long after 3d.
+    G_Away_Short_To_Medium_MS : UDINT := 7200000;
+    G_Away_Medium_To_Long_MS : UDINT := 259200000;
+
+    G_Away_Simulation_Active : BOOL := FALSE;
+    G_Away_Simulation_Intensity : REAL := 0.0;
+    G_Away_Heating_Offset_C : REAL := 0.0;
+    G_Away_Min_Heating_Setpoint_C : REAL := 15.0;
+    G_Away_Long_Economy_Setpoint_C : REAL := 12.0;
+
+    // Security alarm escalation policy.
+    // On alarm: force long-away and publish a 5-minute lighting boost for
+    // FB_Lighting_Blinds_Manager. This is a domain-level output override, not
+    // a direct physical IO write.
+    G_Security_Alarm_Force_Long_Away : BOOL := FALSE;
+    G_Security_Alarm_Light_Boost_Active : BOOL := FALSE;
+    G_Security_Alarm_Light_Boost_Start_MS : UDINT := 0;
+    G_Security_Alarm_Light_Boost_Duration_MS : UDINT := 300000;
+
+    // Entrance lighting assist policy.
+    // Triggered by entrance door opening while dark. Darkness is configurable:
+    // validated lux sensor below threshold and/or fallback to night flag.
+    G_Entrance_Light_Assist_Active : BOOL := FALSE;
+    G_Entrance_Light_Assist_Start_MS : UDINT := 0;
+    G_Entrance_Light_Assist_Dark_Active : BOOL := FALSE;
+
+    // Planned return / preheat policy.
+    // Return time uses the current monotonic system-time domain. HMI/gateway may
+    // set it as an absolute monotonic timestamp in the same domain.
+    G_Away_Planned_Return_Enabled : BOOL := FALSE;
+    G_Away_Planned_Return_MS : UDINT := 0;
+    G_Away_Preheat_Lead_MS : UDINT := 10800000; // 3 hours
+    G_Away_Return_Grace_MS : UDINT := 86400000; // 24 hours
+    G_Away_Preheat_Target_C : REAL := 22.0;
+    G_Away_Return_Preheat_Active : BOOL := FALSE;
+    G_Away_Return_Grace_Active : BOOL := FALSE;
+    G_Away_Return_Grace_Start_MS : UDINT := 0;
+    G_Away_Return_Expired : BOOL := FALSE;
+
+    // Restore state after short away. Downstream restore application is handled
+    // by domain-specific code and should use this policy surface.
+    G_Away_Restore_Requested : BOOL := FALSE;
+    G_Away_Restore_Active : BOOL := FALSE;
+    G_Away_Restore_Start_MS : UDINT := 0;
+    G_Away_Restore_Duration_MS : UDINT := 60000;
+    G_Away_Restore_Progress : REAL := 0.0;
+END_VAR

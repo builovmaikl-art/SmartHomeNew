@@ -1,0 +1,13 @@
+VAR_GLOBAL
+    G_Recovery_Lock : ST_Distributed_Recovery_Lock;
+
+    G_Runtime_Valid : BOOL := FALSE;
+    G_Last_Update_MS : UDINT := 0;
+
+    G_Recovery_Execution_Blocked : BOOL := TRUE;
+    G_Rollback_Execution_Blocked : BOOL := TRUE;
+    G_Reopen_Execution_Blocked : BOOL := TRUE;
+
+    G_Status_Code : UINT := 0;
+    G_Status_Text : STRING(160) := '';
+END_VAR

@@ -1,0 +1,13 @@
+PROGRAM PRG_Distributed_Forward_Progress_Governor
+IF GVL_RESOURCE_STARVATION_BOUNDARY_FABRIC.Resource_Starvation_Boundary_Granted
+AND NOT GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Livelock_Detected
+AND NOT GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Cluster_Progress_Fork_Detected
+AND NOT GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Consensus_Progress_Deadlock THEN
+
+    GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Forward_Progress_Valid := TRUE;
+    GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Forward_Progress_Granted := TRUE;
+    GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Forward_Progress_Canonical := TRUE;
+    GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Cluster_Progress_Consensus_Stable := TRUE;
+    GVL_DISTRIBUTED_FORWARD_PROGRESS_FABRIC.Distributed_Recovery_Progress_Valid := TRUE;
+END_IF;
+END_PROGRAM

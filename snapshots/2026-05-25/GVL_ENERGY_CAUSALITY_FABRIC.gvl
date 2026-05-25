@@ -1,0 +1,40 @@
+VAR_GLOBAL
+    // Global deterministic energy causality authority.
+    Energy_Causality_Valid : BOOL := FALSE;
+    Energy_Causality_Granted : BOOL := FALSE;
+    Energy_Causality_Quarantine_Active : BOOL := TRUE;
+
+    // Energetic realizability proofs.
+    Hydraulic_Energy_State_Valid : BOOL := FALSE;
+    Thermal_Energy_State_Valid : BOOL := FALSE;
+    Electrical_Load_State_Valid : BOOL := FALSE;
+    Motor_Energy_Envelope_Valid : BOOL := FALSE;
+    Distributed_Load_Coherent : BOOL := FALSE;
+
+    // Stable plant energy envelopes.
+    Energy_Envelope_Stable : BOOL := FALSE;
+    Transient_Load_Stable : BOOL := FALSE;
+    Thermal_Accumulation_Stable : BOOL := FALSE;
+    Recovery_Energy_Coherent : BOOL := FALSE;
+
+    // Energy divergence detectors.
+    DryRun_Energy_State_Detected : BOOL := FALSE;
+    Thermal_Extraction_Divergence_Detected : BOOL := FALSE;
+    Load_Synchronization_Spike_Detected : BOOL := FALSE;
+    Hydraulic_Energy_Starvation_Detected : BOOL := FALSE;
+    Distributed_Transient_Overload_Detected : BOOL := FALSE;
+    Energy_Recovery_Instability_Detected : BOOL := FALSE;
+
+    // Energy authority epochs.
+    Energy_Causality_Epoch : UDINT := 0;
+    Energy_Causality_Epoch_Coherent : BOOL := FALSE;
+
+    // Temporal authority.
+    Energy_Causality_Last_Update_MS : UDINT := 0;
+    Energy_Causality_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Energy_Causality_Last_Error_Code : UDINT := 0;
+    Energy_Causality_Last_Error_Text : STRING(160) := '';
+    Energy_Causality_Invalidation_Count : UDINT := 0;
+END_VAR

@@ -1,0 +1,22 @@
+TYPE ST_IO_Binding_Record :
+STRUCT
+    Binding_Valid : BOOL;
+    Binding_Version : UDINT;
+
+    Physical_Channel_Id : UINT;
+    Logical_Device_Id : UINT;
+    Domain_Id : UINT;
+    Role_Id : UINT;
+
+    Controller_Id : UINT;
+    Module_Id : UINT;
+    Terminal_Id : UINT;
+
+    Inverted : BOOL;
+    Required : BOOL;
+    Quality_Required : BOOL;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

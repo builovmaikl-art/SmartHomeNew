@@ -1,0 +1,13 @@
+PROGRAM PRG_Distributed_Epoch_Linearity_Governor
+IF GVL_TEMPORAL_CAUSALITY_CLOSURE_FABRIC.Temporal_Causality_Closure_Granted
+AND NOT GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Epoch_Rollback_Detected
+AND NOT GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Distributed_Epoch_Fork_Detected
+AND NOT GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Stale_Epoch_Application_Detected THEN
+
+    GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Distributed_Epoch_Linearity_Valid := TRUE;
+    GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Distributed_Epoch_Linearity_Granted := TRUE;
+    GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Distributed_Epoch_Linearity_Valid_Proof := TRUE;
+    GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Epoch_Timeline_Monotonic := TRUE;
+    GVL_DISTRIBUTED_EPOCH_LINEARITY_FABRIC.Cluster_Epoch_Consensus_Stable := TRUE;
+END_IF;
+END_PROGRAM

@@ -1,0 +1,24 @@
+TYPE ST_Water_Recovery_FSM_State :
+STRUCT
+    Runtime_Valid : BOOL;
+    Runtime_System_Time_MS : UDINT;
+
+    Recovery_Domain_Id : UINT;
+
+    Recovery_Requested : BOOL;
+    Recovery_Sequencing_Active : BOOL;
+    Recovery_Verification_Window_Active : BOOL;
+
+    Rollback_Required : BOOL;
+    Escalation_Required : BOOL;
+    Operator_Ack_Required : BOOL;
+
+    Recovery_Completed : BOOL;
+    Recovery_Denied : BOOL;
+
+    FSM_State : UINT;
+
+    Status_Code : UINT;
+    Status_Text : STRING(128);
+END_STRUCT
+END_TYPE

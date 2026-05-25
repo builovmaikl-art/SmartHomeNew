@@ -1,0 +1,68 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    // Heating dashboard
+    G_HMI_Heating_Confidence : REAL := 1.0;
+    G_HMI_Heating_Confidence_Percent : INT := 100;
+    G_HMI_Heating_Reason_Code : INT := 0;
+    G_HMI_Heating_Status_Text : STRING(128) := 'OK';
+    G_HMI_Heating_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ALARM
+
+    // Heating cascade dashboard
+    G_HMI_Heating_Cascade_Available : BOOL;
+    G_HMI_Heating_Cascade_Degraded : BOOL;
+    G_HMI_Heating_Cascade_Partial_Capacity : BOOL;
+    G_HMI_Heating_Cascade_No_Flame : BOOL;
+    G_HMI_Heating_Cascade_Transport_Degraded : BOOL;
+    G_HMI_Heating_Cascade_Ignition_Timeout : BOOL;
+    G_HMI_Heating_Cascade_Active_Boilers : UINT;
+    G_HMI_Heating_Cascade_Available_Boilers : UINT;
+
+    // OpenTherm dashboard
+    G_HMI_Boiler_OT_Online : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Command_Ack : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Command_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Heartbeat_Timeout : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Adapter_Error : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_HMI_Boiler_OT_Heartbeat_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_HMI_Boiler_OT_Command_Age_MS : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_HMI_Boiler_OT_Adapter_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Adapter_State;
+    G_HMI_Boiler_OT_Error_State : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF E_OpenTherm_Error;
+
+    // Heating predictive dashboard
+    G_HMI_Heating_Predictive_Pressure_Drop : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+    G_HMI_Heating_Predictive_Current_Rise : ARRAY[1..GVL_CONSTANTS.C_MAX_MANIFOLDS] OF BOOL;
+
+    // File/archive dashboard. Read-only projection of GVL_FILE_ARCHIVE status.
+    // HMI requests still go through GVL_FILE_ARCHIVE one-shot request fields.
+    G_HMI_File_Archive_Interface_Enabled : BOOL;
+    G_HMI_File_Archive_CSV_Enabled : BOOL;
+    G_HMI_File_Archive_Target_Code : BYTE;
+    G_HMI_File_Archive_Target_Available : BOOL;
+    G_HMI_File_Archive_Write_Busy : BOOL;
+    G_HMI_File_Archive_Write_Done : BOOL;
+    G_HMI_File_Archive_Write_Error : BOOL;
+    G_HMI_File_Archive_Last_Error_Code : UDINT;
+    G_HMI_File_Archive_Last_Status_Text : STRING(200);
+    G_HMI_File_Archive_Last_Write_MS : UDINT;
+    G_HMI_File_Archive_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ERROR
+
+    // Automatic config backup dashboard.
+    G_HMI_File_Archive_Auto_Backup_Enabled : BOOL;
+    G_HMI_File_Archive_Auto_Backup_Time_Of_Day_MS : UDINT;
+    G_HMI_File_Archive_Auto_Backup_Last_Day_Of_Week : INT;
+    G_HMI_File_Archive_Auto_Backup_Last_Request_MS : UDINT;
+    G_HMI_File_Archive_Auto_Backup_Last_Status_Text : STRING(200);
+
+    // Config control dashboard. Read-only projection of staged apply and rollback state.
+    G_HMI_Config_Control_Version : UDINT;
+    G_HMI_Config_Control_Last_Good_Version : UDINT;
+    G_HMI_Config_Control_Backup_Valid : BOOL;
+    G_HMI_Config_Control_Apply_Pending : BOOL;
+    G_HMI_Config_Control_Rollback_Pending : BOOL;
+    G_HMI_Config_Control_Apply_Done : BOOL;
+    G_HMI_Config_Control_Rollback_Done : BOOL;
+    G_HMI_Config_Control_Config_Valid : BOOL;
+    G_HMI_Config_Control_Last_Action_Text : STRING(128);
+    G_HMI_Config_Control_Last_Update_MS : UDINT;
+    G_HMI_Config_Control_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=ERROR
+END_VAR

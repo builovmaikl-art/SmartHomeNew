@@ -1,0 +1,41 @@
+VAR_GLOBAL
+    // Global actuation authority.
+    Actuation_Authority_Valid : BOOL := FALSE;
+    Actuation_Authority_Granted : BOOL := FALSE;
+    Actuation_Quarantine_Active : BOOL := TRUE;
+
+    // Deterministic actuation epochs.
+    Actuation_Command_Epoch : UDINT := 0;
+    Field_ACK_Epoch : UDINT := 0;
+    Actuation_Authority_Epoch : UDINT := 0;
+
+    // Field-confirmed execution.
+    Field_Device_ACK_Valid : BOOL := FALSE;
+    Actuator_Transition_Observed : BOOL := FALSE;
+    Physical_Convergence_Confirmed : BOOL := FALSE;
+    Stable_Physical_Convergence : BOOL := FALSE;
+
+    // Physical execution validation.
+    Current_Signature_Confirmed : BOOL := FALSE;
+    Flow_Response_Confirmed : BOOL := FALSE;
+    Pressure_Response_Confirmed : BOOL := FALSE;
+    Motion_Response_Confirmed : BOOL := FALSE;
+
+    // Failure/replay/skew detection.
+    Stale_Field_ACK_Detected : BOOL := FALSE;
+    Write_Without_Confirm_Detected : BOOL := FALSE;
+    Relay_Weld_Suspected : BOOL := FALSE;
+    Actuator_Stall_Detected : BOOL := FALSE;
+    Partial_Actuation_Detected : BOOL := FALSE;
+    Command_Actuation_Skew_Detected : BOOL := FALSE;
+    ACK_Replay_Suspected : BOOL := FALSE;
+
+    // Temporal authority.
+    Actuation_Last_Update_MS : UDINT := 0;
+    Actuation_Lease_Expired : BOOL := TRUE;
+
+    // Diagnostics.
+    Actuation_Last_Error_Code : UDINT := 0;
+    Actuation_Last_Error_Text : STRING(160) := '';
+    Actuation_Invalidation_Count : UDINT := 0;
+END_VAR

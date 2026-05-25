@@ -1,0 +1,49 @@
+TYPE E_GOVERNANCE_PRIORITY_TIER : (
+    TIER_0_SAFETY,
+    TIER_1_AUTHORITY,
+    TIER_2_PHYSICAL_TRUTH,
+    TIER_3_SURVIVABILITY,
+    TIER_4_OBSERVABILITY,
+    TIER_5_ANALYTICS
+);
+END_TYPE
+
+VAR_GLOBAL
+    // Canonical semantic registry.
+    Runtime_Fabric_Registry_Active : BOOL := TRUE;
+    Runtime_Fabric_Registry_ReadOnly : BOOL := TRUE;
+
+    // Tier hierarchy.
+    Current_Governance_Priority_Tier : E_GOVERNANCE_PRIORITY_TIER := TIER_0_SAFETY;
+
+    Tier0_Safety_Active : BOOL := TRUE;
+    Tier1_Authority_Active : BOOL := TRUE;
+    Tier2_Physical_Truth_Active : BOOL := TRUE;
+    Tier3_Survivability_Active : BOOL := TRUE;
+    Tier4_Observability_Active : BOOL := TRUE;
+    Tier5_Analytics_Active : BOOL := TRUE;
+
+    // Canonical semantic domains.
+    Temporal_Integrity_Cluster_Active : BOOL := TRUE;
+    Authority_Integrity_Cluster_Active : BOOL := TRUE;
+    Physical_Reality_Cluster_Active : BOOL := TRUE;
+    Operational_Intelligence_Cluster_Active : BOOL := TRUE;
+    Survivability_Cluster_Active : BOOL := TRUE;
+
+    // Runtime compression observations.
+    Governance_Scattering_Observed : BOOL := FALSE;
+    Semantic_Duplication_Observed : BOOL := FALSE;
+    Runtime_Complexity_Pressure_Observed : BOOL := FALSE;
+
+    // Semantic recursion prevention.
+    Governance_Depth_Limit_Reached : BOOL := FALSE;
+    Semantic_Recursion_Limit_Reached : BOOL := FALSE;
+    Verification_Chaining_Limit_Reached : BOOL := FALSE;
+    Observability_Amplification_Limit_Reached : BOOL := FALSE;
+
+    // Runtime cost awareness.
+    Governance_Runtime_Cost_Observed : BOOL := FALSE;
+    Verification_Induced_Instability_Risk : BOOL := FALSE;
+
+    Runtime_Fabric_Registry_Epoch : UDINT := 0;
+END_VAR

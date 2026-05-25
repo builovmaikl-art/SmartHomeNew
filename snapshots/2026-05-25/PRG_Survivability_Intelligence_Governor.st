@@ -1,0 +1,48 @@
+PROGRAM PRG_Survivability_Intelligence_Governor
+// ADVISORY SURVIVABILITY INTELLIGENCE
+// READ-ONLY / NON-INVASIVE
+// NO ACTUATION / AUTHORITY / RECOVERY MUTATION
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.System_Survivable :=
+    GVL_PHYSICAL_REALITY_VERIFICATION_FABRIC.Physical_Runtime_Reality_Valid;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Degraded_But_Safe :=
+    GVL_RUNTIME_STATE_ALGEBRA.Current_Runtime_State = SYS_DEGRADED;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Isolated_But_Stable :=
+    GVL_RUNTIME_STATE_ALGEBRA.Current_Runtime_State = SYS_ISOLATED;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Partitioned_But_Survivable :=
+    GVL_RUNTIME_STATE_ALGEBRA.Current_Runtime_State = SYS_PARTITIONED;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Resource_Starved_But_Recoverable :=
+    GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Governance_Complexity_Pressure_Observed;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Essential_Functions_Preserved :=
+    GVL_SAFETY_OBSERVABILITY_TRUTH_FABRIC.Observability_Reality_Equivalence_Granted;
+
+IF GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Governance_Saturation_Observed THEN
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.NonEssential_Shedding_Recommended := TRUE;
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Heavy_Diagnostics_Defer_Recommended := TRUE;
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Trend_Analytics_Defer_Recommended := TRUE;
+END_IF;
+
+IF GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Governance_Complexity_Pressure_Observed THEN
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Telemetry_Rate_Reduction_Recommended := TRUE;
+END_IF;
+
+IF GVL_RUNTIME_TRANSITION_SYSTEM.Illegal_Runtime_Transition_Observed THEN
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.LongDuration_Degradation_Observed := TRUE;
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Chronic_Degradation_Risk_Increasing := TRUE;
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Survivability_Advisory_Available := TRUE;
+    GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Survivability_Advisory_Code :=
+        'survivability degraded under prolonged instability';
+END_IF;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Governance_Saturation_Pressure_Observed :=
+    GVL_OPERATIONAL_INTELLIGENCE_FABRIC.Governance_Saturation_Observed;
+
+GVL_SURVIVABILITY_INTELLIGENCE_FABRIC.Distributed_Instability_Pressure_Observed :=
+    NOT GVL_DISTRIBUTED_SAFETY_REALITY_CONSENSUS_FABRIC.Distributed_Safety_Consensus_Valid;
+
+END_PROGRAM

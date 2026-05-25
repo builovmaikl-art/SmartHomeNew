@@ -1,0 +1,156 @@
+PROGRAM PRG_Runtime_Scenario_Validation
+// Observational runtime scenario validator.
+// Checks that domain execution policy matches current scenario/safety context.
+// Does not gate execution and does not write physical outputs.
+
+GVL_RUNTIME_SCENARIO_VALIDATION.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
+GVL_RUNTIME_SCENARIO_VALIDATION.G_Validation_Executed := TRUE;
+GVL_RUNTIME_SCENARIO_VALIDATION.G_Validation_Valid := TRUE;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Active :=
+    GVL_ALARM.G_Security_Armed
+    OR GVL_ALARM.G_Security_Alarm;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Away_Context_Active :=
+    GVL_STATUS.G_Current_Scenario = SCENARIO_AWAY;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Presence_Context_Active :=
+    GVL_STATUS.G_Current_Scenario = SCENARIO_PRESENCE;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Active :=
+    GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Active :=
+    GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Active :=
+    GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Global_Stop_Context_Active :=
+    GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GLOBAL_STOP;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Active :=
+    GVL_STATE.G_Safety_Freeze_Risk
+    OR GVL_INPUT.IN_Freeze_Request;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Demand_Context_Active :=
+    GVL_INPUT.IN_Preheat_Request
+    OR GVL_INPUT.IN_Freeze_Request
+    OR GVL_HEATING_OUTPUT.DO_DHW_Heating_Pump
+    OR GVL_HEATING_OUTPUT.DO_DHW_Circ_Pump
+    OR GVL_HEATING_OUTPUT.DO_Backup_Circulation_Pump
+    OR GVL_HEATING_OUTPUT.DO_Electric_Heater_Enable;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Boost_Context_Active :=
+    GVL_INTENT_BEHAVIOR.I_Request_Ventilation_Boost
+    OR GVL_COMMAND_SHADOW.G_Vent_PV3_Boost
+    OR GVL_COMMAND_SHADOW.G_Exhaust_100_Req
+    OR GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Access_Command_Context_Active :=
+    GVL_COMMAND_SHADOW.G_Lock_1_Open
+    OR GVL_COMMAND_SHADOW.G_Lock_1_Close
+    OR GVL_COMMAND_SHADOW.G_Lock_2_Open
+    OR GVL_COMMAND_SHADOW.G_Lock_2_Close
+    OR GVL_COMMAND_SHADOW.G_Gate_Open
+    OR GVL_COMMAND_SHADOW.G_Wicket_Open
+    OR GVL_ACCESS_RUNTIME.G_Any_Pulse_Active;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Idle_Context_Active :=
+    NOT GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Away_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Presence_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Global_Stop_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Demand_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Boost_Context_Active
+    AND NOT GVL_RUNTIME_SCENARIO_VALIDATION.Access_Command_Context_Active;
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Idle_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Idle_Context_Active)
+    OR (
+        GVL_DOMAIN_EXECUTION_POLICY.Access_Mode = 0
+        AND GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode = 0
+        AND GVL_DOMAIN_EXECUTION_POLICY.Water_Mode = 0
+        AND GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode = 0
+        AND GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode = 0
+    );
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Active)
+    OR (
+        GVL_DOMAIN_EXECUTION_POLICY.Access_Mode >= 1
+        AND GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode >= 1
+        AND GVL_DOMAIN_EXECUTION_POLICY.Water_Mode >= 1
+    );
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Active)
+    OR (
+        GVL_DOMAIN_EXECUTION_POLICY.Access_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Lighting_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode = 2
+    );
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Active)
+    OR (
+        GVL_DOMAIN_EXECUTION_POLICY.Access_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode = 2
+    );
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Active)
+    OR (GVL_DOMAIN_EXECUTION_POLICY.Water_Mode = 2);
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Global_Stop_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Global_Stop_Context_Active)
+    OR (
+        GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode = 2
+        AND GVL_DOMAIN_EXECUTION_POLICY.Water_Mode = 2
+    );
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Active)
+    OR (GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode >= 1);
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Demand_Context_Active)
+    OR (GVL_DOMAIN_EXECUTION_POLICY.Heating_Mode >= 1);
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Boost_Context_Active)
+    OR (GVL_DOMAIN_EXECUTION_POLICY.Vent_Mode >= 1);
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Access_Context_Valid :=
+    (NOT GVL_RUNTIME_SCENARIO_VALIDATION.Access_Command_Context_Active)
+    OR (GVL_DOMAIN_EXECUTION_POLICY.Access_Mode = 2);
+
+GVL_RUNTIME_SCENARIO_VALIDATION.Any_Context_Invalid :=
+    NOT GVL_RUNTIME_SCENARIO_VALIDATION.Idle_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Security_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Fire_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Gas_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Leak_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Global_Stop_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Freeze_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Heating_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Vent_Context_Valid
+    OR NOT GVL_RUNTIME_SCENARIO_VALIDATION.Access_Context_Valid;
+
+IF GVL_RUNTIME_SCENARIO_VALIDATION.Any_Context_Invalid THEN
+    GVL_RUNTIME_SCENARIO_VALIDATION.G_Validation_Valid := FALSE;
+    GVL_RUNTIME_SCENARIO_VALIDATION.Status_Code := 1;
+    GVL_RUNTIME_SCENARIO_VALIDATION.Status_Text := 'Runtime scenario validation mismatch';
+ELSE
+    GVL_RUNTIME_SCENARIO_VALIDATION.Status_Code := 0;
+    GVL_RUNTIME_SCENARIO_VALIDATION.Status_Text := 'Runtime scenario validation nominal';
+END_IF;
+
+// >>> BULK_SYNC_ANCHOR: PRG_Runtime_Scenario_Validation <<<
+END_PROGRAM
