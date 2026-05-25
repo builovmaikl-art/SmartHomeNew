@@ -68,6 +68,8 @@ IF L_State.Activation_Requested THEN
 
         L_State.Activation_Allowed := TRUE;
         GVL_Config_Activation.G_Activation_Request := TRUE;
+        GVL_CONFIG_CONTROL.G_Apply_Request := TRUE;
+        GVL_CONFIG_CONTROL.G_Apply_Confirm := TRUE;
 
     ELSE
 
@@ -83,6 +85,8 @@ IF L_State.Rollback_Requested THEN
 
         L_State.Rollback_Allowed := TRUE;
         GVL_Config_Activation.G_Rollback_Request := TRUE;
+        GVL_CONFIG_CONTROL.G_Rollback_Request := TRUE;
+        GVL_CONFIG_CONTROL.G_Rollback_Confirm := TRUE;
 
     END_IF;
 
@@ -98,6 +102,16 @@ ELSIF L_State.Validation_Failed THEN
     L_State.Status_Code := 1;
     L_State.Status_Text := 'HMI validation failed';
 
+ELSIF L_State.Activation_Allowed THEN
+
+    L_State.Status_Code := 0;
+    L_State.Status_Text := 'HMI config activation requested';
+
+ELSIF L_State.Rollback_Allowed THEN
+
+    L_State.Status_Code := 0;
+    L_State.Status_Text := 'HMI config rollback requested';
+
 ELSE
 
     L_State.Status_Code := 0;
@@ -111,5 +125,17 @@ GVL_HMI_Config_Workflow.G_Runtime_Valid := TRUE;
 GVL_HMI_Config_Workflow.G_Last_Update_MS := VI_System_Time_MS;
 GVL_HMI_Config_Workflow.G_Status_Code := L_State.Status_Code;
 GVL_HMI_Config_Workflow.G_Status_Text := L_State.Status_Text;
+
+IF GVL_HMI_Config_Workflow.G_Validate_Request THEN
+    GVL_HMI_Config_Workflow.G_Validate_Request := FALSE;
+END_IF;
+
+IF GVL_HMI_Config_Workflow.G_Activate_Request THEN
+    GVL_HMI_Config_Workflow.G_Activate_Request := FALSE;
+END_IF;
+
+IF GVL_HMI_Config_Workflow.G_Rollback_Request THEN
+    GVL_HMI_Config_Workflow.G_Rollback_Request := FALSE;
+END_IF;
 
 END_FUNCTION_BLOCK
