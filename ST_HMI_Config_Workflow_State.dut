@@ -10,6 +10,8 @@ STRUCT
     Validation_Requested : BOOL;
     Validation_OK : BOOL;
     Validation_Failed : BOOL;
+    Validated_Draft_Version : UDINT;
+    Validation_Last_Run_MS : UDINT;
 
     Activation_Requested : BOOL;
     Activation_Allowed : BOOL;
