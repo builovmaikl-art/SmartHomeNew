@@ -169,6 +169,7 @@ GVL_HMI.G_HMI_Config_Workflow_Validation_Failed := GVL_HMI_Config_Workflow.G_Wor
 GVL_HMI.G_HMI_Config_Workflow_Draft_Version := GVL_HMI_Config_Workflow.G_Workflow_State.Draft_Version;
 GVL_HMI.G_HMI_Config_Workflow_Validated_Draft_Version := GVL_HMI_Config_Workflow.G_Workflow_State.Validated_Draft_Version;
 GVL_HMI.G_HMI_Config_Workflow_Validation_Last_Run_MS := GVL_HMI_Config_Workflow.G_Workflow_State.Validation_Last_Run_MS;
+GVL_HMI.G_HMI_Config_Workflow_Validation_Result_Seq := GVL_HMI_Config_Workflow.G_Workflow_State.Validation_Result_Seq;
 GVL_HMI.G_HMI_Config_Workflow_Status_Code := GVL_HMI_Config_Workflow.G_Status_Code;
 GVL_HMI.G_HMI_Config_Workflow_Status_Text := GVL_HMI_Config_Workflow.G_Status_Text;
 
@@ -189,6 +190,7 @@ GVL_HMI.G_HMI_Config_Simulation_Request_Pending :=
 GVL_HMI.G_HMI_Config_Simulation_Result_OK := GVL_CONFIG_SIMULATION.G_Simulation_Result_OK;
 GVL_HMI.G_HMI_Config_Simulation_Error_Text := GVL_CONFIG_SIMULATION.G_Simulation_Error_Text;
 GVL_HMI.G_HMI_Config_Simulation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
+GVL_HMI.G_HMI_Config_Simulation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq;
 
 IF GVL_HMI.G_HMI_Config_Simulation_Request_Pending THEN
     GVL_HMI.G_HMI_Config_Simulation_Status_Level := 1;
