@@ -125,6 +125,12 @@ GVL_HMI.G_HMI_File_Archive_Last_Error_Code := GVL_FILE_ARCHIVE.G_Last_Error_Code
 GVL_HMI.G_HMI_File_Archive_Last_Status_Text := GVL_FILE_ARCHIVE.G_Last_Status_Text;
 GVL_HMI.G_HMI_File_Archive_Last_Write_MS := GVL_FILE_ARCHIVE.G_Last_Write_MS;
 
+GVL_HMI.G_HMI_File_Archive_Auto_Backup_Enabled := GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Enabled;
+GVL_HMI.G_HMI_File_Archive_Auto_Backup_Time_Of_Day_MS := GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Time_Of_Day_MS;
+GVL_HMI.G_HMI_File_Archive_Auto_Backup_Last_Day_Of_Week := GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Day_Of_Week;
+GVL_HMI.G_HMI_File_Archive_Auto_Backup_Last_Request_MS := GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Request_MS;
+GVL_HMI.G_HMI_File_Archive_Auto_Backup_Last_Status_Text := GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Status_Text;
+
 IF GVL_FILE_ARCHIVE.G_Write_Error THEN
     GVL_HMI.G_HMI_File_Archive_Status_Level := 2;
 ELSIF GVL_FILE_ARCHIVE.G_Write_Busy THEN
