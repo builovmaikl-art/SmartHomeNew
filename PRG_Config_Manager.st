@@ -78,6 +78,14 @@ IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THE
         L_Staged_Error := TRUE;
     END_IF;
 
+    IF GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq = 0 THEN
+        L_Staged_Error := TRUE;
+    END_IF;
+
+    IF GVL_CONFIG_SIMULATION.G_Simulation_Staged_Config_Version <> GVL_CONFIG_CONTROL.G_Staged_Config_Version THEN
+        L_Staged_Error := TRUE;
+    END_IF;
+
     IF L_Staged_Error THEN
         L_Index := GVL_CONFIG_HISTORY.G_History_Index;
         GVL_CONFIG_HISTORY.G_History_Version[L_Index] := GVL_CONFIG_CONTROL.G_Config_Version;
@@ -89,7 +97,13 @@ IF GVL_CONFIG_CONTROL.G_Apply_Request AND GVL_CONFIG_CONTROL.G_Apply_Confirm THE
         IF L_Index > 5 THEN L_Index := 1; END_IF;
         GVL_CONFIG_HISTORY.G_History_Index := L_Index;
 
-        GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'STAGED CONFIG INVALID';
+        IF GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq = 0 THEN
+            GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'STAGED CONFIG NOT SIMULATED';
+        ELSIF GVL_CONFIG_SIMULATION.G_Simulation_Staged_Config_Version <> GVL_CONFIG_CONTROL.G_Staged_Config_Version THEN
+            GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'STAGED CONFIG SIMULATION STALE';
+        ELSE
+            GVL_CONFIG_VALIDATION.G_Config_Control_Error_Text := 'STAGED CONFIG INVALID';
+        END_IF;
     ELSE
         // Backup current active values before applying staged values.
         GVL_CONFIG_CONTROL.BCK_Reputation_Learning_Rate := GVL_INPUT_VALIDATION_CONFIG.G_Reputation_Learning_Rate;
