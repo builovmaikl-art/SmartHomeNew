@@ -49,6 +49,39 @@ IF GVL_FILE_ARCHIVE_HMI.G_Set_Archive_Config_Req THEN
     GVL_FILE_ARCHIVE_HMI.G_Set_Archive_Config_Req := FALSE;
 END_IF;
 
+IF GVL_FILE_ARCHIVE_HMI.G_Set_Auto_Config_Backup_Req THEN
+    IF GVL_FILE_ARCHIVE_HMI.G_Auto_Config_Backup_Time_Of_Day_MS < GVL_CONSTANTS.C_MS_IN_DAY THEN
+        GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Enabled := GVL_FILE_ARCHIVE_HMI.G_Auto_Config_Backup_Enabled;
+        GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Time_Of_Day_MS := GVL_FILE_ARCHIVE_HMI.G_Auto_Config_Backup_Time_Of_Day_MS;
+        GVL_FILE_ARCHIVE.G_Auto_Config_Backup_Last_Status_Text := 'Auto config backup schedule applied';
+
+        GVL_FILE_ARCHIVE.G_Write_Busy := FALSE;
+        GVL_FILE_ARCHIVE.G_Write_Done := TRUE;
+        GVL_FILE_ARCHIVE.G_Write_Error := FALSE;
+        GVL_FILE_ARCHIVE.G_Last_Error_Code := 0;
+        GVL_FILE_ARCHIVE.G_Last_Status_Text := 'Auto config backup schedule applied';
+        GVL_FILE_ARCHIVE.G_Last_Write_MS := GVL_TIME_SERVICE.G_Now_MS;
+
+        GVL_FILE_ARCHIVE_HMI.G_Last_Error := FALSE;
+        GVL_FILE_ARCHIVE_HMI.G_Last_Error_Code := 0;
+        GVL_FILE_ARCHIVE_HMI.G_Last_Status_Text := 'Auto config backup schedule applied';
+    ELSE
+        GVL_FILE_ARCHIVE.G_Write_Busy := FALSE;
+        GVL_FILE_ARCHIVE.G_Write_Done := FALSE;
+        GVL_FILE_ARCHIVE.G_Write_Error := TRUE;
+        GVL_FILE_ARCHIVE.G_Last_Error_Code := 16#A104;
+        GVL_FILE_ARCHIVE.G_Last_Status_Text := 'Auto config backup rejected: invalid time';
+        GVL_FILE_ARCHIVE.G_Last_Write_MS := GVL_TIME_SERVICE.G_Now_MS;
+
+        GVL_FILE_ARCHIVE_HMI.G_Last_Error := TRUE;
+        GVL_FILE_ARCHIVE_HMI.G_Last_Error_Code := 16#A104;
+        GVL_FILE_ARCHIVE_HMI.G_Last_Status_Text := 'Auto config backup rejected: invalid time';
+    END_IF;
+
+    GVL_FILE_ARCHIVE_HMI.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
+    GVL_FILE_ARCHIVE_HMI.G_Set_Auto_Config_Backup_Req := FALSE;
+END_IF;
+
 IF L_Any_Write_Request THEN
     IF NOT GVL_FILE_ARCHIVE.G_Archive_Interface_Enabled THEN
         GVL_FILE_ARCHIVE.G_Write_Busy := FALSE;
