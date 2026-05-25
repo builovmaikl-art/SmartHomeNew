@@ -141,4 +141,26 @@ ELSE
     GVL_HMI.G_HMI_File_Archive_Status_Level := 1;
 END_IF;
 
+// ======================================================
+// CONFIG CONTROL STATUS (READ-ONLY DASHBOARD)
+// ======================================================
+GVL_HMI.G_HMI_Config_Control_Version := GVL_CONFIG_CONTROL.G_Config_Version;
+GVL_HMI.G_HMI_Config_Control_Last_Good_Version := GVL_CONFIG_CONTROL.G_Last_Good_Version;
+GVL_HMI.G_HMI_Config_Control_Backup_Valid := GVL_CONFIG_CONTROL.G_Backup_Valid;
+GVL_HMI.G_HMI_Config_Control_Apply_Pending := GVL_CONFIG_CONTROL.G_Apply_Request;
+GVL_HMI.G_HMI_Config_Control_Rollback_Pending := GVL_CONFIG_CONTROL.G_Rollback_Request;
+GVL_HMI.G_HMI_Config_Control_Apply_Done := GVL_CONFIG_CONTROL.G_Apply_Done;
+GVL_HMI.G_HMI_Config_Control_Rollback_Done := GVL_CONFIG_CONTROL.G_Rollback_Done;
+GVL_HMI.G_HMI_Config_Control_Config_Valid := GVL_CONFIG_VALIDATION.G_Config_Valid;
+GVL_HMI.G_HMI_Config_Control_Last_Action_Text := GVL_CONFIG_HISTORY.G_Last_Action_Text;
+GVL_HMI.G_HMI_Config_Control_Last_Update_MS := GVL_CONFIG_VALIDATION.G_Config_Last_Update_MS;
+
+IF NOT GVL_CONFIG_VALIDATION.G_Config_Valid THEN
+    GVL_HMI.G_HMI_Config_Control_Status_Level := 2;
+ELSIF GVL_CONFIG_CONTROL.G_Apply_Request OR GVL_CONFIG_CONTROL.G_Rollback_Request THEN
+    GVL_HMI.G_HMI_Config_Control_Status_Level := 1;
+ELSE
+    GVL_HMI.G_HMI_Config_Control_Status_Level := 0;
+END_IF;
+
 END_PROGRAM
