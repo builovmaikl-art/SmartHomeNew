@@ -191,6 +191,7 @@ GVL_HMI.G_HMI_Config_Simulation_Result_OK := GVL_CONFIG_SIMULATION.G_Simulation_
 GVL_HMI.G_HMI_Config_Simulation_Error_Text := GVL_CONFIG_SIMULATION.G_Simulation_Error_Text;
 GVL_HMI.G_HMI_Config_Simulation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
 GVL_HMI.G_HMI_Config_Simulation_Result_Seq := GVL_CONFIG_SIMULATION.G_Simulation_Result_Seq;
+GVL_HMI.G_HMI_Config_Simulation_Staged_Config_Version := GVL_CONFIG_SIMULATION.G_Simulation_Staged_Config_Version;
 
 IF GVL_HMI.G_HMI_Config_Simulation_Request_Pending THEN
     GVL_HMI.G_HMI_Config_Simulation_Status_Level := 1;
