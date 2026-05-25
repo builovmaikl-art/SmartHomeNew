@@ -32,28 +32,70 @@ IF VI_Request AND VI_Confirm THEN
     VO_Result_OK := TRUE;
     VO_Error_Text := '';
 
-    // Simulate INPUT constraints
+    // Simulate INPUT constraints.
     IF (GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate < 0.0) OR (GVL_CONFIG_CONTROL.STG_Reputation_Learning_Rate > 1.0) THEN
         VO_Result_OK := FALSE;
         VO_Error_Text := 'Invalid learning rate';
         L_Error := TRUE;
     END_IF;
 
-    // Simulate SCENARIO logic
+    IF (GVL_CONFIG_CONTROL.STG_Reputation_Recovery_Decay < 0.0) OR (GVL_CONFIG_CONTROL.STG_Reputation_Recovery_Decay > 1.0) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Invalid recovery decay';
+        L_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG_CONTROL.STG_Min_Sensor_Confidence < 0.0) OR (GVL_CONFIG_CONTROL.STG_Min_Sensor_Confidence > 1.0) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Invalid minimum confidence';
+        L_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG_CONTROL.STG_Bad_Spike_Confidence < 0.0) OR (GVL_CONFIG_CONTROL.STG_Bad_Spike_Confidence > 1.0) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Invalid spike confidence';
+        L_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG_CONTROL.STG_Default_Confidence < 0.0) OR (GVL_CONFIG_CONTROL.STG_Default_Confidence > 1.0) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Invalid default confidence';
+        L_Error := TRUE;
+    END_IF;
+
+    // Simulate SCENARIO logic.
+    IF (GVL_CONFIG_CONTROL.STG_Night_Start_Hour < 0) OR (GVL_CONFIG_CONTROL.STG_Night_Start_Hour > 23) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Night start hour invalid';
+        L_Error := TRUE;
+    END_IF;
+
+    IF (GVL_CONFIG_CONTROL.STG_Night_End_Hour < 0) OR (GVL_CONFIG_CONTROL.STG_Night_End_Hour > 23) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Night end hour invalid';
+        L_Error := TRUE;
+    END_IF;
+
     IF GVL_CONFIG_CONTROL.STG_Night_Start_Hour = GVL_CONFIG_CONTROL.STG_Night_End_Hour THEN
         VO_Result_OK := FALSE;
         VO_Error_Text := 'Night window invalid';
         L_Error := TRUE;
     END_IF;
 
-    // Simulate SAFETY
+    IF (GVL_CONFIG_CONTROL.STG_VentBoost_Humidity_Threshold < 0.0) OR (GVL_CONFIG_CONTROL.STG_VentBoost_Humidity_Threshold > 100.0) THEN
+        VO_Result_OK := FALSE;
+        VO_Error_Text := 'Humidity threshold invalid';
+        L_Error := TRUE;
+    END_IF;
+
+    // Simulate SAFETY.
     IF GVL_CONFIG_CONTROL.STG_Stabilization_Delay_MS < 1000 THEN
         VO_Result_OK := FALSE;
         VO_Error_Text := 'Recovery delay too small';
         L_Error := TRUE;
     END_IF;
 
-    // Simulate FAIL-SAFE policy
+    // Simulate FAIL-SAFE policy.
     IF NOT (
         GVL_CONFIG_CONTROL.STG_PLC_Inactive_Close_Gas OR
         GVL_CONFIG_CONTROL.STG_PLC_Inactive_Stop_Boiler OR
@@ -70,6 +112,11 @@ IF VI_Request AND VI_Confirm THEN
     GVL_CONFIG_SIMULATION.G_Simulation_Error_Text := VO_Error_Text;
     GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS := GVL_TIME_SERVICE.G_Now_MS;
     VO_Executed := TRUE;
+
+    // One-shot request consumption. HMI/service callers get the result from
+    // GVL_CONFIG_SIMULATION and must raise a new request for another run.
+    GVL_CONFIG_SIMULATION.G_Simulation_Request := FALSE;
+    GVL_CONFIG_SIMULATION.G_Simulation_Confirm := FALSE;
 
 END_IF;
 
