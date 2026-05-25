@@ -58,8 +58,16 @@ IF L_State.Editor_Open THEN
 END_IF;
 
 IF L_State.Validation_Requested THEN
+    // HMI Validate launches the staged-config simulation gate. The simulation
+    // manager consumes the request and publishes result/error for HMI and apply.
+    GVL_CONFIG_SIMULATION.G_Simulation_Request := TRUE;
+    GVL_CONFIG_SIMULATION.G_Simulation_Confirm := TRUE;
+END_IF;
 
-    IF GVL_Config_Activation.G_Activation_State.Staged_Config_Valid THEN
+IF GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0 THEN
+
+    IF GVL_Config_Activation.G_Activation_State.Staged_Config_Valid
+       AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
 
         L_State.Validation_OK := TRUE;
         L_State.Validation_Failed := FALSE;
@@ -77,7 +85,8 @@ IF L_State.Activation_Requested THEN
 
     IF GVL_HMI_Config_Workflow.G_Service_Mode_Active
        AND GVL_HMI_Config_Workflow.G_Operator_Ack
-       AND L_State.Validation_OK THEN
+       AND L_State.Validation_OK
+       AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
 
         L_State.Activation_Allowed := TRUE;
         GVL_Config_Activation.G_Activation_Request := TRUE;
@@ -127,6 +136,11 @@ ELSIF L_State.Validation_Failed THEN
 
     L_State.Status_Code := 1;
     L_State.Status_Text := 'HMI validation failed';
+
+ELSIF L_State.Validation_Requested THEN
+
+    L_State.Status_Code := 0;
+    L_State.Status_Text := 'HMI config validation requested';
 
 ELSIF L_State.Activation_Allowed THEN
 
