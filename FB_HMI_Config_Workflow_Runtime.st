@@ -53,6 +53,12 @@ L_State.Activation_Blocked := FALSE;
 L_State.Rollback_Allowed := FALSE;
 L_State.Reset_Default_Allowed := FALSE;
 
+IF L_State.Validated_Draft_Version <> L_State.Draft_Version THEN
+    L_State.Validation_OK := FALSE;
+    L_State.Validation_Failed := FALSE;
+    L_State.Draft_Dirty := TRUE;
+END_IF;
+
 IF L_State.Editor_Open THEN
     L_State.Edit_Session_Active := TRUE;
 END_IF;
@@ -71,11 +77,15 @@ IF GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS <> 0 THEN
 
         L_State.Validation_OK := TRUE;
         L_State.Validation_Failed := FALSE;
+        L_State.Validated_Draft_Version := L_State.Draft_Version;
+        L_State.Validation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
+        L_State.Draft_Dirty := FALSE;
 
     ELSE
 
         L_State.Validation_OK := FALSE;
         L_State.Validation_Failed := TRUE;
+        L_State.Validation_Last_Run_MS := GVL_CONFIG_SIMULATION.G_Simulation_Last_Run_MS;
 
     END_IF;
 
@@ -86,6 +96,7 @@ IF L_State.Activation_Requested THEN
     IF GVL_HMI_Config_Workflow.G_Service_Mode_Active
        AND GVL_HMI_Config_Workflow.G_Operator_Ack
        AND L_State.Validation_OK
+       AND (L_State.Validated_Draft_Version = L_State.Draft_Version)
        AND GVL_CONFIG_SIMULATION.G_Simulation_Result_OK THEN
 
         L_State.Activation_Allowed := TRUE;
@@ -156,6 +167,11 @@ ELSIF L_State.Reset_Default_Allowed THEN
 
     L_State.Status_Code := 0;
     L_State.Status_Text := 'HMI config reset default requested';
+
+ELSIF L_State.Draft_Dirty THEN
+
+    L_State.Status_Code := 1;
+    L_State.Status_Text := 'HMI draft changed - validation required';
 
 ELSIF L_State.Validation_OK THEN
 
