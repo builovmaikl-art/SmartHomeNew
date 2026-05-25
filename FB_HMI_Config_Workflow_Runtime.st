@@ -37,8 +37,10 @@ L_State.Reset_Default_Requested :=
 L_State.Active_Version :=
     GVL_Water_Topology_Config.G_Active_Config_Version;
 
+// Draft identity follows the generic staged config version. The staged change
+// monitor increments it when any GVL_CONFIG_CONTROL.STG_* value changes.
 L_State.Draft_Version :=
-    GVL_Config_Activation.G_Staged_Config_Version;
+    GVL_CONFIG_CONTROL.G_Staged_Config_Version;
 
 L_State.Last_Stable_Version :=
     GVL_Config_Activation.G_Last_Stable_Config_Version;
