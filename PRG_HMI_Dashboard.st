@@ -1,6 +1,7 @@
 PROGRAM PRG_HMI_Dashboard
 VAR
     L_i : INT;
+    L_Archive_Target_Available : BOOL;
 END_VAR
 
 // ======================================================
@@ -97,5 +98,41 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_MANIFOLDS DO
     GVL_HMI.G_HMI_Heating_Predictive_Current_Rise[L_i] :=
         GVL_STATE.G_Predictive_Pump_Current_Rise[L_i];
 END_FOR;
+
+// ======================================================
+// FILE / ARCHIVE STATUS (READ-ONLY DASHBOARD)
+// ======================================================
+L_Archive_Target_Available := FALSE;
+CASE GVL_FILE_ARCHIVE.G_File_Archive_Target_Code OF
+    1:
+        L_Archive_Target_Available := GVL_FILE_ARCHIVE.G_PLC_File_Target_Available;
+    2:
+        L_Archive_Target_Available := GVL_FILE_ARCHIVE.G_USB_Target_Available;
+    3:
+        L_Archive_Target_Available := GVL_FILE_ARCHIVE.G_Gateway_Target_Available;
+ELSE
+    L_Archive_Target_Available := FALSE;
+END_CASE;
+
+GVL_HMI.G_HMI_File_Archive_Interface_Enabled := GVL_FILE_ARCHIVE.G_Archive_Interface_Enabled;
+GVL_HMI.G_HMI_File_Archive_CSV_Enabled := GVL_FILE_ARCHIVE.G_CSV_Write_Enabled;
+GVL_HMI.G_HMI_File_Archive_Target_Code := GVL_FILE_ARCHIVE.G_File_Archive_Target_Code;
+GVL_HMI.G_HMI_File_Archive_Target_Available := L_Archive_Target_Available;
+GVL_HMI.G_HMI_File_Archive_Write_Busy := GVL_FILE_ARCHIVE.G_Write_Busy;
+GVL_HMI.G_HMI_File_Archive_Write_Done := GVL_FILE_ARCHIVE.G_Write_Done;
+GVL_HMI.G_HMI_File_Archive_Write_Error := GVL_FILE_ARCHIVE.G_Write_Error;
+GVL_HMI.G_HMI_File_Archive_Last_Error_Code := GVL_FILE_ARCHIVE.G_Last_Error_Code;
+GVL_HMI.G_HMI_File_Archive_Last_Status_Text := GVL_FILE_ARCHIVE.G_Last_Status_Text;
+GVL_HMI.G_HMI_File_Archive_Last_Write_MS := GVL_FILE_ARCHIVE.G_Last_Write_MS;
+
+IF GVL_FILE_ARCHIVE.G_Write_Error THEN
+    GVL_HMI.G_HMI_File_Archive_Status_Level := 2;
+ELSIF GVL_FILE_ARCHIVE.G_Write_Busy THEN
+    GVL_HMI.G_HMI_File_Archive_Status_Level := 1;
+ELSIF GVL_FILE_ARCHIVE.G_Archive_Interface_Enabled AND GVL_FILE_ARCHIVE.G_CSV_Write_Enabled AND L_Archive_Target_Available THEN
+    GVL_HMI.G_HMI_File_Archive_Status_Level := 0;
+ELSE
+    GVL_HMI.G_HMI_File_Archive_Status_Level := 1;
+END_IF;
 
 END_PROGRAM
