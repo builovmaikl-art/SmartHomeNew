@@ -553,7 +553,7 @@ drwxr-xr-x  3 runner runner   4096 May 25 11:25 .github
 -rw-r--r--  1 runner runner   3206 May 25 11:25 PRG_Lighting_Phase_02_Managers.st
 -rw-r--r--  1 runner runner   2267 May 25 11:25 PRG_Lighting_Phase_03_Priority_Restrictions.st
 -rw-r--r--  1 runner runner   3142 May 25 11:25 PRG_Lighting_Phase_04_Output_Publication.st
--rw-r--r--  1 runner runner   4559 May 25 11:25 PRG_Main_Phase_01_Bootstrap.st
+-rw-r--r--  1 runner runner   4595 May 25 11:25 PRG_Main_Phase_01_Bootstrap.st
 -rw-r--r--  1 runner runner   1781 May 25 11:25 PRG_Main_Phase_02_Redundancy.st
 -rw-r--r--  1 runner runner   1082 May 25 11:25 PRG_Main_Phase_03_Input_Safety_Command.st
 -rw-r--r--  1 runner runner   1597 May 25 11:25 PRG_Main_Phase_04_Transport_Distributed.st
@@ -821,8 +821,8 @@ drwxr-xr-x  2 runner runner   4096 May 25 11:25 out
 -rw-r--r--  1 runner runner    177 May 25 11:25 запуск_сборки.sh
 
 === compiler out dir before compile ===
-total 2860
+total 2864
 drwxr-xr-x 2 runner runner    4096 May 25 11:25 .
 drwxr-xr-x 5 runner runner    4096 May 25 11:25 ..
 -rw-r--r-- 1 runner runner       0 May 25 11:25 .gitkeep
--rw-r--r-- 1 runner runner 2916408 May 25 11:25 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 2923308 May 25 11:25 RESULT_methods_clean.xml
