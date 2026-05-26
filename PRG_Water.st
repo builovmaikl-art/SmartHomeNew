@@ -134,6 +134,21 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Open_Common_Inlet_Active THEN
     L_Valve_36_Open := TRUE;
 END_IF;
 
+// Open-timeout service latch blocks further automatic opening until reset.
+FOR L_i := 1 TO 6 DO
+    IF GVL_STATUS.G_Diagnostics.Water_Zone_Open_Blocked[L_i] THEN
+        L_Local_Valve_Open[L_i] := FALSE;
+    END_IF;
+END_FOR;
+
+IF GVL_STATUS.G_Diagnostics.Water_Zone_Open_Blocked[7] THEN
+    L_Valve_35_Open := FALSE;
+END_IF;
+
+IF GVL_STATUS.G_Diagnostics.Water_Zone_Open_Blocked[8] THEN
+    L_Valve_36_Open := FALSE;
+END_IF;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WATER_ZONES DO
     IF L_Zone_Enable[L_i] THEN
         GVL_WATER_DOMAIN_STATUS.G_Any_Zone_Active := TRUE;
