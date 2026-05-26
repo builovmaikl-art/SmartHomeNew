@@ -2,10 +2,17 @@ PROGRAM PRG_Security
 VAR
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    L_Door_Sensors : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    L_Window_Sensors_16 : ARRAY[1..16] OF BOOL;
     L_Manual_Access_Allowed : BOOL;
+    L_Safety_Access_Active : BOOL;
     fbSecurityManager : FB_Security_System_Manager;
     fbAccessControl : FB_Access_Control;
 END_VAR
+
+L_Safety_Access_Active :=
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS);
 
 L_Manual_Access_Allowed :=
     GVL_INTENT_USER.I_Source_Valid
@@ -13,16 +20,30 @@ L_Manual_Access_Allowed :=
     AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = NORMAL);
 
 FOR L_i := 1 TO 16 DO
-    L_Motion_Sensors_16[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
+    IF L_Safety_Access_Active THEN
+        L_Motion_Sensors_16[L_i] := FALSE;
+        L_Window_Sensors_16[L_i] := FALSE;
+    ELSE
+        L_Motion_Sensors_16[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
+        L_Window_Sensors_16[L_i] := GVL_STATE.G_Window_Sensors[L_i];
+    END_IF;
 END_FOR;
-// 7. Система безопасности (Охранная сигнализация)
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_DOOR_SENSORS DO
+    IF L_Safety_Access_Active THEN
+        L_Door_Sensors[L_i] := FALSE;
+    ELSE
+        L_Door_Sensors[L_i] := GVL_STATE.G_Door_Sensors[L_i];
+    END_IF;
+END_FOR;
+
 fbSecurityManager(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Motion_Sensors := L_Motion_Sensors_16,
-    VI_Door_Sensors := GVL_STATE.G_Door_Sensors,
-    VI_Window_Sensors := GVL_STATE.G_Window_Sensors,
-    VI_Arm_Request := GVL_INTENT_USER.I_Arm_Request,
+    VI_Door_Sensors := L_Door_Sensors,
+    VI_Window_Sensors := L_Window_Sensors_16,
+    VI_Arm_Request := GVL_INTENT_USER.I_Arm_Request AND NOT L_Safety_Access_Active,
     VI_Disarm_Request := GVL_INTENT_USER.I_Disarm_Request,
     VI_PIN_Code := GVL_INTENT_USER.I_PIN_Code,
     VI_RFID_Tag := GVL_INTENT_USER.I_RFID_Tag,
@@ -40,9 +61,6 @@ fbSecurityManager(
     VO_Code_To_Send => GVL_COMMAND.G_2FA_Code_Out
 );
 
-// 7.1 Контроль доступа (СКУД)
-// Legacy HMI request bits are accepted only from an authenticated control source.
-// FIRE/GAS emergency access is not handled here; it is owned by command arbitration.
 fbAccessControl(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
