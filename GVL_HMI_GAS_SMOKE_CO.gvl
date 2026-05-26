@@ -2,6 +2,15 @@
 VAR_GLOBAL
     G_Methane_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_METHANE_SENSORS] OF REAL;
     G_Methane_Max_LEL : REAL;
+    G_Methane_Min_LEL : REAL;
+    G_Methane_Diff_LEL : REAL;
+    G_Methane_Max_Sensor_Index : INT;
+    G_Methane_Disagreement_Active : BOOL;
+    G_Methane_Disagreement_Limit_LEL : REAL;
+    G_Methane_Redundancy_Available : BOOL;
+    G_Methane_Conservative_Max_Selected : BOOL;
+    G_Methane_Redundancy_Status_Text : STRING(160);
+    G_Methane_Redundancy_Last_Update_MS : UDINT;
     G_Methane_Warning_Level : BOOL;
     G_Methane_Alarm_Level : BOOL;
     G_Methane_Critical_Level : BOOL;
