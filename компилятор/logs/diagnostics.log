@@ -536,7 +536,7 @@ drwxr-xr-x  3 runner runner   4096 May 26 17:10 .github
 -rw-r--r--  1 runner runner   1407 May 26 17:10 PRG_HMI_Config_Workflow_Manager.st
 -rw-r--r--  1 runner runner  11120 May 26 17:10 PRG_HMI_Dashboard.st
 -rw-r--r--  1 runner runner   8944 May 26 17:10 PRG_HMI_Gas_Smoke_CO_Dashboard.st
--rw-r--r--  1 runner runner   2683 May 26 17:10 PRG_HMI_Security_Dashboard.st
+-rw-r--r--  1 runner runner   3174 May 26 17:10 PRG_HMI_Security_Dashboard.st
 -rw-r--r--  1 runner runner   7519 May 26 17:10 PRG_HMI_Water_Dashboard.st
 -rw-r--r--  1 runner runner  14810 May 26 17:10 PRG_Heating.st
 -rw-r--r--  1 runner runner   2097 May 26 17:10 PRG_Heating_Config_Defaults.st
@@ -843,4 +843,4 @@ total 2968
 drwxr-xr-x 2 runner runner    4096 May 26 17:10 .
 drwxr-xr-x 5 runner runner    4096 May 26 17:10 ..
 -rw-r--r-- 1 runner runner       0 May 26 17:10 .gitkeep
--rw-r--r-- 1 runner runner 3027712 May 26 17:10 RESULT_methods_clean.xml
+-rw-r--r-- 1 runner runner 3027958 May 26 17:10 RESULT_methods_clean.xml
