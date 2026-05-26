@@ -74,6 +74,34 @@ IF (L_Mode <> FIRE)
     RETURN;
 END_IF;
 
+// Access is not part of WATER_LEAK or GLOBAL_STOP recovery semantics.
+// Clear active one-shot pulses so old manual commands cannot continue during safety stop.
+IF (L_Mode = WATER_LEAK) OR (L_Mode = GLOBAL_STOP) THEN
+    fbPulseLock1Open(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock1Close(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock2Open(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseLock2Close(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseGateOpen(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+    fbPulseWicketOpen(VI_Command := FALSE, VI_Reset := TRUE, VI_Now_MS := L_Now_MS, VI_Pulse_MS := 100);
+
+    fbProjection(
+        VI_Lock_1_Open := FALSE,
+        VI_Lock_1_Close := FALSE,
+        VI_Lock_2_Open := FALSE,
+        VI_Lock_2_Close := FALSE,
+        VI_Gate_Open := FALSE,
+        VI_Wicket_Open := FALSE
+    );
+
+    GVL_ACCESS_RUNTIME.G_Runtime_Required := FALSE;
+    GVL_ACCESS_RUNTIME.G_Runtime_Idle_By_Design := TRUE;
+    GVL_ACCESS_RUNTIME.G_Any_Pulse_Active := FALSE;
+    GVL_ACCESS_RUNTIME.G_Status_Code := 3;
+    GVL_ACCESS_RUNTIME.G_Status_Text := 'Access runtime safety-cleared';
+
+    RETURN;
+END_IF;
+
 // Load pulse duration from config with safety clamp.
 L_Pulse_MS := GVL_CONFIG.G_Access_Pulse_MS;
 IF L_Pulse_MS < 100 THEN
