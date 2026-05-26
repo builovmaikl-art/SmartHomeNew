@@ -12,6 +12,8 @@ VAR
     L_Any_Selective : BOOL;
     L_Any_Global : BOOL;
     L_Any_Denied : BOOL;
+    L_Active_Isolation_Count : INT;
+    L_Multiple_Isolations_Active : BOOL;
 END_VAR
 
 IF NOT VI_Enable THEN
@@ -22,6 +24,15 @@ END_IF;
 L_Any_Selective := FALSE;
 L_Any_Global := FALSE;
 L_Any_Denied := FALSE;
+L_Active_Isolation_Count := 0;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    IF GVL_Water_Isolation_Runtime.G_Isolation_Runtime_State[L_i].Isolation_Requested THEN
+        L_Active_Isolation_Count := L_Active_Isolation_Count + 1;
+    END_IF;
+END_FOR;
+
+L_Multiple_Isolations_Active := L_Active_Isolation_Count > 1;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
@@ -55,6 +66,14 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
         L_Authority.Decision_Code := 0;
         L_Authority.Decision_Text := 'No authority required';
+
+    ELSIF L_Multiple_Isolations_Active THEN
+
+        L_Authority.Global_Fallback_Required := TRUE;
+        L_Authority.Authority_Denied := TRUE;
+
+        L_Authority.Decision_Code := 3;
+        L_Authority.Decision_Text := 'Global fallback authority active: multiple leaks';
 
     ELSIF NOT L_Authority.Mapping_Valid
        OR NOT L_Authority.Deterministic_Target_Valid
@@ -104,7 +123,11 @@ GVL_Water_Isolation_Authority.G_Any_Authority_Denied :=
 GVL_Water_Isolation_Authority.G_Authority_Valid := TRUE;
 GVL_Water_Isolation_Authority.G_Last_Update_MS := VI_System_Time_MS;
 
-IF L_Any_Global THEN
+IF L_Multiple_Isolations_Active THEN
+    GVL_Water_Isolation_Authority.G_Status_Code := 3;
+    GVL_Water_Isolation_Authority.G_Status_Text :=
+        'Global fallback authority active: multiple leaks';
+ELSIF L_Any_Global THEN
     GVL_Water_Isolation_Authority.G_Status_Code := 2;
     GVL_Water_Isolation_Authority.G_Status_Text :=
         'Global fallback authority active';
