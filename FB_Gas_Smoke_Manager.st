@@ -26,6 +26,7 @@ END_VAR
 VAR
     L_Methane_Max   : REAL;
     L_CO_Max        : REAL;
+    L_CO_Max_Index  : INT;
     L_Smoke_Count   : UINT;
     L_Smoke_Active  : BOOL;
     L_i             : INT;
@@ -71,9 +72,11 @@ VO_Gas_Detected := VO_Methane_Alarm_Level OR VO_Methane_Critical_Level;
 
 // --- CO ---
 L_CO_Max := 0.0;
+L_CO_Max_Index := 0;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
     IF VI_CO_PPM[L_i] > L_CO_Max THEN
         L_CO_Max := VI_CO_PPM[L_i];
+        L_CO_Max_Index := L_i;
     END_IF;
 END_FOR;
 
@@ -91,6 +94,35 @@ END_IF;
 
 IF L_CO_Timer_70ppm.Q OR L_CO_Timer_400ppm.Q THEN
     VO_CO_Alarm_Level := TRUE;
+END_IF;
+
+GVL_CO_EXPOSURE.G_CO_Max_PPM := L_CO_Max;
+GVL_CO_EXPOSURE.G_CO_Max_Sensor_Index := L_CO_Max_Index;
+GVL_CO_EXPOSURE.G_Level_30ppm_Active := L_CO_Level_30;
+GVL_CO_EXPOSURE.G_Level_70ppm_Active := L_CO_Level_70;
+GVL_CO_EXPOSURE.G_Level_400ppm_Active := L_CO_Level_400;
+GVL_CO_EXPOSURE.G_Timer_30ppm_ET := L_CO_Timer_30ppm.ET;
+GVL_CO_EXPOSURE.G_Timer_70ppm_ET := L_CO_Timer_70ppm.ET;
+GVL_CO_EXPOSURE.G_Timer_400ppm_ET := L_CO_Timer_400ppm.ET;
+GVL_CO_EXPOSURE.G_Timer_30ppm_Q := L_CO_Timer_30ppm.Q;
+GVL_CO_EXPOSURE.G_Timer_70ppm_Q := L_CO_Timer_70ppm.Q;
+GVL_CO_EXPOSURE.G_Timer_400ppm_Q := L_CO_Timer_400ppm.Q;
+GVL_CO_EXPOSURE.G_Warning_Active := VO_CO_Warning_Level;
+GVL_CO_EXPOSURE.G_Alarm_Active := VO_CO_Alarm_Level;
+GVL_CO_EXPOSURE.G_Last_Update_MS := VI_System_Time_MS;
+
+IF VO_CO_Alarm_Level THEN
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO alarm exposure threshold reached';
+ELSIF VO_CO_Warning_Level THEN
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO warning exposure threshold reached';
+ELSIF L_CO_Level_400 THEN
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO 400ppm exposure accumulating';
+ELSIF L_CO_Level_70 THEN
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO 70ppm exposure accumulating';
+ELSIF L_CO_Level_30 THEN
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO 30ppm exposure accumulating';
+ELSE
+    GVL_CO_EXPOSURE.G_Status_Text := 'CO exposure idle';
 END_IF;
 
 // --- Smoke ---
