@@ -14,7 +14,16 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
         L_Methane_Max := GVL_Safety_Selector.G_Methane_Effective_Array[L_i];
     END_IF;
 END_FOR;
-GVL_HMI_GAS_SMOKE_CO.G_Methane_Max_LEL := L_Methane_Max;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Max_LEL := GVL_METHANE_REDUNDANCY.G_Max_LEL;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Min_LEL := GVL_METHANE_REDUNDANCY.G_Min_LEL;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Diff_LEL := GVL_METHANE_REDUNDANCY.G_Diff_LEL;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Max_Sensor_Index := GVL_METHANE_REDUNDANCY.G_Max_Sensor_Index;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Disagreement_Active := GVL_METHANE_REDUNDANCY.G_Disagreement_Active;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Disagreement_Limit_LEL := GVL_METHANE_REDUNDANCY.G_Disagreement_Limit_LEL;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Redundancy_Available := GVL_METHANE_REDUNDANCY.G_Redundancy_Available;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Conservative_Max_Selected := GVL_METHANE_REDUNDANCY.G_Conservative_Max_Selected;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Redundancy_Status_Text := GVL_METHANE_REDUNDANCY.G_Status_Text;
+GVL_HMI_GAS_SMOKE_CO.G_Methane_Redundancy_Last_Update_MS := GVL_METHANE_REDUNDANCY.G_Last_Update_MS;
 
 L_CO_Max := 0.0;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_CO_SENSORS DO
