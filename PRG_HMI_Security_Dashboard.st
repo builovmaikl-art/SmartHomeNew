@@ -22,6 +22,17 @@ GVL_HMI_SECURITY.G_Disarm_Request := GVL_INTENT_USER.I_Disarm_Request;
 GVL_HMI_SECURITY.G_Send_2FA_Req := GVL_COMMAND.G_Send_2FA_Req;
 GVL_HMI_SECURITY.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
 
+GVL_HMI_SECURITY.G_Safety_Access_Active :=
+    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS);
+GVL_HMI_SECURITY.G_Sensor_Path_Suppressed_By_Safety := GVL_HMI_SECURITY.G_Safety_Access_Active;
+
+IF GVL_HMI_SECURITY.G_Sensor_Path_Suppressed_By_Safety THEN
+    GVL_HMI_SECURITY.G_Sensor_Path_Status_Text := 'Security sensors suppressed by safety access mode';
+ELSE
+    GVL_HMI_SECURITY.G_Sensor_Path_Status_Text := 'Security sensors active';
+END_IF;
+
 FOR L_i := 1 TO 16 DO
     GVL_HMI_SECURITY.G_Motion_Active[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
     GVL_HMI_SECURITY.G_Motion_Bypass[L_i] := GVL_CONFIG.G_Security_Config.bypass_motion[L_i];
