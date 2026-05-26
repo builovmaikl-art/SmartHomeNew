@@ -29,6 +29,9 @@ VAR
     L_Smoke_Count   : UINT;
     L_Smoke_Active  : BOOL;
     L_i             : INT;
+    L_Group         : INT;
+    L_A             : INT;
+    L_B             : INT;
 
     L_CO_Timer_30ppm  : FB_System_Timer;
     L_CO_Timer_70ppm  : FB_System_Timer;
@@ -93,21 +96,81 @@ END_IF;
 // --- Smoke ---
 L_Smoke_Count := 0;
 L_Smoke_Active := FALSE;
+GVL_SMOKE_VERIFICATION.G_Verified_By_Pair := FALSE;
+GVL_SMOKE_VERIFICATION.G_Verified_By_Timer := FALSE;
+GVL_SMOKE_VERIFICATION.G_Verified_Group := 0;
+GVL_SMOKE_VERIFICATION.G_Any_Smoke_Input_Active := FALSE;
+
+FOR L_i := 1 TO 3 DO
+    GVL_SMOKE_VERIFICATION.G_Group_Active[L_i] := FALSE;
+    GVL_SMOKE_VERIFICATION.G_Group_Pair_Confirmed[L_i] := FALSE;
+    GVL_SMOKE_VERIFICATION.G_Group_Timer_Confirmed[L_i] := FALSE;
+END_FOR;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
     L_Smoke_Timer[L_i](IN := VI_Smoke_Sensors[L_i], PT := T#30s, VI_System_Time_MS := VI_System_Time_MS);
 
     IF VI_Smoke_Sensors[L_i] THEN
         L_Smoke_Count := L_Smoke_Count + 1;
-    END_IF;
-
-    IF L_Smoke_Timer[L_i].Q OR (L_Smoke_Count >= 2) THEN
-        L_Smoke_Active := TRUE;
+        GVL_SMOKE_VERIFICATION.G_Any_Smoke_Input_Active := TRUE;
     END_IF;
 END_FOR;
 
+FOR L_Group := 1 TO 3 DO
+    L_A := (L_Group * 2) - 1;
+    L_B := L_Group * 2;
+
+    IF (L_A <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS) AND (L_B <= GVL_CONSTANTS.C_MAX_SMOKE_SENSORS) THEN
+        GVL_SMOKE_VERIFICATION.G_Group_Active[L_Group] :=
+            VI_Smoke_Sensors[L_A] OR VI_Smoke_Sensors[L_B];
+
+        GVL_SMOKE_VERIFICATION.G_Group_Pair_Confirmed[L_Group] :=
+            VI_Smoke_Sensors[L_A] AND VI_Smoke_Sensors[L_B];
+
+        GVL_SMOKE_VERIFICATION.G_Group_Timer_Confirmed[L_Group] :=
+            L_Smoke_Timer[L_A].Q OR L_Smoke_Timer[L_B].Q;
+
+        IF GVL_SMOKE_VERIFICATION.G_Group_Pair_Confirmed[L_Group] OR
+           GVL_SMOKE_VERIFICATION.G_Group_Timer_Confirmed[L_Group] THEN
+            L_Smoke_Active := TRUE;
+
+            IF GVL_SMOKE_VERIFICATION.G_Verified_Group = 0 THEN
+                GVL_SMOKE_VERIFICATION.G_Verified_Group := L_Group;
+            END_IF;
+
+            IF GVL_SMOKE_VERIFICATION.G_Group_Pair_Confirmed[L_Group] THEN
+                GVL_SMOKE_VERIFICATION.G_Verified_By_Pair := TRUE;
+            END_IF;
+
+            IF GVL_SMOKE_VERIFICATION.G_Group_Timer_Confirmed[L_Group] THEN
+                GVL_SMOKE_VERIFICATION.G_Verified_By_Timer := TRUE;
+            END_IF;
+        END_IF;
+    END_IF;
+END_FOR;
+
+GVL_SMOKE_VERIFICATION.G_Smoke_Active_Count := L_Smoke_Count;
+GVL_SMOKE_VERIFICATION.G_Verified := L_Smoke_Active;
+GVL_SMOKE_VERIFICATION.G_Last_Update_MS := VI_System_Time_MS;
+
 IF L_Smoke_Active THEN
     VO_Smoke_Detected := TRUE;
+    CASE GVL_SMOKE_VERIFICATION.G_Verified_Group OF
+        1:
+            GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke verified: basement group';
+        2:
+            GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke verified: floor 1 group';
+        3:
+            GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke verified: floor 2 group';
+    ELSE
+            GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke verified';
+    END_CASE;
+ELSE
+    IF GVL_SMOKE_VERIFICATION.G_Any_Smoke_Input_Active THEN
+        GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke input active - waiting verification';
+    ELSE
+        GVL_SMOKE_VERIFICATION.G_Status_Text := 'Smoke verification idle';
+    END_IF;
 END_IF;
 
 // Status
