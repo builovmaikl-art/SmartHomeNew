@@ -5,6 +5,7 @@ VAR
     L_Elapsed_MS : UDINT;
     L_Remaining_MS : UDINT;
     L_Leak_Active : BOOL;
+    L_Close_Fault_Active : BOOL;
     L_i : INT;
 END_VAR
 
@@ -18,6 +19,21 @@ IF (GVL_WATER_EMERGENCY_OPEN.G_Daily_Reset_MS = 0) OR
 END_IF;
 
 L_Leak_Active := GVL_STATE.G_Safety_Leak_Alarm OR GVL_STATE.G_Safety_Leak_Latched;
+L_Close_Fault_Active := GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active OR GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended;
+
+IF L_Close_Fault_Active AND GVL_WATER_EMERGENCY_OPEN.G_Any_Open_Active THEN
+    FOR L_i := 1 TO 4 DO
+        GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_i] := FALSE;
+        GVL_WATER_EMERGENCY_OPEN.G_Open_Duration_MS[L_i] := 0;
+        GVL_WATER_EMERGENCY_OPEN.G_Open_Remaining_MS[L_i] := 0;
+    END_FOR;
+    GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Accepted := FALSE;
+    GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
+    GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 6;
+    GVL_WATER_EMERGENCY_OPEN.G_Last_Event_Group := 0;
+    GVL_WATER_EMERGENCY_OPEN.G_Last_Event_MS := GVL_TIME_SERVICE.G_Now_MS;
+    GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open cancelled: water close fault';
+END_IF;
 
 // HMI immediate close before timeout.
 IF GVL_WATER_EMERGENCY_OPEN.G_Request_Close_Now THEN
@@ -69,7 +85,11 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
             L_Duration_MS := 0;
     END_CASE;
 
-    IF NOT L_Leak_Active THEN
+    IF L_Close_Fault_Active THEN
+        GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
+        GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 6;
+        GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: water close fault active';
+    ELSIF NOT L_Leak_Active THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 1;
         GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: no active leak alarm';
