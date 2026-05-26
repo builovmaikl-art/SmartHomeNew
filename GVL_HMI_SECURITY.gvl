@@ -1,0 +1,29 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Armed : BOOL;
+    G_Alarm_Active : BOOL;
+    G_Siren_Request : BOOL;
+    G_Security_Alarm : BOOL;
+    G_Security_Siren : BOOL;
+    G_Global_Siren : BOOL;
+    G_Status_Text : STRING(200);
+    G_Status_Level : INT := 0; // 0=OK, 1=ARMED, 2=ENTRY_DELAY, 3=ALARM
+
+    G_Motion_Active : ARRAY[1..16] OF BOOL;
+    G_Door_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    G_Window_Active : ARRAY[1..16] OF BOOL;
+
+    G_Motion_Bypass : ARRAY[1..16] OF BOOL;
+    G_Door_Bypass : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    G_Window_Bypass : ARRAY[1..16] OF BOOL;
+
+    G_Motion_Active_Count : INT;
+    G_Door_Active_Count : INT;
+    G_Window_Active_Count : INT;
+    G_Total_Active_Count : INT;
+
+    G_Arm_Request : BOOL;
+    G_Disarm_Request : BOOL;
+    G_Send_2FA_Req : BOOL;
+    G_Last_Update_MS : UDINT;
+END_VAR
