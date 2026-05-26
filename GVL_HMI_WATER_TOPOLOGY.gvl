@@ -1,0 +1,26 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Active_Config_Version : UDINT;
+    G_Config_Loaded : BOOL;
+    G_Runtime_Valid : BOOL;
+    G_Runtime_Remap_Ready : BOOL;
+    G_Any_Invalid_Config : BOOL;
+    G_Any_Multi_Valve_Required : BOOL;
+    G_Status_Code : UINT;
+    G_Status_Text : STRING(128);
+
+    G_Sensor_Config_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Sensor_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Logical_Zone_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Hydraulic_Segment_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Isolation_Group_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Primary_Valve_Group_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Secondary_Valve_Group_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Fallback_Domain_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Recovery_Domain_Id : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF UINT;
+    G_Shared_Trunk : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Cross_Zone_Dependency : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Multi_Valve_Required : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    G_Topology_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF STRING(160);
+    G_Record_Status_Text : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF STRING(128);
+END_VAR
