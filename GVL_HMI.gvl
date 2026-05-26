@@ -75,6 +75,15 @@ VAR_GLOBAL
     G_HMI_Water_Valve_Open_Fault : ARRAY[1..8] OF BOOL;
     G_HMI_Water_Valve_Close_Fault : ARRAY[1..8] OF BOOL;
     G_HMI_Water_Valve_Critical_Close_Fault : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Open_Blocked : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Open_Block_Active : BOOL;
+    G_HMI_Water_Valve_Open_Block_Text : STRING(200);
+    G_HMI_Water_Valve_Service_Last_Reset_Accepted : BOOL;
+    G_HMI_Water_Valve_Service_Last_Reset_Denied : BOOL;
+    G_HMI_Water_Valve_Service_Last_Reset_Denial_Code : UINT;
+    G_HMI_Water_Valve_Service_Last_Reset_Valve_Index : INT;
+    G_HMI_Water_Valve_Service_Last_Reset_MS : UDINT;
+    G_HMI_Water_Valve_Service_Status_Text : STRING(200);
     G_HMI_Water_Valve_Close_Fault_Active : BOOL;
     G_HMI_Water_Valve_Main_Shutdown_Recommended : BOOL;
     G_HMI_Water_Valve_Localization_Failed : BOOL;
