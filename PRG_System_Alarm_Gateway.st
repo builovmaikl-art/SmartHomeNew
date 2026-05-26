@@ -9,6 +9,8 @@ END_VAR
 // The gateway FB may override it through the VIO parameter.
 L_Scenario_Req_Gateway := SCENARIO_NONE;
 
+PRG_Alarm_Audible_Ack_Manager();
+
 fbSystemAlarmOrchestrator(
     VI_First_Fault_Active := GVL_SYSTEM_HEALTH.G_First_Fault_Active,
     VI_First_Fault_Type := GVL_SYSTEM_HEALTH.G_First_Fault_Type,
