@@ -50,6 +50,7 @@ PRG_HMI_Config_Workflow_Manager();
 PRG_File_Archive_HMI_Applicator();
 PRG_File_Archive_Manager();
 PRG_HMI_Dashboard();
+PRG_HMI_Water_Dashboard();
 PRG_Debug_View();
 
 IF L_Run_Extended_Diagnostics THEN
