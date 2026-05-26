@@ -45,7 +45,17 @@ FOR L_i := 1 TO 8 DO
     GVL_HMI.G_HMI_Water_Valve_Open_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Open_Fault[L_i];
     GVL_HMI.G_HMI_Water_Valve_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Close_Fault[L_i];
     GVL_HMI.G_HMI_Water_Valve_Critical_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Critical_Close_Fault[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Open_Blocked[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Open_Blocked[L_i];
 END_FOR;
+
+GVL_HMI.G_HMI_Water_Valve_Open_Block_Active := GVL_STATUS.G_Diagnostics.Water_Open_Block_Active;
+GVL_HMI.G_HMI_Water_Valve_Open_Block_Text := GVL_STATUS.G_Diagnostics.Water_Open_Block_Text;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Accepted := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Accepted;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denied := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denied;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denial_Code := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denial_Code;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Valve_Index := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Valve_Index;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_MS := GVL_WATER_VALVE_SERVICE.G_Last_Reset_MS;
+GVL_HMI.G_HMI_Water_Valve_Service_Status_Text := GVL_WATER_VALVE_SERVICE.G_Status_Text;
 
 GVL_HMI.G_HMI_Water_Valve_Close_Fault_Active := GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active;
 GVL_HMI.G_HMI_Water_Valve_Main_Shutdown_Recommended := GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended;
@@ -55,7 +65,9 @@ GVL_HMI.G_HMI_Water_Valve_Escalation_Text := GVL_STATUS.G_Diagnostics.Water_Esca
 
 IF GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active THEN
     GVL_HMI.G_HMI_Water_Valve_Status_Level := 2;
-ELSIF GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended OR GVL_STATUS.G_Diagnostics.Water_Localization_Failed THEN
+ELSIF GVL_STATUS.G_Diagnostics.Water_Open_Block_Active OR
+      GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended OR
+      GVL_STATUS.G_Diagnostics.Water_Localization_Failed THEN
     GVL_HMI.G_HMI_Water_Valve_Status_Level := 1;
 ELSE
     GVL_HMI.G_HMI_Water_Valve_Status_Level := 0;
