@@ -4,6 +4,8 @@ VAR
     L_i : INT;
 END_VAR
 
+GVL_IO.DO_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve_Close;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     IF (L_i > GVL_SYSTEM_SIZE_CONFIG.G_Active_Heating_Circuits)
        OR GVL_IO_WRITE_RUNTIME_BUFFER.B_Heating_Forced_Off THEN
