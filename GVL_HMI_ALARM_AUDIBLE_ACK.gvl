@@ -10,4 +10,12 @@ VAR_GLOBAL
     G_Last_Event_MS : UDINT;
     G_Status_Text : STRING(200);
     G_Effective_Siren_Muted : BOOL;
+
+    G_Global_Siren_Request : BOOL;
+    G_Global_Critical : BOOL;
+    G_Gas_Fire_Siren_Request : BOOL;
+    G_Security_Siren_Request : BOOL;
+    G_Output_Gas_Siren : BOOL;
+    G_Output_Fire_Siren : BOOL;
+    G_Output_Security_Siren : BOOL;
 END_VAR
