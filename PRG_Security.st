@@ -2,10 +2,15 @@ PROGRAM PRG_Security
 VAR
     L_i : INT;
     L_Motion_Sensors_16 : ARRAY[1..16] OF BOOL;
+    L_Manual_Access_Allowed : BOOL;
     fbSecurityManager : FB_Security_System_Manager;
     fbAccessControl : FB_Access_Control;
 END_VAR
 
+L_Manual_Access_Allowed :=
+    GVL_INTENT_USER.I_Source_Valid
+    AND (GVL_INTENT_USER.I_User_Access_Level >= 2)
+    AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = NORMAL);
 
 FOR L_i := 1 TO 16 DO
     L_Motion_Sensors_16[L_i] := GVL_STATE.G_Motion_Sensors[L_i];
@@ -36,17 +41,19 @@ fbSecurityManager(
 );
 
 // 7.1 Контроль доступа (СКУД)
+// Legacy HMI request bits are accepted only from an authenticated control source.
+// FIRE/GAS emergency access is not handled here; it is owned by command arbitration.
 fbAccessControl(
     VI_System_Time_MS := GVL_STATUS.G_System_Time_MS,
     VI_IsActivePLC := GVL_STATUS.G_Is_Active_PLC,
     VI_Armed := GVL_ALARM.G_Security_Armed,
     VI_System_Mode := GVL_STATE.G_System_Mode,
-    VI_Gate_Open_Req := GVL_CONFIG.G_HMI_Gate_Open_Req,
-    VI_Wicket_Open_Req := GVL_CONFIG.G_HMI_Wicket_Open_Req,
-    VI_Lock_1_Open_Req := GVL_CONFIG.G_HMI_Lock_1_Open_Req,
-    VI_Lock_1_Close_Req := GVL_CONFIG.G_HMI_Lock_1_Close_Req,
-    VI_Lock_2_Open_Req := GVL_CONFIG.G_HMI_Lock_2_Open_Req,
-    VI_Lock_2_Close_Req := GVL_CONFIG.G_HMI_Lock_2_Close_Req,
+    VI_Gate_Open_Req := GVL_CONFIG.G_HMI_Gate_Open_Req AND L_Manual_Access_Allowed,
+    VI_Wicket_Open_Req := GVL_CONFIG.G_HMI_Wicket_Open_Req AND L_Manual_Access_Allowed,
+    VI_Lock_1_Open_Req := GVL_CONFIG.G_HMI_Lock_1_Open_Req AND L_Manual_Access_Allowed,
+    VI_Lock_1_Close_Req := GVL_CONFIG.G_HMI_Lock_1_Close_Req AND L_Manual_Access_Allowed,
+    VI_Lock_2_Open_Req := GVL_CONFIG.G_HMI_Lock_2_Open_Req AND L_Manual_Access_Allowed,
+    VI_Lock_2_Close_Req := GVL_CONFIG.G_HMI_Lock_2_Close_Req AND L_Manual_Access_Allowed,
     VI_PIN_Code := GVL_INTENT_USER.I_PIN_Code,
     VI_RFID_Tag := GVL_INTENT_USER.I_RFID_Tag,
     VI_Access_Codes := GVL_Retain.G_Access_Codes,
@@ -59,4 +66,6 @@ fbAccessControl(
     VO_Lock_2_Open => GVL_INTENT_USER.I_Lock_2_Open_Request,
     VO_Lock_2_Close => GVL_INTENT_USER.I_Lock_2_Close_Request
 );
+
+// >>> BULK_SYNC_ANCHOR: PRG_Security <<<
 END_PROGRAM
