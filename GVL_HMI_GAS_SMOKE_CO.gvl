@@ -36,6 +36,12 @@ VAR_GLOBAL
     G_Command_Boiler_Stop : BOOL;
     G_Output_Gas_Valve_Close : BOOL;
 
+    G_OpenTherm_Command_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF BOOL;
+    G_OpenTherm_Command_Setpoint_x10 : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UINT;
+    G_OpenTherm_Command_Sequence : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UDINT;
+    G_OpenTherm_Wire_Enable : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF WORD;
+    G_OpenTherm_Wire_Setpoint_x10 : ARRAY[1..GVL_CONSTANTS.C_MAX_BOILERS] OF UINT;
+
     G_Vent_Output_Enable : BOOL;
     G_Vent_Output_Supply_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_SUPPLY_FANS] OF UINT;
     G_Vent_Output_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF UINT;
