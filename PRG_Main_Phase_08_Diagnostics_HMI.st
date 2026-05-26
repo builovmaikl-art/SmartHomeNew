@@ -53,6 +53,7 @@ PRG_HMI_Dashboard();
 PRG_HMI_Water_Dashboard();
 PRG_HMI_Gas_Smoke_CO_Dashboard();
 PRG_HMI_Alarm_Audible_Ack_Dashboard();
+PRG_HMI_Access_Dashboard();
 PRG_Debug_View();
 
 IF L_Run_Extended_Diagnostics THEN
