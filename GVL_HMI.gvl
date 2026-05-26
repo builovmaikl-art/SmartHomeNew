@@ -67,6 +67,11 @@ VAR_GLOBAL
     G_HMI_Water_Emergency_Open_Status_Level : INT := 0; // 0=OK, 1=ACTIVE, 2=DENIED
 
     // Water valve diagnostics dashboard. Logical valves 1..6 local, 7=35, 8=36.
+    G_HMI_Water_Valve_Command_Open : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Command_Close : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Open_FB : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Close_FB : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Movement_Timeout_MS : ARRAY[1..8] OF UDINT;
     G_HMI_Water_Valve_Open_Fault : ARRAY[1..8] OF BOOL;
     G_HMI_Water_Valve_Close_Fault : ARRAY[1..8] OF BOOL;
     G_HMI_Water_Valve_Critical_Close_Fault : ARRAY[1..8] OF BOOL;
