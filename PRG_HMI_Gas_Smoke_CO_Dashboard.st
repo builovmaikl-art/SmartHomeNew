@@ -55,6 +55,14 @@ GVL_HMI_GAS_SMOKE_CO.G_Vent_Force_Supply_100 := GVL_INTENT_SAFETY.I_Vent_Force_S
 GVL_HMI_GAS_SMOKE_CO.G_Vent_Force_Supply_80 := GVL_INTENT_SAFETY.I_Vent_Force_Supply_80;
 GVL_HMI_GAS_SMOKE_CO.G_Vent_Force_Exhaust_100 := GVL_INTENT_SAFETY.I_Vent_Force_Exhaust_100;
 
+GVL_HMI_GAS_SMOKE_CO.G_Vent_Output_Enable := GVL_VENT_OUTPUT.DO_Vent_Enable;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+    GVL_HMI_GAS_SMOKE_CO.G_Vent_Output_Supply_Fans[L_i] := GVL_VENT_OUTPUT.AO_Supply_Fans[L_i];
+END_FOR;
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    GVL_HMI_GAS_SMOKE_CO.G_Vent_Output_Exhaust_Fans[L_i] := GVL_VENT_OUTPUT.AO_Exhaust_Fans[L_i];
+END_FOR;
+
 IF GVL_HEALTH_BRIDGE.G_Methane_Critical_Level OR GVL_INTENT_SAFETY.I_System_Safe_Stop_Required THEN
     GVL_HMI_GAS_SMOKE_CO.G_Status_Level := 3;
 ELSIF GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_HEALTH_BRIDGE.G_Smoke_Detected THEN
