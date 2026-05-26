@@ -73,6 +73,18 @@ IF NOT VI_IsActivePLC THEN
     L_2FA_Required := FALSE;
     L_Reset_2FA := FALSE;
     L_Pin_Entry_Active := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Arming_In_Progress := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Pin_Entry_Active := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Disarm_Pending := FALSE;
+    GVL_SECURITY_WORKFLOW.G_2FA_Required := FALSE;
+    GVL_SECURITY_WORKFLOW.G_2FA_Send_Code_Req := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Combined_Window_Active := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Combined_Event_Count := 0;
+    GVL_SECURITY_WORKFLOW.G_Intrusion_Active_Count := 0;
+    GVL_SECURITY_WORKFLOW.G_Intrusion_Event_Count := 0;
+    GVL_SECURITY_WORKFLOW.G_Any_Sensor_Active := FALSE;
+    GVL_SECURITY_WORKFLOW.G_Status_Text := VO_Status_Msg;
+    GVL_SECURITY_WORKFLOW.G_Last_Update_MS := VI_System_Time_MS;
     RETURN;
 END_IF;
 
@@ -335,8 +347,33 @@ IF VO_Armed THEN
         VO_Status_Msg := 'Внимание! Введите PIN-код для отмены тревоги';
     END_IF;
 ELSE
+    L_Any_Sensor_Active := FALSE;
+    L_Intrusion_Active_Count := 0;
+    L_Intrusion_Event_Count := 0;
     L_Pin_Entry_Active := FALSE;
     L_Alarm_Delay_Timer(IN := FALSE, PT := T#0s, VI_System_Time_MS := VI_System_Time_MS);
 END_IF;
+
+GVL_SECURITY_WORKFLOW.G_Arming_In_Progress := L_Arming_In_Progress;
+GVL_SECURITY_WORKFLOW.G_Arm_Delay_ET := L_Arm_Delay_Timer.ET;
+GVL_SECURITY_WORKFLOW.G_Arm_Delay_Q := L_Arm_Delay_Timer.Q;
+GVL_SECURITY_WORKFLOW.G_Pin_Entry_Active := L_Pin_Entry_Active;
+GVL_SECURITY_WORKFLOW.G_Entry_Delay_ET := L_Alarm_Delay_Timer.ET;
+GVL_SECURITY_WORKFLOW.G_Entry_Delay_Q := L_Alarm_Delay_Timer.Q;
+GVL_SECURITY_WORKFLOW.G_Pin_Fail_Count := L_PIN_Fail_Count;
+GVL_SECURITY_WORKFLOW.G_Max_Attempts := L_Max_Attempts;
+GVL_SECURITY_WORKFLOW.G_Disarm_Pending := L_Disarm_Pending;
+GVL_SECURITY_WORKFLOW.G_2FA_Required := L_2FA_Required;
+GVL_SECURITY_WORKFLOW.G_2FA_Send_Code_Req := VO_Send_Code_Req;
+GVL_SECURITY_WORKFLOW.G_Combined_Window_Active := L_Combined_Window_Active;
+GVL_SECURITY_WORKFLOW.G_Combined_Event_Count := L_Combined_Event_Count;
+GVL_SECURITY_WORKFLOW.G_Intrusion_Active_Count := L_Intrusion_Active_Count;
+GVL_SECURITY_WORKFLOW.G_Intrusion_Event_Count := L_Intrusion_Event_Count;
+GVL_SECURITY_WORKFLOW.G_Any_Sensor_Active := L_Any_Sensor_Active;
+GVL_SECURITY_WORKFLOW.G_Door_Blocking_Open := L_Door_Blocking_Open;
+GVL_SECURITY_WORKFLOW.G_Window_Blocking_Open := L_Window_Blocking_Open;
+GVL_SECURITY_WORKFLOW.G_Status_Text := VO_Status_Msg;
+GVL_SECURITY_WORKFLOW.G_Last_Update_MS := VI_System_Time_MS;
+
 // >>> BULK_SYNC_ANCHOR: FB_Security_System_Manager <<<
 END_FUNCTION_BLOCK
