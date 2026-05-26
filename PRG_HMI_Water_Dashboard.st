@@ -1,7 +1,10 @@
 PROGRAM PRG_HMI_Water_Dashboard
 VAR
     L_i : INT;
+    L_Movement_Timeout_MS : UDINT;
 END_VAR
+
+L_Movement_Timeout_MS := GVL_CONSTANTS.C_MS_IN_SECOND * 10;
 
 FOR L_i := 1 TO 4 DO
     GVL_HMI.G_HMI_Water_Emergency_Open_Active[L_i] := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_i];
@@ -25,7 +28,20 @@ ELSE
     GVL_HMI.G_HMI_Water_Emergency_Open_Status_Level := 0;
 END_IF;
 
+FOR L_i := 1 TO 6 DO
+    GVL_HMI.G_HMI_Water_Valve_Command_Open[L_i] := GVL_WATER_OUTPUT.DO_Water_Local_Valve_Open[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Command_Close[L_i] := GVL_WATER_OUTPUT.DO_Water_Local_Valve_Close[L_i];
+END_FOR;
+
+GVL_HMI.G_HMI_Water_Valve_Command_Open[7] := GVL_WATER_OUTPUT.DO_Water_Valve_35_Open;
+GVL_HMI.G_HMI_Water_Valve_Command_Close[7] := GVL_WATER_OUTPUT.DO_Water_Valve_35_Close;
+GVL_HMI.G_HMI_Water_Valve_Command_Open[8] := GVL_WATER_OUTPUT.DO_Water_Valve_36_Open;
+GVL_HMI.G_HMI_Water_Valve_Command_Close[8] := GVL_WATER_OUTPUT.DO_Water_Valve_36_Close;
+
 FOR L_i := 1 TO 8 DO
+    GVL_HMI.G_HMI_Water_Valve_Open_FB[L_i] := GVL_STATE.G_Water_Zone_Open_FB[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Close_FB[L_i] := GVL_STATE.G_Water_Zone_Close_FB[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Movement_Timeout_MS[L_i] := L_Movement_Timeout_MS;
     GVL_HMI.G_HMI_Water_Valve_Open_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Open_Fault[L_i];
     GVL_HMI.G_HMI_Water_Valve_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Close_Fault[L_i];
     GVL_HMI.G_HMI_Water_Valve_Critical_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Critical_Close_Fault[L_i];
