@@ -1,0 +1,22 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_CO_Max_PPM : REAL := 0.0;
+    G_CO_Max_Sensor_Index : INT := 0;
+
+    G_Level_30ppm_Active : BOOL := FALSE;
+    G_Level_70ppm_Active : BOOL := FALSE;
+    G_Level_400ppm_Active : BOOL := FALSE;
+
+    G_Timer_30ppm_ET : TIME := T#0s;
+    G_Timer_70ppm_ET : TIME := T#0s;
+    G_Timer_400ppm_ET : TIME := T#0s;
+
+    G_Timer_30ppm_Q : BOOL := FALSE;
+    G_Timer_70ppm_Q : BOOL := FALSE;
+    G_Timer_400ppm_Q : BOOL := FALSE;
+
+    G_Warning_Active : BOOL := FALSE;
+    G_Alarm_Active : BOOL := FALSE;
+    G_Status_Text : STRING(160) := 'CO exposure idle';
+    G_Last_Update_MS : UDINT := 0;
+END_VAR
