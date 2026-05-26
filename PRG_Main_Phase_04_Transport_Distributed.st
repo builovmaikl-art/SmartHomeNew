@@ -10,6 +10,7 @@ PRG_Modbus_RTU_Driver();
 PRG_Modbus_RTU_SysCom_Backend();
 PRG_Modbus_RTU_SysCom_Transport();
 PRG_Modbus_Register_Scan();
+PRG_OpenTherm_Command_Interface();
 PRG_OpenTherm_Transport();
 PRG_OpenTherm_Adapter_Status();
 PRG_Transport_Freshness_Governor();
