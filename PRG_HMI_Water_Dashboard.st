@@ -6,6 +6,44 @@ END_VAR
 
 L_Movement_Timeout_MS := GVL_CONSTANTS.C_MS_IN_SECOND * 10;
 
+GVL_HMI_WATER_TOPOLOGY.G_Active_Config_Version := GVL_Water_Topology_Config.G_Active_Config_Version;
+GVL_HMI_WATER_TOPOLOGY.G_Config_Loaded := GVL_Water_Topology_Config.G_Config_Loaded;
+GVL_HMI_WATER_TOPOLOGY.G_Runtime_Valid := GVL_Water_Topology_Config.G_Runtime_Valid;
+GVL_HMI_WATER_TOPOLOGY.G_Runtime_Remap_Ready := GVL_Water_Topology_Config.G_Runtime_Remap_Ready;
+GVL_HMI_WATER_TOPOLOGY.G_Any_Invalid_Config := GVL_Water_Topology_Config.G_Any_Invalid_Config;
+GVL_HMI_WATER_TOPOLOGY.G_Any_Multi_Valve_Required := GVL_Water_Topology_Config.G_Any_Multi_Valve_Required;
+GVL_HMI_WATER_TOPOLOGY.G_Status_Code := GVL_Water_Topology_Config.G_Status_Code;
+GVL_HMI_WATER_TOPOLOGY.G_Status_Text := GVL_Water_Topology_Config.G_Status_Text;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    GVL_HMI_WATER_TOPOLOGY.G_Sensor_Config_Valid[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Config_Valid;
+    GVL_HMI_WATER_TOPOLOGY.G_Sensor_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Sensor_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Logical_Zone_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Logical_Zone_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Hydraulic_Segment_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Hydraulic_Segment_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Isolation_Group_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Isolation_Group_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Primary_Valve_Group_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Primary_Valve_Group_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Secondary_Valve_Group_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Secondary_Valve_Group_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Fallback_Domain_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Fallback_Domain_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Recovery_Domain_Id[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Recovery_Domain_Id;
+    GVL_HMI_WATER_TOPOLOGY.G_Shared_Trunk[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Shared_Trunk;
+    GVL_HMI_WATER_TOPOLOGY.G_Cross_Zone_Dependency[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Cross_Zone_Dependency;
+    GVL_HMI_WATER_TOPOLOGY.G_Multi_Valve_Required[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Multi_Valve_Required;
+    GVL_HMI_WATER_TOPOLOGY.G_Record_Status_Text[L_i] := GVL_Water_Topology_Config.G_Config_Record[L_i].Status_Text;
+
+    CASE GVL_Water_Topology_Config.G_Config_Record[L_i].Primary_Valve_Group_Id OF
+        1:
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 1: local valves 1/2';
+        2:
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 2: local valves 3/4';
+        3:
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 3: local valves 5/6';
+        4:
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Common inlet: valves 35/36';
+    ELSE
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Invalid or fallback topology';
+    END_CASE;
+END_FOR;
+
 FOR L_i := 1 TO 4 DO
     GVL_HMI.G_HMI_Water_Emergency_Open_Active[L_i] := GVL_WATER_EMERGENCY_OPEN.G_Open_Active[L_i];
     GVL_HMI.G_HMI_Water_Emergency_Open_Remaining_MS[L_i] := GVL_WATER_EMERGENCY_OPEN.G_Open_Remaining_MS[L_i];
