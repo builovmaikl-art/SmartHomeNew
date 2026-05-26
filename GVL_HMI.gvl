@@ -66,6 +66,17 @@ VAR_GLOBAL
     G_HMI_Water_Emergency_Open_Status_Text : STRING(200);
     G_HMI_Water_Emergency_Open_Status_Level : INT := 0; // 0=OK, 1=ACTIVE, 2=DENIED
 
+    // Water valve diagnostics dashboard. Logical valves 1..6 local, 7=35, 8=36.
+    G_HMI_Water_Valve_Open_Fault : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Close_Fault : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Critical_Close_Fault : ARRAY[1..8] OF BOOL;
+    G_HMI_Water_Valve_Close_Fault_Active : BOOL;
+    G_HMI_Water_Valve_Main_Shutdown_Recommended : BOOL;
+    G_HMI_Water_Valve_Localization_Failed : BOOL;
+    G_HMI_Water_Valve_Close_Fault_Text : STRING(200);
+    G_HMI_Water_Valve_Escalation_Text : STRING(200);
+    G_HMI_Water_Valve_Status_Level : INT := 0; // 0=OK, 1=WARN, 2=CRITICAL
+
     // Config control dashboard. Read-only projection of staged apply and rollback state.
     G_HMI_Config_Control_Version : UDINT;
     G_HMI_Config_Control_Last_Good_Version : UDINT;
