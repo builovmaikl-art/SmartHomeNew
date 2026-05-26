@@ -4,6 +4,7 @@ VAR
     L_Methane_Max : REAL;
     L_CO_Max : REAL;
     L_Smoke_Count : UINT;
+    L_Targeted : BOOL;
 END_VAR
 
 L_Methane_Max := 0.0;
@@ -44,6 +45,40 @@ GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verified_By_Timer := GVL_SMOKE_VERIFICATION.G_Verif
 GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verified_Group := GVL_SMOKE_VERIFICATION.G_Verified_Group;
 GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verification_Text := GVL_SMOKE_VERIFICATION.G_Status_Text;
 GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verification_Last_Update_MS := GVL_SMOKE_VERIFICATION.G_Last_Update_MS;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+    GVL_HMI_GAS_SMOKE_CO.G_Smoke_Target_Exhaust_Fans[L_i] := FALSE;
+END_FOR;
+
+L_Targeted := FALSE;
+CASE GVL_SMOKE_VERIFICATION.G_Verified_Group OF
+    2:
+        IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 1 THEN
+            GVL_HMI_GAS_SMOKE_CO.G_Smoke_Target_Exhaust_Fans[1] := TRUE;
+            L_Targeted := TRUE;
+        END_IF;
+        IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 5 THEN
+            GVL_HMI_GAS_SMOKE_CO.G_Smoke_Target_Exhaust_Fans[5] := TRUE;
+            L_Targeted := TRUE;
+        END_IF;
+    3:
+        IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 2 THEN
+            GVL_HMI_GAS_SMOKE_CO.G_Smoke_Target_Exhaust_Fans[2] := TRUE;
+            L_Targeted := TRUE;
+        END_IF;
+        IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 3 THEN
+            GVL_HMI_GAS_SMOKE_CO.G_Smoke_Target_Exhaust_Fans[3] := TRUE;
+            L_Targeted := TRUE;
+        END_IF;
+ELSE
+        L_Targeted := FALSE;
+END_CASE;
+
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Exhaust_Target_Group := GVL_SMOKE_VERIFICATION.G_Verified_Group;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Exhaust_Targeted :=
+    GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust AND L_Targeted;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Exhaust_Fallback_All :=
+    GVL_COMMAND_SHADOW.G_Vent_Smoke_Exhaust AND NOT L_Targeted;
 
 GVL_HMI_GAS_SMOKE_CO.G_Methane_Warning_Level := GVL_HEALTH_BRIDGE.G_Methane_Warning_Level;
 GVL_HMI_GAS_SMOKE_CO.G_Methane_Alarm_Level := GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level;
