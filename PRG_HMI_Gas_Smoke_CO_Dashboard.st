@@ -33,6 +33,18 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SMOKE_SENSORS DO
 END_FOR;
 GVL_HMI_GAS_SMOKE_CO.G_Smoke_Active_Count := L_Smoke_Count;
 
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Any_Input_Active := GVL_SMOKE_VERIFICATION.G_Any_Smoke_Input_Active;
+FOR L_i := 1 TO 3 DO
+    GVL_HMI_GAS_SMOKE_CO.G_Smoke_Group_Active[L_i] := GVL_SMOKE_VERIFICATION.G_Group_Active[L_i];
+    GVL_HMI_GAS_SMOKE_CO.G_Smoke_Group_Pair_Confirmed[L_i] := GVL_SMOKE_VERIFICATION.G_Group_Pair_Confirmed[L_i];
+    GVL_HMI_GAS_SMOKE_CO.G_Smoke_Group_Timer_Confirmed[L_i] := GVL_SMOKE_VERIFICATION.G_Group_Timer_Confirmed[L_i];
+END_FOR;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verified_By_Pair := GVL_SMOKE_VERIFICATION.G_Verified_By_Pair;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verified_By_Timer := GVL_SMOKE_VERIFICATION.G_Verified_By_Timer;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verified_Group := GVL_SMOKE_VERIFICATION.G_Verified_Group;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verification_Text := GVL_SMOKE_VERIFICATION.G_Status_Text;
+GVL_HMI_GAS_SMOKE_CO.G_Smoke_Verification_Last_Update_MS := GVL_SMOKE_VERIFICATION.G_Last_Update_MS;
+
 GVL_HMI_GAS_SMOKE_CO.G_Methane_Warning_Level := GVL_HEALTH_BRIDGE.G_Methane_Warning_Level;
 GVL_HMI_GAS_SMOKE_CO.G_Methane_Alarm_Level := GVL_HEALTH_BRIDGE.G_Methane_Alarm_Level;
 GVL_HMI_GAS_SMOKE_CO.G_Methane_Critical_Level := GVL_HEALTH_BRIDGE.G_Methane_Critical_Level;
