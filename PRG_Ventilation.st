@@ -22,6 +22,7 @@ VAR
     L_Fire_Smoke_Override : BOOL;
     L_Gas_Vent_Override : BOOL;
     L_Safety_Vent_Override : BOOL;
+    L_Fire_Exhaust_Targeted : BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
@@ -98,13 +99,45 @@ IF L_Distributed_Execute_Allowed THEN
 END_IF;
 
 IF L_Fire_Smoke_Override THEN
-    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-        L_Exhaust_Fans_Byte[L_i] := 100;
-    END_FOR;
-
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
         L_Supply_Fans_Byte[L_i] := 0;
     END_FOR;
+
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        L_Exhaust_Fans_Byte[L_i] := 0;
+    END_FOR;
+
+    L_Fire_Exhaust_Targeted := FALSE;
+
+    CASE GVL_SMOKE_VERIFICATION.G_Verified_Group OF
+        2:
+            IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 1 THEN
+                L_Exhaust_Fans_Byte[1] := 100;
+                L_Fire_Exhaust_Targeted := TRUE;
+            END_IF;
+            IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 5 THEN
+                L_Exhaust_Fans_Byte[5] := 100;
+                L_Fire_Exhaust_Targeted := TRUE;
+            END_IF;
+        3:
+            IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 2 THEN
+                L_Exhaust_Fans_Byte[2] := 100;
+                L_Fire_Exhaust_Targeted := TRUE;
+            END_IF;
+            IF GVL_CONSTANTS.C_MAX_EXHAUST_FANS >= 3 THEN
+                L_Exhaust_Fans_Byte[3] := 100;
+                L_Fire_Exhaust_Targeted := TRUE;
+            END_IF;
+    ELSE
+            L_Fire_Exhaust_Targeted := FALSE;
+    END_CASE;
+
+    IF NOT L_Fire_Exhaust_Targeted THEN
+        FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+            L_Exhaust_Fans_Byte[L_i] := 100;
+        END_FOR;
+    END_IF;
+
 ELSIF L_Supply_100_Req THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
         L_Supply_Fans_Byte[L_i] := 100;
