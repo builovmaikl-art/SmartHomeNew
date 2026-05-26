@@ -4,8 +4,11 @@ VAR
     L_i : INT;
     L_Prev_Distributed_Publication_Block : BOOL;
     L_Prev_Output_Publication_Block : BOOL;
+    L_Audible_Siren_Allowed : BOOL;
     fbTrace : FB_Trace_Write;
 END_VAR
+
+L_Audible_Siren_Allowed := NOT GVL_ALARM_AUDIBLE_ACK.G_Ack_Active;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_HEATING_CIRCUITS DO
     GVL_IO.DO_Zone_Valves[L_i] := FALSE;
@@ -67,16 +70,21 @@ END_FOR;
 GVL_IO.DO_Gas_Valve_Close := TRUE;
 
 GVL_IO.DO_Gas_Siren :=
-    GVL_IO_WRITE_RUNTIME_BUFFER.B_Gas_Fire_Siren_Enable
+    L_Audible_Siren_Allowed
+    AND GVL_IO_WRITE_RUNTIME_BUFFER.B_Gas_Fire_Siren_Enable
     AND GVL_IO_WRITE_RUNTIME_BUFFER.B_Gas_Siren_Authority;
 
 GVL_IO.DO_Fire_Siren :=
-    GVL_IO_WRITE_RUNTIME_BUFFER.B_Gas_Fire_Siren_Enable
+    L_Audible_Siren_Allowed
+    AND GVL_IO_WRITE_RUNTIME_BUFFER.B_Gas_Fire_Siren_Enable
     AND GVL_IO_WRITE_RUNTIME_BUFFER.B_Fire_Siren_Authority;
 
 GVL_IO.DO_Security_Siren :=
-    GVL_ALARM.G_Security_Siren
-    OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm);
+    L_Audible_Siren_Allowed
+    AND (
+        GVL_ALARM.G_Security_Siren
+        OR (GVL_ALARM.G_Global_Siren AND GVL_ALARM.G_Security_Alarm)
+    );
 
 IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Distributed_Publication_Block
    AND NOT L_Prev_Distributed_Publication_Block THEN
