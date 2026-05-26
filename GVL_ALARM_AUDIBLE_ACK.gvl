@@ -2,6 +2,7 @@
 VAR_GLOBAL
     G_Ack_Request : BOOL := FALSE;
     G_Ack_Active : BOOL := FALSE;
+    G_Ack_Start_MS : UDINT := 0;
     G_Ack_Expires_MS : UDINT := 0;
     G_Ack_Remaining_MS : UDINT := 0;
     G_Ack_Count_Current_Alarm : INT := 0;
