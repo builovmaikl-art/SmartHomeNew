@@ -21,6 +21,7 @@ VAR
 
     L_Fire_Smoke_Override : BOOL;
     L_Gas_Vent_Override : BOOL;
+    L_Safety_Vent_Override : BOOL;
 END_VAR
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
@@ -42,7 +43,20 @@ L_Fire_Smoke_Override :=
 
 L_Gas_Vent_Override :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS)
-    OR GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
+    OR GVL_COMMAND_SHADOW.G_Vent_PV3_Boost
+    OR GVL_COMMAND_SHADOW.G_Supply_100_Req;
+
+L_Vent_PV3_Boost_Req := GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
+L_Supply_100_Req := GVL_COMMAND_SHADOW.G_Supply_100_Req;
+L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
+L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
+L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
+
+L_Safety_Vent_Override :=
+    L_Fire_Smoke_Override
+    OR L_Gas_Vent_Override
+    OR L_Supply_80_Req
+    OR L_Exhaust_100_Req;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_WET_ZONES DO
     L_Wet_Zone_Active[L_i] := FALSE;
@@ -51,12 +65,6 @@ END_FOR;
 IF GVL_STATUS.G_Wet_Zone_Light_Active THEN
     L_Wet_Zone_Active[1] := TRUE;
 END_IF;
-
-L_Vent_PV3_Boost_Req := GVL_COMMAND_SHADOW.G_Vent_PV3_Boost;
-L_Supply_100_Req := GVL_COMMAND_SHADOW.G_Supply_100_Req;
-L_Exhaust_100_Req := GVL_COMMAND_SHADOW.G_Exhaust_100_Req;
-L_Supply_80_Req := GVL_COMMAND_SHADOW.G_Supply_80_Req;
-L_Vent_Stop_Req := GVL_COMMAND_SHADOW.G_Vent_Stop;
 
 IF L_Distributed_Execute_Allowed THEN
     fbVentilationManager(
@@ -97,7 +105,19 @@ IF L_Fire_Smoke_Override THEN
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
         L_Supply_Fans_Byte[L_i] := 0;
     END_FOR;
-ELSIF L_Gas_Vent_Override THEN
+ELSIF L_Supply_100_Req THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        L_Supply_Fans_Byte[L_i] := 100;
+    END_FOR;
+ELSIF L_Supply_80_Req THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        IF L_Supply_Fans_Byte[L_i] < 80 THEN
+            L_Supply_Fans_Byte[L_i] := 80;
+        END_IF;
+    END_FOR;
+END_IF;
+
+IF (NOT L_Fire_Smoke_Override) AND L_Vent_PV3_Boost_Req THEN
     IF GVL_CONSTANTS.C_MAX_SUPPLY_FANS >= 3 THEN
         L_Supply_Fans_Byte[3] := 100;
     ELSE
@@ -105,9 +125,23 @@ ELSIF L_Gas_Vent_Override THEN
     END_IF;
 END_IF;
 
+IF (NOT L_Fire_Smoke_Override) AND L_Exhaust_100_Req THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        L_Exhaust_Fans_Byte[L_i] := 100;
+    END_FOR;
+END_IF;
+
+IF L_Vent_Stop_Req AND NOT L_Safety_Vent_Override THEN
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
+        L_Supply_Fans_Byte[L_i] := 0;
+    END_FOR;
+    FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
+        L_Exhaust_Fans_Byte[L_i] := 0;
+    END_FOR;
+END_IF;
+
 IF NOT L_Distributed_Projection_Allowed
-   AND NOT L_Fire_Smoke_Override
-   AND NOT L_Gas_Vent_Override THEN
+   AND NOT L_Safety_Vent_Override THEN
 
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
         L_Exhaust_Fans_Byte[L_i] := 0;
