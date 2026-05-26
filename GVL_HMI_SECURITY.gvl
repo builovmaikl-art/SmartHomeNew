@@ -9,6 +9,10 @@ VAR_GLOBAL
     G_Status_Text : STRING(200);
     G_Status_Level : INT := 0; // 0=OK, 1=ARMED, 2=ENTRY_DELAY, 3=ALARM
 
+    G_Safety_Access_Active : BOOL;
+    G_Sensor_Path_Suppressed_By_Safety : BOOL;
+    G_Sensor_Path_Status_Text : STRING(160);
+
     G_Motion_Active : ARRAY[1..16] OF BOOL;
     G_Door_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
     G_Window_Active : ARRAY[1..16] OF BOOL;
