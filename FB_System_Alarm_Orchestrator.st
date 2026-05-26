@@ -28,7 +28,7 @@ fbAlarmManager(
     VI_Boiler_Errors := GVL_STATE.G_Boiler_Error,
     VI_Security_Msg := GVL_STATUS.G_Security_Status_Msg,
     VI_Acknowledge_All := GVL_CONFIG.G_HMI_Ack_Alarms OR GVL_COMMAND.G_Reset_Errors,
-    VI_Mute_Siren := GVL_CONFIG.G_HMI_Mute_Alarm,
+    VI_Mute_Siren := GVL_ALARM_AUDIBLE_ACK.G_Ack_Active,
     VIO_Next_Alarm_ID := GVL_ALARM.G_Next_Alarm_ID,
     VO_Global_Critical => GVL_ALARM.G_Global_Critical,
     VO_Global_Warning => GVL_ALARM.G_Global_Warning,
