@@ -1,0 +1,13 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Ack_Active : BOOL;
+    G_Ack_Remaining_MS : UDINT;
+    G_Ack_Count_Current_Alarm : INT;
+    G_Ack_Limit_Reached : BOOL;
+    G_Last_Ack_Accepted : BOOL;
+    G_Last_Ack_Denied : BOOL;
+    G_Last_Denial_Code : UINT;
+    G_Last_Event_MS : UDINT;
+    G_Status_Text : STRING(200);
+    G_Effective_Siren_Muted : BOOL;
+END_VAR
