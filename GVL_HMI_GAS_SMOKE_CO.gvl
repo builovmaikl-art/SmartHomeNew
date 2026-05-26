@@ -8,6 +8,18 @@ VAR_GLOBAL
 
     G_CO_Effective : ARRAY[1..GVL_CONSTANTS.C_MAX_CO_SENSORS] OF REAL;
     G_CO_Max_PPM : REAL;
+    G_CO_Max_Sensor_Index : INT;
+    G_CO_Level_30ppm_Active : BOOL;
+    G_CO_Level_70ppm_Active : BOOL;
+    G_CO_Level_400ppm_Active : BOOL;
+    G_CO_Timer_30ppm_ET : TIME;
+    G_CO_Timer_70ppm_ET : TIME;
+    G_CO_Timer_400ppm_ET : TIME;
+    G_CO_Timer_30ppm_Q : BOOL;
+    G_CO_Timer_70ppm_Q : BOOL;
+    G_CO_Timer_400ppm_Q : BOOL;
+    G_CO_Exposure_Status_Text : STRING(160);
+    G_CO_Exposure_Last_Update_MS : UDINT;
     G_CO_Warning_Level : BOOL;
     G_CO_Alarm_Level : BOOL;
 
