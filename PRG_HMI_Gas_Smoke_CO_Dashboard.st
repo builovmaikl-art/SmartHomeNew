@@ -59,6 +59,14 @@ GVL_HMI_GAS_SMOKE_CO.G_Command_Gas_Valve_Close := GVL_COMMAND_SHADOW.G_Gas_Valve
 GVL_HMI_GAS_SMOKE_CO.G_Command_Boiler_Stop := GVL_COMMAND_SHADOW.G_Boiler_Stop;
 GVL_HMI_GAS_SMOKE_CO.G_Output_Gas_Valve_Close := GVL_IO.DO_Gas_Valve_Close;
 
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_BOILERS DO
+    GVL_HMI_GAS_SMOKE_CO.G_OpenTherm_Command_Enable[L_i] := GVL_OPENTHERM_ADAPTER.G_Command[L_i].Enable;
+    GVL_HMI_GAS_SMOKE_CO.G_OpenTherm_Command_Setpoint_x10[L_i] := GVL_OPENTHERM_ADAPTER.G_Command[L_i].Setpoint_x10;
+    GVL_HMI_GAS_SMOKE_CO.G_OpenTherm_Command_Sequence[L_i] := GVL_OPENTHERM_ADAPTER.G_Command[L_i].Sequence;
+    GVL_HMI_GAS_SMOKE_CO.G_OpenTherm_Wire_Enable[L_i] := GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Enable;
+    GVL_HMI_GAS_SMOKE_CO.G_OpenTherm_Wire_Setpoint_x10[L_i] := GVL_OPENTHERM_ADAPTER.G_Wire_Image[L_i].Cmd_Setpoint_x10;
+END_FOR;
+
 GVL_HMI_GAS_SMOKE_CO.G_Vent_Output_Enable := GVL_VENT_OUTPUT.DO_Vent_Enable;
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SUPPLY_FANS DO
     GVL_HMI_GAS_SMOKE_CO.G_Vent_Output_Supply_Fans[L_i] := GVL_VENT_OUTPUT.AO_Supply_Fans[L_i];
