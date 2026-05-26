@@ -13,6 +13,27 @@ VAR_GLOBAL
     G_Sensor_Path_Suppressed_By_Safety : BOOL;
     G_Sensor_Path_Status_Text : STRING(160);
 
+    G_Arming_In_Progress : BOOL;
+    G_Arm_Delay_ET : TIME;
+    G_Arm_Delay_Q : BOOL;
+    G_Pin_Entry_Active : BOOL;
+    G_Entry_Delay_ET : TIME;
+    G_Entry_Delay_Q : BOOL;
+    G_Pin_Fail_Count : BYTE;
+    G_Max_Attempts : BYTE;
+    G_Disarm_Pending : BOOL;
+    G_2FA_Required : BOOL;
+    G_2FA_Send_Code_Req : BOOL;
+    G_Combined_Window_Active : BOOL;
+    G_Combined_Event_Count : INT;
+    G_Perimeter_Active_Count : INT;
+    G_Perimeter_Event_Count : INT;
+    G_Any_Sensor_Active : BOOL;
+    G_Door_Blocking_Open : BOOL;
+    G_Window_Blocking_Open : BOOL;
+    G_Workflow_Status_Text : STRING(200);
+    G_Workflow_Last_Update_MS : UDINT;
+
     G_Motion_Active : ARRAY[1..16] OF BOOL;
     G_Door_Active : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
     G_Window_Active : ARRAY[1..16] OF BOOL;
