@@ -1,0 +1,15 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Sensor_1_LEL : REAL := 0.0;
+    G_Sensor_2_LEL : REAL := 0.0;
+    G_Max_LEL : REAL := 0.0;
+    G_Min_LEL : REAL := 0.0;
+    G_Diff_LEL : REAL := 0.0;
+    G_Max_Sensor_Index : INT := 0;
+    G_Disagreement_Active : BOOL := FALSE;
+    G_Disagreement_Limit_LEL : REAL := 5.0;
+    G_Redundancy_Available : BOOL := FALSE;
+    G_Conservative_Max_Selected : BOOL := TRUE;
+    G_Status_Text : STRING(160) := 'Methane redundancy idle';
+    G_Last_Update_MS : UDINT := 0;
+END_VAR
