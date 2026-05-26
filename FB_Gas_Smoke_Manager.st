@@ -25,6 +25,9 @@ END_VAR
 
 VAR
     L_Methane_Max   : REAL;
+    L_Methane_Min   : REAL;
+    L_Methane_Diff  : REAL;
+    L_Methane_Max_Index : INT;
     L_CO_Max        : REAL;
     L_CO_Max_Index  : INT;
     L_Smoke_Count   : UINT;
@@ -59,11 +62,59 @@ VO_Status_Msg := 'ОК';
 
 // --- Methane ---
 L_Methane_Max := 0.0;
+L_Methane_Min := 0.0;
+L_Methane_Diff := 0.0;
+L_Methane_Max_Index := 0;
+
+IF GVL_CONSTANTS.C_MAX_METHANE_SENSORS >= 1 THEN
+    L_Methane_Max := VI_Methane_LEL[1];
+    L_Methane_Min := VI_Methane_LEL[1];
+    L_Methane_Max_Index := 1;
+END_IF;
+
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_METHANE_SENSORS DO
     IF VI_Methane_LEL[L_i] > L_Methane_Max THEN
         L_Methane_Max := VI_Methane_LEL[L_i];
+        L_Methane_Max_Index := L_i;
+    END_IF;
+
+    IF VI_Methane_LEL[L_i] < L_Methane_Min THEN
+        L_Methane_Min := VI_Methane_LEL[L_i];
     END_IF;
 END_FOR;
+
+IF L_Methane_Max >= L_Methane_Min THEN
+    L_Methane_Diff := L_Methane_Max - L_Methane_Min;
+ELSE
+    L_Methane_Diff := L_Methane_Min - L_Methane_Max;
+END_IF;
+
+IF GVL_CONSTANTS.C_MAX_METHANE_SENSORS >= 1 THEN
+    GVL_METHANE_REDUNDANCY.G_Sensor_1_LEL := VI_Methane_LEL[1];
+END_IF;
+
+IF GVL_CONSTANTS.C_MAX_METHANE_SENSORS >= 2 THEN
+    GVL_METHANE_REDUNDANCY.G_Sensor_2_LEL := VI_Methane_LEL[2];
+END_IF;
+
+GVL_METHANE_REDUNDANCY.G_Max_LEL := L_Methane_Max;
+GVL_METHANE_REDUNDANCY.G_Min_LEL := L_Methane_Min;
+GVL_METHANE_REDUNDANCY.G_Diff_LEL := L_Methane_Diff;
+GVL_METHANE_REDUNDANCY.G_Max_Sensor_Index := L_Methane_Max_Index;
+GVL_METHANE_REDUNDANCY.G_Redundancy_Available := GVL_CONSTANTS.C_MAX_METHANE_SENSORS >= 2;
+GVL_METHANE_REDUNDANCY.G_Conservative_Max_Selected := TRUE;
+GVL_METHANE_REDUNDANCY.G_Disagreement_Active :=
+    GVL_METHANE_REDUNDANCY.G_Redundancy_Available AND
+    (L_Methane_Diff > GVL_METHANE_REDUNDANCY.G_Disagreement_Limit_LEL);
+GVL_METHANE_REDUNDANCY.G_Last_Update_MS := VI_System_Time_MS;
+
+IF GVL_METHANE_REDUNDANCY.G_Disagreement_Active THEN
+    GVL_METHANE_REDUNDANCY.G_Status_Text := 'Methane sensors disagree - conservative max used';
+ELSIF GVL_METHANE_REDUNDANCY.G_Redundancy_Available THEN
+    GVL_METHANE_REDUNDANCY.G_Status_Text := 'Methane redundancy healthy';
+ELSE
+    GVL_METHANE_REDUNDANCY.G_Status_Text := 'Methane redundancy unavailable';
+END_IF;
 
 VO_Methane_Warning_Level := (L_Methane_Max >= 10.0);
 VO_Methane_Alarm_Level := (L_Methane_Max >= 20.0);
