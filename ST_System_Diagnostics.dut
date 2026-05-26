@@ -87,6 +87,9 @@ STRUCT
 
     Water_Zone_Open_Fault : ARRAY[1..32] OF BOOL;
     Water_Zone_Close_Fault : ARRAY[1..32] OF BOOL;
+    Water_Zone_Open_Blocked : ARRAY[1..32] OF BOOL;
+    Water_Open_Block_Active : BOOL;
+    Water_Open_Block_Text : STRING(200);
     Water_Valve_Exercise_Last_Zone : INT;
     Water_Valve_Exercise_Last_Result : STRING(160);
     Water_Zone_Critical_Close_Fault : ARRAY[1..32] OF BOOL;
