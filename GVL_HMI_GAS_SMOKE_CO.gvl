@@ -23,6 +23,10 @@ VAR_GLOBAL
     G_Smoke_Verified_Group : INT;
     G_Smoke_Verification_Text : STRING(160);
     G_Smoke_Verification_Last_Update_MS : UDINT;
+    G_Smoke_Exhaust_Targeted : BOOL;
+    G_Smoke_Exhaust_Fallback_All : BOOL;
+    G_Smoke_Exhaust_Target_Group : INT;
+    G_Smoke_Target_Exhaust_Fans : ARRAY[1..GVL_CONSTANTS.C_MAX_EXHAUST_FANS] OF BOOL;
 
     G_Gas_Detected : BOOL;
     G_Status_Text : STRING(200);
