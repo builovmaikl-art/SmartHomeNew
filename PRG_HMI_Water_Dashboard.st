@@ -25,5 +25,25 @@ ELSE
     GVL_HMI.G_HMI_Water_Emergency_Open_Status_Level := 0;
 END_IF;
 
+FOR L_i := 1 TO 8 DO
+    GVL_HMI.G_HMI_Water_Valve_Open_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Open_Fault[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Close_Fault[L_i];
+    GVL_HMI.G_HMI_Water_Valve_Critical_Close_Fault[L_i] := GVL_STATUS.G_Diagnostics.Water_Zone_Critical_Close_Fault[L_i];
+END_FOR;
+
+GVL_HMI.G_HMI_Water_Valve_Close_Fault_Active := GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active;
+GVL_HMI.G_HMI_Water_Valve_Main_Shutdown_Recommended := GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended;
+GVL_HMI.G_HMI_Water_Valve_Localization_Failed := GVL_STATUS.G_Diagnostics.Water_Localization_Failed;
+GVL_HMI.G_HMI_Water_Valve_Close_Fault_Text := GVL_STATUS.G_Diagnostics.Water_Close_Fault_Text;
+GVL_HMI.G_HMI_Water_Valve_Escalation_Text := GVL_STATUS.G_Diagnostics.Water_Escalation_Text;
+
+IF GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active THEN
+    GVL_HMI.G_HMI_Water_Valve_Status_Level := 2;
+ELSIF GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended OR GVL_STATUS.G_Diagnostics.Water_Localization_Failed THEN
+    GVL_HMI.G_HMI_Water_Valve_Status_Level := 1;
+ELSE
+    GVL_HMI.G_HMI_Water_Valve_Status_Level := 0;
+END_IF;
+
 // >>> BULK_SYNC_ANCHOR: PRG_HMI_Water_Dashboard <<<
 END_PROGRAM
