@@ -53,6 +53,19 @@ VAR_GLOBAL
     G_HMI_File_Archive_Auto_Backup_Last_Request_MS : UDINT;
     G_HMI_File_Archive_Auto_Backup_Last_Status_Text : STRING(200);
 
+    // Water emergency-open dashboard. Read-only projection of emergency access state.
+    G_HMI_Water_Emergency_Open_Active : ARRAY[1..4] OF BOOL;
+    G_HMI_Water_Emergency_Open_Remaining_MS : ARRAY[1..4] OF UDINT;
+    G_HMI_Water_Emergency_Open_Count_Today : ARRAY[1..4] OF INT;
+    G_HMI_Water_Emergency_Open_Any_Active : BOOL;
+    G_HMI_Water_Emergency_Open_Last_Accepted : BOOL;
+    G_HMI_Water_Emergency_Open_Last_Denied : BOOL;
+    G_HMI_Water_Emergency_Open_Last_Denial_Code : UINT;
+    G_HMI_Water_Emergency_Open_Last_Event_Group : INT;
+    G_HMI_Water_Emergency_Open_Last_Event_MS : UDINT;
+    G_HMI_Water_Emergency_Open_Status_Text : STRING(200);
+    G_HMI_Water_Emergency_Open_Status_Level : INT := 0; // 0=OK, 1=ACTIVE, 2=DENIED
+
     // Config control dashboard. Read-only projection of staged apply and rollback state.
     G_HMI_Config_Control_Version : UDINT;
     G_HMI_Config_Control_Last_Good_Version : UDINT;
