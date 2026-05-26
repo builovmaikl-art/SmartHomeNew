@@ -185,5 +185,7 @@ fbProjection(
     VI_Local_Valve_Close := L_Local_Valve_Close
 );
 
+PRG_Water_Valve_Diagnostics();
+
 // >>> BULK_SYNC_ANCHOR: PRG_Water <<<
 END_PROGRAM
