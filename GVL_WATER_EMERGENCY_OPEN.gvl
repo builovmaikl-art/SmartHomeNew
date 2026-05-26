@@ -14,6 +14,7 @@ VAR_GLOBAL
     G_Open_Active : ARRAY[1..4] OF BOOL;
     G_Open_Start_MS : ARRAY[1..4] OF UDINT;
     G_Open_Duration_MS : ARRAY[1..4] OF UDINT;
+    G_Open_Remaining_MS : ARRAY[1..4] OF UDINT;
     G_Open_Count_Today : ARRAY[1..4] OF INT;
 
     // Derived commands consumed by PRG_Water.
@@ -21,11 +22,14 @@ VAR_GLOBAL
     G_Open_Riser_2_Active : BOOL := FALSE;
     G_Open_Riser_3_Active : BOOL := FALSE;
     G_Open_Common_Inlet_Active : BOOL := FALSE;
+    G_Any_Open_Active : BOOL := FALSE;
 
     G_Daily_Reset_MS : UDINT := 0;
     G_Last_Request_Accepted : BOOL := FALSE;
     G_Last_Request_Denied : BOOL := FALSE;
     G_Last_Denial_Code : UINT := 0;
+    G_Last_Event_Group : INT := 0;
+    G_Last_Event_MS : UDINT := 0;
     G_Status_Text : STRING(200) := '';
     G_Last_Update_MS : UDINT := 0;
 END_VAR
