@@ -1,0 +1,27 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Arming_In_Progress : BOOL := FALSE;
+    G_Arm_Delay_ET : TIME := T#0s;
+    G_Arm_Delay_Q : BOOL := FALSE;
+
+    G_Pin_Entry_Active : BOOL := FALSE;
+    G_Entry_Delay_ET : TIME := T#0s;
+    G_Entry_Delay_Q : BOOL := FALSE;
+    G_Pin_Fail_Count : BYTE := 0;
+    G_Max_Attempts : BYTE := 0;
+
+    G_Disarm_Pending : BOOL := FALSE;
+    G_2FA_Required : BOOL := FALSE;
+    G_2FA_Send_Code_Req : BOOL := FALSE;
+
+    G_Combined_Window_Active : BOOL := FALSE;
+    G_Combined_Event_Count : INT := 0;
+    G_Intrusion_Active_Count : INT := 0;
+    G_Intrusion_Event_Count : INT := 0;
+
+    G_Any_Sensor_Active : BOOL := FALSE;
+    G_Door_Blocking_Open : BOOL := FALSE;
+    G_Window_Blocking_Open : BOOL := FALSE;
+    G_Status_Text : STRING(200) := '';
+    G_Last_Update_MS : UDINT := 0;
+END_VAR
