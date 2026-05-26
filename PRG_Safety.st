@@ -126,6 +126,12 @@ IF GVL_STATE.G_Safety_Leak_Latched THEN
     GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
 END_IF;
 
+IF GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended OR
+   GVL_STATUS.G_Diagnostics.Water_Close_Fault_Active THEN
+    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Leak_Alarm_Active := TRUE;
+END_IF;
+
 IF GVL_STATE.G_Freeze_Hardware_Degraded THEN
     GVL_INTENT_SAFETY.I_Freeze_Protection_Required := TRUE;
 END_IF;
