@@ -1,0 +1,7 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Auto_Lock_Close_Request : BOOL := FALSE;
+    G_Auto_Lock_Close_Accepted_By_Arbitration : BOOL := FALSE;
+    G_Last_Auto_Lock_Request_MS : UDINT := 0;
+    G_Status_Text : STRING(160) := 'Security access intent idle';
+END_VAR
