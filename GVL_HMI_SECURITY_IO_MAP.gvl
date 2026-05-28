@@ -1,0 +1,17 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Door_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF INT;
+    G_Door_Map_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+    G_Door_Raw_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_DOOR_SENSORS] OF BOOL;
+
+    G_Window_Map : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF INT;
+    G_Window_Map_Valid : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Window_Uses_Open_Input : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Window_Uses_Glass_Input : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Window_Overridden_By_2F_Group : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+    G_Window_Raw_Open : ARRAY[1..GVL_CONSTANTS.C_MAX_ZONES] OF BOOL;
+
+    G_Group_2F_Active : BOOL;
+    G_Any_Invalid_Map : BOOL;
+    G_Status_Text : STRING(200);
+END_VAR
