@@ -17,6 +17,7 @@ PRG_Safety_Shutdown();
 PRG_Safety_Recovery();
 PRG_System_Intent();
 PRG_Security();
+PRG_Security_Auto_Lock_Intent();
 PRG_System_Access_Maintenance();
 PRG_User_Adapt_Control();
 PRG_Behavior_Adapt_Profile();
