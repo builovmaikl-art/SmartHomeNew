@@ -56,6 +56,7 @@ PRG_HMI_Alarm_Audible_Ack_Dashboard();
 PRG_HMI_Access_Dashboard();
 PRG_HMI_Security_Dashboard();
 PRG_HMI_Security_Access_Intent_Dashboard();
+PRG_HMI_Security_IO_Map_Dashboard();
 PRG_Debug_View();
 
 IF L_Run_Extended_Diagnostics THEN
