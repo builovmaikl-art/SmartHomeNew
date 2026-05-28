@@ -36,6 +36,16 @@ IF (NOT GVL_COMMAND_ARBITRATION_BUFFER.B_Safety_Active)
     END_IF;
 END_IF;
 
+IF (NOT GVL_COMMAND_ARBITRATION_BUFFER.B_Safety_Active)
+   AND GVL_SECURITY_ACCESS_INTENT.G_Auto_Lock_Close_Request THEN
+    GVL_COMMAND_ARBITRATION_BUFFER.B_Lock_1_Open := FALSE;
+    GVL_COMMAND_ARBITRATION_BUFFER.B_Lock_1_Close := TRUE;
+    GVL_COMMAND_ARBITRATION_BUFFER.B_Lock_2_Open := FALSE;
+    GVL_COMMAND_ARBITRATION_BUFFER.B_Lock_2_Close := TRUE;
+    GVL_SECURITY_ACCESS_INTENT.G_Auto_Lock_Close_Accepted_By_Arbitration := TRUE;
+    GVL_SECURITY_ACCESS_INTENT.G_Status_Text := 'Security auto-lock accepted by arbitration';
+END_IF;
+
 // Dangerous user actions require explicit confirmation and elevated access.
 IF (NOT GVL_COMMAND_ARBITRATION_BUFFER.B_Safety_Active)
    AND GVL_INTENT_USER.I_Source_Valid
