@@ -1,0 +1,9 @@
+PROGRAM PRG_HMI_Security_Access_Intent_Dashboard
+
+GVL_HMI_SECURITY_ACCESS_INTENT.G_Close_Request := GVL_SECURITY_ACCESS_INTENT.G_Auto_Lock_Close_Request;
+GVL_HMI_SECURITY_ACCESS_INTENT.G_Close_Accepted := GVL_SECURITY_ACCESS_INTENT.G_Auto_Lock_Close_Accepted_By_Arbitration;
+GVL_HMI_SECURITY_ACCESS_INTENT.G_Last_Request_MS := GVL_SECURITY_ACCESS_INTENT.G_Last_Auto_Lock_Request_MS;
+GVL_HMI_SECURITY_ACCESS_INTENT.G_Status_Text := GVL_SECURITY_ACCESS_INTENT.G_Status_Text;
+
+// >>> BULK_SYNC_ANCHOR: PRG_HMI_Security_Access_Intent_Dashboard <<<
+END_PROGRAM
