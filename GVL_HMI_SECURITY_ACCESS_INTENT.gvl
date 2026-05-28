@@ -1,0 +1,7 @@
+{attribute 'qualified_only'}
+VAR_GLOBAL
+    G_Close_Request : BOOL;
+    G_Close_Accepted : BOOL;
+    G_Last_Request_MS : UDINT;
+    G_Status_Text : STRING(160);
+END_VAR
