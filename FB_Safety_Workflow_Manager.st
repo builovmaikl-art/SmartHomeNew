@@ -34,9 +34,9 @@ VAR
     L_CMD_Gas_Valve_Test_Close_Prev : BOOL;
     L_CMD_Gas_Valve_Test_Confirm_Prev : BOOL;
     L_Water_Test_Active : BOOL;
-    L_Water_Test_Deadline : UDINT;
+    L_Water_Test_Start_MS : UDINT;
     L_Gas_Test_Active : BOOL;
-    L_Gas_Test_Deadline : UDINT;
+    L_Gas_Test_Start_MS : UDINT;
 END_VAR
 
 VO_Water_Test_Timeout_Close_Required := FALSE;
@@ -62,11 +62,15 @@ L_CMD_Gas_Valve_Test_Confirm_Prev := VI_Gas_Valve_Test_Confirm;
 
 IF VO_Water_Valve_Test_Open_Edge THEN
     L_Water_Test_Active := TRUE;
-    L_Water_Test_Deadline := VI_System_Time_MS + 60000;
+    L_Water_Test_Start_MS := VI_System_Time_MS;
+END_IF;
+
+IF VO_Water_Valve_Test_Close_Edge OR VO_Water_Valve_Test_Confirm_Edge THEN
+    L_Water_Test_Active := FALSE;
 END_IF;
 
 IF L_Water_Test_Active THEN
-    IF VI_System_Time_MS >= L_Water_Test_Deadline THEN
+    IF (VI_System_Time_MS - L_Water_Test_Start_MS) >= 60000 THEN
         L_Water_Test_Active := FALSE;
         VO_Water_Test_Timeout_Close_Required := TRUE;
     END_IF;
@@ -74,11 +78,15 @@ END_IF;
 
 IF VO_Gas_Valve_Test_Open_Edge THEN
     L_Gas_Test_Active := TRUE;
-    L_Gas_Test_Deadline := VI_System_Time_MS + 60000;
+    L_Gas_Test_Start_MS := VI_System_Time_MS;
+END_IF;
+
+IF VO_Gas_Valve_Test_Close_Edge OR VO_Gas_Valve_Test_Confirm_Edge THEN
+    L_Gas_Test_Active := FALSE;
 END_IF;
 
 IF L_Gas_Test_Active THEN
-    IF VI_System_Time_MS >= L_Gas_Test_Deadline THEN
+    IF (VI_System_Time_MS - L_Gas_Test_Start_MS) >= 60000 THEN
         L_Gas_Test_Active := FALSE;
         VO_Gas_Test_Timeout_Close_Required := TRUE;
     END_IF;
