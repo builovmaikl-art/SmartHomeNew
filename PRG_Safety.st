@@ -25,10 +25,15 @@ GVL_INTENT_SAFETY.I_Vent_Force_Exhaust_100 := FALSE;
 GVL_INTENT_SAFETY.I_Water_Main_Close_Required := FALSE;
 GVL_INTENT_SAFETY.I_Water_Selective_Recovery_Allowed := FALSE;
 GVL_INTENT_SAFETY.I_Water_Recovery_Target_Zone := 0;
+FOR L_i := 1 TO 32 DO
+    GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[L_i] := FALSE;
+END_FOR;
 GVL_INTENT_SAFETY.I_Lock_1_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_1_Force_Close_Block := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Open := FALSE;
 GVL_INTENT_SAFETY.I_Lock_2_Force_Close_Block := FALSE;
+GVL_INTENT_SAFETY.I_Test_Timeout_Gas_Close := FALSE;
+GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close := FALSE;
 
 fbWaterLeakageManager(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
