@@ -1,3 +1,11 @@
+// ==============================================================================
+// System / gateway user-intent bridge
+//
+// Owns publication of gateway/operator request surfaces into GVL_INTENT_USER.
+// GVL_COMMAND remains a legacy/operator request surface; downstream runtime
+// layers consume GVL_INTENT_USER and command arbitration, not GVL_COMMAND as
+// final authority.
+// ==============================================================================
 FUNCTION_BLOCK FB_System_Gateway_Intent
 VAR_INPUT
     VI_System_Time_MS : UDINT;
@@ -19,12 +27,17 @@ VAR
     L_Gateway_Gas_Alarm_Active : BOOL;
     L_Gateway_Fire_Alarm_Active : BOOL;
     L_Command_Received_Allowed : BOOL;
+    L_Operator_Service_Allowed : BOOL;
 END_VAR
 
 L_Gateway_Flood_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected OR GVL_STATE.G_Safety_Leak_Latched;
 L_Gateway_Gas_Alarm_Active := GVL_HEALTH_BRIDGE.G_Gas_Detected OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level OR GVL_STATE.G_Safety_Gas_Latched;
 L_Gateway_Fire_Alarm_Active := GVL_HEALTH_BRIDGE.G_Smoke_Detected OR GVL_STATE.G_Safety_Smoke_Latched;
 L_Command_Received_Allowed := GVL_GATEWAY.G_Gateway_Command_Received AND VI_Gateway_Writes_Allowed;
+L_Operator_Service_Allowed :=
+    VI_Gateway_Writes_Allowed
+    AND (GVL_COMMAND.CMD_User_Access_Level >= 3)
+    AND GVL_COMMAND.CMD_Dangerous_Action_Confirm;
 
 VIO_Scenario_Req_Gateway := SCENARIO_NONE;
 
@@ -99,6 +112,34 @@ GVL_INTENT_USER.I_Disarm_Request := GVL_COMMAND.G_Disarm_Req AND L_Command_Recei
 GVL_INTENT_USER.I_PIN_Code := GVL_COMMAND.G_PIN_Code;
 GVL_INTENT_USER.I_RFID_Tag := GVL_COMMAND.G_RFID_Tag;
 GVL_INTENT_USER.I_2FA_Code_In := GVL_COMMAND.G_2FA_Code_In;
+GVL_INTENT_USER.I_Dangerous_Action_Request :=
+    GVL_COMMAND.CMD_Dangerous_Action_Request AND VI_Gateway_Writes_Allowed;
+GVL_INTENT_USER.I_Dangerous_Action_Confirm :=
+    GVL_COMMAND.CMD_Dangerous_Action_Confirm AND VI_Gateway_Writes_Allowed;
+
+IF VI_Gateway_Writes_Allowed THEN
+    GVL_INTENT_USER.I_User_Access_Level := GVL_COMMAND.CMD_User_Access_Level;
+ELSE
+    GVL_INTENT_USER.I_User_Access_Level := 0;
+END_IF;
+
+GVL_INTENT_USER.I_Water_Valve_Test_Open :=
+    GVL_COMMAND.CMD_Water_Valve_Test_Open AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Water_Valve_Test_Close :=
+    GVL_COMMAND.CMD_Water_Valve_Test_Close AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Water_Valve_Test_Confirm :=
+    GVL_COMMAND.CMD_Water_Valve_Test_Confirm AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Gas_Valve_Test_Open :=
+    GVL_COMMAND.CMD_Gas_Valve_Test_Open AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Gas_Valve_Test_Close :=
+    GVL_COMMAND.CMD_Gas_Valve_Test_Close AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Gas_Valve_Test_Confirm :=
+    GVL_COMMAND.CMD_Gas_Valve_Test_Confirm AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Water_Selective_Recover :=
+    GVL_COMMAND.CMD_Water_Selective_Recover AND L_Operator_Service_Allowed;
+GVL_INTENT_USER.I_Gas_Selective_Recover :=
+    GVL_COMMAND.CMD_Gas_Selective_Recover AND L_Operator_Service_Allowed;
+
 GVL_INTENT_USER.I_Lighting_Override_32 := GVL_COMMAND.G_Lighting_Override;
 GVL_INTENT_USER.I_Blinds_Override_32 := GVL_COMMAND.G_Blinds_Override;
 GVL_INTENT_USER.I_Socket_Override_32 := GVL_COMMAND.G_Socket_Override;
