@@ -15,11 +15,11 @@ VAR_GLOBAL
     // Final authority remains inside runtime arbitration/safety layers.
     // ==============================================================================
 
-    // Per-zone isolation intent.
+    // Per-sensor / logical-zone isolation intent.
     G_Zone_Close_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
 
-    // Valve-group visibility.
-    G_Valve_Group_Close_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_SENSORS] OF BOOL;
+    // Valve-group visibility: 1..3 local risers, 4 common inlet 35/36.
+    G_Valve_Group_Close_Requested : ARRAY[1..GVL_CONSTANTS.C_MAX_FLOOD_VALVES] OF BOOL;
 
     // Conservative fallback visibility.
     G_Global_Isolation_Requested : BOOL;
