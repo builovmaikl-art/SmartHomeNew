@@ -59,15 +59,22 @@ END_FOR;
 
 // Water outputs. PRG_Water owns the domain projection in GVL_WATER_OUTPUT;
 // command shadow remains the common-inlet emergency fallback.
+// Water forced-off must suppress Open commands but must not suppress Close
+// commands, because leak/safe-state authority is expressed as physical close.
 IF GVL_IO_WRITE_RUNTIME_BUFFER.B_Water_Forced_Off THEN
     GVL_IO.DO_Water_Valve_35_Open := FALSE;
-    GVL_IO.DO_Water_Valve_35_Close := FALSE;
+    GVL_IO.DO_Water_Valve_35_Close :=
+        GVL_WATER_OUTPUT.DO_Water_Valve_35_Close
+        OR GVL_COMMAND_SHADOW.G_Close_Valve_35;
     GVL_IO.DO_Water_Valve_36_Open := FALSE;
-    GVL_IO.DO_Water_Valve_36_Close := FALSE;
+    GVL_IO.DO_Water_Valve_36_Close :=
+        GVL_WATER_OUTPUT.DO_Water_Valve_36_Close
+        OR GVL_COMMAND_SHADOW.G_Close_Valve_36;
 
     FOR L_i := 1 TO 6 DO
         GVL_IO.DO_Water_Local_Valve_Open[L_i] := FALSE;
-        GVL_IO.DO_Water_Local_Valve_Close[L_i] := FALSE;
+        GVL_IO.DO_Water_Local_Valve_Close[L_i] :=
+            GVL_WATER_OUTPUT.DO_Water_Local_Valve_Close[L_i];
     END_FOR;
 ELSE
     GVL_IO.DO_Water_Valve_35_Open := GVL_WATER_OUTPUT.DO_Water_Valve_35_Open;
