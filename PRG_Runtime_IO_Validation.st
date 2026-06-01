@@ -10,6 +10,7 @@ VAR
     L_Any_Socket_On : BOOL;
     L_Any_Freeze_Circulation_On : BOOL;
     L_Fire_Access_Valid : BOOL;
+    L_Water_Leak_Close_Valid : BOOL;
 END_VAR
 
 GVL_RUNTIME_IO_VALIDATION.G_Last_Update_MS := GVL_TIME_SERVICE.G_Now_MS;
@@ -25,6 +26,7 @@ L_Any_Lighting_Output_On := FALSE;
 L_Any_Socket_On := FALSE;
 L_Any_Freeze_Circulation_On := FALSE;
 L_Fire_Access_Valid := TRUE;
+L_Water_Leak_Close_Valid := TRUE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
     IF GVL_IO.AO_Exhaust_Fans[L_i] > 0 THEN
@@ -101,6 +103,40 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_SOCKETS DO
     END_IF;
 END_FOR;
 
+IF GVL_SAFETY_SHUTDOWN.G_Safety_Mode = WATER_LEAK THEN
+    // Four leak zones: 1..3 local pairs, 4 common inlet 35/36.
+    IF GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[1] THEN
+        L_Water_Leak_Close_Valid :=
+            L_Water_Leak_Close_Valid
+            AND GVL_IO.DO_Water_Local_Valve_Close[1]
+            AND GVL_IO.DO_Water_Local_Valve_Close[2];
+    END_IF;
+
+    IF GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[2] THEN
+        L_Water_Leak_Close_Valid :=
+            L_Water_Leak_Close_Valid
+            AND GVL_IO.DO_Water_Local_Valve_Close[3]
+            AND GVL_IO.DO_Water_Local_Valve_Close[4];
+    END_IF;
+
+    IF GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[3] THEN
+        L_Water_Leak_Close_Valid :=
+            L_Water_Leak_Close_Valid
+            AND GVL_IO.DO_Water_Local_Valve_Close[5]
+            AND GVL_IO.DO_Water_Local_Valve_Close[6];
+    END_IF;
+
+    IF GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[4]
+       OR GVL_INTENT_SAFETY.I_Water_Main_Close_Required
+       OR GVL_COMMAND_SHADOW.G_Close_Valve_35
+       OR GVL_COMMAND_SHADOW.G_Close_Valve_36 THEN
+        L_Water_Leak_Close_Valid :=
+            L_Water_Leak_Close_Valid
+            AND GVL_IO.DO_Water_Valve_35_Close
+            AND GVL_IO.DO_Water_Valve_36_Close;
+    END_IF;
+END_IF;
+
 GVL_RUNTIME_IO_VALIDATION.Fire_IO_Valid :=
     (NOT GVL_STATUS.G_Is_Active_PLC)
     OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> FIRE)
@@ -120,11 +156,9 @@ GVL_RUNTIME_IO_VALIDATION.Gas_IO_Valid :=
     );
 
 GVL_RUNTIME_IO_VALIDATION.Leak_IO_Valid :=
-    (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> WATER_LEAK)
-    OR (
-        GVL_IO.DO_Water_Valve_35_Close
-        AND GVL_IO.DO_Water_Valve_36_Close
-    );
+    (NOT GVL_STATUS.G_Is_Active_PLC)
+    OR (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> WATER_LEAK)
+    OR L_Water_Leak_Close_Valid;
 
 GVL_RUNTIME_IO_VALIDATION.Global_Stop_IO_Valid :=
     (GVL_SAFETY_SHUTDOWN.G_Safety_Mode <> GLOBAL_STOP)
