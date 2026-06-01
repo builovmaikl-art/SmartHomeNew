@@ -32,13 +32,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     CASE GVL_Water_Topology_Config.G_Config_Record[L_i].Primary_Valve_Group_Id OF
         1:
-            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 1: local valves 1/2';
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Zone 1 kitchen: valves 1/2';
         2:
-            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 2: local valves 3/4';
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Zone 2 master bathroom: valves 3/4';
         3:
-            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Riser 3: local valves 5/6';
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Zone 3 guest bathrooms + laundry: valves 5/6';
         4:
-            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Common inlet: valves 35/36';
+            GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Zone 4 boiler/common inlet: valves 35/36';
     ELSE
             GVL_HMI_WATER_TOPOLOGY.G_Topology_Text[L_i] := 'Invalid or fallback topology';
     END_CASE;
@@ -89,7 +89,7 @@ END_FOR;
 GVL_HMI.G_HMI_Water_Valve_Open_Block_Active := GVL_STATUS.G_Diagnostics.Water_Open_Block_Active;
 GVL_HMI.G_HMI_Water_Valve_Open_Block_Text := GVL_STATUS.G_Diagnostics.Water_Open_Block_Text;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Accepted := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Accepted;
-GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denied := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denied;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denied := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denial_Code;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denial_Code := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denial_Code;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Valve_Index := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Valve_Index;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_MS := GVL_WATER_VALVE_SERVICE.G_Last_Reset_MS;
