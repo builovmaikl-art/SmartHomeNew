@@ -5,10 +5,16 @@ VAR_INPUT
 END_VAR
 VAR
     L_i : INT;
+    L_Group : INT;
+    L_Feedback_Index_A : INT;
+    L_Feedback_Index_B : INT;
 
     L_Authority : ST_Water_Isolation_Authority_State;
     L_Valve : ST_Water_Valve_Runtime_State;
     L_Empty_Valve : ST_Water_Valve_Runtime_State;
+
+    L_Feedback_A : ST_Water_Valve_Feedback_State;
+    L_Feedback_B : ST_Water_Valve_Feedback_State;
 
     L_Any_Degraded : BOOL;
     L_Any_Confirmation_Unknown : BOOL;
@@ -55,19 +61,62 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Valve.Output_Command_Projected :=
         L_Valve.Close_Requested;
 
-    // Feedback/runtime hooks.
-    L_Valve.Confirmation_Available :=
-        GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i].Feedback_Available;
+    // Feedback/runtime hooks. Runtime authority is per leak sensor, but valve
+    // feedback is per physical valve pair: group 1 => 1/2, group 2 => 3/4,
+    // group 3 => 5/6, group 4 => 7/8 (35/36).
+    L_Group := UINT_TO_INT(L_Authority.Valve_Group_Id);
+    L_Feedback_Index_A := 0;
+    L_Feedback_Index_B := 0;
 
-    IF L_Valve.Confirmation_Available THEN
-
-        L_Valve.Confirmed_Closed :=
-            GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_i].Confirmed_Closed;
-
+    CASE L_Group OF
+        1:
+            L_Feedback_Index_A := 1;
+            L_Feedback_Index_B := 2;
+        2:
+            L_Feedback_Index_A := 3;
+            L_Feedback_Index_B := 4;
+        3:
+            L_Feedback_Index_A := 5;
+            L_Feedback_Index_B := 6;
+        4:
+            L_Feedback_Index_A := 7;
+            L_Feedback_Index_B := 8;
     ELSE
+            L_Feedback_Index_A := 0;
+            L_Feedback_Index_B := 0;
+    END_CASE;
 
+    IF (L_Feedback_Index_A >= 1) AND (L_Feedback_Index_B >= 1) THEN
+        L_Feedback_A := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_Feedback_Index_A];
+        L_Feedback_B := GVL_Water_Valve_Feedback.G_Valve_Feedback_State[L_Feedback_Index_B];
+
+        L_Valve.Confirmation_Available :=
+            L_Feedback_A.Feedback_Available
+            AND L_Feedback_B.Feedback_Available;
+
+        IF L_Valve.Confirmation_Available THEN
+            L_Valve.Confirmed_Closed :=
+                L_Feedback_A.Confirmed_Closed
+                AND L_Feedback_B.Confirmed_Closed;
+
+            L_Valve.Confirmed_Open :=
+                L_Feedback_A.Confirmed_Open
+                AND L_Feedback_B.Confirmed_Open;
+
+            L_Valve.Confirmation_Timeout :=
+                L_Feedback_A.Feedback_Timeout
+                OR L_Feedback_B.Feedback_Timeout;
+        ELSE
+            L_Valve.Confirmation_Unknown := TRUE;
+        END_IF;
+    ELSE
         L_Valve.Confirmation_Unknown := TRUE;
+    END_IF;
 
+    IF L_Valve.Confirmation_Available
+       AND NOT L_Valve.Confirmed_Open
+       AND NOT L_Valve.Confirmed_Closed THEN
+        L_Valve.Confirmation_Unknown := TRUE;
     END_IF;
 
     // Observe-only semantics must not force degraded state.
@@ -82,6 +131,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     END_IF;
 
+    IF L_Valve.Confirmation_Timeout THEN
+        L_Valve.Valve_Degraded := TRUE;
+        L_Valve.Valve_Stuck_Suspected := TRUE;
+    END_IF;
+
     IF L_Valve.Valve_Degraded THEN
 
         L_Valve.Unsafe_Reopen_Denied := TRUE;
@@ -89,19 +143,19 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
         L_Valve.Status_Code := 2;
         L_Valve.Status_Text :=
-            'Recovery denied: valve degraded';
+            'Recovery denied: valve pair degraded';
 
     ELSIF L_Valve.Confirmation_Unknown THEN
 
         L_Valve.Status_Code := 1;
         L_Valve.Status_Text :=
-            'Valve confirmation unavailable';
+            'Valve pair confirmation unavailable';
 
     ELSE
 
         L_Valve.Status_Code := 0;
         L_Valve.Status_Text :=
-            'Valve governance runtime healthy';
+            'Valve pair governance runtime healthy';
 
     END_IF;
 
@@ -141,7 +195,7 @@ IF L_Any_Degraded THEN
 ELSIF L_Any_Confirmation_Unknown THEN
     GVL_Water_Valve_Runtime.G_Status_Code := 1;
     GVL_Water_Valve_Runtime.G_Status_Text :=
-        'Valve confirmation unknown';
+        'Valve pair confirmation unknown';
 ELSE
     GVL_Water_Valve_Runtime.G_Status_Code := 0;
     GVL_Water_Valve_Runtime.G_Status_Text :=
