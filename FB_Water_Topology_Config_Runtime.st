@@ -25,10 +25,10 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Default_Group := 0;
 
     // Default topology from current TZ:
-    // sensors 1..2  -> riser 1 local valves 1/2;
-    // sensors 3..4  -> riser 2 local valves 3/4;
-    // sensors 5..9  -> riser 3 local valves 5/6;
-    // sensors 10..12 -> common inlet valves 35/36.
+    // sensors 1..2   -> zone 1 kitchen, valves 1/2;
+    // sensors 3..4   -> zone 2 master bathroom, valves 3/4;
+    // sensors 5..9   -> zone 3 guest bathrooms + laundry, valves 5/6;
+    // sensors 10..12 -> zone 4 boiler/common inlet, valves 35/36.
     IF (L_i >= 1) AND (L_i <= 2) THEN
         L_Default_Group := 1;
     ELSIF (L_i >= 3) AND (L_i <= 4) THEN
@@ -66,13 +66,13 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         L_Config.Status_Code := 0;
         CASE L_Config.Primary_Valve_Group_Id OF
             1:
-                L_Config.Status_Text := 'Topology loaded: riser 1 valves 1/2';
+                L_Config.Status_Text := 'Topology loaded: zone 1 kitchen valves 1/2';
             2:
-                L_Config.Status_Text := 'Topology loaded: riser 2 valves 3/4';
+                L_Config.Status_Text := 'Topology loaded: zone 2 master bathroom valves 3/4';
             3:
-                L_Config.Status_Text := 'Topology loaded: riser 3 valves 5/6';
+                L_Config.Status_Text := 'Topology loaded: zone 3 guest bathrooms + laundry valves 5/6';
             4:
-                L_Config.Status_Text := 'Topology loaded: common inlet 35/36';
+                L_Config.Status_Text := 'Topology loaded: zone 4 boiler/common inlet 35/36';
         ELSE
                 L_Config.Status_Text := 'Topology loaded';
         END_CASE;
