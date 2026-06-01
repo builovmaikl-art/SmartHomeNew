@@ -70,13 +70,19 @@ IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = GAS) THEN
 END_IF;
 
 IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) THEN
+    L_Any_Vent_Fan_On := FALSE;
+
     FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_EXHAUST_FANS DO
-        IF GVL_IO.AO_Exhaust_Fans[L_i] = 0 THEN
-            L_Runtime_Error := TRUE;
-            L_Runtime_Error_Code := 2;
-            L_Runtime_Error_Text := 'Smoke exhaust not active';
+        IF GVL_IO.AO_Exhaust_Fans[L_i] <> 0 THEN
+            L_Any_Vent_Fan_On := TRUE;
         END_IF;
     END_FOR;
+
+    IF NOT L_Any_Vent_Fan_On THEN
+        L_Runtime_Error := TRUE;
+        L_Runtime_Error_Code := 2;
+        L_Runtime_Error_Text := 'Smoke exhaust not active';
+    END_IF;
 END_IF;
 
 IF (NOT L_Runtime_Error) AND (GVL_SAFETY_SHUTDOWN.G_Safety_Mode = FIRE) THEN
