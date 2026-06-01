@@ -14,7 +14,9 @@ ELSE
         L_Mode := FIRE;
     ELSIF GVL_INTENT_SAFETY.I_Gas_Close_Required OR GVL_INTENT_SAFETY.I_Test_Timeout_Gas_Close THEN
         L_Mode := GAS;
-    ELSIF GVL_INTENT_SAFETY.I_Water_Main_Close_Required OR GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close THEN
+    ELSIF GVL_INTENT_SAFETY.I_Leak_Alarm_Active OR
+          GVL_INTENT_SAFETY.I_Water_Main_Close_Required OR
+          GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close THEN
         L_Mode := WATER_LEAK;
     ELSIF GVL_INTENT_SAFETY.I_System_Safe_Stop_Required THEN
         L_Mode := GLOBAL_STOP;
