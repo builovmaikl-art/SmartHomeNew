@@ -89,7 +89,7 @@ END_FOR;
 GVL_HMI.G_HMI_Water_Valve_Open_Block_Active := GVL_STATUS.G_Diagnostics.Water_Open_Block_Active;
 GVL_HMI.G_HMI_Water_Valve_Open_Block_Text := GVL_STATUS.G_Diagnostics.Water_Open_Block_Text;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Accepted := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Accepted;
-GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denied := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denial_Code;
+GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denied := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denied;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Denial_Code := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Denial_Code;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_Valve_Index := GVL_WATER_VALVE_SERVICE.G_Last_Reset_Valve_Index;
 GVL_HMI.G_HMI_Water_Valve_Service_Last_Reset_MS := GVL_WATER_VALVE_SERVICE.G_Last_Reset_MS;
