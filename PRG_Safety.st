@@ -4,6 +4,9 @@ VAR
     fbGasSmokeManager : FB_Gas_Smoke_Manager;
     fbOwnership : FB_Ownership_Watchdog;
     L_i : INT;
+    L_Water_Group : INT;
+    L_Any_Water_Leak : BOOL;
+    L_Water_Main_Close : BOOL;
 END_VAR
 
 GVL_INTENT_SAFETY.I_Source_Valid := TRUE;
@@ -45,12 +48,35 @@ fbWaterLeakageManager(
     VO_Leak_Warning_Level => GVL_HEALTH_BRIDGE.G_Leak_Warning_Level
 );
 
-// Any confirmed leak enters WATER_LEAK safety mode. Common inlet 35/36 close is
-// reserved for topology/global fallback, close-fault escalation or explicit main
-// shutdown recommendation; local riser leaks are handled by the water domain.
-GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
+L_Any_Water_Leak := FALSE;
+L_Water_Main_Close := FALSE;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    IF GVL_STATE.G_Flood_Alarm[L_i] THEN
+        L_Any_Water_Leak := TRUE;
+        L_Water_Group := TO_INT(GVL_CONFIG.G_Flood_Global_Config.sensor_to_valve_map[L_i]);
+
+        IF (L_Water_Group >= 1) AND (L_Water_Group <= 4) THEN
+            GVL_INTENT_SAFETY.I_Water_Zone_Close_Required[L_Water_Group] := TRUE;
+        ELSE
+            L_Water_Main_Close := TRUE;
+        END_IF;
+
+        IF L_Water_Group = 4 THEN
+            L_Water_Main_Close := TRUE;
+        END_IF;
+    END_IF;
+END_FOR;
+
+// Four logical leak zones: 1 kitchen, 2 master bathroom,
+// 3 guest bathrooms + laundry, 4 boiler/common inlet 35/36.
+// WATER_LEAK mode is entered for any confirmed leak. Common inlet 35/36 close
+// is required only for zone 4, invalid mapping, fallback/escalation or test timeout.
+GVL_INTENT_SAFETY.I_Leak_Alarm_Active :=
+    L_Any_Water_Leak OR GVL_HEALTH_BRIDGE.G_Leak_Detected;
 GVL_INTENT_SAFETY.I_Water_Main_Close_Required :=
-    GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required;
+    L_Water_Main_Close
+    OR GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required;
 
 fbGasSmokeManager(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
@@ -101,7 +127,7 @@ END_IF;
 fbOwnership(
     VI_Gas_Level := GVL_Safety_Selector.G_Methane_Effective_Array[GVL_CONSTANTS.C_PRIMARY_EFFECTIVE_GAS_INDEX],
     VI_Gas_Alarm := GVL_INTENT_SAFETY.I_Gas_Alarm_Active,
-    VI_Leak_Alarm := GVL_HEALTH_BRIDGE.G_Leak_Detected,
+    VI_Leak_Alarm := GVL_INTENT_SAFETY.I_Leak_Alarm_Active,
     VI_Smoke_Alarm := GVL_HEALTH_BRIDGE.G_Smoke_Detected
 );
 
