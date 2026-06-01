@@ -81,8 +81,11 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
         AND NOT L_Traversal.Traversal_Conflict
         AND NOT L_Traversal.Traversal_Ambiguous;
 
+    // Main-close intent belongs to zone 4 / common inlet 35/36. It must not
+    // turn a single zone-4 leak into global fallback closing all local valves.
     L_Authority.Safety_Context_Allows_Selective :=
-        NOT GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
+        (NOT GVL_INTENT_SAFETY.I_Water_Main_Close_Required)
+        OR (L_Runtime.Valve_Group_Id = 4);
 
     IF NOT L_Authority.Isolation_Requested THEN
 
