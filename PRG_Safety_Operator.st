@@ -17,6 +17,12 @@ fbSafetyWorkflow(
     VI_Gas_Valve_Test_Confirm := GVL_INTENT_USER.I_Gas_Valve_Test_Confirm
 );
 
+// selective recover requests enter the deterministic recovery state machine
+IF fbSafetyWorkflow.VO_Water_Selective_Recover_Edge OR
+   fbSafetyWorkflow.VO_Gas_Selective_Recover_Edge THEN
+    GVL_SAFETY_RECOVERY.G_Recovery_Requested := TRUE;
+END_IF;
+
 // propagate test timeout safety actions
 IF fbSafetyWorkflow.VO_Water_Test_Timeout_Close_Required THEN
     GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close := TRUE;
