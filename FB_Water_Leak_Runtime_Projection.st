@@ -5,6 +5,7 @@ VAR_INPUT
 END_VAR
 VAR
     L_i : INT;
+    L_Group : INT;
     L_Runtime_State : ST_Water_Leak_Runtime_State;
     L_Global_Leak : BOOL;
     L_Global_Warning : BOOL;
@@ -27,24 +28,31 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
     L_Runtime_State.Physical_Input_Valid := TRUE;
     L_Runtime_State.Leak_Warning_Active := GVL_STATE.G_Flood_Warning[L_i];
     L_Runtime_State.Leak_Confirmed := GVL_STATE.G_Flood_Alarm[L_i];
-    L_Runtime_State.Active_Safety_Leak_Latched := GVL_INTENT_SAFETY.I_Water_Main_Close_Required;
+    L_Runtime_State.Active_Safety_Leak_Latched := GVL_INTENT_SAFETY.I_Leak_Alarm_Active;
     L_Runtime_State.Active_Global_Close_Path := GVL_COMMAND_SHADOW.G_Close_Valve_35 OR GVL_COMMAND_SHADOW.G_Close_Valve_36;
 
-    L_Runtime_State.Mapping_Valid := (GVL_CONFIG.G_Flood_Global_Config.sensor_to_valve_map[L_i] <> 0);
+    // Runtime topology is the authoritative mapping source here. It is updated
+    // earlier in PRG_Water_Supervisory_Publication before leak projection runs.
+    L_Group := UINT_TO_INT(GVL_Water_Topology_Config.G_Config_Record[L_i].Primary_Valve_Group_Id);
+    L_Runtime_State.Mapping_Valid :=
+        GVL_Water_Topology_Config.G_Config_Record[L_i].Config_Valid
+        AND (L_Group >= 1)
+        AND (L_Group <= GVL_CONSTANTS.C_MAX_FLOOD_VALVES);
     L_Runtime_State.Mapping_Missing := NOT L_Runtime_State.Mapping_Valid;
 
     IF L_Runtime_State.Mapping_Valid THEN
-        L_Runtime_State.Valve_Group_Id := TO_UINT(GVL_CONFIG.G_Flood_Global_Config.sensor_to_valve_map[L_i]);
+        L_Runtime_State.Valve_Group_Id := TO_UINT(L_Group);
         L_Runtime_State.Selective_Isolation_Possible := TRUE;
         L_Runtime_State.Fallback_Global_Isolation_Required := FALSE;
     ELSE
+        L_Runtime_State.Valve_Group_Id := 0;
         L_Runtime_State.Selective_Isolation_Possible := FALSE;
         L_Runtime_State.Fallback_Global_Isolation_Required := TRUE;
     END_IF;
 
     L_Runtime_State.Logical_Sensor_Valid := TRUE;
     L_Runtime_State.Hydraulic_Zone_Id := TO_UINT(L_i);
-    L_Runtime_State.Hydraulic_Segment_Id := TO_UINT(L_i);
+    L_Runtime_State.Hydraulic_Segment_Id := GVL_Water_Topology_Config.G_Config_Record[L_i].Hydraulic_Segment_Id;
     L_Runtime_State.Isolation_Group_Id := L_Runtime_State.Valve_Group_Id;
 
     IF L_Runtime_State.Leak_Confirmed THEN
