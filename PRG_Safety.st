@@ -44,8 +44,13 @@ fbWaterLeakageManager(
     VO_Leak_Detected => GVL_HEALTH_BRIDGE.G_Leak_Detected,
     VO_Leak_Warning_Level => GVL_HEALTH_BRIDGE.G_Leak_Warning_Level
 );
+
+// Any confirmed leak enters WATER_LEAK safety mode. Common inlet 35/36 close is
+// reserved for topology/global fallback, close-fault escalation or explicit main
+// shutdown recommendation; local riser leaks are handled by the water domain.
 GVL_INTENT_SAFETY.I_Leak_Alarm_Active := GVL_HEALTH_BRIDGE.G_Leak_Detected;
-GVL_INTENT_SAFETY.I_Water_Main_Close_Required := GVL_HEALTH_BRIDGE.G_Leak_Detected;
+GVL_INTENT_SAFETY.I_Water_Main_Close_Required :=
+    GVL_Water_Isolation_Authority.G_Any_Global_Fallback_Required;
 
 fbGasSmokeManager(
     VI_System_Time_MS := GVL_TIME_SERVICE.G_Now_MS,
@@ -128,7 +133,7 @@ IF GVL_HEALTH_BRIDGE.G_CO_Warning_Level OR GVL_HEALTH_BRIDGE.G_CO_Alarm_Level TH
 END_IF;
 
 IF GVL_STATE.G_Safety_Leak_Latched THEN
-    GVL_INTENT_SAFETY.I_Water_Main_Close_Required := TRUE;
+    GVL_INTENT_SAFETY.I_Leak_Alarm_Active := TRUE;
 END_IF;
 
 IF GVL_STATUS.G_Diagnostics.Water_Main_Shutdown_Recommended OR
