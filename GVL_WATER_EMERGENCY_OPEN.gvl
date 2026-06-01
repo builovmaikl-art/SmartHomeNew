@@ -1,11 +1,11 @@
 {attribute 'qualified_only'}
 VAR_GLOBAL
     // HMI/runtime surface for emergency temporary opening during active leak alarm.
-    // Targets:
-    // 1 = стояк 1 (локальные краны 1 ХВС + 2 ГВС),
-    // 2 = стояк 2 (локальные краны 3 ХВС + 4 ГВС),
-    // 3 = стояк 3 (локальные краны 5 ХВС + 6 ГВС),
-    // 4 = общий ввод (35 ХВС + 36 ГВС).
+    // Targets are four leak zones, not raw leak sensors:
+    // 1 = зона 1 кухня (краны 1 ХВС + 2 ГВС),
+    // 2 = зона 2 мастер-санузел (краны 3 ХВС + 4 ГВС),
+    // 3 = зона 3 гостевые санузлы + постирочная (краны 5 ХВС + 6 ГВС),
+    // 4 = зона 4 котельная / общий ввод (35 ХВС + 36 ГВС).
     G_Request_Open : BOOL := FALSE;
     G_Request_Close_Now : BOOL := FALSE;
     G_Target_Isolation_Group : INT := 0;
@@ -18,6 +18,8 @@ VAR_GLOBAL
     G_Open_Count_Today : ARRAY[1..4] OF INT;
 
     // Derived commands consumed by PRG_Water.
+    // G_Open_Riser_* names are retained as legacy compatibility aliases for
+    // leak zones 1..3; zone 4 uses common inlet 35/36.
     G_Open_Riser_1_Active : BOOL := FALSE;
     G_Open_Riser_2_Active : BOOL := FALSE;
     G_Open_Riser_3_Active : BOOL := FALSE;
