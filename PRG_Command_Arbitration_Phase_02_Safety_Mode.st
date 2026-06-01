@@ -41,8 +41,15 @@ CASE GVL_COMMAND_ARBITRATION_BUFFER.B_Mode OF
         GVL_COMMAND_ARBITRATION_BUFFER.B_Safety_Active := TRUE;
         GVL_COMMAND_ARBITRATION_BUFFER.B_Water_Block := GVL_COMMAND_POLICY_CONFIG.G_Water_Block_Water;
         GVL_COMMAND_ARBITRATION_BUFFER.B_Water_Emergency_Stop := GVL_COMMAND_POLICY_CONFIG.G_Water_Block_Water;
-        GVL_COMMAND_ARBITRATION_BUFFER.B_Close_Valve_35 := GVL_COMMAND_POLICY_CONFIG.G_Water_Block_Water;
-        GVL_COMMAND_ARBITRATION_BUFFER.B_Close_Valve_36 := GVL_COMMAND_POLICY_CONFIG.G_Water_Block_Water;
+        // WATER_LEAK means a water safety event is active, but 35/36 are the
+        // zone-4/common-inlet pair. Do not close them for single local leaks in
+        // zones 1..3 unless main-close/fallback/test-timeout requires it.
+        GVL_COMMAND_ARBITRATION_BUFFER.B_Close_Valve_35 :=
+            GVL_INTENT_SAFETY.I_Water_Main_Close_Required
+            OR GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close;
+        GVL_COMMAND_ARBITRATION_BUFFER.B_Close_Valve_36 :=
+            GVL_INTENT_SAFETY.I_Water_Main_Close_Required
+            OR GVL_INTENT_SAFETY.I_Test_Timeout_Water_Close;
 
     GLOBAL_STOP:
         GVL_COMMAND_ARBITRATION_BUFFER.B_Safety_Active := TRUE;
