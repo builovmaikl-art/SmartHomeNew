@@ -4,6 +4,7 @@ VAR_INPUT
 END_VAR
 VAR
     L_i : INT;
+    L_Group : INT;
     L_State : ST_Water_Isolation_Runtime_State;
     L_Any_Selective : BOOL;
     L_Global_Fallback : BOOL;
@@ -18,11 +19,16 @@ L_Any_Selective := FALSE;
 L_Global_Fallback := FALSE;
 
 FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
+    GVL_Water_Isolation_Intent.G_Zone_Close_Requested[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_VALVES DO
+    GVL_Water_Isolation_Intent.G_Valve_Group_Close_Requested[L_i] := FALSE;
+END_FOR;
+
+FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
     L_State := GVL_Water_Isolation_Runtime.G_Isolation_Runtime_State[L_i];
-
-    GVL_Water_Isolation_Intent.G_Zone_Close_Requested[L_i] := FALSE;
-    GVL_Water_Isolation_Intent.G_Valve_Group_Close_Requested[L_i] := FALSE;
 
     IF L_State.Selective_Isolation_Requested THEN
 
@@ -35,13 +41,17 @@ FOR L_i := 1 TO GVL_CONSTANTS.C_MAX_FLOOD_SENSORS DO
 
         END_IF;
 
-        IF (L_State.Valve_Group_Id >= 1)
-           AND (L_State.Valve_Group_Id <= GVL_CONSTANTS.C_MAX_FLOOD_SENSORS) THEN
+        L_Group := UINT_TO_INT(L_State.Valve_Group_Id);
+
+        IF (L_Group >= 1)
+           AND (L_Group <= GVL_CONSTANTS.C_MAX_FLOOD_VALVES) THEN
 
             GVL_Water_Isolation_Intent.G_Valve_Group_Close_Requested[
-                L_State.Valve_Group_Id
+                L_Group
             ] := TRUE;
 
+        ELSE
+            L_Global_Fallback := TRUE;
         END_IF;
 
         L_Any_Selective := TRUE;
