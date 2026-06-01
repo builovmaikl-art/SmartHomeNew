@@ -71,7 +71,8 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Close_Now THEN
 END_IF;
 
 // HMI emergency open request.
-// Groups 1..3 = local risers; group 4 = common inlet 35/36.
+// Groups 1..4 are leak zones: 1 kitchen, 2 master bathroom,
+// 3 guest bathrooms + laundry, 4 boiler/common inlet 35/36.
 IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
     L_Group := GVL_WATER_EMERGENCY_OPEN.G_Target_Isolation_Group;
     L_Duration_MS := 0;
@@ -112,7 +113,7 @@ IF GVL_WATER_EMERGENCY_OPEN.G_Request_Open THEN
     ELSIF (L_Group < 1) OR (L_Group > 4) THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 3;
-        GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: invalid isolation group';
+        GVL_WATER_EMERGENCY_OPEN.G_Status_Text := 'Emergency open denied: invalid leak zone';
     ELSIF L_Duration_MS = 0 THEN
         GVL_WATER_EMERGENCY_OPEN.G_Last_Request_Denied := TRUE;
         GVL_WATER_EMERGENCY_OPEN.G_Last_Denial_Code := 4;
