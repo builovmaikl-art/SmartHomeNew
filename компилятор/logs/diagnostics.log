@@ -817,7 +817,7 @@ drwxr-xr-x  3 runner runner   4096 Jul 30 07:01 .github
 drwxr-xr-x  2 runner runner   4096 Jul 30 07:01 docs
 drwxr-xr-x 11 runner runner   4096 Jul 30 07:01 node_modules
 drwxr-xr-x  2 runner runner   4096 Jul 30 07:01 requirements
-drwxr-xr-x 10 runner runner   4096 Jul 30 07:01 snapshots
+drwxr-xr-x  9 runner runner   4096 Jul 30 07:01 snapshots
 drwxr-xr-x  3 runner runner   4096 Jul 30 07:01 tools
 -rw-r--r--  1 runner runner 430747 Jul 30 07:01 Система умного дома.xml
 -rw-r--r--  1 runner runner  32949 Jul 30 07:01 ТЗ обновлен.txt
