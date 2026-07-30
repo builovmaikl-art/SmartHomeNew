@@ -1,4 +1,0 @@
-POU_TEMPLATE_STUDY
-functionBlock=workspace/export_forensics/sandbox/pou_template_study/functionBlock_template.xml
-program=workspace/export_forensics/sandbox/pou_template_study/program_template.xml
-function=NOT_FOUND

@@ -1,3 +1,0 @@
-ADAPTER_DRAFT_READY=YES
-RUNTIME_INTEGRATION=NO
-NEXT_STEP=prepare reverse adapter and compatibility package

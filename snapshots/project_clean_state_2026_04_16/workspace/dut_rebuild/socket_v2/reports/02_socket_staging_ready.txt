@@ -1,3 +1,0 @@
-SOCKET_STAGING_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=discover real Socket runtime and integrate shadow only

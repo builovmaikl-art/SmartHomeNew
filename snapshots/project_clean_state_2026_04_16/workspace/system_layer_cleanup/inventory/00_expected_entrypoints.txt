@@ -1,8 +1,0 @@
-EXPECTED_ENTRYPOINTS
-MAIN.st
-PRG_System.st
-PRG_Lighting.st
-FB_Gateway_Interface.st
-PRG_IO_Read.st
-PRG_IO_Write.st
-FB_Simulation_Manager.st

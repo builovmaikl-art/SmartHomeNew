@@ -1,5 +1,0 @@
-TYPE ST_DHW_State_V2 : STRUCT
-    Tank_Temp : REAL;
-    Supply_Temp : REAL;
-END_STRUCT
-END_TYPE

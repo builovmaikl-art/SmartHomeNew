@@ -1,3 +1,0 @@
-VENTILATION_STAGING_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=add validation and then guarded enable like Alarm

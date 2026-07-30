@@ -1,8 +1,0 @@
-FIRST_LIVE_COMPARISON_BINDING
-HARNESS=FB_CoreKernel_Comparison_Harness_DRAFT
-LEGACY_SOURCE=GVL_STATUS.G_Is_Active_PLC
-ACTIVE_GATE=GVL_STATUS.G_Is_Active_PLC
-
-EXPECTED_RESULT:
-- On ACTIVE PLC, diff reflects legacy vs shadow wiring consistency.
-- On STANDBY PLC, diff remains suppressed by comparison gating.

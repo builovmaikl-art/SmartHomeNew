@@ -1,3 +1,0 @@
-NEXT_REAL_RUNTIME_STEP=insert compatibility package in staging copy of FB_Rule_Engine
-ACTIVE_RUNTIME_PATCH=NOT_DONE
-SAFE_TO_CONTINUE=YES

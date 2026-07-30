@@ -1,5 +1,0 @@
-TYPE ST_Blinds_Command_V2 :
-STRUCT
-    Position_Setpoint : BYTE;
-END_STRUCT
-END_TYPE

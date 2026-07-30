@@ -1,6 +1,0 @@
-1. Review workspace draft structures
-2. Freeze old/new field mapping
-3. Introduce compatibility layer
-4. Migrate Rule Engine
-5. Migrate Alarm Manager
-6. Migrate History/BlackBox

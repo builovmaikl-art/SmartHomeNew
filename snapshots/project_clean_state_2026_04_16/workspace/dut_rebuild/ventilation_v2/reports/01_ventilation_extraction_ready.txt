@@ -1,3 +1,0 @@
-VENTILATION_EXTRACTION_PACKAGE=READY
-RUNTIME_PATCH=NOT_DONE
-NEXT_STEP=prepare Ventilation staging compatibility package

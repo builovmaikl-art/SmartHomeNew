@@ -1,6 +1,0 @@
-SANDBOX_XML_IMPL_PATCH_REPORT
-POU=FB_Astro_Timer
-ST_SOURCE=FB_Astro_Timer.st
-XML_TARGET=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX.xml
-ACTION=implementation_only_xhtml_replaced
-ORIGINAL_XML_UNTOUCHED=yes

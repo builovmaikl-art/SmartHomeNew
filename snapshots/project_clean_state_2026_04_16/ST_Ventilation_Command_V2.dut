@@ -1,4 +1,0 @@
-TYPE ST_Ventilation_Command_V2 : STRUCT
-    Fan_Speed_Setpoint : REAL;
-END_STRUCT
-END_TYPE

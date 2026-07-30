@@ -1,6 +1,0 @@
-XML_POU_PATCH_REPORT
-RESULT=patched
-XML=workspace/export_forensics/sandbox/SMART_HOME_SANDBOX_V3.xml
-POU=FB_Astro_Timer
-ST=FB_Astro_Timer.st
-MODE=implementation_only

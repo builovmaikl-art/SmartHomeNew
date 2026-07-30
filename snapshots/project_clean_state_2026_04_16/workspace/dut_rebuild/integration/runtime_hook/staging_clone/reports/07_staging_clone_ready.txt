@@ -1,3 +1,0 @@
-STAGING_CLONE_READY=YES
-ACTIVE_RUNTIME_UNCHANGED=YES
-NEXT_STEP=prepare explicit migration package against active FB_Rule_Engine
