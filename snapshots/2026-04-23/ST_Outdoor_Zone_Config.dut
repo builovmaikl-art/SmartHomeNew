@@ -1,9 +1,0 @@
-{attribute 'pack_mode' := '1'}
-TYPE ST_Outdoor_Zone_Config :
-STRUCT
-    zone_id : BYTE := 0;
-    lighting_circuit_id : BYTE := 0;
-    auto_enabled : BOOL := TRUE;
-    party_mode_enabled : BOOL := FALSE;
-END_STRUCT
-END_TYPE
