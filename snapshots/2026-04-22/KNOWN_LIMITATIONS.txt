@@ -1,3 +1,0 @@
-- GVL_COMMAND used as gateway adapter
-- 2FA uses GVL_COMMAND (transport layer)
-- No test PRG yet

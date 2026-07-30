@@ -1,7 +1,0 @@
-{attribute 'strict'}
-TYPE E_VALVE_TYPE :
-(
-  VALVE_NC := 1,
-  VALVE_NO := 2
-) USINT;
-END_TYPE

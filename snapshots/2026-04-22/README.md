@@ -1,1 +1,0 @@
-Snapshot placeholder. Files copied progressively.
