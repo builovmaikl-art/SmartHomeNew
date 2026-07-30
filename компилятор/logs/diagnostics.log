@@ -11,7 +11,7 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 === repo tree root ===
-total 4592
+total 4588
 -rw-r--r--  1 runner runner  13067 Jul 30 07:01 -files _ grep 'methods_v1_interface_check.txt'
 drwxr-xr-x 10 runner runner  45056 Jul 30 07:01 .
 drwxr-xr-x  3 runner runner   4096 Jul 30 07:01 ..
@@ -817,7 +817,7 @@ drwxr-xr-x  3 runner runner   4096 Jul 30 07:01 .github
 drwxr-xr-x  2 runner runner   4096 Jul 30 07:01 docs
 drwxr-xr-x 11 runner runner   4096 Jul 30 07:01 node_modules
 drwxr-xr-x  2 runner runner   4096 Jul 30 07:01 requirements
-drwxr-xr-x 11 runner runner   4096 Jul 30 07:01 snapshots
+drwxr-xr-x 10 runner runner   4096 Jul 30 07:01 snapshots
 drwxr-xr-x  3 runner runner   4096 Jul 30 07:01 tools
 -rw-r--r--  1 runner runner 430747 Jul 30 07:01 Система умного дома.xml
 -rw-r--r--  1 runner runner  32949 Jul 30 07:01 ТЗ обновлен.txt
@@ -827,7 +827,7 @@ drwxr-xr-x  5 runner runner   4096 Jul 30 07:01 компилятор
 -rw-r--r--  1 runner runner  11783 Jul 30 07:01 ошибки компиляции.txt
 
 === compiler dir ===
-total 616
+total 612
 drwxr-xr-x  5 runner runner   4096 Jul 30 07:01 .
 drwxr-xr-x 10 runner runner  45056 Jul 30 07:01 ..
 -rw-r--r--  1 runner runner  21153 Jul 30 07:01 001_universal_pou_builder_METHODS_V2.py
