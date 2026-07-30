@@ -1,1 +1,0 @@
-(restored full METHODS_V3 script from previous commit)
